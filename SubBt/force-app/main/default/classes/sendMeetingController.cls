@@ -39,7 +39,7 @@ public class sendMeetingController {
     
     
     @AuraEnabled
-    public static void sendMail(List<contact> contactList,List<contact> ccContactList,string EmaiValue,string ccValue,string SubjectValue,string bodyvalue){
+    public static void sendMail(List<buildertek__Attendee__c> atendeeList,List<contact> ccContactList,string EmaiValue,string ccValue,string SubjectValue,string bodyvalue){
         EmailTemplate et = [SELECT Id,Subject, Body FROM EmailTemplate WHERE name ='Send Meeting Email'];
         /*List<Messaging.SingleEmailMessage> lstMsgs = new List<Messaging.SingleEmailMessage>();
         Messaging.SingleEmailMessage msg = new Messaging.SingleEmailMessage();
@@ -49,15 +49,18 @@ public class sendMeetingController {
         msg.setToAddresses(new list<string>{EmaiValue});
         lstMsgs.add(msg);
         Messaging.sendEmail(lstMsgs);*/
+        System.debug(atendeeList);
+        System.debug('========atendeeList=======');
+
         List<string> emaillist = new List<string>();
         if(EmaiValue != null && EmaiValue != ''){
             //emaillist.add(EmaiValue);
             emaillist = EmaiValue.split(',');
         }
-        system.debug(contactList);
-        if(contactList.size()>0){
-            for(contact con:contactList){
-                emaillist.add(con.Email); 
+        // system.debug(contactList);
+        if(atendeeList.size()>0){
+            for(buildertek__Attendee__c atendee:atendeeList){
+                emaillist.add(atendee.buildertek__Email_Address__c	); 
             }
         }
         system.debug(emaillist);
