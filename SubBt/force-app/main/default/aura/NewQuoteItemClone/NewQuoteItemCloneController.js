@@ -1,0 +1,2436 @@
+({
+    initialize: function (component, event, helper) {
+
+    },
+    closetab: function (component, event, helper) {
+        var workspaceAPI = component.find("workspace");
+        workspaceAPI.getFocusedTabInfo().then(function (response) {
+            var focusedTabId = response.tabId;
+            workspaceAPI.closeTab({ tabId: focusedTabId });
+        })
+            .catch(function (error) {
+                console.log(error);
+            });
+        var navEvt = $A.get("e.force:navigateToSObject");
+        navEvt.setParams({
+            "recordId": component.get("v.recordId"),
+            "slideDevName": "related"
+        });
+        navEvt.fire();
+    },
+
+    doInit: function (component, event, helper) {
+
+
+
+        var workspaceAPI = component.find("workspace");
+        workspaceAPI.getEnclosingTabId().then((response) => {
+            let opendTab = response.tabId;
+            workspaceAPI.setTabLabel({
+                tabId: opendTab,
+                label: "View Quote Lines"
+            });
+            workspaceAPI.setTabIcon({
+                tabId: opendTab,
+                icon: 'custom:custom5',
+                iconAlt: 'View Quote Lines'
+            });
+        });
+
+        /*--------------------------------------------*/
+
+
+
+
+
+
+
+
+        $A.get("e.c:BT_SpinnerEvent").setParams({
+            "action": "SHOW"
+        }).fire();
+        var page = component.get("v.page") || 1
+        var workspaceAPI = component.find("workspace");
+        workspaceAPI.getFocusedTabInfo().then(function (response) {
+            var focusedTabId = response.tabId;
+            component.set("v.currentTab", focusedTabId);
+            //workspaceAPI.closeTab({tabId: focusedTabId});
+        })
+        var action = component.get("c.getProject");
+        action.setParams({
+            "recordId": component.get("v.recordId")
+        });
+        action.setCallback(this, function (response) {
+            if (response.getState() == "SUCCESS") {
+                //console.log(JSON.parse(JSON.stringify(response.getReturnValue())));
+                var quoteData = JSON.parse(JSON.stringify(response.getReturnValue()))
+                component.set("v.quoteName", quoteData.Name);
+                component.set("v.quoteId", quoteData.Id);
+                if (component.find('expandCollapeseAllBtn')) {
+                    if (component.find('expandCollapeseAllBtn').get('v.iconName')) {
+                        var quoteId = component.get("v.quoteId");
+
+                        var spanEle = document.getElementsByClassName('expandAllBtn_' + quoteId);
+                        if (spanEle[0]) {
+                            spanEle[0].style.display = "none"; //spanEle[0].style.display="inline-block";
+                        }
+                        if (document.getElementsByClassName('CollapeseAllBtn_' + quoteId)[0]) {
+                            document.getElementsByClassName('CollapeseAllBtn_' + quoteId)[0].style.display = "inline-block";
+                            // document.getElementsByClassName('CollapeseAllBtn_'+quoteId)[0].style.display="none";
+                        }
+                    }
+                }
+            }
+        })
+        $A.enqueueAction(action);
+        helper.getGroups(component, event, helper, page);
+        helper.fetchPickListVal(component, event, helper);
+        helper.fetchpricebooks(component, event, helper);
+        helper.getQuoteInfo(component, event, helper);
+        helper.getcurr(component, event, helper);
+        helper.getmulticur(component, event, helper);
+        console.log("Hello : ", JSON.parse(JSON.stringify(component.get("v.TotalRecords"))));
+        /*if(component.find('expandCollapeseAllBtn')){
+                    if(component.find('expandCollapeseAllBtn').get('v.iconName')){
+                        component.find('expandCollapeseAllBtn').set("v.title", "Expand All");
+                    
+                        component.find('expandCollapeseAllBtn').set("v.iconName", "utility:add");
+                    }
+                     
+                }*/
+        if (component.find('expandCollapeseAllBtn2')) {
+            if (component.find('expandCollapeseAllBtn2').get('v.iconName')) {
+                component.find('expandCollapeseAllBtn2').set("v.title", "Collapse All");
+
+                component.find('expandCollapeseAllBtn2').set("v.iconName", "utility:dash");
+            }
+
+        }
+    },
+
+    onClickChangeGroupName: function (component, event, helper) {
+        if (!component.get('v.isGroupNameOpen')) {
+            var groups = component.get('v.TotalRecords').groups;
+            var target = event.target;
+            var index = target.getAttribute("data-index");
+            component.set('v.changeGroupNameId', '');
+            var groupId = groups[index].Id != undefined ? groups[index].Id : '';
+            var groupName = groups[index].Name != undefined ? groups[index].Name : '';
+            //Existing Group
+            if (groupId != undefined && groupId != '') {
+                component.set('v.changeGroupNameId', groupId);
+                component.set('v.changeGroupName', groupName);
+                component.set('v.groupNameIndex', index);
+                component.set('v.isGroupNameOpen', true);
+            }
+        } else {
+            if (component.get('v.changeGroupNameId') != undefined && component.get('v.changeGroupNameId') != '') {
+                //Update Group Name
+                helper.updateName(component, event, helper);
+            }
+        }
+    },
+
+    closeGroupName: function (component, event, helper) {
+        if (component.get('v.isGroupNameOpen')) {
+            component.set('v.isGroupNameOpen', false);
+        }
+    },
+    addGroupDescription: function (component, event, helper) {
+        if (!component.get('v.isGroupDescriptionOpen')) {
+            var groups = component.get('v.TotalRecords').groups;
+            var target = event.target;
+            var index = target.getAttribute("data-index");
+            component.set('v.budgetGroupId', '');
+            var groupId = groups[index].Id != undefined ? groups[index].Id : '';
+            var groupDescription = groups[index].buildertek__Description__c != undefined ? groups[index].buildertek__Description__c : '';
+            console.log({groupDescription});
+            if (groupId != undefined && groupId != '') {
+                component.set('v.budgetGroupId', groupId);
+                component.set('v.groupDescription', groupDescription);
+                component.set('v.groupDescriptionIndex', index);
+                component.set('v.isGroupDescriptionOpen', true);
+            }
+        } else {
+            //Update Group Description
+            helper.updateGroupDescription(component, event, helper);
+        }
+    },
+
+    closeGroupDescription: function (component, event, helper) {
+        if (component.get('v.isGroupDescriptionOpen')) {
+            component.set('v.isGroupDescriptionOpen', false);
+        }
+    },
+    addProductFromGroup: function (component, event, helper) {
+
+        // debugger;
+        // component.set("v.Spinner",true);
+        if (!component.get('v.isAddProductFromGroup')) {
+            var groups = component.get('v.TotalRecords').groups;
+            var quote = component.get('v.newQuote');
+            console.log("New Quote1")
+            console.log("New Quote : " + quote)
+            if (event.getSource().get("v.name") != undefined) {
+                var index = event.getSource().get("v.name");
+                var groupId = groups[index].Id != undefined ? groups[index].Id : '';
+                if (groupId != '') {
+                    quote.buildertek__Grouping__c = groupId;
+                    console.log("New Quote2")
+                    console.log("New Quote : " + quote)
+                    component.set('v.newQuote', quote);
+                    component.set('v.quoteGroupId', groupId);
+                }
+            }
+
+
+            component.set('v.columns1', [
+                { label: 'Product Family', fieldName: 'Family', type: 'text' },
+                { label: 'Product Name', fieldName: 'Name', type: 'text' },
+                { label: 'Product Description', fieldName: 'Description', type: 'text' },
+                { label: 'Product Code', fieldName: 'ProductCode', type: 'text' },
+                { label: 'List Price', fieldName: 'UnitPrice', type: 'currency', typeAttributes: { currencyCode: { fieldName: 'CurrencyIsoCode' } }, cellAttributes: { alignment: 'left' } },
+
+            ]);
+
+            var action4 = component.get("c.getProducts");
+            action4.setCallback(this, function (response) {
+                //  alert("ok")
+                component.set("v.Spinner2", true)
+                if (response.getState() == "SUCCESS") {
+                    var rows = response.getReturnValue();
+                    console.log('Rows =>',{rows});
+                    for (var i = 0; i < rows.length; i++) {
+                        var row = rows[i];
+                        if (row.PricebookEntries) {
+                            row.UnitPrice = row.PricebookEntries[0].UnitPrice;
+                        }
+                    }
+
+                    component.set("v.data1", rows);
+                    component.set("v.filteredData", rows);
+                    helper.sortData(component, component.get("v.sortedBy"), component.get("v.sortedDirection"));
+
+                    //console.log("data : ",response.getReturnValue());
+                    var actions = component.get("c.getpricebooks");
+                    var opts = [];
+                    actions.setCallback(this, function (response) {
+                        if (response.getState() == "SUCCESS") {
+                            var result = response.getReturnValue();
+                            var opts = [];
+                            opts.push({ key: "None", value: "" });
+                            for (var key in result) {
+                                opts.push({ key: key, value: result[key] });
+                            }
+                            component.set("v.pricebookoptions", opts);
+
+                            /*-----------------------------------------------------*/
+                            var action20 = component.get("c.priceBookInProject");
+                            action20.setParams({
+                                "recordId": component.get("v.recordId")
+                            });
+                            action20.setCallback(this, function (response) {
+                                var state = response.getState();
+                                if (state === 'SUCCESS') {
+                                    var result = response.getReturnValue();
+                                    if (result != 'ERROR') {
+                                        component.set("v.pricebookName1", result);
+                                        component.set("v.data1", '');
+                                        var x;
+                                        if (component.find("getPriceBookId")) {
+                                            x = component.find("getPriceBookId").get("v.value");
+                                        }
+                                        else {
+                                            x = '';
+                                        }
+
+
+                                        if (x == '') {
+                                            console.log("Empty : ", x)
+                                            x = 'None';
+
+                                        }
+                                        console.log("Empty1 : ", x);
+                                        var selectedPricebookList = component.get("v.storePriceBookId");
+                                        for (var i = 0; i < selectedPricebookList.length; i++) {
+                                            selectedPricebookList.push(x);
+                                        }
+                                        component.set("v.storePriceBookId", selectedPricebookList)
+                                        var action21 = component.get("c.getProductsthroughPriceBook");
+                                        action21.setParams({
+                                            "pbookId": x
+                                        });
+                                        action21.setCallback(this, function (response) {
+                                            if (response.getState() == "SUCCESS") {
+                                                var rows = response.getReturnValue();
+                                                console.log("Rows : ", rows);
+                                                for (var i = 0; i < rows.length; i++) {
+                                                    var row = rows[i];
+                                                    row.UnitPrice = row.buildertek__Available_Quantity__c;
+                                                }
+                                                console.log("Get Products based on PriceBook : ", response.getReturnValue());
+                                                component.set("v.data1", rows);
+                                                component.set("v.filteredData", rows);
+                                                helper.sortData(component, component.get("v.sortedBy"), component.get("v.sortedDirection"));
+                                                component.set("v.checkFunctionCall", true);
+                                                var selectedRows = [];
+                                                var listIds = component.get("v.listOfSelectedIds");
+                                                for (var i = 0; i < listIds.length; i++) {
+                                                    selectedRows.push(listIds[i])
+                                                }
+                                                component.set("v.selectedRows", selectedRows)
+                                            }
+                                            component.set("v.Spinner2", false);
+                                        });
+                                        $A.enqueueAction(action21);
+                                    }
+
+
+                                }
+                                else {
+                                    console.log(JSON.stringify(response.getError()))
+                                }
+                            });
+                            $A.enqueueAction(action20);
+                        }
+                    });
+                    $A.enqueueAction(actions);
+                }
+            });
+            //   component.set("v.Spinner",false);
+            $A.enqueueAction(action4);
+
+            //--------------------------------------------
+            component.set('v.openProductBox', true);
+            component.set("v.Spinner", false);
+
+        } else {
+            console.log("Quote 3")
+            console.log('Quote Items :0: ', JSON.stringify(component.get("v.newQuote")));
+            helper.addProductToGroup(component, event, helper);
+        }
+    },
+
+    saveAndNew: function (component, event, helper) {
+        if (!component.get('v.isAddProductFromGroup')) {
+            var groups = component.get('v.TotalRecords').groups;
+            var quote = component.get('v.newQuote');
+            if (event.getSource().get("v.name") != undefined) {
+                var index = event.getSource().get("v.name");
+                var groupId = groups[index].Id != undefined ? groups[index].Id : '';
+                if (groupId != '') {
+                    quote.buildertek__Grouping__c = groupId;
+                    console.log("Quote 4")
+                    component.set('v.newQuote', quote);
+                    component.set('v.quoteGroupId', groupId);
+                }
+            }
+
+            component.set('v.isAddProductFromGroup', true);
+
+        } else {
+
+            if (component.get('v.newQuote.Name') != null && component.get('v.newQuote.buildertek__Unit_Cost__c') != null && component.get('v.newQuote.Name') != ' ' && component.get('v.newQuote.buildertek__Unit_Cost__c') != ' ' && component.get('v.newQuote.Name') != undefined && component.get('v.newQuote.buildertek__Unit_Cost__c') != undefined) {
+                component.set("v.Spinner", true);
+                console.log("Quote 5")
+                console.log('Quote Items :0: ', JSON.stringify(component.get("v.newQuote")));
+                helper.addAndSaveProduct(component, event, helper);
+                $A.get('e.force:refreshView').fire();
+
+
+            }
+            else {
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    title: 'Error',
+                    message: 'Please fill the required fields.',
+                    duration: ' 5000',
+                    key: 'info_alt',
+                    type: 'error',
+                    mode: 'pester'
+                });
+                toastEvent.fire();
+            }
+
+        }
+    },
+    // isRefreshed: function(component, event, helper) {
+    // location.reload();
+    //},
+
+    closeAddProductFromGroup: function (component, event, helper) {
+        if (component.get('v.isAddProductFromGroup')) {
+            var quote = component.get('v.newQuote');
+            quote.buildertek__Grouping__c = '';
+            console.log("Quote 6")
+            component.set('v.newQuote', quote);
+            component.set('v.isAddProductFromGroup', false);
+
+        }
+    },
+
+    navigate: function (component, event, helper) {
+        $A.get("e.c:BT_SpinnerEvent").setParams({
+            "action": "SHOW"
+        }).fire();
+        var page = component.get("v.page") || 1;
+        // get the previous button label  
+        var direction = event.getSource().get("v.label");
+        // set the current page,(using ternary operator.)  
+        page = direction === "Previous" ? (page - 1) : (page + 1);
+        // call the helper function
+        helper.getGroups(component, event, helper, page);
+        if (component.find('expandCollapeseAllBtn')) {
+            if (component.find('expandCollapeseAllBtn').get('v.iconName')) {
+                component.find('expandCollapeseAllBtn').set("v.title", "Expand All");
+
+                component.find('expandCollapeseAllBtn').set("v.iconName", "utility:add");
+            }
+        }
+
+    },
+    changefamily: function (component, event, helper) {
+
+        var product = component.get('v.selectedLookUpRecord');
+        var compEvent = $A.get('e.c:BT_CLearLightningLookupEvent');
+        compEvent.setParams({
+            "recordByEvent": product
+        });
+        compEvent.fire();
+        console.log("Quote 7")
+        component.set('v.newQuote.Name', '');
+        component.set('v.newQuote.buildertek__Unit_Cost__c', '');
+        component.set('v.newQuote.buildertek__Unit_Price__c', null);
+        component.set('v.newQuote.buildertek__Markup__c', '');
+
+    },
+    changeEvent: function (component, event, helper) {
+        var group = component.find('groupId');
+        group.set("v._text_value", '');
+        var product = component.get('v.selectedLookUpRecord');
+        console.log({product});
+        console.log('===================================================================');
+        var compEvent = $A.get('e.c:BT_CLearLightningLookupEvent');
+        compEvent.setParams({
+            "recordByEvent": product
+        });
+        compEvent.fire();
+        console.log("Quote 8")
+        component.set('v.newQuote.Name', '');
+        //component.set('v.newQuote.buildertek__Grouping__c', null);
+        component.set('v.newQuote.buildertek__UOM__c', '');
+        component.set('v.newQuote.buildertek__Unit_Cost__c', '');
+        component.set('v.newQuote.buildertek__Unit_Price__c', null);
+        component.set('v.newQuote.buildertek__Quantity__c', 1);
+        component.set('v.newQuote.buildertek__Markup__c', '');
+        var pribooknames = component.get("v.pricebookName");
+        console.log("PriceBook Name : ======= : ", pribooknames); 
+        console.log({product} );
+        //alert(pribooknames)
+        var action = component.get("c.getProductfamilyRecords");
+        // set param to method  
+        action.setParams({
+            'ObjectName': "Product2",
+            'parentId': component.get("v.pricebookName")
+        });
+        // set a callBack    
+        action.setCallback(this, function (response) {
+            $A.util.removeClass(component.find("mySpinner"), "slds-show");
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                helper.fetchPickListVal(component, event, helper);
+                var storeResponse = response.getReturnValue();
+                // if storeResponse size is equal 0 ,display No Result Found... message on screen.                }
+                if (storeResponse.length == 0) {
+                    component.set("v.Message", 'No Result Found...');
+                } else {
+                    component.set("v.Message", '');
+                }
+                // set searchResult list with return value from server.
+                component.set("v.listofproductfamily", storeResponse);
+
+                if (component.get("v.listofproductfamily").length > 0) {
+                    component.set("v.productfamily", component.get("v.listofproductfamily")[0].productfamilyvalues);
+                }
+                else {
+                    component.set("v.productfamily", null)
+                }
+
+            }
+
+        });
+        // enqueue the Action  
+        $A.enqueueAction(action);
+    },
+
+    doView: function (component, event, helper) {
+        ////console.log(event.currentTarget.dataset.record);
+        var editRecordEvent = $A.get("e.force:navigateToSObject");
+        editRecordEvent.setParams({
+            "recordId": event.currentTarget.dataset.record
+        });
+        editRecordEvent.fire();
+    },
+
+    handleSaveSuccess: function (component, event, helper) {
+        if (event) {
+            if (event.getParams().message && event.getParams().message.indexOf('was saved') != -1) {
+                var page = component.get("v.page") || 1
+                helper.getGroups(component, event, helper, page);
+                // $A.get("e.force:refreshView").fire();
+            }
+        }
+    },
+
+    eventAction: function (component, event, helper) {
+        var action, grpID = event.getParam("groupId");
+        action = event.getParam("action");
+
+        if (action == 'NEW_ITEM') {
+            var evt = $A.get("e.force:createRecord");
+            evt.setParams({
+                'entityApiName': 'buildertek__Quote_Item__c',
+                'defaultFieldValues': {
+                    'buildertek__Quote__c': component.get("v.recordId"),
+                    'buildertek__Grouping__c': grpID,
+                    'Name': 'Quote Item'
+                },
+                'panelOnDestroyCallback': function (e) {
+                    $A.enqueueAction(component.get("v.refreshGridAction"));
+                },
+                'navigationLocation': 'RELATED_LIST'
+            });
+            evt.fire();
+        } else if (action == "ADD_PRODUCTS") {
+            helper.createProductItemPicker(component, event, helper, grpID);
+        } else if (action == "EDIT_GROUP") {
+            var editRecordEvent = $A.get("e.force:editRecord");
+            editRecordEvent.setParams({
+                "recordId": grpID
+            });
+            editRecordEvent.fire();
+        }
+    },
+
+
+    getsetparams: function (component, event, helper) {
+        var showresultvalue = event.getParam("selectedRows");
+        component.set("v.selectedRows", showresultvalue);
+    },
+
+    addProduct: function (component, event, helper) {
+        helper.createProductItemPicker(component, event, helper);
+    },
+
+    addRFQ: function (component, event, helper) {
+        helper.createRFQPicker(component, event, helper);
+    },
+
+    refreshQuoteItemList: function (component, event, helper) {
+        var page = component.get("v.page") || 1
+        helper.getGroups(component, event, helper, page);
+    },
+
+    onRender: function (component, event, helper) {
+
+    },
+
+    handleDestroy: function (component, event, helper) {
+
+    },
+
+    newGroup: function (component, event, helper) {
+        $A.createComponents(
+            [
+                ["aura:html", {
+                    "tag": "h2",
+                    "body": "New Quote Group",
+                    "HTMLAttributes": {
+                        "class": "slds-text-heading_medium slds-hyphenate"
+                    }
+                }],
+                ["c:BT_NewQuoteGroup", {
+                    "quoteId": component.get("v.recordId"),
+                    "onSuccess": function () {
+                        var page = component.get("v.page") || 1
+                        helper.getGroups(component, event, helper, page);
+                    }
+                }],
+
+            ],
+            function (components, status) {
+                if (status === 'SUCCESS') {
+                    component.find('overlayLib').showCustomModal({
+                        header: components[0],
+                        body: components[1],
+                        footer: components[1].find("footer"),
+                        showCloseButton: true,
+                        cssClass: 'slds-modal_large'
+                    });
+
+                }
+            });
+    },
+    saveQuoteRecord: function (component, event, helper) {
+        console.log('========================Save method fire======================');
+        $A.get("e.c:BT_SpinnerEvent").setParams({
+            "action": "SHOW"
+        }).fire();
+        var quoteObject = component.get("v.newQuote");
+
+        console.log(' Quote Data ==> ' + JSON.stringify(quoteObject));
+
+        var recordId = component.get("v.recordId");
+        component.set("v.newQuote.buildertek__Quote__c", recordId);
+        var markup = quoteObject.buildertek__Markup__c;
+        // markup = markup * 100;
+        component.set("v.newQuote.buildertek__Markup__c", markup);
+        var action = component.get("c.saveQuoteLineItem");
+        action.setParams({
+            "quoteLineRecord": JSON.stringify(quoteObject)
+        });
+        action.setCallback(this, function (respo) {
+            var returnValue = respo.getReturnValue();
+            console.log('returnValue ===> ',{returnValue});
+            if (component.isValid() && respo.getState() === "SUCCESS") {
+                var group = component.find('groupId');
+                group.set("v._text_value", '');
+                var product = component.get('v.selectedLookUpRecord');
+                var compEvent = $A.get('e.c:BT_CLearLightningLookupEvent');
+                compEvent.setParams({
+                    "recordByEvent": product
+                });
+                compEvent.fire();
+                component.set('v.newQuote.Name', '');
+                component.set('v.newQuote.buildertek__Description__c','');
+                component.set('v.newQuote.buildertek__Grouping__c', null);
+                component.set('v.newQuote.buildertek__UOM__c', '');
+                component.set('v.newQuote.buildertek__Unit_Cost__c', '');
+                component.set('v.newQuote.buildertek__Notes__c', '');
+                component.set('v.newQuote.buildertek__Quantity__c', 1);
+                component.set('v.newQuote.buildertek__Markup__c', '');
+                component.set('v.newQuote.buildertek__Product__c', '');
+                component.set("v.listofproductfamily", '');
+                $A.get('e.force:refreshView').fire();
+                window.setTimeout(
+                    $A.getCallback(function () {
+                        var toastEvent = $A.get("e.force:showToast");
+                        toastEvent.setParams({
+                            mode: 'sticky',
+                            message: 'Quote Line created successfully',
+                            type: 'success',
+                            duration: '10000',
+                            mode: 'dismissible'
+                        });
+                        toastEvent.fire();
+                    }), 3000
+                );
+
+                var page = component.get("v.page") || 1
+                helper.getGroups(component, event, helper, page);
+                helper.fetchpricebooks(component, event, helper);
+                helper.fetchPickListVal(component, event, helper);
+            }
+        });
+        $A.enqueueAction(action);
+
+    },
+
+    checkQuoteStatus: function (component, event, helper) { },
+
+    handleComponentEvent: function (component, event, helper) {
+        // get the selected Account record from the COMPONETN event 	 
+        var selectedAccountGetFromEvent = event.getParam("recordByEvent");
+        component.set("v.productId", selectedAccountGetFromEvent.Id);
+        component.set("v.productName", selectedAccountGetFromEvent.Name);
+        helper.getProductDetails(component, event, helper);
+        helper.getUOMValues(component, event, helper);
+    },
+
+    deleteRecord: function (component, event, helper) {
+        // get the selected Account record from the COMPONETN EVENT
+    },
+
+    handleEvent: function (component, event, helper) {
+        var message = event.getParam("message");
+        var toastEvent = $A.get("e.force:showToast");
+        toastEvent.setParams({
+            "title": "",
+            "message": message,
+            "type": "success"
+        });
+        component.refreshData();
+        $A.get("e.c:BT_SpinnerEvent").setParams({
+            "action": "HIDE"
+        }).fire();
+    },
+
+
+    editQuote: function (component, event, helper) {
+        var recordId = event.currentTarget.dataset.id;
+        var editRecordEvent = $A.get("e.force:editRecord");
+        editRecordEvent.setParams({
+            "recordId": recordId
+        });
+        editRecordEvent.fire();
+    },
+    editUnitPrice: function (component, event, helper) {
+        var recordId = event.currentTarget.dataset.id;
+        $A.get("e.c:BT_SpinnerEvent").setParams({
+            "action": "SHOW"
+        }).fire();
+        component.set("v.NetUnit", null);
+        //alert('NetUnit'+component.get("v.NetUnit"));
+        component.set("v.editedquoterec", recordId);
+        var action = component.get("c.getquote");
+        action.setParams({
+            "recordId": recordId
+        });
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+            // alert('state'+state);
+            if (state === "SUCCESS") {
+                var result = response.getReturnValue();
+                if (result != null) {
+                    component.set("v.markup", result.buildertek__Markup__c);
+                    component.set("v.isunitcost", result.buildertek__Unit_Cost__c);
+                    component.set("v.isdiscount", result.buildertek__Additional_Discount__c);
+                    component.set("v.isSalesprice", result.buildertek__Net_Unit__c);
+                    component.set("v.listPrice", result.buildertek__Unit_Price__c);
+                    component.set("v.NetUnit", result.buildertek__Net_Unit__c)
+                }
+                $A.get("e.c:BT_SpinnerEvent").setParams({
+                    "action": "HIDE"
+                }).fire();
+                component.set("v.editUnitPrice", true);
+            }
+        });
+
+        $A.enqueueAction(action);
+    },
+
+
+    closeunitsalesprice: function (component, event, helper) {
+        component.set("v.editUnitPrice", false);
+    },
+
+
+    deleteQuote: function (component, event, helper) {
+        component.set("v.PopupHeader", "Delete Quote Line");
+        component.set("v.PopupDescription", "Are you sure you want to delete this Quote Line?");
+        component.set("v.isOpen", true);
+        var recordId = event.currentTarget.dataset.id;
+        component.set("v.quoteItemId", recordId);
+    },
+
+    deleteAllQuotelines: function (component, event, helper) {
+        component.set("v.QuotelinePopupHeader", "Delete Quote Lines");
+        component.set("v.QuotelinePopupDescription", "Are you sure you want to delete Quote Lines?");
+        component.set("v.isQuotelinedelete", true);
+        var recordId = component.get("v.recordId");
+        component.set("v.quoteItemId", recordId);
+    },
+
+    deleteSelectedQuoteItem: function (component, event, helper) {
+        if (component.find("checkQuoteItem") != undefined) {
+            $A.get("e.c:BT_SpinnerEvent").setParams({
+                "action": "SHOW"
+            }).fire();
+            var QuoteIds = [];
+            var rowData;
+            var newRFQItems = [];
+            var delId = [];
+            var getAllId = component.find("checkQuoteItem");
+            if (!Array.isArray(getAllId)) {
+                if (getAllId.get("v.value") == true) {
+                    QuoteIds.push(getAllId.get("v.text"));
+                }
+            } else {
+                for (var i = 0; i < getAllId.length; i++) {
+                    if (getAllId[i].get("v.value") == true) {
+                        QuoteIds.push(getAllId[i].get("v.text"));
+                    }
+                }
+            }
+            if (QuoteIds.length > 0) {
+
+                var modal = component.find("exampleModal");
+                $A.util.removeClass(modal, 'hideDiv');
+                component.set("v.QuotelinePopupHeader", "Delete Quote Lines");
+                component.set("v.QuotelinePopupDescription", "Are you sure you want to delete Quote Lines?");
+                component.set("v.isQuotelinedelete", true);
+            } else {
+                /*   component.find('notifLib').showNotice({
+                       "variant": "error",
+                       "header": "Please Select Quote Line!",
+                       "message": "Please select the Quote Line you would like to Delete.",
+                       closeCallback: function () {
+                           $A.get("e.c:BT_SpinnerEvent").setParams({
+                               "action": "HIDE"
+                           }).fire();
+                       }
+                   }); */
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    title: 'Error',
+                    message: 'Please select the Quote Line you would like to Delete.',
+                    duration: ' 5000',
+                    key: 'info_alt',
+                    type: 'error',
+                    mode: 'pester'
+                });
+                toastEvent.fire();
+                $A.get("e.c:BT_SpinnerEvent").setParams({
+                    "action": "HIDE"
+                }).fire();
+            }
+        }
+    },
+
+    newRFQ: function (component, event, helper) {
+        if (component.find("checkQuoteItem") != undefined) {
+            var QuoteId;
+            var rowData;
+            var newRFQItems = [];
+            var getAllId = component.find("checkQuoteItem");
+            if (!Array.isArray(getAllId)) {
+                if (getAllId.get("v.value") == true) {
+                    QuoteId = getAllId.get("v.text");
+                }
+            } else {
+                for (var i = 0; i < getAllId.length; i++) {
+                    if (getAllId[i].get("v.value") == true) {
+                        QuoteId = getAllId[i].get("v.text");
+                    }
+                }
+            }
+            if (QuoteId != undefined) {
+                var overlayLib;
+                $A.createComponents([
+                    ["c:CreateRFQFromQuote", {
+                        "quoteId": component.get("v.recordId"),
+                        "selectedQuoteItem": QuoteId,
+                        "saveCallback": component.get("v.refreshGridAction"),
+                        "cancelCallback": function () {
+                            overlayLib.close();
+                        }
+                    }],
+
+                ],
+                    function (components, status, errorMessage) {
+                        if (status === "SUCCESS") {
+                            component.find('overlayLib').showCustomModal({
+                                header: "New RFQ",
+                                body: components[0],
+                                footer: components[0].find("footer").get("v.body"),
+                                showCloseButton: true,
+                                cssClass: 'slds-modal_medium',
+                                closeCallback: function () {
+
+                                }
+                            }).then(function (overlay) {
+                                overlayLib = overlay;
+                            });
+                        }
+                    }
+                );
+            } else {
+                component.find('notifLib').showNotice({
+                    "variant": "error",
+                    "header": "Please Select Quote Line!",
+                    "message": "Please Select Quote Line to Create RFQ.",
+                    closeCallback: function () { }
+                });
+            }
+        } else {
+            component.find('notifLib').showNotice({
+                "variant": "error",
+                "header": "No Quote Lines!",
+                "message": "No Quote Line Records",
+                closeCallback: function () { }
+            });
+        }
+    },
+
+    closeModel: function (component, event, helper) {
+        // for Hide/Close Model,set the "isOpen" attribute to "Fasle"  
+        component.set("v.isOpen", false);
+    },
+
+    closeQuotelineModel: function (component, event, helper) {
+        // for Hide/Close Model,set the "isOpen" attribute to "Fasle"  
+        component.set("v.isQuotelinedelete", false);
+        $A.get("e.c:BT_SpinnerEvent").setParams({
+            "action": "HIDE"
+        }).fire();
+    },
+
+
+    deleteQuoteItems: function (component, event, helper) {
+        $A.get("e.c:BT_SpinnerEvent").setParams({
+            "action": "SHOW"
+        }).fire();
+        var recordId = component.get("v.quoteItemId");
+        var action = component.get("c.deleteQuoteItem");
+        action.setParams({
+            "quoteId": recordId
+        });
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                var result = response.getReturnValue();
+                component.set("v.isOpen", false);
+                $A.get("e.force:refreshView").fire();
+                window.setTimeout(
+                    $A.getCallback(function () {
+                        var toastEvent = $A.get("e.force:showToast");
+                        toastEvent.setParams({
+                            mode: 'sticky',
+                            message: 'Quote Line was deleted',
+                            messageTemplate: "Quote Line {0} was deleted.",
+                            messageTemplateData: [{
+                                label: result.Name,
+                            }],
+                            type: 'success',
+                            duration: '10000',
+                            mode: 'dismissible'
+                        });
+                        toastEvent.fire();
+                    }), 3000
+                );
+                var page = component.get("v.page") || 1
+                helper.getGroups(component, event, helper, page);
+            }
+        });
+        $A.enqueueAction(action);
+    },
+
+    onClickCreateNewGroup: function (component, event, helper) {
+        component.set('v.addGroupPopup', true);
+    },
+
+    onClickAddGroup: function (component, event, helper) {
+        var totalRecords = component.get('v.TotalRecords');
+        console.log('Total Records::', JSON.stringify(totalRecords));
+        var groups = totalRecords.groups;
+        var groupObj = {};
+        groupObj.Id = '';
+        groupObj.Name = 'New Group';
+        groupObj.isSelected = false;
+        groupObj.buildertek__Description__c = 'Click to edit description.';
+        groups.unshift(groupObj);
+        component.set('v.TotalRecords', totalRecords);
+    },
+
+    newGroupCloseModal: function (component, event, helper) {
+        component.set('v.addGroupPopup', false);
+        component.set('v.quoteGroupNameDescription', '');
+        component.set('v.quoteGroupName', '');
+    },
+    createNewQuoteLineGroup: function (component, event, helper) {
+        var groupName = component.get('v.quoteGroupName');
+        if (groupName != undefined && groupName != '') {
+            helper.createQuoteLineGroup(component, event, helper);
+        } else {
+            var toastEvent = $A.get("e.force:showToast");
+            toastEvent.setParams({
+                "type": "warning",
+                "title": "Warning!",
+                "message": 'Please Enter Group Name!'
+            });
+            toastEvent.fire();
+        }
+    },
+    deleteSelectedQuoteItemlines: function (component, event, helper) {
+        $A.get("e.c:BT_SpinnerEvent").setParams({
+            "action": "SHOW"
+        }).fire();
+        var QuoteIds = [];
+        var rowData;
+        var newRFQItems = [];
+        var delId = [];
+        var getAllId = component.find("checkQuoteItem");
+        if (!Array.isArray(getAllId)) {
+            if (getAllId.get("v.value") == true) {
+                QuoteIds.push(getAllId.get("v.text"));
+            }
+        } else {
+            for (var i = 0; i < getAllId.length; i++) {
+                if (getAllId[i].get("v.value") == true) {
+                    QuoteIds.push(getAllId[i].get("v.text"));
+                }
+            }
+        }
+        if (QuoteIds.length > 0) {
+
+            var action = component.get('c.deleteSelectedItems');
+            action.setParams({
+                "recordIds": QuoteIds
+            });
+            action.setCallback(this, function (response) {
+                var state = response.getState();
+                if (state === "SUCCESS") {
+                    component.set("v.isQuotelinedelete", false);
+                    $A.get("e.force:refreshView").fire();
+                    window.setTimeout(
+                        $A.getCallback(function () {
+                            var toastEvent = $A.get("e.force:showToast");
+                            toastEvent.setParams({
+                                mode: 'sticky',
+                                message: 'Selected Quote Lines was deleted',
+                                type: 'success',
+                                duration: '10000',
+                                mode: 'dismissible'
+                            });
+                            toastEvent.fire();
+                        }), 3000
+                    );
+                    //var checkvalue = component.find("selectAll").set("v.value", false);
+                    var page = component.get("v.page") || 1
+                    helper.getGroups(component, event, helper, page);
+                }
+            });
+            $A.enqueueAction(action);
+        } else {
+            component.find('notifLib').showNotice({
+                "variant": "error",
+                "header": "Please Select Quote Line!",
+                "message": "Please select the Quote Line you would like to Delete.",
+                closeCallback: function () {
+                    $A.get("e.c:BT_SpinnerEvent").setParams({
+                        "action": "HIDE"
+                    }).fire();
+                }
+            });
+        }
+    },
+
+    inlineEdit: function (component, event, helper) {
+        var recordId = event.currentTarget.dataset.id;
+        var fieldName = event.currentTarget.dataset.label;
+        var groupId = event.currentTarget.dataset.group;
+        component.set("v.editedGroupId", groupId);
+        component.set("v.quoteItemId", recordId);
+        var editMode = component.get("v.isEditMode");
+        component.set("v.isEditMode", true);
+        component.set("v.fieldName", fieldName);
+    },
+
+    onblur: function (component, event, helper) {
+        component.set("v.isEditMode", false);
+        console.log('target:' + event.currentTarget);
+    },
+
+    handleLookUpEvent: function (component, event, helper) {
+        var selectedRecordId = event.getParam("selectedRecordId");
+        var index = event.getParam('index');
+        var TotalRecords = component.get("v.TotalRecords");
+
+        var fieldName = event.getParam('fieldName');
+        var ListOfEachRecord = TotalRecords.tarTable.ListOfEachRecord;
+        if (TotalRecords != undefined && TotalRecords.wrapperList != undefined) {
+            component.set('v.wrapperListLength', TotalRecords.wrapperList.length - 1);
+        }
+        if (ListOfEachRecord[index] != undefined) {
+            if (ListOfEachRecord[index].recordList != undefined) {
+
+                for (var i in ListOfEachRecord[index].recordList) {
+                    if (ListOfEachRecord[index].recordList[i].fieldName == fieldName) {
+                        ListOfEachRecord[index].recordList[i].originalValue = selectedRecordId;
+                    }
+                }
+            }
+        }
+        component.set("v.isChangeData", true);
+        component.set("v.TotalRecords", TotalRecords);
+        console.log("Toatl records : ", TotalRecords.tarTable.ListOfEachRecord);
+    },
+    updateQuoteData: function (component, event, helper) {
+        var target = event.currentTarget;
+
+        if (!component.get("v.enableMassUpdate")) {
+            var recordId = component.get("v.quoteItemId");
+            var quoteList = component.get("v.datalist");
+            var initialString = component.get("v.finalString");
+            var delId = {};
+            var newId = {};
+            if (initialString == null) {
+                delId = {
+                    "Id": recordId
+                }
+                component.set("v.finalString", delId);
+            } else {
+                var isVal = 'True';
+                for (var k = 0; k < quoteList.length; k++) {
+                    if (quoteList[k].Id == recordId) {
+                        newId = component.get("v.finalString");
+                        isVal = 'false';
+                    }
+                }
+                if (isVal == 'True') {
+                    newId = {
+                        "Id": recordId
+                    };
+                    component.set("v.finalString", newId);
+                }
+            }
+
+            var finString = component.get("v.finalString");
+            var fieldName = component.get("v.fieldName");
+            var getAllId = component.find("inputId");
+            if (!Array.isArray(getAllId)) {
+                if (getAllId.get("v.value") != null) {
+                    if (finString.Id == recordId) {
+                        finString[fieldName] = getAllId.get("v.value");
+                        quoteList.push(finString);
+                    } else {
+                        var isValue = 'True';
+                        for (var l = 0; l < quoteList.length; l++) {
+                            if (quoteList[l].Id == recordId) {
+                                newId = quoteList[l];
+                                newId[fieldName] = getAllId.get("v.value");
+                                quoteList.push(newId);
+                                break;
+                            }
+                        }
+                    }
+                }
+            } else {
+                for (var i = 0; i < getAllId.length; i++) {
+                    if (getAllId[i].get("v.value") != null) {
+                        if (finString.Id == recordId) {
+                            finString[fieldName] = getAllId[i].get("v.value");
+                            quoteList.push(finString);
+                        } else {
+                            newId[fieldName] = getAllId[i].get("v.value");
+                            quoteList.push(newId);
+                        }
+                    }
+                }
+            }
+            component.set("v.datalist", quoteList);
+            component.set("v.showButtons", true);
+            console.log('quoteList:' + JSON.stringify(quoteList));
+            var action = component.get("c.prepareString");
+            action.setParams({
+                "quoteString": JSON.stringify(quoteList),
+            });
+            action.setCallback(this, function (response) {
+                var state = response.getState();
+                if (state === "SUCCESS") {
+                    var result = response.getReturnValue();
+                    //Bakul - 12/16 - commented as component attribut already has latest data
+                    //component.set("v.quoteItemList", result);
+                    /*var action1 = component.get('c.doInit');
+$A.enqueueAction(action1);*/
+                    var page = component.get("v.page") || 1
+                    helper.getGroups(component, event, helper, page);
+                }
+            });
+            $A.enqueueAction(action);
+        } else {
+            component.set("v.isChangeData", true);
+        }
+    },
+
+    closeInlineEditForm: function (component, event, helper) {
+        component.set("v.isEditMode", false);
+        component.set("v.showButtons", false);
+        component.refreshData();
+    },
+
+    SaveEditedValues: function (component, event, helper) {
+        $A.get("e.c:BT_SpinnerEvent").setParams({
+            "action": "SHOW"
+        }).fire();
+        var recordId = component.get("v.quoteItemId");
+        console.log('Quote Items ::', JSON.stringify(component.get("v.quoteItemList")));
+        var action = component.get("c.saveUpdatedValues");
+        action.setParams({
+            "quoteItemList": component.get("v.quoteItemList")
+        });
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                component.set("v.isEditMode", false);
+                component.set("v.showButtons", false);
+                component.set("v.QuoteString", '');
+                component.set("v.datalist", []);
+
+                $A.get("e.force:refreshView").fire();
+                window.setTimeout(
+                    $A.getCallback(function () {
+                        var toastEvent = $A.get("e.force:showToast");
+                        toastEvent.setParams({
+                            mode: 'sticky',
+                            message: 'Your changes are saved',
+                            type: 'success',
+                            duration: '10000',
+                            mode: 'dismissible'
+                        });
+                        toastEvent.fire();
+                    }), 3000
+                );
+                var page = component.get("v.page") || 1
+                helper.getGroups(component, event, helper, page);
+            }
+        });
+        $A.enqueueAction(action);
+    },
+
+    //start
+    //additional functionallity for mass-update and duplicate records 
+
+    onClickMassUpdateCancel: function (component, event, helper) {
+        $A.get("e.c:BT_SpinnerEvent").setParams({
+            "action": "SHOW"
+        }).fire();
+        component.set("v.enableMassUpdate", component.get("v.enableMassUpdate") == true ? false : true);
+        component.set("v.isChangeData", false);
+        var page = component.get("v.page") || 1
+        helper.getGroups(component, event, helper, page);
+
+    },
+
+    onClickMassUpdate: function (component, event, helper) {
+        component.set("v.enableMassUpdate", component.get("v.enableMassUpdate") == true ? false : true);
+        if (component.get("v.enableMassUpdate") == false && component.get('v.isChangeData')) {
+            $A.get("e.c:BT_SpinnerEvent").setParams({
+                "action": "SHOW"
+            }).fire();
+            var TotalRecords = component.get("v.TotalRecords");
+            var ListOfEachRecord = TotalRecords.tarTable.ListOfEachRecord;
+            var ListOfEachRecordLength = ListOfEachRecord.length;
+
+            var newMassQi = [];
+
+            //console.log('@@ originalValue length :: ', ListOfEachRecordLength ,'   @@ originalValue :: ',JSON.stringify(ListOfEachRecord));
+            for (var i = 0; i < ListOfEachRecordLength; i++) {
+                var newMassQuoteItem = {};
+                newMassQuoteItem.sobjectType = 'buildertek__Quote_Item__c';
+                for (var j = 0; j < ListOfEachRecord[i].recordList.length; j++) {
+                    if (ListOfEachRecord[i].recordList[j].fieldName == 'buildertek__Quantity__c') {
+                        newMassQuoteItem.buildertek__Quantity__c = ListOfEachRecord[i].recordList[j].originalValue;
+                    } else if (ListOfEachRecord[i].recordList[j].fieldName == 'buildertek__Unit_Cost__c') {
+                        newMassQuoteItem.buildertek__Unit_Cost__c = ListOfEachRecord[i].recordList[j].originalValue;
+                    } else if (ListOfEachRecord[i].recordList[j].fieldName == 'buildertek__Markup__c') {
+                        newMassQuoteItem.buildertek__Markup__c = ListOfEachRecord[i].recordList[j].originalValue;
+                    } else if (ListOfEachRecord[i].recordList[j].fieldName == 'buildertek__Unit_Price__c') {
+                        newMassQuoteItem.buildertek__Unit_Price__c = ListOfEachRecord[i].recordList[j].originalValue;
+                    } else if (ListOfEachRecord[i].recordList[j].fieldName == 'buildertek__Additional_Discount__c') {
+                        newMassQuoteItem.buildertek__Additional_Discount__c = ListOfEachRecord[i].recordList[j].originalValue;
+                    } else if (ListOfEachRecord[i].recordList[j].fieldName == 'buildertek__Notes__c') {
+                        newMassQuoteItem.buildertek__Notes__c = ListOfEachRecord[i].recordList[j].originalValue;
+                    } else if (ListOfEachRecord[i].recordList[j].fieldName == 'buildertek__UOM__c') {
+                        newMassQuoteItem.buildertek__UOM__c = ListOfEachRecord[i].recordList[j].originalValue;
+                    } else if (ListOfEachRecord[i].recordList[j].fieldName == 'buildertek__Vendor__c') {
+                        newMassQuoteItem.buildertek__Vendor__c = ListOfEachRecord[i].recordList[j].originalValue;
+                    } else if (ListOfEachRecord[i].recordList[j].fieldName == 'buildertek__Priority__c') {
+                        // debugger;
+                        newMassQuoteItem.buildertek__Priority__c = ListOfEachRecord[i].recordList[j].originalValue;
+                    }
+                }
+                newMassQuoteItem.Id = ListOfEachRecord[i].recordId;
+                newMassQuoteItem.Name = ListOfEachRecord[i].recordName;
+                newMassQi.push(newMassQuoteItem);
+            }
+            if (newMassQi.length > 0) {
+                var action = component.get("c.massUpdateQuoteLineItem");
+                action.setParams({
+                    "quoteLineRecords": JSON.stringify(newMassQi)
+                });
+                action.setCallback(this, function (respo) {
+                    console.log('response is : ', respo.getState());
+                    component.set("v.isChangeData", false);
+                    if (respo.getState() === "SUCCESS") {
+                        $A.get('e.force:refreshView').fire();
+                        window.setTimeout(
+                            $A.getCallback(function () {
+                                var toastEvent = $A.get("e.force:showToast");
+                                toastEvent.setParams({
+                                    mode: 'sticky',
+                                    message: 'Quote Line Updated successfully',
+                                    type: 'success',
+                                    duration: '10000',
+                                    mode: 'dismissible'
+                                });
+                                toastEvent.fire();
+                            }), 3000
+                        );
+                        var page = component.get("v.page") || 1
+                        helper.getGroups(component, event, helper, page);
+                    }
+                });
+                $A.enqueueAction(action);
+            }
+        }
+        if (component.get("v.enableMassUpdate")) {
+            console.log(component.get("v.TotalRecords").groups);
+            var quoteId = component.get("v.quoteId");
+            // var spanEle = event.currentTarget.dataset.iconname;
+            // console.log(spanEle)
+            var expandallicon = document.getElementsByClassName('expandAllBtn_' + quoteId);
+            var collapeallIcon = document.getElementsByClassName('CollapeseAllBtn_' + quoteId);
+            //var labelName =spanEle
+
+            expandallicon[0].style.display = 'none';
+            collapeallIcon[0].style.display = 'inline-block';
+
+
+            var groups = component.get("v.TotalRecords").groups;
+            var quoteId = component.get("v.quoteId")
+            for (var j = 0; j < groups.length; j++) {
+                var grpIndex = j;
+                var expandicon = document.getElementsByClassName(quoteId + ' expandGrpIcon_' + grpIndex);
+                var collapeIcon = document.getElementsByClassName(quoteId + ' collapseGrpIcon_' + grpIndex);
+                var className = quoteId + " groupRows_" + grpIndex;
+                var grpRows = document.getElementsByClassName(className);
+                // if(labelName == 'Expand All') {   
+                expandicon[0].style.display = 'none';
+                collapeIcon[0].style.display = 'inline-block';
+                for (var i = 0; i < grpRows.length; i++) {
+                    var item = grpRows[i];
+                    if (!expandicon[0].classList.contains('hideExpandIcon')) {
+                        expandicon[0].classList.add('hideExpandIcon')
+                    }
+                    if (expandicon[0].classList.contains('hideExpandIconhideCollapseIcon')) {
+                        expandicon[0].classList.remove('hideExpandIconhideCollapseIcon')
+                    }
+                    if (item.style.display == "none") {
+                        item.style.display = 'table-row';
+                    }
+                }
+
+            }
+        }
+
+
+
+    },
+
+    handleSelectAll: function (component, event, helper) {
+        //var groupName = event.getSource().get("v.value");
+        var totalRecords = component.get('v.TotalRecords');
+        var records = totalRecords.tarTable.ListOfEachRecord;
+        let groupIds = new Set()
+        let groupIdsToRemove = new Set()
+        for (var i in totalRecords.groups) {
+            if (totalRecords.groups[i].isSelected != undefined && totalRecords.groups[i].isSelected) {
+                groupIds.add(totalRecords.groups[i].Id);
+            } else {
+                groupIdsToRemove.add(totalRecords.groups[i].Id);
+            }
+        }
+
+        for (var i in records) {
+            if (groupIds.has(records[i].groupId)) {
+                records[i].isSelected = true;
+            } else if (groupIdsToRemove.has(records[i].groupId)) {
+                records[i].isSelected = false;
+            }
+        }
+        component.set('v.TotalRecords', totalRecords);
+        // var checkvalue = component.find("selectAll").get("v.value");
+        // var checkQuoteItem = component.find("checkQuoteItem");
+
+        // if (checkvalue == true) {
+        //     for (var i = 0; i < checkQuoteItem.length; i++) {
+        //         checkQuoteItem[i].set("v.value", true);
+        //     }
+        // } else {
+        //     for (var i = 0; i < checkQuoteItem.length; i++) {
+        //         checkQuoteItem[i].set("v.value", false);
+        //     }
+        // }
+    },
+
+    unCheckAll: function (component, event, helper) {
+        var selectedId = event.getSource().get("v.text");
+        var totalRecords = component.get('v.TotalRecords');
+        var records = totalRecords.tarTable.ListOfEachRecord;
+        let deSelectGroup = new Set()
+
+        for (var i in records) {
+            if (selectedId === records[i].recordId) {
+                if (records[i].isSelected === false) {
+                    deSelectGroup.add(records[i].groupId);
+                }
+            }
+        }
+
+        for (var i in totalRecords.groups) {
+            if (deSelectGroup.has(totalRecords.groups[i].Id)) {
+                totalRecords.groups[i].isSelected = false;
+            }
+        }
+        component.set('v.TotalRecords', totalRecords);
+        // var checkQuoteItem = component.find("checkQuoteItem");
+        // var checkvalue = component.find("selectAll");
+        // var checkBool = 0;
+
+        // for (var i = 0; i < checkQuoteItem.length; i++) {
+        //     if (checkQuoteItem[i].get("v.value")) {
+        //         checkBool++;
+        //     }
+        // }
+
+        // if (checkBool == checkQuoteItem.length) {
+        //     checkvalue.set("v.value", true);
+        // } else {
+        //     checkvalue.set("v.value", false);
+        // }
+
+    },
+    updateQuoteRecords: function (component, event, helper) {
+        var checkvalue = component.find("selectAll");
+        var checkQuoteItem = component.find("checkQuoteItem");
+        var quoteObject = component.get("v.newMassQuote");
+        var lookupValue = component.get("v.selectedMassLookUpRecord");
+        var newMassQi = [];
+        for (var i = 0; i < checkQuoteItem.length; i++) {
+            if (checkQuoteItem[i].get("v.value") && checkQuoteItem[i].get("v.value") != undefined && checkQuoteItem[i].get("v.value") != '') {
+                var newMassQuoteItem = {};
+                var checkBool = 0;
+                var isValueChange = false;
+                newMassQuoteItem.sobjectType = 'buildertek__Quote_Item__c';
+                if (lookupValue.Id != null && lookupValue.Id != undefined) {
+                    newMassQuoteItem.buildertek__Product__c = lookupValue.Id;
+                    isValueChange = true;
+                }
+                if (quoteObject.buildertek__Quantity__c != null) {
+                    newMassQuoteItem.buildertek__Quantity__c = quoteObject.buildertek__Quantity__c;
+                    isValueChange = true;
+                }
+                if (quoteObject.buildertek__Unit_Cost__c != null) {
+                    newMassQuoteItem.buildertek__Unit_Cost__c = quoteObject.buildertek__Unit_Cost__c;
+                    isValueChange = true;
+                }
+                if (quoteObject.buildertek__Markup__c != null) {
+                    newMassQuoteItem.buildertek__Markup__c = quoteObject.buildertek__Markup__c * 100;
+                    isValueChange = true;
+                }
+                newMassQuoteItem.Id = checkQuoteItem[i].get("v.text");
+                newMassQi.push(newMassQuoteItem);
+                checkBool++;
+            }
+        }
+        component.set("v.newMassQi", newMassQi);
+
+        if (checkBool > 0 && isValueChange) {
+            var action = component.get("c.massUpdateQuoteLineItem");
+            action.setParams({
+                "quoteLineRecords": JSON.stringify(component.get("v.newMassQi"))
+            });
+            action.setCallback(this, function (respo) {
+                console.log('response is : ', respo.getState());
+                if (respo.getState() === "SUCCESS") {
+                    component.set("v.newMassQi", "[]");
+                    checkvalue.set("v.value", false);
+                    component.set("v.selectedMassLookUpRecord", "{}");
+                    component.set("v.enableMassUpdate", component.get("v.enableMassUpdate") == true ? false : true);
+                    component.set("v.enableMassUpdate", component.get("v.enableMassUpdate") == true ? false : true);
+                    $A.get('e.force:refreshView').fire();
+                    window.setTimeout(
+                        $A.getCallback(function () {
+                            var toastEvent = $A.get("e.force:showToast");
+                            toastEvent.setParams({
+                                mode: 'sticky',
+                                message: 'Quote Line Updated successfully',
+                                type: 'success',
+                                duration: '10000',
+                                mode: 'dismissible'
+                            });
+                            toastEvent.fire();
+                        }), 3000
+                    );
+                    var page = component.get("v.page") || 1
+                    helper.getGroups(component, event, helper, page);
+                }
+            });
+            $A.enqueueAction(action);
+        } else {
+            var toastEvent = $A.get("e.force:showToast");
+            toastEvent.setParams({
+                mode: 'sticky',
+                message: 'Please select any record.',
+                type: 'warning',
+                duration: '10000',
+                mode: 'dismissible'
+            });
+            toastEvent.fire();
+
+        }
+    },
+    onClickMassDuplicate: function (component, event, helper) {
+        if (component.find("checkQuoteItem") != undefined) {
+            var QuoteIds = [];
+            var getAllId = component.find("checkQuoteItem");
+            if (!Array.isArray(getAllId)) {
+                if (getAllId.get("v.value") == true) {
+                    QuoteIds.push(getAllId.get("v.text"));
+                }
+            } else {
+                for (var i = 0; i < getAllId.length; i++) {
+                    if (getAllId[i].get("v.value") == true) {
+                        QuoteIds.push(getAllId[i].get("v.text"));
+                    }
+                }
+            }
+            if (QuoteIds.length > 0) {
+                component.set("v.PopupHeader", "Duplicate Quote Lines");
+                component.set("v.PopupDescription", "Are you sure you want to duplicate this Quote Lines?");
+                component.set("v.isMassDuplicate", true);
+            } else {
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    mode: 'sticky',
+                    message: 'Please select the Quote Line you would like to duplicate.',
+                    type: 'error',
+                    duration: '10000',
+                    mode: 'dismissible'
+                });
+                toastEvent.fire();
+            }
+        } else {
+            component.find('notifLib').showNotice({
+                "variant": "error",
+                "header": "No Quote Lines!",
+                "message": "No Quote Line Records",
+                closeCallback: function () { }
+            });
+        }
+    },
+    onClickAddlines: function (component, event, helper) {
+        var evt = $A.get("e.force:navigateToComponent");
+        evt.setParams({
+            componentDef: "c:BT_MassUpdateQuote",
+            componentAttributes: {
+                recordId: component.get("v.recordId")
+            }
+        });
+        evt.fire();
+    },
+    onMassDuplicate: function (component, event, helper) {
+        var checkvalue = component.find("selectAll");
+        var checkQuoteItem = component.find("checkQuoteItem");
+        var duplicateRecs = component.get("v.duplicateRecs");
+        var checkBool = 0;
+
+        component.set("v.isMassDuplicate", false);
+
+        for (var i = 0; i < checkQuoteItem.length; i++) {
+            if (checkQuoteItem[i].get("v.value") && checkQuoteItem[i].get("v.value") != undefined && checkQuoteItem[i].get("v.value") != '') {
+                duplicateRecs.push(checkQuoteItem[i].get("v.text"));
+                checkBool++;
+            }
+        }
+        if (checkBool > 0) {
+            $A.get("e.c:BT_SpinnerEvent").setParams({
+                "action": "SHOW"
+            }).fire();
+            // debugger;
+            var action = component.get("c.massDuplicateQuoteLineItem");
+            action.setParams({
+                "quoteLineRecords": duplicateRecs
+            });
+            action.setCallback(this, function (respo) {
+                if (respo.getState() === "SUCCESS") {
+                    $A.get('e.force:refreshView').fire();
+                    window.setTimeout(
+                        $A.getCallback(function () {
+                            var toastEvent = $A.get("e.force:showToast");
+                            toastEvent.setParams({
+                                mode: 'sticky',
+                                message: 'Duplicate records for selected quote items created successfully.',
+                                type: 'success',
+                                duration: '10000',
+                                mode: 'dismissible'
+                            });
+                            toastEvent.fire();
+                        }), 3000
+                    );
+                    var page = component.get("v.page") || 1
+                    helper.getGroups(component, event, helper, page);
+                }
+            });
+            $A.enqueueAction(action);
+
+        } else {
+            var toastEvent = $A.get("e.force:showToast");
+            toastEvent.setParams({
+                mode: 'sticky',
+                message: 'Please select any record.',
+                type: 'warning',
+                duration: '10000',
+                mode: 'dismissible'
+            });
+            toastEvent.fire();
+        }
+
+    },
+    onclickDuplicate: function (component, event, helper) {
+        var currentId = event.currentTarget.getAttribute("data-id");
+        component.set("v.currentId", currentId);
+        component.set("v.PopupHeader", "Duplicate Quote Line");
+        component.set("v.PopupDescription", "Are you sure you want to duplicate this Quote Line?");
+        component.set("v.isDuplicate", true);
+    },
+    duplicateQuote: function (component, event, helper) {
+        var currentId = component.get("v.currentId");
+        if (currentId != "" && currentId != undefined) {
+            component.set("v.isDuplicate", false);
+            $A.get("e.c:BT_SpinnerEvent").setParams({
+                "action": "SHOW"
+            }).fire();
+            var checkvalue = component.find("selectAll");
+            var duplicateRecs = [];
+            duplicateRecs.push(currentId);
+            var action = component.get("c.massDuplicateQuoteLineItem");
+            action.setParams({
+                "quoteLineRecords": duplicateRecs
+            });
+            action.setCallback(this, function (respo) {
+                console.log('response is : ', respo.getState());
+                if (respo.getState() === "SUCCESS") {
+                    component.set("v.value", false);
+                    component.set("v.currentId", "");
+                    $A.get('e.force:refreshView').fire();
+                    window.setTimeout(
+                        $A.getCallback(function () {
+                            var toastEvent = $A.get("e.force:showToast");
+                            toastEvent.setParams({
+                                mode: 'sticky',
+                                message: 'Duplicate records for selected quote items created successfully.',
+                                type: 'success',
+                                duration: '10000',
+                                mode: 'dismissible'
+                            });
+                            toastEvent.fire();
+                        }), 3000
+                    );
+                    var page = component.get("v.page") || 1
+                    helper.getGroups(component, event, helper, page);
+                }
+            });
+            $A.enqueueAction(action);
+        }
+    },
+    closeDuplicateModel: function (component, event, helper) {
+        // for Hide/Close Model,set the "isDuplicate" attribute to "Fasle"  
+        component.set("v.isOpen", false);
+        component.set("v.isDuplicate", false);
+        component.set("v.isMassDuplicate", false);
+        component.set("v.currentId", "");
+    },
+    onMarkupEdit: function (component, event, helper) {
+        component.set("v.isMarkup", true);
+
+    },
+    onMarkupChange: function (component, event, helper) {
+        var markup = component.get("v.QuoteRec").buildertek__Markup__c;
+        if (markup != '' && markup != null && markup != 'Undefined') {
+            component.set("v.isMarkup", true);
+            //component.set("v.PopupHeader", "Save Quote Line");
+            //component.set("v.PopupDescription", "Are you sure you want to update quote line markup?");
+            component.set("v.PopupHeader", "Update Markup");
+            component.set("v.PopupDescription", "Are you sure you want to Update Markup?");
+            component.set("v.isQuoteRecChange", true);
+        } else {
+            /*  component.find('notifLib').showNotice({
+                "variant": "error",
+                "header": "No Markup",
+                "message": "Please enter a Markup value",
+                closeCallback: function () {}
+            }); */
+            var toastEvent = $A.get("e.force:showToast");
+            toastEvent.setParams({
+                title: 'Error',
+                message: 'Please Enter a Markup Value.',
+                duration: ' 5000',
+                key: 'info_alt',
+                type: 'error',
+                mode: 'pester'
+            });
+            toastEvent.fire();
+        }
+
+        // 	var a = component.get("v.QuoteRec").Id;
+        // 	alert('a---->'+a);
+        //console.log("check"+JSON.stringify(component.get("v.TotalRecords")));
+        //     var markupvalue = component.get("v.QuoteRec").buildertek__Markup__c;
+        //     alert('a---->'+markupvalue);
+        //     var action = component.get("c.saveQuoteLineItemsValues"); 
+        //     	action.setParams({
+        // 		"quoteRec": component.get("v.QuoteRec").Id,
+        // 		markupvalue : markupvalue
+        // 	});
+        // 	action.setCallback(this, function(response) {
+        // 		if (response.getState() == "SUCCESS") {
+        // 		    var result  = response.getReturnValue();
+        // 		    alert('result----->'+result);
+        // 		    component.set("v.TotalRecords",result);
+        // 		}
+        // });
+        // var records = component.get("v.TotalRecords");
+
+        /* for(var i =0; i<records.tarTable.ListOfEachRecord.length; i++){
+for(var j=0; j<records.tarTable.ListOfEachRecord[i].recordList.length; j++){
+if(records.tarTable.ListOfEachRecord[i].recordList[j].fieldName == 'buildertek__Markup__c'){
+if(records.tarTable.ListOfEachRecord[i].recordList[j].originalValue <=0 || records.tarTable.ListOfEachRecord[i].recordList[j].originalValue == '' ||records.tarTable.ListOfEachRecord[i].recordList[j].originalValue == null){
+records.tarTable.ListOfEachRecord[i].recordList[j].originalValue = markupvalue;
+}
+ 
+}
+//alert(records.tarTable.ListOfEachRecord[i].recordList[j].fieldName);
+}
+ 
+}*/
+
+        // component.set("v.TotalRecords",records);
+        //alert(JSON.stringify(records.tarTable));
+        // $A.enqueueAction(action);
+    },
+    closeModelQuoteRec: function (component, event, helper) {
+        component.set("v.isQuoteRecChange", false);
+        helper.getQuoteInfo(component, event, helper);
+    },
+    saveQuoteSingleRecord: function (component, event, helper) {
+        component.set("v.isQuoteRecChange", false);
+        component.get("v.isMarkup", false);
+        $A.get("e.c:BT_SpinnerEvent").setParams({
+            "action": "SHOW"
+        }).fire();
+        var markupvalue = component.get("v.QuoteRec").buildertek__Markup__c;
+        var actionLines = component.get("c.saveQuoteLineItemsValues");
+        actionLines.setParams({
+            "quoteRec": component.get("v.QuoteRec").Id,
+            markupvalue: markupvalue
+        });
+        actionLines.setCallback(this, function (response) {
+            if (response.getState() == "SUCCESS") {
+                var result = response.getReturnValue();
+                component.set("v.TotalRecords", result);
+                $A.get('e.force:refreshView').fire();
+                var page = component.get("v.page") || 1
+                helper.getGroups(component, event, helper, page);
+                window.setTimeout(
+                    $A.getCallback(function () {
+                        var toastEvent = $A.get("e.force:showToast");
+                        toastEvent.setParams({
+                            mode: 'sticky',
+                            message: 'Quote line markup(%) updated successfully.',
+                            type: 'success',
+                            duration: '10000',
+                            mode: 'dismissible'
+                        });
+                        toastEvent.fire();
+                    }), 3000
+                );
+            }
+        });
+        $A.enqueueAction(actionLines);
+        helper.getQuoteInfo(component, event, helper);
+
+        /* var actions = component.get("c.saveQuoteSingleRec"); 
+actions.setParams({
+"quoteRec": JSON.stringify(component.get("v.QuoteRec"))
+});
+actions.setCallback(this, function(response) {
+if (response.getState() == "SUCCESS") {
+var result  = response.getReturnValue();
+console.log('retVal :'+JSON.stringify(result));
+component.set("v.QuoteRec",result);
+$A.get('e.force:refreshView').fire();
+helper.getGroups(component, event, helper, page);
+ 
+window.setTimeout(
+$A.getCallback(function() {
+var toastEvent = $A.get("e.force:showToast");
+toastEvent.setParams({
+mode: 'sticky',
+message: 'Quote line markup(%) updated successfully.',
+type : 'success',
+duration: '10000', 
+mode: 'dismissible'
+});
+toastEvent.fire();
+}), 3000
+);
+}else{
+window.setTimeout(
+$A.getCallback(function() {
+var toastEvent = $A.get("e.force:showToast");
+toastEvent.setParams({
+mode: 'sticky',
+message: 'Something Went Wrong!!',
+type : 'error',
+duration: '10000', 
+mode: 'dismissible'
+});
+toastEvent.fire();
+}), 3000
+);
+} 
+});
+$A.enqueueAction(actions);
+helper.getQuoteInfo(component,event,helper);*/
+
+    },
+
+    refreshComponentHandler: function (component, event, helper) {
+        console.log('refreshComponentHandler');
+        $A.get("e.c:BT_SpinnerEvent").setParams({
+            "action": "SHOW"
+        }).fire();
+        var page = component.get("v.page") || 1;
+        helper.getGroups(component, event, helper, page);
+
+    },
+    onInputChange: function (component, event, helper) {
+        var fieldName = event.getSource().get("v.name").split('-');
+        var index = fieldName[0];
+        var fieldLabel = fieldName[1];
+        var selectedValue = event.getSource().get("v.value");
+        var record = component.get('v.record');
+        record[fieldLabel] = selectedValue != '' && selectedValue != 'None' ? selectedValue : '';
+        component.set('v.record', record);
+    },
+
+    updateUnitSalesPrice: function (component, event, helper) {
+        //	alert('hii'+component.get("v.NetUnit"));
+        var netunit = component.get("v.NetUnit");
+        var mar = component.get("v.markup");
+        //   alert('markup'+mar);
+        var unitcost = component.get("v.isunitcost");
+        //   alert('unitcost'+unitcost);
+        var discost = component.get("v.isdiscount") ? component.get("v.isdiscount") : 0;
+        //  alert('discost'+discost);
+        var salesprice = component.get("v.isSalesprice");
+
+
+        var total;
+        netunit = netunit * 100;
+        var unitPrice = component.get("v.listPrice");
+        if (unitcost != 0 && unitcost != undefined) {
+            var denom = unitcost * (1 - discost / 100);
+            total = -100 + netunit / denom;
+        } else {
+
+            var denom = unitPrice * (1 - discost / 100);
+            total = -100 + netunit / denom;
+        }
+
+        var action = component.get("c.updatequote");
+        action.setParams({
+            "recordId": component.get("v.editedquoterec"),
+            "markup": total
+        });
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+            // alert('state'+state);
+            if (state === "SUCCESS") {
+                var result = response.getReturnValue();
+                $A.get("e.c:BT_SpinnerEvent").setParams({
+                    "action": "SHOW"
+                }).fire();
+                //alert(result.buildertek__Markup__c);
+                component.set("v.editUnitPrice", false);
+                // component.refreshData();
+                $A.get('e.force:refreshView').fire();
+            }
+        });
+        $A.enqueueAction(action);
+
+    },
+    expandCollapeAll: function (component, event, helper) {
+        //component.set("v.ShowSpinner",true);
+        /* console.log(component.get("v.TotalRecords").groups);
+console.log(event.getSource());
+var iconName = event.getSource().get("v.iconName")
+var labelName = event.getSource().get("v.title");
+if(labelName == 'Expand All'){
+event.getSource().set("v.title", "Collapse All");
+event.getSource().set("v.iconName", "utility:dash");
+}else if(labelName == 'Collapse All'){
+event.getSource().set("v.title", "Expand All");
+event.getSource().set("v.iconName", "utility:add");
+}
+var groups = component.get("v.TotalRecords").groups;
+for(var j=0;j<groups.length;j++){
+var grpIndex = j;
+var expandicon = document.getElementsByClassName('expandGrpIcon_'+grpIndex);
+var collapeIcon = document.getElementsByClassName('collapseGrpIcon_'+grpIndex);
+var className = "groupRows_"+grpIndex;
+var grpRows = document.getElementsByClassName(className) ;
+if((!expandicon[0].classList.contains('hideExpandIcon') && collapeIcon[0].classList.contains('hideCollapseIcon') && labelName == 'Expand All')
+|| iconName == 'utility:add' )  {                
+//component.set("v.isExpandGrp",true);
+//alert("HAI");
+$A.util.toggleClass(expandicon[0], 'hideExpandIcon');
+$A.util.toggleClass(collapeIcon[0], 'hideCollapseIcon');
+for(var i=0;i<grpRows.length;i++){
+var item = grpRows[i];
+if(!item.classList.contains('showRows')){
+item.classList.add('showRows')
+}
+}
+ 
+}else if((expandicon[0].classList.contains('hideExpandIcon') && !collapeIcon[0].classList.contains('hideCollapseIcon') && labelName == 'Collapse All')
+|| iconName == 'utility:dash'){
+ 
+$A.util.toggleClass(expandicon[0], 'hideExpandIcon');
+$A.util.toggleClass(collapeIcon[0], 'hideCollapseIcon');
+component.set("v.isExpandGrp",false);
+for(var i=0;i<grpRows.length;i++){
+var item = grpRows[i];
+if(item.classList.contains('showRows')){
+item.classList.remove('showRows')
+}
+}
+console.log(document.getElementsByClassName(className)[0]);
+}
+}*/
+        console.log(component.get("v.TotalRecords").groups);
+        var quoteId = component.get("v.quoteId");
+        var spanEle = event.currentTarget.dataset.iconname;
+        console.log(spanEle)
+        var expandallicon = document.getElementsByClassName('expandAllBtn_' + quoteId);
+        var collapeallIcon = document.getElementsByClassName('CollapeseAllBtn_' + quoteId);
+        var labelName = spanEle
+        if (labelName == 'Expand All') {
+            expandallicon[0].style.display = 'none';
+            collapeallIcon[0].style.display = 'inline-block';
+        } else if (labelName == 'Collapse All') {
+            expandallicon[0].style.display = 'inline-block';
+            collapeallIcon[0].style.display = 'none';
+        }
+
+        var groups = component.get("v.TotalRecords").groups;
+        var quoteId = component.get("v.quoteId")
+        for (var j = 0; j < groups.length; j++) {
+            var grpIndex = j;
+            var expandicon = document.getElementsByClassName(quoteId + ' expandGrpIcon_' + grpIndex);
+            var collapeIcon = document.getElementsByClassName(quoteId + ' collapseGrpIcon_' + grpIndex);
+            var className = quoteId + " groupRows_" + grpIndex;
+            var grpRows = document.getElementsByClassName(className);
+            if (labelName == 'Expand All') {
+                expandicon[0].style.display = 'none';
+                collapeIcon[0].style.display = 'inline-block';
+                for (var i = 0; i < grpRows.length; i++) {
+                    var item = grpRows[i];
+                    if (!expandicon[0].classList.contains('hideExpandIcon')) {
+                        expandicon[0].classList.add('hideExpandIcon')
+                    }
+                    if (expandicon[0].classList.contains('hideExpandIconhideCollapseIcon')) {
+                        expandicon[0].classList.remove('hideExpandIconhideCollapseIcon')
+                    }
+                    if (item.style.display == "none") {
+                        item.style.display = 'table-row';
+                    }
+                }
+
+            } else if (labelName == 'Collapse All') {
+                collapeIcon[0].style.display = 'none';
+                expandicon[0].style.display = 'inline-block';
+                for (var i = 0; i < grpRows.length; i++) {
+                    var item = grpRows[i];
+                    if (!expandicon[0].classList.contains('hideExpandIconhideCollapseIcon')) {
+                        expandicon[0].classList.add('hideExpandIconhideCollapseIcon')
+                    }
+                    if (expandicon[0].classList.contains('hideExpandIcon')) {
+                        expandicon[0].classList.remove('hideExpandIcon')
+                    }
+                    if (item.style.display == "table-row") {
+                        item.style.display = 'none';
+                    }
+                }
+            }
+        }
+
+    },
+    expandCollapseGroups: function (component, event, helper) {
+        /* var grpIndex = event.currentTarget.dataset.grpindex;
+var expandicon = document.getElementsByClassName('expandGrpIcon_'+grpIndex);
+var collapeIcon = document.getElementsByClassName('collapseGrpIcon_'+grpIndex);
+ 
+var className = "groupRows_"+grpIndex;
+var grpRows = document.getElementsByClassName(className) ;
+var allGroups = component.get("v.TotalRecords").groups;
+ 
+ 
+if(!expandicon[0].classList.contains('hideExpandIcon') && collapeIcon[0].classList.contains('hideCollapseIcon')){
+$A.util.toggleClass(expandicon[0], 'hideExpandIcon');
+$A.util.toggleClass(collapeIcon[0], 'hideCollapseIcon');
+for(var i=0;i<grpRows.length;i++){
+var item = grpRows[i];
+if(!item.classList.contains('showRows')){
+item.classList.add('showRows')
+}
+}
+var hideExpandIconEles = document.getElementsByClassName('hideExpandIcon');
+if(hideExpandIconEles.length == allGroups.length){
+var btn = component.find("expandCollapeseAllBtn");
+btn.set("v.title", "Collapse All");
+btn.set("v.iconName", "utility:dash");
+}
+ 
+}else if(expandicon[0].classList.contains('hideExpandIcon') && !collapeIcon[0].classList.contains('hideCollapseIcon')){
+$A.util.toggleClass(expandicon[0], 'hideExpandIcon');
+$A.util.toggleClass(collapeIcon[0], 'hideCollapseIcon');
+ 
+//component.set("v.isExpandGrp",false);
+for(var i=0;i<grpRows.length;i++){
+var item = grpRows[i];
+if(item.classList.contains('showRows')){
+item.classList.remove('showRows')
+}
+ 
+}
+var hideCollapseIconEles = document.getElementsByClassName('hideCollapseIcon');
+if(hideCollapseIconEles.length == allGroups.length){
+var btn = component.find("expandCollapeseAllBtn");
+btn.set("v.title", "Expand All");
+btn.set("v.iconName", "utility:add");
+}
+console.log(document.getElementsByClassName(className)[0]);
+}*/
+
+
+        var quoteId = component.get("v.quoteId")
+        var grpIndex = event.currentTarget.dataset.grpindex;
+        var expandicon = document.getElementsByClassName(quoteId + ' expandGrpIcon_' + grpIndex);
+        var collapeIcon = document.getElementsByClassName(quoteId + ' collapseGrpIcon_' + grpIndex);
+        var className = quoteId + " groupRows_" + grpIndex;
+        var grpRows = document.getElementsByClassName(className);
+        var allGroups = component.get("v.TotalRecords").groups;
+        console.log(expandicon[0].style.display)
+        console.log(collapeIcon[0].style.display)
+        if (expandicon[0].style.display == "inline-block" && collapeIcon[0].style.display == "none") {
+            component.set("v.isExpandGrp", true);
+            expandicon[0].style.display = 'none';
+            collapeIcon[0].style.display = 'inline-block';
+
+            if (!expandicon[0].classList.contains('hideExpandIcon')) {
+                expandicon[0].classList.add('hideExpandIcon')
+            }
+            if (expandicon[0].classList.contains('hideExpandIconhideCollapseIcon')) {
+                expandicon[0].classList.remove('hideExpandIconhideCollapseIcon')
+            }
+            for (var i = 0; i < grpRows.length; i++) {
+                var item = grpRows[i];
+                if (item.style.display == "none") {
+                    item.style.display = 'table-row';
+                }
+            }
+            var hideCollapseIconEles = document.getElementsByClassName(quoteId + ' hideExpandIcon')
+            if (hideCollapseIconEles.length == allGroups.length) {
+                var expandallicon = document.getElementsByClassName('expandAllBtn_' + quoteId);
+                var collapeallIcon = document.getElementsByClassName('CollapeseAllBtn_' + quoteId);
+                collapeallIcon[0].style.display = "inline-block";
+                expandallicon[0].style.display = "none";
+            }
+
+
+        }
+        else if (expandicon[0].style.display == "none" && collapeIcon[0].style.display == "inline-block") {
+            collapeIcon[0].style.display = 'none';
+            expandicon[0].style.display = 'inline-block';
+
+            if (!expandicon[0].classList.contains('hideExpandIconhideCollapseIcon')) {
+                expandicon[0].classList.add('hideExpandIconhideCollapseIcon')
+            }
+            if (expandicon[0].classList.contains('hideExpandIcon')) {
+                expandicon[0].classList.remove('hideExpandIcon')
+            }
+            for (var i = 0; i < grpRows.length; i++) {
+                var item = grpRows[i];
+                if (item.style.display == "table-row") {
+                    item.style.display = 'none';
+                }
+            }
+            var hideExpandIconEles = document.getElementsByClassName(quoteId + ' hideExpandIconhideCollapseIcon')
+            if (hideExpandIconEles.length == allGroups.length) {
+                var expandallicon = document.getElementsByClassName('expandAllBtn_' + quoteId);
+                var collapeallIcon = document.getElementsByClassName('CollapeseAllBtn_' + quoteId);
+                expandallicon[0].style.display = "inline-block";
+                collapeallIcon[0].style.display = "none";
+            }
+        }
+
+    },
+
+    openQuoteLine: function (component, event, helper) {
+        component.set("v.Spinner", true);
+        var listid = component.get("v.listOfSelectedIds");
+        console.log("List of selected Id when click next : ", listid)
+        /*    console.log(listid);
+var unselectedData = component.get("v.StoreIdsOfDatatable2")
+console.log("unchecked : ",unselectedData);
+if(unselectedData != undefined){
+for(var i = 0; i< unselectedData.length;i++){
+if(listid.indexOf(unselectedData[i].Id) >= 0){
+//  listid.pop(unselectedData[i].Id);
+console.log(listid[listid.indexOf(unselectedData[i].Id)])
+delete listid[listid.indexOf(unselectedData[i].Id)];
+}
+}
+}
+component.set("v.StoreIdsOfDatatable2",'') */
+        if (listid.length > 0 && listid != undefined && listid != "") {
+            // debugger;
+            component.set("v.openProductBox", false);
+            component.set("v.openQuoteLineBox", true);
+            var BookId = component.get("v.storePriceBookId");
+
+            var action6 = component.get("c.getProductRecordsByIds");
+            action6.setParams({
+                "Ids": listid,
+                "PricebookId": component.get("v.storePriceBookId")
+                //  "pBookId":BookId
+                //  "Ids": component.get("v.listOfSelectedIds")
+            });
+            // alert(listid)
+            //  alert(BookId)
+            action6.setCallback(this, function (response) {
+                if (response.getState() == "SUCCESS") {
+                    var listProduct = response.getReturnValue();
+                    console.log("Products : ", listProduct)
+                    var xyz = [];
+                    var Quotelist = component.get("v.QuoteLineList");
+                    for (var i = 0; i < listProduct.length; i++) {
+
+                        /*   xyz.push({
+                            'Name':listProduct[i].Product2.Name,
+                            'buildertek__Unit_Price__c':listProduct[i].buildertek__Unit_Cost__c ? listProduct[i].buildertek__Unit_Cost__c : 0,
+                            'buildertek__Unit_Price__c':listProduct[i].buildertek__Unit_Cost__c ? listProduct[i].buildertek__Unit_Cost__c : 0,
+                            'buildertek__Grouping__c':'',
+                            'buildertek__Quantity__c':'1',
+                            'buildertek__Additional_Discount__c': listProduct[i].buildertek__Discount__c ? listProduct[i].buildertek__Discount__c : 0,
+                            'buildertek__Unit_Cost__c':'',
+                            'buildertek__Markup__c':listProduct[i].buildertek__Markup__c ? listProduct[i].buildertek__Markup__c : 0,
+                            'buildertek__Product__c':listProduct[i].Product2.Id,
+                            'buildertek__Size__c':listProduct[i].Pricebook2.Name
+                        }) */
+                        var row1 = listProduct[i];
+                        console.log("Row1 PricebookEntries : ", row1.PricebookEntries)
+                        console.log("Row1 => ",{row1});
+                        console.log(row1.buildertek__Quote_Group__c);
+                        if (row1.PricebookEntries != undefined) {
+                            if (row1.buildertek__Quote_Group__c != undefined) {
+                                xyz.push({
+                                    'Name': row1.Name,
+                                    'buildertek__Unit_Price__c': row1.PricebookEntries[0].UnitPrice,
+                                    'buildertek__Unit_Price__c': row1.PricebookEntries[0].UnitPrice,
+                                    'buildertek__Grouping__c': row1.buildertek__Quote_Group__c,
+                                    'buildertek__Quantity__c': '1',
+                                    'buildertek__Additional_Discount__c': row1.PricebookEntries[0].buildertek__Discount__c ? row1.PricebookEntries[0].buildertek__Discount__c : 0,
+                                    'buildertek__Unit_Cost__c': row1.PricebookEntries[0].buildertek__Unit_Cost__c ? row1.PricebookEntries[0].buildertek__Unit_Cost__c : 0,
+                                    'buildertek__Markup__c': row1.PricebookEntries[0].buildertek__Markup__c ? row1.PricebookEntries[0].buildertek__Markup__c : 0,
+                                    'buildertek__Product__c': row1.Id,
+                                    'buildertek__Size__c': row1.PricebookEntries[0].Pricebook2.Name
+                                })
+                            }
+                            else{
+                                xyz.push({
+                                    'Name': row1.Name,
+                                    'buildertek__Unit_Price__c': row1.PricebookEntries[0].UnitPrice,
+                                    'buildertek__Unit_Price__c': row1.PricebookEntries[0].UnitPrice,
+                                    'buildertek__Grouping__c': '',
+                                    'buildertek__Quantity__c': '1',
+                                    'buildertek__Additional_Discount__c': row1.PricebookEntries[0].buildertek__Discount__c ? row1.PricebookEntries[0].buildertek__Discount__c : 0,
+                                    'buildertek__Unit_Cost__c': row1.PricebookEntries[0].buildertek__Unit_Cost__c ? row1.PricebookEntries[0].buildertek__Unit_Cost__c : 0,
+                                    'buildertek__Markup__c': row1.PricebookEntries[0].buildertek__Markup__c ? row1.PricebookEntries[0].buildertek__Markup__c : 0,
+                                    'buildertek__Product__c': row1.Id,
+                                    'buildertek__Size__c': row1.PricebookEntries[0].Pricebook2.Name
+                                })
+                            }
+                        }
+                    }
+
+                    component.set("v.data2", xyz);
+                    console.log("data 2 : ", xyz);
+                    //  var action11 = component.get("c.getQuoteLineGroupRecords");
+                    //    getQuoteGrouping
+                    var action11 = component.get("c.getQuoteGrouping2");
+                    action11.setParams({
+                        "quoteId": component.get("v.recordId")
+                    });
+                    action11.setCallback(this, function (response) {
+                        if (response.getState() == "SUCCESS") {
+                            component.set("v.quotelineRecords", response.getReturnValue());
+                        }
+                    });
+                    $A.enqueueAction(action11);
+                    component.set("v.Spinner", false);
+                }
+                else {
+                    console.log(response.getError());
+                    component.set("v.Spinner", false);
+                }
+            });
+            $A.enqueueAction(action6);
+        }
+        else {
+            component.set("v.Spinner", false);
+            var toastEvent = $A.get("e.force:showToast");
+            toastEvent.setParams({
+                title: 'Error',
+                message: 'Please select at least one Product.',
+                duration: ' 5000',
+                key: 'info_alt',
+                type: 'error',
+                mode: 'pester'
+            });
+            toastEvent.fire();
+        }
+    },
+    closeBox: function (component, event, helper) {
+        component.set("v.data1", [])                       //1
+        component.set("v.selectedRows", "");
+        //   component.set("v.listOfSelectedIds",null);
+        component.set("v.data2", "");
+        component.set("v.data2", []);                  //2
+        component.set("v.listOfSelectedIds", []);                  //3
+        component.set("v.pricebookName1", "")                      //4
+        // $A.get('e.force:refreshView').fire();
+        component.set("v.openProductBox", false);
+        component.set("v.openQuoteLineBox", false);
+        // location.reload();
+    },
+    closeBox2: function (component, event, helper) {
+        component.set("v.data1", [])                       //1
+        component.set("v.selectedRows", "");
+        //   component.set("v.listOfSelectedIds",null);
+        component.set("v.data2", "");
+        component.set("v.data2", []);                  //2
+        component.set("v.listOfSelectedIds", []);                  //3
+        component.set("v.pricebookName1", "")                      //4
+        // $A.get('e.force:refreshView').fire();
+        component.set("v.openProductBox", false);
+        component.set("v.openQuoteLineBox", false);
+        // location.reload();
+        /*-------------------------------------
+        component.set("v.selectedRows", "");
+        //  component.set("v.listOfSelectedIds",null);
+        component.set("v.data2", "");
+        // $A.get('e.force:refreshView').fire();
+        component.set("v.openProductBox",false);  
+        component.set("v.openQuoteLineBox",false);  
+        // location.reload(); */
+    },
+
+    updateSelectedText: function (component, event, helper) {
+        var selectedRows = event.getParam('selectedRows');
+        console.log(component.get("v.pricebookName1"))
+        /*   if(!component.get("v.checkFunctionCall")){
+var oldData = component.get("v.oldData");
+ 
+if(oldData != undefined){
+if(oldData.length == 0){
+component.set("v.oldData", selectedRows);
+}else if(selectedRows.length < oldData.length){
+
+var onlyInOld = selectedRows.filter(comparer(oldData));
+var onlyInNew = oldData.filter(comparer(selectedRows));
+
+//List of all unselected objects from dataTable
+var unselectedData = onlyInOld.concat(onlyInNew);
+console.log("your unselected data", unselectedData);
+component.set("v.StoreIdsOfDatatable2",unselectedData)
+}else if(selectedRows.length > oldData.length){
+component.set("v.oldData", selectedRows);
+}
+}
+
+//helper comparer function
+function comparer(otherArray){
+return function(current){
+return otherArray.filter(function(other){
+return other.Id == current.Id
+}).length == 0;
+}
+}  
+} */
+
+        console.log("1 st -- " + component.get("v.listOfSelectedIds"));
+        component.set("v.StoreIdsOfDatatable", component.get("v.listOfSelectedIds"));
+        var y = [];
+        var selectedRowList = component.get("v.listOfSelectedIds")
+        var NewselectedRows = [];
+        for (var i = 0; i < selectedRows.length; i++) {
+            if (selectedRowList.indexOf(selectedRows[i].Id) < 0) {
+                selectedRowList.push(selectedRows[i].Id)
+
+            }
+            else {
+                console.log("yes")
+                /*   if(selectedRowList){
+                   for( var j = 0; j < selectedRowList.length; j++){ 
+                       
+                       if ( selectedRowList[j] === selectedRows[i].Id) { 
+                           console.log("yes")
+                           selectedRowList.splice(j, 1); 
+                       }
+                       
+                   }
+                   } */
+            }
+            NewselectedRows.push(selectedRows[i].Id);
+        }
+                                                                                                                                            /*     if(unselectedData != undefined && !component.get("v.checkFunctionCall")){
+                                        for(var i = 0; i< unselectedData.length;i++){
+                                            if(selectedRowList.indexOf(unselectedData[i].Id) >= 0){
+                                              //  selectedRowList.pop(unselectedData[i].Id);
+                                            delete  selectedRowList[i];
+                                            }
+                                        }
+                                        } */                                                                                              console.log("Final List :------------------> " + selectedRowList)
+        component.set("v.listOfSelectedIds", selectedRowList)
+        component.set("v.selectedRows", NewselectedRows);
+    },
+
+    cancelBox: function (component, event, helper) {
+        var abc = component.get("v.listOfSelectedIds");
+        component.set("v.openQuoteLineBox", false);
+        component.set("v.openProductBox", true);
+    },
+
+    addQuoteLine: function (component, event, helper) {
+        component.set("v.isDisabled", true)
+
+        console.log(component.get("v.isDisabled"))
+        var listQlines = component.get("v.data2");
+        component.set("v.Spinner", true);
+        var action10 = component.get("c.QuoteLinesInsert");
+        action10.setParams({
+            "Quotelines": listQlines,
+            "QuoteId": component.get("v.recordId")
+        });
+        console.log(component.get("v.recordId") + '---*****************');
+        action10.setCallback(this, function (response) {
+            component.set("v.openQuoteLineBox", false);
+            $A.get("e.force:refreshView").fire();
+            component.set("v.Spinner", false);
+            var toastEvent = $A.get("e.force:showToast");
+            toastEvent.setParams({
+                title: 'Success',
+                message: 'Quote Lines are created successfully',
+                duration: ' 5000',
+                key: 'info_alt',
+                type: 'success',
+                mode: 'pester'
+            });
+            toastEvent.fire();
+            component.set("v.isDisabled", false)
+
+            //--------------------------------------
+            component.set("v.data1", [])                       //1
+            component.set("v.selectedRows", "");
+            //   component.set("v.listOfSelectedIds",null);
+            component.set("v.data2", "");
+            component.set("v.data2", []);                  //2
+            component.set("v.listOfSelectedIds", []);                  //3
+            component.set("v.pricebookName1", "")                      //4
+            // $A.get('e.force:refreshView').fire();
+            component.set("v.openProductBox", false);
+            component.set("v.openQuoteLineBox", false);
+            // location.reload();
+
+        });
+        $A.enqueueAction(action10);
+
+    },
+
+    searchTable: function (component, event, helper) {
+        var allRecords = component.get("v.filteredData");
+        // var allRecords = cmp.get("v.data1");
+        var searchFilter = event.getSource().get("v.value").toUpperCase()
+        var tempArray = [];
+        var i;
+        console.log("ok")
+        for (i = 0; i < allRecords.length; i++) {
+            if ((allRecords[i].Name && allRecords[i].Name.toUpperCase().indexOf(searchFilter) != -1)) {
+                tempArray.push(allRecords[i]);
+            }
+        }
+        console.log("Temp array : ", tempArray);
+        component.set("v.data1", tempArray);
+        helper.sortData(component, component.get("v.sortedBy"), component.get("v.sortedDirection"));
+
+    },
+
+    changeEvent1: function (component, event, helper) {
+        // debugger
+        component.set("v.data1", '');
+        var x = component.find("getPriceBookId").get("v.value");
+
+        if (x == '') {
+            console.log("Empty : ", x)
+            x = 'None';
+
+        }
+        console.log("Empty1 : ", x);
+        var selectedPricebookList = component.get("v.storePriceBookId");
+        for (var i = 0; i < selectedPricebookList.length; i++) {
+            selectedPricebookList.push(x);
+        }
+        component.set("v.storePriceBookId", selectedPricebookList)
+        var action = component.get("c.getProductsthroughPriceBook");
+        action.setParams({
+            "pbookId": x
+        });
+        action.setCallback(this, function (response) {
+            if (response.getState() == "SUCCESS") {
+                var rows = response.getReturnValue();
+                console.log("Rows : ", rows);
+                for (var i = 0; i < rows.length; i++) {
+                    var row = rows[i];
+                    row.UnitPrice = row.buildertek__Available_Quantity__c;
+                }
+                console.log("Get Products based on PriceBook : ", response.getReturnValue());
+                component.set("v.data1", rows);
+                component.set("v.filteredData", rows);
+                helper.sortData(component, component.get("v.sortedBy"), component.get("v.sortedDirection"));
+                component.set("v.checkFunctionCall", true);
+                var selectedRows = [];
+                var listIds = component.get("v.listOfSelectedIds");
+                for (var i = 0; i < listIds.length; i++) {
+                    selectedRows.push(listIds[i])
+                }
+                component.set("v.selectedRows", selectedRows)
+            }
+        });
+        $A.enqueueAction(action);
+
+    },
+    updateColumnSorting: function (component, event, helper) {
+        var fieldName = event.getParam('fieldName');
+        var sortDirection = event.getParam('sortDirection');
+        component.set("v.sortedBy", fieldName);
+        component.set("v.sortedDirection", sortDirection);
+        helper.sortData(component, fieldName, sortDirection);
+    },
+    // new method for search filter on product family
+    searchKeyProductFamily: function (component, event, helper){
+        var searchWord = component.get('v.searchKey2');
+        console.log("searchKey2 result in serchWord ==>",searchWord);
+        var action = component.get("c.searchProdcutFamily");
+        action.setParams({
+            "searchedWord" : searchWord
+        });
+        action.setCallback(this, function(response){
+
+            var rows = response.getReturnValue();
+            for (var i = 0; i < rows.length; i++) {
+                var row = rows[i];
+                if (row.PricebookEntries) {
+                    row.UnitPrice = row.PricebookEntries[0].UnitPrice;
+                }
+            }
+            component.set("v.data1", rows);
+            helper.sortData(component, component.get("v.sortedBy"), component.get("v.sortedDirection"));
+            component.set("v.filteredData", rows);
+        });
+        $A.enqueueAction(action);
+    }
+})

@@ -1,0 +1,16 @@
+<apex:page controller="BT_ChangeOrderonOverage" sidebar="false" lightningStylesheets="true">
+    <apex:slds />
+    <apex:form >
+        <apex:pageBlock mode="maindetail">
+            <apex:pageMessages />
+            <apex:pageblocksection >
+                <apex:inputcheckbox value="{!isCreateChangeOrderonOverage}" label="Create Change Order on Overage">
+                </apex:inputcheckbox>
+                <apex:inputtext value="{!emailsubject}" label="Email Subject"/>
+                <center>
+                <apex:commandButton value="Save" id="onCreateChangeOrderonOverage" styleClass="slds-button slds-button_brand" action="{!onCreateChangeOrderonOverage}"></apex:commandButton>
+                </center>
+            </apex:pageblocksection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

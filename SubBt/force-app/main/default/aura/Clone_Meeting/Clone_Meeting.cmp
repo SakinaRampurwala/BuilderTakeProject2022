@@ -1,0 +1,139 @@
+<aura:component implements="force:hasRecordId,force:lightningQuickActionWithoutHeader" controller="CloneMeetingController">
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:attribute name="oldMeeting" type="Meeting__c" default="{ 'sobjectType': 'Meeting__c' }" access="public" />
+    <aura:attribute name="Atendee" type="Attendee__c" default="{ 'sobjectType': 'Attendee__c' }" access="public" />
+    <aura:attribute name="actionItemRec" type="Action_Item__c" default="{ 'sobjectType': 'Action_Item__c' }" access="public" />
+    <aura:attribute name="Spinner" type="Boolean" default="false" />
+    <aura:attribute name="getOption" type="List" default="[]" />
+    <aura:attribute name="getStatusOption" type="List" default="[]" />
+
+
+
+    <ltng:require styles="{!$Resource.MOdalPreviewWidth72}" />
+    <!-- <aura:html tag="style">
+        .slds-modal__container { 
+        	width : 92% !important; 
+        	max-width : 95% !important; 
+        } 
+        .slds-modal__content{
+       		max-height: 40rem !important;
+        	height: 40rem !important;
+        }
+    </aura:html> -->
+    <div class="mainDiv">
+        <!-- ===Header=== -->
+        <div class="slds-modal__header">
+            <h4 class="title slds-text-heading--medium">
+                <ui:outputText value="New Meeting" />
+            </h4>
+        </div>
+
+        <!-- ===Start Main Content=== -->
+        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+            <!-- ====SPINNER==== -->
+            <aura:if isTrue="{!v.Spinner}">
+                <div aura:id="spinnerId" class="slds-spinner_container">
+                    <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                        <span class="slds-assistive-text">Loading</span>
+                        <div class="slds-spinner__dot-a"></div>
+                        <div class="slds-spinner__dot-b"></div>
+                    </div>
+                </div>
+            </aura:if>
+            <lightning:spinner aura:id="spinner" variant="brand" class="slds-hide" />
+            <!-- ====SPINNER==== -->
+
+            <!-- === Start Input Field layout=== -->
+            <lightning:layout multipleRows="true">
+                <lightning:outputField fieldName="Auto_Number__c" />
+
+                <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
+                    <label>Meeting Name</label>
+                    <lightning:input type="text" autocomplete="off" variant="label-hidden" readonly="true" />
+                </lightning:layoutItem>
+
+                <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
+                    <label>Location</label>
+                    <lightning:textarea name="input1" label="location" value="{!v.oldMeeting.buildertek__Location__c}" variant="label-hidden" />
+                </lightning:layoutItem>
+
+                <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
+                    <label>Subject</label>
+                    <lightning:input type="text" value="{!v.oldMeeting.buildertek__Subject__c}" autocomplete="off" variant="label-hidden" required="true" />
+                </lightning:layoutItem>
+
+                <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
+                    <lightning:recordEditForm objectApiName="buildertek__Meeting__c">
+                        <lightning:messages />
+                        <lightning:inputField fieldName="buildertek__Project__c" value="{!v.oldMeeting.buildertek__Project__c}" />
+                    </lightning:recordEditForm>
+                </lightning:layoutItem>
+
+                <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
+                    <label>Meeting Date</label>
+                    <lightning:input type="date" value="{!v.oldMeeting.buildertek__Meeting_Date__c}" autocomplete="off" variant="label-hidden" />
+                </lightning:layoutItem>
+
+                <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
+                    <lightning:recordEditForm objectApiName="buildertek__Meeting__c">
+                        <lightning:messages />
+                        <lightning:inputField fieldName="buildertek__Opportunity__c" value="{!v.oldMeeting.buildertek__Opportunity__c}" />
+                    </lightning:recordEditForm>
+                </lightning:layoutItem>
+
+
+
+                <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
+                    <lightning:select label="Status" aura:id="statusPicklist" value="{!v.oldMeeting.buildertek__Status__c}" name="statusPicklist">
+                        <option value="">--None--</option>
+                        <aura:iteration items="{!v.getStatusOption}" var="statusOpt" indexVar="key">
+                            <option text="{!statusOpt.value}" value="{!statusOpt.key}" selected="{!statusOpt.key==v.oldMeeting.buildertek__Status__c}" />
+                        </aura:iteration>
+                    </lightning:select>
+                </lightning:layoutItem>
+
+                <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
+
+                </lightning:layoutItem>
+
+
+                <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
+                    <label>Start Time</label>
+                    <lightning:input type="time" value="{!v.oldMeeting.buildertek__Start_Time__c}" autocomplete="off" variant="label-hidden" hour="2-digit" minute="2-digit" />
+                </lightning:layoutItem>
+
+                <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
+
+                </lightning:layoutItem>
+
+                <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
+                    <lightning:select label="Duration (Minutes)" aura:id="durationPicklist" value="{!v.oldMeeting.buildertek__Duration__c}" name="durationPicklist">
+                        <option value="">--None--</option>
+                        <aura:iteration items="{!v.getOption}" var="durationOpt" indexVar="key">
+                            <option text="{!durationOpt.value}" value="{!durationOpt.key}" selected="{!durationOpt.key==v.oldMeeting.buildertek__Duration__c}" />
+                        </aura:iteration>
+                    </lightning:select>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
+
+                </lightning:layoutItem>
+
+                <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
+                    <label>End Time</label>
+                    <lightning:input type="time" value="{!v.oldMeeting.buildertek__End_Time__c}" autocomplete="off" variant="label-hidden" />
+                </lightning:layoutItem>
+            </lightning:layout>
+            <!-- === End Input Field layout=== -->
+        </div>
+        <!-- ===End Main Content=== -->
+    </div>
+    <!-- ===Footer=== -->
+    <div class="slds-modal__footer">
+        <button class="slds-button slds-button_neutral" aria-label="Cancel and close" onclick="{!c.Cancel}">Cancel</button>
+        <button class="slds-button slds-button_brand" onclick="{!c.Save}">Save</button>
+    </div>
+    <!-- ===Footer=== -->
+
+
+</aura:component>
