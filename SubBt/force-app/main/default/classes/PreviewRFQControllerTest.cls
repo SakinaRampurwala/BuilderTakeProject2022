@@ -36,16 +36,28 @@ public with sharing class PreviewRFQControllerTest {
             et.Body = 'test'; 
             insert et; 
         }
+
+        Blob bodyBlob=Blob.valueOf('Unit Test Attachment Body');
+        Messaging.EmailFileAttachment efa = new Messaging.EmailFileAttachment();
+        efa.setFileName('MSAForm.pdf');
+        efa.setBody(bodyBlob);
+
+        List<String> to = new List<String>();
+        List<String> cc = new List<String>();
+
         EmailTemplate emailTemplate = [SELECT Id FROM EmailTemplate LIMIT 1];
         Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
         String[] sendTo = new String[]{'XXXXXXXXX@gmail.com'};
-        email.setToAddresses(sendTo);
+        to.add(con.Email);
+        cc.add(con.Email);
+        email.setToAddresses(to);
+        email.setCcAddresses(cc);
+        email.setSubject('PurchaseOrder');
         email.setTemplateID(emailTemplate.Id);
         email.setTargetObjectId(con.Id);
         email.setHtmlBody(con.Name);
-        Messaging.sendEmail(new Messaging.SingleEmailMessage[] { email });   
-        List<Messaging.SendEmailResult> results = Messaging.SendEmail(new Messaging.Email[] { email });
-        System.debug('result----->---'+results);
+        email.setFileAttachments(new Messaging.EmailFileAttachment[]{ efa });
+        Messaging.sendEmail(new Messaging.SingleEmailMessage[] { email });
 
         ContentVersion contentVersion = new ContentVersion(
             Title = 'CompanySignature',
@@ -62,19 +74,41 @@ public with sharing class PreviewRFQControllerTest {
         cdl.shareType = 'V';
         insert cdl;
 
+        // EmailMessage message = new EmailMessage();
+        // message.ToAddress = 'test@test.com';
+        // message.Subject = 'Test';
+        // message.TextBody = 'Testing';
+        // message.Incoming = false;
+        // insert message;
 
+        Account ac = new Account();
+        ac.Name = 'Test';
+        insert ac;
+
+        buildertek__Purchase_Order__c po = new buildertek__Purchase_Order__c();
+        po.buildertek__Vendor__c = ac.Id;
+       // po.buildertek__Ordered_By__c = con.Id;
+        po.buildertek__Date_Confirmed__c = System.today();
+        po.buildertek__Status__c = 'Vendor Accepted';
+        insert po;
     }
     @isTest
     static void previewRFQ2(){
+
+        buildertek__Purchase_Order__c po = [SELECT Id, Name FROM buildertek__Purchase_Order__c];
         
         EmailTemplate et = [SELECT Id FROM EmailTemplate Limit 1];
-        Contact con = [select Id,Name from Contact Limit 1];
+        Contact con = [select Id,Name,Email from Contact Limit 1];
         List<String> to = new List<String>();
+        to.add(con.Id);
         List<String> cc = new List<String>();
+        cc.add(con.Id);
         PreviewRFQController.getTemplates();
         PreviewRFQController.getPurchaseOrderLines(con.Id,et.Id);
         PreviewRFQController.sendProposal('abc',con.Id,et.Id,to,cc,'f');
         PreviewRFQController.acceptandsendProposal('abc',con.Id,et.Id,to,cc,'sub','f');
-        PreviewRFQController.saveSign(con.Id,'abc','abcd','ab');
+        PreviewRFQController.saveSign(po.Id,'abc','abcd','ab');
+        PreviewRFQController.rejectSign(po.Id,'abc','abcd','ab','rk');
+        PreviewRFQController.rejectionWithReason(po.Id,'abc','abcd','ab','rk');
     }
 }

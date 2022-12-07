@@ -2,8 +2,8 @@ public with sharing class OptionUpgrade {
 
     @AuraEnabled
     public static optionWrapper getProductDetails(String recordId, String searchNameValue, String searchTypeValue, String searchManufacturerValue, String searchFamilyValue, String searchCategoryValue, String selectedPriceBook, Boolean priceBookFilter) {
-        buildertek__Question__c option = [SELECT Id, Name, buildertek__Question_Group__c, buildertek__Product__c, buildertek__Product__r.Name, buildertek__Manufacturer__c, buildertek__Manufacturer__r.Name, 
-                                            buildertek__Section__c, buildertek__Cost__c, buildertek__Upgrade_Costs__c, buildertek__Total_Sales_Price__c, buildertek__Price_Book__c, 
+        buildertek__Question__c option = [SELECT Id, Name, buildertek__Question_Group__c, buildertek__Product__c, buildertek__Product__r.Name, buildertek__Manufacturer__c, buildertek__Manufacturer__r.Name,
+                                            buildertek__Section__c, buildertek__Cost__c, buildertek__Upgrade_Costs__c, buildertek__Total_Sales_Price__c, buildertek__Price_Book__c, CurrencyIsoCode,
                                             buildertek__Question_Group__r.buildertek__Section__r.buildertek__Selection__r.buildertek__Project__r.buildertek__Price_Book__c FROM buildertek__Question__c WHERE Id =: recordId];
 
         List<Product2> productList = new List<Product2>();
@@ -12,11 +12,11 @@ public with sharing class OptionUpgrade {
         // if (option.buildertek__Section__c != null) {
             // String sectionId = option.buildertek__Section__c;
             String queryList = 'SELECT Id, Name, buildertek__Selection_Category_Lookup__c, buildertek__Product_Type__r.Name, buildertek__Manufacturer__r.Name, Family, buildertek__Category__c, buildertek__Category__r.Name, (SELECT Id, Name, UnitPrice, Pricebook2.Id, Pricebook2.Name FROM PricebookEntries) FROM Product2';
-            
+
             if (searchNameValue != null && searchNameValue != '') {
                 queryList = queryList + ' WHERE Name LIKE \'' + searchNameValue + '%\'';
             }
-    
+
             if (searchTypeValue != null && searchTypeValue != '') {
                 if (queryList.contains('WHERE')) {
                     queryList = queryList + ' AND buildertek__Product_Type__r.Name LIKE \'' + searchTypeValue + '%\'';
@@ -24,7 +24,7 @@ public with sharing class OptionUpgrade {
                     queryList = queryList + ' WHERE buildertek__Product_Type__r.Name LIKE \'' + searchTypeValue + '%\'';
                 }
             }
-    
+
             if (searchManufacturerValue != null && searchManufacturerValue != '') {
                 if (queryList.contains('WHERE')) {
                     queryList = queryList + ' AND buildertek__Manufacturer__r.Name LIKE \'' + searchManufacturerValue + '%\'';
@@ -32,7 +32,7 @@ public with sharing class OptionUpgrade {
                     queryList = queryList + ' WHERE buildertek__Manufacturer__r.Name LIKE \'' + searchManufacturerValue + '%\'';
                 }
             }
-    
+
             if (searchFamilyValue != null && searchFamilyValue != '') {
                 if (queryList.contains('WHERE')) {
                     queryList = queryList + ' AND Family LIKE \'' + searchFamilyValue + '%\'';
@@ -77,7 +77,7 @@ public with sharing class OptionUpgrade {
         } else {
             priceBookValue = selectedPriceBook;
         }
-        
+
         optionWrapper optionWrapperData = new optionWrapper();
         optionWrapperData.option = option;
         optionWrapperData.projectPriceBook = priceBookValue;
@@ -94,7 +94,7 @@ public with sharing class OptionUpgrade {
                 if (priceBookValue != '' && priceBookEntry.Pricebook2Id == priceBookValue) {
                     checkPriceBook = true;
                 }
-            } 
+            }
             if (checkPriceBook == true || priceBookValue == '') {
                 productWrapper prodWrapper = new productWrapper();
                 prodWrapper.product = product;
@@ -251,7 +251,7 @@ public with sharing class OptionUpgrade {
     public class productWrapper{
         @AuraEnabled
         public Product2 product {get;set;}
-        
+
         @AuraEnabled
         public List<ContentDocumentLink> contentDocsList {get;set;}
     }

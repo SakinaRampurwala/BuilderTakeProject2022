@@ -10,7 +10,7 @@ public class POPageController {
         Integer totalRecords = 0;
         Integer recordEnd = pageSize * pageNumber;
         string orgCurr = UserInfo.getDefaultCurrency();
-        
+        System.debug('poFilter=====>'+poFilter);
         String query = 'Select COUNT() FROM buildertek__Purchase_Order__c';
         if(poFilter != ''){
             
@@ -22,7 +22,7 @@ public class POPageController {
                 
             }
             totalRecords = Database.countQuery(query);
-            
+            System.debug('tradeTypeFilter===============>'+tradeTypeFilter);
         }else if(tradeTypeFilter != ''){
             if(tradeTypeFilter != '' && tradeTypeFilter != null){
                 query = query+ ' Where (buildertek__Vendor__r.buildertek__Trade_Type_Lookup__r.Name LIKE \'%'+String.escapeSingleQuotes(tradeTypeFilter)+'%\')';
@@ -81,6 +81,7 @@ public class POPageController {
 
             queryList = queryList+ ' ORDER BY buildertek__Phase__c  DESC NULLS last, buildertek__Vendor__r.Name ASC NULLS last, Name DESC, buildertek__Status__c ASC';
             MainpoRecList = Database.query(queryList); 
+
         }
         
         else if(poLineFilter != '' || productFilter != ''){
@@ -146,8 +147,9 @@ public class POPageController {
         }
         
         map<String , List<buildertek__Purchase_Order__c>> GroupingMap = new map<String , List<buildertek__Purchase_Order__c>>(); 
-        
+        System.debug('MainpoRecList======>====='+MainpoRecList);
         for(buildertek__Purchase_Order__c POrec : MainpoRecList){
+            System.debug('POrec======>'+POrec);
             if(POrec.Purchase_Order_Items__r.size() > 0){
                 if(GroupingMap.get(POrec.buildertek__Phase__c) == null){
                     GroupingMap.put(POrec.buildertek__Phase__c , new List<buildertek__Purchase_Order__c>());

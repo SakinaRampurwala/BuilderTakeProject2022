@@ -57,6 +57,7 @@ public with sharing class PreviewRFQController {
              String body = '';
              String subject = 'PurchaseOrder'; 
             List<buildertek__BT_ConfirmatioPageURL__c> confirmationPageSiteURL = [Select Id, buildertek__Public_Site_Url__c FROM buildertek__BT_ConfirmatioPageURL__c];
+            System.debug('confirmationPageSiteURL---------------->'+confirmationPageSiteURL);
             string SiteUrl = '';
             if(confirmationPageSiteURL.size()>0){
                 SiteUrl = confirmationPageSiteURL[0].buildertek__Public_Site_Url__c;

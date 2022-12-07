@@ -133,11 +133,18 @@ return oAttachment.Id;*/
                                                    buildertek__MSA_Template__c,buildertek__Send_MSA_Template_Name__c
                                                    from buildertek__MSA_Settings__c
                                                    WHERE Name = 'MSA Settings' LIMIT 1];
+         System.debug(msaSettings);
         list<buildertek__Pre_Qual__c> accountlist = [select id,Name,buildertek__MSA_Additional_Email__c,buildertek__Pre_Qual_Contact__c from buildertek__Pre_Qual__c where id =:recordId];
-        // List<Contact> contacts = [SELECT Id,Email, AccountId,Account.buildertek__MSA_Additional_Email__c FROM Contact WHERE AccountId IN: accountIds];
+        System.debug(accountlist);
+
         List<Contact> contactsList = [SELECT Id, Name, Email FROM Contact WHERE id =: accountlist[0].buildertek__Pre_Qual_Contact__c];
+        System.debug(contactsList);
+
         List<EmailTemplate> template = [SELECT Id, Name, Subject, Body,htmlvalue FROM EmailTemplate  WHERE Name =:msaSettings.buildertek__Send_MSA_Template_Name__c];
         string body ='';
+        System.debug(template);
+        System.debug([SELECT Id, Name, Subject, Body,htmlvalue FROM EmailTemplate ]);
+
         if(template.size()>0){
             body= template[0].htmlvalue;
         }
@@ -169,11 +176,15 @@ return oAttachment.Id;*/
             system.debug('hi');
             
             List<OrgWideEmailAddress> owea = new List<OrgWideEmailAddress>();
+            System.debug(owea);
             List<buildertek__MSA_Settings__c> msaSettingsList = [Select Id,buildertek__From_Email_Address__c from buildertek__MSA_Settings__c where Name = :'MSA Settings'];
+           System.debug(msaSettingsList);
             if(msaSettingsList.size() > 0){
                 owea = [select Id,Address from OrgWideEmailAddress where Address =: msaSettingsList[0].buildertek__From_Email_Address__c]; 
             }
+            system.debug([select Id,Address from OrgWideEmailAddress]);
             system.debug(owea.size());
+
             //Messaging.SendEmailResult[] results ;
             try {
                 if(owea.size() > 0){

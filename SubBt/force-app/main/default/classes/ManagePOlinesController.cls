@@ -1539,6 +1539,12 @@ public with sharing class ManagePOlinesController {
         }
 
     }
+
+    @AuraEnabled
+    public static String createQuoteMethod(String recordId){
+        System.debug('createQuoteMethod');
+        return recordId;
+    }
     
     
 }

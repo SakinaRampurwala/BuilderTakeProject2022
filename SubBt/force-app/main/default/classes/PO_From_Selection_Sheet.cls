@@ -59,22 +59,71 @@ public with sharing class PO_From_Selection_Sheet {
 
     /* Description:- This method is used to get all  option records whose slected checkbox is checked , Manufacturer and Product are not null!!!!*/
     @AuraEnabled
-    public static  wrapper getOption(String recordId) {
-        wrapper wp = new wrapper();
-        wp.getOptionList= new  List<buildertek__Question__c>();
-        wp.getOptionList = [SELECT Id, Name, buildertek__Selected__c, buildertek__Product__c, buildertek__Product__r.Name , buildertek__Manufacturer__c, buildertek__Manufacturer__r.Name, buildertek__Quantity__c, buildertek__Cost__c, buildertek__Purchase_Order__c, buildertek__Question_Group__r.buildertek__Section__r.buildertek__Selection__r.buildertek__Project__c FROM buildertek__Question__c WHERE buildertek__Question_Group__r.buildertek__Section__r.buildertek__Selection__c =: recordId AND buildertek__Selected__c = true AND buildertek__Manufacturer__c != null AND buildertek__Product__c != null AND buildertek__Purchase_Order__c = null];
-        buildertek__Selection__c getId =[SELECT Id, buildertek__Project__c FROM buildertek__Selection__c where Id=:recordId LIMIT 1];
-        wp.getProjectId=getId.buildertek__Project__c;
-        return wp;
+    public static List<wrapper> getOption(String recordId) {
+        List<wrapper> wpList = new List<wrapper>();
+        // wp.getOptionList= new  List<buildertek__Question__c>();
+        List<buildertek__Question__c> optionList = [SELECT Id, Name, buildertek__Selected__c, buildertek__Product__c, buildertek__Product__r.Name , 
+                                                    buildertek__Manufacturer__c, buildertek__Manufacturer__r.Name, buildertek__Quantity__c, buildertek__Cost__c, 
+                                                    buildertek__Purchase_Order__c, buildertek__Question_Group__r.buildertek__Section__r.buildertek__Selection__r.buildertek__Project__c 
+                                                    FROM buildertek__Question__c WHERE buildertek__Question_Group__r.buildertek__Section__r.buildertek__Selection__c =: recordId AND 
+                                                    buildertek__Selected__c = true AND buildertek__Manufacturer__c != null AND buildertek__Product__c != null AND buildertek__Purchase_Order__c = null
+                                                    ORDER BY buildertek__Manufacturer__c];
+
+        String vendorId = recordId;
+        for (buildertek__Question__c option : optionList) {
+            if (vendorId != option.buildertek__Manufacturer__c) {
+                wrapper wp = new wrapper();
+
+                Account acc = new Account();
+                acc.Id = option.buildertek__Manufacturer__c;
+                acc.Name = option.buildertek__Manufacturer__r.Name;
+                wp.VendorData = acc;
+
+                wp.getProjectId = option.buildertek__Question_Group__r.buildertek__Section__r.buildertek__Selection__r.buildertek__Project__c;
+                wpList.add(wp);
+                vendorId = option.buildertek__Manufacturer__c;
+            } 
+        }
+
+        for (wrapper wpData : wpList) {
+            List<optionData> optionDataList = new List<optionData>();
+            for (buildertek__Question__c option : optionList) {
+                if (wpData.VendorData.Id == option.buildertek__Manufacturer__c) {
+
+                    optionData optionData = new optionData();
+                    optionData.option = option;
+                    optionData.selected = false;
+                    optionDataList.add(optionData);
+
+                }
+            }
+            wpData.optionDataList = optionDataList;
+            
+        }
+        
+        // buildertek__Selection__c getId =[SELECT Id, buildertek__Project__c FROM buildertek__Selection__c WHERE Id=:recordId LIMIT 1];
+        // wp.getProjectId=getId.buildertek__Project__c;
+        return wpList;
     }
 
 
     public class wrapper{
         @AuraEnabled
-        public List<buildertek__Question__c> getOptionList{get;set;}
+        public List<optionData> optionDataList{get;set;}
 
         @AuraEnabled
         public String getProjectId{get;set;}
+
+        @AuraEnabled
+        public Account VendorData{get;set;}
+    }
+
+    public class optionData{
+        @AuraEnabled
+        public buildertek__Question__c option{get;set;}
+
+        @AuraEnabled
+        public Boolean selected{get;set;}
     }
        
 }
