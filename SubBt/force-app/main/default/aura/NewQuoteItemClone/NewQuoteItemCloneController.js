@@ -1,14 +1,14 @@
 ({
-    initialize: function (component, event, helper) {
+    initialize: function(component, event, helper) {
 
     },
-    closetab: function (component, event, helper) {
+    closetab: function(component, event, helper) {
         var workspaceAPI = component.find("workspace");
-        workspaceAPI.getFocusedTabInfo().then(function (response) {
-            var focusedTabId = response.tabId;
-            workspaceAPI.closeTab({ tabId: focusedTabId });
-        })
-            .catch(function (error) {
+        workspaceAPI.getFocusedTabInfo().then(function(response) {
+                var focusedTabId = response.tabId;
+                workspaceAPI.closeTab({ tabId: focusedTabId });
+            })
+            .catch(function(error) {
                 console.log(error);
             });
         var navEvt = $A.get("e.force:navigateToSObject");
@@ -19,9 +19,9 @@
         navEvt.fire();
     },
 
-    doInit: function (component, event, helper) {
+    doInit: function(component, event, helper) {
 
-
+        component.set('v.clickRejectBtn', true);
 
         var workspaceAPI = component.find("workspace");
         workspaceAPI.getEnclosingTabId().then((response) => {
@@ -51,7 +51,7 @@
         }).fire();
         var page = component.get("v.page") || 1
         var workspaceAPI = component.find("workspace");
-        workspaceAPI.getFocusedTabInfo().then(function (response) {
+        workspaceAPI.getFocusedTabInfo().then(function(response) {
             var focusedTabId = response.tabId;
             component.set("v.currentTab", focusedTabId);
             //workspaceAPI.closeTab({tabId: focusedTabId});
@@ -60,7 +60,7 @@
         action.setParams({
             "recordId": component.get("v.recordId")
         });
-        action.setCallback(this, function (response) {
+        action.setCallback(this, function(response) {
             if (response.getState() == "SUCCESS") {
                 //console.log(JSON.parse(JSON.stringify(response.getReturnValue())));
                 var quoteData = JSON.parse(JSON.stringify(response.getReturnValue()))
@@ -89,6 +89,9 @@
         helper.getQuoteInfo(component, event, helper);
         helper.getcurr(component, event, helper);
         helper.getmulticur(component, event, helper);
+        helper.setRejectedBtnColor(component, event, helper);
+
+
         console.log("Hello : ", JSON.parse(JSON.stringify(component.get("v.TotalRecords"))));
         /*if(component.find('expandCollapeseAllBtn')){
                     if(component.find('expandCollapeseAllBtn').get('v.iconName')){
@@ -108,7 +111,7 @@
         }
     },
 
-    onClickChangeGroupName: function (component, event, helper) {
+    onClickChangeGroupName: function(component, event, helper) {
         if (!component.get('v.isGroupNameOpen')) {
             var groups = component.get('v.TotalRecords').groups;
             var target = event.target;
@@ -131,12 +134,12 @@
         }
     },
 
-    closeGroupName: function (component, event, helper) {
+    closeGroupName: function(component, event, helper) {
         if (component.get('v.isGroupNameOpen')) {
             component.set('v.isGroupNameOpen', false);
         }
     },
-    addGroupDescription: function (component, event, helper) {
+    addGroupDescription: function(component, event, helper) {
         if (!component.get('v.isGroupDescriptionOpen')) {
             var groups = component.get('v.TotalRecords').groups;
             var target = event.target;
@@ -144,7 +147,7 @@
             component.set('v.budgetGroupId', '');
             var groupId = groups[index].Id != undefined ? groups[index].Id : '';
             var groupDescription = groups[index].buildertek__Description__c != undefined ? groups[index].buildertek__Description__c : '';
-            console.log({groupDescription});
+            console.log({ groupDescription });
             if (groupId != undefined && groupId != '') {
                 component.set('v.budgetGroupId', groupId);
                 component.set('v.groupDescription', groupDescription);
@@ -157,12 +160,13 @@
         }
     },
 
-    closeGroupDescription: function (component, event, helper) {
+    closeGroupDescription: function(component, event, helper) {
         if (component.get('v.isGroupDescriptionOpen')) {
             component.set('v.isGroupDescriptionOpen', false);
         }
     },
-    addProductFromGroup: function (component, event, helper) {
+    addProductFromGroup: function(component, event, helper) {
+        component.set('v.clickRejectBtn', true);
 
         // debugger;
         // component.set("v.Spinner",true);
@@ -194,12 +198,12 @@
             ]);
 
             var action4 = component.get("c.getProducts");
-            action4.setCallback(this, function (response) {
+            action4.setCallback(this, function(response) {
                 //  alert("ok")
                 component.set("v.Spinner2", true)
                 if (response.getState() == "SUCCESS") {
                     var rows = response.getReturnValue();
-                    console.log('Rows =>',{rows});
+                    console.log('Rows =>', { rows });
                     for (var i = 0; i < rows.length; i++) {
                         var row = rows[i];
                         if (row.PricebookEntries) {
@@ -214,7 +218,7 @@
                     //console.log("data : ",response.getReturnValue());
                     var actions = component.get("c.getpricebooks");
                     var opts = [];
-                    actions.setCallback(this, function (response) {
+                    actions.setCallback(this, function(response) {
                         if (response.getState() == "SUCCESS") {
                             var result = response.getReturnValue();
                             var opts = [];
@@ -229,7 +233,7 @@
                             action20.setParams({
                                 "recordId": component.get("v.recordId")
                             });
-                            action20.setCallback(this, function (response) {
+                            action20.setCallback(this, function(response) {
                                 var state = response.getState();
                                 if (state === 'SUCCESS') {
                                     var result = response.getReturnValue();
@@ -239,8 +243,7 @@
                                         var x;
                                         if (component.find("getPriceBookId")) {
                                             x = component.find("getPriceBookId").get("v.value");
-                                        }
-                                        else {
+                                        } else {
                                             x = '';
                                         }
 
@@ -260,7 +263,7 @@
                                         action21.setParams({
                                             "pbookId": x
                                         });
-                                        action21.setCallback(this, function (response) {
+                                        action21.setCallback(this, function(response) {
                                             if (response.getState() == "SUCCESS") {
                                                 var rows = response.getReturnValue();
                                                 console.log("Rows : ", rows);
@@ -286,8 +289,7 @@
                                     }
 
 
-                                }
-                                else {
+                                } else {
                                     console.log(JSON.stringify(response.getError()))
                                 }
                             });
@@ -311,7 +313,7 @@
         }
     },
 
-    saveAndNew: function (component, event, helper) {
+    saveAndNew: function(component, event, helper) {
         if (!component.get('v.isAddProductFromGroup')) {
             var groups = component.get('v.TotalRecords').groups;
             var quote = component.get('v.newQuote');
@@ -338,8 +340,7 @@
                 $A.get('e.force:refreshView').fire();
 
 
-            }
-            else {
+            } else {
                 var toastEvent = $A.get("e.force:showToast");
                 toastEvent.setParams({
                     title: 'Error',
@@ -358,7 +359,7 @@
     // location.reload();
     //},
 
-    closeAddProductFromGroup: function (component, event, helper) {
+    closeAddProductFromGroup: function(component, event, helper) {
         if (component.get('v.isAddProductFromGroup')) {
             var quote = component.get('v.newQuote');
             quote.buildertek__Grouping__c = '';
@@ -369,7 +370,7 @@
         }
     },
 
-    navigate: function (component, event, helper) {
+    navigate: function(component, event, helper) {
         $A.get("e.c:BT_SpinnerEvent").setParams({
             "action": "SHOW"
         }).fire();
@@ -389,7 +390,7 @@
         }
 
     },
-    changefamily: function (component, event, helper) {
+    changefamily: function(component, event, helper) {
 
         var product = component.get('v.selectedLookUpRecord');
         var compEvent = $A.get('e.c:BT_CLearLightningLookupEvent');
@@ -404,11 +405,11 @@
         component.set('v.newQuote.buildertek__Markup__c', '');
 
     },
-    changeEvent: function (component, event, helper) {
+    changeEvent: function(component, event, helper) {
         var group = component.find('groupId');
         group.set("v._text_value", '');
         var product = component.get('v.selectedLookUpRecord');
-        console.log({product});
+        console.log({ product });
         console.log('===================================================================');
         var compEvent = $A.get('e.c:BT_CLearLightningLookupEvent');
         compEvent.setParams({
@@ -424,8 +425,8 @@
         component.set('v.newQuote.buildertek__Quantity__c', 1);
         component.set('v.newQuote.buildertek__Markup__c', '');
         var pribooknames = component.get("v.pricebookName");
-        console.log("PriceBook Name : ======= : ", pribooknames); 
-        console.log({product} );
+        console.log("PriceBook Name : ======= : ", pribooknames);
+        console.log({ product });
         //alert(pribooknames)
         var action = component.get("c.getProductfamilyRecords");
         // set param to method  
@@ -434,7 +435,7 @@
             'parentId': component.get("v.pricebookName")
         });
         // set a callBack    
-        action.setCallback(this, function (response) {
+        action.setCallback(this, function(response) {
             $A.util.removeClass(component.find("mySpinner"), "slds-show");
             var state = response.getState();
             if (state === "SUCCESS") {
@@ -451,8 +452,7 @@
 
                 if (component.get("v.listofproductfamily").length > 0) {
                     component.set("v.productfamily", component.get("v.listofproductfamily")[0].productfamilyvalues);
-                }
-                else {
+                } else {
                     component.set("v.productfamily", null)
                 }
 
@@ -463,7 +463,7 @@
         $A.enqueueAction(action);
     },
 
-    doView: function (component, event, helper) {
+    doView: function(component, event, helper) {
         ////console.log(event.currentTarget.dataset.record);
         var editRecordEvent = $A.get("e.force:navigateToSObject");
         editRecordEvent.setParams({
@@ -472,7 +472,7 @@
         editRecordEvent.fire();
     },
 
-    handleSaveSuccess: function (component, event, helper) {
+    handleSaveSuccess: function(component, event, helper) {
         if (event) {
             if (event.getParams().message && event.getParams().message.indexOf('was saved') != -1) {
                 var page = component.get("v.page") || 1
@@ -482,7 +482,7 @@
         }
     },
 
-    eventAction: function (component, event, helper) {
+    eventAction: function(component, event, helper) {
         var action, grpID = event.getParam("groupId");
         action = event.getParam("action");
 
@@ -495,7 +495,7 @@
                     'buildertek__Grouping__c': grpID,
                     'Name': 'Quote Item'
                 },
-                'panelOnDestroyCallback': function (e) {
+                'panelOnDestroyCallback': function(e) {
                     $A.enqueueAction(component.get("v.refreshGridAction"));
                 },
                 'navigationLocation': 'RELATED_LIST'
@@ -513,33 +513,34 @@
     },
 
 
-    getsetparams: function (component, event, helper) {
+    getsetparams: function(component, event, helper) {
         var showresultvalue = event.getParam("selectedRows");
         component.set("v.selectedRows", showresultvalue);
     },
 
-    addProduct: function (component, event, helper) {
+    addProduct: function(component, event, helper) {
         helper.createProductItemPicker(component, event, helper);
     },
 
-    addRFQ: function (component, event, helper) {
+    addRFQ: function(component, event, helper) {
+        component.set('v.clickRejectBtn', true);
         helper.createRFQPicker(component, event, helper);
     },
 
-    refreshQuoteItemList: function (component, event, helper) {
+    refreshQuoteItemList: function(component, event, helper) {
         var page = component.get("v.page") || 1
         helper.getGroups(component, event, helper, page);
     },
 
-    onRender: function (component, event, helper) {
+    onRender: function(component, event, helper) {
 
     },
 
-    handleDestroy: function (component, event, helper) {
+    handleDestroy: function(component, event, helper) {
 
     },
 
-    newGroup: function (component, event, helper) {
+    newGroup: function(component, event, helper) {
         $A.createComponents(
             [
                 ["aura:html", {
@@ -551,14 +552,14 @@
                 }],
                 ["c:BT_NewQuoteGroup", {
                     "quoteId": component.get("v.recordId"),
-                    "onSuccess": function () {
+                    "onSuccess": function() {
                         var page = component.get("v.page") || 1
                         helper.getGroups(component, event, helper, page);
                     }
                 }],
 
             ],
-            function (components, status) {
+            function(components, status) {
                 if (status === 'SUCCESS') {
                     component.find('overlayLib').showCustomModal({
                         header: components[0],
@@ -571,7 +572,10 @@
                 }
             });
     },
-    saveQuoteRecord: function (component, event, helper) {
+    saveQuoteRecord: function(component, event, helper) {
+        component.set('v.clickRejectBtn', true);
+
+
         console.log('========================Save method fire======================');
         $A.get("e.c:BT_SpinnerEvent").setParams({
             "action": "SHOW"
@@ -589,9 +593,9 @@
         action.setParams({
             "quoteLineRecord": JSON.stringify(quoteObject)
         });
-        action.setCallback(this, function (respo) {
+        action.setCallback(this, function(respo) {
             var returnValue = respo.getReturnValue();
-            console.log('returnValue ===> ',{returnValue});
+            console.log('returnValue ===> ', { returnValue });
             if (component.isValid() && respo.getState() === "SUCCESS") {
                 var group = component.find('groupId');
                 group.set("v._text_value", '');
@@ -602,7 +606,7 @@
                 });
                 compEvent.fire();
                 component.set('v.newQuote.Name', '');
-                component.set('v.newQuote.buildertek__Description__c','');
+                component.set('v.newQuote.buildertek__Description__c', '');
                 component.set('v.newQuote.buildertek__Grouping__c', null);
                 component.set('v.newQuote.buildertek__UOM__c', '');
                 component.set('v.newQuote.buildertek__Unit_Cost__c', '');
@@ -613,7 +617,7 @@
                 component.set("v.listofproductfamily", '');
                 $A.get('e.force:refreshView').fire();
                 window.setTimeout(
-                    $A.getCallback(function () {
+                    $A.getCallback(function() {
                         var toastEvent = $A.get("e.force:showToast");
                         toastEvent.setParams({
                             mode: 'sticky',
@@ -636,9 +640,9 @@
 
     },
 
-    checkQuoteStatus: function (component, event, helper) { },
+    checkQuoteStatus: function(component, event, helper) {},
 
-    handleComponentEvent: function (component, event, helper) {
+    handleComponentEvent: function(component, event, helper) {
         // get the selected Account record from the COMPONETN event 	 
         var selectedAccountGetFromEvent = event.getParam("recordByEvent");
         component.set("v.productId", selectedAccountGetFromEvent.Id);
@@ -647,11 +651,11 @@
         helper.getUOMValues(component, event, helper);
     },
 
-    deleteRecord: function (component, event, helper) {
+    deleteRecord: function(component, event, helper) {
         // get the selected Account record from the COMPONETN EVENT
     },
 
-    handleEvent: function (component, event, helper) {
+    handleEvent: function(component, event, helper) {
         var message = event.getParam("message");
         var toastEvent = $A.get("e.force:showToast");
         toastEvent.setParams({
@@ -666,7 +670,7 @@
     },
 
 
-    editQuote: function (component, event, helper) {
+    editQuote: function(component, event, helper) {
         var recordId = event.currentTarget.dataset.id;
         var editRecordEvent = $A.get("e.force:editRecord");
         editRecordEvent.setParams({
@@ -674,7 +678,7 @@
         });
         editRecordEvent.fire();
     },
-    editUnitPrice: function (component, event, helper) {
+    editUnitPrice: function(component, event, helper) {
         var recordId = event.currentTarget.dataset.id;
         $A.get("e.c:BT_SpinnerEvent").setParams({
             "action": "SHOW"
@@ -686,7 +690,7 @@
         action.setParams({
             "recordId": recordId
         });
-        action.setCallback(this, function (response) {
+        action.setCallback(this, function(response) {
             var state = response.getState();
             // alert('state'+state);
             if (state === "SUCCESS") {
@@ -710,12 +714,12 @@
     },
 
 
-    closeunitsalesprice: function (component, event, helper) {
+    closeunitsalesprice: function(component, event, helper) {
         component.set("v.editUnitPrice", false);
     },
 
 
-    deleteQuote: function (component, event, helper) {
+    deleteQuote: function(component, event, helper) {
         component.set("v.PopupHeader", "Delete Quote Line");
         component.set("v.PopupDescription", "Are you sure you want to delete this Quote Line?");
         component.set("v.isOpen", true);
@@ -723,7 +727,7 @@
         component.set("v.quoteItemId", recordId);
     },
 
-    deleteAllQuotelines: function (component, event, helper) {
+    deleteAllQuotelines: function(component, event, helper) {
         component.set("v.QuotelinePopupHeader", "Delete Quote Lines");
         component.set("v.QuotelinePopupDescription", "Are you sure you want to delete Quote Lines?");
         component.set("v.isQuotelinedelete", true);
@@ -731,7 +735,9 @@
         component.set("v.quoteItemId", recordId);
     },
 
-    deleteSelectedQuoteItem: function (component, event, helper) {
+    deleteSelectedQuoteItem: function(component, event, helper) {
+        component.set('v.clickRejectBtn', true);
+
         if (component.find("checkQuoteItem") != undefined) {
             $A.get("e.c:BT_SpinnerEvent").setParams({
                 "action": "SHOW"
@@ -787,7 +793,7 @@
         }
     },
 
-    newRFQ: function (component, event, helper) {
+    newRFQ: function(component, event, helper) {
         if (component.find("checkQuoteItem") != undefined) {
             var QuoteId;
             var rowData;
@@ -807,17 +813,17 @@
             if (QuoteId != undefined) {
                 var overlayLib;
                 $A.createComponents([
-                    ["c:CreateRFQFromQuote", {
-                        "quoteId": component.get("v.recordId"),
-                        "selectedQuoteItem": QuoteId,
-                        "saveCallback": component.get("v.refreshGridAction"),
-                        "cancelCallback": function () {
-                            overlayLib.close();
-                        }
-                    }],
+                        ["c:CreateRFQFromQuote", {
+                            "quoteId": component.get("v.recordId"),
+                            "selectedQuoteItem": QuoteId,
+                            "saveCallback": component.get("v.refreshGridAction"),
+                            "cancelCallback": function() {
+                                overlayLib.close();
+                            }
+                        }],
 
-                ],
-                    function (components, status, errorMessage) {
+                    ],
+                    function(components, status, errorMessage) {
                         if (status === "SUCCESS") {
                             component.find('overlayLib').showCustomModal({
                                 header: "New RFQ",
@@ -825,10 +831,10 @@
                                 footer: components[0].find("footer").get("v.body"),
                                 showCloseButton: true,
                                 cssClass: 'slds-modal_medium',
-                                closeCallback: function () {
+                                closeCallback: function() {
 
                                 }
-                            }).then(function (overlay) {
+                            }).then(function(overlay) {
                                 overlayLib = overlay;
                             });
                         }
@@ -839,7 +845,7 @@
                     "variant": "error",
                     "header": "Please Select Quote Line!",
                     "message": "Please Select Quote Line to Create RFQ.",
-                    closeCallback: function () { }
+                    closeCallback: function() {}
                 });
             }
         } else {
@@ -847,17 +853,17 @@
                 "variant": "error",
                 "header": "No Quote Lines!",
                 "message": "No Quote Line Records",
-                closeCallback: function () { }
+                closeCallback: function() {}
             });
         }
     },
 
-    closeModel: function (component, event, helper) {
+    closeModel: function(component, event, helper) {
         // for Hide/Close Model,set the "isOpen" attribute to "Fasle"  
         component.set("v.isOpen", false);
     },
 
-    closeQuotelineModel: function (component, event, helper) {
+    closeQuotelineModel: function(component, event, helper) {
         // for Hide/Close Model,set the "isOpen" attribute to "Fasle"  
         component.set("v.isQuotelinedelete", false);
         $A.get("e.c:BT_SpinnerEvent").setParams({
@@ -866,7 +872,7 @@
     },
 
 
-    deleteQuoteItems: function (component, event, helper) {
+    deleteQuoteItems: function(component, event, helper) {
         $A.get("e.c:BT_SpinnerEvent").setParams({
             "action": "SHOW"
         }).fire();
@@ -875,14 +881,14 @@
         action.setParams({
             "quoteId": recordId
         });
-        action.setCallback(this, function (response) {
+        action.setCallback(this, function(response) {
             var state = response.getState();
             if (state === "SUCCESS") {
                 var result = response.getReturnValue();
                 component.set("v.isOpen", false);
                 $A.get("e.force:refreshView").fire();
                 window.setTimeout(
-                    $A.getCallback(function () {
+                    $A.getCallback(function() {
                         var toastEvent = $A.get("e.force:showToast");
                         toastEvent.setParams({
                             mode: 'sticky',
@@ -905,11 +911,11 @@
         $A.enqueueAction(action);
     },
 
-    onClickCreateNewGroup: function (component, event, helper) {
+    onClickCreateNewGroup: function(component, event, helper) {
         component.set('v.addGroupPopup', true);
     },
 
-    onClickAddGroup: function (component, event, helper) {
+    onClickAddGroup: function(component, event, helper) {
         var totalRecords = component.get('v.TotalRecords');
         console.log('Total Records::', JSON.stringify(totalRecords));
         var groups = totalRecords.groups;
@@ -922,12 +928,12 @@
         component.set('v.TotalRecords', totalRecords);
     },
 
-    newGroupCloseModal: function (component, event, helper) {
+    newGroupCloseModal: function(component, event, helper) {
         component.set('v.addGroupPopup', false);
         component.set('v.quoteGroupNameDescription', '');
         component.set('v.quoteGroupName', '');
     },
-    createNewQuoteLineGroup: function (component, event, helper) {
+    createNewQuoteLineGroup: function(component, event, helper) {
         var groupName = component.get('v.quoteGroupName');
         if (groupName != undefined && groupName != '') {
             helper.createQuoteLineGroup(component, event, helper);
@@ -941,7 +947,7 @@
             toastEvent.fire();
         }
     },
-    deleteSelectedQuoteItemlines: function (component, event, helper) {
+    deleteSelectedQuoteItemlines: function(component, event, helper) {
         $A.get("e.c:BT_SpinnerEvent").setParams({
             "action": "SHOW"
         }).fire();
@@ -967,13 +973,13 @@
             action.setParams({
                 "recordIds": QuoteIds
             });
-            action.setCallback(this, function (response) {
+            action.setCallback(this, function(response) {
                 var state = response.getState();
                 if (state === "SUCCESS") {
                     component.set("v.isQuotelinedelete", false);
                     $A.get("e.force:refreshView").fire();
                     window.setTimeout(
-                        $A.getCallback(function () {
+                        $A.getCallback(function() {
                             var toastEvent = $A.get("e.force:showToast");
                             toastEvent.setParams({
                                 mode: 'sticky',
@@ -996,7 +1002,7 @@
                 "variant": "error",
                 "header": "Please Select Quote Line!",
                 "message": "Please select the Quote Line you would like to Delete.",
-                closeCallback: function () {
+                closeCallback: function() {
                     $A.get("e.c:BT_SpinnerEvent").setParams({
                         "action": "HIDE"
                     }).fire();
@@ -1005,7 +1011,7 @@
         }
     },
 
-    inlineEdit: function (component, event, helper) {
+    inlineEdit: function(component, event, helper) {
         var recordId = event.currentTarget.dataset.id;
         var fieldName = event.currentTarget.dataset.label;
         var groupId = event.currentTarget.dataset.group;
@@ -1016,12 +1022,12 @@
         component.set("v.fieldName", fieldName);
     },
 
-    onblur: function (component, event, helper) {
+    onblur: function(component, event, helper) {
         component.set("v.isEditMode", false);
         console.log('target:' + event.currentTarget);
     },
 
-    handleLookUpEvent: function (component, event, helper) {
+    handleLookUpEvent: function(component, event, helper) {
         var selectedRecordId = event.getParam("selectedRecordId");
         var index = event.getParam('index');
         var TotalRecords = component.get("v.TotalRecords");
@@ -1045,7 +1051,7 @@
         component.set("v.TotalRecords", TotalRecords);
         console.log("Toatl records : ", TotalRecords.tarTable.ListOfEachRecord);
     },
-    updateQuoteData: function (component, event, helper) {
+    updateQuoteData: function(component, event, helper) {
         var target = event.currentTarget;
 
         if (!component.get("v.enableMassUpdate")) {
@@ -1115,7 +1121,7 @@
             action.setParams({
                 "quoteString": JSON.stringify(quoteList),
             });
-            action.setCallback(this, function (response) {
+            action.setCallback(this, function(response) {
                 var state = response.getState();
                 if (state === "SUCCESS") {
                     var result = response.getReturnValue();
@@ -1133,13 +1139,13 @@ $A.enqueueAction(action1);*/
         }
     },
 
-    closeInlineEditForm: function (component, event, helper) {
+    closeInlineEditForm: function(component, event, helper) {
         component.set("v.isEditMode", false);
         component.set("v.showButtons", false);
         component.refreshData();
     },
 
-    SaveEditedValues: function (component, event, helper) {
+    SaveEditedValues: function(component, event, helper) {
         $A.get("e.c:BT_SpinnerEvent").setParams({
             "action": "SHOW"
         }).fire();
@@ -1149,7 +1155,7 @@ $A.enqueueAction(action1);*/
         action.setParams({
             "quoteItemList": component.get("v.quoteItemList")
         });
-        action.setCallback(this, function (response) {
+        action.setCallback(this, function(response) {
             var state = response.getState();
             if (state === "SUCCESS") {
                 component.set("v.isEditMode", false);
@@ -1159,7 +1165,7 @@ $A.enqueueAction(action1);*/
 
                 $A.get("e.force:refreshView").fire();
                 window.setTimeout(
-                    $A.getCallback(function () {
+                    $A.getCallback(function() {
                         var toastEvent = $A.get("e.force:showToast");
                         toastEvent.setParams({
                             mode: 'sticky',
@@ -1181,7 +1187,9 @@ $A.enqueueAction(action1);*/
     //start
     //additional functionallity for mass-update and duplicate records 
 
-    onClickMassUpdateCancel: function (component, event, helper) {
+    onClickMassUpdateCancel: function(component, event, helper) {
+        component.set('v.clickRejectBtn', true);
+
         $A.get("e.c:BT_SpinnerEvent").setParams({
             "action": "SHOW"
         }).fire();
@@ -1192,7 +1200,7 @@ $A.enqueueAction(action1);*/
 
     },
 
-    onClickMassUpdate: function (component, event, helper) {
+    onClickMassUpdate: function(component, event, helper) {
         component.set("v.enableMassUpdate", component.get("v.enableMassUpdate") == true ? false : true);
         if (component.get("v.enableMassUpdate") == false && component.get('v.isChangeData')) {
             $A.get("e.c:BT_SpinnerEvent").setParams({
@@ -1239,13 +1247,13 @@ $A.enqueueAction(action1);*/
                 action.setParams({
                     "quoteLineRecords": JSON.stringify(newMassQi)
                 });
-                action.setCallback(this, function (respo) {
+                action.setCallback(this, function(respo) {
                     console.log('response is : ', respo.getState());
                     component.set("v.isChangeData", false);
                     if (respo.getState() === "SUCCESS") {
                         $A.get('e.force:refreshView').fire();
                         window.setTimeout(
-                            $A.getCallback(function () {
+                            $A.getCallback(function() {
                                 var toastEvent = $A.get("e.force:showToast");
                                 toastEvent.setParams({
                                     mode: 'sticky',
@@ -1308,7 +1316,7 @@ $A.enqueueAction(action1);*/
 
     },
 
-    handleSelectAll: function (component, event, helper) {
+    handleSelectAll: function(component, event, helper) {
         //var groupName = event.getSource().get("v.value");
         var totalRecords = component.get('v.TotalRecords');
         var records = totalRecords.tarTable.ListOfEachRecord;
@@ -1344,7 +1352,7 @@ $A.enqueueAction(action1);*/
         // }
     },
 
-    unCheckAll: function (component, event, helper) {
+    unCheckAll: function(component, event, helper) {
         var selectedId = event.getSource().get("v.text");
         var totalRecords = component.get('v.TotalRecords');
         var records = totalRecords.tarTable.ListOfEachRecord;
@@ -1381,7 +1389,7 @@ $A.enqueueAction(action1);*/
         // }
 
     },
-    updateQuoteRecords: function (component, event, helper) {
+    updateQuoteRecords: function(component, event, helper) {
         var checkvalue = component.find("selectAll");
         var checkQuoteItem = component.find("checkQuoteItem");
         var quoteObject = component.get("v.newMassQuote");
@@ -1421,7 +1429,7 @@ $A.enqueueAction(action1);*/
             action.setParams({
                 "quoteLineRecords": JSON.stringify(component.get("v.newMassQi"))
             });
-            action.setCallback(this, function (respo) {
+            action.setCallback(this, function(respo) {
                 console.log('response is : ', respo.getState());
                 if (respo.getState() === "SUCCESS") {
                     component.set("v.newMassQi", "[]");
@@ -1431,7 +1439,7 @@ $A.enqueueAction(action1);*/
                     component.set("v.enableMassUpdate", component.get("v.enableMassUpdate") == true ? false : true);
                     $A.get('e.force:refreshView').fire();
                     window.setTimeout(
-                        $A.getCallback(function () {
+                        $A.getCallback(function() {
                             var toastEvent = $A.get("e.force:showToast");
                             toastEvent.setParams({
                                 mode: 'sticky',
@@ -1461,7 +1469,9 @@ $A.enqueueAction(action1);*/
 
         }
     },
-    onClickMassDuplicate: function (component, event, helper) {
+    onClickMassDuplicate: function(component, event, helper) {
+        component.set('v.clickRejectBtn', true);
+
         if (component.find("checkQuoteItem") != undefined) {
             var QuoteIds = [];
             var getAllId = component.find("checkQuoteItem");
@@ -1496,11 +1506,13 @@ $A.enqueueAction(action1);*/
                 "variant": "error",
                 "header": "No Quote Lines!",
                 "message": "No Quote Line Records",
-                closeCallback: function () { }
+                closeCallback: function() {}
             });
         }
     },
-    onClickAddlines: function (component, event, helper) {
+    onClickAddlines: function(component, event, helper) {
+        component.set('v.clickRejectBtn', true);
+
         var evt = $A.get("e.force:navigateToComponent");
         evt.setParams({
             componentDef: "c:BT_MassUpdateQuote",
@@ -1510,7 +1522,7 @@ $A.enqueueAction(action1);*/
         });
         evt.fire();
     },
-    onMassDuplicate: function (component, event, helper) {
+    onMassDuplicate: function(component, event, helper) {
         var checkvalue = component.find("selectAll");
         var checkQuoteItem = component.find("checkQuoteItem");
         var duplicateRecs = component.get("v.duplicateRecs");
@@ -1533,11 +1545,11 @@ $A.enqueueAction(action1);*/
             action.setParams({
                 "quoteLineRecords": duplicateRecs
             });
-            action.setCallback(this, function (respo) {
+            action.setCallback(this, function(respo) {
                 if (respo.getState() === "SUCCESS") {
                     $A.get('e.force:refreshView').fire();
                     window.setTimeout(
-                        $A.getCallback(function () {
+                        $A.getCallback(function() {
                             var toastEvent = $A.get("e.force:showToast");
                             toastEvent.setParams({
                                 mode: 'sticky',
@@ -1568,14 +1580,14 @@ $A.enqueueAction(action1);*/
         }
 
     },
-    onclickDuplicate: function (component, event, helper) {
+    onclickDuplicate: function(component, event, helper) {
         var currentId = event.currentTarget.getAttribute("data-id");
         component.set("v.currentId", currentId);
         component.set("v.PopupHeader", "Duplicate Quote Line");
         component.set("v.PopupDescription", "Are you sure you want to duplicate this Quote Line?");
         component.set("v.isDuplicate", true);
     },
-    duplicateQuote: function (component, event, helper) {
+    duplicateQuote: function(component, event, helper) {
         var currentId = component.get("v.currentId");
         if (currentId != "" && currentId != undefined) {
             component.set("v.isDuplicate", false);
@@ -1589,14 +1601,14 @@ $A.enqueueAction(action1);*/
             action.setParams({
                 "quoteLineRecords": duplicateRecs
             });
-            action.setCallback(this, function (respo) {
+            action.setCallback(this, function(respo) {
                 console.log('response is : ', respo.getState());
                 if (respo.getState() === "SUCCESS") {
                     component.set("v.value", false);
                     component.set("v.currentId", "");
                     $A.get('e.force:refreshView').fire();
                     window.setTimeout(
-                        $A.getCallback(function () {
+                        $A.getCallback(function() {
                             var toastEvent = $A.get("e.force:showToast");
                             toastEvent.setParams({
                                 mode: 'sticky',
@@ -1615,18 +1627,18 @@ $A.enqueueAction(action1);*/
             $A.enqueueAction(action);
         }
     },
-    closeDuplicateModel: function (component, event, helper) {
+    closeDuplicateModel: function(component, event, helper) {
         // for Hide/Close Model,set the "isDuplicate" attribute to "Fasle"  
         component.set("v.isOpen", false);
         component.set("v.isDuplicate", false);
         component.set("v.isMassDuplicate", false);
         component.set("v.currentId", "");
     },
-    onMarkupEdit: function (component, event, helper) {
+    onMarkupEdit: function(component, event, helper) {
         component.set("v.isMarkup", true);
 
     },
-    onMarkupChange: function (component, event, helper) {
+    onMarkupChange: function(component, event, helper) {
         var markup = component.get("v.QuoteRec").buildertek__Markup__c;
         if (markup != '' && markup != null && markup != 'Undefined') {
             component.set("v.isMarkup", true);
@@ -1653,6 +1665,8 @@ $A.enqueueAction(action1);*/
             });
             toastEvent.fire();
         }
+        component.set('v.clickRejectBtn', true);
+
 
         // 	var a = component.get("v.QuoteRec").Id;
         // 	alert('a---->'+a);
@@ -1690,11 +1704,11 @@ records.tarTable.ListOfEachRecord[i].recordList[j].originalValue = markupvalue;
         //alert(JSON.stringify(records.tarTable));
         // $A.enqueueAction(action);
     },
-    closeModelQuoteRec: function (component, event, helper) {
+    closeModelQuoteRec: function(component, event, helper) {
         component.set("v.isQuoteRecChange", false);
         helper.getQuoteInfo(component, event, helper);
     },
-    saveQuoteSingleRecord: function (component, event, helper) {
+    saveQuoteSingleRecord: function(component, event, helper) {
         component.set("v.isQuoteRecChange", false);
         component.get("v.isMarkup", false);
         $A.get("e.c:BT_SpinnerEvent").setParams({
@@ -1706,7 +1720,7 @@ records.tarTable.ListOfEachRecord[i].recordList[j].originalValue = markupvalue;
             "quoteRec": component.get("v.QuoteRec").Id,
             markupvalue: markupvalue
         });
-        actionLines.setCallback(this, function (response) {
+        actionLines.setCallback(this, function(response) {
             if (response.getState() == "SUCCESS") {
                 var result = response.getReturnValue();
                 component.set("v.TotalRecords", result);
@@ -1714,7 +1728,7 @@ records.tarTable.ListOfEachRecord[i].recordList[j].originalValue = markupvalue;
                 var page = component.get("v.page") || 1
                 helper.getGroups(component, event, helper, page);
                 window.setTimeout(
-                    $A.getCallback(function () {
+                    $A.getCallback(function() {
                         var toastEvent = $A.get("e.force:showToast");
                         toastEvent.setParams({
                             mode: 'sticky',
@@ -1777,7 +1791,7 @@ helper.getQuoteInfo(component,event,helper);*/
 
     },
 
-    refreshComponentHandler: function (component, event, helper) {
+    refreshComponentHandler: function(component, event, helper) {
         console.log('refreshComponentHandler');
         $A.get("e.c:BT_SpinnerEvent").setParams({
             "action": "SHOW"
@@ -1786,7 +1800,7 @@ helper.getQuoteInfo(component,event,helper);*/
         helper.getGroups(component, event, helper, page);
 
     },
-    onInputChange: function (component, event, helper) {
+    onInputChange: function(component, event, helper) {
         var fieldName = event.getSource().get("v.name").split('-');
         var index = fieldName[0];
         var fieldLabel = fieldName[1];
@@ -1796,7 +1810,7 @@ helper.getQuoteInfo(component,event,helper);*/
         component.set('v.record', record);
     },
 
-    updateUnitSalesPrice: function (component, event, helper) {
+    updateUnitSalesPrice: function(component, event, helper) {
         //	alert('hii'+component.get("v.NetUnit"));
         var netunit = component.get("v.NetUnit");
         var mar = component.get("v.markup");
@@ -1825,7 +1839,7 @@ helper.getQuoteInfo(component,event,helper);*/
             "recordId": component.get("v.editedquoterec"),
             "markup": total
         });
-        action.setCallback(this, function (response) {
+        action.setCallback(this, function(response) {
             var state = response.getState();
             // alert('state'+state);
             if (state === "SUCCESS") {
@@ -1842,7 +1856,7 @@ helper.getQuoteInfo(component,event,helper);*/
         $A.enqueueAction(action);
 
     },
-    expandCollapeAll: function (component, event, helper) {
+    expandCollapeAll: function(component, event, helper) {
         //component.set("v.ShowSpinner",true);
         /* console.log(component.get("v.TotalRecords").groups);
 console.log(event.getSource());
@@ -1948,7 +1962,7 @@ console.log(document.getElementsByClassName(className)[0]);
         }
 
     },
-    expandCollapseGroups: function (component, event, helper) {
+    expandCollapseGroups: function(component, event, helper) {
         /* var grpIndex = event.currentTarget.dataset.grpindex;
 var expandicon = document.getElementsByClassName('expandGrpIcon_'+grpIndex);
 var collapeIcon = document.getElementsByClassName('collapseGrpIcon_'+grpIndex);
@@ -2031,8 +2045,7 @@ console.log(document.getElementsByClassName(className)[0]);
             }
 
 
-        }
-        else if (expandicon[0].style.display == "none" && collapeIcon[0].style.display == "inline-block") {
+        } else if (expandicon[0].style.display == "none" && collapeIcon[0].style.display == "inline-block") {
             collapeIcon[0].style.display = 'none';
             expandicon[0].style.display = 'inline-block';
 
@@ -2059,11 +2072,11 @@ console.log(document.getElementsByClassName(className)[0]);
 
     },
 
-    openQuoteLine: function (component, event, helper) {
+    openQuoteLine: function(component, event, helper) {
         component.set("v.Spinner", true);
         var listid = component.get("v.listOfSelectedIds");
         console.log("List of selected Id when click next : ", listid)
-        /*    console.log(listid);
+            /*    console.log(listid);
 var unselectedData = component.get("v.StoreIdsOfDatatable2")
 console.log("unchecked : ",unselectedData);
 if(unselectedData != undefined){
@@ -2086,12 +2099,12 @@ component.set("v.StoreIdsOfDatatable2",'') */
             action6.setParams({
                 "Ids": listid,
                 "PricebookId": component.get("v.storePriceBookId")
-                //  "pBookId":BookId
-                //  "Ids": component.get("v.listOfSelectedIds")
+                    //  "pBookId":BookId
+                    //  "Ids": component.get("v.listOfSelectedIds")
             });
             // alert(listid)
             //  alert(BookId)
-            action6.setCallback(this, function (response) {
+            action6.setCallback(this, function(response) {
                 if (response.getState() == "SUCCESS") {
                     var listProduct = response.getReturnValue();
                     console.log("Products : ", listProduct)
@@ -2113,7 +2126,7 @@ component.set("v.StoreIdsOfDatatable2",'') */
                         }) */
                         var row1 = listProduct[i];
                         console.log("Row1 PricebookEntries : ", row1.PricebookEntries)
-                        console.log("Row1 => ",{row1});
+                        console.log("Row1 => ", { row1 });
                         console.log(row1.buildertek__Quote_Group__c);
                         if (row1.PricebookEntries != undefined) {
                             if (row1.buildertek__Quote_Group__c != undefined) {
@@ -2129,8 +2142,7 @@ component.set("v.StoreIdsOfDatatable2",'') */
                                     'buildertek__Product__c': row1.Id,
                                     'buildertek__Size__c': row1.PricebookEntries[0].Pricebook2.Name
                                 })
-                            }
-                            else{
+                            } else {
                                 xyz.push({
                                     'Name': row1.Name,
                                     'buildertek__Unit_Price__c': row1.PricebookEntries[0].UnitPrice,
@@ -2155,22 +2167,20 @@ component.set("v.StoreIdsOfDatatable2",'') */
                     action11.setParams({
                         "quoteId": component.get("v.recordId")
                     });
-                    action11.setCallback(this, function (response) {
+                    action11.setCallback(this, function(response) {
                         if (response.getState() == "SUCCESS") {
                             component.set("v.quotelineRecords", response.getReturnValue());
                         }
                     });
                     $A.enqueueAction(action11);
                     component.set("v.Spinner", false);
-                }
-                else {
+                } else {
                     console.log(response.getError());
                     component.set("v.Spinner", false);
                 }
             });
             $A.enqueueAction(action6);
-        }
-        else {
+        } else {
             component.set("v.Spinner", false);
             var toastEvent = $A.get("e.force:showToast");
             toastEvent.setParams({
@@ -2184,28 +2194,28 @@ component.set("v.StoreIdsOfDatatable2",'') */
             toastEvent.fire();
         }
     },
-    closeBox: function (component, event, helper) {
-        component.set("v.data1", [])                       //1
+    closeBox: function(component, event, helper) {
+        component.set("v.data1", []) //1
         component.set("v.selectedRows", "");
         //   component.set("v.listOfSelectedIds",null);
         component.set("v.data2", "");
-        component.set("v.data2", []);                  //2
-        component.set("v.listOfSelectedIds", []);                  //3
-        component.set("v.pricebookName1", "")                      //4
-        // $A.get('e.force:refreshView').fire();
+        component.set("v.data2", []); //2
+        component.set("v.listOfSelectedIds", []); //3
+        component.set("v.pricebookName1", "") //4
+            // $A.get('e.force:refreshView').fire();
         component.set("v.openProductBox", false);
         component.set("v.openQuoteLineBox", false);
         // location.reload();
     },
-    closeBox2: function (component, event, helper) {
-        component.set("v.data1", [])                       //1
+    closeBox2: function(component, event, helper) {
+        component.set("v.data1", []) //1
         component.set("v.selectedRows", "");
         //   component.set("v.listOfSelectedIds",null);
         component.set("v.data2", "");
-        component.set("v.data2", []);                  //2
-        component.set("v.listOfSelectedIds", []);                  //3
-        component.set("v.pricebookName1", "")                      //4
-        // $A.get('e.force:refreshView').fire();
+        component.set("v.data2", []); //2
+        component.set("v.listOfSelectedIds", []); //3
+        component.set("v.pricebookName1", "") //4
+            // $A.get('e.force:refreshView').fire();
         component.set("v.openProductBox", false);
         component.set("v.openQuoteLineBox", false);
         // location.reload();
@@ -2219,10 +2229,10 @@ component.set("v.StoreIdsOfDatatable2",'') */
         // location.reload(); */
     },
 
-    updateSelectedText: function (component, event, helper) {
+    updateSelectedText: function(component, event, helper) {
         var selectedRows = event.getParam('selectedRows');
         console.log(component.get("v.pricebookName1"))
-        /*   if(!component.get("v.checkFunctionCall")){
+            /*   if(!component.get("v.checkFunctionCall")){
 var oldData = component.get("v.oldData");
  
 if(oldData != undefined){
@@ -2261,41 +2271,41 @@ return other.Id == current.Id
             if (selectedRowList.indexOf(selectedRows[i].Id) < 0) {
                 selectedRowList.push(selectedRows[i].Id)
 
-            }
-            else {
+            } else {
                 console.log("yes")
-                /*   if(selectedRowList){
-                   for( var j = 0; j < selectedRowList.length; j++){ 
-                       
-                       if ( selectedRowList[j] === selectedRows[i].Id) { 
-                           console.log("yes")
-                           selectedRowList.splice(j, 1); 
+                    /*   if(selectedRowList){
+                       for( var j = 0; j < selectedRowList.length; j++){ 
+                           
+                           if ( selectedRowList[j] === selectedRows[i].Id) { 
+                               console.log("yes")
+                               selectedRowList.splice(j, 1); 
+                           }
+                           
                        }
-                       
-                   }
-                   } */
+                       } */
             }
             NewselectedRows.push(selectedRows[i].Id);
         }
-                                                                                                                                            /*     if(unselectedData != undefined && !component.get("v.checkFunctionCall")){
+        /*     if(unselectedData != undefined && !component.get("v.checkFunctionCall")){
                                         for(var i = 0; i< unselectedData.length;i++){
                                             if(selectedRowList.indexOf(unselectedData[i].Id) >= 0){
                                               //  selectedRowList.pop(unselectedData[i].Id);
                                             delete  selectedRowList[i];
                                             }
                                         }
-                                        } */                                                                                              console.log("Final List :------------------> " + selectedRowList)
+                                        } */
+        console.log("Final List :------------------> " + selectedRowList)
         component.set("v.listOfSelectedIds", selectedRowList)
         component.set("v.selectedRows", NewselectedRows);
     },
 
-    cancelBox: function (component, event, helper) {
+    cancelBox: function(component, event, helper) {
         var abc = component.get("v.listOfSelectedIds");
         component.set("v.openQuoteLineBox", false);
         component.set("v.openProductBox", true);
     },
 
-    addQuoteLine: function (component, event, helper) {
+    addQuoteLine: function(component, event, helper) {
         component.set("v.isDisabled", true)
 
         console.log(component.get("v.isDisabled"))
@@ -2307,7 +2317,7 @@ return other.Id == current.Id
             "QuoteId": component.get("v.recordId")
         });
         console.log(component.get("v.recordId") + '---*****************');
-        action10.setCallback(this, function (response) {
+        action10.setCallback(this, function(response) {
             component.set("v.openQuoteLineBox", false);
             $A.get("e.force:refreshView").fire();
             component.set("v.Spinner", false);
@@ -2324,14 +2334,14 @@ return other.Id == current.Id
             component.set("v.isDisabled", false)
 
             //--------------------------------------
-            component.set("v.data1", [])                       //1
+            component.set("v.data1", []) //1
             component.set("v.selectedRows", "");
             //   component.set("v.listOfSelectedIds",null);
             component.set("v.data2", "");
-            component.set("v.data2", []);                  //2
-            component.set("v.listOfSelectedIds", []);                  //3
-            component.set("v.pricebookName1", "")                      //4
-            // $A.get('e.force:refreshView').fire();
+            component.set("v.data2", []); //2
+            component.set("v.listOfSelectedIds", []); //3
+            component.set("v.pricebookName1", "") //4
+                // $A.get('e.force:refreshView').fire();
             component.set("v.openProductBox", false);
             component.set("v.openQuoteLineBox", false);
             // location.reload();
@@ -2341,7 +2351,7 @@ return other.Id == current.Id
 
     },
 
-    searchTable: function (component, event, helper) {
+    searchTable: function(component, event, helper) {
         var allRecords = component.get("v.filteredData");
         // var allRecords = cmp.get("v.data1");
         var searchFilter = event.getSource().get("v.value").toUpperCase()
@@ -2359,7 +2369,7 @@ return other.Id == current.Id
 
     },
 
-    changeEvent1: function (component, event, helper) {
+    changeEvent1: function(component, event, helper) {
         // debugger
         component.set("v.data1", '');
         var x = component.find("getPriceBookId").get("v.value");
@@ -2379,7 +2389,7 @@ return other.Id == current.Id
         action.setParams({
             "pbookId": x
         });
-        action.setCallback(this, function (response) {
+        action.setCallback(this, function(response) {
             if (response.getState() == "SUCCESS") {
                 var rows = response.getReturnValue();
                 console.log("Rows : ", rows);
@@ -2403,7 +2413,7 @@ return other.Id == current.Id
         $A.enqueueAction(action);
 
     },
-    updateColumnSorting: function (component, event, helper) {
+    updateColumnSorting: function(component, event, helper) {
         var fieldName = event.getParam('fieldName');
         var sortDirection = event.getParam('sortDirection');
         component.set("v.sortedBy", fieldName);
@@ -2411,14 +2421,14 @@ return other.Id == current.Id
         helper.sortData(component, fieldName, sortDirection);
     },
     // new method for search filter on product family
-    searchKeyProductFamily: function (component, event, helper){
+    searchKeyProductFamily: function(component, event, helper) {
         var searchWord = component.get('v.searchKey2');
-        console.log("searchKey2 result in serchWord ==>",searchWord);
+        console.log("searchKey2 result in serchWord ==>", searchWord);
         var action = component.get("c.searchProdcutFamily");
         action.setParams({
-            "searchedWord" : searchWord
+            "searchedWord": searchWord
         });
-        action.setCallback(this, function(response){
+        action.setCallback(this, function(response) {
 
             var rows = response.getReturnValue();
             for (var i = 0; i < rows.length; i++) {
@@ -2432,5 +2442,30 @@ return other.Id == current.Id
             component.set("v.filteredData", rows);
         });
         $A.enqueueAction(action);
+    },
+
+    showRejectedLines: function(component, event, helper) {
+        var rejectData = component.get('v.rejectData');
+        if (rejectData != null) {
+            $A.get("e.c:BT_SpinnerEvent").setParams({
+                "action": "SHOW"
+            }).fire();
+            component.set('v.clickRejectBtn', false);
+            component.set('v.rejectColumns', [
+                { label: 'Product Description', fieldName: 'Name' },
+                { label: 'Quantity', fieldName: 'buildertek__Quantity__c', type: 'text' },
+                { label: 'Unit Cost', fieldName: 'buildertek__Unit_Cost__c' },
+                { label: 'Sub Total', fieldName: 'buildertek__Total_Cost__c' },
+                { label: 'Markup (%)', fieldName: 'buildertek__Markup__c', type: 'percentage' },
+                { label: 'Discount (%)', fieldName: 'buildertek__Discount__c', type: 'percentage' },
+                { label: 'Unit Sales Price', fieldName: 'buildertek__Net_Unit__c' },
+                { label: 'Total', fieldName: 'buildertek__Net_Total_Price__c' }
+
+            ]);
+            $A.get("e.c:BT_SpinnerEvent").setParams({
+                "action": "HIDE"
+            }).fire();
+
+        }
     }
 })

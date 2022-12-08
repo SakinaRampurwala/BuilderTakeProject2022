@@ -2072,4 +2072,23 @@ public with sharing class QuoteDAO{
             return null;
         }
     }
+
+    /*
+    Created:- 8th December 2022
+    Description:- Used to Fetch all Quotelines 
+    */
+    @AuraEnabled
+    public static List<buildertek__Quote_Item__c> getQuoteLines(string recordId){
+        try{
+        List<buildertek__Quote_Item__c> quoteLineList = new List<buildertek__Quote_Item__c>();
+        quoteLineList= [SELECT  Id, Name, buildertek__Status__c,buildertek__Net_Unit__c,buildertek__Net_Total_Price__c,buildertek__Total_Cost__c	,buildertek__Quantity__c, buildertek__Unit_Cost__c, buildertek__Markup__c, buildertek__Discount__c ,buildertek__Quote__c FROM buildertek__Quote_Item__c where buildertek__Quote__c=:recordId AND buildertek__Status__c='Reject'];
+        System.debug(quoteLineList);
+        return quoteLineList;
+        }catch(Exception e){
+            System.debug(e.getMessage() + ':' + e.getLineNumber());
+            return null;
+        }
+        
+    }
+
 }

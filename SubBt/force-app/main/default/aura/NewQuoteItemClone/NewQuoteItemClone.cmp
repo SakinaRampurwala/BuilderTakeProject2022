@@ -1,5 +1,4 @@
-<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes"
-    access="global" Controller="QuoteDAO">
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes" access="global" Controller="QuoteDAO">
     <!--<ltng:require styles="{!join(',',$Resource.BTDrag + '/BT-Drag.min.css')}"
                   scripts="{!join(',',$Resource.Jquery + '/jquery/lightning/js/jquery-3.2.1.min.js',$Resource.BTDrag+ '/BT-Drag.min.js')}"
                   afterScriptsLoaded="{!c.initialize}"/>-->
@@ -52,13 +51,10 @@
     <aura:attribute name="wrapperListLength" type="Integer" />
     <aura:method name="refreshData" action="{!c.doInit}" access="public" />
     <aura:attribute name="headerFields" type="List" default="" description="Quote header fields" />
-    <aura:attribute name="quoteByGroupId" type="Map" access="public" default="{}"
-        description="Section details by parent id map" />
+    <aura:attribute name="quoteByGroupId" type="Map" access="public" default="{}" description="Section details by parent id map" />
     <aura:attribute name="groups" type="List" description="section detail list" />
-    <aura:attribute name="initReference" type="Aura.Action" default="{!c.doInit}"
-        description="Init Reference action used to call from child components" />
-    <aura:attribute name="groupLoaded" type="Boolean" default="false"
-        description="This boolean will be true once all section list loaded through aura itration." />
+    <aura:attribute name="initReference" type="Aura.Action" default="{!c.doInit}" description="Init Reference action used to call from child components" />
+    <aura:attribute name="groupLoaded" type="Boolean" default="false" description="This boolean will be true once all section list loaded through aura itration." />
     <aura:attribute name="save" type="Aura.Action" description="Save action Reference action" />
     <aura:attribute name="columns" type="List" />
     <aura:attribute name="dummyData" type="List" />
@@ -105,6 +101,13 @@
     <aura:attribute name="listPrice" type="decimal" default="" />
     <aura:attribute name="mapDistances" type="Map" default="{}" />
     <aura:attribute name="searchKey2" type="string" />
+    <aura:attribute name="clickRejectBtn" type="Boolean" default="true" />
+    <aura:attribute name="getRejectQuoteLine" type="Quote_Item__c[]" />
+
+    <aura:attribute name="rejectData" type="Object" />
+    <aura:attribute name="rejectColumns" type="List" />
+
+
 
 
     <!-- refresh component event -->
@@ -113,18 +116,15 @@
     <!-- MassUpdate start -->
     <aura:attribute name="enableMassUpdate" type="boolean" default="false" />
     <aura:attribute name="selectedMassLookUpRecord" type="sObject" default="{}" />
-    <aura:attribute name="newMassQuote" type="Quote_Item__c" default="{ 'sobjectType':'Quote_Item__c'}"
-        access="global" />
+    <aura:attribute name="newMassQuote" type="Quote_Item__c" default="{ 'sobjectType':'Quote_Item__c'}" access="global" />
     <aura:attribute name="newMassQi" type="Quote_Item__c" access="public" />
     <aura:attribute name="duplicateRecs" type="List" default="[]" />
     <aura:attribute name="isDuplicate" type="Boolean" default="false" />
     <aura:attribute name="isMassDuplicate" type="Boolean" default="false" />
     <aura:attribute name="isChangeData" type="Boolean" default="false" />
     <aura:attribute name="isMarkup" type="Boolean" default="false" />
-    <aura:attribute name="QuoteRec" type="Quote__c" default="{ 'sobjectType':'Quote__c','buildertek__Markup__c':'0'}"
-        access="global" />
-    <aura:attribute name="QuoteRecCopy" type="Quote__c"
-        default="{ 'sobjectType':'Quote__c','buildertek__Markup__c':'0'}" access="global" />
+    <aura:attribute name="QuoteRec" type="Quote__c" default="{ 'sobjectType':'Quote__c','buildertek__Markup__c':'0'}" access="global" />
+    <aura:attribute name="QuoteRecCopy" type="Quote__c" default="{ 'sobjectType':'Quote__c','buildertek__Markup__c':'0'}" access="global" />
     <aura:attribute name="isQuoteRecChange" type="Boolean" default="false" />
     <aura:attribute name="currentId" type="String" default="" />
 
@@ -197,8 +197,7 @@
 
             <!-- div style="float:right;margin-top: 25px;margin-right: 10px;"-->
 
-            <div style="float: right;margin-top: 25px;"
-                class="slds-m-top_medium slds-m-bottom_medium slds-m-right_small">
+            <div style="float: right;margin-top: 25px;" class="slds-m-top_medium slds-m-bottom_medium slds-m-right_small">
 
                 <lightning:buttonGroup>
 
@@ -214,38 +213,36 @@
                         Global Markup</div>
                     <ui:inputNumber aura:id="testId" value="{!v.QuoteRec.buildertek__Markup__c}" class="uiInputCss">
                     </ui:inputNumber>
-                    <lightning:buttonIcon iconName="utility:save" class="saveInputCss slds-m-left_xx-small"
-                        onclick="{!c.onMarkupChange}" alternativeText="Save" />
+                    <lightning:buttonIcon iconName="utility:save" class="saveInputCss slds-m-left_xx-small" onclick="{!c.onMarkupChange}" alternativeText="Save" />
                     <aura:if isTrue="{!v.enableMassUpdate}">
                         <div>
-                            <lightning:button iconName="utility:save" iconPosition="left"
-                                onclick="{!c.onClickMassUpdate}"
-                                label="{!v.enableMassUpdate==true?'Save':'Mass Update'}" class="sldsButtonGroup" />
+                            <lightning:button iconName="utility:save" iconPosition="left" onclick="{!c.onClickMassUpdate}" label="{!v.enableMassUpdate==true?'Save':'Mass Update'}" class="sldsButtonGroup" />
                         </div>&nbsp;
                         <div>
-                            <lightning:button iconName="utility:close" iconPosition="left"
-                                onclick="{!c.onClickMassUpdateCancel}" label="Cancel" class="sldsButtonGroup" />
+                            <lightning:button iconName="utility:close" iconPosition="left" onclick="{!c.onClickMassUpdateCancel}" label="Cancel" class="sldsButtonGroup" />
                         </div>
                         <aura:set attribute="else">
                             <div>
-                                <lightning:button iconPosition="left" onclick="{!c.addProductFromGroup}"
-                                    label="Add Lines" class="sldsButtonGroup" />
+                                <lightning:button iconPosition="left" onclick="{!c.addProductFromGroup}" label="Add Lines" class="sldsButtonGroup" />
                             </div>&nbsp;
+
                             <div>
-                                <lightning:button iconPosition="left" onclick="{!c.onClickAddlines}"
-                                    label="Mass Add Line" class="sldsButtonGroup" />
+                                <lightning:button aura:id='rejectBtn' disabled='true' iconPosition="left" label="Rejected Lines" class="sldsButtonGroup" onclick="{!c.showRejectedLines}" />
                             </div>&nbsp;
+
+
                             <div>
-                                <lightning:button iconName="utility:edit" iconPosition="left"
-                                    onclick="{!c.onClickMassUpdate}"
-                                    label="{!v.enableMassUpdate==true?'Save':'Mass Update'}" class="sldsButtonGroup" />
+                                <lightning:button iconPosition="left" onclick="{!c.onClickAddlines}" label="Mass Add Line" class="sldsButtonGroup" />
                             </div>&nbsp;
+
+                            <div>
+                                <lightning:button iconName="utility:edit" iconPosition="left" onclick="{!c.onClickMassUpdate}" label="{!v.enableMassUpdate==true?'Save':'Mass Update'}" class="sldsButtonGroup" />
+                            </div>&nbsp;
+
                             <!-- <lightning:button iconName="utility:groups" iconPosition="left"
                             onclick="{!c.onClickCreateNewGroup}" label="Add Group" class="sldsButtonGroup" />-->
                             <div>
-                                <lightning:button iconName="utility:copy" iconPosition="left"
-                                    onclick="{!c.onClickMassDuplicate}" label="Duplicate Lines"
-                                    class="sldsButtonGroup" />
+                                <lightning:button iconName="utility:copy" iconPosition="left" onclick="{!c.onClickMassDuplicate}" label="Duplicate Lines" class="sldsButtonGroup" />
                             </div>&nbsp;
 
                             <!-- <lightning:button label="Add Product" onclick="{!c.addProduct}" class="sldsButtonGroup" />-->
@@ -253,8 +250,7 @@
                                 <lightning:button label="Import RFQ's" onclick="{!c.addRFQ}" class="sldsButtonGroup" />
                             </div>&nbsp;
                             <div style="border-radius: 0.25rem;">
-                                <lightning:button label="Delete" onclick="{!c.deleteSelectedQuoteItem}"
-                                    class="sldsButtonGroup" />
+                                <lightning:button label="Delete" onclick="{!c.deleteSelectedQuoteItem}" class="sldsButtonGroup" />
                             </div>
 
                         </aura:set>
@@ -262,22 +258,18 @@
                 </lightning:buttonGroup>
             </div>
             <br />
-            <div class="slds-float_left" style="padding: 1rem; margin-top: -5px;margin-left: 0.7rem;">
+            <div class="slds-float_left" style="padding: 1rem; margin-top: -5px;">
                 <!-- <span style="display:inline-block;" class="{!'expandAllBtn_'+v.quoteId}" data-iconattr ="{!'expandAllBtn_'+v.quoteId}" data-iconname="Expand All" onclick="{!c.expandCollapeAll}">
                 <lightning:buttonIcon aura:id="expandCollapeseAllBtn" iconName="utility:add"  variant="border-filled" iconClass="dark" alternativeText="Expand All" title="Expand All"  />                       
             </span> 
             <span style="display:none;" class="{!'CollapeseAllBtn_'+v.quoteId}" data-iconattr ="{!'CollapeseAllBtn_'+v.quoteId}" data-iconname="Collapse All"  onclick="{!c.expandCollapeAll}">
                 <lightning:buttonIcon aura:id="expandCollapeseAllBtn2" iconName="utility:dash"  variant="border-filled" iconClass="dark" alternativeText="Collapse All" title="Collapse All"/>                       
             </span> inline-block-->
-                <span style="display:none;" class="{!'expandAllBtn_'+v.quoteId}"
-                    data-iconattr="{!'expandAllBtn_'+v.quoteId}" data-iconname="Expand All"
-                    onclick="{!c.expandCollapeAll}">
+                <span style="display:none;" class="{!'expandAllBtn_'+v.quoteId}" data-iconattr="{!'expandAllBtn_'+v.quoteId}" data-iconname="Expand All" onclick="{!c.expandCollapeAll}">
                     <lightning:buttonIcon aura:id="expandCollapeseAllBtn" iconName="utility:add" variant="border-filled"
                         iconClass="dark" alternativeText="Expand All" title="Expand All" />
                 </span>
-                <span style="display:inline-block;" class="{!'CollapeseAllBtn_'+v.quoteId}"
-                    data-iconattr="{!'CollapeseAllBtn_'+v.quoteId}" data-iconname="Collapse All"
-                    onclick="{!c.expandCollapeAll}">
+                <span style="display:inline-block;" class="{!'CollapeseAllBtn_'+v.quoteId}" data-iconattr="{!'CollapeseAllBtn_'+v.quoteId}" data-iconname="Collapse All" onclick="{!c.expandCollapeAll}">
                     <lightning:buttonIcon aura:id="expandCollapeseAllBtn2" iconName="utility:dash"
                         variant="border-filled" iconClass="dark" alternativeText="Collapse All" title="Collapse All" />
                 </span>
@@ -286,34 +278,27 @@
             </div>
 
             <aura:if isTrue="{!v.addGroupPopup}">
-                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
-                    aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
                     <div class="slds-modal__container">
                         <header class="slds-modal__header">
-                            <lightning:buttonIcon iconName="utility:close" onclick="{! c.newGroupCloseModal }"
-                                alternativeText="close" variant="bare-inverse" class="slds-modal__close" />
-                            <h2 id="modal-heading-01" class="slds-text-heading_large slds-hyphenate">Add Quote Line
-                                Group
+                            <lightning:buttonIcon iconName="utility:close" onclick="{! c.newGroupCloseModal }" alternativeText="close" variant="bare-inverse" class="slds-modal__close" />
+                            <h2 id="modal-heading-01" class="slds-text-heading_large slds-hyphenate">Add Quote Line Group
                             </h2>
                         </header>
                         <div class="slds-modal__content slds-p-around_large" id="modal-content-id-222">
                             <lightning:layout multipleRows="true">
                                 <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
-                                    <lightning:input type="textarea" aura:id="gpnameid" value="{!v.quoteGroupName}"
-                                        label="Name" />
+                                    <lightning:input type="textarea" aura:id="gpnameid" value="{!v.quoteGroupName}" label="Name" />
                                 </lightning:layoutItem>
 
                                 <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
-                                    <lightning:textarea aura:id="gpdescid" value="{!v.quoteGroupNameDescription}"
-                                        label="Description" />
+                                    <lightning:textarea aura:id="gpdescid" value="{!v.quoteGroupNameDescription}" label="Description" />
                                 </lightning:layoutItem>
                             </lightning:layout>
                         </div>
                         <footer class="slds-modal__footer">
-                            <lightning:button variant="neutral" label="Cancel" title="Cancel"
-                                onclick="{!c.newGroupCloseModal}" />
-                            <lightning:button variant="brand" label="Save" title="Save"
-                                onclick="{!c.createNewQuoteLineGroup}" />
+                            <lightning:button variant="neutral" label="Cancel" title="Cancel" onclick="{!c.newGroupCloseModal}" />
+                            <lightning:button variant="brand" label="Save" title="Save" onclick="{!c.createNewQuoteLineGroup}" />
                         </footer>
                     </div>
                 </section>
@@ -321,12 +306,10 @@
             </aura:if>
 
             <aura:if isTrue="{!v.isAddProductFromGroup}">
-                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
-                    aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
                     <div class="slds-modal__container">
                         <header class="slds-modal__header">
-                            <lightning:buttonIcon iconName="utility:close" onclick="{! c.closeAddProductFromGroup }"
-                                alternativeText="close" variant="bare-inverse" class="slds-modal__close" />
+                            <lightning:buttonIcon iconName="utility:close" onclick="{! c.closeAddProductFromGroup }" alternativeText="close" variant="bare-inverse" class="slds-modal__close" />
                             <h2 id="modal-heading-01" class="slds-text-heading_large slds-hyphenate">Add Quote Line</h2>
                         </header>
                         <div class="slds-modal__content" id="modal-content-id-1">
@@ -334,11 +317,9 @@
                                 <div class="slds-grid slds-gutters">
                                     <div class="slds-col slds-size_6-of-12">
                                         <label class="slds-form-element__label">Pricebook</label>
-                                        <ui:inputSelect value="{!v.pricebookName}" change="{!c.changeEvent}"
-                                            class="pricebook-class">
+                                        <ui:inputSelect value="{!v.pricebookName}" change="{!c.changeEvent}" class="pricebook-class">
                                             <aura:iteration var="option" items="{! v.pricebookoptions }">
-                                                <option value="{! option.value }"
-                                                    selected="{!option.value == v.pricebookName}">
+                                                <option value="{! option.value }" selected="{!option.value == v.pricebookName}">
                                                     {! option.key }
                                                 </option>
                                             </aura:iteration>
@@ -350,59 +331,48 @@
                                                 format=".00%" />-->
                                         <!-- <ui:inputNumber value="{!v.newQuote.buildertek__Markup__c}" aura:id="markUpId"
                                               format="%" formatter="percent"/>-->
-                                        <lightning:input value="{!v.newQuote.buildertek__Markup__c}" label="Markup"
-                                            aura:id="markUpId" type="number" step="0.01" />
+                                        <lightning:input value="{!v.newQuote.buildertek__Markup__c}" label="Markup" aura:id="markUpId" type="number" step="0.01" />
                                     </div>
-                                    
-                                    
+
+
                                 </div>
                                 <div class="slds-grid slds-gutters">
                                     <div class="slds-col slds-size_6-of-12">
                                         <label class="slds-form-element__label">Product Family</label>
-                                        <ui:inputSelect value="{!v.productfamily}" change="{!c.changefamily}"
-                                            class="pricebook-class">
+                                        <ui:inputSelect value="{!v.productfamily}" change="{!c.changefamily}" class="pricebook-class">
                                             <aura:iteration var="option" items="{!v.listofproductfamily}">
-                                                <option value="{!option.productfamilyvalues}"
-                                                    selected="{!option.productfamilyvalues == v.productfamily}">
+                                                <option value="{!option.productfamilyvalues}" selected="{!option.productfamilyvalues == v.productfamily}">
                                                     {!option.productfamilyvalues}</option>
                                             </aura:iteration>
                                         </ui:inputSelect>
                                     </div>
                                     <div class="slds-col slds-size_6-of-12">
-                                        <lightning:input type="text" label="Description"
-                                            value="{!v.newQuote.buildertek__Description__c}"
-                                            required="true" style="max-width: 100% !important;"/>
+                                        <lightning:input type="text" label="Description" value="{!v.newQuote.buildertek__Description__c}" required="true" style="max-width: 100% !important;" />
                                     </div>
                                     <div class="slds-col slds-size_6-of-12">
-                                        <ui:inputTextArea value="{!v.newQuote.buildertek__Notes__c}"/>
+                                        <ui:inputTextArea value="{!v.newQuote.buildertek__Notes__c}" />
                                     </div>
                                     <div class="slds-col slds-size_6-of-12">
                                         <label class="slds-form-element__label">Grouping</label>
-                                        <c:BT_LookupFields aura:id="groupId" fieldName="buildertek__Grouping__c"
-                                            childObjectName="buildertek__Quote_Item__c"
-                                            recordId="{!v.newQuote.buildertek__Grouping__c}" />
+                                        <c:BT_LookupFields aura:id="groupId" fieldName="buildertek__Grouping__c" childObjectName="buildertek__Quote_Item__c" recordId="{!v.newQuote.buildertek__Grouping__c}" />
                                     </div>
-                                    
-                                        
-                                    
+
+
+
                                 </div>
                                 <div class="slds-grid slds-gutters">
-                                   
+
                                     <div class="slds-col slds-size_6-of-12">
                                         <label class="slds-form-element__label">Product</label>
-                                        <c:BT_LightningLookup objectAPIName="Product2" IconName="standard:product"
-                                            selectedRecord="{!v.selectedLookUpRecord}" aura:id="productId"
-                                            parentId="{! v.pricebookName }" prodctfamly="{!v.productfamily}" />
+                                        <c:BT_LightningLookup objectAPIName="Product2" IconName="standard:product" selectedRecord="{!v.selectedLookUpRecord}" aura:id="productId" parentId="{! v.pricebookName }" prodctfamly="{!v.productfamily}" />
                                     </div>
-                                    
+
                                     <div class="slds-col slds-size_6-of-12">
                                         <label class="slds-form-element__label">UOM</label>
                                         <br />
-                                        <ui:inputSelect value="{! v.UOMvalues }" class="pricebook-class"
-                                            aura:id="uomId">
+                                        <ui:inputSelect value="{! v.UOMvalues }" class="pricebook-class" aura:id="uomId">
                                             <aura:iteration var="option" items="{! v.options }">
-                                                <option value="{! option.value }"
-                                                    selected="{!option.value == v.UOMvalues}">{! option.label }</option>
+                                                <option value="{! option.value }" selected="{!option.value == v.UOMvalues}">{! option.label }</option>
                                             </aura:iteration>
                                         </ui:inputSelect>
                                     </div>
@@ -411,8 +381,7 @@
                                     <div class="slds-col slds-size_6-of-12">
                                         <!-- <label class="slds-form-element__label">Quote Line</label>
                                 <ui:inputText value="{!v.newQuote.Name}" aura:id="quoteLineID" required = "true"/> -->
-                                        <lightning:input type="text" label="Quote Line" value="{!v.newQuote.Name}"
-                                            aura:id="quoteLineID" required="true" />
+                                        <lightning:input type="text" label="Quote Line" value="{!v.newQuote.Name}" aura:id="quoteLineID" required="true" />
                                     </div>
                                     <div class="slds-col slds-size_6-of-12">
                                     </div>
@@ -427,9 +396,7 @@
                                 </div>
                                 <div class="slds-grid slds-gutters">
                                     <div class="slds-col slds-size_6-of-12">
-                                        <lightning:input type="Currency" label="Unit Cost"
-                                            value="{!v.newQuote.buildertek__Unit_Cost__c}" aura:id="unitCostId"
-                                            required="true"/>
+                                        <lightning:input type="Currency" label="Unit Cost" value="{!v.newQuote.buildertek__Unit_Cost__c}" aura:id="unitCostId" required="true" />
                                     </div>
                                     <div class="slds-col slds-size_6-of-12">
                                     </div>
@@ -437,8 +404,7 @@
                                 <div class="slds-grid slds-gutters">
                                     <div class="slds-col slds-size_6-of-12">
                                         <label class="slds-form-element__label">List Price</label>
-                                        <ui:inputCurrency value="{!v.newQuote.buildertek__Unit_Price__c}"
-                                            aura:id="listpriceId" />
+                                        <ui:inputCurrency value="{!v.newQuote.buildertek__Unit_Price__c}" aura:id="listpriceId" />
                                     </div>
                                     <div class="slds-col slds-size_6-of-12">
                                     </div>
@@ -448,8 +414,7 @@
                             </div>
                             <aura:if isTrue="{!v.Spinner}">
                                 <div aura:id="spinnerId" class="slds-spinner_container">
-                                    <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative"
-                                        role="alert">
+                                    <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
                                         <span class="slds-assistive-text">Loading</span>
                                         <div class="slds-spinner__dot-a"></div>
                                         <div class="slds-spinner__dot-b"></div>
@@ -472,12 +437,9 @@
                     </div>          
                 </div>-->
                             <footer class="slds-modal__footer">
-                                <lightning:button variant="neutral" label="Cancel" title="Cancel"
-                                    onclick="{! c.closeAddProductFromGroup }" />
-                                <lightning:button variant="brand" label="Add &amp; New" title="Save &amp; New"
-                                    onclick="{!c.saveAndNew}" />
-                                <lightning:button variant="brand" label="Add" title="Add"
-                                    onclick="{!c.addProductFromGroup}" />
+                                <lightning:button variant="neutral" label="Cancel" title="Cancel" onclick="{! c.closeAddProductFromGroup }" />
+                                <lightning:button variant="brand" label="Add &amp; New" title="Save &amp; New" onclick="{!c.saveAndNew}" />
+                                <lightning:button variant="brand" label="Add" title="Add" onclick="{!c.addProductFromGroup}" />
 
 
                             </footer>
@@ -499,25 +461,20 @@
             </aura:if>
 
             <aura:if isTrue="{!v.isGroupNameOpen}">
-                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
-                    aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
                     <div class="slds-modal__container">
                         <header class="slds-modal__header">
-                            <lightning:buttonIcon iconName="utility:close" onclick="{! c.closeGroupName }"
-                                alternativeText="close" variant="bare-inverse" class="slds-modal__close" />
-                            <h2 id="modal-heading-01" class="slds-text-heading_large slds-hyphenate">Quote Line Group
-                                Name</h2>
+                            <lightning:buttonIcon iconName="utility:close" onclick="{! c.closeGroupName }" alternativeText="close" variant="bare-inverse" class="slds-modal__close" />
+                            <h2 id="modal-heading-01" class="slds-text-heading_large slds-hyphenate">Quote Line Group Name
+                            </h2>
                         </header>
                         <div class="slds-modal__content slds-p-around_large" id="modal-content-id-1">
-                            <lightning:input variant="bottom-toolbar" value="{!v.changeGroupName}"
-                                placeholder="Add Group Name" />
+                            <lightning:input variant="bottom-toolbar" value="{!v.changeGroupName}" placeholder="Add Group Name" />
                             <br />
                             <br />
                             <footer class="slds-modal__footer">
-                                <lightning:button variant="neutral" label="Cancel" title="Cancel"
-                                    onclick="{! c.closeGroupName }" />
-                                <lightning:button variant="brand" label="Update" title="Update"
-                                    onclick="{!c.onClickChangeGroupName}" />
+                                <lightning:button variant="neutral" label="Cancel" title="Cancel" onclick="{! c.closeGroupName }" />
+                                <lightning:button variant="brand" label="Update" title="Update" onclick="{!c.onClickChangeGroupName}" />
                             </footer>
                         </div>
                     </div>
@@ -526,25 +483,20 @@
             </aura:if>
 
             <aura:if isTrue="{!v.isGroupDescriptionOpen}">
-                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
-                    aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
                     <div class="slds-modal__container">
                         <header class="slds-modal__header">
-                            <lightning:buttonIcon iconName="utility:close" onclick="{! c.closeGroupDescription }"
-                                alternativeText="close" variant="bare-inverse" class="slds-modal__close" />
-                            <h2 id="modal-heading-01" class="slds-text-heading_large slds-hyphenate">Quote Line Group
-                                Description</h2>
+                            <lightning:buttonIcon iconName="utility:close" onclick="{! c.closeGroupDescription }" alternativeText="close" variant="bare-inverse" class="slds-modal__close" />
+                            <h2 id="modal-heading-01" class="slds-text-heading_large slds-hyphenate">Quote Line Group Description
+                            </h2>
                         </header>
                         <div class="slds-modal__content slds-p-around_large" id="modal-content-id-1">
-                            <lightning:inputRichText variant="bottom-toolbar" value="{!v.groupDescription}"
-                                placeholder="Add Group Description" />
+                            <lightning:inputRichText variant="bottom-toolbar" value="{!v.groupDescription}" placeholder="Add Group Description" />
                             <br />
                             <br />
                             <footer class="slds-modal__footer">
-                                <lightning:button variant="neutral" label="Cancel" title="Cancel"
-                                    onclick="{! c.closeGroupDescription }" />
-                                <lightning:button variant="brand" label="Add" title="Add"
-                                    onclick="{!c.addGroupDescription}" />
+                                <lightning:button variant="neutral" label="Cancel" title="Cancel" onclick="{! c.closeGroupDescription }" />
+                                <lightning:button variant="brand" label="Add" title="Add" onclick="{!c.addGroupDescription}" />
                             </footer>
                         </div>
                     </div>
@@ -559,13 +511,11 @@
                     <div style="padding:10px;margin-top: -5px;">
                         <br />
                         <div aura:id="inlineEditQuote" style="margin-top:25px; margin-bottom:25px;">
-                            <table class="slds-table slds-table_bordered slds-table_cell-buffer"
-                                style="border:1px solid grey;border-radius: 5px;">
+                            <table class="slds-table slds-table_bordered slds-table_cell-buffer" style="border:1px solid grey;border-radius: 5px;">
                                 <thead style="border:1px solid rgb(216, 237, 255);">
                                     <tr class="slds-text-title_caps">
-                                        <th scope="col"
-                                            style="background-color:rgba(27, 82, 151, 1.0); color:white; border-top-left-radius:5px;">
-                                            <div class="slds-truncate" title="Pricebook" >Pricebook</div>
+                                        <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white; border-top-left-radius:5px;">
+                                            <div class="slds-truncate" title="Pricebook">Pricebook</div>
                                         </th>
                                         <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white; ">
                                             <div class="slds-truncate" title="Product Family">Product Family</div>
@@ -573,15 +523,15 @@
                                         <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white; ">
                                             <div class="slds-truncate" title="Product">Product</div>
                                         </th>
-                                         <th style="background-color:rgba(27, 82, 151, 1.0); color:white; ">
+                                        <th style="background-color:rgba(27, 82, 151, 1.0); color:white; ">
                                             <div class="slds-truncate" title="Description">Description</div>
                                         </th>
                                         <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white;  ">
                                             <div class="slds-truncate" title="Grouping">Grouping</div>
                                         </th>
-                                         <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white; ">
+                                        <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white; ">
                                             <div class="slds-truncate" title="note">Note</div>
-                                        </th> 
+                                        </th>
                                         <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white;">
                                             <div class="slds-truncate" title="Quantity">Quantity</div>
                                         </th>
@@ -591,8 +541,7 @@
                                         <th style="background-color:rgba(27, 82, 151, 1.0); color:white;">
                                             <div class="slds-truncate" title="Mark Up">Markup</div>
                                         </th>
-                                        <th scope="col"
-                                            style="background-color:rgba(27, 82, 151, 1.0); color:white; border-top-right-radius:5px; ">
+                                        <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white; border-top-right-radius:5px; ">
                                             <div class="slds-truncate" title="save">Save</div>
                                         </th>
                                     </tr>
@@ -600,21 +549,17 @@
                                 <tbody>
                                     <tr>
                                         <td>
-                                            <ui:inputSelect value="{! v.pricebookName }" change="{!c.changeEvent}"
-                                                class="pricebook-class">
+                                            <ui:inputSelect value="{! v.pricebookName }" change="{!c.changeEvent}" class="pricebook-class">
                                                 <aura:iteration var="option" items="{! v.pricebookoptions }">
-                                                    <option value="{! option.value }"
-                                                        selected="{!option.value == v.pricebookName}">{! option.key }
+                                                    <option value="{! option.value }" selected="{!option.value == v.pricebookName}">{! option.key }
                                                     </option>
                                                 </aura:iteration>
                                             </ui:inputSelect>
                                         </td>
                                         <td>
-                                            <ui:inputSelect value="{!v.productfamily}" change="{!c.changefamily}"
-                                                class="pricebook-class">
+                                            <ui:inputSelect value="{!v.productfamily}" change="{!c.changefamily}" class="pricebook-class">
                                                 <aura:iteration var="option" items="{!v.listofproductfamily}">
-                                                    <option value="{!option.productfamilyvalues}"
-                                                        selected="{!option.productfamilyvalues == v.productfamily}">
+                                                    <option value="{!option.productfamilyvalues}" selected="{!option.productfamilyvalues == v.productfamily}">
                                                         {!option.productfamilyvalues}</option>
                                                 </aura:iteration>
                                             </ui:inputSelect>
@@ -623,24 +568,20 @@
                                             <!--   <c:BT_LightningLookup objectAPIName="Product2" IconName="standard:product"
                                                 selectedRecord="{!v.selectedLookUpRecord}" aura:id="productId"
                                                 parentId="{! v.pricebookName }"/> -->
-                                            <c:BT_LightningLookup objectAPIName="Product2" IconName="standard:product"
-                                                selectedRecord="{!v.selectedLookUpRecord}" aura:id="productId"
-                                                parentId="{! v.pricebookName }" prodctfamly="{!v.productfamily}" />
+                                            <c:BT_LightningLookup objectAPIName="Product2" IconName="standard:product" selectedRecord="{!v.selectedLookUpRecord}" aura:id="productId" parentId="{! v.pricebookName }" prodctfamly="{!v.productfamily}" />
                                         </td>
                                         <!-- <td>
                                             <ui:inputText value="{!v.newQuote.Name}" aura:id="quoteLineID" />
                                         </td> -->
                                         <td>
                                             <!-- <aura:if isTrue="{!v.newQuote.Name != ''}"> -->
-                                                <ui:inputText value="{!v.newQuote.Name}" aura:id="quoteLineID1" />
-                                            
+                                            <ui:inputText value="{!v.newQuote.Name}" aura:id="quoteLineID1" />
+
                                         </td>
                                         <td>
-                                            <c:BT_LookUp aura:id="groupId" _field="buildertek__Grouping__c"
-                                                _sobject="buildertek__Quote_Item__c"
-                                                _value="{!v.newQuote.buildertek__Grouping__c}" _label="" _filter="" />
+                                            <c:BT_LookUp aura:id="groupId" _field="buildertek__Grouping__c" _sobject="buildertek__Quote_Item__c" _value="{!v.newQuote.buildertek__Grouping__c}" _label="" _filter="" />
                                         </td>
-                                        
+
                                         <!-- <td>
                                             <ui:inputSelect value="{! v.newQuote.buildertek__UOM__c }" class="select-class">
                                                 <aura:iteration var="option" items="{! v.options }">
@@ -649,23 +590,19 @@
                                             </ui:inputSelect>
                                         </td> -->
                                         <td>
-                                            <ui:inputTextArea value="{!v.newQuote.buildertek__Notes__c}"/>
+                                            <ui:inputTextArea value="{!v.newQuote.buildertek__Notes__c}" />
                                         </td>
                                         <td style="width: 6% !important;">
                                             <ui:inputNumber value="{!v.newQuote.buildertek__Quantity__c}" />
                                         </td>
                                         <td style="width: 6% !important;">
-                                            <ui:inputCurrency value="{!v.newQuote.buildertek__Unit_Cost__c}"
-                                                aura:id="unitCostId"/>
+                                            <ui:inputCurrency value="{!v.newQuote.buildertek__Unit_Cost__c}" aura:id="unitCostId" />
                                         </td>
                                         <td style="padding-bottom:22px; width: 6% !important;">
-                                            <lightning:input type="number" name="input6" label=""
-                                                value="{!v.newQuote.buildertek__Markup__c}" formatter="percent-fixed"
-                                                aura:id="markUpId" />
+                                            <lightning:input type="number" name="input6" label="" value="{!v.newQuote.buildertek__Markup__c}" formatter="percent-fixed" aura:id="markUpId" />
                                         </td>
                                         <td>
-                                            <lightning:buttonIcon iconName="utility:save" alternativeText="save"
-                                                onclick="{!c.saveQuoteRecord}" />
+                                            <lightning:buttonIcon iconName="utility:save" alternativeText="save" onclick="{!c.saveQuoteRecord}" />
                                         </td>
                                     </tr>
                                 </tbody>
@@ -675,25 +612,18 @@
 
                     <aura:if isTrue="{!or(or(or(v.isDuplicate,v.isMassDuplicate),v.isOpen),v.isQuoteRecChange)}">
                         <div class="slds-m-around_xx-large">
-                            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
-                                aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
                                 <div class="slds-modal__container">
                                     <header class="slds-modal__header">
                                         <aura:if isTrue="{!v.isOpen}">
-                                            <lightning:buttonIcon iconName="utility:close" onclick="{!c.closeModel}"
-                                                alternativeText="close" variant="bare-inverse"
-                                                class="slds-modal__close" />
+                                            <lightning:buttonIcon iconName="utility:close" onclick="{!c.closeModel}" alternativeText="close" variant="bare-inverse" class="slds-modal__close" />
                                         </aura:if>
                                         <aura:if isTrue="{!or(v.isDuplicate,v.isMassDuplicate)}">
-                                            <lightning:buttonIcon iconName="utility:close"
-                                                onclick="{!c.closeDuplicateModel}" alternativeText="close"
-                                                variant="bare-inverse" class="slds-modal__close" />
+                                            <lightning:buttonIcon iconName="utility:close" onclick="{!c.closeDuplicateModel}" alternativeText="close" variant="bare-inverse" class="slds-modal__close" />
                                         </aura:if>
 
                                         <aura:if isTrue="{!v.isQuoteRecChange}">
-                                            <lightning:buttonIcon iconName="utility:close"
-                                                onclick="{!c.closeModelQuoteRec}" alternativeText="close"
-                                                variant="bare-inverse" class="slds-modal__close" />
+                                            <lightning:buttonIcon iconName="utility:close" onclick="{!c.closeModelQuoteRec}" alternativeText="close" variant="bare-inverse" class="slds-modal__close" />
                                         </aura:if>
                                         <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">
                                             {!v.PopupHeader}</h2>
@@ -705,30 +635,23 @@
                                     </div>
                                     <footer class="slds-modal__footer">
                                         <aura:if isTrue="{!v.isOpen}">
-                                            <lightning:button variant="neutral" label="Cancel" title="Cancel"
-                                                onclick="{!c.closeModel}" />
-                                            <lightning:button variant="brand" label="Delete" title="Delete"
-                                                onclick="{!c.deleteQuoteItems}" />
+                                            <lightning:button variant="neutral" label="Cancel" title="Cancel" onclick="{!c.closeModel}" />
+                                            <lightning:button variant="brand" label="Delete" title="Delete" onclick="{!c.deleteQuoteItems}" />
                                         </aura:if>
 
                                         <aura:if isTrue="{!or(v.isDuplicate,v.isMassDuplicate)}">
-                                            <lightning:button variant="neutral" label="Cancel" title="Cancel"
-                                                onclick="{!c.closeDuplicateModel}" />
+                                            <lightning:button variant="neutral" label="Cancel" title="Cancel" onclick="{!c.closeDuplicateModel}" />
                                         </aura:if>
 
                                         <aura:if isTrue="{!v.isDuplicate}">
-                                            <lightning:button variant="brand" label="Duplicate" title="Duplicate"
-                                                onclick="{!c.duplicateQuote}" />
+                                            <lightning:button variant="brand" label="Duplicate" title="Duplicate" onclick="{!c.duplicateQuote}" />
                                         </aura:if>
                                         <aura:if isTrue="{!v.isMassDuplicate}">
-                                            <lightning:button variant="brand" label="Duplicate" title="Duplicate"
-                                                onclick="{!c.onMassDuplicate}" />
+                                            <lightning:button variant="brand" label="Duplicate" title="Duplicate" onclick="{!c.onMassDuplicate}" />
                                         </aura:if>
                                         <aura:if isTrue="{!v.isQuoteRecChange}">
-                                            <lightning:button variant="neutral" label="Cancel" title="Cancel"
-                                                onclick="{!c.closeModelQuoteRec}" />
-                                            <lightning:button variant="brand" label="Save" title="Save"
-                                                onclick="{!c.saveQuoteSingleRecord}" />
+                                            <lightning:button variant="neutral" label="Cancel" title="Cancel" onclick="{!c.closeModelQuoteRec}" />
+                                            <lightning:button variant="brand" label="Save" title="Save" onclick="{!c.saveQuoteSingleRecord}" />
                                         </aura:if>
                                     </footer>
                                 </div>
@@ -739,14 +662,11 @@
 
                     <aura:if isTrue="{!v.isQuotelinedelete}">
                         <div class="slds-m-around_xx-large">
-                            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
-                                aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
                                 <div class="slds-modal__container">
                                     <header class="slds-modal__header">
                                         <aura:if isTrue="{!v.isQuotelinedelete}">
-                                            <lightning:buttonIcon iconName="utility:close"
-                                                onclick="{!c.closeQuotelineModel}" alternativeText="close"
-                                                variant="bare-inverse" class="slds-modal__close" />
+                                            <lightning:buttonIcon iconName="utility:close" onclick="{!c.closeQuotelineModel}" alternativeText="close" variant="bare-inverse" class="slds-modal__close" />
                                         </aura:if>
                                         <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">
                                             {!v.QuotelinePopupHeader}</h2>
@@ -758,10 +678,8 @@
                                     </div>
                                     <footer class="slds-modal__footer">
                                         <aura:if isTrue="{!v.isQuotelinedelete}">
-                                            <lightning:button variant="neutral" label="Cancel" title="Cancel"
-                                                onclick="{!c.closeQuotelineModel}" />
-                                            <lightning:button variant="brand" label="Delete" title="Delete"
-                                                onclick="{!c.deleteSelectedQuoteItemlines}" />
+                                            <lightning:button variant="neutral" label="Cancel" title="Cancel" onclick="{!c.closeQuotelineModel}" />
+                                            <lightning:button variant="brand" label="Delete" title="Delete" onclick="{!c.deleteSelectedQuoteItemlines}" />
                                         </aura:if>
                                     </footer>
                                 </div>
@@ -771,35 +689,31 @@
                     </aura:if>
 
                     <div class="slds">
-                        <div>
-                            <!--<div class="slds-scrollable" style="width:100%;height: 35rem;">-->
-                            <table
-                                class="slds-table slds-table--bordered slds-max-medium-table--stacked-horizontal tablecls">
-                                <!--Table must be responsive-->
-                                <tbody>
-                                    <aura:iteration items="{!v.TotalRecords.groups}" var="group" indexVar="groupIndex">
-                                        <tr class="groupHeader">
+                        <aura:if isTrue="{!v.clickRejectBtn}">
 
-                                            <td colspan="{!v.TotalRecords.totalColumns}" style="line-height:3vh;">
-                                                <div class="slds-grid slds-gutters  ">
-                                                    <!-- <div style="float: right !important;">-->
-                                                    <!-- <div style="float: right;" class="slds-p-right_small">-->
+                            <div>
+                                <!--<div class="slds-scrollable" style="width:100%;height: 35rem;">-->
 
-                                                    <div class="slds-p-left_x-large">
-                                                        <span style="display: none; margin-top:-0.9rem;"
-                                                            class="{!v.quoteId+' expandGrpIcon_'+groupIndex}"
-                                                            data-grpindex="{!groupIndex}"
-                                                            onclick="{!c.expandCollapseGroups}">
+                                <table class="slds-table slds-table--bordered slds-max-medium-table--stacked-horizontal tablecls">
+                                    <!--Table must be responsive-->
+                                    <tbody>
+                                        <aura:iteration items="{!v.TotalRecords.groups}" var="group" indexVar="groupIndex">
+                                            <tr class="groupHeader">
+
+                                                <td colspan="{!v.TotalRecords.totalColumns}" style="line-height:3vh;">
+                                                    <div class="slds-grid slds-gutters  ">
+                                                        <!-- <div style="float: right !important;">-->
+                                                        <!-- <div style="float: right;" class="slds-p-right_small">-->
+
+                                                        <div class="slds-p-left_x-large">
+                                                            <span style="display: none; margin-top:-0.9rem;" class="{!v.quoteId+' expandGrpIcon_'+groupIndex}" data-grpindex="{!groupIndex}" onclick="{!c.expandCollapseGroups}">
                                                             <lightning:icon iconName="utility:add" size="xx-small"
                                                                 alternativeText="add"
                                                                 style="border: 1px solid #b9b9b9; padding: 0.1rem 0.3rem 0.3rem 0.3rem" />
                                                         </span>
-                                                    </div>
-                                                    <!-- <span style="display:none;" class="{!'hideCollapseIcon collapseGrpIcon_'+parentGroupIndex}" data-grpindex="{!parentGroupIndex}" onclick="{!c.expandCollapseGroups}"> -->
-                                                    <span style="display:inline-block;"
-                                                        class="{!v.quoteId+' collapseGrpIcon_'+groupIndex}"
-                                                        data-grpindex="{!groupIndex}"
-                                                        onclick="{!c.expandCollapseGroups}">
+                                                        </div>
+                                                        <!-- <span style="display:none;" class="{!'hideCollapseIcon collapseGrpIcon_'+parentGroupIndex}" data-grpindex="{!parentGroupIndex}" onclick="{!c.expandCollapseGroups}"> -->
+                                                        <span style="display:inline-block;" class="{!v.quoteId+' collapseGrpIcon_'+groupIndex}" data-grpindex="{!groupIndex}" onclick="{!c.expandCollapseGroups}">
                                                         <lightning:icon iconName="utility:dash" size="xx-small"
                                                             alternativeText="dash"
                                                             style="border: 1px solid #b9b9b9; padding: 0.1rem 0.3rem 0.3rem 0.3rem" />
@@ -807,7 +721,7 @@
 
 
 
-                                                    <!-- <span class="{!'expandGrpIcon_'+groupIndex}" style="" data-grpindex="{!groupIndex}" onclick="{!c.expandCollapseGroups}">
+                                                        <!-- <span class="{!'expandGrpIcon_'+groupIndex}" style="" data-grpindex="{!groupIndex}" onclick="{!c.expandCollapseGroups}">
                                                     <lightning:icon
                                                                     iconName="utility:add"
                                                                     size="xx-small"
@@ -819,23 +733,19 @@
                                                                     size="xx-small"
                                                                     alternativeText="dash"  style="border: 1px solid #b9b9b9; padding: 0.1rem 0.3rem 0.3rem 0.3rem"/>
                                                 </span> -->
-                                                    <!-- <div class="slds-col slds-size_6-of-12" data-index='{!groupIndex}'
+                                                        <!-- <div class="slds-col slds-size_6-of-12" data-index='{!groupIndex}'
                                                     onclick="{!c.onClickChangeGroupName}"> -->
-                                                    <div class="slds-col slds-size_6-of-12" style="font-size: 17px;">
-                                                        <!-- <span style=" margin-right:-60px; margin-left: -60px; !important;" >-->
+                                                        <div class="slds-col slds-size_6-of-12" style="font-size: 17px;">
+                                                            <!-- <span style=" margin-right:-60px; margin-left: -60px; !important;" >-->
 
-                                                        {!group.Name}
+                                                            {!group.Name}
 
+                                                        </div>
+                                                        <div class="slds-col slds-size_6-of-12 slds-float_right" style="font-size: 10px; height:1.5rem;">
+                                                            <lightning:button variant="neutral" label="Add Quote Line" name="{!groupIndex}" title="Add Quote Line" class="addBudgetLineStyle" onclick="{!c.addProductFromGroup}" />
+                                                        </div>
                                                     </div>
-                                                    <div class="slds-col slds-size_6-of-12 slds-float_right"
-                                                        style="font-size: 10px; height:1.5rem;">
-                                                        <lightning:button variant="neutral" label="Add Quote Line"
-                                                            name="{!groupIndex}" title="Add Quote Line"
-                                                            class="addBudgetLineStyle"
-                                                            onclick="{!c.addProductFromGroup}" />
-                                                    </div>
-                                                </div>
-                                                <!-- <div class="slds-grid slds-gutters">
+                                                    <!-- <div class="slds-grid slds-gutters">
                                                 <div class="slds-col slds-size_1-of-12">
                                                     <aura:if
                                                         isTrue="{!if(group.buildertek__Description__c!=null,true,false)}">
@@ -855,84 +765,78 @@
                                                 </div>
                                             </div> -->
 
-                                            </td>
-                                            <td colspan="{!v.TotalRecords.totalColumns}">
-                                            <td>
-                                            </td>
-                                            </td>
-                                            <td>
-                                            </td>
-                                            <td>
-                                            </td>
-                                            <td>
-                                            </td>
-                                            <td>
-                                            </td>
-                                            <!-- <td></td>-->
-                                        </tr>
-                                        <tr class="slds-text-heading--label" style="line-height: 2;font-size: 12px;">
-                                            <th></th>
-                                            <th class="slds-is-sortable tabletitle" scope="col" width="5px">
-                                                <div class="slds-form-element">
-                                                    <div class="slds-form-element__control">
-                                                        <label class="slds-checkbox" width="10px">
+                                                </td>
+                                                <td colspan="{!v.TotalRecords.totalColumns}">
+                                                    <td>
+                                                    </td>
+                                                </td>
+                                                <td>
+                                                </td>
+                                                <td>
+                                                </td>
+                                                <td>
+                                                </td>
+                                                <td>
+                                                </td>
+                                                <!-- <td></td>-->
+                                            </tr>
+                                            <tr class="slds-text-heading--label" style="line-height: 2;font-size: 12px;">
+                                                <th></th>
+                                                <th class="slds-is-sortable tabletitle" scope="col" width="5px">
+                                                    <div class="slds-form-element">
+                                                        <div class="slds-form-element__control">
+                                                            <label class="slds-checkbox" width="10px">
                                                             <ui:inputCheckbox value="{!group.isSelected}"
                                                                 name="{!group.Name}" change="{!c.handleSelectAll}"
                                                                 aura:id="selectAll" class="" />
                                                             <span class="slds-checkbox--faux" style="top:-2px;"></span>
                                                             <span class="slds-form-element__label text"></span>
                                                         </label>
-                                                    </div>
-                                                </div>
-                                            </th>
-                                            <aura:iteration items="{!v.columns}" var="col">
-                                                <aura:if
-                                                    isTrue="{!and(col.fieldName!='Name',and(col.fieldName!='buildertek__Notes__c',col.fieldType!='reference'))}">
-                                                    <th class="slds-is-sortable inputCss tabletitle" scope="col"
-                                                        style="padding-right:5px !important;padding-left:5px !important;">
-                                                        <div class="slds-truncate" title="{!col.label}">{!col.label}
                                                         </div>
-                                                    </th>
-                                                    <aura:set attribute="else">
-                                                        <aura:if isTrue="{!and(col.fieldType=='reference')}">
-                                                            <th class="slds-is-sortable lookupCss" scope="col"
-                                                                style="padding-right:5px !important;padding-left:5px !important;">
-                                                                <div class="slds-truncate" title="{!col.label}">
-                                                                    {!col.label}
-                                                                </div>
-                                                            </th>
-                                                            <aura:set attribute="else">
-                                                                <th class="slds-is-sortable" scope="col"
-                                                                    style="padding-right:5px !important;padding-left:5px !important;">
+                                                    </div>
+                                                </th>
+                                                <aura:iteration items="{!v.columns}" var="col">
+                                                    <aura:if isTrue="{!and(col.fieldName!='Name',and(col.fieldName!='buildertek__Notes__c',col.fieldType!='reference'))}">
+                                                        <th class="slds-is-sortable inputCss tabletitle" scope="col" style="padding-right:5px !important;padding-left:5px !important;">
+                                                            <div class="slds-truncate" title="{!col.label}">{!col.label}
+                                                            </div>
+                                                        </th>
+                                                        <aura:set attribute="else">
+                                                            <aura:if isTrue="{!and(col.fieldType=='reference')}">
+                                                                <th class="slds-is-sortable lookupCss" scope="col" style="padding-right:5px !important;padding-left:5px !important;">
                                                                     <div class="slds-truncate" title="{!col.label}">
                                                                         {!col.label}
                                                                     </div>
                                                                 </th>
-                                                            </aura:set>
-                                                        </aura:if>
-                                                    </aura:set>
-                                                </aura:if>
-                                            </aura:iteration>
-                                            <th>
-                                            </th>
-                                            <th>
-                                            </th>
-                                        </tr>
-                                        <aura:iteration items="{!v.TotalRecords.tarTable.ListOfEachRecord}" var="tar"
-                                            indexVar="quoteIndex">
-                                            <tr style="line-height: 2.5;display:table-row;"
-                                                class="{!v.quoteId+' slds-hint-parent groupRows_'+groupIndex}">
-                                                <!-- quoteId -->
+                                                                <aura:set attribute="else">
+                                                                    <th class="slds-is-sortable" scope="col" style="padding-right:5px !important;padding-left:5px !important;">
+                                                                        <div class="slds-truncate" title="{!col.label}">
+                                                                            {!col.label}
+                                                                        </div>
+                                                                    </th>
+                                                                </aura:set>
+                                                            </aura:if>
+                                                        </aura:set>
+                                                    </aura:if>
+                                                </aura:iteration>
+                                                <th>
+                                                </th>
+                                                <th>
+                                                </th>
+                                            </tr>
+                                            <aura:iteration items="{!v.TotalRecords.tarTable.ListOfEachRecord}" var="tar" indexVar="quoteIndex">
+                                                <tr style="line-height: 2.5;display:table-row;" class="{!v.quoteId+' slds-hint-parent groupRows_'+groupIndex}">
+                                                    <!-- quoteId -->
 
-                                                <aura:if isTrue="{!group.Id == tar.groupId}">
+                                                    <aura:if isTrue="{!group.Id == tar.groupId}">
 
-                                                    <td>
-                                                        {!tar.recordCount +1}
-                                                    </td>
-                                                    <td>
-                                                        <div class="slds-form-element">
-                                                            <div class="slds-form-element__control">
-                                                                <label class="slds-checkbox" style="width:2px;">
+                                                        <td>
+                                                            {!tar.recordCount +1}
+                                                        </td>
+                                                        <td>
+                                                            <div class="slds-form-element">
+                                                                <div class="slds-form-element__control">
+                                                                    <label class="slds-checkbox" style="width:2px;">
                                                                     <ui:inputCheckbox text="{!tar.recordId}"
                                                                         aura:id="checkQuoteItem"
                                                                         value="{!tar.isSelected}"
@@ -941,24 +845,18 @@
                                                                         style="top:-2px;"></span>
                                                                     <span class="slds-form-element__label text"></span>
                                                                 </label>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </td>
-                                                    <td scope="row" class="slds-cell-edit" data-label="Name">
-                                                        <aura:if
-                                                            isTrue="{!or(and(and(v.isEditMode, v.fieldName == 'Name'), v.quoteItemId == tar.recordId),and(v.enableMassUpdate))}">
-                                                            <ui:inputText aura:id="inputId" value="{!tar.recordName}"
-                                                                change="{!c.updateQuoteData}" blur="{!c.onblur}" />
-                                                            <aura:set attribute="else">
-                                                                <div class="slds-truncate" title="{!tar.recordName}">
-                                                                    <a href="javascript:void(0);" role="menuitem"
-                                                                        tabindex="-1" data-record="{!tar.recordId}"
-                                                                        onclick="{!c.doView}">
+                                                        </td>
+                                                        <td scope="row" class="slds-cell-edit" data-label="Name">
+                                                            <aura:if isTrue="{!or(and(and(v.isEditMode, v.fieldName == 'Name'), v.quoteItemId == tar.recordId),and(v.enableMassUpdate))}">
+                                                                <ui:inputText aura:id="inputId" value="{!tar.recordName}" change="{!c.updateQuoteData}" blur="{!c.onblur}" />
+                                                                <aura:set attribute="else">
+                                                                    <div class="slds-truncate" title="{!tar.recordName}">
+                                                                        <a href="javascript:void(0);" role="menuitem" tabindex="-1" data-record="{!tar.recordId}" onclick="{!c.doView}">
                                                                         {!tar.recordName}
                                                                     </a>
-                                                                    <button
-                                                                        class="slds-button slds-button_icon slds-cell-edit__button slds-m-left_x-small"
-                                                                        tabindex="-1" title="">
+                                                                        <button class="slds-button slds-button_icon slds-cell-edit__button slds-m-left_x-small" tabindex="-1" title="">
                                                                         <span style="display:none;"
                                                                             data-id="{!tar.recordId}" data-label="Name"
                                                                             data-group="{!tar.groupId}"
@@ -969,141 +867,95 @@
                                                                         </span>
                                                                         <span class="slds-assistive-text">Edit</span>
                                                                     </button>
-                                                                </div>
-                                                            </aura:set>
-                                                        </aura:if>
-                                                    </td>
-                                                    <aura:iteration items="{!tar.recordList}" var="value">
-                                                        <td class="ShowIconClass" data-myvalue="{!value}">
-                                                            <aura:if
-                                                                isTrue="{!or(and(and(v.isEditMode, v.fieldName == value.fieldName),v.quoteItemId == tar.recordId),and(v.enableMassUpdate,or(or(or(or(or(or(or(value.fieldName=='buildertek__Quantity__c',or(or(value.fieldName == 'buildertek__Unit_Price__c',value.fieldName == 'buildertek__Priority__c'),value.fieldName == 'buildertek__Vendor__c')),value.fieldName=='buildertek__Additional_Discount__c'),value.fieldName=='buildertek__Unit_Cost__c'),value.fieldName=='buildertek__Applied_Markup__c'),value.fieldName == 'buildertek__UOM__c'),value.fieldName == 'buildertek__Markup__c'),value.fieldName=='buildertek__Notes__c')))}">
-                                                                <aura:if isTrue="{!value.fieldType != 'picklist'}">
-                                                                    <aura:if isTrue="{!value.fieldType == 'reference'}">
-                                                                        <c:BT_LookupFields
-                                                                            childObjectName="buildertek__Quote_Item__c"
-                                                                            selectedRecordId="{!value.originalValue}"
-                                                                            fieldName="{!value.fieldName}"
-                                                                            index="{!quoteIndex}" />
+                                                                    </div>
+                                                                </aura:set>
+                                                            </aura:if>
+                                                        </td>
+                                                        <aura:iteration items="{!tar.recordList}" var="value">
+                                                            <td class="ShowIconClass" data-myvalue="{!value}">
+                                                                <aura:if isTrue="{!or(and(and(v.isEditMode, v.fieldName == value.fieldName),v.quoteItemId == tar.recordId),and(v.enableMassUpdate,or(or(or(or(or(or(or(value.fieldName=='buildertek__Quantity__c',or(or(value.fieldName == 'buildertek__Unit_Price__c',value.fieldName == 'buildertek__Priority__c'),value.fieldName == 'buildertek__Vendor__c')),value.fieldName=='buildertek__Additional_Discount__c'),value.fieldName=='buildertek__Unit_Cost__c'),value.fieldName=='buildertek__Applied_Markup__c'),value.fieldName == 'buildertek__UOM__c'),value.fieldName == 'buildertek__Markup__c'),value.fieldName=='buildertek__Notes__c')))}">
+                                                                    <aura:if isTrue="{!value.fieldType != 'picklist'}">
+                                                                        <aura:if isTrue="{!value.fieldType == 'reference'}">
+                                                                            <c:BT_LookupFields childObjectName="buildertek__Quote_Item__c" selectedRecordId="{!value.originalValue}" fieldName="{!value.fieldName}" index="{!quoteIndex}" />
+                                                                            <aura:set attribute="else">
+                                                                                <ui:inputText aura:id="inputId" value="{!value.originalValue}" change="{!c.updateQuoteData}" blur="{!c.onblur}" />
+                                                                            </aura:set>
+                                                                        </aura:if>
+
                                                                         <aura:set attribute="else">
-                                                                            <ui:inputText aura:id="inputId"
-                                                                                value="{!value.originalValue}"
-                                                                                change="{!c.updateQuoteData}"
-                                                                                blur="{!c.onblur}" />
+                                                                            <ui:inputSelect value="{! value.originalValue }" class="select-class">
+                                                                                <aura:iteration var="option" items="{! v.options }">
+                                                                                    <option value="{! option.value }" selected="{!value.originalValue == option.value}">
+                                                                                        {! option.label }</option>
+                                                                                </aura:iteration>
+                                                                            </ui:inputSelect>
                                                                         </aura:set>
                                                                     </aura:if>
-
                                                                     <aura:set attribute="else">
-                                                                        <ui:inputSelect value="{! value.originalValue }"
-                                                                            class="select-class">
-                                                                            <aura:iteration var="option"
-                                                                                items="{! v.options }">
-                                                                                <option value="{! option.value }"
-                                                                                    selected="{!value.originalValue == option.value}">
-                                                                                    {! option.label }</option>
-                                                                            </aura:iteration>
-                                                                        </ui:inputSelect>
-                                                                    </aura:set>
-                                                                </aura:if>
-                                                                <aura:set attribute="else">
-                                                                    <div class="slds-truncate">
-                                                                        <aura:if
-                                                                            isTrue="{!value.fieldType == 'currency'}">
-                                                                            <aura:if
-                                                                                isTrue="{!value.originalValue != ''}">
-                                                                                <aura:if
-                                                                                    isTrue="{!value.fieldName != 'buildertek__Net_Unit__c'}">
-                                                                                    <!--<aura:if isTrue='{!v.multicurrency}'>
+                                                                        <div class="slds-truncate">
+                                                                            <aura:if isTrue="{!value.fieldType == 'currency'}">
+                                                                                <aura:if isTrue="{!value.originalValue != ''}">
+                                                                                    <aura:if isTrue="{!value.fieldName != 'buildertek__Net_Unit__c'}">
+                                                                                        <!--<aura:if isTrue='{!v.multicurrency}'>
                                                                                     <lightning:formattedNumber
                                                                                                        value="{!value.originalValue}"
                                                                                                        style="currency" class="inputCss" currencyCode="{!value.CurrencyIsoCode}" currencyDisplayAs="code"/>
                                                                                 </aura:if>
                                                                                 <aura:if isTrue='{!!v.multicurrency}'>-->
-                                                                                    <lightning:formattedNumber
-                                                                                        value="{!value.originalValue}"
-                                                                                        style="currency"
-                                                                                        class="inputCss"
-                                                                                        currencyCode="{!v.currencycode}"
-                                                                                        currencyDisplayAs="code" />
+                                                                                        <lightning:formattedNumber value="{!value.originalValue}" style="currency" class="inputCss" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
 
-                                                                                    <!--</aura:if>-->
+                                                                                        <!--</aura:if>-->
 
-                                                                                    <aura:set attribute="else">
-                                                                                        <span data-id="{!tar.recordId}"
-                                                                                            onclick="{!c.editUnitPrice}">
+                                                                                        <aura:set attribute="else">
+                                                                                            <span data-id="{!tar.recordId}" onclick="{!c.editUnitPrice}">
                                                                                             <lightning:icon
                                                                                                 iconName="utility:edit"
                                                                                                 size="xx-small" />
                                                                                             &nbsp;
                                                                                         </span>
-                                                                                        <!--<aura:if isTrue='{!v.multicurrency}'>
+                                                                                            <!--<aura:if isTrue='{!v.multicurrency}'>
                                                                                     <lightning:formattedNumber
                                                                                                            value="{!value.originalValue}"
                                                                                                            style="currency" class="inputCss" currencyCode="{!value.CurrencyIsoCode}" currencyDisplayAs="code"/>
                                                                                 
                                                                                 </aura:if>
                                                                                 <aura:if isTrue='{!!v.multicurrency}'>-->
-                                                                                        <lightning:formattedNumber
-                                                                                            value="{!value.originalValue}"
-                                                                                            style="currency"
-                                                                                            class="inputCss"
-                                                                                            currencyCode="{!v.currencycode}"
-                                                                                            currencyDisplayAs="code" />
+                                                                                            <lightning:formattedNumber value="{!value.originalValue}" style="currency" class="inputCss" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
 
-                                                                                        <!--</aura:if>-->
-                                                                                    </aura:set>
-                                                                                </aura:if>
-                                                                                <aura:set attribute="else">
-                                                                                    <!--<aura:if isTrue='{!v.multicurrency}'>
+                                                                                            <!--</aura:if>-->
+                                                                                        </aura:set>
+                                                                                    </aura:if>
+                                                                                    <aura:set attribute="else">
+                                                                                        <!--<aura:if isTrue='{!v.multicurrency}'>
                                                                                     <lightning:formattedNumber value="0.00"
                                                                                     style="currency" class="inputCss" currencyCode="{!value.CurrencyIsoCode}" currencyDisplayAs="code"/>
                                                                                  </aura:if>
                                                                                 <aura:if isTrue='{!!v.multicurrency}'>-->
-                                                                                    <lightning:formattedNumber
-                                                                                        value="0.00" style="currency"
-                                                                                        class="inputCss"
-                                                                                        currencyCode="{!v.currencycode}"
-                                                                                        currencyDisplayAs="code" />
-                                                                                    <!--</aura:if>-->
-                                                                                </aura:set>
+                                                                                        <lightning:formattedNumber value="0.00" style="currency" class="inputCss" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
+                                                                                        <!--</aura:if>-->
+                                                                                    </aura:set>
+                                                                                </aura:if>
+
                                                                             </aura:if>
 
-                                                                        </aura:if>
+                                                                            <aura:if isTrue="{!value.fieldType == 'number'}">
 
-                                                                        <aura:if
-                                                                            isTrue="{!value.fieldType == 'number'}">
+                                                                                <lightning:formattedNumber value="{!value.originalValue}" class="inputCss" />
+                                                                            </aura:if>
+                                                                            <aura:if isTrue="{!value.fieldType == 'string'}">
 
-                                                                            <lightning:formattedNumber
-                                                                                value="{!value.originalValue}"
-                                                                                class="inputCss" />
-                                                                        </aura:if>
-                                                                        <aura:if
-                                                                            isTrue="{!value.fieldType == 'string'}">
-
-                                                                            <lightning:formattedNumber
-                                                                                value="{!value.originalValue/100}"
-                                                                                style="percent"
-                                                                                minimumFractionDigits="2"
-                                                                                class="inputCss" />
-                                                                        </aura:if>
-                                                                        <aura:if
-                                                                            isTrue="{!value.fieldType == 'textarea'}">
-                                                                            <lightning:formattedRichText
-                                                                                value="{!value.originalValue}"
-                                                                                class="textAreaCss" />
-                                                                        </aura:if>
-                                                                        <aura:if
-                                                                            isTrue="{!value.fieldType == 'picklist'}">
-                                                                            {!value.originalValue}
-                                                                        </aura:if>
-                                                                        <aura:if isTrue="{!value.referenceValue}">
-                                                                            <ui:outputURL
-                                                                                value="{!'/one/one.app?#/sObject/'+ value.originalValue + '/view'}"
-                                                                                target="_blank"
-                                                                                label="{!value.referenceValue}" />
-                                                                        </aura:if>
-                                                                        <button
-                                                                            class="slds-button slds-button_icon slds-cell-edit__button slds-m-left_x-small"
-                                                                            tabindex="-1" title="">
+                                                                                <lightning:formattedNumber value="{!value.originalValue/100}" style="percent" minimumFractionDigits="2" class="inputCss" />
+                                                                            </aura:if>
+                                                                            <aura:if isTrue="{!value.fieldType == 'textarea'}">
+                                                                                <lightning:formattedRichText value="{!value.originalValue}" class="textAreaCss" />
+                                                                            </aura:if>
+                                                                            <aura:if isTrue="{!value.fieldType == 'picklist'}">
+                                                                                {!value.originalValue}
+                                                                            </aura:if>
+                                                                            <aura:if isTrue="{!value.referenceValue}">
+                                                                                <ui:outputURL value="{!'/one/one.app?#/sObject/'+ value.originalValue + '/view'}" target="_blank" label="{!value.referenceValue}" />
+                                                                            </aura:if>
+                                                                            <button class="slds-button slds-button_icon slds-cell-edit__button slds-m-left_x-small" tabindex="-1" title="">
                                                                             <aura:if
                                                                                 isTrue="{!value.isEditable == true}">
                                                                                 <span style="display:none;"
@@ -1120,50 +972,47 @@
                                                                             <span
                                                                                 class="slds-assistive-text">Edit</span>
                                                                         </button>
-                                                                    </div>
-                                                                </aura:set>
-                                                            </aura:if>
-                                                        </td>
-                                                    </aura:iteration>
-                                                    <td style="text-align:right">
-                                                        <div class="slds-truncate">
-                                                            <span data-id="{!tar.recordId}"
-                                                                onclick="{!c.onclickDuplicate}">
+                                                                        </div>
+                                                                    </aura:set>
+                                                                </aura:if>
+                                                            </td>
+                                                        </aura:iteration>
+                                                        <td style="text-align:right">
+                                                            <div class="slds-truncate">
+                                                                <span data-id="{!tar.recordId}" onclick="{!c.onclickDuplicate}">
                                                                 <lightning:icon iconName="utility:copy"
                                                                     size="xx-small" />
                                                                 &nbsp;
                                                             </span>
-                                                            <span data-id="{!tar.recordId}" onclick="{!c.editQuote}">
+                                                                <span data-id="{!tar.recordId}" onclick="{!c.editQuote}">
                                                                 <lightning:icon iconName="utility:edit"
                                                                     size="xx-small" />
                                                                 &nbsp;
                                                             </span>
-                                                            <span data-id="{!tar.recordId}" onclick="{!c.deleteQuote}">
+                                                                <span data-id="{!tar.recordId}" onclick="{!c.deleteQuote}">
                                                                 <lightning:icon iconName="utility:delete"
                                                                     size="xx-small" />
                                                             </span>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                    </td>
-                                                </aura:if>
-                                            </tr>
-                                        </aura:iteration>
-                                        <tr class="groupFooter">
-                                            <td>
-                                            </td>
-                                            <td>
-                                            </td>
-                                            <td>
-                                            </td>
-                                            <aura:iteration items="{!v.TotalRecords.wrapperList}" var="rec"
-                                                indexVar="totalRecordsIndex">
-                                                <aura:if
-                                                    isTrue="{!group.Name == rec.groupName &amp;&amp; rec.fieldType != 'false'}">
-                                                    <aura:if isTrue="{!rec.fieldType == 'CURRENCY'}">
+                                                            </div>
+                                                        </td>
                                                         <td>
-                                                            <aura:if isTrue="{!rec.totalValue != null}">
-                                                                <span style="font-weight: bold;">
+                                                        </td>
+                                                    </aura:if>
+                                                </tr>
+                                            </aura:iteration>
+                                            <tr class="groupFooter">
+                                                <td>
+                                                </td>
+                                                <td>
+                                                </td>
+                                                <td>
+                                                </td>
+                                                <aura:iteration items="{!v.TotalRecords.wrapperList}" var="rec" indexVar="totalRecordsIndex">
+                                                    <aura:if isTrue="{!group.Name == rec.groupName &amp;&amp; rec.fieldType != 'false'}">
+                                                        <aura:if isTrue="{!rec.fieldType == 'CURRENCY'}">
+                                                            <td>
+                                                                <aura:if isTrue="{!rec.totalValue != null}">
+                                                                    <span style="font-weight: bold;">
                                                                     <!--<aura:if isTrue='{!v.multicurrency}'>
                                                                     <lightning:formattedNumber value="{!rec.totalValue}"
                                                                 style="currency" currencyCode="{!rec.CurrencyIsoCode}" currencyDisplayAs="code"/>
@@ -1187,51 +1036,49 @@
                                                                         <!--</aura:if>-->
                                                                     </aura:set>
                                                                 </span>
-                                                            </aura:if>
-                                                            <button
-                                                                class="slds-button slds-button_icon slds-cell-edit__button slds-m-left_x-small"
-                                                                tabindex="-1" title="">
+                                                                </aura:if>
+                                                                <button class="slds-button slds-button_icon slds-cell-edit__button slds-m-left_x-small" tabindex="-1" title="">
                                                                 <span style="display:none;">
                                                                 </span>
                                                                 <span class="slds-assistive-text">Edit</span>
                                                             </button>
+                                                            </td>
+                                                        </aura:if>
+                                                    </aura:if>
+                                                    <!-- <aura:if isTrue="{!v.wrapperListLength != totalRecordsIndex}">  -->
+                                                    <aura:if isTrue="{!group.Name == rec.groupName &amp;&amp; rec.fieldType == 'false'}">
+                                                        <td style="text-align:right">
+
                                                         </td>
                                                     </aura:if>
-                                                </aura:if>
-                                                <!-- <aura:if isTrue="{!v.wrapperListLength != totalRecordsIndex}">  -->
-                                                <aura:if
-                                                    isTrue="{!group.Name == rec.groupName &amp;&amp; rec.fieldType == 'false'}">
-                                                    <td style="text-align:right">
+                                                    <!-- </aura:if> -->
+                                                </aura:iteration>
+                                            </tr>
+                                            <br />
 
-                                                    </td>
-                                                </aura:if>
-                                                <!-- </aura:if> -->
-                                            </aura:iteration>
-                                        </tr>
-                                        <br />
-
-                                        <!--<br />
+                                            <!--<br />
                                     <br />-->
-                                    </aura:iteration>
-                                    <aura:if isTrue="{!empty(v.TotalRecords.groups)}">
-                                        <div class="slds-col slds-size_6-of-12 slds-float_right"
-                                            style="font-size: 10px; height:1.5rem;">
-                                            <lightning:button variant="neutral" label="Add Quote Line"
-                                                name="{!groupIndex}" title="Add Quote Line" class="addBudgetLineStyle"
-                                                onclick="{!c.addProductFromGroup}" />
-                                        </div>
-                                    </aura:if>
-                                </tbody>
-                            </table>
-                        </div>
-                        <!--<br />-->
-                        <aura:if isTrue="{!v.total > 50}">
-                            <div class="slds-align_absolute-center">
-                                <lightning:button disabled="{!v.page == 1}" variant="brand" label="Previous"
-                                    onclick="{! c.navigate }" />
-                                <lightning:button disabled="{!v.page == v.pages}" aura:id="previousPage" variant="brand"
-                                    label="Next" onclick="{! c.navigate }" />
+                                        </aura:iteration>
+                                        <aura:if isTrue="{!empty(v.TotalRecords.groups)}">
+                                            <div class="slds-col slds-size_6-of-12 slds-float_right" style="font-size: 10px; height:1.5rem;">
+                                                <lightning:button variant="neutral" label="Add Quote Line" name="{!groupIndex}" title="Add Quote Line" class="addBudgetLineStyle" onclick="{!c.addProductFromGroup}" />
+                                            </div>
+                                        </aura:if>
+                                    </tbody>
+                                </table>
+
                             </div>
+                            <!--<br />-->
+                            <aura:if isTrue="{!v.total > 50}">
+                                <div class="slds-align_absolute-center">
+                                    <lightning:button disabled="{!v.page == 1}" variant="brand" label="Previous" onclick="{! c.navigate }" />
+                                    <lightning:button disabled="{!v.page == v.pages}" aura:id="previousPage" variant="brand" label="Next" onclick="{! c.navigate }" />
+                                </div>
+                            </aura:if>
+
+                            <aura:set attribute="else">
+                                <lightning:datatable keyField="id" data="{! v.rejectData }" columns="{! v.rejectColumns }" hideCheckboxColumn="true" />
+                            </aura:set>
                         </aura:if>
 
                         <!-- <br />-->
@@ -1247,14 +1094,11 @@
                         </aura:if>
                     </div>
                     <aura:if isTrue="{!v.editUnitPrice}">
-                        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
-                            aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
                             <div class="slds-modal__container">
                                 <header class="slds-modal__header">
-                                    <lightning:buttonIcon iconName="utility:close" onclick="{! c.closeunitsalesprice }"
-                                        alternativeText="close" variant="bare-inverse" class="slds-modal__close" />
-                                    <h2 id="modal-heading-01" class="slds-text-heading_large slds-hyphenate">Update Unit
-                                        Sales Price</h2>
+                                    <lightning:buttonIcon iconName="utility:close" onclick="{! c.closeunitsalesprice }" alternativeText="close" variant="bare-inverse" class="slds-modal__close" />
+                                    <h2 id="modal-heading-01" class="slds-text-heading_large slds-hyphenate">Update Unit Sales Price</h2>
                                 </header>
                                 <div class="slds-modal__content" id="modal-content-id-1">
                                     <div class="slds-p-around_large">
@@ -1269,10 +1113,8 @@
                                         </div>
                                     </div>
                                     <footer class="slds-modal__footer">
-                                        <lightning:button variant="neutral" label="Cancel" title="Cancel"
-                                            onclick="{! c.closeunitsalesprice }" />
-                                        <lightning:button variant="brand" label="Save" title="Save"
-                                            onclick="{!c.updateUnitSalesPrice}" />
+                                        <lightning:button variant="neutral" label="Cancel" title="Cancel" onclick="{! c.closeunitsalesprice }" />
+                                        <lightning:button variant="brand" label="Save" title="Save" onclick="{!c.updateUnitSalesPrice}" />
                                     </footer>
                                 </div>
                             </div>
@@ -1280,9 +1122,7 @@
                         <div class="slds-backdrop slds-backdrop_open"></div>
                     </aura:if>
                     <aura:if isTrue="{!v.openProductBox}">
-                        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
-                            aria-describedby="modal-content-id-1"
-                            class="slds-modal slds-fade-in-open  slds-modal_large">
+                        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open  slds-modal_large">
                             <div class="slds-modal__container increaseheight">
                                 <header class="slds-modal__header">
                                     <!--   <lightning:buttonIcon iconName="utility:close" onclick="{! c.closeAddProductFromGroup }"
@@ -1295,13 +1135,10 @@
                                         <lightning:layoutItem padding="around-small" size="4">
                                             <!--  <label>Pricebook</label> -->
                                             <div style="padding-top:18px">
-                                                <ui:inputSelect value="{! v.pricebookName1 }" change="{!c.changeEvent1}"
-                                                    class="pricebook-class" aura:id="getPriceBookId" >
+                                                <ui:inputSelect value="{! v.pricebookName1 }" change="{!c.changeEvent1}" class="pricebook-class" aura:id="getPriceBookId">
                                                     <aura:iteration var="option" items="{! v.pricebookoptions }">
                                                         <aura:if isTrue="{! option.key != 'None'}">
-                                                            <option value="{! option.value }"
-                                                                selected="{!option.value == v.pricebookName1}">{!
-                                                                option.key }</option>
+                                                            <option value="{! option.value }" selected="{!option.value == v.pricebookName1}">{! option.key }</option>
                                                         </aura:if>
                                                     </aura:iteration>
                                                 </ui:inputSelect>
@@ -1328,17 +1165,13 @@
                                     <br />
                                     <div style="height: 500px">
 
-                                        <lightning:datatable aura:id="accountDataTable" keyField="Id"
-                                            data="{! v.data1 }" hideCheckboxColumn="false" columns="{! v.columns1 }"
-                                            selectedRows="{! v.selectedRows }"
-                                            onrowselection="{! c.updateSelectedText }" onsort="{!c.updateColumnSorting}"
-                                            sortedBy="{!v.sortedBy}" sortedDirection="{!v.sortedDirection}" />
+                                        <lightning:datatable aura:id="accountDataTable" keyField="Id" data="{! v.data1 }" hideCheckboxColumn="false" columns="{! v.columns1 }" selectedRows="{! v.selectedRows }" onrowselection="{! c.updateSelectedText }" onsort="{!c.updateColumnSorting}" sortedBy="{!v.sortedBy}"
+                                            sortedDirection="{!v.sortedDirection}" />
                                     </div>
                                 </div>
                                 <aura:if isTrue="{!v.Spinner2}">
                                     <div aura:id="spinnerId" class="slds-spinner_container">
-                                        <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative"
-                                            role="alert">
+                                        <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
                                             <span class="slds-assistive-text">Loading</span>
                                             <div class="slds-spinner__dot-a"></div>
                                             <div class="slds-spinner__dot-b"></div>
@@ -1350,10 +1183,8 @@
                                 </aura:if>
 
                                 <footer class="slds-modal__footer">
-                                    <button class="slds-button slds-button_neutral" aria-label="Cancel and close"
-                                        onclick="{!c.closeBox}">Cancel</button>
-                                    <button class="slds-button slds-button_brand"
-                                        onclick="{!c.openQuoteLine}">Next</button>
+                                    <button class="slds-button slds-button_neutral" aria-label="Cancel and close" onclick="{!c.closeBox}">Cancel</button>
+                                    <button class="slds-button slds-button_brand" onclick="{!c.openQuoteLine}">Next</button>
                                 </footer>
 
                             </div>
@@ -1362,20 +1193,15 @@
                     </aura:if>
 
                     <aura:if isTrue="{!v.openQuoteLineBox}">
-                        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
-                            aria-describedby="modal-content-id-1"
-                            class="slds-modal slds-fade-in-open  slds-modal_large">
+                        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open  slds-modal_large">
                             <div class="slds-modal__container">
                                 <header class="slds-modal__header">
                                     <!--  <lightning:buttonIcon iconName="utility:close" onclick="{! c.closeAddProductFromGroup }"
                             alternativeText="close" variant="bare-inverse" class="slds-modal__close" /> -->
-                                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Edit
-                                        Selected Quote Line Items</h2>
+                                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Edit Selected Quote Line Items</h2>
                                 </header>
                                 <div class="slds-modal__content" id="modal-content-id-1">
-                                    <table aria-multiselectable="true"
-                                        class="slds-card slds-table slds-table_bordered slds-table_fixed-layout slds-table_resizable-cols"
-                                        role="grid">
+                                    <table aria-multiselectable="true" class="slds-card slds-table slds-table_bordered slds-table_fixed-layout slds-table_resizable-cols" role="grid">
                                         <thead style="height: 40px; ">
                                             <tr>
 
@@ -1402,7 +1228,7 @@
                                                 <th style="width: 100px; padding-left: 12px">
                                                     List Price
                                                 </th>
-                                                <th style = "width: 100px; padding-left: 10px">
+                                                <th style="width: 100px; padding-left: 10px">
                                                     Description
                                                 </th>
                                                 <th style="width: 200px; padding-left: 10px">
@@ -1433,31 +1259,23 @@
                                             <aura:iteration items="{!v.data2}" var="item" indexVar="recIndex">
                                                 <tr title="Product">
                                                     <td>
-                                                        <lightning:input name="input1" label=""
-                                                            value="{!item.buildertek__Size__c}" disabled="true" />
+                                                        <lightning:input name="input1" label="" value="{!item.buildertek__Size__c}" disabled="true" />
                                                     </td>
                                                     <td>
-                                                        <lightning:input name="input1" label="" value="{!item.Name}"
-                                                            disabled="true" />
+                                                        <lightning:input name="input1" label="" value="{!item.Name}" disabled="true" />
                                                     </td>
                                                     <td>
-                                                        <lightning:input name="input6" label=""
-                                                            value="{!item.buildertek__Unit_Cost__c}"
-                                                            formatter="currency" type="number" maximumFractionDigits="5"
-                                                            step="0.01" />
+                                                        <lightning:input name="input6" label="" value="{!item.buildertek__Unit_Cost__c}" formatter="currency" type="number" maximumFractionDigits="5" step="0.01" />
                                                     </td>
                                                     <td>
-                                                        <lightning:input name="input2" label=""
-                                                            value="{!item.buildertek__Unit_Price__c}"
-                                                            formatter="currency" type="number" maximumFractionDigits="5"
-                                                            step="0.01" />
+                                                        <lightning:input name="input2" label="" value="{!item.buildertek__Unit_Price__c}" formatter="currency" type="number" maximumFractionDigits="5" step="0.01" />
                                                     </td>
-                                                     <td>
-                                                        <lightning:input name="input3" label="" value="{!item.buildertek__Description__c}"/>
-                                                    </td> 
                                                     <td>
-                                             
-                             
+                                                        <lightning:input name="input3" label="" value="{!item.buildertek__Description__c}" />
+                                                    </td>
+                                                    <td>
+
+
                                                         <lightning:select name="mySelect" label="" value="{!item.buildertek__Grouping__c}">
                                                             <option value="">No Grouping</option>
                                                             <aura:iteration items="{!v.quotelineRecords}" var="rec">
@@ -1473,16 +1291,13 @@
                                                         </lightning:select>
                                                     </td>
                                                     <td>
-                                                        <lightning:input name="input4" label=""
-                                                            value="{!item.buildertek__Quantity__c}" />
+                                                        <lightning:input name="input4" label="" value="{!item.buildertek__Quantity__c}" />
                                                     </td>
                                                     <td>
-                                                        <lightning:input name="input7" label=""
-                                                            value="{!item.buildertek__Markup__c}" />
+                                                        <lightning:input name="input7" label="" value="{!item.buildertek__Markup__c}" />
                                                     </td>
                                                     <td>
-                                                        <lightning:input name="input5" label=""
-                                                            value="{!item.buildertek__Additional_Discount__c}" />
+                                                        <lightning:input name="input5" label="" value="{!item.buildertek__Additional_Discount__c}" />
                                                     </td>
 
 
@@ -1493,8 +1308,7 @@
                                 </div>
                                 <aura:if isTrue="{!v.Spinner}">
                                     <div aura:id="spinnerId" class="slds-spinner_container">
-                                        <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative"
-                                            role="alert">
+                                        <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
                                             <span class="slds-assistive-text">Loading</span>
                                             <div class="slds-spinner__dot-a"></div>
                                             <div class="slds-spinner__dot-b"></div>
@@ -1505,13 +1319,10 @@
                                     </div>
                                 </aura:if>
                                 <footer class="slds-modal__footer">
-                                    <button class="slds-button slds-button_neutral" aria-label="Cancel and close"
-                                        onclick="{!c.closeBox2}">Cancel</button>
-                                    <button class="slds-button slds-button_neutral" aria-label="Cancel and close"
-                                        onclick="{!c.cancelBox}">Back</button>
+                                    <button class="slds-button slds-button_neutral" aria-label="Cancel and close" onclick="{!c.closeBox2}">Cancel</button>
+                                    <button class="slds-button slds-button_neutral" aria-label="Cancel and close" onclick="{!c.cancelBox}">Back</button>
 
-                                    <button class="slds-button slds-button_brand" onclick="{!c.addQuoteLine}"
-                                        disabled="{!v.isDisabled}">Save</button>
+                                    <button class="slds-button slds-button_brand" onclick="{!c.addQuoteLine}" disabled="{!v.isDisabled}">Save</button>
                                 </footer>
                             </div>
                         </section>
