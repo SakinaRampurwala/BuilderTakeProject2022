@@ -1500,7 +1500,7 @@ $A.enqueueAction(action1);*/
         } else {
             var toastEvent = $A.get("e.force:showToast");
             toastEvent.setParams({
-                mode: 'sticky',
+                title: 'Error',
                 message: 'Please select the Quote Line you would like to duplicate.',
                 type: 'error',
                 duration: '10000',

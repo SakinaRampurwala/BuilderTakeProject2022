@@ -773,7 +773,7 @@ public with sharing class QuoteDAO{
             }
         }
         soql = soql + ' FROM buildertek__Quote_Item__c';
-        string status = 'Accept';
+        string status = 'Reject';
         soql = soql + ' WHERE buildertek__Quote__c =: quoteId AND buildertek__status__c =: status ORDER BY buildertek__Grouping__r.buildertek__Sort_Id__c,buildertek__Grouping__r.Name  ASC limit ' + recordToDisply + ' OFFSET ' + offset;
 
         List<buildertek__Quote_Item__c> quoteItemList = new List<buildertek__Quote_Item__c>();
@@ -1604,7 +1604,7 @@ public with sharing class QuoteDAO{
             }
         }
         system.debug('aggregateFields --------> ' + aggregateFields);
-        string status = 'Accept';
+        string status = 'Reject';
         String myqueries = '';
         myqueries = 'select buildertek__Quote__c,buildertek__Grouping__r.Name,buildertek__Grouping__r.buildertek__Sort_Id__c ' + aggregateFields + ' from buildertek__Quote_Item__c where buildertek__Quote__c =: recordId  AND buildertek__Status__c =: status  Order By buildertek__Grouping__r.buildertek__Sort_Id__c,buildertek__Grouping__r.Name, buildertek__Priority__c ASC , Name ASC limit ' + recordToDisply + ' OFFSET ' + offset;
         List<SObject> ListOfRecords;
