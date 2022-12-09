@@ -1626,6 +1626,7 @@ $A.enqueueAction(action1);*/
             });
             $A.enqueueAction(action);
         }
+
     },
     closeDuplicateModel: function(component, event, helper) {
         // for Hide/Close Model,set the "isDuplicate" attribute to "Fasle"  
@@ -1639,7 +1640,10 @@ $A.enqueueAction(action1);*/
 
     },
     onMarkupChange: function(component, event, helper) {
+        console.log('clicl markup');
         var markup = component.get("v.QuoteRec").buildertek__Markup__c;
+        component.set('v.clickRejectBtn', true);
+
         if (markup != '' && markup != null && markup != 'Undefined') {
             component.set("v.isMarkup", true);
             //component.set("v.PopupHeader", "Save Quote Line");
@@ -1665,7 +1669,6 @@ $A.enqueueAction(action1);*/
             });
             toastEvent.fire();
         }
-        component.set('v.clickRejectBtn', true);
 
 
         // 	var a = component.get("v.QuoteRec").Id;
@@ -1792,12 +1795,17 @@ helper.getQuoteInfo(component,event,helper);*/
     },
 
     refreshComponentHandler: function(component, event, helper) {
-        console.log('refreshComponentHandler');
-        $A.get("e.c:BT_SpinnerEvent").setParams({
-            "action": "SHOW"
-        }).fire();
-        var page = component.get("v.page") || 1;
-        helper.getGroups(component, event, helper, page);
+        try {
+            console.log('refreshComponentHandler');
+            $A.get("e.c:BT_SpinnerEvent").setParams({
+                "action": "SHOW"
+            }).fire();
+            var page = component.get("v.page") || 1;
+            helper.getGroups(component, event, helper, page);
+        } catch (e) {
+            console.log({ e });
+        }
+
 
     },
     onInputChange: function(component, event, helper) {
@@ -2306,8 +2314,9 @@ return other.Id == current.Id
     },
 
     addQuoteLine: function(component, event, helper) {
-        component.set("v.isDisabled", true)
 
+
+        component.set("v.isDisabled", true)
         console.log(component.get("v.isDisabled"))
         var listQlines = component.get("v.data2");
         component.set("v.Spinner", true);
@@ -2344,6 +2353,9 @@ return other.Id == current.Id
                 // $A.get('e.force:refreshView').fire();
             component.set("v.openProductBox", false);
             component.set("v.openQuoteLineBox", false);
+
+            component.set('v.clickRejectBtn', true);
+
             // location.reload();
 
         });
@@ -2445,27 +2457,45 @@ return other.Id == current.Id
     },
 
     showRejectedLines: function(component, event, helper) {
-        var rejectData = component.get('v.rejectData');
-        if (rejectData != null) {
-            $A.get("e.c:BT_SpinnerEvent").setParams({
-                "action": "SHOW"
-            }).fire();
-            component.set('v.clickRejectBtn', false);
-            component.set('v.rejectColumns', [
-                { label: 'Product Description', fieldName: 'Name' },
-                { label: 'Quantity', fieldName: 'buildertek__Quantity__c', type: 'text' },
-                { label: 'Unit Cost', fieldName: 'buildertek__Unit_Cost__c' },
-                { label: 'Sub Total', fieldName: 'buildertek__Total_Cost__c' },
-                { label: 'Markup (%)', fieldName: 'buildertek__Markup__c', type: 'percentage' },
-                { label: 'Discount (%)', fieldName: 'buildertek__Discount__c', type: 'percentage' },
-                { label: 'Unit Sales Price', fieldName: 'buildertek__Net_Unit__c' },
-                { label: 'Total', fieldName: 'buildertek__Net_Total_Price__c' }
-
-            ]);
-            $A.get("e.c:BT_SpinnerEvent").setParams({
-                "action": "HIDE"
-            }).fire();
-
+        helper.showRejectedLines(component, event, helper);
+    },
+    goBack: function(component, event, helper) {
+        component.set('v.clickRejectBtn', true);
+    },
+    handleRowAction: function(component, event, helper) {
+        var action = event.getParam('action');
+        var row = event.getParam('row');
+        var recordId = row.Id;
+        switch (action.name) {
+            case 'copy':
+                component.set("v.currentId", recordId);
+                component.set("v.PopupHeader", "Duplicate Quote Line");
+                component.set("v.PopupDescription", "Are you sure you want to duplicate this Quote Line?");
+                component.set("v.isDuplicate", true);
+                break;
+            case 'edit':
+                var editRecordEvent = $A.get("e.force:editRecord");
+                editRecordEvent.setParams({
+                    "recordId": recordId
+                });
+                editRecordEvent.fire();
+                break;
+            case 'delete':
+                component.set("v.PopupHeader", "Delete Quote Line");
+                component.set("v.PopupDescription", "Are you sure you want to delete this Quote Line?");
+                component.set("v.isOpen", true);
+                component.set("v.quoteItemId", recordId);
+                break;
         }
+        window.setTimeout(
+            $A.getCallback(function() {
+                helper.setRejectedBtnColor(component, event, helper)
+                helper.showRejectedLines(component, event, helper)
+            }), 3000
+        );
+        $A.get('e.force:refreshView').fire();
+        console.log(component.get('v.rejectData'));
+
     }
+
 })

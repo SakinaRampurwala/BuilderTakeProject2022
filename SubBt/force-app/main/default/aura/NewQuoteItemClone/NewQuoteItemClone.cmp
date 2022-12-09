@@ -106,6 +106,8 @@
 
     <aura:attribute name="rejectData" type="Object" />
     <aura:attribute name="rejectColumns" type="List" />
+    <aura:attribute name="selectedRejectRows" type="List" />
+
 
 
 
@@ -227,7 +229,7 @@
                             </div>&nbsp;
 
                             <div>
-                                <lightning:button aura:id='rejectBtn' disabled='true' iconPosition="left" label="Rejected Lines" class="sldsButtonGroup" onclick="{!c.showRejectedLines}" />
+                                <lightning:button aura:id='rejectBtn' disabled='true' iconPosition="left" label="Rejected Lines" class="rejectBtn sldsButtonGroup" onclick="{!c.showRejectedLines}" />
                             </div>&nbsp;
 
 
@@ -258,24 +260,27 @@
                 </lightning:buttonGroup>
             </div>
             <br />
-            <div class="slds-float_left" style="padding: 1rem; margin-top: -5px;">
-                <!-- <span style="display:inline-block;" class="{!'expandAllBtn_'+v.quoteId}" data-iconattr ="{!'expandAllBtn_'+v.quoteId}" data-iconname="Expand All" onclick="{!c.expandCollapeAll}">
+            <aura:if isTrue="{!v.clickRejectBtn}">
+
+                <div class="slds-float_left" style="padding-left: 1rem; padding-top:1rem; margin-top: -5px;">
+                    <!-- <span style="display:inline-block;" class="{!'expandAllBtn_'+v.quoteId}" data-iconattr ="{!'expandAllBtn_'+v.quoteId}" data-iconname="Expand All" onclick="{!c.expandCollapeAll}">
                 <lightning:buttonIcon aura:id="expandCollapeseAllBtn" iconName="utility:add"  variant="border-filled" iconClass="dark" alternativeText="Expand All" title="Expand All"  />                       
             </span> 
             <span style="display:none;" class="{!'CollapeseAllBtn_'+v.quoteId}" data-iconattr ="{!'CollapeseAllBtn_'+v.quoteId}" data-iconname="Collapse All"  onclick="{!c.expandCollapeAll}">
                 <lightning:buttonIcon aura:id="expandCollapeseAllBtn2" iconName="utility:dash"  variant="border-filled" iconClass="dark" alternativeText="Collapse All" title="Collapse All"/>                       
             </span> inline-block-->
-                <span style="display:none;" class="{!'expandAllBtn_'+v.quoteId}" data-iconattr="{!'expandAllBtn_'+v.quoteId}" data-iconname="Expand All" onclick="{!c.expandCollapeAll}">
+                    <span style="display:none;" class="{!'expandAllBtn_'+v.quoteId}" data-iconattr="{!'expandAllBtn_'+v.quoteId}" data-iconname="Expand All" onclick="{!c.expandCollapeAll}">
                     <lightning:buttonIcon aura:id="expandCollapeseAllBtn" iconName="utility:add" variant="border-filled"
                         iconClass="dark" alternativeText="Expand All" title="Expand All" />
                 </span>
-                <span style="display:inline-block;" class="{!'CollapeseAllBtn_'+v.quoteId}" data-iconattr="{!'CollapeseAllBtn_'+v.quoteId}" data-iconname="Collapse All" onclick="{!c.expandCollapeAll}">
+                    <span style="display:inline-block;" class="{!'CollapeseAllBtn_'+v.quoteId}" data-iconattr="{!'CollapeseAllBtn_'+v.quoteId}" data-iconname="Collapse All" onclick="{!c.expandCollapeAll}">
                     <lightning:buttonIcon aura:id="expandCollapeseAllBtn2" iconName="utility:dash"
                         variant="border-filled" iconClass="dark" alternativeText="Collapse All" title="Collapse All" />
                 </span>
-                <!-- <lightning:buttonIcon aura:id="expandCollapeseAllBtn" iconName="utility:add"  variant="border-filled" iconClass="dark" alternativeText="Expand All" title="Expand All"   onclick="{!c.expandCollapeAll}" /> -->
-                <!-- <lightning:button aura:id="expandCollapeseAllBtn" variant="neutral" label="" title="Expand All"  iconName="utility:add" iconPosition="left" onclick="{!c.expandCollapeAll}"/> -->
-            </div>
+                    <!-- <lightning:buttonIcon aura:id="expandCollapeseAllBtn" iconName="utility:add"  variant="border-filled" iconClass="dark" alternativeText="Expand All" title="Expand All"   onclick="{!c.expandCollapeAll}" /> -->
+                    <!-- <lightning:button aura:id="expandCollapeseAllBtn" variant="neutral" label="" title="Expand All"  iconName="utility:add" iconPosition="left" onclick="{!c.expandCollapeAll}"/> -->
+                </div>
+            </aura:if>
 
             <aura:if isTrue="{!v.addGroupPopup}">
                 <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
@@ -1077,7 +1082,10 @@
                             </aura:if>
 
                             <aura:set attribute="else">
-                                <lightning:datatable keyField="id" data="{! v.rejectData }" columns="{! v.rejectColumns }" hideCheckboxColumn="true" />
+                                <!-- <lightning:buttonIcon iconName="utility:back" variant="bare" onclick="{!c.goBack}" alternativeText="Back" title="Back" /> -->
+                                <lightning:button label="Go Back" iconName="utility:back" onclick="{!c.goBack}" iconPosition="left" class="slds-m-bottom_x-small slds-m-left_x-small" />
+
+                                <lightning:datatable keyField="id" data="{!v.rejectData }" columns="{!v.rejectColumns }" selectedRows="{! v.selectedRejectRows }" hideCheckboxColumn="false" maxRowSelection="{!v.maxRowSelection }" onrowaction="{!c.handleRowAction  }" />
                             </aura:set>
                         </aura:if>
 
@@ -1165,8 +1173,8 @@
                                     <br />
                                     <div style="height: 500px">
 
-                                        <lightning:datatable aura:id="accountDataTable" keyField="Id" data="{! v.data1 }" hideCheckboxColumn="false" columns="{! v.columns1 }" selectedRows="{! v.selectedRows }" onrowselection="{! c.updateSelectedText }" onsort="{!c.updateColumnSorting}" sortedBy="{!v.sortedBy}"
-                                            sortedDirection="{!v.sortedDirection}" />
+                                        <lightning:datatable aura:id="accountDataTable" keyField="Id" data="{! v.data1 }" hideCheckboxColumn="false" columns="{! v.columns1 }" onrowselection="{! c.updateSelectedText }" onsort="{!c.updateColumnSorting}" sortedBy="{!v.sortedBy}" sortedDirection="{!v.sortedDirection}"
+                                        />
                                     </div>
                                 </div>
                                 <aura:if isTrue="{!v.Spinner2}">
