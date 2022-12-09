@@ -107,6 +107,8 @@
     <aura:attribute name="rejectData" type="Object" />
     <aura:attribute name="rejectColumns" type="List" />
     <aura:attribute name="selectedRejectRows" type="List" />
+    <!-- <aura:attribute name="selectRejectRows" type="List" /> -->
+
 
 
 
@@ -1085,7 +1087,7 @@
                                 <!-- <lightning:buttonIcon iconName="utility:back" variant="bare" onclick="{!c.goBack}" alternativeText="Back" title="Back" /> -->
                                 <lightning:button label="Go Back" iconName="utility:back" onclick="{!c.goBack}" iconPosition="left" class="slds-m-bottom_x-small slds-m-left_x-small" />
 
-                                <lightning:datatable keyField="id" data="{!v.rejectData }" columns="{!v.rejectColumns }" selectedRows="{! v.selectedRejectRows }" hideCheckboxColumn="false" maxRowSelection="{!v.maxRowSelection }" onrowaction="{!c.handleRowAction  }" />
+                                <lightning:datatable keyField="id" data="{!v.rejectData }" columns="{!v.rejectColumns }" hideCheckboxColumn="false" maxRowSelection="{!v.maxRowSelection }" onrowselection="{! c.handleSelectedRow }" onrowaction="{!c.handleRowAction  }" />
                             </aura:set>
                         </aura:if>
 

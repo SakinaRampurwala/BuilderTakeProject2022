@@ -736,9 +736,28 @@
     },
 
     deleteSelectedQuoteItem: function(component, event, helper) {
-        component.set('v.clickRejectBtn', true);
+        // component.set('v.clickRejectBtn', true);
+        let getValue = component.get('v.clickRejectBtn') == false ? component.set('v.clickRejectBtn', false) : component.set('v.clickRejectBtn', true);
+        let getRejectBtnValue = component.get('v.clickRejectBtn');
+        let getSelectedRows = component.get("v.selectedRejectRows");
+        if (getSelectedRows.length > 0) {
+            console.log(getSelectedRows);
+            // helper.duplicateRejectedQuoteLine(component, event, helper);
+        } else {
+            var toastEvent = $A.get("e.force:showToast");
+            toastEvent.setParams({
+                title: 'Error',
+                message: 'Please select the Quote Line you would like to Delete.',
+                duration: ' 5000',
+                key: 'info_alt',
+                type: 'error',
+                mode: 'pester'
+            });
+            toastEvent.fire();
 
-        if (component.find("checkQuoteItem") != undefined) {
+        }
+
+        if (component.find("checkQuoteItem") != undefined && getRejectBtnValue == true) {
             $A.get("e.c:BT_SpinnerEvent").setParams({
                 "action": "SHOW"
             }).fire();
@@ -1188,8 +1207,7 @@ $A.enqueueAction(action1);*/
     //additional functionallity for mass-update and duplicate records 
 
     onClickMassUpdateCancel: function(component, event, helper) {
-        component.set('v.clickRejectBtn', true);
-
+        // let getValue = component.get('v.clickRejectBtn') == false ? component.set('v.clickRejectBtn', false) : component.set('v.clickRejectBtn', true);
         $A.get("e.c:BT_SpinnerEvent").setParams({
             "action": "SHOW"
         }).fire();
@@ -1201,6 +1219,9 @@ $A.enqueueAction(action1);*/
     },
 
     onClickMassUpdate: function(component, event, helper) {
+        // let getValue = component.get('v.clickRejectBtn') == false ? component.set('v.clickRejectBtn', false) : component.set('v.clickRejectBtn', true);
+        // let getRejectBtnValue = component.get('v.clickRejectBtn');
+        // component.set('v.clickRejectBtn', true)
         component.set("v.enableMassUpdate", component.get("v.enableMassUpdate") == true ? false : true);
         if (component.get("v.enableMassUpdate") == false && component.get('v.isChangeData')) {
             $A.get("e.c:BT_SpinnerEvent").setParams({
@@ -1470,9 +1491,26 @@ $A.enqueueAction(action1);*/
         }
     },
     onClickMassDuplicate: function(component, event, helper) {
-        component.set('v.clickRejectBtn', true);
+        let getValue = component.get('v.clickRejectBtn') == false ? component.set('v.clickRejectBtn', false) : component.set('v.clickRejectBtn', true);
+        let getRejectBtnValue = component.get('v.clickRejectBtn');
+        let getSelectedRows = component.get("v.selectedRejectRows");
+        if (getSelectedRows.length > 0) {
+            console.log(getSelectedRows);
+            helper.duplicateRejectedQuoteLine(component, event, helper);
+        } else {
+            var toastEvent = $A.get("e.force:showToast");
+            toastEvent.setParams({
+                mode: 'sticky',
+                message: 'Please select the Quote Line you would like to duplicate.',
+                type: 'error',
+                duration: '10000',
+                mode: 'dismissible'
+            });
+            toastEvent.fire();
 
-        if (component.find("checkQuoteItem") != undefined) {
+        }
+
+        if (component.find("checkQuoteItem") != undefined && getRejectBtnValue == true) {
             var QuoteIds = [];
             var getAllId = component.find("checkQuoteItem");
             if (!Array.isArray(getAllId)) {
@@ -1501,7 +1539,7 @@ $A.enqueueAction(action1);*/
                 });
                 toastEvent.fire();
             }
-        } else {
+        } else if (getRejectBtnValue) {
             component.find('notifLib').showNotice({
                 "variant": "error",
                 "header": "No Quote Lines!",
@@ -2495,6 +2533,27 @@ return other.Id == current.Id
         );
         $A.get('e.force:refreshView').fire();
         console.log(component.get('v.rejectData'));
+
+    },
+    handleSelectedRow: function(component, event, helper) {
+        var selectedRows = event.getParam('selectedRows');
+        console.log(selectedRows);
+        let setRows = [];
+
+        for (var i in selectedRows) {
+            setRows.push(selectedRows[i]);
+        }
+        component.set("v.selectedRejectRows", setRows);
+        console.log(component.get("v.selectedRejectRows"));
+        // let setRows = [];
+        // selectedRows.forEach((element) => {
+        //     setRows.push(selectedRows[element]);
+
+        // });
+        // component.set("v.selectedRejectRows", setRows);
+        // console.log(setRows);
+        // console.log(component.get("v.selectedRejectRows"));
+
 
     }
 

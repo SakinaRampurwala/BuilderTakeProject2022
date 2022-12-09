@@ -802,12 +802,13 @@
                 });
                 $A.enqueueAction(action);
             }
-            if (!getValue) {
 
-                helper.setRejectedBtnColor(component, event, helper);
-                helper.showRejectedLines(component, event, helper);
+            helper.setRejectedBtnColor(component, event, helper);
+            // if (!getValue) {
 
-            }
+            //     helper.showRejectedLines(component, event, helper);
+
+            // }
 
 
 
@@ -1187,6 +1188,36 @@
             return 1;
         }
         return 0;
+    },
+    duplicateRejectedQuoteLine: function(component, event, helper) {
+        let getSelectedRows = component.get("v.selectedRejectRows");
+        if (getSelectedRows != null) {
+            var action = component.get("c.massDuplicateQuoteLineItem2");
+            action.setParams({
+                "quoteLineRecords": component.get("v.selectedRejectRows")
+            });
+            action.setCallback(this, function(respo) {
+                if (respo.getState() === "SUCCESS") {
+                    $A.get('e.force:refreshView').fire();
+                    window.setTimeout(
+                        $A.getCallback(function() {
+                            var toastEvent = $A.get("e.force:showToast");
+                            toastEvent.setParams({
+                                mode: 'sticky',
+                                message: 'Duplicate records for selected quote items created successfully.',
+                                type: 'success',
+                                duration: '10000',
+                                mode: 'dismissible'
+                            });
+                            toastEvent.fire();
+                        }), 3000
+                    );
+                }
+            });
+            $A.enqueueAction(action);
+
+        }
+
     }
 
 })

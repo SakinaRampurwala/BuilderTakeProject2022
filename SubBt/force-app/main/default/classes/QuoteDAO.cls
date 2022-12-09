@@ -998,6 +998,17 @@ public with sharing class QuoteDAO{
     }
 
     @AuraEnabled
+    public static void massDuplicateQuoteLineItem2(List<buildertek__Quote_Item__c> quoteLineRecords){  
+        List<buildertek__Quote_Item__c> lstRecsClone = quoteLineRecords.deepClone();
+        if (lstRecsClone.size() > 0){
+            if (Schema.sObjectType.buildertek__Quote_Item__c.fields.Name.isCreateable() && Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Quote__c.isCreateable() && Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Grouping__c.isCreateable() && Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__UOM__c.isCreateable() && Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Unit_Cost__c.isCreateable() && Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Quantity__c.isCreateable() && Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Cost_Code__c.isCreateable() && Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Product__c.isCreateable()){
+
+                insert lstRecsClone;
+            }
+        }
+    }
+
+    @AuraEnabled
     public static void massUpdateQuoteLineItem(string quoteLineRecords){
         System.debug('quoteLineRecords ::' + quoteLineRecords);
         List<buildertek__Quote_Item__c> QuoteRecs = new List<buildertek__Quote_Item__c>();
