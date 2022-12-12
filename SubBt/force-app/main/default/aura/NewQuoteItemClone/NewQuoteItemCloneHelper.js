@@ -19,109 +19,29 @@
         action.setCallback(this, function(response) {
             console.log(response.getReturnValue());
             var result = response.getReturnValue();
-            // records.forEach(function(record){
-            //     record.linkName = ‘/’+record.Id;
-            // });
-            if (result != null) {
+            result.forEach(element => {
+                if (result != null) {
+                    // component.set('v.rejectData', result);
+                    statusIsRejected = true;
+                }
 
-                result.forEach(element => {
-                    element.linkName = '/' + element.Id;
-
-                });
-                component.set('v.rejectData', result);
-
-                statusIsRejected = true;
-            }
-
+            });
             console.log(statusIsRejected);
-            // var getBtn = document.querySelector('.rejectBtn');
-            var getBtn = component.find('rejectBtn');
             if (statusIsRejected) {
-                // getBtn.classList.add("rejBtn");
-                // rejectBtn
-                // var getBtn = component.find('rejectBtn');
-                // getBtn.setAttribute('v.disabled', false);
-                // getBtn.setAttribute('v.variant', 'destructive');
+                var getBtn = component.find('rejectBtn');
                 getBtn.set('v.variant', 'destructive');
                 getBtn.set('v.disabled', false);
 
             } else {
+                var getBtn = component.find('rejectBtn');
                 getBtn.set('v.disabled', true);
-                // getBtn.setAttribute('v.disabled', true);
-
 
             }
         });
         $A.enqueueAction(action);
 
     },
-    showRejectedLines: function(component, event, helper) {
-        var rejectData = component.get('v.rejectData');
-        if (rejectData != null) {
-            $A.get("e.c:BT_SpinnerEvent").setParams({
-                "action": "SHOW"
-            }).fire();
-            component.set('v.clickRejectBtn', false);
 
-            component.set('v.rejectColumns', [{
-                    label: 'Product Description',
-                    fieldName: 'linkName',
-                    type: 'url',
-                    typeAttributes: { label: { fieldName: 'Name' }, target: '_blank' }
-                },
-                { label: 'Quantity', fieldName: 'buildertek__Quantity__c', type: 'text' },
-                { label: 'Unit Cost', fieldName: 'buildertek__Unit_Cost__c' },
-                { label: 'Sub Total', fieldName: 'buildertek__Total_Cost__c' },
-                { label: 'Markup (%)', fieldName: 'buildertek__Markup__c', type: 'percentage' },
-                { label: 'Discount (%)', fieldName: 'buildertek__Discount__c', type: 'percentage' },
-                { label: 'Unit Sales Price', fieldName: 'buildertek__Net_Unit__c' },
-                { label: 'Total', fieldName: 'buildertek__Net_Total_Price__c' },
-                {
-                    type: 'button-icon',
-                    fixedWidth: 40,
-                    typeAttributes: {
-                        iconName: 'utility:copy',
-                        name: 'copy',
-                        title: 'Copy',
-                        variant: 'bare',
-                        alternativeText: 'Copy',
-                        disabled: false,
-                    }
-                },
-                {
-                    type: 'button-icon',
-                    fixedWidth: 40,
-                    typeAttributes: {
-                        iconName: 'utility:edit',
-                        name: 'edit',
-                        title: 'Edit',
-                        variant: 'bare',
-                        alternativeText: 'edit',
-                        disabled: false
-                    }
-                },
-                {
-                    type: 'button-icon',
-                    fixedWidth: 40,
-                    typeAttributes: {
-                        iconName: 'utility:delete',
-                        name: 'delete',
-                        title: 'Delete',
-                        variant: 'bare',
-                        alternativeText: 'Delete',
-                        disabled: false
-                    }
-                },
-
-
-            ]);
-            $A.get("e.c:BT_SpinnerEvent").setParams({
-                "action": "HIDE"
-            }).fire();
-
-        }
-
-    },
     getmulticur: function(component, event, helper) {
         var action = component.get("c.getmulticurrency");
         action.setCallback(this, function(response) {
@@ -243,7 +163,6 @@
           "action": "SHOW"
           }).fire(); */
         //  component.set("v.Spinner", true);
-
         var quoteObject = component.get("v.newQuote");
         console.log("Quote 11")
         var recordId = component.get("v.recordId");
@@ -730,90 +649,90 @@
     // Convert JSON object to sObject List
 
     getGroups: function(component, event, helper, page) {
-        try {
-            //component.set("v.groupLoaded", false);
-            var quoteId = component.get("v.quoteId");
-            var getValue = component.get('v.clickRejectBtn');
 
-            if (quoteId) {
-                /*if(component.find('expandCollapeseAllBtn')){
-                    if(component.find('expandCollapeseAllBtn').get('v.iconName')){
-                       // var quoteId =  component.get("v.quoteId");
-                        var spanEle = document.getElementsByClassName('expandAllBtn_'+quoteId);
-                        if(spanEle[0]){
-                            spanEle[0].style.display="inline-block";
-                        }
-                        if(document.getElementsByClassName('CollapeseAllBtn_'+quoteId)[0]){
-                            document.getElementsByClassName('CollapeseAllBtn_'+quoteId)[0].style.display="none";
-                        }
-                        console.log(spanEle[0])
+        //component.set("v.groupLoaded", false);
+        var quoteId = component.get("v.quoteId");
+        if (quoteId) {
+            if (component.find('expandCollapeseAllBtn2')) {
+                if (component.find('expandCollapeseAllBtn2').get('v.iconName')) {
+                    // var quoteId =  component.get("v.quoteId");
+                    var spanEle = document.getElementsByClassName('expandAllBtn_' + quoteId);
+                    if (spanEle[0]) {
+                        spanEle[0].style.display = "none";
                     }
-                }*/
-                if (component.find('expandCollapeseAllBtn2')) {
-                    if (component.find('expandCollapeseAllBtn2').get('v.iconName')) {
-                        // var quoteId =  component.get("v.quoteId");
-                        var spanEle = document.getElementsByClassName('expandAllBtn_' + quoteId);
-                        if (spanEle[0]) {
-                            spanEle[0].style.display = "none";
-                        }
-                        if (document.getElementsByClassName('CollapeseAllBtn_' + quoteId)[0]) {
-                            document.getElementsByClassName('CollapeseAllBtn_' + quoteId)[0].style.display = "inline-block";
-                        }
-                        console.log(spanEle[0])
+                    if (document.getElementsByClassName('CollapeseAllBtn_' + quoteId)[0]) {
+                        document.getElementsByClassName('CollapeseAllBtn_' + quoteId)[0].style.display = "inline-block";
                     }
+                    console.log(spanEle[0])
                 }
             }
-            if (component.get("v.recordId")) {
-                var action = component.get("c.retrieveGroups");
-                action.setStorable({
-                    ignoreExisting: true
-                });
-                action.setParams({
-                    quoteId: component.get("v.recordId"),
-                    pageNumber: page,
-                    recordToDisply: 50
-                });
-                action.setCallback(this, function(response) {
-                    var state = response.getState();
-                    if (state === "SUCCESS") {
-                        var result = response.getReturnValue();
-                        component.set("v.TotalRecords", result); //This Line has slow performance past 200 objects being loaded.
-                        if (result != undefined && result.wrapperList != undefined) {
-                            component.set('v.wrapperListLength', result.wrapperList.length - 1);
-                        }
-                        if (result.groups != undefined) {
-                            for (var i in result.groups) {
-                                result.groups[i].isSelected = false;
-                            }
-                        }
-                        console.log('total records....' + JSON.stringify(component.get("v.TotalRecords")));
-                        component.set("v.columns", result.columns);
-                        component.set("v.page", result.page);
-                        component.set("v.total", result.total);
-                        if (result.total == 0) {
-                            component.set("v.pages", 1);
-                        } else {
-                            component.set("v.pages", Math.ceil(result.total / 50));
-                        }
-                        $A.get("e.c:BT_SpinnerEvent").setParams({
-                            "action": "HIDE"
-                        }).fire();
-                    }
-                });
-                $A.enqueueAction(action);
+        }
+        if (component.get("v.recordId")) {
+            let checkBtnClick = component.get('v.clickRejectBtn');
+            let status;
+            var getBtn = component.find('rejectBtn');
+
+            if (checkBtnClick) {
+                status = 'Reject';
+
+            } else {
+                status = 'Accept';
             }
+            console.log({ status });
 
-            helper.setRejectedBtnColor(component, event, helper);
-            // if (!getValue) {
+            var action = component.get("c.retrieveGroups");
+            action.setStorable({
+                ignoreExisting: true
+            });
+            action.setParams({
+                quoteId: component.get("v.recordId"),
+                pageNumber: page,
+                recordToDisply: 50,
+                status: status
+            });
+            action.setCallback(this, function(response) {
+                var state = response.getState();
+                if (state === "SUCCESS") {
+                    var result = response.getReturnValue();
+                    console.log(response.groups);
+                    console.log({ result });
+                    console.log(result.status);
+                    // console.log(result.tarTable.ListOfEachRecord);
 
-            //     helper.showRejectedLines(component, event, helper);
 
-            // }
+                    // if (response.groups == undefined) {
+
+                    // }
+
+                    component.set("v.TotalRecords", result); //This Line has slow performance past 200 objects being loaded.
+                    if (result != undefined && result.wrapperList != undefined) {
+                        component.set('v.wrapperListLength', result.wrapperList.length - 1);
 
 
+                    }
+                    if (result.groups != undefined) {
+                        for (var i in result.groups) {
+                            result.groups[i].isSelected = false;
+                        }
+                        // getBtn.set('v.variant', 'destructive');
+                        // getBtn.set('v.disabled', false);
+                        // getBtn.set('v.disabled', true);
+                    }
+                    component.set("v.columns", result.columns);
+                    component.set("v.page", result.page);
+                    component.set("v.total", result.total);
 
-        } catch (e) {
-            console.log({ e });
+                    if (result.total == 0) {
+                        component.set("v.pages", 1);
+                    } else {
+                        component.set("v.pages", Math.ceil(result.total / 50));
+                    }
+                    $A.get("e.c:BT_SpinnerEvent").setParams({
+                        "action": "HIDE"
+                    }).fire();
+                }
+            });
+            $A.enqueueAction(action);
         }
     },
 
@@ -1188,36 +1107,6 @@
             return 1;
         }
         return 0;
-    },
-    duplicateRejectedQuoteLine: function(component, event, helper) {
-        let getSelectedRows = component.get("v.selectedRejectRows");
-        if (getSelectedRows != null) {
-            var action = component.get("c.massDuplicateQuoteLineItem2");
-            action.setParams({
-                "quoteLineRecords": component.get("v.selectedRejectRows")
-            });
-            action.setCallback(this, function(respo) {
-                if (respo.getState() === "SUCCESS") {
-                    $A.get('e.force:refreshView').fire();
-                    window.setTimeout(
-                        $A.getCallback(function() {
-                            var toastEvent = $A.get("e.force:showToast");
-                            toastEvent.setParams({
-                                mode: 'sticky',
-                                message: 'Duplicate records for selected quote items created successfully.',
-                                type: 'success',
-                                duration: '10000',
-                                mode: 'dismissible'
-                            });
-                            toastEvent.fire();
-                        }), 3000
-                    );
-                }
-            });
-            $A.enqueueAction(action);
-
-        }
-
     }
 
 })

@@ -685,11 +685,11 @@ public with sharing class QuoteDAO{
     }
 
     @AuraEnabled(cacheable = true)
-    public static object retrieveGroups(string quoteId, Decimal pageNumber, Integer recordToDisply){
+    public static object retrieveGroups(string quoteId, Decimal pageNumber, Integer recordToDisply, String status){
         Integer pageSize = recordToDisply;
         Integer offset = ((Integer)pageNumber - 1) * pageSize;
         quoteDetails Detail = new quoteDetails();
-        Detail.groups = getQuoteGroupDetails(quoteId, null, recordToDisply, offset);
+        Detail.groups = getQuoteGroupDetails(quoteId, null, recordToDisply, offset , status);
         Detail.columns = BT_Lightning_Utils.getFieldSetForDataTable('buildertek__Quote_Item__c', 'buildertek__BT_Related_List_View_Fields');
 
         List<String> groupIds = new List<String>();
@@ -721,7 +721,7 @@ public with sharing class QuoteDAO{
         wrapperList = groupValues(quoteId, fieldsList, allFields, groupIds, recordToDisply, offset);
         TargetTable tarTable = new TargetTable();
         //List<FieldClass> fieldClassList = (List<FieldClass>)System.JSON.deserialize(fieldsType, List<FieldClass>.class);
-        tarTable = getQuoteItemData(quoteId, allFields, fieldsType, recordToDisply, offset);
+        tarTable = getQuoteItemData(quoteId, allFields, fieldsType, recordToDisply, offset , status);
         FinalWrapperClass wrap = new FinalWrapperClass();
         wrap.tarTable = tarTable;
         wrap.wrapperList = wrapperList;
@@ -733,6 +733,7 @@ public with sharing class QuoteDAO{
         wrap.total = [SELECT count()
                       FROM buildertek__Quote_Item__c
                       WHERE buildertek__Quote__c = :quoteId];
+        //  wrap.status=status;
         //FinalWrapperClass wrap = new FinalWrapperClass();
         return wrap;
     }
@@ -745,7 +746,7 @@ public with sharing class QuoteDAO{
      update (List<Quote_Item__c>)System.JSON.deserialize(Items, List<Quote_Item__c>.class);
      return getQuoteGroupDetails(quoteId, groupId, recordToDisply, offset)[0];
      }*/
-    public static List<quote_line_group__c> getQuoteGroupDetails(String quoteId, String groupId, Decimal recordToDisply, Integer offset){
+    public static List<quote_line_group__c> getQuoteGroupDetails(String quoteId, String groupId, Decimal recordToDisply, Integer offset , string status){
         List<quote_line_group__c> budgetGroup;
         // Add selected field in soql from field set
         String objectName = 'buildertek__Quote_Item__c';
@@ -773,7 +774,7 @@ public with sharing class QuoteDAO{
             }
         }
         soql = soql + ' FROM buildertek__Quote_Item__c';
-        string status = 'Reject';
+        // string status = 'Accept';
         soql = soql + ' WHERE buildertek__Quote__c =: quoteId AND buildertek__status__c =: status ORDER BY buildertek__Grouping__r.buildertek__Sort_Id__c,buildertek__Grouping__r.Name  ASC limit ' + recordToDisply + ' OFFSET ' + offset;
 
         List<buildertek__Quote_Item__c> quoteItemList = new List<buildertek__Quote_Item__c>();
@@ -989,17 +990,6 @@ public with sharing class QuoteDAO{
         lstRecs = Database.query(query);
         /*}*/
         List<buildertek__Quote_Item__c> lstRecsClone = lstRecs.deepClone();
-        if (lstRecsClone.size() > 0){
-            if (Schema.sObjectType.buildertek__Quote_Item__c.fields.Name.isCreateable() && Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Quote__c.isCreateable() && Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Grouping__c.isCreateable() && Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__UOM__c.isCreateable() && Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Unit_Cost__c.isCreateable() && Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Quantity__c.isCreateable() && Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Cost_Code__c.isCreateable() && Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Product__c.isCreateable()){
-
-                insert lstRecsClone;
-            }
-        }
-    }
-
-    @AuraEnabled
-    public static void massDuplicateQuoteLineItem2(List<buildertek__Quote_Item__c> quoteLineRecords){  
-        List<buildertek__Quote_Item__c> lstRecsClone = quoteLineRecords.deepClone();
         if (lstRecsClone.size() > 0){
             if (Schema.sObjectType.buildertek__Quote_Item__c.fields.Name.isCreateable() && Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Quote__c.isCreateable() && Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Grouping__c.isCreateable() && Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__UOM__c.isCreateable() && Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Unit_Cost__c.isCreateable() && Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Quantity__c.isCreateable() && Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Cost_Code__c.isCreateable() && Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Product__c.isCreateable()){
 
@@ -1316,13 +1306,13 @@ public with sharing class QuoteDAO{
     }
 
     @AuraEnabled
-    public static quote_line_group__c deleteItem(List<buildertek__Quote_Item__c> Items, String groupId, String quoteId){
+    public static quote_line_group__c deleteItem(List<buildertek__Quote_Item__c> Items, String groupId, String quoteId , String status){
         system.debug('Items ------> ' + Items);
         system.debug('groupId -------> ' + groupId);
         try{
             DMLManager.deleteAsUser(Items);
-            system.debug('Quote Line Items ' + getQuoteGroupDetails(quoteId, groupId, 10, 10)[0]);
-            return getQuoteGroupDetails(quoteId, groupId, 10, 10)[0];
+            system.debug('Quote Line Items ' + getQuoteGroupDetails(quoteId, groupId, 10, 10, status)[0]);
+            return getQuoteGroupDetails(quoteId, groupId, 10, 10 , status)[0];
         } catch (Exception ex){
             //throw new AuraHandledException(ex.getMessage());
         }
@@ -1585,7 +1575,7 @@ public with sharing class QuoteDAO{
     }
 
     //@AuraEnabled
-    public static TargetTable getQuoteItemData(String recordId, List<String> fieldsList, String fieldString, Decimal recordToDisply, Integer offset){
+    public static TargetTable getQuoteItemData(String recordId, List<String> fieldsList, String fieldString, Decimal recordToDisply, Integer offset ,  string status ){
         List<FieldClass> fieldClassList = (List<FieldClass>)System.JSON.deserialize(fieldString, List<FieldClass>.class);
         system.debug('fieldClassList ------------> ' + fieldClassList);
         system.debug('fieldsList --------> ' + fieldsList);
@@ -1604,22 +1594,15 @@ public with sharing class QuoteDAO{
             }
         }
         system.debug('aggregateFields --------> ' + aggregateFields);
-        string status = 'Reject';
+        // string status = 'Accept';
         String myqueries = '';
-        myqueries = 'select buildertek__Quote__c,buildertek__Grouping__r.Name,buildertek__Grouping__r.buildertek__Sort_Id__c ' + aggregateFields + ' from buildertek__Quote_Item__c where buildertek__Quote__c =: recordId  AND buildertek__Status__c =: status  Order By buildertek__Grouping__r.buildertek__Sort_Id__c,buildertek__Grouping__r.Name, buildertek__Priority__c ASC , Name ASC limit ' + recordToDisply + ' OFFSET ' + offset;
+        String myqueries2 = '';
+
+        myqueries = 'select buildertek__Quote__c,buildertek__Status__c ,buildertek__Grouping__r.Name,buildertek__Grouping__r.buildertek__Sort_Id__c ' + aggregateFields + ' from buildertek__Quote_Item__c where buildertek__Quote__c =: recordId  AND buildertek__Status__c =: status  Order By buildertek__Grouping__r.buildertek__Sort_Id__c,buildertek__Grouping__r.Name, buildertek__Priority__c ASC , Name ASC limit ' + recordToDisply + ' OFFSET ' + offset;
+        // myqueries2 = 'select buildertek__Quote__c,buildertek__Status__c ,buildertek__Grouping__r.Name,buildertek__Grouping__r.buildertek__Sort_Id__c ' + aggregateFields + ' from buildertek__Quote_Item__c where buildertek__Quote__c =: recordId  AND buildertek__Status__c =Accept  Order By buildertek__Grouping__r.buildertek__Sort_Id__c,buildertek__Grouping__r.Name, buildertek__Priority__c ASC , Name ASC limit ' + recordToDisply + ' OFFSET ' + offset;
         List<SObject> ListOfRecords;
-        /*if(Schema.sObjectType.buildertek__Quote_Item__c.fields.Id.isAccessible()&&
-         Schema.sObjectType.buildertek__Quote_Item__c.fields.Name.isAccessible() &&
-         Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Product__c.isAccessible() &&
-         Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Quote__c.isAccessible() &&
-         Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Grouping__c.isAccessible() &&
-         Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__UOM__c.isAccessible() &&
-         Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Unit_Cost__c.isAccessible() &&
-         Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Unit_Price__c.isAccessible() &&
-         Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Quantity__c.isAccessible() &&
-         Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Cost_Code__c.isAccessible() &&
-         Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Markup__c.isAccessible() ){*/
         ListOfRecords = Database.query(myqueries);
+
         
         system.debug('ListOfRecords --------> ' + ListOfRecords.size());
         /*}*/
@@ -1674,6 +1657,8 @@ public with sharing class QuoteDAO{
         }
         TargetTable_inst.records = ListOfRecords;
         TargetTable_inst.ListOfEachRecord = allListOfRecords;
+        // TargetTable_inst.getRejectLines = quoteList;
+
         return TargetTable_inst;
     }
 
@@ -1719,7 +1704,7 @@ public with sharing class QuoteDAO{
         
          system.debug('recordId ---------->'+recordId);
         
-        buildertek__Quote_Item__c quoteRecord = [select id, name, buildertek__Markup__c,buildertek__Unit_Price__c,buildertek__Net_Unit__c,buildertek__Additional_Discount__c, buildertek__Unit_Cost__c, buildertek__Notes__c from buildertek__Quote_Item__c Where Id =: recordId];
+        buildertek__Quote_Item__c quoteRecord = [select id, name, buildertek__Markup__c,buildertek__Unit_Price__c,buildertek__Status__c ,buildertek__Net_Unit__c,buildertek__Additional_Discount__c, buildertek__Unit_Cost__c, buildertek__Notes__c from buildertek__Quote_Item__c Where Id =: recordId];
         
         
         system.debug('Quote record-------->'+quoteRecord);
@@ -1733,7 +1718,7 @@ public with sharing class QuoteDAO{
     
     system.debug('markup from controller----->'+markup);
     
-   buildertek__Quote_Item__c quoterec= [select id, name, buildertek__Markup__c,buildertek__Net_Unit__c,buildertek__Additional_Discount__c, buildertek__Unit_Cost__c, buildertek__Notes__c from buildertek__Quote_Item__c Where Id =: recordId];
+   buildertek__Quote_Item__c quoterec= [select id, name, buildertek__Markup__c,buildertek__Status__c ,buildertek__Net_Unit__c,buildertek__Additional_Discount__c, buildertek__Unit_Cost__c, buildertek__Notes__c from buildertek__Quote_Item__c Where Id =: recordId];
     quoterec.buildertek__Markup__c = markup;
     
     update quoterec;
@@ -1799,6 +1784,11 @@ public with sharing class QuoteDAO{
         @AuraEnabled
         public List<EachRecord> ListOfEachRecord;
 
+        // @AuraEnabled
+        // public List<buildertek__Quote_Item__c> getRejectLines;
+
+        
+
         //all data will be saved as array of array values
     }
 
@@ -1856,6 +1846,9 @@ public with sharing class QuoteDAO{
 
         @AuraEnabled
         public Integer total{ get; set; }
+
+        @AuraEnabled
+        public String status{get;set;}
     }
 
     public class productfamilyClass{
@@ -2083,8 +2076,7 @@ public with sharing class QuoteDAO{
             return null;
         }
     }
-
-    /*
+     /*
     Created:- 8th December 2022
     Description:- Used to Fetch all Quotelines 
     */
@@ -2102,4 +2094,6 @@ public with sharing class QuoteDAO{
         
     }
 
+
+    
 }
