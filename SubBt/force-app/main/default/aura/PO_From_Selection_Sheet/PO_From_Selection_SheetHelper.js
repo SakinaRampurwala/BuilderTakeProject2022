@@ -1,76 +1,148 @@
 ({
     //======= Description:- This method is used to display option list =========
     doInitHelper: function(component, event, helper) {
-        try {
-            var recordId = component.get("v.recordId");
-            console.log('recordId => ' + recordId);
-            var action = component.get("c.getOption");
-            action.setParams({
-                recordId: recordId
-            });
-            action.setCallback(this, function(response) {
-                var state = response.getState();
-                console.log('State => ' + state);
-                var result = response.getReturnValue().getOptionList;
-                component.set('v.projectId', response.getReturnValue().getProjectId);
-                console.log('Result =>', { result });
-                console.log({ response });
-                console.log(response.getError());
-                var error = response.getError();
 
-                if (state == "SUCCESS") {
-                    component.set('v.columns', [
-                        { label: 'Option Name', fieldName: 'Name', type: 'text', sortable: true },
-                        { label: 'Vendor', fieldName: 'ManufacturerName', type: 'text', sortable: true },
-                        { label: 'Product', fieldName: 'ProductName', type: 'text', sortable: true },
-                        { label: 'Quantity', fieldName: 'buildertek__Quantity__c', type: 'text' },
-                        { label: 'Sales Price', fieldName: 'buildertek__Cost__c', type: 'currency', cellAttributes: { alignment: 'left' } }
-                    ]);
+        var recordId = component.get("v.recordId");
+        console.log('recordId --> ' + recordId);
+        var action = component.get("c.getOption");
+        action.setParams({
+            recordId: recordId
+        });
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+            console.log('State ---> ' + state);            
 
-                    result.forEach(element => {
-                        console.log('element => ', { element });
-                        element.ManufacturerName = element.buildertek__Manufacturer__r.Name;
-                        element.ProductName = element.buildertek__Product__r.Name
-                    });
-                    component.set("v.data", result);
+            if (state == "SUCCESS") {
 
-                    $A.get('e.force:refreshView').fire();
+                var result = response.getReturnValue();
+                console.log("Result ---> ",{result});
 
-                    component.set("v.Spinner", false);
-
-                } else {
-                    $A.get("e.force:closeQuickAction").fire();
-                    $A.get('e.force:refreshView').fire();
-                    component.set("v.Spinner", false);
-                    helper.showToast("Error", "Error", "Something went wrong", "5000");
-
+                component.set('v.optionWrapper', result);
+                if (result.length != 0) {
+                    component.set("v.projectId", result[0].getProjectId);
+                } else{
+                    component.set("v.noData", true);
                 }
+            } else {
+                helper.showToast("Error", "Error", "Something went wrong", "5000");
+            }
+        });
+        $A.enqueueAction(action);
+
+    },
+
+    //===== Description:- This method is used to create purchase order when user click on "create PO" button from Selection sheet =====
+    createPOhelper: function(component, event, helper){
+        try {
+            component.set("v.Spinner", true);
+            var recordId = component.get("v.recordId");
+            // var selectedRowList = component.get("v.selectedRowList");
+
+            var selectedRowList = [];
+
+            var optionWrapper = component.get("v.optionWrapper");
+            console.log('optionWrapper ==> ',{optionWrapper});
+
+            optionWrapper.forEach(optionList => {
+                optionList.optionDataList.forEach(optionData => {
+                    // console.log('optionData ==> ',{optionData});
+                    if (optionData.selected == true ) {
+                        // console.log('option ==> ',optionData.option);
+                        selectedRowList.push(optionData.option);
+                    }
+                });
             });
-            $A.enqueueAction(action);
-        } catch (e) {
-            console.log({ e });
+
+            console.log('selectedRowList ==> ', {selectedRowList});
+            console.log('Project Id => '+component.get('v.projectId'));
+            if (selectedRowList.length != 0) {
+
+                var action = component.get("c.createPO");
+                action.setParams({
+                    recordId: recordId,
+                    selectedRowList: selectedRowList
+
+                });
+                action.setCallback(this, function(response) {
+                    var state = response.getState();
+                    console.log(response.getError());
+                    var prjId = component.get('v.projectId');
+                    var getError = response.getError();
+                    var setError;
+                    console.log(Object.values(getError));
+
+                    var object = Object.values(getError);
+                    for (const key in object) {
+                        var item = Object.values(object[key].fieldErrors).forEach(element => {
+                            element.forEach(e => {
+                                console.log(e.statusCode);
+                                setError = e.statusCode;
+
+                            });
+
+                        });
+
+                        console.log({ setError });
+                    }
+
+                    console.log(state);
+
+                    if (state == "SUCCESS") {
+                        helper.showToast("Success", "Success", "New PO and PO Line Created.", "5000");
+                        var urlEvent = $A.get("e.force:navigateToURL");
+
+                        if (prjId != null && prjId != '') {
+                            urlEvent.setParams({
+                                "url": "/lightning/r/buildertek__Project__c/" + prjId + "/related/buildertek__Purchase_Orders__r/view?ws=%2Flightning%2Fr%2Fbuildertek__Selection__c%2F" + recordId + "%2Fview"
+                            });
+                            urlEvent.fire();
+                        } else {
+                            urlEvent.setParams({
+                                "url": "/lightning/o/buildertek__Purchase_Order__c/home"
+                            });
+                            urlEvent.fire();
+
+                        }
+
+                    } else {
+                        if (setError == 'STRING_TOO_LONG') {
+                            helper.showToast("Error", "Error", 'Poduct name is too long', "5000");
+                        } else {
+                            helper.showToast("Error", "Error", 'Something went wrong', "5000");
+                        }
+                    }
+                    component.set("v.Spinner", false);
+                    $A.get("e.force:closeQuickAction").fire();
+                });
+                 $A.enqueueAction(action);
+            } else {
+                component.set("v.Spinner", false);
+                helper.showToast("Error", "Error", "Please Select Options", "5000");
+            }
+        } catch (error) {
+            console.log('error --> ',{ error });
         }
-
-
     },
 
-    sortData: function(component, fieldName, sortDirection) {
-        var data = component.get("v.data");
-        var reverse = sortDirection !== 'asc';
-        data.sort(this.sortBy(fieldName, reverse));
-        component.set("v.data", data);
-        console.log("sorted data : ", component.get("v.data"));
+    selectAll: function(component, event, helper) {
+        var optionWrapper = component.get("v.optionWrapper");
+        
+        console.log('optionWrapper ==> ',{optionWrapper});
+        optionWrapper.forEach(optionList => {
+                optionList.optionDataList.forEach(optionData => {
+                    console.log('optionData ==> ',optionData);
+                    optionData.selected=false;
+                    if (optionList.selected == true ) {
+                        console.log('true ====> ');
+                        console.log('optionList ==> ',optionList);
+                        optionData.selected=true;
+                    }
+            });
+            });
+            component.set("v.optionWrapper",optionWrapper);
+            console.log('End optionWrapper ==> ',{optionWrapper});
     },
 
-    sortBy: function(field, reverse, primer) {
-        var key = primer ?
-            function(x) { return primer(x.hasOwnProperty(field) ? (typeof x[field] === 'string' ? x[field].toLowerCase() : x[field]) : 'aaa') } :
-            function(x) { return x.hasOwnProperty(field) ? (typeof x[field] === 'string' ? x[field].toLowerCase() : x[field]) : 'aaa' };
-        reverse = !reverse ? 1 : -1;
-        return function(a, b) {
-            return a = key(a), b = key(b), reverse * ((a > b) - (b > a));
-        }
-    },
     //===== Description:- This method is used to show toast message !!====
     showToast: function(type, title, message, time) {
         try {
