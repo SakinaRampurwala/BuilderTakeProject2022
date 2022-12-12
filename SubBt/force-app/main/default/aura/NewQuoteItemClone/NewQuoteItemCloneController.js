@@ -2410,6 +2410,12 @@ return other.Id == current.Id
         component.set('v.clickRejectBtn', true);
         $A.get('e.force:refreshView').fire();
 
+
+    },
+    goBack: function(component, event, helper) {
+        component.set('v.clickRejectBtn', false);
+        $A.get('e.force:refreshView').fire();
+
     }
 
 
