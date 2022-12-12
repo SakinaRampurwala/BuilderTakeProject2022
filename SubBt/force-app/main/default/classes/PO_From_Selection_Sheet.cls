@@ -3,6 +3,7 @@ public with sharing class PO_From_Selection_Sheet {
     @AuraEnabled
     public static void createPO(String recordId , List<buildertek__Question__c> selectedRowList){
         List<buildertek__Question__c> optionList = [SELECT Id, Name, buildertek__Selected__c, buildertek__Product__c, buildertek__Product__r.Name , buildertek__Manufacturer__c, buildertek__Manufacturer__r.Name, buildertek__Quantity__c, buildertek__Cost__c, buildertek__Purchase_Order__c, buildertek__Question_Group__r.buildertek__Section__r.buildertek__Selection__r.buildertek__Project__c FROM buildertek__Question__c WHERE buildertek__Question_Group__r.buildertek__Section__r.buildertek__Selection__c =: recordId AND buildertek__Selected__c = true AND buildertek__Manufacturer__c != null AND buildertek__Product__c != null AND buildertek__Purchase_Order__c = null];
+        Integer maxSize = 80;
 
         List<String> manufacturerIds = new List<String>();
         List<Account> manufacturerList = new List<Account>();
@@ -35,8 +36,13 @@ public with sharing class PO_From_Selection_Sheet {
                 if (option.buildertek__Manufacturer__c == po.buildertek__Vendor__c) {
                     buildertek__Purchase_Order_Item__c poLine = new buildertek__Purchase_Order_Item__c();
                     poLine.buildertek__Purchase_Order__c = po.Id;
-                    poLine.Name = option.buildertek__Product__r.Name;
                     poLine.buildertek__Unit_Price__c = option.buildertek__Cost__c;
+                    if(option.buildertek__Product__r.Name.length() <= maxSize){
+                        poLine.Name = option.buildertek__Product__r.Name;
+                    }else {
+                        poLine.buildertek__Description__c= option.buildertek__Product__r.Name;
+                        poLine.Name = option.buildertek__Product__r.Name.substring(0, maxSize);
+                    }
                     poItemMap.put(option.Id, poLine);
                     System.debug('poLine => '+poLine);
                 }

@@ -12,8 +12,8 @@
     <aura:attribute name="noData" type="Boolean" default="false" />
     <aura:attribute name="projectId" type="String" default="" />
     <ltng:require styles="{!$Resource.ModalPreviewCSS}" />
-    <aura:attribute name="selected" type="List" default="[]"/>
-    <aura:attribute name="listOfSelectedRFQIds" type="List" default="[]"/>
+    <aura:attribute name="selected" type="List" default="[]" />
+    <aura:attribute name="listOfSelectedRFQIds" type="List" default="[]" />
     <aura:attribute name="OptList" type="object" />
 
 
@@ -28,27 +28,8 @@
     </aura:if>
 
     <aura:html tag="style">
-        .container{
-            height: auto !important;
-        }
-        .slds-modal__content {
-            overflow: hidden !important;
-        }
-        .slds-modal__close{
-            display:block !important;
-        }
-        .slds-docked-form-footer{
-            bottom: auto;
-        }
-        .slds-p-around--medium{
-            padding: 0;
-        }
-        .modalBodyDiv{
-            text-align: center;
-            font-weight: 600;
-            line-height: 10rem;
-            font-size: 18px;
-        }
+        .container{ height: auto !important; } .slds-modal__content { overflow: hidden !important; } .slds-modal__close{ display:block !important; } .slds-docked-form-footer{ bottom: auto; } .slds-p-around--medium{ padding: 0; } .modalBodyDiv{ text-align: center;
+        font-weight: 600; line-height: 10rem; font-size: 18px; }
     </aura:html>
 
     <div class="slds-modal__content">
@@ -72,37 +53,33 @@
                                 <thead>
 
                                     <tr class="slds-text-heading--label slds-scrollable" style="line-height:20px">
-                                        <th class="subHeader" style="width: 40px;">  </th>
+                                        <th class="subHeader" style="width: 40px;"> </th>
                                         <th class="subHeader subData"> Option Name </th>
                                         <th class="subHeader subData"> Product </th>
-                                        <th class="subHeader subData"> Quantity   </th>
+                                        <th class="subHeader subData"> Quantity </th>
                                         <th class="subHeader subData"> Sales Price </th>
                                     </tr>
 
                                     <aura:iteration items="{!v.optionWrapper}" var="optionWp">
                                         <tr>
                                             <th scope="col" class="tableData">
-                                                <lightning:input type="checkbox" aura:id="checkContractors" onchange="{!c.selectCheck}" checked="{!optionWp.selected}"/>
+                                                <lightning:input type="checkbox" aura:id="checkContractors" onchange="{!c.selectCheck}" checked="{!optionWp.selected}" />
                                             </th>
                                             <td class="vendorData" colspan="4">
                                                 {!optionWp.VendorData.Name}
                                             </td>
                                         </tr>
-                                        <aura:iteration items="{!optionWp.optionDataList}" var="option" >
+                                        <aura:iteration items="{!optionWp.optionDataList}" var="option">
                                             <tr>
                                                 <td class="tableData">
                                                     <lightning:input type="checkbox" aura:id="checkContractor" variant="label-hidden" checked="{!option.selected}" />
                                                 </td>
-                                                <!-- <td class="tableData"> {!option.option.Name} </td>
-                                                <td class="tableData"> {!option.option.buildertek__Product__r.Name} </td>
-                                                <td class="tableData"> {!option.option.buildertek__Quantity__c} </td>
-                                                <td class="tableData"> {!option.option.buildertek__Cost__c} </td> -->
 
-                                                <td class="tableData" role="gridcell" title = "{!option.option.Name}" >
+                                                <td class="tableData" role="gridcell" title="{!option.option.Name}">
                                                     <ui:outputURL value="{!'/one/one.app?#/sObject/'+ option.option.Id + '/view'}" target="_blank" label="{!option.option.Name}" />
                                                 </td>
 
-                                                <td class="tableData" role="gridcell" title = "{!option.option.buildertek__Product__r.Name}" >
+                                                <td class="tableData" role="gridcell" title="{!option.option.buildertek__Product__r.Name}">
                                                     <ui:outputURL value="{!'/one/one.app?#/sObject/'+ option.option.buildertek__Product__r.Id + '/view'}" target="_blank" label="{!option.option.buildertek__Product__r.Name}" />
                                                 </td>
 
