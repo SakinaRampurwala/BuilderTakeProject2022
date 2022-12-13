@@ -880,7 +880,7 @@ SchedulerRec.ScheduleProjectId = equ.buildertek__Project__r.Id;*/
         string contactQuery = 'Select id,Name,Account.Name,AccountId,buildertek__Simultaneous_Tasks__c From Contact Where ';
         contactQuery += ' id != null ';
         if (slectedTradetypeId != null && slectedTradetypeId != ''){
-            contactQuery += ' AND Account.buildertek__Trade_Type_Lookup__c=: slectedTradetypeId And';
+            contactQuery += ' AND Account.buildertek__Trade_Type_Lookup__c=: slectedTradetypeId';
         }
         if(resourceSearch != null && resourceSearch != ''){
             contactQuery += ' AND (Name LIKE: resourceSearchVal) ';
@@ -896,7 +896,6 @@ SchedulerRec.ScheduleProjectId = equ.buildertek__Project__r.Id;*/
         contactQuery += ' order by Name asc';
         system.debug('--contactQuery---' + contactQuery);
         conresource = Database.query(contactQuery);
-        
         for (buildertek__Project_Task__c scitem : schudleitemList){
             system.debug(fromDate+','+ toDate+','+scitem.buildertek__Start__c+','+scitem.buildertek__Finish__c);
             if (!scheduleitemmap.containsKey(scitem.buildertek__Contractor_Resource__c)){
@@ -1032,7 +1031,6 @@ SchedulerRec.ScheduleProjectId = equ.buildertek__Project__r.Id;*/
         }        
         
         List<String> resourceTaskList = new List<String>();
-        
         for (contact con : conresource){
             if (contactnamemap.get(con.id) != null){
                 ResourceCalendarWrap projectRec = new ResourceCalendarWrap();
