@@ -72,6 +72,7 @@ public class createCO_selectionType_Test {
             // createCO_selectionType.changeOptionList(changeOrder, selectionType.Id);
             createCO_selectionType.getOptionData(selectionType.Id);
             createCO_selectionType.createCO(changeOrder, optionLs);
+            createCO_selectionType.getOptionAllData(selectionType.Id);
         Test.stopTest();
         
     }

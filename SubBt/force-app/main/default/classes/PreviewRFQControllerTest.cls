@@ -104,7 +104,7 @@ public with sharing class PreviewRFQControllerTest {
         List<String> cc = new List<String>();
         cc.add(con.Id);
         PreviewRFQController.getTemplates();
-        PreviewRFQController.getPurchaseOrderLines(con.Id,et.Id);
+        // PreviewRFQController.getPurchaseOrderLines(con.Id,et.Id);
         PreviewRFQController.sendProposal('abc',con.Id,et.Id,to,cc,'f');
         PreviewRFQController.acceptandsendProposal('abc',con.Id,et.Id,to,cc,'sub','f');
         PreviewRFQController.saveSign(po.Id,'abc','abcd','ab');

@@ -5,8 +5,7 @@
         <members>*</members>
         <name>ApexClass</name>
     </types>
-	
-	 <types>
+	<types>
         <members>*</members>
         <name>ApexComponent</name>
     </types>
@@ -37,5 +36,6 @@
         <members>*</members>
         <name>StaticResource</name>
     </types>  
+	 
     <version>55.0</version>
 </Package>

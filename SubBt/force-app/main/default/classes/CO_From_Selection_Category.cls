@@ -1,8 +1,22 @@
 public with sharing class CO_From_Selection_Category {
 
     @AuraEnabled
-    public static List<buildertek__Question__c> getOption(String recordId) {
-        List<buildertek__Question__c> optionList = [SELECT Id, Name, buildertek__Upgrade__c, buildertek__Upgrade_Costs__c, buildertek__Change_Order__c, buildertek__Manufacturer__c, buildertek__Manufacturer__r.Name, buildertek__Quantity__c, buildertek__Cost__c, buildertek__Question_Group__r.buildertek__Section__r.buildertek__Selection__r.buildertek__Project__c FROM buildertek__Question__c WHERE buildertek__Question_Group__r.buildertek__Section__c =: recordId AND buildertek__Upgrade__c = true AND buildertek__Change_Order__c = null];
+    public static List<buildertek__Question__c> getOption(String recordId, Boolean upgraded) {
+        List<buildertek__Question__c> optionList = new List<buildertek__Question__c>();
+        if (upgraded == true) {
+            optionList = [SELECT Id, Name, buildertek__Upgrade__c, buildertek__Upgrade_Costs__c, buildertek__Change_Order__c, 
+                            buildertek__Manufacturer__c, buildertek__Manufacturer__r.Name, buildertek__Quantity__c, buildertek__Cost__c, 
+                            buildertek__Question_Group__r.buildertek__Section__r.buildertek__Selection__r.buildertek__Project__c 
+                            FROM buildertek__Question__c WHERE buildertek__Question_Group__r.buildertek__Section__c =: recordId 
+                            AND buildertek__Upgrade__c = true AND buildertek__Change_Order__c = null];
+        } else {
+            optionList = [SELECT Id, Name, buildertek__Upgrade__c, buildertek__Upgrade_Costs__c, buildertek__Change_Order__c, 
+                            buildertek__Manufacturer__c, buildertek__Manufacturer__r.Name, buildertek__Quantity__c, buildertek__Cost__c, 
+                            buildertek__Question_Group__r.buildertek__Section__r.buildertek__Selection__r.buildertek__Project__c 
+                            FROM buildertek__Question__c WHERE buildertek__Question_Group__r.buildertek__Section__c =: recordId 
+                            AND buildertek__Change_Order__c = null];
+        }
+
         System.debug('optionList => '+optionList);
         return optionList;
     }

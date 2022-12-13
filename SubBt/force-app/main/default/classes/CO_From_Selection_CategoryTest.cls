@@ -42,7 +42,7 @@ public with sharing class CO_From_Selection_CategoryTest {
         co.Name = 'Testing CO';
         co.buildertek__Due_Date__c = System.Today();
 
-        CO_From_Selection_Category.getOption(section.Id);
+        CO_From_Selection_Category.getOption(section.Id, true);
         CO_From_Selection_Category.createCO(co, optionList);
     }
 }

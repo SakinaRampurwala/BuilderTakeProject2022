@@ -81,7 +81,21 @@ public with sharing class createCO_selectionType {
         
         List<buildertek__Question__c> optionList = new List<buildertek__Question__c>();
         
-        optionList = [SELECT Id, Name, buildertek__Manufacturer__c, buildertek__Manufacturer__r.Name, buildertek__Change_Order__c, buildertek__Cost__c, buildertek__Quantity__c, buildertek__Upgrade_Costs__c, buildertek__Question_Group__r.buildertek__Section__r.buildertek__Selection__r.buildertek__Project__c FROM buildertek__Question__c WHERE buildertek__Question_Group__c =:selectionTypeId and buildertek__Upgrade__c = true AND buildertek__Change_Order__c = null];
+        optionList = [SELECT Id, Name, buildertek__Manufacturer__c, buildertek__Manufacturer__r.Name, buildertek__Change_Order__c, buildertek__Cost__c, 
+                        buildertek__Quantity__c, buildertek__Upgrade_Costs__c, buildertek__Question_Group__r.buildertek__Section__r.buildertek__Selection__r.buildertek__Project__c 
+                        FROM buildertek__Question__c WHERE buildertek__Question_Group__c =:selectionTypeId and buildertek__Upgrade__c = true AND buildertek__Change_Order__c = null];
+        
+        return optionList;
+    }
+
+    @AuraEnabled
+    public static List<buildertek__Question__c> getOptionAllData(String selectionTypeId) {
+        
+        List<buildertek__Question__c> optionList = new List<buildertek__Question__c>();
+        
+        optionList = [SELECT Id, Name, buildertek__Manufacturer__c, buildertek__Manufacturer__r.Name, buildertek__Change_Order__c, buildertek__Cost__c, 
+                        buildertek__Quantity__c, buildertek__Upgrade_Costs__c, buildertek__Question_Group__r.buildertek__Section__r.buildertek__Selection__r.buildertek__Project__c 
+                        FROM buildertek__Question__c WHERE buildertek__Question_Group__c =:selectionTypeId AND buildertek__Change_Order__c = null];
         
         return optionList;
     }

@@ -40,9 +40,9 @@ public with sharing class PO_From_Selection_Sheet {
                     if(option.buildertek__Product__r.Name.length() <= maxSize){
                         poLine.Name = option.buildertek__Product__r.Name;
                     }else {
-                        poLine.buildertek__Description__c= option.buildertek__Product__r.Name;
                         poLine.Name = option.buildertek__Product__r.Name.substring(0, maxSize);
                     }
+                    poLine.buildertek__Description__c= option.buildertek__Product__r.Name;
                     poItemMap.put(option.Id, poLine);
                     System.debug('poLine => '+poLine);
                 }
