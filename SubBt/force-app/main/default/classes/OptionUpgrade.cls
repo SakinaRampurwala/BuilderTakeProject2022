@@ -3,10 +3,12 @@ public with sharing class OptionUpgrade {
     @AuraEnabled
     public static optionWrapper getProductDetails(String recordId, String searchNameValue, String searchTypeValue, String searchManufacturerValue, String searchFamilyValue, String searchCategoryValue, String selectedPriceBook, Boolean priceBookFilter) {
         buildertek__Question__c option = [SELECT Id, Name, buildertek__Question_Group__c, buildertek__Product__c, buildertek__Product__r.Name, buildertek__Manufacturer__c, buildertek__Manufacturer__r.Name,
-                                            buildertek__Section__c, buildertek__Cost__c, buildertek__Upgrade_Costs__c, buildertek__Total_Sales_Price__c, buildertek__Price_Book__c, CurrencyIsoCode,
+                                            buildertek__Section__c, buildertek__Cost__c, buildertek__Upgrade_Costs__c, buildertek__Total_Sales_Price__c, buildertek__Price_Book__c,
                                             buildertek__Question_Group__r.buildertek__Section__r.buildertek__Selection__r.buildertek__Project__r.buildertek__Price_Book__c FROM buildertek__Question__c WHERE Id =: recordId];
 
         List<Product2> productList = new List<Product2>();
+
+        string orgCurr = UserInfo.getDefaultCurrency();
 
         System.debug('-- option --');
         // if (option.buildertek__Section__c != null) {
@@ -112,6 +114,7 @@ public with sharing class OptionUpgrade {
         }
         optionWrapperData.productWrapperList = prodWrapperList;
         optionWrapperData.productCount = prodCount;
+        optionWrapperData.orgCurr = orgCurr;
         return optionWrapperData;
     }
 
@@ -231,6 +234,34 @@ public with sharing class OptionUpgrade {
         return ManufacturerList;
     }
 
+    @AuraEnabled
+    public static buildertek__Question__c getOptionRecord(String recordId){
+        try {
+         buildertek__Question__c optRecord=[Select Id ,Name ,buildertek__Price_Book__c ,buildertek__Product__c,buildertek__Quantity__c,buildertek__Cost__c,buildertek__Markup__c,buildertek__Upgrade_Costs__c,buildertek__Question_Group__c,buildertek__Manufacturer__c,buildertek__Selected__c,buildertek__Default_Option__c,buildertek__Upgrade__c,buildertek__Original_Option__c,buildertek__Date_Option_Upgraded__c FROM buildertek__Question__c WHERE Id=:recordId LIMIT 1];
+            return optRecord;
+        }catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    @AuraEnabled
+    public static String cloneOptionRecord(buildertek__Question__c optionRec, String recordId){
+        try {
+            buildertek__Question__c optionCloneCopy  = optionRec.clone(false, false, false, false);
+            insert optionCloneCopy;
+
+            buildertek__Question__c getOption=[Select Id , buildertek__Original_Option__c, name From buildertek__Question__c WHERE Id=:recordId LIMIT 1];
+            getOption.buildertek__Original_Option__c=optionCloneCopy.Id;
+            update getOption;
+
+            return optionCloneCopy.Id;
+         
+        }catch (Exception e) {
+            System.debug(e);
+            return null;
+        }
+    }
+
     public class optionWrapper{
         @AuraEnabled
         public buildertek__Question__c option {get;set;}
@@ -246,6 +277,8 @@ public with sharing class OptionUpgrade {
 
         @AuraEnabled
         public List<productWrapper> productWrapperList {get;set;}
+
+        @AuraEnabled public String orgCurr;
     }
 
     public class productWrapper{
