@@ -236,30 +236,24 @@ public with sharing class OptionUpgrade {
 
     @AuraEnabled
     public static buildertek__Question__c getOptionRecord(String recordId){
-        try {
-         buildertek__Question__c optRecord=[Select Id ,Name ,buildertek__Price_Book__c ,buildertek__Product__c,buildertek__Quantity__c,buildertek__Cost__c,buildertek__Markup__c,buildertek__Upgrade_Costs__c,buildertek__Question_Group__c,buildertek__Manufacturer__c,buildertek__Selected__c,buildertek__Default_Option__c,buildertek__Upgrade__c,buildertek__Original_Option__c,buildertek__Date_Option_Upgraded__c FROM buildertek__Question__c WHERE Id=:recordId LIMIT 1];
+        if(recordId!=null){
+            buildertek__Question__c optRecord=[Select Id ,Name ,buildertek__Price_Book__c ,buildertek__Product__c,buildertek__Quantity__c,buildertek__Cost__c,buildertek__Markup__c,buildertek__Upgrade_Costs__c,buildertek__Question_Group__c,buildertek__Manufacturer__c,buildertek__Selected__c,buildertek__Default_Option__c,buildertek__Upgrade__c,buildertek__Original_Option__c,buildertek__Date_Option_Upgraded__c FROM buildertek__Question__c WHERE Id=:recordId LIMIT 1];
             return optRecord;
-        }catch (Exception e) {
-            throw new AuraHandledException(e.getMessage());
+        }else{
+            return null;
         }
     }
 
     @AuraEnabled
     public static String cloneOptionRecord(buildertek__Question__c optionRec, String recordId){
-        try {
-            buildertek__Question__c optionCloneCopy  = optionRec.clone(false, false, false, false);
-            insert optionCloneCopy;
-
-            buildertek__Question__c getOption=[Select Id , buildertek__Original_Option__c, name From buildertek__Question__c WHERE Id=:recordId LIMIT 1];
-            getOption.buildertek__Original_Option__c=optionCloneCopy.Id;
-            update getOption;
-
-            return optionCloneCopy.Id;
+    
+        buildertek__Question__c optionCloneCopy  = optionRec.clone(false, false, false, false);
+        insert optionCloneCopy;
+        buildertek__Question__c getOption=[Select Id , buildertek__Original_Option__c, name From buildertek__Question__c WHERE Id=:recordId LIMIT 1];
+        getOption.buildertek__Original_Option__c=optionCloneCopy.Id;
+        update getOption;
+        return optionCloneCopy.Id;
          
-        }catch (Exception e) {
-            System.debug(e);
-            return null;
-        }
     }
 
     public class optionWrapper{

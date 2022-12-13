@@ -61,6 +61,10 @@ public with sharing class OptionUpgradeTest {
         OptionUpgrade.getProductName('t');
         OptionUpgrade.getManufacturer('t');
         OptionUpgrade.getProductCategory('t');
+        OptionUpgrade.getOptionRecord(option.Id);
+        OptionUpgrade.cloneOptionRecord(option, option.Id);
+
+
 		
         Test.stopTest();
 
