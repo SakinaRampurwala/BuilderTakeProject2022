@@ -11,6 +11,7 @@
     <aura:attribute name="TextField" type="String" />
     <aura:attribute name="Contact" type="String" />
     <aura:attribute name="selectedToContact" type="sObject[]" default="[]" />
+
     <aura:attribute name="selectedCcContact" type="sObject[]" default="[]" />
 
     <aura:attribute name="recordId" type="String" />
@@ -44,7 +45,7 @@
                     <label class="slds-form-element__label" for="recipients-to">To</label>
                     <div class="slds-form-element__control">
                         <div style="width:97%;margin-left:30px;">
-                            <c:BT_MultiSelectLookup objectAPIName="buildertek__Attendee__c" IconName="standard:contact" lstSelectedRecords="{!v.selectedToContact}" label="" recordId='{!v.recordId}' />
+                            <c:BT_MultiSelectLookup aura:id="childCmp" objectAPIName="buildertek__Attendee__c" IconName="standard:contact" lstSelectedRecords="{!v.selectedToContact}" label="" recordId='{!v.recordId}' />
                         </div>
                     </div>
                 </div>

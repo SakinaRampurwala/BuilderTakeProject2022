@@ -21,6 +21,8 @@
             }
         });
         $A.enqueueAction(action);
+        var childComponent = component.find("childCmp");
+        var callSearchHelper = childComponent.callSearchHelperMethod();
     },
     sendEmail: function(component, event, helper) {
         console.log(JSON.stringify(component.get("v.selectedToContact")));

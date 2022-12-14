@@ -109,4 +109,24 @@
         $A.util.addClass(forclose, 'slds-is-close');
         $A.util.removeClass(forclose, 'slds-is-open');
     },
+    searchBar: function(component, event, helper) {
+        var getInputkeyWord = '';
+        helper.searchHelper(component, event, getInputkeyWord);
+        window.setTimeout(
+            $A.getCallback(function() {
+                console.log(component.get("v.listOfSearchRecords"));
+                var listSelectedItems = component.get("v.listOfSearchRecords");
+                if (listSelectedItems != null) {
+                    component.set("v.lstSelectedRecords", listSelectedItems);
+                    var forclose = component.find("lookup-pill");
+                    $A.util.addClass(forclose, 'slds-show');
+                    $A.util.removeClass(forclose, 'slds-hide');
+                    var forclose = component.find("searchRes");
+                    $A.util.addClass(forclose, 'slds-is-close');
+                    $A.util.removeClass(forclose, 'slds-is-open');
+                }
+
+            }), 2000
+        );
+    }
 })
