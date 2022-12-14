@@ -500,10 +500,7 @@ public class ManageVendorSOVController {
            
             
             List<buildertek__Schedule_of_Value_Lines__c> rejectedLines = [select Id, Name,buildertek__Schedule_of_Values__c, buildertek__Status__c,buildertek__Rejection_Reason__c from buildertek__Schedule_of_Value_Lines__c where Id IN:sovLineIds and (buildertek__Status__c = 'Rejected' OR buildertek__Status__c = 'Vendor Submitted')];
-            System.debug(rejectedLines);
-            System.debug(SovLineList)
-            System.debug([select Id, Name,buildertek__Schedule_of_Values__c,buildertek__Schedule_of_Values__r.Name, buildertek__Status__c,buildertek__Rejection_Reason__c from buildertek__Schedule_of_Value_Lines__c where Id IN:sovLineIds]);
-
+          
             List<string> stndSovIds = new List<string>();
             
             set<string> StandardSOVId = new set<string>();
