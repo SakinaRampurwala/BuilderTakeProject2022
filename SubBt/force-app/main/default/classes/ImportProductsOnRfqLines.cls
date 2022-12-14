@@ -22,7 +22,7 @@ public class ImportProductsOnRfqLines {
             PElist = [select id, Product2Id
                       from pricebookEntry where pricebook2Id = :parentId
                      ];
-            
+            System.debug(PElist);
             for (pricebookEntry PE : PElist){
                 ProdIds.add(PE.Product2Id);
             }
@@ -154,7 +154,7 @@ WHERE buildertek__Status__c ='Awarded' OR buildertek__Status__c ='Accepted'];
             queryList = queryList+ ' ORDER BY Name LIMIT :pageSize OFFSET :offset';
             
             List<Product2> allProds =  Database.query(queryList2);
-            // system.debug(queryList);
+            system.debug(allProds);
             objDT.recordList = Database.query(queryList);
              system.debug(objDT.recordList);
              List<String> categoryNameList = new List<String>();
