@@ -91,6 +91,7 @@ public class ExportPaymentApplicationController {
         sheetLineGrpMap = new  Map<String,List<buildertek__SOV_Continuation_Sheet_Lines__c>>();
         calcMap = new Map<String,ContinuationSheetLinesWrapper>();
         wrapList = new List<ContinuationSheetLinesWrapper>();
+        // System.debug(sheetLineGrpMap);
         for(buildertek__SOV_Continuation_Sheet_Lines__c sheetLine : sheetLineList){
             
             if(sheetLine.buildertek__Grouping__c != null){
@@ -105,6 +106,7 @@ public class ExportPaymentApplicationController {
                     sheetLineGrpMap.put(sheetLine.buildertek__Grouping__c,sheetLineList1);
                     
                 }
+                System.debug(calcMap);
                 ContinuationSheetLinesWrapper wrapVal = new ContinuationSheetLinesWrapper(); 
                 if(calcMap.containsKey(sheetLine.buildertek__Grouping__c))
                 {
