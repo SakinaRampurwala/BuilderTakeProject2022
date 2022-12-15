@@ -128,6 +128,8 @@ public class DocuSignApi {
             docuTemps.status = envId.status;
             
             system.debug(ObjName);
+            system.debug(docuTemps);
+
             
             If(ObjName == 'Change Order'){
                 list<buildertek__Change_Order__c> contactDetails = new list<buildertek__Change_Order__c>();
@@ -135,6 +137,7 @@ public class DocuSignApi {
                 system.debug(contactDetails);
                 for(Integer i=0;i<contactDetails.Size();i++){
                     contactDetails[i].Envelope_Sent__c = docuTemps.envelopeId; 
+                    contactDetails[i].buildertek__Customer_Accepted_Date__c=Date.today();
                 }
                 update contactDetails;
                 system.debug(contactDetails);
