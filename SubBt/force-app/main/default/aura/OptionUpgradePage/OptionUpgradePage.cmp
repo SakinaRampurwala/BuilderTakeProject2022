@@ -1,5 +1,5 @@
 <!-- This Component Called From OptionUpgrade.cmp -->
-<aura:component controller="OptionUpgrade">
+<aura:component controller="OptionUpgrade" access="global">
 
     <lightning:workspaceAPI aura:id="workspace"/>
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
@@ -46,14 +46,14 @@
     <aura:handler name="change" value="{!v.searchNameFilter}" action="{!c.doSearch}" />
     <aura:attribute name="ProductNameList" type="List" />
     <aura:attribute name="displayNameList" type="Boolean" default="false" />
-    
+
     <aura:attribute name="oldSearchManufacturerFilter" type="String" default="" />
     <aura:attribute name="searchManufacturerFilter" type="String" default="" />
     <aura:handler name="change" value="{!v.searchManufacturerFilter}" action="{!c.doSearch}" />
     <aura:attribute name="ManufacturerList" type="List" />
     <aura:attribute name="displayManufacturerList" type="Boolean" default="false" />
-    
-    
+
+
 
     <div class="mainDiv" onclick="{!c.closeSearchOption}">
 
@@ -69,16 +69,16 @@
 
         <lightning:layout multipleRows="true" class="searchbarList">
 
-            <lightning:layoutItem padding="around-small" class="priceDiv"> 
+            <lightning:layoutItem padding="around-small" class="priceDiv">
                 <lightning:select label="Select Pricebook:" value="{!v.selectedPriceBook}" onchange="{!c.changePriceBook}">
                     <aura:iteration items="{!v.priceBookList}" var="option">
                         <option text="{!option.key}" value="{!option.value}" selected="{!(option.value == v.selectedPriceBook)}"/>
                     </aura:iteration>
                 </lightning:select>
             </lightning:layoutItem>
-            
-            <lightning:layoutItem padding="around-small" class="slds15"> 
-                <lightning:input autocomplete="off" type="search" placeholder="Search Product Family" variant="label-hidden" value="{!v.searchFamilyFilter}" onfocus="{!c.searchProductFamily}" onkeyup="{!c.searchProductFamily}" />
+
+            <lightning:layoutItem padding="around-small" class="slds15">
+                <lightning:input autocomplete="off" type="search" placeholder="Search Product Family" variant="label-hidden" value="{!v.searchFamilyFilter}" onclick="{!c.searchProductFamily}" onkeyup="{!c.searchProductFamily}" />
                 <aura:if isTrue="{!v.displayFamilyList}" >
                     <div id="listbox-id-11" class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid searchResult" role="listbox">
                         <ul class="slds-listbox slds-listbox_vertical" role="presentation">
@@ -97,7 +97,7 @@
                                 <span>
                                     <p class="blank-lst">
                                         There Are No Product Family With This Name
-                                    </p>  
+                                    </p>
                                 </span>
                             </aura:if>
                         </ul>
@@ -105,8 +105,8 @@
                 </aura:if>
             </lightning:layoutItem>
 
-            <lightning:layoutItem padding="around-small" class="slds15"> 
-                <lightning:input autocomplete="off" type="search" placeholder="Search Product Category" variant="label-hidden" value="{!v.searchCategoryFilter}" onfocus="{!c.searchProductCategory}" onkeyup="{!c.searchProductCategory}" />
+            <lightning:layoutItem padding="around-small" class="slds15">
+                <lightning:input autocomplete="off" type="search" placeholder="Search Product Category" variant="label-hidden" value="{!v.searchCategoryFilter}" onclick="{!c.searchProductCategory}" onkeyup="{!c.searchProductCategory}" />
                 <aura:if isTrue="{!v.displayCategoryList}" >
                     <div id="listbox-id-11" class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid searchResult" role="listbox">
                         <ul class="slds-listbox slds-listbox_vertical" role="presentation">
@@ -125,16 +125,16 @@
                                 <span>
                                     <p class="blank-lst">
                                         There Are No Product Category With This Name
-                                    </p>  
+                                    </p>
                                 </span>
                             </aura:if>
                         </ul>
                     </div>
                 </aura:if>
             </lightning:layoutItem>
-            
+
             <lightning:layoutItem padding="around-small" class="slds15">
-                <lightning:input autocomplete="off" type="search" placeholder="Search Product Type" variant="label-hidden" value="{!v.searchTypeFilter}" onfocus="{!c.searchProductType}" onkeyup="{!c.searchProductType}" />
+                <lightning:input autocomplete="off" type="search" placeholder="Search Product Type" variant="label-hidden" value="{!v.searchTypeFilter}" onclick="{!c.searchProductType}" onkeyup="{!c.searchProductType}" />
                 <aura:if isTrue="{!v.displayTypeList}" >
                     <div id="listbox-id-11" class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid searchResult" role="listbox">
                         <ul class="slds-listbox slds-listbox_vertical" role="presentation">
@@ -153,7 +153,7 @@
                                 <span>
                                     <p class="blank-lst">
                                         There Are No Product Type With This Name
-                                    </p>  
+                                    </p>
                                 </span>
                             </aura:if>
                         </ul>
@@ -162,7 +162,7 @@
             </lightning:layoutItem>
 
             <lightning:layoutItem padding="around-small" class="slds15">
-                <lightning:input autocomplete="off" type="search" placeholder="Search Product Name" variant="label-hidden" value="{!v.searchNameFilter}" onfocus="{!c.searchProductName}" onkeyup="{!c.searchProductName}" />
+                <lightning:input autocomplete="off" type="search" placeholder="Search Product Name" variant="label-hidden" value="{!v.searchNameFilter}" onclick="{!c.searchProductName}" onkeyup="{!c.searchProductName}" />
                 <aura:if isTrue="{!v.displayNameList}" >
                     <div id="listbox-id-11" class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid searchResult" role="listbox">
                         <ul class="slds-listbox slds-listbox_vertical" role="presentation">
@@ -181,7 +181,7 @@
                                 <span>
                                     <p class="blank-lst">
                                         There Are No Product With This Name
-                                    </p>  
+                                    </p>
                                 </span>
                             </aura:if>
                         </ul>
@@ -190,7 +190,7 @@
             </lightning:layoutItem>
 
             <lightning:layoutItem padding="around-small" class="slds15">
-                <lightning:input autocomplete="off" type="search" placeholder="Search Manufacturer" variant="label-hidden" value="{!v.searchManufacturerFilter}" onfocus="{!c.searchManufacturer}" onkeyup="{!c.searchManufacturer}" />
+                <lightning:input autocomplete="off" type="search" placeholder="Search Manufacturer" variant="label-hidden" value="{!v.searchManufacturerFilter}" onclick="{!c.searchManufacturer}" onkeyup="{!c.searchManufacturer}" />
                 <aura:if isTrue="{!v.displayManufacturerList}" >
                     <div id="listbox-id-11" class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid searchResult" role="listbox">
                         <ul class="slds-listbox slds-listbox_vertical" role="presentation">
@@ -209,7 +209,7 @@
                                 <span>
                                     <p class="blank-lst">
                                         There Are No Manufacturer With This Name
-                                    </p>  
+                                    </p>
                                 </span>
                             </aura:if>
                         </ul>
@@ -246,20 +246,20 @@
                                         </thead>
                                         <tbody class = "slds-scrollable">
                                             <tr>
-                                                <td> 
+                                                <td>
                                                     <ui:outputURL value="{!'/one/one.app?#/sObject/'+ v.optionValue.buildertek__Product__c + '/view'}" target="_blank" label="{!v.optionValue.buildertek__Product__r.Name}" />
                                                 </td>
-                                                <td>  
+                                                <td>
                                                     <ui:outputURL value="{!'/one/one.app?#/sObject/'+ v.optionValue.buildertek__Manufacturer__c + '/view'}" target="_blank" label="{!v.optionValue.buildertek__Manufacturer__r.Name}" />
                                                 </td>
                                                 <td>
-                                                    {!v.optionValue.buildertek__Cost__c}
+                                                    <lightning:formattedNumber value="{!v.optionValue.buildertek__Cost__c}" style="currency" currencyCode="{!v.orgCurr}" currencyDisplayAs="code"/>
                                                 </td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
-                                    
+
                                 <div>
                                     <div class="optionTitle" style="padding-top: 30px;">
                                         New Option
@@ -274,14 +274,14 @@
                                         </thead>
                                         <tbody class = "slds-scrollable">
                                             <tr>
-                                                <td> 
+                                                <td>
                                                     <ui:outputURL value="{!'/one/one.app?#/sObject/'+ v.productValue.Id + '/view'}" target="_blank" label="{!v.productValue.Name}" />
                                                 </td>
-                                                <td>  
+                                                <td>
                                                     <ui:outputURL value="{!'/one/one.app?#/sObject/'+ v.productValue.buildertek__Manufacturer__c + '/view'}" target="_blank" label="{!v.productValue.buildertek__Manufacturer__r.Name}" />
                                                 </td>
                                                 <td>
-                                                    {!v.optionValue.buildertek__Upgrade_Costs__c}
+                                                    <lightning:formattedNumber value="{!v.optionValue.buildertek__Upgrade_Costs__c}" style="currency" currencyCode="{!v.orgCurr}" currencyDisplayAs="code"/>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -290,7 +290,7 @@
 
                             </aura:set>
                         </aura:if>
-                       
+
                     </div>
                     <footer class="slds-modal__footer">
                         <lightning:button variant="neutral" label="Cancel" onclick="{!c.closeModel}"/>
@@ -321,11 +321,11 @@
                         <aura:iteration items="{!v.productWrapper}" var="ProductWrap" indexVar="index">
 
                             <tr>
-                                <td class="prodImg"> 
+                                <td class="prodImg">
                                     <lightning:carousel disableAutoRefresh="false" disableAutoScroll="true">
                                         <aura:iteration items="{!ProductWrap.contentDocsList}" var="contentDocs" indexVar="inx">
                                             <lightning:carouselImage src="{!'https://btservice360-dev-ed.lightning.force.com/sfc/servlet.shepherd/document/download/'+contentDocs.ContentDocumentId}" onclick="{!c.onImageClick}" id="{!index+'-'+inx}">
-                                            </lightning:carouselImage> 
+                                            </lightning:carouselImage>
                                         </aura:iteration>
                                         <aura:if isTrue="{!empty(ProductWrap.contentDocsList)}">
                                             <div class="noImageDiv">
@@ -333,23 +333,23 @@
                                                 No Image Found
                                             </div>
                                         </aura:if>
-                                    </lightning:carousel>    
+                                    </lightning:carousel>
                                 </td>
                                 <td> {!ProductWrap.product.Family} </td>
-                                <td> 
+                                <td>
                                     <ui:outputURL value="{!'/one/one.app?#/sObject/'+ ProductWrap.product.buildertek__Category__c + '/view'}" target="_blank" label="{!ProductWrap.product.buildertek__Category__r.Name}" />
                                 </td>
-                                <td> 
+                                <td>
                                     <ui:outputURL value="{!'/one/one.app?#/sObject/'+ ProductWrap.product.buildertek__Product_Type__c + '/view'}" target="_blank" label="{!ProductWrap.product.buildertek__Product_Type__r.Name}" />
                                 </td>
-                                <td> 
+                                <td>
                                     <ui:outputURL value="{!'/one/one.app?#/sObject/'+ ProductWrap.product.Id + '/view'}" target="_blank" label="{!ProductWrap.product.Name}" />
                                 </td>
-                                <td>  
+                                <td>
                                     <ui:outputURL value="{!'/one/one.app?#/sObject/'+ ProductWrap.product.buildertek__Manufacturer__c + '/view'}" target="_blank" label="{!ProductWrap.product.buildertek__Manufacturer__r.Name}" />
                                 </td>
-                                <td> 
-                                    <lightning:button variant="brand" label="Upgrade" onclick="{!c.handleClick}" value="{!index}" />    
+                                <td>
+                                    <lightning:button variant="brand" label="Upgrade" onclick="{!c.handleClick}" value="{!index}" />
                                 </td>
                             </tr>
 

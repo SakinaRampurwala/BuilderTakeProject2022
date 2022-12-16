@@ -20,14 +20,21 @@
         action.setCallback(this, function(response) {
             var result = response.getReturnValue();
             var state = response.getState();
-            if (result != null && state == 'SUCCESS') {
+            if (state == 'SUCCESS') {
                 component.set('v.Option', result);
+            } else{
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    "title": "Error!",
+                    "message": "Something went wrong",
+                    "type": "error",
+                    "duration": 5000
+                });
+                toastEvent.fire();
             }
-
+            $A.get("e.c:BT_SpinnerEvent").setParams({ "action": "HIDE" }).fire();
         });
         $A.enqueueAction(action);
-        $A.get("e.c:BT_SpinnerEvent").setParams({ "action": "HIDE" }).fire();
-
 
     },
     createRecord: function(component, event, helper) {
@@ -41,7 +48,7 @@
         action.setCallback(this, function(response) {
             var result = response.getReturnValue();
             var state = response.getState();
-            if (result != null && state == 'SUCCESS') {
+            if (state == 'SUCCESS') {
                 var navEvt = $A.get("e.force:navigateToSObject");
                 navEvt.setParams({
                     "recordId": response.getReturnValue(),
@@ -57,9 +64,7 @@
                     "duration": 5000
                 });
                 toastEvent.fire();
-
             } else {
-
                 var toastEvent = $A.get("e.force:showToast");
                 toastEvent.setParams({
                     "title": "Error!",
@@ -68,11 +73,11 @@
                     "duration": 5000
                 });
                 toastEvent.fire();
-
             }
+            $A.get("e.c:BT_SpinnerEvent").setParams({ "action": "HIDE" }).fire();
         });
         $A.enqueueAction(action);
-        $A.get("e.c:BT_SpinnerEvent").setParams({ "action": "HIDE" }).fire();
+
     },
     closePopup: function(component, event, helper) {
         $A.get("e.force:closeQuickAction").fire();

@@ -350,9 +350,9 @@
             "action": "SHOW"
         }).fire();
         var page = component.get("v.page") || 1;
-        // get the previous button label  
+        // get the previous button label
         var direction = event.getSource().get("v.label");
-        // set the current page,(using ternary operator.)  
+        // set the current page,(using ternary operator.)
         page = direction === "Previous" ? (page - 1) : (page + 1);
         // call the helper function
         helper.getGroups(component, event, helper, page);
@@ -404,12 +404,12 @@
         console.log({ product });
         //alert(pribooknames)
         var action = component.get("c.getProductfamilyRecords");
-        // set param to method  
+        // set param to method
         action.setParams({
             'ObjectName': "Product2",
             'parentId': component.get("v.pricebookName")
         });
-        // set a callBack    
+        // set a callBack
         action.setCallback(this, function(response) {
             $A.util.removeClass(component.find("mySpinner"), "slds-show");
             var state = response.getState();
@@ -434,7 +434,7 @@
             }
 
         });
-        // enqueue the Action  
+        // enqueue the Action
         $A.enqueueAction(action);
     },
 
@@ -614,7 +614,7 @@
     checkQuoteStatus: function(component, event, helper) {},
 
     handleComponentEvent: function(component, event, helper) {
-        // get the selected Account record from the COMPONETN event 	 
+        // get the selected Account record from the COMPONETN event
         var selectedAccountGetFromEvent = event.getParam("recordByEvent");
         component.set("v.productId", selectedAccountGetFromEvent.Id);
         component.set("v.productName", selectedAccountGetFromEvent.Name);
@@ -828,12 +828,12 @@
     },
 
     closeModel: function(component, event, helper) {
-        // for Hide/Close Model,set the "isOpen" attribute to "Fasle"  
+        // for Hide/Close Model,set the "isOpen" attribute to "Fasle"
         component.set("v.isOpen", false);
     },
 
     closeQuotelineModel: function(component, event, helper) {
-        // for Hide/Close Model,set the "isOpen" attribute to "Fasle"  
+        // for Hide/Close Model,set the "isOpen" attribute to "Fasle"
         component.set("v.isQuotelinedelete", false);
         $A.get("e.c:BT_SpinnerEvent").setParams({
             "action": "HIDE"
@@ -1154,7 +1154,7 @@ $A.enqueueAction(action1);*/
     },
 
     //start
-    //additional functionallity for mass-update and duplicate records 
+    //additional functionallity for mass-update and duplicate records
 
     onClickMassUpdateCancel: function(component, event, helper) {
         $A.get("e.c:BT_SpinnerEvent").setParams({
@@ -1260,7 +1260,7 @@ $A.enqueueAction(action1);*/
                 var collapeIcon = document.getElementsByClassName(quoteId + ' collapseGrpIcon_' + grpIndex);
                 var className = quoteId + " groupRows_" + grpIndex;
                 var grpRows = document.getElementsByClassName(className);
-                // if(labelName == 'Expand All') {   
+                // if(labelName == 'Expand All') {
                 expandicon[0].style.display = 'none';
                 collapeIcon[0].style.display = 'inline-block';
                 for (var i = 0; i < grpRows.length; i++) {
@@ -1591,7 +1591,7 @@ $A.enqueueAction(action1);*/
         }
     },
     closeDuplicateModel: function(component, event, helper) {
-        // for Hide/Close Model,set the "isDuplicate" attribute to "Fasle"  
+        // for Hide/Close Model,set the "isDuplicate" attribute to "Fasle"
         component.set("v.isOpen", false);
         component.set("v.isDuplicate", false);
         component.set("v.isMassDuplicate", false);
@@ -1635,7 +1635,7 @@ $A.enqueueAction(action1);*/
         //console.log("check"+JSON.stringify(component.get("v.TotalRecords")));
         //     var markupvalue = component.get("v.QuoteRec").buildertek__Markup__c;
         //     alert('a---->'+markupvalue);
-        //     var action = component.get("c.saveQuoteLineItemsValues"); 
+        //     var action = component.get("c.saveQuoteLineItemsValues");
         //     	action.setParams({
         // 		"quoteRec": component.get("v.QuoteRec").Id,
         // 		markupvalue : markupvalue
@@ -1655,11 +1655,11 @@ if(records.tarTable.ListOfEachRecord[i].recordList[j].fieldName == 'buildertek__
 if(records.tarTable.ListOfEachRecord[i].recordList[j].originalValue <=0 || records.tarTable.ListOfEachRecord[i].recordList[j].originalValue == '' ||records.tarTable.ListOfEachRecord[i].recordList[j].originalValue == null){
 records.tarTable.ListOfEachRecord[i].recordList[j].originalValue = markupvalue;
 }
- 
+
 }
 //alert(records.tarTable.ListOfEachRecord[i].recordList[j].fieldName);
 }
- 
+
 }*/
 
         // component.set("v.TotalRecords",records);
@@ -1707,7 +1707,7 @@ records.tarTable.ListOfEachRecord[i].recordList[j].originalValue = markupvalue;
         $A.enqueueAction(actionLines);
         helper.getQuoteInfo(component, event, helper);
 
-        /* var actions = component.get("c.saveQuoteSingleRec"); 
+        /* var actions = component.get("c.saveQuoteSingleRec");
 actions.setParams({
 "quoteRec": JSON.stringify(component.get("v.QuoteRec"))
 });
@@ -1718,7 +1718,7 @@ console.log('retVal :'+JSON.stringify(result));
 component.set("v.QuoteRec",result);
 $A.get('e.force:refreshView').fire();
 helper.getGroups(component, event, helper, page);
- 
+
 window.setTimeout(
 $A.getCallback(function() {
 var toastEvent = $A.get("e.force:showToast");
@@ -1726,7 +1726,7 @@ toastEvent.setParams({
 mode: 'sticky',
 message: 'Quote line markup(%) updated successfully.',
 type : 'success',
-duration: '10000', 
+duration: '10000',
 mode: 'dismissible'
 });
 toastEvent.fire();
@@ -1740,13 +1740,13 @@ toastEvent.setParams({
 mode: 'sticky',
 message: 'Something Went Wrong!!',
 type : 'error',
-duration: '10000', 
+duration: '10000',
 mode: 'dismissible'
 });
 toastEvent.fire();
 }), 3000
 );
-} 
+}
 });
 $A.enqueueAction(actions);
 helper.getQuoteInfo(component,event,helper);*/
@@ -1839,7 +1839,7 @@ var collapeIcon = document.getElementsByClassName('collapseGrpIcon_'+grpIndex);
 var className = "groupRows_"+grpIndex;
 var grpRows = document.getElementsByClassName(className) ;
 if((!expandicon[0].classList.contains('hideExpandIcon') && collapeIcon[0].classList.contains('hideCollapseIcon') && labelName == 'Expand All')
-|| iconName == 'utility:add' )  {                
+|| iconName == 'utility:add' )  {
 //component.set("v.isExpandGrp",true);
 //alert("HAI");
 $A.util.toggleClass(expandicon[0], 'hideExpandIcon');
@@ -1850,10 +1850,10 @@ if(!item.classList.contains('showRows')){
 item.classList.add('showRows')
 }
 }
- 
+
 }else if((expandicon[0].classList.contains('hideExpandIcon') && !collapeIcon[0].classList.contains('hideCollapseIcon') && labelName == 'Collapse All')
 || iconName == 'utility:dash'){
- 
+
 $A.util.toggleClass(expandicon[0], 'hideExpandIcon');
 $A.util.toggleClass(collapeIcon[0], 'hideCollapseIcon');
 component.set("v.isExpandGrp",false);
@@ -1928,12 +1928,12 @@ console.log(document.getElementsByClassName(className)[0]);
         /* var grpIndex = event.currentTarget.dataset.grpindex;
 var expandicon = document.getElementsByClassName('expandGrpIcon_'+grpIndex);
 var collapeIcon = document.getElementsByClassName('collapseGrpIcon_'+grpIndex);
- 
+
 var className = "groupRows_"+grpIndex;
 var grpRows = document.getElementsByClassName(className) ;
 var allGroups = component.get("v.TotalRecords").groups;
- 
- 
+
+
 if(!expandicon[0].classList.contains('hideExpandIcon') && collapeIcon[0].classList.contains('hideCollapseIcon')){
 $A.util.toggleClass(expandicon[0], 'hideExpandIcon');
 $A.util.toggleClass(collapeIcon[0], 'hideCollapseIcon');
@@ -1949,18 +1949,18 @@ var btn = component.find("expandCollapeseAllBtn");
 btn.set("v.title", "Collapse All");
 btn.set("v.iconName", "utility:dash");
 }
- 
+
 }else if(expandicon[0].classList.contains('hideExpandIcon') && !collapeIcon[0].classList.contains('hideCollapseIcon')){
 $A.util.toggleClass(expandicon[0], 'hideExpandIcon');
 $A.util.toggleClass(collapeIcon[0], 'hideCollapseIcon');
- 
+
 //component.set("v.isExpandGrp",false);
 for(var i=0;i<grpRows.length;i++){
 var item = grpRows[i];
 if(item.classList.contains('showRows')){
 item.classList.remove('showRows')
 }
- 
+
 }
 var hideCollapseIconEles = document.getElementsByClassName('hideCollapseIcon');
 if(hideCollapseIconEles.length == allGroups.length){
@@ -2186,8 +2186,8 @@ component.set("v.StoreIdsOfDatatable2",'') */
         //  component.set("v.listOfSelectedIds",null);
         component.set("v.data2", "");
         // $A.get('e.force:refreshView').fire();
-        component.set("v.openProductBox",false);  
-        component.set("v.openQuoteLineBox",false);  
+        component.set("v.openProductBox",false);
+        component.set("v.openQuoteLineBox",false);
         // location.reload(); */
     },
 
@@ -2196,7 +2196,7 @@ component.set("v.StoreIdsOfDatatable2",'') */
         console.log(component.get("v.pricebookName1"))
             /*   if(!component.get("v.checkFunctionCall")){
 var oldData = component.get("v.oldData");
- 
+
 if(oldData != undefined){
 if(oldData.length == 0){
 component.set("v.oldData", selectedRows);
@@ -2221,7 +2221,7 @@ return otherArray.filter(function(other){
 return other.Id == current.Id
 }).length == 0;
 }
-}  
+}
 } */
 
         console.log("1 st -- " + component.get("v.listOfSelectedIds"));
@@ -2236,13 +2236,13 @@ return other.Id == current.Id
             } else {
                 console.log("yes")
                     /*   if(selectedRowList){
-                       for( var j = 0; j < selectedRowList.length; j++){ 
-                           
-                           if ( selectedRowList[j] === selectedRows[i].Id) { 
+                       for( var j = 0; j < selectedRowList.length; j++){
+
+                           if ( selectedRowList[j] === selectedRows[i].Id) {
                                console.log("yes")
-                               selectedRowList.splice(j, 1); 
+                               selectedRowList.splice(j, 1);
                            }
-                           
+
                        }
                        } */
             }
@@ -2407,13 +2407,17 @@ return other.Id == current.Id
     },
 
     clickRejectLinesBtn: function(component, event, helper) {
-        component.set('v.clickRejectBtn', true);
-        $A.get('e.force:refreshView').fire();
-
-
-    },
-    goBack: function(component, event, helper) {
-        component.set('v.clickRejectBtn', false);
+        var getBtn = component.find('rejectBtn');
+        var getBoolVal = component.get('v.clickRejectBtn');
+        if (getBoolVal) {
+            component.set('v.clickRejectBtn', false);
+            getBtn.set('v.variant', 'destructive');
+            getBtn.set('v.label', 'Rejected Lines');
+        }else{
+            component.set('v.clickRejectBtn', true);
+            getBtn.set('v.variant', 'success');
+            getBtn.set('v.label', 'All Lines');
+        }
         $A.get('e.force:refreshView').fire();
 
     }

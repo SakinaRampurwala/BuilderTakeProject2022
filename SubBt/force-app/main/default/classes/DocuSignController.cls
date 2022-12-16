@@ -8,7 +8,6 @@ public  class DocuSignController {
         
         If(ObjName == 'Change Order'){
             list<buildertek__Change_Order__c> contactDetails = new list<buildertek__Change_Order__c>();
-            list<buildertek__Change_Order__c> changeOrderList = new list<buildertek__Change_Order__c>();
 
             system.debug(SelectedDoc);
             contactDetails = [select Id, name , buildertek__Vendor__r.name, buildertek__Vendor__r.buildertek__Email_Address__c from buildertek__Change_Order__c WHERE Id =: recordId];

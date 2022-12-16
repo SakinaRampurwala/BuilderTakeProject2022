@@ -156,6 +156,7 @@ public with sharing class CreateRFQForPRLController {
         list<buildertek__Expense__c> expenselist = [select id, Name, buildertek__Description__c,buildertek__Type__c,buildertek__Payment_Method__c,buildertek__Amount__c
                                              from buildertek__Expense__c where buildertek__Description__c =: expenseDescription and buildertek__Type__c =: expenseType and 
                                                                                buildertek__Payment_Method__c =: expensePaymentMethod and buildertek__Amount__c =: Amount];
+        System.debug('expenselist===========>>>>>>'+expenselist);
         if(expenselist.size()>0){
             return 'DuplicateExpense';
         }else{

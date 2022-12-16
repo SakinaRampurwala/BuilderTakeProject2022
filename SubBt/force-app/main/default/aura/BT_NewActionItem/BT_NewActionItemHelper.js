@@ -9,6 +9,7 @@
 			if (response.getState() == 'SUCCESS' && response.getReturnValue()) {
 				var listOfFields = JSON.parse(response.getReturnValue());
                 component.set("v.listOfFields", listOfFields);
+				console.log('fields----->',{listOfFields});
 			} else {
 				console.log('Error');
 			}

@@ -2,9 +2,8 @@ public class OrderPOFromProjectController {
     @AuraEnabled
     public static object getMasterBudgets(String recId, Integer pageNumber, Integer pageSize, String poFilter, String poLineFilter, String tradeTypeFilter, String projectFilter, String productFilter, String permitFilter){
 
-       
-        System.debug(tradeTypeFilter != '');
-        System.debug(poFilter != '');
+        system.debug('pageNumber--------->'+pageNumber);
+        system.debug('pageSize----------->'+pageSize);
 
         Integer offset;
         offset = (pageNumber - 1) * pageSize;
@@ -14,17 +13,17 @@ public class OrderPOFromProjectController {
 
         String query = 'Select COUNT() FROM buildertek__Purchase_Order__c';
         if(poFilter != ''){
-          System.debug(poFilter);
+
             if(poFilter != '' && poFilter != null){
                 query = query+ ' Where (buildertek__Vendor__r.Name LIKE \'%'+String.escapeSingleQuotes(poFilter)+'%\')';
                 query = query+ ' or (Name LIKE \'%'+String.escapeSingleQuotes(poFilter)+'%\')';
                 query = query+ ' or (buildertek__Status__c LIKE \'%'+String.escapeSingleQuotes(poFilter)+'%\')';
                 query = query+ ' or (buildertek__Project__r.Name LIKE \'%'+String.escapeSingleQuotes(poFilter)+'%\')';
+
             }
             totalRecords = Database.countQuery(query);
-            System.debug('END POFILTR');
+
         }else if(tradeTypeFilter != ''){
-            System.debug('===TRADE===');
             if(tradeTypeFilter != '' && tradeTypeFilter != null){
                 query = query+ ' Where (buildertek__Vendor__r.buildertek__Trade_Type_Lookup__r.Name LIKE \'%'+String.escapeSingleQuotes(tradeTypeFilter)+'%\')';
             }
@@ -34,23 +33,23 @@ public class OrderPOFromProjectController {
                 query = query+ ' Where (buildertek__Vendor__r.Name LIKE \'%'+String.escapeSingleQuotes(projectFilter)+'%\')';
             }
             totalRecords = Database.countQuery(query);
-        }else{
+        }
+
+        else{
             totalRecords = [SELECT COUNT() FROM buildertek__Purchase_Order__c WHERE buildertek__Project__c =: recId AND buildertek__Phase__c != ''];
         }
 
         List<MasterBudgetsClass> MasterBudgetsClassList = new List<MasterBudgetsClass>();
         List<buildertek__Purchase_Order__c> nullspoRecList;
         List<buildertek__Purchase_Order__c> MainpoRecList = new List<buildertek__Purchase_Order__c>();
-        String queryList = 'SELECT Id, Name, buildertek__Type__c,toLabel(buildertek__Phase__c),buildertek__Vendor__c,buildertek__Vendor__r.Name,buildertek__Vendor__r.buildertek__Trade_Type_Lookup__r.Name,buildertek__Vendor__r.buildertek__Email_Address__c,buildertek__Status__c,buildertek__Description__c,buildertek__Change_Order__c,buildertek__Change_Order__r.Name, buildertek__PO_Total__c, buildertek__Paid_Amount__c, buildertek__PO_Balance__c, buildertek__Date_Ordered__c, buildertek__Project__c, buildertek__Project__r.Name,';
+        String queryList = 'SELECT Id, Name, buildertek__Type__c,toLabel(buildertek__Phase__c),buildertek__Vendor__c,buildertek__Vendor__r.Name,buildertek__Vendor__r.buildertek__Trade_Type_Lookup__r.Name,buildertek__Vendor__r.buildertek__Email_Address__c,buildertek__Status__c,buildertek__Lead_Time__c,buildertek__Required_Delivery_Date__c,buildertek__Description__c,buildertek__Change_Order__c,buildertek__Change_Order__r.Name, buildertek__PO_Total__c, buildertek__Paid_Amount__c, buildertek__PO_Balance__c, buildertek__Date_Ordered__c, buildertek__Project__c, buildertek__Project__r.Name,';
         queryList = queryList +  ' (SELECT Id, Name, buildertek__Purchase_Order__c,buildertek__Total_Price__c,buildertek__Tax__c, buildertek__Purchase_Order__r.Name, buildertek__Quantity__c, buildertek__Unit_Price__c, buildertek__Description__c, buildertek__Total_Amount_Tax__c from Purchase_Order_Items__r), buildertek__Permit__c, buildertek__Permit__r.Name, buildertek__Permit__r.buildertek__Status__c FROM buildertek__Purchase_Order__c';
         queryList = queryList+ ' WHERE buildertek__Project__c =: recId ';
         if(poFilter != '' || tradeTypeFilter != '' || projectFilter != '' || permitFilter != ''){
             if(poFilter != ''){
 
                 queryList = queryList+ ' AND (buildertek__Vendor__r.Name LIKE \'%'+String.escapeSingleQuotes(poFilter)+'%\'';
-
                 queryList = queryList+ ' or Name LIKE \'%'+String.escapeSingleQuotes(poFilter)+'%\'';
-
                 queryList = queryList+ ' or buildertek__Status__c LIKE \'%'+String.escapeSingleQuotes(poFilter)+'%\'';
                 queryList = queryList+ ' or buildertek__Project__r.Name LIKE \'%'+String.escapeSingleQuotes(poFilter)+'%\')';
 
@@ -85,6 +84,8 @@ public class OrderPOFromProjectController {
                                 buildertek__Vendor__r.buildertek__Email_Address__c,
                                 buildertek__Vendor__r.buildertek__Trade_Type_Lookup__r.Name,
                                 buildertek__Status__c,
+                                buildertek__Lead_Time__c,
+                                buildertek__Required_Delivery_Date__c,
                                 buildertek__Description__c,
                                 buildertek__Change_Order__c,
                                 buildertek__Change_Order__r.Name,
@@ -118,6 +119,8 @@ public class OrderPOFromProjectController {
                                 buildertek__Vendor__r.buildertek__Email_Address__c,
                                 buildertek__Vendor__r.buildertek__Trade_Type_Lookup__r.Name,
                                 buildertek__Status__c,
+                                buildertek__Lead_Time__c,
+                                buildertek__Required_Delivery_Date__c,
                                 buildertek__Description__c,
                                 buildertek__Change_Order__c,
                                 buildertek__Change_Order__r.Name,
@@ -142,39 +145,7 @@ public class OrderPOFromProjectController {
                                                             buildertek__Product__r.ProductCode FROM Purchase_Order_Items__r)
                                 FROM buildertek__Purchase_Order__c WHERE buildertek__Project__c =: recId ORDER BY buildertek__Phase__c  DESC NULLS last, buildertek__Vendor__r.Name ASC NULLS last, Name DESC, buildertek__Status__c ASC  LIMIT :pageSize OFFSET :offset];
         }
-        System.debug('MainpoRecList>>>'+MainpoRecList);
-        System.debug([SELECT Id,
-        Name,
-        buildertek__Type__c,
-        toLabel(buildertek__Phase__c),
-        buildertek__Vendor__c,
-        buildertek__Vendor__r.Name,
-        buildertek__Vendor__r.buildertek__Email_Address__c,
-        buildertek__Vendor__r.buildertek__Trade_Type_Lookup__r.Name,
-        buildertek__Status__c,
-        buildertek__Description__c,
-        buildertek__Change_Order__c,
-        buildertek__Change_Order__r.Name,
-        buildertek__PO_Total__c,
-        buildertek__Paid_Amount__c,
-        buildertek__PO_Balance__c,
-        buildertek__Date_Ordered__c,
-        buildertek__Project__c,
-        buildertek__Project__r.Name,
-        buildertek__Permit__c,
-        buildertek__Permit__r.Name,
-        buildertek__Permit__r.buildertek__Status__c, (SELECT Id, Name,
-                                    buildertek__Purchase_Order__c,
-                                    buildertek__Purchase_Order__r.Name,
-                                    buildertek__Quantity__c,
-                                    buildertek__Unit_Price__c,
-                                    buildertek__Description__c,
-                                    buildertek__Tax__c,
-                                    buildertek__Total_Price__c,
-                                    buildertek__Total_Amount_Tax__c,
-                                    buildertek__Product__c,
-                                    buildertek__Product__r.ProductCode FROM Purchase_Order_Items__r)
-        FROM buildertek__Purchase_Order__c WHERE buildertek__Project__c =: recId ]);
+        System.debug('MainpoRecList======>>>'+MainpoRecList);
         map<String , List<buildertek__Purchase_Order__c>> GroupingMap = new map<String , List<buildertek__Purchase_Order__c>>();
 
         for(buildertek__Purchase_Order__c POrec : MainpoRecList){
@@ -334,7 +305,6 @@ public class OrderPOFromProjectController {
         }
 
         return  MasterBudgetsClassList;
-    
     }
 
     public class MasterBudgetsClass{
@@ -447,6 +417,8 @@ public class OrderPOFromProjectController {
                                                          buildertek__Type__c,
                                                          buildertek__Phase__c,
                                                          buildertek__Vendor__c,
+                                                         buildertek__Lead_Time__c,
+                                                         buildertek__Required_Delivery_Date__c,
                                                          buildertek__Vendor__r.Name,
                                                          buildertek__Status__c,
                                                          buildertek__Description__c,
@@ -604,8 +576,7 @@ public class OrderPOFromProjectController {
                     PageReference pagePdf = new PageReference('/apex/PurchaseOrderAttachment');
                     pagePdf.getParameters().put('budgetId', myContact.Id);
 
-                    Blob pdfPageBlob = !Test.isRunningTest() ? pagePdf.getContentAsPDF() : Blob.valueOf('Fake content');
-                    // blob pdfPageBlob = pagePdf.getContentAsPDF();
+                    blob pdfPageBlob = pagePdf.getContentAsPDF();
                     List<Messaging.Emailfileattachment> fileAttachments = new List<Messaging.Emailfileattachment>();
 
                     if(filedata != null && filedata != '' && filedata != '[]'){

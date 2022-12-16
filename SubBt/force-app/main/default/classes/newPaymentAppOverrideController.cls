@@ -233,6 +233,7 @@ public class newPaymentAppOverrideController {
         system.debug(masterRFQList);
         system.debug(masterRFQList.size());
         list<buildertek__Schedule_of_Value_Lines__c> masterRFQListClone = new list<buildertek__Schedule_of_Value_Lines__c>(); 
+        System.debug('<<<<<======= masterRFQList =====>>>>>>'+masterRFQList);
         for(buildertek__Schedule_of_Value_Lines__c pc:masterRFQList){
             system.debug(pc);
             if(Id.contains(pc.buildertek__Schedule_of_Values__c)){
@@ -911,7 +912,7 @@ public class newPaymentAppOverrideController {
                                                                       where buildertek__Status__c = 'Accepted' and buildertek__SOV_Continuation_Sheet__r.buildertek__SOV_Payment_Application__c IN: idList];
         
         List<buildertek__SOV_Continuation_Sheet_Lines__c> newLines = sovpList.clone();
-        
+        System.debug('newLines========>>>>>>'+newLines);
         buildertek__SOV_Continuation__c newSheetId = [select Id,buildertek__SOV_Payment_Application__c 
                                                       from buildertek__SOV_Continuation__c where buildertek__SOV_Payment_Application__c =:paymentId];
         

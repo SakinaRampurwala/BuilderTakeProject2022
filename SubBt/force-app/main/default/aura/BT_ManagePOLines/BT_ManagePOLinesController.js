@@ -989,6 +989,10 @@
         component.set('v.openCreateProposalModal', false);
     },
 
+    createQuote: function(component, event, helper) {
+        helper.quote(component, event, helper);
+    }
+
 
 
 

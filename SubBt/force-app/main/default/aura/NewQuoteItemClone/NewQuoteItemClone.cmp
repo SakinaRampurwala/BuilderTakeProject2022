@@ -691,9 +691,8 @@
                     <div class="slds">
 
                         <div>
-                            <aura:if isTrue="{!v.clickRejectBtn}">
-                                <lightning:button label="Go Back" iconName="utility:back" onclick="{!c.goBack}" iconPosition="left" class="slds-m-bottom_x-small slds-m-left_x-small" />
-                            </aura:if>
+                            <!--<div class="slds-scrollable" style="width:100%;height: 35rem;">-->
+
                             <table class="slds-table slds-table--bordered slds-max-medium-table--stacked-horizontal tablecls">
                                 <!--Table must be responsive-->
                                 <tbody>

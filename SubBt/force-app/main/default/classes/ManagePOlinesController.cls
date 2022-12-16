@@ -1541,10 +1541,53 @@ public with sharing class ManagePOlinesController {
     }
 
     @AuraEnabled
-    public static String createQuoteMethod(String recordId){
-        System.debug('createQuoteMethod');
-        return recordId;
+    public static List<String> createQuoteMethod(String recordId, String mapFieldData){
+        List<String> message = new List<String>();
+        
+        Map<String,List<String>> myMap = (Map<String,List<String>>)JSON.deserialize(mapFieldData, Map<String,List<String>>.class);
+        System.debug('myMap --> '+myMap);
+
+        try {
+            List<buildertek__Select_Sheet__c> BOMLineList = new List<buildertek__Select_Sheet__c>();
+            List<buildertek__Quote_Item__c> qtLineList = new List<buildertek__Quote_Item__c>();
+            BOMLineList = [SELECT Id, Name, buildertek__Quantity__c, buildertek__BL_LIST_PRICE__c, buildertek__Selection_Sheet_Takeoff__c, buildertek__Selection_Sheet_Takeoff__r.Name  FROM buildertek__Select_Sheet__c WHERE buildertek__Selection_Sheet_Takeoff__c =:recordId];
+            
+            if (BOMLineList.size() > 0) {
+                buildertek__Quote__c quote = new buildertek__Quote__c();
+                quote.Name = BOMLineList[0].buildertek__Selection_Sheet_Takeoff__r.Name;
+                // insert quote;
+                
+                for (buildertek__Select_Sheet__c bomLine : BOMLineList) {
+                    buildertek__Quote_Item__c qtLine = new buildertek__Quote_Item__c();
+                    Decimal markUp;
+                    String str = myMap.get(bomLine.Id)[0];
+                    if (String.isNotBlank(str)) {
+                        System.debug('in loop');
+                        System.debug('str '+str);
+                        markUp = decimal.valueOf(str);
+                    }else{
+                        markUp = 0;
+                    }
+                    qtLine.Name = bomLine.Name;
+                    qtLine.buildertek__Quantity__c = bomLine.buildertek__Quantity__c;
+                    qtLine.buildertek__Unit_Price__c = bomLine.buildertek__BL_LIST_PRICE__c;
+                    qtLine.buildertek__Quote__c = quote.Id;
+                    qtLine.buildertek__Markup__c = markUp;
+                    // qtLine.buildertek__Tax_Amount__c = decimal.valueOf(myMap.get(bomLine.Id)[1]);
+                    qtLineList.add(qtLine);
+                }
+                // insert qtLineList;
+                message.add('Success');
+                message.add(quote.Id);
+            }else{
+                message.add('null');
+            }
+            return message;
+        } catch (Exception e) {
+            String str = 'Error Message : '+ e.getMessage()+ ' Error Line Number : ' + e.getLineNumber();
+            message.add(str);
+            return message;
+        }
     }
-    
     
 }

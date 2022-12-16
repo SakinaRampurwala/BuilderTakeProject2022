@@ -4,8 +4,7 @@ public class ViewVendorPaymentApplicationController {
     @AuraEnabled
     public static string getcurrency(){
        return UserInfo.getDefaultCurrency();
-       
-    }    
+    }
     
     // To Get community user
     @AuraEnabled 
@@ -51,8 +50,6 @@ public class ViewVendorPaymentApplicationController {
     
         buildertek__Admin_Interface_Node_Configuration__c adminInterfaceNodeConfigurations = [Select Id,buildertek__Default_Account_for_SOV__c 
                                                                                               from buildertek__Admin_Interface_Node_Configuration__c WHERE Name=:'SOV Configuration'];
-
-        System.debug('recordId => '+recordId);
         
         buildertek__Schedule_of_Values__c stndSOV = [select Id, Name, recordtype.name,buildertek__Vendor__c from buildertek__Schedule_of_Values__c where Id =:recordId ];
         
@@ -105,7 +102,7 @@ public class ViewVendorPaymentApplicationController {
                 
                 continuationSheetLines.Id = coItem.Id;
                 continuationSheetLines.buildertek__Description_of_Work__c = coItem.buildertek__Description_of_Work__c;
-                System.debug('log----------*****------------>'+portalCode);
+                
                 if(portalCode == 'true'){
                     continuationSheetLines.buildertek__Vendor__c = vendorId;
                 }
@@ -238,7 +235,6 @@ public class ViewVendorPaymentApplicationController {
         string currentStatus = 'Pending';
         string approvedStatus = 'Customer Approved';
         buildertek__Schedule_of_Values__c bsc = [SELECT Id,buildertek__Type__c, RecordTypeId, recordtype.name  from buildertek__Schedule_of_Values__c where id=:recordId];
-        System.debug('recordType.Name--------->'+bsc.recordtype.name);
         if(bsc.recordtype.name == 'Standard'){
             if(UserInfo.isMultiCurrencyOrganization()){  
                 insertedSOVLinesString = 'SELECT Id,Name,CurrencyIsoCode,buildertek__Description_of_Work__c,LastModifiedDate ,buildertek__Vendor_Scheduled_Value__c, buildertek__Item__c,buildertek__Item_New__c,buildertek__Scheduled_Value__c,buildertek__Schedule_of_Values__r.buildertek__Status__c,buildertek__Schedule_of_Values__r.buildertek__Total_Costs__c,buildertek__Schedule_of_Values__c,buildertek__Vendor__c,buildertek__Status__c,buildertek__Rejection_Reason__c,buildertek__Vendor__r.Name,buildertek__Vendor_Item_Number_New__c, buildertek__Schedule_of_Values__r.buildertek__Vendor_Total_CostsTotal_Costs__c  FROM buildertek__Schedule_of_Value_Lines__c WHERE buildertek__Schedule_of_Values__c =: recordId AND (buildertek__Status__c =:currentStatus or buildertek__Status__c =:approvedStatus) AND buildertek__isConsolidated__c = false ORDER BY buildertek__Item__c ASC, buildertek__Vendor__r.Name ASC ';
@@ -464,8 +460,6 @@ public class ViewVendorPaymentApplicationController {
             
         List<SOVWrapper> SOVWrapperList = new List<SOVWrapper>();        
        
-        System.debug('projectId ==> '+projectId);
-        
         list<buildertek__Schedule_of_Values__c> sovsList = [ SELECT Id,
                                                             Name, buildertek__Project__c, 
                                                             buildertek__Project__r.Name,
@@ -483,7 +477,7 @@ public class ViewVendorPaymentApplicationController {
                                                            ];
         integer i=1;
         // integer j=1;
-        System.debug('sovsList--------------------->>>>>>>>>>>'+sovsList);
+        
         if(sovsList.size() > 0){
             for(buildertek__Schedule_of_Values__c rec : sovsList){
                 SOVWrapper obj = new SOVWrapper();

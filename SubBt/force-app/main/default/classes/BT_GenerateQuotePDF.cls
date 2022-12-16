@@ -20,7 +20,6 @@ public without sharing class BT_GenerateQuotePDF {
     }
     
     public void createPDF(){
-        // try{
         
          string vendorID;
         // Pick a dummy Contact
@@ -34,14 +33,7 @@ public without sharing class BT_GenerateQuotePDF {
              vendorID = c.id;
              
          }
-         System.debug(recordId);
-        System.debug( apexpages.currentPage());
-        System.debug( apexpages.currentPage().getParameters());
-        System.debug( apexpages.currentPage().getParameters().get('recordId'));
-        System.debug( apexpages.currentPage().getParameters().get('recordId').escapeHtml4());
-
-
-
+        
         recordID = apexpages.currentPage().getParameters().get('recordId').escapeHtml4();
         templateId = apexpages.currentPage().getParameters().get('templateId').escapeHtml4();
         system.debug('recordID --------> '+recordID);
@@ -151,8 +143,5 @@ public without sharing class BT_GenerateQuotePDF {
             
         }
     
-    // }catch(exception e){
-    //     System.debug(e.getMessage() + e.getLineNumber());
-    // }
-}
+    }
 }

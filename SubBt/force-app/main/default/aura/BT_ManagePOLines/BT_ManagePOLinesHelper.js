@@ -1,4 +1,7 @@
 ({
+    listOfBOMfield: [],
+    BOMLineobj: {},
+    storeAllData:[],
     setColumns: function(component) {
         component.set("v.columns", [{
                 label: 'Name',
@@ -756,7 +759,7 @@
         // var showFabTaxes = component.get('v.showFabricationDetails');
         // if(showFabTaxes == true)
         // {
-
+        console.log('loop calling in calculateCostAdjustment');
 
         component.set('v.isLoading', true);
         // $A.get('e.force:refreshView').fire();
@@ -881,11 +884,15 @@
             var groupByData = component.get("v.orgData");
             // console.log('@@groupByData-', groupByData);
             var allData = component.get("v.dataByGroup");
+            this.storeAllData = allData;
+            var v = this.storeAllData;
+            console.log('storeAllData in var',{v});
             // console.log('@@dataByGroup FIRST-', allData);
             var map1 = new Map();
             var map2 = new Map();
             if(allData !=null && allData != undefined){
-
+                console.log('all data :)-> ',{allData});
+                console.log('all data length :)-> ',allData.length);
                 for (var i = 0; i < allData.length; i++) {
     
                     var groupedRecords = allData[i].groupedRecordsTmp;
@@ -898,8 +905,11 @@
                     }
                     // console.log('@@bomIdVsUpgradedCost FIRST-', bomIdVsUpgradedCost);
                     // console.log('@@bomIdVslistPrice FIRST-', bomIdVslistPrice);
+                    console.log('groupedRecords :) --> ',{groupedRecords});
+                    console.log('groupedRecords.length :) --> ',groupedRecords.length);
                     for (var j = 0; j < groupedRecords.length; j++) {
                         var record = groupedRecords[j];
+                        console.log('record :) --> ',{record});
                         var lastindex = record.length - 1;
     
                         var productCode = '';
@@ -1019,6 +1029,7 @@
                             var testo1 = record[k];
                             if (record[k].Key == "Id") {
                                 bomLineId = record[k].Value;
+                                console.log('bomLineId :) -> ',bomLineId);
                             }
     
                             if (bomLineId != null && bomLineId != '' && bomIdVsUpgradedCost != null && bomIdVslistPrice != null) {
@@ -1346,11 +1357,13 @@
                             totalCost = Number(finalExtendedCost) + Number(salestax);
     
                             if (record[k].Key == "buildertek__SalesTax") {
+                                console.log('salestax -> ',salestax);
                                 record[k].Value = parseFloat(salestax).toFixed(2);
                             }
     
     
                             if (record[k].Key == "buildertek__Markup") {
+                                console.log('markupPercentage -> ',markupPercentage);
                                 record[k].Value = markupPercentage;
                             }
     
@@ -1388,6 +1401,7 @@
                             var testoId = testo.Id;
     
                             record[lastindex + 3] = JSON.parse('{"fieldType": "PERCENTAGE", "Key": "buildertek__Markup", "Value": "' + markupPercentage + '"}');
+                            // * here we got the markup for all the BOM lines
     
                             //MarkUp Amount
                             console.log('service category====3 ++'+testo.buildertek__Location_Detail_Reference_1__c);
@@ -1515,6 +1529,8 @@
                             record[lastindex + 8] = JSON.parse('{"fieldType": "CURRENCY", "Key": "buildertek__Total_Cost", "Value": "' + parseFloat(totalCost).toFixed(2) + '"}');
                             //    record[lastindex + 6] = JSON.parse('{"fieldType": "CURRENCY", "Key": "buildertek__SalesTax", "Value": "' + parseFloat(salestax).toFixed(2) + '"}');
                             record[lastindex + 7] = JSON.parse('{"fieldType": "CURRENCY", "Key": "buildertek__SalesTax", "Value": "' + salestax + '"}');
+                            
+                            //* here we got the salestax for all the BOM lines
     
                             //Total Cost
     
@@ -1547,7 +1563,6 @@
                 }
             }
         }
-
         component.set("v.bomLineFieldsSettings", bomLineFields);
         component.set("v.dataByGroup", allData);
         // console.log('dataByGroup Last--', component.get("v.dataByGroup"));
@@ -1771,8 +1786,9 @@
                                     if (record[k].Key == "buildertek__Markup" && record[k].Value != null && record[k].Value != undefined &&
                                         
                                         thisBuildPhaseName != null && thisBuildPhaseName != undefined && thisBuildPhaseName != '' && thisBuildPhaseName == 'Base') {
-                                        console.log('markup value==='+record[k].Value.tostring);
-                                        markup = Math.round((parseFloat(markup.toString()) + parseFloat(record[k].Value.toString())) * 100) / 100;
+                                            markup = Math.round((parseFloat(markup.toString()) + parseFloat(record[k].Value.toString())) * 100) / 100;
+                                            console.log('markup value==='+record[k].Value);
+
                                         let theMarkUp = parseFloat(record[k].Value.toString());
                                         // console.log('theMarkUp--',theMarkUp);
                                         if (theMarkUp != null && theMarkUp != undefined && theMarkUp != 0) {
@@ -1799,6 +1815,7 @@
                                     if (record[k].Key == "buildertek__SalesTax" && record[k].Value != null && record[k].Value != undefined &&
                                         thisBuildPhaseName != null && thisBuildPhaseName != undefined && thisBuildPhaseName != '' && thisBuildPhaseName == 'Base') {
                                         salestax = Math.round((parseFloat(salestax.toString()) + parseFloat(record[k].Value.toString())) * 100) / 100;
+                                        console.log('salestax :) -> ',record[k].Value);
                                     }
         
                                     if (record[k].Key == "buildertek__Total_Cost" && record[k].Value != null && record[k].Value != undefined &&
@@ -2187,7 +2204,7 @@
                             }
     
                             // console.log('bomlineIdVsWCFee');
-                            console.log(bomlineIdVsWCFee.get(bomLineId));
+                            // console.log(bomlineIdVsWCFee.get(bomLineId));
                             if (bomLineId != null && bomLineId != '' && bomlineIdVsWCFee != null && bomlineIdVsWCFee != undefined) {
                                 if (bomlineIdVsWCFee.has(bomLineId) && bomlineIdVsWCFee.get(bomLineId) != null) {
                                     workrsCompFee = bomlineIdVsWCFee.get(bomLineId);
@@ -2226,7 +2243,7 @@
                                 }
                             }
     
-                            console.log('OCIP=='+OCIPVal);
+                            // console.log('OCIP=='+OCIPVal);
                             if (record[k].Key == "buildertek__Total_Cost" && serviceCategory != null && serviceCategory != undefined && serviceCategory == 'OCIP' ) {
                                 if (thisBuildPhaseName == 'Base' || thisBuildPhaseName == 'Option') {
                                     record[k].Value = parseFloat(OCIPVal).toFixed(2);
@@ -2702,5 +2719,78 @@
     isNotPresentInSlab: function(value) {
 
         return !['Slab', 'Slab - Quartz', 'Slab - Granite', 'Slab - Porcelain'].includes(value);
-    }
+    },
+    getfieldData: function(component, event, helper){
+        var allData = this.storeAllData;
+        var lineMap = new Map();
+        for (let i = 0; i < allData.length; i++) {
+            const record = allData[i].groupedRecordsTmp;
+            for (let j = 0; j < record.length; j++) {
+                const singleRecord = record[j];
+                var listOfLine = []
+                for (let k = 0; k < singleRecord.length; k++) {
+                    if (singleRecord[k].Key === "Id") {
+                        var id = singleRecord[k].Value;
+                    }
+                    if (singleRecord[k].Key === "buildertek__SalesTax") {
+                        listOfLine.push(String(singleRecord[k].Value));
+                    }
+                    if (singleRecord[k].Key === "buildertek__Markup") {
+                        listOfLine.push(String(singleRecord[k].Value));
+                    }
+                    lineMap.set(id, listOfLine);
+                }
+            }
+        }
+        return lineMap;
+    },
+    quote: function(component, event, helper){
+        console.log('listOfBOMfield :) -> ',this.listOfBOMfield);
+        var myFieldMap = helper.getfieldData(component, event, helper);
+        var obj = Object.fromEntries(myFieldMap);
+        var jsonString = JSON.stringify(obj);
+        console.log('myFieldMap --> ',jsonString);
+        component.set("v.Spinner", true);
+        var action = component.get("c.createQuoteMethod");
+        action.setParams({
+            "recordId": component.get("v.recordId"),
+            "mapFieldData": jsonString
+        });
+        action.setCallback(this, function(response) {
+            var status = response.getState();
+            console.log('status ==> '+status);
+            var result = response.getReturnValue();
+            console.log('result ==> '+result);
+            if (result[0] === 'Success' ) {
+                helper.showToast1(component, event, helper,'Success','Quote Created Successfully', 'success');
+                var navEvt = $A.get("e.force:navigateToSObject");
+                navEvt.setParams({
+                    "recordId": result[1],
+                    "slideDevName": "Detail"
+                });
+                navEvt.fire();
+            }else if(result[0] === 'null'){
+                helper.showToast1(component, event, helper,'No Lines','There are no BOMLines', 'info');
+            }else{
+                console.log('Error -> ',result);
+                helper.showToast1(component, event, helper,'Error','Something Went Wrong', 'error');
+            }
+            
+            component.set("v.Spinner", false);
+        })
+        $A.enqueueAction(action);
+    },
+    showToast1 : function(component, event, helper, title, message, type) {
+        console.log('title ', title);
+        console.log('messge ', message);
+        console.log('type ', type);
+        var toastEvent = $A.get("e.force:showToast");
+        toastEvent.setParams({
+            "title": title,
+            "message": message,
+            "type": type,
+            "duration": 3000 
+        });
+        toastEvent.fire();
+    },
 })

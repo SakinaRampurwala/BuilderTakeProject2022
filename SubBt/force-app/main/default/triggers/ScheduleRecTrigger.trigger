@@ -3,7 +3,7 @@ trigger ScheduleRecTrigger on buildertek__Schedule__c (after insert, after updat
     ScheduleTriggerHandler handler = new ScheduleTriggerHandler(Trigger.isExecuting, Trigger.size);
     UpdateProjecttOnScheduleUpdateHandler projectUpdateHandler = new UpdateProjecttOnScheduleUpdateHandler();
     if (Trigger.isInsert && Trigger.isAfter && !handler.blnSkipTaskTrigger){
-        
+
         SET<Id> projectIdSet = new SET<Id>();
         List<buildertek__Schedule__c> scheduleToUpdate = new List<buildertek__Schedule__c>();
         //Set<Id> scheduleIds = new Set<Id>();
@@ -13,15 +13,15 @@ trigger ScheduleRecTrigger on buildertek__Schedule__c (after insert, after updat
         }
 
         //handler.getScheduleItemCount(Trigger.new, Trigger.newMap);
-        
+
         List<buildertek__Schedule__c> scheduleList;
         List<buildertek__Project__c> projectList = new List<buildertek__Project__c>();
         List<buildertek__Project__c> projectRecList = new List<buildertek__Project__c>();
         List<buildertek__Project__c> updateprojectRecList = new List<buildertek__Project__c>();
-        
+
         if (projectIdSet.size() > 0){
-            
-            projectRecList = [select Id,Name,buildertek__Actual_Start__c ,buildertek__Actual_Completion_Date__c,buildertek__Original_Start_Date__c,buildertek__Original_End_Date__c ,
+
+            projectRecList = [select Id,Name,buildertek__Actual_Start__c ,buildertek__Actual_Completion_Date__c, buildertek__Stage__c, buildertek__Original_Start_Date__c,buildertek__Original_End_Date__c ,
                                 (select id,Name,buildertek__Start_Date__c,buildertek__End_Date__c,buildertek__Original_Start_Date__c,buildertek__Original_End_Date__c from buildertek__Schedules__r ORDER BY CreatedDate ASC)  from buildertek__Project__c where Id IN:projectIdSet];
             if(projectRecList.size()>0){
                 for(buildertek__Project__c proj : projectRecList){
@@ -30,8 +30,11 @@ trigger ScheduleRecTrigger on buildertek__Schedule__c (after insert, after updat
                         buildertek__Project__c newProj = new buildertek__Project__c();
                         newProj.Id = proj.Id;
                         system.debug('Ater Insert in Trigger ScheduleRecTrigger     ---> '+sch.buildertek__End_Date__c);
-                      newProj.buildertek__Actual_Start__c = sch.buildertek__Start_Date__c;
-                    newProj.buildertek__Actual_Completion_Date__c= sch.buildertek__End_Date__c;
+                        if (proj.buildertek__Stage__c != 'Completed') {
+                            newProj.buildertek__Actual_Start__c = sch.buildertek__Start_Date__c;
+                            newProj.buildertek__Actual_Completion_Date__c= sch.buildertek__End_Date__c;
+                        }
+
                         newProj.buildertek__Original_Start_Date__c = sch.buildertek__Original_Start_Date__c;
                         newProj.buildertek__Original_End_Date__c = sch.buildertek__Original_End_Date__c;
                         System.debug('schedule debug'+sch.buildertek__Original_End_Date__c);
@@ -40,12 +43,12 @@ trigger ScheduleRecTrigger on buildertek__Schedule__c (after insert, after updat
                 }
             }
         }
-        
+
         if(updateprojectRecList.size()>0){
             projectUpdateHandler.updateProjectList_New(updateprojectRecList);
             system.debug('updateprojectRecList'+updateprojectRecList);
         }
-        
+
         scheduleList = [SELECT Id, Name, buildertek__End_Date__c, buildertek__Start_Date__c, buildertek__Primary_Schedule__c, buildertek__Project__c, buildertek__Project__r.buildertek__Project_Manager__c
                         FROM buildertek__Schedule__c
                         WHERE buildertek__Project__c IN :projectIdSet
@@ -123,18 +126,18 @@ trigger ScheduleRecTrigger on buildertek__Schedule__c (after insert, after updat
                 }
             }
         }
-        
- 
-   
+
+
+
     if (Trigger.isUpdate && Trigger.isAfter && !handler.blnSkipTaskTrigger){
         // ScheduleTriggerHandler.afterUpdateHandler(JSON.serialize(trigger.new),JSON.serialize(trigger.oldMap),Trigger.isExecuting, Trigger.size);
         try{
             SET<Id> projectIdSet = new SET<Id>();
             SET<Id> scheduleIds = new SET<Id>();
             Set<Id> scheduleShare = new Set<Id>();
-            
-          
-                    
+
+
+
             List<buildertek__Schedule__c> scheduleToUpdate = new List<buildertek__Schedule__c>();
             Map<Id, buildertek__Schedule__c> scheduleMap = new Map<Id, buildertek__Schedule__c>();
             List<buildertek__Project__c> projectList = new List<buildertek__Project__c>();
@@ -145,12 +148,12 @@ trigger ScheduleRecTrigger on buildertek__Schedule__c (after insert, after updat
                     scheduleShare.add(sch.Project__r.buildertek__Account__r.Id);
                 }
             }
-            
+
             List<buildertek__Project__c> projectRecList = new List<buildertek__Project__c>();
             List<buildertek__Project__c> updateprojectRecList = new List<buildertek__Project__c>();
-            
+
             /*if (projectIdSet.size() > 0){
-                
+
                 for(buildertek__Project__c proj : [select Id,Name,buildertek__Actual_Start__c ,buildertek__Actual_Completion_Date__c,buildertek__Original_Start_Date__c,buildertek__Original_End_Date__c,
                                     (select id,Name,buildertek__Start_Date__c,buildertek__End_Date__c,buildertek__Original_Start_Date__c,buildertek__Original_End_Date__c from buildertek__Schedules__r ORDER BY CreatedDate ASC)  from buildertek__Project__c where Id IN:projectIdSet]){
                     if(proj.buildertek__Schedules__r.size() > 0){
@@ -162,33 +165,33 @@ trigger ScheduleRecTrigger on buildertek__Schedule__c (after insert, after updat
                         newProj.buildertek__Original_Start_Date__c = sch.buildertek__Original_Start_Date__c;
                         newProj.buildertek__Original_End_Date__c= sch.buildertek__Original_End_Date__c;
                         system.debug(sch.buildertek__End_Date__c);
-                        
+
                         updateprojectRecList.add(newProj);
                     }
                 }
             }
-            
+
             if(updateprojectRecList.size()>0){
                 system.debug('updateprojectRecList-->'+updateprojectRecList[0].buildertek__Actual_Completion_Date__c );
                 projectUpdateHandler.updateProjectList_New(updateprojectRecList);
                 system.debug('updateprojectRecList-->'+updateprojectRecList[0].buildertek__Actual_Completion_Date__c );
                 system.debug('updateprojectRecList-->'+updateprojectRecList[0].Id);
             }*/
-            
+
             if (scheduleShare.size() > 0){
                 delete [Select Id
                         FROM buildertek__Schedule__Share
                         WHERE UserOrGroupId = :scheduleShare AND AccessLevel = :'Read' AND RowCause = :'Manual'];
             }
-    
+
             if (projectIdSet.size() > 0){
                 List<buildertek__Schedule__c> scheduleList;
-    
+
                 scheduleList = [SELECT Id, Name, buildertek__End_Date__c, buildertek__Primary_Schedule__c, buildertek__Start_Date__c, buildertek__Project__c
                                 FROM buildertek__Schedule__c
                                 WHERE buildertek__Project__c IN :projectIdSet
                                 ORDER BY CreatedDate ASC];
-    
+
                 if (scheduleList.size() > 0){
                     if (scheduleList.size() > 1){
                         for (buildertek__Schedule__c schedule : scheduleList){
@@ -289,14 +292,14 @@ trigger ScheduleRecTrigger on buildertek__Schedule__c (after insert, after updat
             System.debug('Exception cause-->'+e.getStackTraceString());
         }
     }
-    
+
     if (trigger.isDelete && trigger.isBefore){
-        
-        
+
+
          SET<Id> projectIdSet = new SET<Id>();
         List<buildertek__Schedule__c> scheduleToUpdate = new List<buildertek__Schedule__c>();
         //Set<Id> scheduleIds = new Set<Id>();
-        
+
         if(Trigger.new != null){
             for (buildertek__Schedule__c sch : Trigger.new){
                 projectIdSet.add(sch.buildertek__Project__c);
@@ -308,9 +311,9 @@ trigger ScheduleRecTrigger on buildertek__Schedule__c (after insert, after updat
                 //scheduleIds.add(sch.Id);
             }
         }
-        
-        
-        
+
+
+
         List<buildertek__Schedule__c> scheduleList;
         List<buildertek__Project__c> projectList = new List<buildertek__Project__c>();
         if (projectIdSet.size() > 0){
@@ -402,18 +405,18 @@ trigger ScheduleRecTrigger on buildertek__Schedule__c (after insert, after updat
                 }
             }
         }
-        
-        
+
+
     }
-    
-     if (trigger.isUpdate && trigger.isBefore){  
+
+     if (trigger.isUpdate && trigger.isBefore){
  for (buildertek__Schedule__c sch : Trigger.new){
         if(sch.buildertek__Complete1__c >0 && sch.buildertek__Actual_Start_Date_2__c == null){
                 sch.buildertek__Actual_Start_Date_2__c = system.today();
 }
 }
 }
-    
-    
-    
+
+
+
 }

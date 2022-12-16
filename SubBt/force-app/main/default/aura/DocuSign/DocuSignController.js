@@ -32,7 +32,7 @@
 
                 component.set("v.TemplatesList", result);
 
-                //   console.log(result);
+                console.log(result);
 
             }
         });
@@ -145,11 +145,12 @@
 
     sendEnv: function(component, event, helper) {
         // debugger;
-
+        console.log('Send env');
         var recordId = component.get('v.recordId');
         component.set("v.Spinner", true);
         component.set("v.showMessage", true);
         var selectedDocId = component.get('v.SelectedDocuments');
+        console.log(selectedDocId);
 
         if (selectedDocId.length > 0) {
             var action = component.get("c.sendDocEnv");

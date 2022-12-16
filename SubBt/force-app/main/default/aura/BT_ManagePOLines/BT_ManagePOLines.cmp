@@ -614,8 +614,12 @@
                                 <lightning:button iconName="utility:close" iconPosition="left" onclick="{!c.onMassUpdateCancel}"
                                                   label="Cancel" />
                             </aura:if>
-                            <lightning:button label="Create Proposal" disabled="false" 
-                                              onclick="{!c.validateProposal}"/>
+                            <!-- <lightning:button label="Create Proposal" disabled="false" 
+                                              onclick="{!c.validateProposal}"/> -->
+
+                            <lightning:button label="Create Quote" disabled="false" 
+                                              onclick="{!c.createQuote}"/>
+
                             <lightning:button label="Create PO" disabled="false" 
                                               onclick="{!c.newPO}"/>
                             

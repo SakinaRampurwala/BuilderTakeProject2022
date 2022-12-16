@@ -324,13 +324,16 @@ public class ContinuationSheetLineTriggerHandler {
                         if(updateAppIdList.indexOf(newapp.Id) < 0){
                             updateAppList.add(newapp);
                         }
+                        System.debug('updateAppList=====>>>>>'+updateAppList);
                     }
                 }
             }
+            System.debug('updateAppList=====>>>>>'+updateAppList);
             
             if(updateAppList.Size()>0){
                 ContinuationSheetLineTriggerHandler.blnSkipSheetLineTrigger = true;
                 update updateAppList;
+                System.debug('IF updateAppList=====>>>>>'+updateAppList);
                 ContinuationSheetLineTriggerHandler.blnSkipSheetLineTrigger = false; 
             }
         }

@@ -9,7 +9,7 @@ public class SubContractOrderFromProjectClass {
            Schema.sObjectType.buildertek__Budget_Item__c.fields.buildertek__Description__c.isAccessible() &&
            Schema.sObjectType.buildertek__Budget_Item__c.fields.buildertek__Cost_Code__c.isAccessible() &&
            Schema.sObjectType.buildertek__Budget_Item__c.fields.buildertek__Budget__c.isAccessible()){
-            rfqList = [SELECT Id,
+               rfqList = [SELECT Id,
                           Name, 
                           buildertek__Contractor__r.Name,
                           buildertek__Budget__c,
@@ -24,10 +24,8 @@ public class SubContractOrderFromProjectClass {
                           buildertek__Purchase_Order__c,
                           buildertek__Purchase_Order__r.Name,(select id,buildertek__Budget_Line2__c from Purchase_Orders1__r)
                                 FROM buildertek__Budget_Item__c Where buildertek__Budget__r.buildertek__Project__c =: recId AND buildertek__Sub_Contract__c != ''  ORDER BY Name ASC  ];    
-           System.debug('inside' + rfqList);
-
+               
            }
-           System.debug(rfqList);
         for(buildertek__Budget_Item__c bud : rfqList){
             MasterBudgetsClass MasterBudgetsClassRecord = new MasterBudgetsClass(); 
             MasterBudgetsClassRecord.budgetRecord = bud;
@@ -152,7 +150,7 @@ public class MessageClass{
      @AuraEnabled
     public static List<buildertek__Purchase_Order__c> createPO(List<String> budgetIds, String recordId, String fileData){
         system.debug('budgetIds--------->'+budgetIds);
-       system.debug('fileData--------->'+fileData);
+      //  system.debug('fileData--------->'+fileData);
         
            List<Innerclass> inn = new  List<Innerclass>();
         if(filedata != null && filedata != '' && filedata != '[]'){
@@ -281,17 +279,7 @@ public class MessageClass{
                System.debug('three');
             if(inn.size() > 0){
             for(Innerclass a : inn){
-                System.debug(a);
-                System.debug(po.buildertek__Sub_Contract__c);
-                System.debug(po.buildertek__Status__c);
-
-                System.debug(po.buildertek__Sub_Contract__c == a.POId);
-                
-
-
                 if(po.buildertek__Sub_Contract__c == a.POId){
-                System.debug(a);
-
                   /*  System.debug('Attached in the record');
                     String base64Data = EncodingUtil.urlDecode(a.fileContent, 'UTF-8');
                     Attachment attach = new Attachment();
@@ -513,7 +501,6 @@ public class MessageClass{
                     pagePdf.getParameters().put('budgetId', myContact.Id);
                     System.debug('okkkkkkkkkkkkkkkkkkkkkkkkkk');
                     blob pdfPageBlob = pagePdf.getContentAsPDF();
-                    System.debug(pdfPageBlob);
                     List<Messaging.Emailfileattachment> fileAttachments = new List<Messaging.Emailfileattachment>();
                     if(filedata != null && filedata != '' && filedata != '[]'){
                         if(inn.size() > 0){

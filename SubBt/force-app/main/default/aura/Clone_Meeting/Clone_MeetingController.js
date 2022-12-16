@@ -15,22 +15,35 @@
                 var state = response.getState();
                 console.log(response);
                 if (state === "SUCCESS") {
-                    console.log(response.getReturnValue());
-                    component.set('v.oldMeeting', response.getReturnValue().meet);
-                    component.set('v.Atendee', response.getReturnValue().Attendee);
-                    component.set('v.actionItemRec', response.getReturnValue().actionItem);
+                    var resule = response.getReturnValue();
+                    console.log('resule ==> ',{resule});
+                    
+                    // For Set Start Time
+                    var startTime = resule.buildertek__Start_Time__c;
+                    var startMinutes = Math.floor((startTime / (1000 * 60)) % 60);
+                    var startHours = Math.floor((startTime / (1000 * 60 * 60)) % 24);
+                    
+                    startHours = (startHours < 10) ? "0" + startHours : startHours;
+                    startMinutes = (startMinutes < 10) ? "0" + startMinutes : startMinutes;
+                    resule.buildertek__Start_Time__c = startHours + ":" + startMinutes + ":00.000";
 
+                    // For Set End Time
+                    var endTime = resule.buildertek__End_Time__c;
+                    var endMinutes = Math.floor((endTime / (1000 * 60)) % 60);
+                    var endHours = Math.floor((endTime / (1000 * 60 * 60)) % 24);
+                    
+                    endHours = (endHours < 10) ? "0" + endHours : endHours;
+                    endMinutes = (endMinutes < 10) ? "0" + endMinutes : endMinutes;
+                    resule.buildertek__End_Time__c = endHours + ":" + endMinutes + ":00.000";
 
-
-
+                    component.set('v.oldMeeting', resule);
                 }
             });
             $A.enqueueAction(action);
 
-            helper.getPicklist(component, event, helper);
             component.set("v.Spinner", false);
-        } catch (e) {
-            console.log({ e });
+        } catch (error) {
+            console.log('Error ==> ',{ error });
         }
     },
 
@@ -50,69 +63,37 @@
     
     */
     Save: function(component, event, helper) {
-        try {
-            component.set("v.Spinner", true);
-            var cloneMeetRecord = component.get('v.oldMeeting');
-            delete cloneMeetRecord['Id'];
 
-            var action = component.get("c.save");
-            action.setParams({
-                meet: cloneMeetRecord,
-                attendee: component.get('v.Atendee'),
-                action: component.get('v.actionItemRec')
-            });
-            action.setCallback(this, function(response) {
-                console.log(response);
-                var state = response.getState();
-                var result = response.getReturnValue();
-                if (state === "SUCCESS") {
-                    component.set("v.Spinner", false);
-                    $A.get("e.force:closeQuickAction").fire();
-                    var toastEvent = $A.get("e.force:showToast");
-                    toastEvent.setParams({
-                        "title": "Success!",
-                        "message": "Meeting added successfully",
-                        "type": "success",
-                        "duration": 5000
-                    });
-                    toastEvent.fire();
+        component.set("v.Spinner", true);
+        var meetingData = component.get('v.oldMeeting');
+        delete meetingData['Id'];
 
+        var action = component.get("c.cloneMeeting");
+        action.setParams({
+            meeting: meetingData,
+            recordId: component.get("v.recordId")
+        });
+        action.setCallback(this, function(response) {
+            console.log(response);
+            var state = response.getState();
+            var result = response.getReturnValue();
+            $A.get("e.force:closeQuickAction").fire();
+            if (state === "SUCCESS") {
+                helper.showToast("Success", "Success", "Meeting added successfully", "5000");
 
-                    console.log(response.getReturnValue());
-                    var navEvt = $A.get("e.force:navigateToSObject");
-                    navEvt.setParams({
-                        "recordId": result,
-                        "slideDevName": "related"
-                    });
-                    navEvt.fire();
+                var navEvt = $A.get("e.force:navigateToSObject");
+                navEvt.setParams({
+                    "recordId": result,
+                    "slideDevName": "related"
+                });
+                navEvt.fire();
+            } else {
+                helper.showToast("Error", "Error", "Failed to save record", "5000");
+            }
+            component.set("v.Spinner", false);
+        });
 
-
-                } else {
-                    component.set("v.Spinner", false);
-                    $A.get("e.force:closeQuickAction").fire();
-                    var toastEvent = $A.get("e.force:showToast");
-                    toastEvent.setParams({
-                        "title": "Error!",
-                        "message": "Failed to save record",
-                        "type": "error",
-                        "duration": 5000
-                    });
-                    toastEvent.fire();
-
-
-                }
-            });
-
-
-
-            $A.enqueueAction(action);
-
-
-        } catch (e) {
-            console.log({ e });
-        }
-
+        $A.enqueueAction(action);
     },
-
 
 })

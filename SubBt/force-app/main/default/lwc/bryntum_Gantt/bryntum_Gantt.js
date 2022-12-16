@@ -34,11 +34,11 @@ import { formatData, saveeditRecordMethod } from "./bryntum_GanttHelper";
 import getRecordType from "@salesforce/apex/BT_NewGanttChartCls.getRecordType";
 import getholidays from "@salesforce/apex/BT_NewGanttChartCls.getholidays";
 import { getPicklistValues, getObjectInfo } from 'lightning/uiObjectInfoApi';
-import login from "@salesforce/apex/LightningLoginFormController.login";
 
 export default class Gantt_component extends NavigationMixin(LightningElement) {
-	@api holidays = [];
-	@api showpopup = false;
+  @api showpopup = false;
+  @api holidays = [];
+  @api monthsval = [];
   @api fileTaskId = "";
   @api showDeletePopup = false;
   @api showEditPopup = false;
@@ -164,22 +164,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
   @track showOriginalDateModal = false;
   @track blankPredecessor = false;
 
-  @api monthsval = [
-    {monthname : "Jan", month: "01"},
-    {monthname : "Feb", month: "02"},
-    {monthname : "Mar", month: "03"},
-    {monthname : "Apr", month: "04"},
-    {monthname : "May", month: "05"},
-    {monthname : "Jun", month: "06"},
-    {monthname : "Jul", month: "07"},
-    {monthname : "Aug", month: "08"},
-    {monthname : "Sep", month: "09"},
-    {monthname : "Oct", month: "10"},
-    {monthname : "Nov", month: "11"},
-    {monthname : "Dec", month: "12"}
-  ];
-
-	
   @wire(getRecordType) objRecordType;
 
   @wire(pickListValueDynamically, {
@@ -209,44 +193,11 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
     this.newTaskRecordCreate["buildertek__Type__c"] = event.target.value;
   }
 
-
-  connectedCallback() {
-	debugger;
-    this.phaseFunction();
-	// this.holidays = new set();
-	// var test = this;
-	// console.log('In connected Callback');
-
-  
-
-	// getholidays().then(function (response) {
-	// 	for (let i = 0; i < response.length; i++) {
-	// 		test.holidays.push(response[i].ActivityDate);
-	// 	}
-	// 	console.log('holiday list===',test.holidays.includes('2022-12-28'));
-	//   });
-	//   console.log('test.holidays=='+test.holidays);
-	// debugger;
-  }
   errorCallback(error, stack) {}
 
   get acceptedFormats() {
     return [".pdf", ".png", ".jpg", ".jpeg", ".csv", ".docx", ".doc"];
   }
-
-  holidaydata() {
-    getholidays()
-      .then((result) => {
-          console.log('this.holidays--->',this.holidays);
-          for (let i = 0; i < result.length; i++) {
-            this.holidays.push(result[i].ActivityDate);
-            }
-      })
-      .catch((error) => {
-          console.log('Holidays Error',{error});
-      });
-  }
-
   handleUploadFinished(event) {
     // Get the list of uploaded files
     const uploadedFiles = event.detail.files;
@@ -506,7 +457,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
           var dupStDate = stDate;
           for (var j = 0; j < duration - 1; j++) {
             var dt = new Date(dupStDate.setDate(dupStDate.getDate() + j));
-			console.log('474=='+dt);
             if (dt.getDay() == 6 || dt.getDay() == 0) {
               endDate = new Date(endDate.setDate(endDate.getDate() + 1));
             }
@@ -550,7 +500,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
           var dupStDate = stDate;
           for (var j = 0; j < duration - 1; j++) {
             var dt = new Date(dupStDate.setDate(dupStDate.getDate() + j));
-			console.log('518=='+dt);
             if (dt.getDay() == 6 || dt.getDay() == 0) {
               endDate = new Date(endDate.setDate(endDate.getDate() + 1));
             }
@@ -890,7 +839,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
       dt = new Date();
       newTaskeDate = new Date().toLocaleDateString().split("/");
     }
-	console.log('858=='+dt);
     if (dt.getDay() == 6) {
       dt.setDate(dt.getDate() + 2);
     }
@@ -1079,7 +1027,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
   }
 
   gettaskrecords() {
-    debugger;
     this.isLoaded = true;
     var that = this;
     getScheduleItemRecords({
@@ -1106,7 +1053,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
         }
         this.isLoaded = false;
       });
-      debugger;
   }
   openMasterSchedule() {
     const urlWithParameters =
@@ -1208,7 +1154,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
 
   phaseFunction(){
     //CODE ADDED TO GET PHASE DATES - 09-10
-	debugger;
     getPhaseDates({
       scheduleId : this.recordId
     }).then(data=>{
@@ -1228,10 +1173,24 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
     }).catch(error=>{
       console.log({error});
     });
-	debugger;
   }
 
-  
+  connectedCallback() {
+    this.phaseFunction();
+  }
+
+  holidaydata() {
+    getholidays()
+      .then((result) => {
+          console.log('this.holidays--->',this.holidays);
+          for (let i = 0; i < result.length; i++) {
+            this.holidays.push(result[i].ActivityDate);
+            }
+      })
+      .catch((error) => {
+          console.log('Holidays Error',{error});
+      });
+  }
 
   renderedCallback() {
     if (this.bryntumInitialized) {
@@ -1538,7 +1497,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
       groupData.push(newObj);
     }
     this.scheduleItemsData = groupData;
-    console.log('groupData--->',{groupData});
+    console.log({groupData});
     if (this.template.querySelector(".container").children.length) {
       this.template.querySelector(".container").innerHTML = "";
       this.template.querySelector(".container1").innerHTML = "";
@@ -1551,7 +1510,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
   createGantt() {
     try {
       console.log('createGantt');
-      debugger;
       var GanttToolbar;
       var loc = window.location.href;
       var domName = loc.split(".lightning.force.com")[0].split("https://")[1];
@@ -1600,7 +1558,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
           }
         }
       }
-      debugger;
       this.scheduleItemsDataList = scheduleDataList;
 
       var formatedSchData = formatData(
@@ -1610,8 +1567,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
       );
       console.log('=== formatedSchData ===');
       console.log({formatedSchData});
-      console.log('1560');
-      debugger;
 
       // var refVar = formatedSchData;
       // for(var key in refVar.rows[0].children){
@@ -1660,8 +1615,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
         assignmentsData: assignmentRowData,
         calendarsData: data.calendars.rows,
       });
-      console.log('1608');
-      debugger;
       console.log("project ==>", { project });
       const gantt = new bryntum.gantt.Gantt({
         project,
@@ -1691,6 +1644,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
               {
                 cls: "b-fa b-fa-plus",
                 onClick: ({ record }) => {
+                  console.log('record ===>'+record);
                   if (record._data.id.indexOf("_generate") == -1) {
                     this.recordTaskParent = record;
                     this.addNewTask(record);
@@ -1707,7 +1661,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
               {
                 cls: "b-fa b-fa-pen",
                 onClick: ({ record }) => {
-                  console.log('1655--->',{record});
                   if (
                     record._data.type == "Task" &&
                     record._data.id.indexOf("_generate") == -1
@@ -1745,7 +1698,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
               {
                 cls: "b-fa b-fa-check",
                 onClick: ({ record }) => {
-                  console.log('1692--->',{record});
                   if (record._data.type == "Task") {
                     if (record._data.percentDone == 100) {
                       record.set("percentDone", 0);
@@ -1804,7 +1756,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
             type: "startdate",
             editor: true,
             renderer: function(record){
-              console.log('In the Start render');
               var months = [
                 "Jan",
                 "Feb",
@@ -1819,39 +1770,27 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
                 "Nov",
                 "Dec",
               ];
-              console.log('record.value-->'+record.value);
-              console.log('record.record._data.name-->'+record.record._data.name);
-              console.log('record.record.startDate-->'+record.record.startDate);
               if(record.value && record.record._data.name == 'Milestone Complete'){
-                debugger;
-                console.log({record});
                 var endDate;
                 var endDate1 = new Date(record.record.startDate);
-                console.log('1769--',{endDate1});
                 endDate1.setDate(endDate1.getDate() + record.record._data.durationMile);
                 if(record.record._parent._data.endDate != undefined){
-                  endDate = new Date(record.record._parent._data.endDate);
-                  endDate.setDate(endDate.getDate() - 1);
-                  endDate = new Date(endDate);
-                  console.log('1773-',{endDate});
-                
-                  //return record.value;
+                endDate = new Date(record.record._parent._data.endDate);
+                endDate.setDate(endDate.getDate() - 1);
+                endDate = new Date(endDate);
+                //return record.value;
 
-                  return (
-                    months[endDate.getMonth()] +
-                    " " +
-                    Number(endDate.getDate()) +
-                    ", " +
-                    endDate.getFullYear()
-                  );
-                  
-                } 
+                return (
+                  months[endDate.getMonth()] +
+                  " " +
+                  Number(endDate.getDate()) +
+                  ", " +
+                  endDate.getFullYear()
+                );
+
+                }
               }else{
-                console.log('1791--->',{record});
-                console.log('1791--->',record.record.startDate);
-                console.log('--->',record.record.originalData.startDate);
-                // var sdate = new Date(record.record.startDate);
-                var sdate = new Date(record.record.originalData.startDate);
+                var sdate = new Date(record.record.startDate);
                 return (
                     months[sdate.getMonth()] +
                     " " +
@@ -1866,9 +1805,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
             type: "enddate",
             editor: true,
             renderer: function (record) {
-              console.log('1804');
-              console.log({record});
-              debugger;
               if (record.rowElement) {
                 record.rowElement.draggable = true;
               }
@@ -1891,13 +1827,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
                 "Nov",
                 "Dec",
               ];
-
-              const monthsv = ["01","02","03","04","05","06","07","08","09","10","11","12"];
-
-              
-              console.log('monthsv',{monthsv});
-
-
               if (record.value) {
 
                 // console.log('Record of endDate =>',{record});
@@ -1909,20 +1838,13 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
                   record.record._data.type == "Task" &&
                   record.record._data.name != "Milestone Complete"
                 ) {
-                  debugger;
                     // console.log('In if conditon for enddate');
                   var start;
                   var endDate = new Date(record.value);
                   var start = new Date(record.record.startDate.getTime());
                   var duration = record.record.duration;
-
-				  console.log('duration==1851=='+duration);
-				  
                   var eDate = new Date(start);
-                  // var eDatebefore = endDate;
-				  console.log('endDate==1855=='+endDate);
-
-				  debugger;
+                  var eDatebefore = endDate;
                   // newly added
                   var eDate2 = new Date(start);
                   for (var i = 0; i < duration; i++) {
@@ -1935,48 +1857,27 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
                       eDate2 = new Date(eDate2.setDate(eDate2.getDate() + 1));
                       // console.log("eDate2 els after=> " + "i = " + i + " " + eDate2);
                     }
-                      console.log('1884=='+eDate2);
-                      console.log('1909-->',holidayvalue);
-                      // console.log('this.monthsval-->',this.monthsval);
-                      
-                      console.log(monthsv[eDate2.getMonth()]);
-                      // Added By Ritu
-                      var edatedate = new Date(eDate2).getFullYear()+'-'+monthsv[eDate2.getMonth()]+'-'+new Date(eDate2).getDate();
-                      console.log('2669=='+edatedate);
-                      // var test = this.holidays;
-                      // console.log({test});
-                      console.log('holiday includes=='+holidayvalue.includes(edatedate));
-
-                    if (new Date(eDate2).getDay() == 0 ||  holidayvalue.includes(edatedate)) { // Added By Ritu
-                      console.log('1944--'+eDate2);
+                    if (new Date(eDate2).getDay() == 0) {
                       eDate2 = new Date(eDate2.setDate(eDate2.getDate() + 1));
-                      console.log('1946--'+eDate2);
                     }
-                    if (new Date(eDate2).getDay() == 6   ) {
+                    if (new Date(eDate2).getDay() == 6) {
                       eDate2 = new Date(eDate2.setDate(eDate2.getDate() + 2));
                     }
                     //console.log('custom',eDate2)
                     eDate2 = new Date(eDate2);
-                    console.log('1953-->'+eDate2);
                   }
                   endDate.setDate(endDate.getDate() - 1);
                   if (endDate.getTime() <= eDate2.getTime()) {
-                    console.log('1957');
                     record.value.setMonth(eDate2.getMonth());
                     record.value.setFullYear(eDate2.getFullYear());
                     record.value.setDate(eDate2.getDate() + 1);
                     endDate = new Date(eDate2);
-                    console.log('If-1961--'+endDate);
                   } else if (endDate.getTime() <= start) {
-                    console.log('1964');
                     record.value.setMonth(eDate2.getMonth());
                     record.value.setFullYear(eDate2.getFullYear());
                     record.value.setDate(eDate2.getDate() + 1);
-                    console.log('ELSE--1966');
                   }
                   var eDateafter = endDate;
-                  console.log('1873--->'+endDate);
-                  console.log('1870--->'+eDate2);
                   return (
                     months[endDate.getMonth()] +
                     " " +
@@ -1999,7 +1900,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
 
                   map1.set(count,endDate);
                 //   console.log({map1});
-                console.log('1908-->',{endDate});
                   return (
                     months[endDate.getMonth()] +
                     " " +
@@ -2016,7 +1916,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
                   endDate = new Date(record.value);
                   endDate.setDate(endDate.getDate() - 1);
                   endDate = new Date(endDate);
-                  console.log('1925-->',{endDate});
                   return (
                     months[endDate.getMonth()] +
                     " " +
@@ -2025,8 +1924,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
                     endDate.getFullYear()
                   );
                 } else {
-                  // debugger;
-
                   // console.log('start Date',record.record.startDate);
                 //   console.log('MileStone EndDate');
                 //   console.log({record});
@@ -2051,12 +1948,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
                   // }else{
                     // console.log('--'+record.record._parent._data.endDate);
                     // endDate = new Date(record.record._parent._data.endDate);
-
-                    console.log({record});
-                    console.log('End Date-->'+record.record._parent._data.endDate);
-                    console.log('Data-->'+JSON.stringify(record.record._parent._data));
-                    console.log('record->'+record.record);
-                    console.log('Start Date->'+record.record.startDate);
                     if(record.record._parent._data.endDate != undefined) console.log('-|-'+record.record._parent._data.endDate.toString().substring(8,10));
                     // console.log({endDate});
 
@@ -2069,14 +1960,11 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
 
                     var endDate1 = new Date(record.record.startDate);
                     endDate1.setDate(endDate1.getDate() + record.record._data.durationMile);
-                    console.log('1979-->'+endDate1);
                     // console.log({endDate1});
-                    console.log('1980--->'+record.record.endDate);
-                    endDate = new Date(record.record.endDate);        //Added By Ravi
-                    console.log('1982==>'+endDate);
+
+                    endDate = new Date(record.record._parent._data.endDate);
                     // console.log('1-'+endDate);
-                    endDate.setDate(endDate.getDate() - 1);         //Added By Ravi
-                    console.log('1986-->'+endDate);
+                    endDate.setDate(endDate.getDate() - 1);
                     // console.log('2-'+endDate);
                     endDate = new Date(endDate);
                     // console.log('3-'+endDate);
@@ -2084,8 +1972,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
 
                     // endDate.setDate(endDate.getDate() + record.record._parent._data.duration);
                   // }
-                  console.log(' 1990 Return EndDate-->'+endDate);
-                  debugger;
+
 
                   return (
                     months[endDate.getMonth()] +
@@ -2095,7 +1982,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
                     endDate.getFullYear()
                   );
                 }
-              } 
+              }
             },
           },
           {
@@ -2470,7 +2357,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
                   } else {
                     eDate = new Date(eDate.setDate(eDate.getDate() + 1));
                   }
-				  console.log('2402==='+new Date(eDate));
                   if (new Date(eDate).getDay() == 0) {
                     eDate = new Date(eDate.setDate(eDate.getDate() + 1));
                   }
@@ -2563,7 +2449,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
                     } else {
                       stDate.setDate(stDate.getDate() + 1);
                     }
-					console.log('2495=='+stDate);
                     if (
                       new Date(stDate).getDay() != 0 &&
                       new Date(stDate).getDay() != 6
@@ -2719,9 +2604,9 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
           };
           if (taskRecord._data.endDate) {
             recEdate = new Date(taskRecord._data.endDate);
-            var start = taskRecord.startDate;
-              // ? new Date(taskRecord.startDate.getTime())
-              // : new Date(taskRecord._data.startDate.getTime());
+            var start = taskRecord.startDate
+              ? new Date(taskRecord.startDate.getTime())
+              : new Date(taskRecord._data.startDate.getTime());
             var duration = taskRecord.duration;
             var eDate = new Date(start);
             // console.log('Start date ==> ',{start});
@@ -2734,9 +2619,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
                 eDate = new Date(eDate.setDate(eDate.getDate() + 1));
               }
               //eDate = eDate.setDate(eDate.getDate() + 1)
-			  console.log('2666=='+eDate);
-			 
-              if (new Date(eDate).getDay() == 0 ) {
+              if (new Date(eDate).getDay() == 0) {
                 eDate = new Date(eDate.setDate(eDate.getDate() + 1));
               }
               if (new Date(eDate).getDay() == 6) {
@@ -3006,11 +2889,9 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
         ////console.log(source)
       });
       gantt.on("expandnode", (source) => {
-        console.log('2917--',{source});
         this.populateIconsOnExpandCollapse(source);
       });
       gantt.on("collapsenode", (source) => {
-        console.log('2921--',{source});
         this.populateIconsOnExpandCollapse(source);
       });
 
@@ -3045,8 +2926,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
         var loc = window.location.href;
         var domName = loc.split(".lightning.force.com")[0].split("https://")[1];
       }, 1000);
-      console.log('2916');
-      debugger;
     } catch (error) {
       if (error && !this.isTabClosed) {
         setTimeout(() => {

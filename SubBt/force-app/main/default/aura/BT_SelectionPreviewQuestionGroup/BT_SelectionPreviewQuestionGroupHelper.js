@@ -35,7 +35,7 @@
                                     treeNodeClickEvent.fire();
                                 }
                             }
-                           
+                           console.log('selectionCatagory=====>',selectionCatagory);
                         }
                     });
                     

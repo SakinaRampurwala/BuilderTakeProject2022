@@ -36,6 +36,7 @@
                 var result = response.getReturnValue();
                 console.log('Result => ',{result});
                 component.set("v.optionWrapper", result);
+                component.set("v.orgCurr", result.orgCurr);
                 if (result.productCount > 10) {
                     var totalPage = Math.trunc(result.productCount/10)+1;
                     component.set("v.totalPage", totalPage);
