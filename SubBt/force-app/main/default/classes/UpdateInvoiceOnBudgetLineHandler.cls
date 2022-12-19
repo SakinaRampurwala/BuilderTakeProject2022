@@ -2,7 +2,7 @@ public with sharing class UpdateInvoiceOnBudgetLineHandler {
    public static Set<Id> setBudgetLineIds = new Set<Id>();
 
    //After Insert , Update and Undelete this method is excecuted
-   public void afterTrigger(List<buildertek__Account_Payable_Item_Clone__c> invLineList) {
+    public void afterTrigger(List<buildertek__Account_Payable_Item_Clone__c> invLineList) {
         for(buildertek__Account_Payable_Item_Clone__c invoiceLineAp:invLineList){
             if(invoiceLineAp.buildertek__Budget_Line__c	!= null){
                 setBudgetLineIds.add(invoiceLineAp.buildertek__Budget_Line__c);
