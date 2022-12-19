@@ -34,14 +34,19 @@ public without sharing class QuoteTriggerHandler {
                                         Account.Billingstate,
                                         Account.Billingcountry,
                                         Account.Billingstreet,
-                                        Account.Billingpostalcode
-                                        from Opportunity where Id IN : oppoids  and AccountId != null];
+                                        Account.Billingpostalcode,
+                                        Description from Opportunity where Id IN : oppoids  and AccountId != null];
             for(Quote__c quoterec : newQuotes){
                 for(Opportunity opp :opplst ){
                     if(quoterec.buildertek__Opportunity__c == opp.Id ){
                         if(quoterec.Name == null || quoterec.Name == ''){
                             quoterec.Name = opp.Name;
                         }
+                        // ====created date:-19th december 2022 devName:- Sakina ===
+                        if(quoterec.buildertek__Description__c == null || quoterec.buildertek__Description__c == ''){
+                            quoterec.buildertek__Description__c = opp.Description;
+                        }
+                        // ====created date:-19th december 2022 devName:- Sakina ===
                         if(opp.AccountId != null){
                             if(quoterec.buildertek__Bill_To_Email_Address__c == null || quoterec.buildertek__Bill_To_Email_Address__c == ''){
                                 quoterec.buildertek__Bill_To_Email_Address__c = opp.Account.buildertek__Email_Address__c;
@@ -53,8 +58,8 @@ public without sharing class QuoteTriggerHandler {
                                 quoterec.buildertek__Bill_To_Name__c = opp.Account.Name;
                             }
                             /*  if(quoterec.buildertek__Bill_To_State__c == null || quoterec.buildertek__Bill_To_State__c == ''){
-quoterec.buildertek__Bill_To_State__c = opp.Account.Billingstate;
-}*/
+                            quoterec.buildertek__Bill_To_State__c = opp.Account.Billingstate;
+                            }*/
                             if(quoterec.buildertek__Bill_To_City__c == null || quoterec.buildertek__Bill_To_City__c == ''){
                                 quoterec.buildertek__Bill_To_City__c = opp.Account.Billingcity;
                             }
@@ -64,6 +69,8 @@ quoterec.buildertek__Bill_To_State__c = opp.Account.Billingstate;
                             if(quoterec.buildertek__Bill_To_Zip_Code__c == null || quoterec.buildertek__Bill_To_Zip_Code__c == ''){
                                 quoterec.buildertek__Bill_To_Zip_Code__c = opp.Account.Billingpostalcode;
                             }
+
+                           
                         }
                     }
                     
