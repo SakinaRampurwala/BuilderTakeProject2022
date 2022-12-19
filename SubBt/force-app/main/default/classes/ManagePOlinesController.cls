@@ -1540,47 +1540,89 @@ public with sharing class ManagePOlinesController {
 
     }
 
+    /* this method is used for creating quote and quotelines and associate it with the bom and bomlines
+    also logic is added for creating new grouping if not available on the quotelines */
     @AuraEnabled
     public static List<String> createQuoteMethod(String recordId, String mapFieldData){
         List<String> message = new List<String>();
+        List<buildertek__Project_Selection_Sheet_Takeoff__c> bom = new List<buildertek__Project_Selection_Sheet_Takeoff__c>();
+        List<buildertek__Select_Sheet__c> bomLineList = new List<buildertek__Select_Sheet__c>();
+        Map<String, Id> quoteLineGroupMap = new Map<String, Id>();
+        List<buildertek__Build_Phase__c> buildPhaseList = new List<buildertek__Build_Phase__c>();
+        Map<String, buildertek__Quote_Line_Group__c> newQuoteLineGroupMap = new Map<String, buildertek__Quote_Line_Group__c>();
+        Map<Id, buildertek__Quote_Item__c> qtLineMap = new Map<Id, buildertek__Quote_Item__c>();
         
         Map<String,List<String>> myMap = (Map<String,List<String>>)JSON.deserialize(mapFieldData, Map<String,List<String>>.class);
-        System.debug('myMap --> '+myMap);
 
         try {
-            List<buildertek__Select_Sheet__c> BOMLineList = new List<buildertek__Select_Sheet__c>();
-            List<buildertek__Quote_Item__c> qtLineList = new List<buildertek__Quote_Item__c>();
-            BOMLineList = [SELECT Id, Name, buildertek__Quantity__c, buildertek__BL_LIST_PRICE__c, buildertek__Selection_Sheet_Takeoff__c, buildertek__Selection_Sheet_Takeoff__r.Name  FROM buildertek__Select_Sheet__c WHERE buildertek__Selection_Sheet_Takeoff__c =:recordId];
+            bom = [SELECT ID, Name,buildertek__BT_Quote__c,buildertek__Tax_Rate_1__c, (SELECT Id,Name,buildertek__Quantity__c, buildertek__BL_LIST_PRICE__c FROM buildertek__Selection_Sheet_Takeoff_Lines__r) FROM buildertek__Project_Selection_Sheet_Takeoff__c WHERE Id =:recordId];
+            buildPhaseList = [SELECT Id, Name FROM buildertek__Build_Phase__c];
             
-            if (BOMLineList.size() > 0) {
-                buildertek__Quote__c quote = new buildertek__Quote__c();
-                quote.Name = BOMLineList[0].buildertek__Selection_Sheet_Takeoff__r.Name;
-                // insert quote;
-                
-                for (buildertek__Select_Sheet__c bomLine : BOMLineList) {
-                    buildertek__Quote_Item__c qtLine = new buildertek__Quote_Item__c();
-                    Decimal markUp;
-                    String str = myMap.get(bomLine.Id)[0];
-                    if (String.isNotBlank(str)) {
-                        System.debug('in loop');
-                        System.debug('str '+str);
-                        markUp = decimal.valueOf(str);
-                    }else{
-                        markUp = 0;
+            for (buildertek__Quote_Line_Group__c qtGroup : [SELECT Id, Name FROM buildertek__Quote_Line_Group__c]) {
+                quoteLineGroupMap.put(qtGroup.Name, qtGroup.Id);
+            }
+
+            if (buildPhaseList.size() > 0) {
+                for (buildertek__Build_Phase__c bPhase : buildPhaseList) {
+                    if (!quoteLineGroupMap.containsKey(bPhase.Name)) {
+                        buildertek__Quote_Line_Group__c qtLineGp = new buildertek__Quote_Line_Group__c();
+                        qtLineGp.Name = bPhase.Name;
+                        newQuoteLineGroupMap.put(qtLineGp.Name ,qtLineGp);
                     }
-                    qtLine.Name = bomLine.Name;
-                    qtLine.buildertek__Quantity__c = bomLine.buildertek__Quantity__c;
-                    qtLine.buildertek__Unit_Price__c = bomLine.buildertek__BL_LIST_PRICE__c;
-                    qtLine.buildertek__Quote__c = quote.Id;
-                    qtLine.buildertek__Markup__c = markUp;
-                    // qtLine.buildertek__Tax_Amount__c = decimal.valueOf(myMap.get(bomLine.Id)[1]);
-                    qtLineList.add(qtLine);
                 }
-                // insert qtLineList;
-                message.add('Success');
-                message.add(quote.Id);
+                insert newQuoteLineGroupMap.values();
+            }
+
+            if (bom.size() > 0 && bom[0].buildertek__BT_Quote__c == null) {
+                if (bom[0].buildertek__Selection_Sheet_Takeoff_Lines__r.size() > 0) {
+                    buildertek__Quote__c quote = new buildertek__Quote__c();
+                    quote.Name = bom[0].Name;
+                    insert quote;
+                    bom[0].buildertek__BT_Quote__c = quote.Id;
+                    update bom[0];
+                    for (buildertek__Select_Sheet__c bomLine : bom[0].buildertek__Selection_Sheet_Takeoff_Lines__r) {
+                        buildertek__Quote_Item__c qtLine = new buildertek__Quote_Item__c();
+                        Decimal markUp;
+                        String str = myMap.get(bomLine.Id)[0];
+                        String groupName = myMap.get(bomLine.Id)[1];
+                        if (String.isNotBlank(str)) {
+                            markUp = decimal.valueOf(str);
+                        }else{
+                            markUp = 0;
+                        }
+                        qtLine.Name = bomLine.Name;
+                        qtLine.buildertek__Quantity__c = bomLine.buildertek__Quantity__c;
+                        qtLine.buildertek__Unit_Price__c = bomLine.buildertek__BL_LIST_PRICE__c;
+                        qtLine.buildertek__Quote__c = quote.Id;
+                        qtLine.buildertek__Markup__c = markUp;
+                        qtLine.buildertek__Tax__c = bom[0].buildertek__Tax_Rate_1__c;
+
+                        // *check if the value come for first time then newQuoteLineGroupMap should have the values
+                        if (newQuoteLineGroupMap.containsKey(groupName)) {
+                            qtLine.buildertek__Grouping__c = newQuoteLineGroupMap.get(groupName).Id;
+                        }
+                        // *if the values are already there then quoteLineGroupMap should have the values
+                        else{ 
+                            qtLine.buildertek__Grouping__c = quoteLineGroupMap.get(groupName);
+                        }
+                        qtLineMap.put(bomLine.Id,qtLine);
+                    }
+                    insert qtLineMap.values();
+
+                    for (buildertek__Select_Sheet__c bomLine : bom[0].buildertek__Selection_Sheet_Takeoff_Lines__r) {
+                        if (qtLineMap.containsKey(bomLine.Id)) {
+                            bomLine.buildertek__BT_Quote_Line__c = qtLineMap.get(bomLine.Id).Id;
+                            bomLineList.add(bomLine);
+                        }
+                    }
+                    update bomLineList;
+                    message.add('Success');
+                    message.add(quote.Id);
+                }else {
+                    message.add('null');
+                }
             }else{
-                message.add('null');
+                message.add('notNull');
             }
             return message;
         } catch (Exception e) {

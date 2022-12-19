@@ -38,7 +38,7 @@ public class massUpdateSovController {
     @AuraEnabled
     public static String getRecords(String recordId, String fieldNameJson, Integer pageNumber, Integer pageSize){
         List<buildertek__Schedule_of_Value_Lines__c > lstResult = new List<buildertek__Schedule_of_Value_Lines__c >();
-        system.debug(fieldNameJson);
+        system.debug('fieldNameJson=====>>>>>>>>>'+fieldNameJson);
         String result = '[]';
         try{
             if (String.isNotBlank(recordId)){

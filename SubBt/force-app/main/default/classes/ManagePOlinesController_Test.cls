@@ -280,10 +280,10 @@ public with sharing class ManagePOlinesController_Test
         buildertek__Project_Selection_Sheet_Takeoff__c bomRecord = [Select Id, Name,buildertek__Fabrication_Labor_Mark_up_LongText__c, buildertek__General_Liability_Insurance_Long__c,buildertek__Textura_Fee__c, buildertek__Project__r.Name,buildertek__Fabrication_Install_Rate__c,buildertek__Workers_Comp__c from buildertek__Project_Selection_Sheet_Takeoff__c LIMIT 1];
         bomRecords.add(bomRecord);
         List<buildertek__Select_Sheet__c> bomLines = [Select id,name,buildertek__Product__c,buildertek__Selection_Sheet_Takeoff__r.buildertek__Project__c,buildertek__Quantity__c FROM buildertek__Select_Sheet__c ];
-
+        String str = '{"a131K000008jGKBQA2":["11.5","Base"],"a131K000008jGKCQA2":["11.5","Base"]}';
         Test.startTest();
         ManagePOlinesController.createNewOptionLine(bomLines[0].buildertek__Product__c,bomLines[0].buildertek__Selection_Sheet_Takeoff__r.buildertek__Project__c,bomLines[0].Id);
-
+        ManagePOlinesController.createQuoteMethod(bomRecord.Id,str);
         System.assert(bomRecord != null);
         Test.stopTest();
     }
