@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Total_Pending_Costs__c</fullName>
+    <deprecated>false</deprecated>
+    <description>This include only approved sov lines total cost</description>
+    <externalId>false</externalId>
+    <label>Total Pending Costs</label>
+    <summarizedField>Schedule_of_Value_Lines__c.Scheduled_Value__c</summarizedField>
+    <summaryFilterItems>
+        <field>Schedule_of_Value_Lines__c.isConsolidated__c</field>
+        <operation>notEqual</operation>
+        <value>True</value>
+    </summaryFilterItems>
+    <summaryFilterItems>
+        <field>Schedule_of_Value_Lines__c.Status__c</field>
+        <operation>equals</operation>
+        <value>Pending</value>
+    </summaryFilterItems>
+    <summaryForeignKey>Schedule_of_Value_Lines__c.Schedule_of_Values__c</summaryForeignKey>
+    <summaryOperation>sum</summaryOperation>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

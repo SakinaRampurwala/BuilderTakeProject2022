@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Pending_Inspection_Lines__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Pending Inspection Lines</label>
+    <summaryFilterItems>
+        <field>Inspection_Line__c.Status__c</field>
+        <operation>equals</operation>
+        <value>Pending</value>
+    </summaryFilterItems>
+    <summaryForeignKey>Inspection_Line__c.Inspection__c</summaryForeignKey>
+    <summaryOperation>count</summaryOperation>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

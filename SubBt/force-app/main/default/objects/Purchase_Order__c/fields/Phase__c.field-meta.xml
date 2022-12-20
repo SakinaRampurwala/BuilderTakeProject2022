@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Phase__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Phase</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Pre-Construction</fullName>
+                <default>false</default>
+                <label>1. Pre-Construction</label>
+            </value>
+            <value>
+                <fullName>Stake House</fullName>
+                <default>false</default>
+                <label>2. Stake House</label>
+            </value>
+            <value>
+                <fullName>Bathroom Tops</fullName>
+                <default>false</default>
+                <label>Bathroom Tops</label>
+            </value>
+            <value>
+                <fullName>Cabinets/Flooring/Trim</fullName>
+                <default>false</default>
+                <label>Cabinets/Flooring/Trim</label>
+            </value>
+            <value>
+                <fullName>Candidate Selection</fullName>
+                <default>false</default>
+                <label>Candidate Selection</label>
+            </value>
+            <value>
+                <fullName>Carpet/Cleaning</fullName>
+                <default>false</default>
+                <label>Carpet/Cleaning</label>
+            </value>
+            <value>
+                <fullName>Closing</fullName>
+                <default>false</default>
+                <label>Closing</label>
+            </value>
+            <value>
+                <fullName>Codes</fullName>
+                <default>false</default>
+                <label>Codes</label>
+            </value>
+            <value>
+                <fullName>Concrete</fullName>
+                <default>false</default>
+                <label>Concrete</label>
+            </value>
+            <value>
+                <fullName>Concrete flat work</fullName>
+                <default>false</default>
+                <label>Concrete flat work</label>
+            </value>
+            <value>
+                <fullName>Construction</fullName>
+                <default>false</default>
+                <label>Construction</label>
+            </value>
+            <value>
+                <fullName>Coordination w/ MEP &amp; GC</fullName>
+                <default>false</default>
+                <label>Coordination w/ MEP &amp; GC</label>
+            </value>
+            <value>
+                <fullName>Demolition</fullName>
+                <default>false</default>
+                <label>Demolition</label>
+            </value>
+            <value>
+                <fullName>Drywall</fullName>
+                <default>false</default>
+                <label>Drywall</label>
+            </value>
+            <value>
+                <fullName>Electrical</fullName>
+                <default>false</default>
+                <label>Electrical</label>
+            </value>
+            <value>
+                <fullName>Excavation</fullName>
+                <default>false</default>
+                <label>Excavation</label>
+            </value>
+            <value>
+                <fullName>Fabrication</fullName>
+                <default>false</default>
+                <label>Fabrication</label>
+            </value>
+            <value>
+                <fullName>Finance</fullName>
+                <default>false</default>
+                <label>Finance</label>
+            </value>
+            <value>
+                <fullName>Finish Carpentry</fullName>
+                <default>false</default>
+                <label>Finish Carpentry</label>
+            </value>
+            <value>
+                <fullName>Finish Carpentry to Paint</fullName>
+                <default>false</default>
+                <label>Finish Carpentry to Paint</label>
+            </value>
+            <value>
+                <fullName>Flooring and Tile</fullName>
+                <default>false</default>
+                <label>Flooring and Tile</label>
+            </value>
+            <value>
+                <fullName>Foundation</fullName>
+                <default>false</default>
+                <label>Foundation</label>
+            </value>
+            <value>
+                <fullName>Framing</fullName>
+                <default>false</default>
+                <label>Framing</label>
+            </value>
+            <value>
+                <fullName>General</fullName>
+                <default>false</default>
+                <label>General</label>
+            </value>
+            <value>
+                <fullName>Glazier Integration Design</fullName>
+                <default>false</default>
+                <label>Glazier Integration Design</label>
+            </value>
+            <value>
+                <fullName>Ground Work</fullName>
+                <default>false</default>
+                <label>Ground Work</label>
+            </value>
+            <value>
+                <fullName>Interior Doors</fullName>
+                <default>false</default>
+                <label>Interior Doors</label>
+            </value>
+            <value>
+                <fullName>Kitchen Tops</fullName>
+                <default>false</default>
+                <label>Kitchen Tops</label>
+            </value>
+            <value>
+                <fullName>Landscape &amp; Fencing</fullName>
+                <default>false</default>
+                <label>Landscape &amp; Fencing</label>
+            </value>
+            <value>
+                <fullName>Mechanical</fullName>
+                <default>false</default>
+                <label>Mechanical</label>
+            </value>
+            <value>
+                <fullName>Metal Components</fullName>
+                <default>false</default>
+                <label>Metal Components</label>
+            </value>
+            <value>
+                <fullName>Ops to Engineering Turnover</fullName>
+                <default>false</default>
+                <label>Ops to Engineering Turnover</label>
+            </value>
+            <value>
+                <fullName>Painting</fullName>
+                <default>false</default>
+                <label>Painting</label>
+            </value>
+            <value>
+                <fullName>Permits</fullName>
+                <default>false</default>
+                <label>Permits</label>
+            </value>
+            <value>
+                <fullName>Plumbing</fullName>
+                <default>false</default>
+                <label>Plumbing</label>
+            </value>
+            <value>
+                <fullName>Post-Construction</fullName>
+                <default>false</default>
+                <label>Post-Construction</label>
+            </value>
+            <value>
+                <fullName>Project Kickoff Meeting</fullName>
+                <default>false</default>
+                <label>Project Kickoff Meeting</label>
+            </value>
+            <value>
+                <fullName>Site Work &amp; Foundation</fullName>
+                <default>false</default>
+                <label>Site Work &amp; Foundation</label>
+            </value>
+            <value>
+                <fullName>Staging to Market</fullName>
+                <default>false</default>
+                <label>Staging to Market</label>
+            </value>
+            <value>
+                <fullName>Submittal Package</fullName>
+                <default>false</default>
+                <label>Submittal Package</label>
+            </value>
+            <value>
+                <fullName>Trim to Completion</fullName>
+                <default>false</default>
+                <label>Trim to Completion</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

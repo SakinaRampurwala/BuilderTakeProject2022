@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Status__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Status</label>
+    <required>false</required>
+    <trackFeedHistory>true</trackFeedHistory>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Approved</fullName>
+                <default>false</default>
+                <label>Approved</label>
+            </value>
+            <value>
+                <fullName>Canceled</fullName>
+                <default>false</default>
+                <label>Canceled</label>
+            </value>
+            <value>
+                <fullName>Open</fullName>
+                <default>true</default>
+                <label>Open</label>
+            </value>
+            <value>
+                <fullName>Order Confirmed</fullName>
+                <default>false</default>
+                <label>Order Confirmed</label>
+            </value>
+            <value>
+                <fullName>Ordered</fullName>
+                <default>false</default>
+                <label>Ordered</label>
+            </value>
+            <value>
+                <fullName>Paid</fullName>
+                <default>false</default>
+                <label>Paid</label>
+            </value>
+            <value>
+                <fullName>Partially Paid</fullName>
+                <default>false</default>
+                <label>Partially Paid</label>
+            </value>
+            <value>
+                <fullName>Vendor Accepted</fullName>
+                <default>false</default>
+                <label>Vendor Accepted</label>
+            </value>
+            <value>
+                <fullName>Vendor Rejected</fullName>
+                <default>false</default>
+                <label>Vendor Rejected</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

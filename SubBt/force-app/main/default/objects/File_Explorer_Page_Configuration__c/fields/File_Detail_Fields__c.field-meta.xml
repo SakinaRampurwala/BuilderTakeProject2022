@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>File_Detail_Fields__c</fullName>
+    <deprecated>false</deprecated>
+    <description>File fields needs to be displayed on page.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>File fields needs to be displayed on page.</inlineHelpText>
+    <label>File Detail Fields</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

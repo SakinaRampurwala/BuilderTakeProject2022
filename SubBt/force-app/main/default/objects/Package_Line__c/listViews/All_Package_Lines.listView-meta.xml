@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>All_Package_Lines</fullName>
+    <columns>NAME</columns>
+    <columns>Category__c</columns>
+    <columns>Location__c</columns>
+    <columns>Package_Name__c</columns>
+    <columns>Product_Type__c</columns>
+    <columns>Quantity__c</columns>
+    <filterScope>Everything</filterScope>
+    <label>All Package Lines</label>
+</ListView>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Vendor_Retainage__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <formula>((Vendor_Work_Completed_from_Previous_Appl__c+Vendor_Work_Completed_This_Period__c) / 100) * 10</formula>
+    <label>Retainage (Not Used In Layout)</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

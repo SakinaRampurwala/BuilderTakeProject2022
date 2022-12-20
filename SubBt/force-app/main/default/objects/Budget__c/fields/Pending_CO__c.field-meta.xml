@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Pending_CO__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Sum of all pending CO</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Rollup of Pending Change Orders.</inlineHelpText>
+    <label>Pending CO</label>
+    <summarizedField>Budget_Item__c.Pending_CO__c</summarizedField>
+    <summaryForeignKey>Budget_Item__c.Budget__c</summaryForeignKey>
+    <summaryOperation>sum</summaryOperation>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

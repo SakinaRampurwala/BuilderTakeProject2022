@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Tree_Configuration__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <description>Tree where this node is displayed</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Tree where this node is displayed</inlineHelpText>
+    <label>Tree Configuration</label>
+    <referenceTo>Tree_Configuration__c</referenceTo>
+    <relationshipName>Tree_Node_Configurations</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

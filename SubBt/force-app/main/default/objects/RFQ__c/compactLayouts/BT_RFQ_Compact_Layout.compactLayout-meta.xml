@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CompactLayout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>BT_RFQ_Compact_Layout</fullName>
+    <fields>Auto_Number__c</fields>
+    <fields>Name</fields>
+    <fields>Status__c</fields>
+    <fields>Vendor__c</fields>
+    <fields>Due_Date__c</fields>
+    <fields>Awarded_Date__c</fields>
+    <fields>Vendor_Quote__c</fields>
+    <label>BT_RFQ_Compact_Layout</label>
+</CompactLayout>

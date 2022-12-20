@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CompactLayout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>WIP</fullName>
+    <fields>Name</fields>
+    <fields>Contract_Number__c</fields>
+    <fields>Status__c</fields>
+    <fields>Contract_Amount__c</fields>
+    <fields>Completion__c</fields>
+    <fields>Invoiced_To_Date__c</fields>
+    <fields>Over_Under_Billed__c</fields>
+    <label>WIP</label>
+</CompactLayout>

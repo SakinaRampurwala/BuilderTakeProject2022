@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Budget_Item__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>BT Budget Item</label>
+    <referenceTo>Budget_Item__c</referenceTo>
+    <relationshipName>Budget_Item_To_PO_Item_Links</relationshipName>
+    <relationshipOrder>1</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Service_Request_Subject_Required</fullName>
+    <active>true</active>
+    <errorConditionFormula>OR(ISBLANK(Subject__c),
+ISNULL(Subject__c)
+)</errorConditionFormula>
+    <errorDisplayField>Subject__c</errorDisplayField>
+    <errorMessage>You must enter a value.</errorMessage>
+</ValidationRule>

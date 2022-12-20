@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CompactLayout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Asset_Manager</fullName>
+    <fields>Name</fields>
+    <fields>Current_Project__c</fields>
+    <fields>Location_on_Jobsite__c</fields>
+    <fields>Total_Hours_Used__c</fields>
+    <label>Asset Manager</label>
+</CompactLayout>

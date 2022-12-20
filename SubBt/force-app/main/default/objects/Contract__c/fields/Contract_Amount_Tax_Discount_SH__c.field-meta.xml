@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Contract_Amount_Tax_Discount_SH__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <formula>(Contract_Amount__c - (  Contract_Amount__c  *  Discount__c    )) +  Markup_Amount__c
+
+/*buildertek__Contract_Amount__c +(((  buildertek__Contract_Amount__c  *  buildertek__Tax_Rate__c ) +  buildertek__Shipping_Handling__c) +  buildertek__Markup_Amount__c )*/</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <inlineHelpText>Original Contract plus Discounts and Markups.</inlineHelpText>
+    <label>Total Contract Amount</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>

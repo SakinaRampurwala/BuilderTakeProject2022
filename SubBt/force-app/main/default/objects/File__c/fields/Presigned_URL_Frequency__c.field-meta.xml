@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Presigned_URL_Frequency__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Presigned URL for file will be updated as per this frequency.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Presigned URL for file will be updated as per this frequency.</inlineHelpText>
+    <label>Presigned URL Frequency</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Every Day</fullName>
+                <default>false</default>
+                <label>Every Day</label>
+            </value>
+            <value>
+                <fullName>Every Week</fullName>
+                <default>false</default>
+                <label>Every Week</label>
+            </value>
+            <value>
+                <fullName>Every 10 Days</fullName>
+                <default>false</default>
+                <label>Every 10 Days</label>
+            </value>
+            <value>
+                <fullName>Every 15 Days</fullName>
+                <default>false</default>
+                <label>Every 15 Days</label>
+            </value>
+            <value>
+                <fullName>Every Month</fullName>
+                <default>true</default>
+                <label>Every Month</label>
+            </value>
+            <value>
+                <fullName>Every Quarter</fullName>
+                <default>false</default>
+                <label>Every Quarter</label>
+            </value>
+            <value>
+                <fullName>Every 6 Months</fullName>
+                <default>false</default>
+                <label>Every 6 Months</label>
+            </value>
+            <value>
+                <fullName>Every Year</fullName>
+                <default>false</default>
+                <label>Every Year</label>
+            </value>
+            <value>
+                <fullName>Every 5 Years</fullName>
+                <default>false</default>
+                <label>Every 5 Years</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

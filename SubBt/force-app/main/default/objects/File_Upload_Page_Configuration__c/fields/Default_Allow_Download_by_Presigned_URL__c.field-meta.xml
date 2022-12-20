@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Default_Allow_Download_by_Presigned_URL__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Default value for &quot;Allow to Download by Presigned URL&quot; for new file.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Default value for &quot;Allow to Download by Presigned URL&quot; for new file.</inlineHelpText>
+    <label>Default Allow Download by Presigned URL</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

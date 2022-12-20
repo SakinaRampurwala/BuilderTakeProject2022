@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Location__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>Location where the Warranty Item exists.</inlineHelpText>
+    <label>Location</label>
+    <required>false</required>
+    <trackFeedHistory>true</trackFeedHistory>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Bedroom #1 Bath</fullName>
+                <default>false</default>
+                <label>Bedroom #1 Bath</label>
+            </value>
+            <value>
+                <fullName>Bedroom #2</fullName>
+                <default>false</default>
+                <label>Bedroom #2</label>
+            </value>
+            <value>
+                <fullName>Bedroom #2 Bath</fullName>
+                <default>false</default>
+                <label>Bedroom #2 Bath</label>
+            </value>
+            <value>
+                <fullName>Bedroom #3</fullName>
+                <default>false</default>
+                <label>Bedroom #3</label>
+            </value>
+            <value>
+                <fullName>Bedroom #3 Bath</fullName>
+                <default>false</default>
+                <label>Bedroom #3 Bath</label>
+            </value>
+            <value>
+                <fullName>Dining Room</fullName>
+                <default>false</default>
+                <label>Dining Room</label>
+            </value>
+            <value>
+                <fullName>edroom #1</fullName>
+                <default>false</default>
+                <label>edroom #1</label>
+            </value>
+            <value>
+                <fullName>Game Room</fullName>
+                <default>false</default>
+                <label>Game Room</label>
+            </value>
+            <value>
+                <fullName>Hallway</fullName>
+                <default>false</default>
+                <label>Hallway</label>
+            </value>
+            <value>
+                <fullName>Hearth Room</fullName>
+                <default>false</default>
+                <label>Hearth Room</label>
+            </value>
+            <value>
+                <fullName>Kitchen</fullName>
+                <default>false</default>
+                <label>Kitchen</label>
+            </value>
+            <value>
+                <fullName>Living Room</fullName>
+                <default>false</default>
+                <label>Living Room</label>
+            </value>
+            <value>
+                <fullName>Master Bathroom</fullName>
+                <default>false</default>
+                <label>Master Bathroom</label>
+            </value>
+            <value>
+                <fullName>Master Bedroom</fullName>
+                <default>false</default>
+                <label>Master Bedroom</label>
+            </value>
+            <value>
+                <fullName>Master Closet</fullName>
+                <default>false</default>
+                <label>Master Closet</label>
+            </value>
+            <value>
+                <fullName>Mud Room</fullName>
+                <default>false</default>
+                <label>Mud Room</label>
+            </value>
+            <value>
+                <fullName>Office</fullName>
+                <default>false</default>
+                <label>Office</label>
+            </value>
+            <value>
+                <fullName>Other (Indicate in Notes Section)</fullName>
+                <default>false</default>
+                <label>Other (Indicate in Notes Section)</label>
+            </value>
+            <value>
+                <fullName>Stairway</fullName>
+                <default>false</default>
+                <label>Stairway</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

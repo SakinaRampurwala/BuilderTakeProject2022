@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Detailed_Man_Hours_Worked__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <formula>((((End_Time__c -Start_Time__c)*24*60)- (Lunch_In_Time__c-Lunch_Out_Time__c)*24*60)/60)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <inlineHelpText>Total hours clocked for the resource.  Accounting for lunch break.</inlineHelpText>
+    <label>Total Detailed Man Hours Worked</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

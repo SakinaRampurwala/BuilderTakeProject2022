@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Budget_Line__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Budget Line</label>
+    <referenceTo>Budget_Item__c</referenceTo>
+    <relationshipLabel>Expense To Budget Item Link</relationshipLabel>
+    <relationshipName>Expense_To_Budget_Item_Link</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

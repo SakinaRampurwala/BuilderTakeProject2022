@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Group_By_Query_String__c</fullName>
+    <deprecated>false</deprecated>
+    <description>The query must have the following syntax &quot;Select Count(Id) fieldCount, &lt;GroupByFieldName&gt; fieldValue from &lt;ObjectName&gt; Group By&lt;GroupByFieldName&gt; Order By &lt;FieldName&gt;</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The query must have the following syntax &quot;Select Count(Id) fieldCount, &lt;GroupByFieldName&gt; fieldValue from &lt;ObjectName&gt; Group By&lt;GroupByFieldName&gt; Order By &lt;FieldName&gt;</inlineHelpText>
+    <label>Group By Query String</label>
+    <length>32768</length>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>3</visibleLines>
+</CustomField>

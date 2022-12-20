@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Show_Extension_Icon__c</fullName>
+    <defaultValue>true</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Show / Hide file extension icon.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>If checked, show file extension icon.</inlineHelpText>
+    <label>Show File Extension Icon</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

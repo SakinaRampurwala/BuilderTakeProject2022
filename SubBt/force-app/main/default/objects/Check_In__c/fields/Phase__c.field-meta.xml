@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Phase__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Phase</label>
+    <required>false</required>
+    <trackFeedHistory>true</trackFeedHistory>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Administrative</fullName>
+                <default>false</default>
+                <label>Administrative</label>
+            </value>
+            <value>
+                <fullName>Site Prep</fullName>
+                <default>false</default>
+                <label>Site Prep</label>
+            </value>
+            <value>
+                <fullName>Below Ground Rough</fullName>
+                <default>false</default>
+                <label>Below Ground Rough</label>
+            </value>
+            <value>
+                <fullName>Phase 1 Construction</fullName>
+                <default>false</default>
+                <label>Phase 1 Construction</label>
+            </value>
+            <value>
+                <fullName>Phase 2 Construction</fullName>
+                <default>false</default>
+                <label>Phase 2 Construction</label>
+            </value>
+            <value>
+                <fullName>Above Ground Rough</fullName>
+                <default>false</default>
+                <label>Above Ground Rough</label>
+            </value>
+            <value>
+                <fullName>Above Ground Finish</fullName>
+                <default>false</default>
+                <label>Above Ground Finish</label>
+            </value>
+            <value>
+                <fullName>Close Out</fullName>
+                <default>false</default>
+                <label>Close Out</label>
+            </value>
+            <value>
+                <fullName>Warranty</fullName>
+                <default>false</default>
+                <label>Warranty</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

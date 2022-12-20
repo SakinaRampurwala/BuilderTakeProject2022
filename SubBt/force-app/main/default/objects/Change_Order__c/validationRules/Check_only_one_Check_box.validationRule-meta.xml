@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Check_only_one_Check_box</fullName>
+    <active>true</active>
+    <errorConditionFormula>Roll_Up_All_Lines__c  &amp;&amp;  Roll_Up_All_Lines_by_Group__c</errorConditionFormula>
+    <errorDisplayField>Roll_Up_All_Lines__c</errorDisplayField>
+    <errorMessage>You can not able to check Roll-Up All Lines by Group and Roll-Up All Lines at the same time.</errorMessage>
+</ValidationRule>

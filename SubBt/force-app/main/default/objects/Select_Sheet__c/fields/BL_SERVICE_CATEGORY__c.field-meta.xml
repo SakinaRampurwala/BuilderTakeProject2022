@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>BL_SERVICE_CATEGORY__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Service Category</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Fab</fullName>
+                <default>false</default>
+                <label>Fab</label>
+            </value>
+            <value>
+                <fullName>Install</fullName>
+                <default>false</default>
+                <label>Install</label>
+            </value>
+            <value>
+                <fullName>Material</fullName>
+                <default>false</default>
+                <label>Material</label>
+            </value>
+            <value>
+                <fullName>Option</fullName>
+                <default>false</default>
+                <label>Option</label>
+            </value>
+            <value>
+                <fullName>Misc</fullName>
+                <default>false</default>
+                <label>Misc</label>
+            </value>
+            <value>
+                <fullName>Slab</fullName>
+                <default>false</default>
+                <label>Slab</label>
+            </value>
+            <value>
+                <fullName>Edge</fullName>
+                <default>false</default>
+                <label>Edge</label>
+            </value>
+            <value>
+                <fullName>Work Comp</fullName>
+                <default>false</default>
+                <label>Work Comp</label>
+            </value>
+            <value>
+                <fullName>Slab - Quartz</fullName>
+                <default>false</default>
+                <label>Slab - Quartz</label>
+            </value>
+            <value>
+                <fullName>Slab - Granite</fullName>
+                <default>false</default>
+                <label>Slab - Granite</label>
+            </value>
+            <value>
+                <fullName>Slab - Porcelain</fullName>
+                <default>false</default>
+                <label>Slab - Porcelain</label>
+            </value>
+            <value>
+                <fullName>Misc Non-Tax</fullName>
+                <default>false</default>
+                <label>Misc Non-Tax</label>
+            </value>
+            <value>
+                <fullName>Misc Taxable</fullName>
+                <default>false</default>
+                <label>Misc Taxable</label>
+            </value>
+            <value>
+                <fullName>Textura</fullName>
+                <default>false</default>
+                <label>Textura</label>
+            </value>
+            <value>
+                <fullName>Insurance</fullName>
+                <default>false</default>
+                <label>Insurance</label>
+            </value>
+            <value>
+                <fullName>Ins</fullName>
+                <default>false</default>
+                <label>Ins</label>
+            </value>
+            <value>
+                <fullName>OCIP</fullName>
+                <default>false</default>
+                <label>OCIP</label>
+            </value>
+            <value>
+                <fullName>Fab &amp; Install</fullName>
+                <default>false</default>
+                <label>Fab &amp; Install</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

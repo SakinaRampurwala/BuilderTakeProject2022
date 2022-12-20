@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Estimate__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <description>This field is used to store the estimate record type records in work order. When estimate get approved at that time system will create new work order with this estimates.</description>
+    <externalId>false</externalId>
+    <label>Estimate</label>
+    <referenceTo>Service_Request__c</referenceTo>
+    <relationshipName>Service_Estimates</relationshipName>
+    <required>false</required>
+    <trackFeedHistory>true</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

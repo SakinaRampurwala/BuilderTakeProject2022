@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Status__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Change Order Status</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Change Order Status</inlineHelpText>
+    <label>Status</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Approved</fullName>
+                <default>false</default>
+                <label>Approved</label>
+            </value>
+            <value>
+                <fullName>Company Rejected</fullName>
+                <default>false</default>
+                <label>Company Rejected</label>
+            </value>
+            <value>
+                <fullName>Customer Approved</fullName>
+                <default>false</default>
+                <label>Customer Approved</label>
+            </value>
+            <value>
+                <fullName>Customer Rejected</fullName>
+                <default>false</default>
+                <label>Customer Rejected</label>
+            </value>
+            <value>
+                <fullName>Paid</fullName>
+                <default>false</default>
+                <label>Paid</label>
+            </value>
+            <value>
+                <fullName>Partially Paid</fullName>
+                <default>false</default>
+                <label>Partially Paid</label>
+            </value>
+            <value>
+                <fullName>Pending</fullName>
+                <default>true</default>
+                <label>Pending</label>
+            </value>
+            <value>
+                <fullName>Vendor Submitted</fullName>
+                <default>false</default>
+                <label>Vendor Submitted</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

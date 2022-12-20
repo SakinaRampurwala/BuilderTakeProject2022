@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Send_Email</fullName>
+    <availability>online</availability>
+    <description>Send file in email.</description>
+    <displayType>massActionButton</displayType>
+    <encodingKey>UTF-8</encodingKey>
+    <linkType>url</linkType>
+    <masterLabel>Send Email</masterLabel>
+    <openType>replace</openType>
+    <protected>false</protected>
+    <requireRowSelection>true</requireRowSelection>
+    <url>{!URLFOR(&quot;/apex/VRSF__BT_EmailFilesToUsers&quot;, &quot;&quot;)}?folderId={!Folder__c.Id}</url>
+</WebLink>

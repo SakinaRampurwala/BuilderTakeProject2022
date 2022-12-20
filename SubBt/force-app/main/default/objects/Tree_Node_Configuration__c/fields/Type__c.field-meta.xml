@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Type__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Tree node type. Can be one of 
+o	&apos;NodeType_Root&apos; - the top most root node that can have static children only as defined in configuration
+o	NodeType_Object - an object is displayed as tree node 
+o	NodeType_GroupByRoot - group nodes inside this using group by field 
+o	NodeType_Query - nodes inside this node comes from query result</description>
+    <externalId>false</externalId>
+    <inlineHelpText>o	NodeType_Root - node that can have static children only
+o	NodeType_Object - an object is displayed as tree node 
+o	NodeType_GroupByRoot - group nodes inside this using group by field 
+o	NodeType_Query - nodes inside this node comes from query result</inlineHelpText>
+    <label>Type</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>NodeType_GroupByRoot</fullName>
+                <default>true</default>
+                <label>NodeType_GroupByRoot</label>
+            </value>
+            <value>
+                <fullName>NodeType_Object</fullName>
+                <default>false</default>
+                <label>NodeType_Object</label>
+            </value>
+            <value>
+                <fullName>NodeType_Query</fullName>
+                <default>false</default>
+                <label>NodeType_Query</label>
+            </value>
+            <value>
+                <fullName>NodeType_Root</fullName>
+                <default>false</default>
+                <label>NodeType_Root</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

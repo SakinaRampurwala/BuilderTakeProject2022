@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Sort_Id__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Sort identifier to sort all nodes in a tree in specific order. By default sort is using sort id followed by name. If user is interested in specific sort order, configure this value such as 001, 002...
+The sort id is within the context of parent.</description>
+    <externalId>false</externalId>
+    <label>Sort Id</label>
+    <length>3</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

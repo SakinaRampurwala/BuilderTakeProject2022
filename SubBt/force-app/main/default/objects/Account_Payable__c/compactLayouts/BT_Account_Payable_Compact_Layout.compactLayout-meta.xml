@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CompactLayout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>BT_Account_Payable_Compact_Layout</fullName>
+    <fields>Auto_Number__c</fields>
+    <fields>Purchase_Order__c</fields>
+    <fields>Status__c</fields>
+    <fields>Total_Tax__c</fields>
+    <fields>Payments__c</fields>
+    <fields>Balance__c</fields>
+    <fields>Vendor__c</fields>
+    <label>BT Account Payable Compact Layout</label>
+</CompactLayout>

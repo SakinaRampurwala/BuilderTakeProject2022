@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Show_Children_as_tree_nodes__c</fullName>
+    <defaultValue>true</defaultValue>
+    <deprecated>false</deprecated>
+    <description>If checked shows children objects as tree nodes.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>If checked shows children objects as tree nodes.</inlineHelpText>
+    <label>Show Children as tree nodes</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

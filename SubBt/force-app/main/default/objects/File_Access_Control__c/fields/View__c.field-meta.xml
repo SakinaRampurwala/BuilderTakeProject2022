@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>View__c</fullName>
+    <defaultValue>true</defaultValue>
+    <deprecated>false</deprecated>
+    <description>User can only &quot;View&quot; the file on Amazon Server.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>If true, Grantee can only &quot;View&quot; the file.</inlineHelpText>
+    <label>View</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

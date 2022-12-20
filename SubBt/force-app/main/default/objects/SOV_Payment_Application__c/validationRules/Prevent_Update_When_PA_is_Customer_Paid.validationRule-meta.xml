@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Prevent_Update_When_PA_is_Customer_Paid</fullName>
+    <active>false</active>
+    <errorConditionFormula>AND(
+$Profile.Name &lt;&gt; &quot;System Administrator&quot;,
+NOT(ISNEW()),
+OR(ISPICKVAL(PRIORVALUE(Status__c) , &quot;Customer Paid&quot;),ISPICKVAL(PRIORVALUE(Status__c) , &quot;Customer Paid&quot;),
+AND(ISPICKVAL(PRIORVALUE(Status__c) , &quot;Customer Paid&quot;),(ISCHANGED( Status__c ))))
+)</errorConditionFormula>
+    <errorMessage>&apos;You cannot Edit this Payment Application because the Status has been set to Customer Paid. You will need to contact your Administrator to have the Status updated before you can Edit this record.</errorMessage>
+</ValidationRule>

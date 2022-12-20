@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Total_CO__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Change order amount which is related to this budget item</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Change order amount which is related to this budget item</inlineHelpText>
+    <label>Total CO</label>
+    <summarizedField>CO_Item_To_Budget_Item_Link__c.Total_CO_Amount__c</summarizedField>
+    <summaryForeignKey>CO_Item_To_Budget_Item_Link__c.Budget_Item__c</summaryForeignKey>
+    <summaryOperation>sum</summaryOperation>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

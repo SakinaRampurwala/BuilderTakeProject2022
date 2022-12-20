@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CompactLayout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Inspection_Layout</fullName>
+    <fields>Inspection_Number__c</fields>
+    <fields>Inspector__c</fields>
+    <fields>Inspection_Date__c</fields>
+    <fields>Scheduled_Date__c</fields>
+    <fields>Total_Inspection_Lines__c</fields>
+    <label>Inspection Layout</label>
+</CompactLayout>

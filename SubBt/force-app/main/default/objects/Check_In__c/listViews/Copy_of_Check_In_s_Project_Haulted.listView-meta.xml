@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Copy_of_Check_In_s_Project_Haulted</fullName>
+    <columns>Project__c</columns>
+    <columns>NAME</columns>
+    <columns>Status__c</columns>
+    <columns>Complete__c</columns>
+    <columns>Date_Created__c</columns>
+    <columns>Phase__c</columns>
+    <columns>Trade_Type__c</columns>
+    <columns>Days_Lost__c</columns>
+    <columns>Notes__c</columns>
+    <columns>Weather__c</columns>
+    <columns>Vendor__c</columns>
+    <columns>Vendor_Resource__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Status__c</field>
+        <operation>equals</operation>
+        <value>Project Haulted</value>
+    </filters>
+    <label>Check-In&apos;s - Project Haulted</label>
+</ListView>

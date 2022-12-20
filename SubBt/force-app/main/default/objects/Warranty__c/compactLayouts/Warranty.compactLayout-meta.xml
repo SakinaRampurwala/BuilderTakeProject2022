@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CompactLayout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Warranty</fullName>
+    <fields>Name</fields>
+    <fields>Description__c</fields>
+    <fields>Warranty_Manager__c</fields>
+    <fields>Due_Date__c</fields>
+    <fields>Effective_Date__c</fields>
+    <fields>Locked__c</fields>
+    <label>Warranty</label>
+</CompactLayout>

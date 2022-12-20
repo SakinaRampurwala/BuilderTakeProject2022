@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CompactLayout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Vendor_Review</fullName>
+    <fields>Name</fields>
+    <fields>Purchase_Order__c</fields>
+    <fields>Contractor__c</fields>
+    <label>Vendor Review</label>
+</CompactLayout>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CompactLayout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>BT_Quote_Compact_Layout</fullName>
+    <fields>Quote_Number__c</fields>
+    <fields>Project__c</fields>
+    <fields>Status__c</fields>
+    <fields>Grand_Total__c</fields>
+    <fields>Total_Costs__c</fields>
+    <fields>Gross_Profit__c</fields>
+    <fields>Gross_Margin__c</fields>
+    <label>BT Quote Compact Layout</label>
+</CompactLayout>

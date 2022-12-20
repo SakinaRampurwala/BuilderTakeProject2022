@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Dependency__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Predecessor</label>
+    <lookupFilter>
+        <active>true</active>
+        <filterItems>
+            <field>Project_Task__c.Schedule__c</field>
+            <operation>equals</operation>
+            <valueField>$Source.Schedule__c</valueField>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>Project_Task__c</referenceTo>
+    <relationshipLabel>Schedule Items</relationshipLabel>
+    <relationshipName>Project_Tasks</relationshipName>
+    <required>false</required>
+    <trackFeedHistory>true</trackFeedHistory>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

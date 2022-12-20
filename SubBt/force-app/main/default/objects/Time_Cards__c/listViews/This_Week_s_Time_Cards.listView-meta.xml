@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>This_Week_s_Time_Cards</fullName>
+    <columns>NAME</columns>
+    <columns>Project__c</columns>
+    <columns>Resource__c</columns>
+    <columns>Start_Time__c</columns>
+    <columns>End_Time__c</columns>
+    <columns>Hours_Worked__c</columns>
+    <columns>Daily_Expense__c</columns>
+    <filterScope>Everything</filterScope>
+    <label>This Week&apos;s Time Cards</label>
+</ListView>

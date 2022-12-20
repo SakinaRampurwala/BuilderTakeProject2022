@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Show_this_configuration_node_in_tree__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>If checked shows the configuration node in the tree.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>If checked shows the configuration node in the tree.</inlineHelpText>
+    <label>Show this configuration node in tree</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

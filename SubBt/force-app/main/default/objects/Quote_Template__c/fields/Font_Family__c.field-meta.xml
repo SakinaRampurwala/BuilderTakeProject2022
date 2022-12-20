@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Font_Family__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Font Family</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Arial</fullName>
+                <default>false</default>
+                <label>Arial</label>
+            </value>
+            <value>
+                <fullName>Monospace</fullName>
+                <default>false</default>
+                <label>Monospace</label>
+            </value>
+            <value>
+                <fullName>Sans-serif</fullName>
+                <default>false</default>
+                <label>Sans-serif</label>
+            </value>
+            <value>
+                <fullName>Serif</fullName>
+                <default>false</default>
+                <label>Serif</label>
+            </value>
+            <value>
+                <fullName>Verdana</fullName>
+                <default>false</default>
+                <label>Verdana</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

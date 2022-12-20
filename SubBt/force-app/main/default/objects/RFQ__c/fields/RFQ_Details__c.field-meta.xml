@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>RFQ_Details__c</fullName>
+    <deprecated>false</deprecated>
+    <description>This is the section where you will provide the details of the RFQ.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This is the section where you will provide the details of the RFQ.</inlineHelpText>
+    <label>RFQ Details</label>
+    <length>32768</length>
+    <trackFeedHistory>true</trackFeedHistory>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>3</visibleLines>
+</CustomField>

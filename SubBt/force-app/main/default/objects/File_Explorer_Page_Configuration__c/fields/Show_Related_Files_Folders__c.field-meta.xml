@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Show_Related_Files_Folders__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Show files and folders related to any record.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>If checked, files and folders related to any record of any object will also be displayed in the file system.</inlineHelpText>
+    <label>Show related files / folders</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

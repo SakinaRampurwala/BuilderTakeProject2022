@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>All</fullName>
+    <columns>Project__c</columns>
+    <columns>NAME</columns>
+    <columns>Actual_Cost_To_Date__c</columns>
+    <columns>Actual_GM_To_Date__c</columns>
+    <columns>Completion__c</columns>
+    <columns>Contract_Amount__c</columns>
+    <columns>Est_GM_To_Date__c</columns>
+    <columns>Estimated_Cost__c</columns>
+    <columns>Invoiced_To_Date__c</columns>
+    <columns>Open_Balance__c</columns>
+    <columns>Over_Under_Billed__c</columns>
+    <filterScope>Everything</filterScope>
+    <label>All</label>
+</ListView>

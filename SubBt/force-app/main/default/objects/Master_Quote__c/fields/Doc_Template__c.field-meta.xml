@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Doc_Template__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Doc Template</label>
+    <lookupFilter>
+        <active>true</active>
+        <filterItems>
+            <field>Quote_Template__c.RecordType.Name</field>
+            <operation>equals</operation>
+            <value>Quote</value>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>Quote_Template__c</referenceTo>
+    <relationshipLabel>Master Quotes</relationshipLabel>
+    <relationshipName>Master_Quotes</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

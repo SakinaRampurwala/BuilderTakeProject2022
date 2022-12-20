@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>All</fullName>
+    <columns>NAME</columns>
+    <columns>Permit_Number__c</columns>
+    <columns>Permit_Type__c</columns>
+    <columns>Permit_Sub_Type__c</columns>
+    <columns>Status__c</columns>
+    <columns>Address__c</columns>
+    <columns>Date_Ordered__c</columns>
+    <columns>Date_Scheduled__c</columns>
+    <columns>Date_Completed__c</columns>
+    <columns>Inspector__c</columns>
+    <columns>Notes__c</columns>
+    <columns>Project__c</columns>
+    <columns>Type__c</columns>
+    <columns>CREATED_DATE</columns>
+    <columns>Create_on_New_Project__c</columns>
+    <filterScope>Everything</filterScope>
+    <label>All</label>
+</ListView>

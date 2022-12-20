@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Assigned_Contractor__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <description>Contracting company the punch list item is assigned to.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Contracting company the punch list item is assigned to.</inlineHelpText>
+    <label>Assigned Contractor</label>
+    <referenceTo>Account</referenceTo>
+    <relationshipLabel>Punch List Lines</relationshipLabel>
+    <relationshipName>Punch_List_Lines</relationshipName>
+    <required>false</required>
+    <trackFeedHistory>true</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

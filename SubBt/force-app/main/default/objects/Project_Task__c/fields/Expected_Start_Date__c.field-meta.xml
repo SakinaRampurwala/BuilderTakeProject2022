@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Expected_Start_Date__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <formula>IF( ISNULL(Dependency__c) , Start__c, CASE( 
+MOD( Dependency__r.Finish__c + Lag__c - DATE(1900, 1, 7), 7), 
+0, Dependency__r.Finish__c + 1 + Lag__c, 
+1, Dependency__r.Finish__c + 1 + Lag__c, 
+2, Dependency__r.Finish__c + 1 + Lag__c, 
+3, Dependency__r.Finish__c + 1 + Lag__c, 
+4, Dependency__r.Finish__c + 1 + Lag__c, 
+5, Dependency__r.Finish__c + 3 + Lag__c, 
+6, Dependency__r.Finish__c + 2 + Lag__c, 
+Dependency__r.Finish__c + 1 + Lag__c ))</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <inlineHelpText>This is driven from the current start date on the schedule.</inlineHelpText>
+    <label>Anticipated Start Date</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Date</type>
+</CustomField>

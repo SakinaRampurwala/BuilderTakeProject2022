@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Block_Edit_When_Is_Blocked_Field_Chekced</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+  PRIORVALUE( Is_Budget_Locked__c ), NOT($Setup.Budget_Configurations__c.Disable_Validations__c)
+)</errorConditionFormula>
+    <errorMessage>You Cannot Edit this Record as Budget is Locked</errorMessage>
+</ValidationRule>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Warranty__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Next Warranty</label>
+    <lookupFilter>
+        <active>true</active>
+        <filterItems>
+            <field>$Source.Project__c</field>
+            <operation>equals</operation>
+            <valueField>Warranty__c.Project__c</valueField>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>Warranty__c</referenceTo>
+    <relationshipLabel>Warranty&apos;s</relationshipLabel>
+    <relationshipName>Warranty_s</relationshipName>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

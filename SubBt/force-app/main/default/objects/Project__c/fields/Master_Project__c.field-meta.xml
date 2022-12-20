@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Master_Project__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>Selecting a Master Project and Saving the Project will pull in all the details from the Master Project.  This will save you time manually import all of the Master Project information.</inlineHelpText>
+    <label>Master Project</label>
+    <lookupFilter>
+        <active>true</active>
+        <filterItems>
+            <field>Project__c.Type__c</field>
+            <operation>equals</operation>
+            <value>Master</value>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>Project__c</referenceTo>
+    <relationshipLabel>Projects</relationshipLabel>
+    <relationshipName>Projects</relationshipName>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

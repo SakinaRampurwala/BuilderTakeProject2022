@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Order_Children_By__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Fields string used to sort the children of a node. It can contain one or more fields along with the order of sort.
+
+field1 =&gt; order by field1 ASC
+field1~field2 =&gt; order by field1 ASC, field2 ASC
+field1#ASC~field2 =&gt; order by field1 ASC, field2 ASC
+field1#DESC~field2 =&gt; order by field1 DESC, field2 ASC
+field1~field2#DESC =&gt; order by field1 ASC, field2 DESC
+field1#DESC~field2#DESC =&gt; order by field1 DESC, field2 DESC</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Fields used to sort the children of a node. Use ~ as separator when using multiple fields.</inlineHelpText>
+    <label>Order Children By</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

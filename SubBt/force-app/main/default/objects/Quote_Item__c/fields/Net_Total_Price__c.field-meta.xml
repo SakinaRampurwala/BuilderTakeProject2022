@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Net_Total_Price__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <formula>/*( buildertek__Net_Unit__c *  buildertek__Quantity__c) +  buildertek__Tax_Amount__c -  buildertek__Additional_Discount__c BC - 11/19/22 */
+Total_Cost__c  +   Markup_Amount__c + Tax_Amount__c -  Discount_Amount__c</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <inlineHelpText>SubTotal + Discount, Markup and Taxes.</inlineHelpText>
+    <label>Total</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>

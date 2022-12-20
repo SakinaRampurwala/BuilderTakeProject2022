@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Default_Project_Owner__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <description>It was used as default project owner when the original project owner was Inactive</description>
+    <externalId>false</externalId>
+    <inlineHelpText>It was used as default project owner when the original project owner was Inactive</inlineHelpText>
+    <label>Default Project Owner</label>
+    <referenceTo>User</referenceTo>
+    <relationshipName>Admin_Interface_Node_Configurations</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

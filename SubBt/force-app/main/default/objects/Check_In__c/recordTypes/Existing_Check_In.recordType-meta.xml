@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Existing_Check_In</fullName>
+    <active>true</active>
+    <label>Existing Check-In</label>
+    <picklistValues>
+        <picklist>Category__c</picklist>
+        <values>
+            <fullName>Labor Issue</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>None</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>Union Issue</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Work Stoppage</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Phase__c</picklist>
+        <values>
+            <fullName>Above Ground Finish</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Above Ground Rough</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Administrative</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Below Ground Rough</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Close Out</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Phase 1 Construction</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Phase 2 Construction</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Site Prep</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Warranty</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Reporting_Location__c</picklist>
+        <values>
+            <fullName>Onsite</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Phone Call</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Video Conference</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Status__c</picklist>
+        <values>
+            <fullName>Major Issue</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Minor Issue</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>No Issues</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Project Haulted</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Weather__c</picklist>
+        <values>
+            <fullName>EarthQuake</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Rained-Out</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Raining</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sunny</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>Windy</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+</RecordType>

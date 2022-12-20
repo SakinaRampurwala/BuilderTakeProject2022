@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Direct_Costs__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Direct Costs - Sum of all Expenses and Invoices not tied to a Commitment.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Direct Costs - Sum of all Expenses and Invoices not tied to a Commitment.</inlineHelpText>
+    <label>Direct Costs</label>
+    <summarizedField>Budget_Item__c.Direct_Costs__c</summarizedField>
+    <summaryForeignKey>Budget_Item__c.Budget__c</summaryForeignKey>
+    <summaryOperation>sum</summaryOperation>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

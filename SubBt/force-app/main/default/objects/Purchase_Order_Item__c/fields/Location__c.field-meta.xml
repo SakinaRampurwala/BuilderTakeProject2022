@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Location__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Location</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Exterior Wall Mount</fullName>
+                <default>false</default>
+                <label>Exterior Wall Mount</label>
+            </value>
+            <value>
+                <fullName>M. Bedroom</fullName>
+                <default>false</default>
+                <label>M. Bedroom</label>
+            </value>
+            <value>
+                <fullName>Bedroom 2</fullName>
+                <default>false</default>
+                <label>Bedroom 2</label>
+            </value>
+            <value>
+                <fullName>Bedroom 3</fullName>
+                <default>false</default>
+                <label>Bedroom 3</label>
+            </value>
+            <value>
+                <fullName>M. Closet</fullName>
+                <default>false</default>
+                <label>M. Closet</label>
+            </value>
+            <value>
+                <fullName>Laundry</fullName>
+                <default>false</default>
+                <label>Laundry</label>
+            </value>
+            <value>
+                <fullName>Dining</fullName>
+                <default>false</default>
+                <label>Dining</label>
+            </value>
+            <value>
+                <fullName>Pantry</fullName>
+                <default>false</default>
+                <label>Pantry</label>
+            </value>
+            <value>
+                <fullName>M. Bathroom</fullName>
+                <default>false</default>
+                <label>M. Bathroom</label>
+            </value>
+            <value>
+                <fullName>Bathroom 2</fullName>
+                <default>false</default>
+                <label>Bathroom 2</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>RFQStatusAwarded</fullName>
+    <active>false</active>
+    <errorConditionFormula>AND (
+ISNEW(),
+ NOT(ISPICKVAL(RFQ_Package__r.Status__c, &quot;Awarded&quot;))
+)</errorConditionFormula>
+    <errorMessage>Canot Create a Record.Until RFQ status will be Awarded</errorMessage>
+</ValidationRule>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Import_Vendor_Review</fullName>
+    <availability>online</availability>
+    <displayType>massActionButton</displayType>
+    <encodingKey>UTF-8</encodingKey>
+    <height>600</height>
+    <linkType>url</linkType>
+    <masterLabel>Import Vendor Review</masterLabel>
+    <openType>sidebar</openType>
+    <protected>false</protected>
+    <requireRowSelection>true</requireRowSelection>
+    <url>{!IF(ISNULL(Account.Id),
+  URLFOR(&quot;/lightning/cmp/buildertek__ImportVendorReview&quot;, null, 
+    [buildertek__parentId=Purchase_Order__c.Id]),
+  URLFOR(&quot;/lightning/cmp/buildertek__ImportVendorReview&quot;, null,
+    [buildertek__parentId=Account.Id])
+)}</url>
+</WebLink>

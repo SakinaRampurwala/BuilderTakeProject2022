@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Completion_Percent_Budget__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <formula>/*buildertek__Committed_Costs__c /  IF(buildertek__Forecast_To_Complete__c = 0, 0, buildertek__Forecast_To_Complete__c)*/
+
+Committed_Costs__c /  Original_Budget__c</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <inlineHelpText>Committed Costs divided by Original Budget.</inlineHelpText>
+    <label>Budget Completion %</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Percent</type>
+</CustomField>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Pricing_Method__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Pricing Method</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>List</fullName>
+                <default>false</default>
+                <label>List</label>
+            </value>
+            <value>
+                <fullName>Cost</fullName>
+                <default>false</default>
+                <label>Cost</label>
+            </value>
+            <value>
+                <fullName>Profit Margin %</fullName>
+                <default>false</default>
+                <label>Profit Margin %</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

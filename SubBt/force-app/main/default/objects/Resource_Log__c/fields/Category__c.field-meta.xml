@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Category__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Category</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Damaged</fullName>
+                <default>false</default>
+                <label>Damaged</label>
+            </value>
+            <value>
+                <fullName>Doesn&apos;t Match Blue Prints</fullName>
+                <default>false</default>
+                <label>Doesn&apos;t Match Blue Prints</label>
+            </value>
+            <value>
+                <fullName>Improper Gear</fullName>
+                <default>false</default>
+                <label>Improper Gear</label>
+            </value>
+            <value>
+                <fullName>Incomplete Work</fullName>
+                <default>false</default>
+                <label>Incomplete Work</label>
+            </value>
+            <value>
+                <fullName>Incorrect Material</fullName>
+                <default>false</default>
+                <label>Incorrect Material</label>
+            </value>
+            <value>
+                <fullName>Onsite Injury</fullName>
+                <default>false</default>
+                <label>Onsite Injury</label>
+            </value>
+            <value>
+                <fullName>Substandard Material</fullName>
+                <default>false</default>
+                <label>Substandard Material</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

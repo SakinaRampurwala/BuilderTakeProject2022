@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Master_RFQ_s</fullName>
+    <columns>Project__c</columns>
+    <columns>NAME</columns>
+    <columns>Status__c</columns>
+    <columns>Vendor_Quote__c</columns>
+    <columns>Due_Date__c</columns>
+    <columns>RFQ_Details__c</columns>
+    <columns>Accepted_Date__c</columns>
+    <columns>Auto_Number__c</columns>
+    <columns>RFQ_Number__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Type__c</field>
+        <operation>equals</operation>
+        <value>Master</value>
+    </filters>
+    <label>Master RFQ&apos;s</label>
+    <sharedTo>
+        <allInternalUsers></allInternalUsers>
+    </sharedTo>
+</ListView>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>File_Administration</fullName>
+    <availability>online</availability>
+    <description>Administration for file.</description>
+    <displayType>button</displayType>
+    <encodingKey>UTF-8</encodingKey>
+    <linkType>url</linkType>
+    <masterLabel>File Administration</masterLabel>
+    <openType>replace</openType>
+    <protected>false</protected>
+    <url>{!URLFOR(&quot;/apex/VRSF__BT_FileAdministrator&quot;, &quot;&quot;)}?id={!File__c.Id}&amp;retURL=/{!File__c.Id}</url>
+</WebLink>

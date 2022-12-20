@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Division__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Cost Code Division</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Division 1 — General Requirements</fullName>
+                <default>false</default>
+                <label>Division 1 — General Requirements</label>
+            </value>
+            <value>
+                <fullName>Division 2 — Site Construction</fullName>
+                <default>false</default>
+                <label>Division 2 — Site Construction</label>
+            </value>
+            <value>
+                <fullName>Division 3 — Concrete</fullName>
+                <default>false</default>
+                <label>Division 3 — Concrete</label>
+            </value>
+            <value>
+                <fullName>Division 4 — Masonry (Ex. Concrete block)</fullName>
+                <default>false</default>
+                <label>Division 4 — Masonry (Ex. Concrete block)</label>
+            </value>
+            <value>
+                <fullName>Division 5 — Metals (Ex. Beams)</fullName>
+                <default>false</default>
+                <label>Division 5 — Metals (Ex. Beams)</label>
+            </value>
+            <value>
+                <fullName>Division 6 — Wood and Plastics</fullName>
+                <default>false</default>
+                <label>Division 6 — Wood and Plastics</label>
+            </value>
+            <value>
+                <fullName>Division 7 — Thermal and Moisture Protection</fullName>
+                <default>false</default>
+                <label>Division 7 — Thermal and Moisture Protection</label>
+            </value>
+            <value>
+                <fullName>Division 8 — Doors and Windows</fullName>
+                <default>false</default>
+                <label>Division 8 — Doors and Windows</label>
+            </value>
+            <value>
+                <fullName>Division 9 — Finishes</fullName>
+                <default>false</default>
+                <label>Division 9 — Finishes</label>
+            </value>
+            <value>
+                <fullName>Division 10 — Specialties</fullName>
+                <default>false</default>
+                <label>Division 10 — Specialties</label>
+            </value>
+            <value>
+                <fullName>Division 11 — Equipment</fullName>
+                <default>false</default>
+                <label>Division 11 — Equipment</label>
+            </value>
+            <value>
+                <fullName>Division 12 — Furnishings</fullName>
+                <default>false</default>
+                <label>Division 12 — Furnishings</label>
+            </value>
+            <value>
+                <fullName>Division 13 — Special Construction</fullName>
+                <default>false</default>
+                <label>Division 13 — Special Construction</label>
+            </value>
+            <value>
+                <fullName>Division 14 — Conveying Systems</fullName>
+                <default>false</default>
+                <label>Division 14 — Conveying Systems</label>
+            </value>
+            <value>
+                <fullName>Division 15 — Mechanical (Ex. Plumbing and HVAC)</fullName>
+                <default>false</default>
+                <label>Division 15 — Mechanical (Ex. Plumbing and HVAC)</label>
+            </value>
+            <value>
+                <fullName>Division 16 — Electrical</fullName>
+                <default>false</default>
+                <label>Division 16 — Electrical</label>
+            </value>
+            <value>
+                <fullName>Division 17 — Markup and Contingency</fullName>
+                <default>false</default>
+                <label>Division 17 — Markup and Contingency</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

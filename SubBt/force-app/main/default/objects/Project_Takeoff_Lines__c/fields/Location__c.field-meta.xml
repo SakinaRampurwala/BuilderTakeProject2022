@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Location__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Location</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Bath</fullName>
+                <default>false</default>
+                <label>Bath</label>
+            </value>
+            <value>
+                <fullName>Bathroom 2</fullName>
+                <default>false</default>
+                <label>Bathroom 2</label>
+            </value>
+            <value>
+                <fullName>Bathroom 3</fullName>
+                <default>false</default>
+                <label>Bathroom 3</label>
+            </value>
+            <value>
+                <fullName>Bedroom 2</fullName>
+                <default>false</default>
+                <label>Bedroom 2</label>
+            </value>
+            <value>
+                <fullName>Bedroom 3</fullName>
+                <default>false</default>
+                <label>Bedroom 3</label>
+            </value>
+            <value>
+                <fullName>DRYER &amp; RANGE VENT</fullName>
+                <default>false</default>
+                <label>DRYER &amp; RANGE VENT</label>
+            </value>
+            <value>
+                <fullName>DUCT SYSTEM</fullName>
+                <default>false</default>
+                <label>DUCT SYSTEM</label>
+            </value>
+            <value>
+                <fullName>Exterior Gas Stub</fullName>
+                <default>false</default>
+                <label>Exterior Gas Stub</label>
+            </value>
+            <value>
+                <fullName>Fireplace</fullName>
+                <default>false</default>
+                <label>Fireplace</label>
+            </value>
+            <value>
+                <fullName>FURNACE (BTU)</fullName>
+                <default>false</default>
+                <label>FURNACE (BTU)</label>
+            </value>
+            <value>
+                <fullName>GAS LINES</fullName>
+                <default>false</default>
+                <label>GAS LINES</label>
+            </value>
+            <value>
+                <fullName>H2O B-VENT</fullName>
+                <default>false</default>
+                <label>H2O B-VENT</label>
+            </value>
+            <value>
+                <fullName>Kitchen</fullName>
+                <default>false</default>
+                <label>Kitchen</label>
+            </value>
+            <value>
+                <fullName>Laundry</fullName>
+                <default>false</default>
+                <label>Laundry</label>
+            </value>
+            <value>
+                <fullName>LAUNDRY &amp; BATH FANS</fullName>
+                <default>false</default>
+                <label>LAUNDRY &amp; BATH FANS</label>
+            </value>
+            <value>
+                <fullName>Master Bathroom</fullName>
+                <default>false</default>
+                <label>Master Bathroom</label>
+            </value>
+            <value>
+                <fullName>Master Bedroom</fullName>
+                <default>false</default>
+                <label>Master Bedroom</label>
+            </value>
+            <value>
+                <fullName>Powder Room</fullName>
+                <default>false</default>
+                <label>Powder Room</label>
+            </value>
+            <value>
+                <fullName>THERMOSTAT</fullName>
+                <default>false</default>
+                <label>THERMOSTAT</label>
+            </value>
+            <value>
+                <fullName>None</fullName>
+                <default>false</default>
+                <label>None</label>
+            </value>
+            <value>
+                <fullName>Common Area</fullName>
+                <default>false</default>
+                <label>Common Area</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

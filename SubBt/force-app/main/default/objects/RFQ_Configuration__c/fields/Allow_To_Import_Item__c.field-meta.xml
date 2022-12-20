@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Allow_To_Import_Item__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>If this checked then user can import the item excel file</inlineHelpText>
+    <label>Allow To Import Item</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

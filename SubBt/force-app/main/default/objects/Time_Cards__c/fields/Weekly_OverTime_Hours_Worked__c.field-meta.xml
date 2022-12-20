@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Weekly_OverTime_Hours_Worked__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <formula>/*IF(( buildertek__Resource__r.buildertek__Weekly__c  &gt; 0),
+(IF(( buildertek__Hours_Worked__c &gt;  buildertek__Resource__r.buildertek__Daily_Over_Time_Threshold__c), (buildertek__Hours_Worked__c -  buildertek__Resource__r.buildertek__Weekly__c),0)),0)*/
+/*buildertek__Resource__r.buildertek__Hours_Worked_This_Week__c - buildertek__Resource__r.buildertek__Weekly__c)*/
+
+
+/*IF(( buildertek__Resource__r.buildertek__Hours_Worked_This_Week__c &lt;  buildertek__Resource__r.buildertek__Weekly__c), 0, 
+buildertek__Weekly_OT__c)*/
+IF((Weekly_OT__c &lt; 0), 0, Weekly_OT__c)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Weekly Overtime Hours Worked</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Grand_Total__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <formula>Total__c + ( Total__c  *  Tax__c )
+
+
+/*((buildertek__Total__c - (buildertek__Total__c *  buildertek__Discount__c)) + (buildertek__Total__c - (buildertek__Total__c *  buildertek__Discount__c))* buildertek__Tax__c)*/</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <inlineHelpText>Quote Amount with Tax and Shipping &amp; Handling.</inlineHelpText>
+    <label>Total Amount</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>

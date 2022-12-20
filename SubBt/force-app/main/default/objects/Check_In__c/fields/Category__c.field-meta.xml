@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Category__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Category</label>
+    <required>false</required>
+    <trackFeedHistory>true</trackFeedHistory>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>None</fullName>
+                <default>true</default>
+                <label>None</label>
+            </value>
+            <value>
+                <fullName>Work Stoppage</fullName>
+                <default>false</default>
+                <label>Work Stoppage</label>
+            </value>
+            <value>
+                <fullName>Union Issue</fullName>
+                <default>false</default>
+                <label>Union Issue</label>
+            </value>
+            <value>
+                <fullName>Labor Issue</fullName>
+                <default>false</default>
+                <label>Labor Issue</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

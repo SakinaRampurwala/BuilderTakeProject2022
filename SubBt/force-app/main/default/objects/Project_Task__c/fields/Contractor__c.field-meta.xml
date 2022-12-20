@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Contractor__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>This field is used to identify the Contractor Account that is assigned to the Task.</inlineHelpText>
+    <label>Contractor</label>
+    <referenceTo>Account</referenceTo>
+    <relationshipLabel>Schedule Items</relationshipLabel>
+    <relationshipName>Schedule_Tasks</relationshipName>
+    <required>false</required>
+    <trackFeedHistory>true</trackFeedHistory>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Caption_Field_Name__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Field name to use to retrieve node caption/title. Note that this field will be used as &apos;group by&apos; field for the group by nodes. This field is required for group by and query type of nodes.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Field name to use to retrieve node caption/title. Note that this field will be used as &apos;group by&apos; field for the group by nodes. This field is required for group by and query type of nodes.</inlineHelpText>
+    <label>Caption Field Name</label>
+    <length>80</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

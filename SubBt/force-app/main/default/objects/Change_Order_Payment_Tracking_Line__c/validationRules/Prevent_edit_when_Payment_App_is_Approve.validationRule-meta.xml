@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Prevent_edit_when_Payment_App_is_Approve</fullName>
+    <active>true</active>
+    <description>This will prevent user to update record when the associated payment app is Approved</description>
+    <errorConditionFormula>AND(
+NOT(ISNEW()),
+OR(
+ISPICKVAL( Change_Order_Payment_Tracking__r.Payment_Application_G702__r.Status__c , &quot;Company Accepted&quot;),
+ISPICKVAL( Change_Order_Payment_Tracking__r.Payment_Application_G702__r.Status__c , &quot;Customer Accepted&quot;)
+)
+)</errorConditionFormula>
+    <errorMessage>You Cannot edit the record Once the Payment App is Accepted</errorMessage>
+</ValidationRule>

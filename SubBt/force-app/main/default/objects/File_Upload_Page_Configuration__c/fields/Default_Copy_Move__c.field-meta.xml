@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Default_Copy_Move__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Default allow copy &amp; move for new files.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Default allow copy &amp; move for new files.</inlineHelpText>
+    <label>Default copy &amp; move</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

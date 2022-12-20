@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Committed_Costs__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Sum of all Approved PO</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Sum of all Approved PO&apos;s</inlineHelpText>
+    <label>Committed Costs</label>
+    <summarizedField>PO_Item_To_Budget_Item_Link__c.Approved_PO__c</summarizedField>
+    <summaryForeignKey>PO_Item_To_Budget_Item_Link__c.Budget_Item__c</summaryForeignKey>
+    <summaryOperation>sum</summaryOperation>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Project__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <description>Project the inspection is to be completed on.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Project the inspection is to be completed on.</inlineHelpText>
+    <label>Project</label>
+    <referenceTo>Project__c</referenceTo>
+    <relationshipLabel>Inspections</relationshipLabel>
+    <relationshipName>Inspections</relationshipName>
+    <required>false</required>
+    <trackFeedHistory>true</trackFeedHistory>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

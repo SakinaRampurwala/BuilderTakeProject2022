@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Internal_Resource__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>Internal Resource responsible for completing or following up on the Warranty Item.</inlineHelpText>
+    <label>Internal Resource</label>
+    <referenceTo>Contact</referenceTo>
+    <relationshipLabel>Warranty Item&apos;s (Internal Resource)</relationshipLabel>
+    <relationshipName>Warranty_Item_s1</relationshipName>
+    <required>false</required>
+    <trackFeedHistory>true</trackFeedHistory>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

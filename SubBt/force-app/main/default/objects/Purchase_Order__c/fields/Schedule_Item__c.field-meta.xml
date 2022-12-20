@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Schedule_Item__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>Scheduled Item this PO is associated with.</inlineHelpText>
+    <label>Schedule Item</label>
+    <lookupFilter>
+        <active>true</active>
+        <filterItems>
+            <field>Project_Task__c.Schedule__c</field>
+            <operation>equals</operation>
+            <valueField>$Source.Schedule__c</valueField>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>Project_Task__c</referenceTo>
+    <relationshipLabel>Purchase Orders</relationshipLabel>
+    <relationshipName>Purchase_Orders</relationshipName>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

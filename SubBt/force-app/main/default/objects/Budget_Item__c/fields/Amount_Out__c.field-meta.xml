@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Amount_Out__c</fullName>
+    <deprecated>false</deprecated>
+    <description>This is the Amount which transferred from this budget item to other budge item</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This is the Amount which transferred from this budget item to other budge item</inlineHelpText>
+    <label>Amount Out (DEP)</label>
+    <summarizedField>Budget_Modifications__c.Amount__c</summarizedField>
+    <summaryForeignKey>Budget_Modifications__c.From__c</summaryForeignKey>
+    <summaryOperation>sum</summaryOperation>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

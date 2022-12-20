@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Only_BT_Service_360_Employees</fullName>
+    <active>false</active>
+    <errorConditionFormula>Employee__r.Profile.Name != &quot;BT Service 360 Employee&quot;</errorConditionFormula>
+    <errorDisplayField>Employee__c</errorDisplayField>
+    <errorMessage>You must select assignee from  &quot;BT Service 360 Employee&quot; profile.</errorMessage>
+</ValidationRule>

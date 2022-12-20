@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>RECORD_TYPE2</fullName>
+    <active>true</active>
+    <label>RECORD TYPE2</label>
+    <picklistValues>
+        <picklist>Material_Received__c</picklist>
+        <values>
+            <fullName>No</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>Partially Recived%2E</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Yes</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Phase__c</picklist>
+        <values>
+            <fullName>Coordination w%2F MEP %26 GC</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Engineering Design</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Glazier Integration Design</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Ops to Engineering Turnover</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Plan Submission</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Project Kickoff Meeting</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>SOV %2F AFP - VIS or VaaS Only</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sales to Ops Turnover</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Subdivision Agreement  Development Agreement  Draft Plan Approval</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Submittal Package</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>TPO Roof System</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Trim to Completion</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Reason_for_Date_Change_PL__c</picklist>
+        <values>
+            <fullName>Landlord Change</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sup Change</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Type__c</picklist>
+        <values>
+            <fullName>Milestone</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Task</fullName>
+            <default>true</default>
+        </values>
+    </picklistValues>
+</RecordType>

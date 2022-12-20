@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Work_Completed_This_Period__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Work Completed This Period</label>
+    <summarizedField>Change_Order_Payment_Tracking_Line__c.Work_Completed_This_Period__c</summarizedField>
+    <summaryForeignKey>Change_Order_Payment_Tracking_Line__c.Change_Order_Payment_Tracking__c</summaryForeignKey>
+    <summaryOperation>sum</summaryOperation>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

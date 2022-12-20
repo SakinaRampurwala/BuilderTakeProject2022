@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Customer_accepted_amount__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Customer Accepted Amount</label>
+    <summarizedField>Quote_Item__c.Net_Total_Price__c</summarizedField>
+    <summaryFilterItems>
+        <field>Quote_Item__c.Status__c</field>
+        <operation>equals</operation>
+        <value>Accept</value>
+    </summaryFilterItems>
+    <summaryForeignKey>Quote_Item__c.Quote__c</summaryForeignKey>
+    <summaryOperation>sum</summaryOperation>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

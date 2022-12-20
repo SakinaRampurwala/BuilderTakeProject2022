@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CompactLayout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>IL_PO</fullName>
+    <fields>Auto_Number__c</fields>
+    <fields>Total_Price__c</fields>
+    <fields>Tax__c</fields>
+    <fields>Total_Amount_With_Tax__c</fields>
+    <label>IL PO</label>
+</CompactLayout>

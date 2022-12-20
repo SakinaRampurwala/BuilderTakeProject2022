@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Overtime_Hours__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <formula>/*IF((buildertek__Resource__r.buildertek__Daily_Over_Time_Threshold__c &lt; 1),0,(buildertek__Hours_Worked_Formula__c - (buildertek__Hours_Worked_Formula__c - buildertek__Resource__r.buildertek__Daily_Over_Time_Threshold__c)))*/
+
+ Hours_Worked_Formula__c -  Regular_Hours__c</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Overtime Hours</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>File_Administrative_Fields__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Administrative fields need to be displayed in file upload page.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Administrative fields need to be displayed in file upload page.</inlineHelpText>
+    <label>File Administrative Fields</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>TextArea</type>
+</CustomField>

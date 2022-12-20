@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Cost_Code__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <description>Cost Codes allows you to assign Costs to a particular Code that can be used to tie back to your Accounting Package.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Cost Codes allows you to assign Costs to a particular Code that can be used to tie back to your Accounting Package.</inlineHelpText>
+    <label>Cost Code</label>
+    <referenceTo>Cost_Codes__c</referenceTo>
+    <relationshipName>Budget_Items</relationshipName>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

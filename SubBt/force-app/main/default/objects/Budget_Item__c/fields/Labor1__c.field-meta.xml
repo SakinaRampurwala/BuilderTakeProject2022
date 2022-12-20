@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Labor1__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Sum of all Time Card entries for the Budget Line.</description>
+    <externalId>false</externalId>
+    <formula>Labor__c</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <inlineHelpText>This is an accumulated amount across all Times Cards associated with this Budget Line.</inlineHelpText>
+    <label>Labor (Accum)</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>

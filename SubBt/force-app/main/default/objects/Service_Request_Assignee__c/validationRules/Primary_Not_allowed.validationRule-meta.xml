@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Primary_Not_allowed</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(ISNEW(),Service_Request__r.Primary_Count__c = 1, Primary__c = true)</errorConditionFormula>
+    <errorDisplayField>Primary__c</errorDisplayField>
+    <errorMessage>Someone has already been assign as &quot;Primary&quot;</errorMessage>
+</ValidationRule>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Location__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Location</label>
+    <required>false</required>
+    <trackFeedHistory>true</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Exterior</fullName>
+                <default>false</default>
+                <label>Exterior</label>
+            </value>
+            <value>
+                <fullName>Interior</fullName>
+                <default>false</default>
+                <label>Interior</label>
+            </value>
+            <value>
+                <fullName>HVAC Room</fullName>
+                <default>false</default>
+                <label>HVAC Room</label>
+            </value>
+            <value>
+                <fullName>Parking Garage</fullName>
+                <default>false</default>
+                <label>Parking Garage</label>
+            </value>
+            <value>
+                <fullName>Mechanical Room #1</fullName>
+                <default>false</default>
+                <label>Mechanical Room #1</label>
+            </value>
+            <value>
+                <fullName>Conference Room #1</fullName>
+                <default>false</default>
+                <label>Conference Room #1</label>
+            </value>
+            <value>
+                <fullName>Bathroom #1</fullName>
+                <default>false</default>
+                <label>Bathroom #1</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

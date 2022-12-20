@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Restrict_user_to_update_when_vendor_subm</fullName>
+    <active>false</active>
+    <description>Only system admin can edit the sov record once the sov status is changes to &quot;vendor submitted&quot;</description>
+    <errorConditionFormula>AND (
+ISPICKVAL(Status__c , &quot;Vendor Submitted&quot;),
+OR (
+ISNEW(),
+ISCHANGED ( Status__c  )
+),
+AND (
+$Profile.Name &lt;&gt; &quot;System Administrato&quot;
+
+))</errorConditionFormula>
+    <errorDisplayField>Status__c</errorDisplayField>
+    <errorMessage>You Cannot edit the record Once submitted or Review</errorMessage>
+</ValidationRule>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Project_Manager__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>Project Manager Associated with this Schedule.  By default the Project Manager from the Project is used, however you can change that at this Schedule level.</inlineHelpText>
+    <label>Project Manager - Contact</label>
+    <referenceTo>Contact</referenceTo>
+    <relationshipLabel>Schedules</relationshipLabel>
+    <relationshipName>Schedules</relationshipName>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

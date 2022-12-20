@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>File_Extension_Validation</fullName>
+    <active>false</active>
+    <description>File Extension cannot be updated once file get created.</description>
+    <errorConditionFormula>AND(NOT(ISNEW()), ISCHANGED(  Extension__c ))</errorConditionFormula>
+    <errorDisplayField>Extension__c</errorDisplayField>
+    <errorMessage>Extension cannot be updated manually. Its a system generated field.</errorMessage>
+</ValidationRule>

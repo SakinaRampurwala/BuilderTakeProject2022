@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Tax_Rate_2_Required</fullName>
+    <active>false</active>
+    <description>Tax rate 2 cannot be zero when Tax Fabrication is required</description>
+    <errorConditionFormula>AND(Tax_on_Fabrication_Required__c  = true, Tax_Rate_2__c  = 0 )</errorConditionFormula>
+    <errorMessage>&apos;Tax Rate 2&apos; Cannot be Zero when &apos;Tax Fabrication&apos; is required</errorMessage>
+</ValidationRule>

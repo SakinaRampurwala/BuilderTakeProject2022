@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Applied_Markup__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Comes from the Line Item Markup or the Grouping Markup.  If there is a Markup at the Grouping level and not at the line item level, then it pulls from the Grouping level, otherwise the Line Item Markup overrides the Grouping level Markup.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Comes from the Line Item Markup or the Grouping Markup.  If there is a Markup at the Grouping level and not at the line item level, then it pulls from the Grouping level, otherwise the Line Item Markup overrides the Grouping level Markup.</inlineHelpText>
+    <label>Group Markup</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>3</scale>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Percent</type>
+</CustomField>

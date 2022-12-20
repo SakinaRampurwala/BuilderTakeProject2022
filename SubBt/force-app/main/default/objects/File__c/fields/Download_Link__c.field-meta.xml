@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Download_Link__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <formula>IF(OR(ISPICKVAL(Upload_Status__c, &apos;&apos;), ISPICKVAL( Upload_Status__c , &apos;Completed&apos;)), HYPERLINK(LEFT($Api.Partner_Server_URL_260, FIND(&apos;/services&apos;,$Api.Partner_Server_URL_260))&amp;&apos;apex/buildertek__BT_FileDetail?cleanId=&apos;&amp;Id,  IMAGE(LEFT($Api.Partner_Server_URL_260, FIND(&apos;/services&apos;,$Api.Partner_Server_URL_260))+&quot;resource/buildertek__BT_ResourceUtils/resources/images/fileIcons/downloadlightning.png&quot;,&apos;Download&apos;, 25, 25), &quot;_blank&quot;), &apos;&apos;)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Download</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

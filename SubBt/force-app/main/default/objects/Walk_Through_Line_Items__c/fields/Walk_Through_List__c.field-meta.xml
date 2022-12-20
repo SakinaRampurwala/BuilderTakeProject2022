@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Walk_Through_List__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Walk Through List</label>
+    <referenceTo>Walk_Through_List__c</referenceTo>
+    <relationshipLabel>Walk Through Line Items</relationshipLabel>
+    <relationshipName>Walk_Through_Line_Items</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

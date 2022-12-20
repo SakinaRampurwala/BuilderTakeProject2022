@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Gross_Profit_Percemtage__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <formula>/*(buildertek__Total_Sales_Price__c -  buildertek__Total_Costs__c) / buildertek__Total_Costs__c*/
+
+IF(Total_Sales_Price__c=0,0,((Total_Sales_Price__c -  Total_Costs__c) / Total_Costs__c))</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <inlineHelpText>Gross Profit Percentage</inlineHelpText>
+    <label>Markup (%)</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Percent</type>
+</CustomField>
