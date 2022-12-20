@@ -7,6 +7,7 @@ public without sharing class PreviewQuoteController{
                       from Emailtemplate
                       where folder.name = 'BT Quote'];
         }
+        System.debug('Template ========>>>>>'+temrec);
         return temrec;
     }
 

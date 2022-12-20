@@ -695,7 +695,7 @@
                 if (state === "SUCCESS") {
                     var result = response.getReturnValue();
                     console.log(response.groups);
-                    console.log({ result });
+                    console.log('TotalRecords ==> ',{ result });
                     console.log(result.status);
                     // console.log(result.tarTable.ListOfEachRecord);
 

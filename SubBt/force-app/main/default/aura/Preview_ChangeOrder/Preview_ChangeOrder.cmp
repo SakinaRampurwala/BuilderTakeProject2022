@@ -162,7 +162,9 @@
                                 </div>
                             </div>
                         </div>
+                        
                         <aura:unescapedHtml value="{!v.changeOrderLines}" /> 
+                        
                         <br/>
                         
                         <article class="slds-card">
