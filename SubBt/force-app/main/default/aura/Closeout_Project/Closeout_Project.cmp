@@ -70,7 +70,7 @@
                             <lightning:select name="templates" label="Select Template" aura:id="template" value="{!v.selectedTemplate}" onchange="{!c.preiewEmailTemplate}">
                                 <option text="None" value="" />
                                 <option text="Create Closeout Invoice" value="Invoice" />
-                                <option text="Create Closeout Documentation" value="Documentation" />
+                                <!-- <option text="Create Closeout Documentation" value="Documentation" /> -->
                             </lightning:select>
                         </aura:if>  
                         <aura:if isTrue="{!v.isTemplateSelected}">
