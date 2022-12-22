@@ -2041,6 +2041,47 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
                             OFFSET :offset];*/
         return objDT;
     }
+    @AuraEnabled
+    public static BudgetDataTableWrapperClone getTimeCardData(Integer pageNumber, Integer pageSize, string RecId){
+        buildertek__Budget__c RFQRec = [SELECT Id, Name, buildertek__Project__c
+                                        FROM buildertek__Budget__c
+                                        where Id = :RecId];
+        //Offset for SOQL
+        Integer offset = (pageNumber - 1) * pageSize;
+        //Total Records
+        Integer totalRecords = [SELECT COUNT()
+                                FROM buildertek__Purchase_Order__c
+                                where buildertek__Project__c = :RFQRec.buildertek__Project__c AND buildertek__PO_Type__c = 'Master'];
+        Integer recordEnd = pageSize * pageNumber;
+        //Instance of Contact DataTable Wrapper Class
+        BudgetDataTableWrapperClone objDT = new BudgetDataTableWrapperClone();
+        objDT.pageSize = pageSize;
+        objDT.pageNumber = pageNumber;
+        objDT.recordStart = offset + 1;
+        objDT.recordEnd = totalRecords >= recordEnd ? recordEnd : totalRecords;
+        objDT.totalRecords = totalRecords; 
+        objDT.selectedPurchaseOrder = false;
+        if(UserInfo.isMultiCurrencyOrganization()){
+            string rfqrecords = 'SELECT Id, Name, buildertek__Project__c, buildertek__Project__r.Name,buildertek__PO_Type__c,buildertek__Description__c,'+
+                            'buildertek__Daily_Expense__c'+
+                            ' FROM buildertek__Time_Cards__c'+
+                            ' where buildertek__Project__c =\'' +RFQRec.buildertek__Project__c+'\' ORDER BY Name LIMIT :pageSize OFFSET :offset';
+               objDT.recordList = Database.query(rfqrecords);
+            }else{
+                objDT.recordList = [SELECT Id, Name, buildertek__Project__c, buildertek__Project__r.Name,buildertek__Description__c,buildertek__Daily_Expense__c FROM buildertek__Time_Cards__c where buildertek__Project__c = :RFQRec.buildertek__Project__c
+                            ORDER BY Name
+                            LIMIT :pageSize
+                            OFFSET :offset];
+            }
+        /*objDT.recordList = [SELECT Id, Name, buildertek__Project__c, buildertek__Project__r.Name,buildertek__PO_Type__c,buildertek__Description__c,
+                            buildertek__Vendor__c,buildertek__Vendor__r.Name,buildertek__PO_Total__c
+                            FROM buildertek__Purchase_Order__c
+                            where buildertek__Project__c = :RFQRec.buildertek__Project__c
+                            ORDER BY Name
+                            LIMIT :pageSize
+                            OFFSET :offset];*/
+        return objDT;
+    }
     public class BudgetDataTableWrapper{
         @AuraEnabled
         public Integer pageSize{ get; set; }
@@ -2060,6 +2101,26 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
         Public Boolean selectedPurchaseOrder {get;set;}
         @AuraEnabled
         public List<buildertek__Purchase_Order__c> recordList{ get; set; }
+    }
+    public class BudgetDataTableWrapperClone{
+        @AuraEnabled
+        public Integer pageSize{ get; set; }
+        
+        @AuraEnabled
+        public Integer pageNumber{ get; set; }
+        
+        @AuraEnabled
+        public Integer totalRecords{ get; set; }
+        
+        @AuraEnabled
+        public Integer recordStart{ get; set; }
+        
+        @AuraEnabled
+        public Integer recordEnd{ get; set; }
+        @AuraEnabled
+        Public Boolean selectedPurchaseOrder {get;set;}
+        @AuraEnabled
+        public List<buildertek__Time_Cards__c> recordList{ get; set; }
     }
     @AuraEnabled
     public static buildertek__Budget__c getbudget(String recordId){

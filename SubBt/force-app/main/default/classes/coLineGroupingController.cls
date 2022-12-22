@@ -58,8 +58,8 @@ public without sharing class coLineGroupingController {
                 if (wpList.budgetGroup.Id == coLine.buildertek__Budget_Line_Group__c) {
                     coLineData coData = new coLineData();
                     coData.coLine = coLine;
-                    if (coLine.buildertek__SubTotal__c != null) {
-                        wpList.totalGroupCost += coLine.buildertek__SubTotal__c;
+                    if (coLine.buildertek__Total__c != null) {
+                        wpList.totalGroupCost += coLine.buildertek__Total__c;
                     }
                     coLineListData.add(coData);
                 }

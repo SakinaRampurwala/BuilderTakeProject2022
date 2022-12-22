@@ -50,10 +50,13 @@ public class DocuSignApi {
         //Authorization header generating using DocuSign credentials. 
         
         // String authorizationHeader = '<DocuSignCredentials><Username>'+userName+'</Username><Password>'+Password+'</Password><IntegratorKey>'+integratorKey+'</IntegratorKey></DocuSignCredentials>'; 
+        String access_token = DocuSignTGen1.getAccessToken();
+        
         String authorizationHeader = '<DocuSignCredentials><Username>'+userName+'</Username><Password>'+Password+'</Password><IntegratorKey>'+integratorKey+'</IntegratorKey></DocuSignCredentials>'; 
 
         System.debug(authorizationHeader);
-        req.setHeader('X-DocuSign-Authentication', authorizationHeader); 
+        // req.setHeader('X-DocuSign-Authentication', authorizationHeader); 
+        req.setHeader('Authorization', 'Bearer '+access_token);
         
         req.setHeader('Accept','application/json'); 
         
@@ -120,6 +123,7 @@ public class DocuSignApi {
             
             res = http.send(req); 
             
+            system.debug('DocuSign Response'+ res);
             system.debug('DocuSign Response'+ res.getBody());
             
             EnvelopeId envId =  (EnvelopeId) System.JSON.deserialize(res.getBody(), EnvelopeId.class);
