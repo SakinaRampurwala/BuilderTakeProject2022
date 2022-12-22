@@ -33,7 +33,7 @@
         });
         action.setCallback(this, function (response) {
             var status = response.getState();
-            if (status = 'SUCCESS') {
+            if (status == 'SUCCESS') {
                 var result = response.getReturnValue();
                 console.log('result ==> ',{result});
 
@@ -50,6 +50,8 @@
 
             } else{
                 helper.showToast("Error", "Error", "Something Went Wrong", "5000");
+                var error = response.getError();
+                console.log('Error =>',{error});
             }
             component.set("v.Spinner", false);
         });

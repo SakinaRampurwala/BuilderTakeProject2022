@@ -211,8 +211,10 @@ vendorUserMap.put(usr.AccountId,usr);
                             where LocalPart = 'projects'];
                
                String fromAddress = eServices.LocalPart + '@' + eServices.EmailDomainName;
-       Savepoint sp = Database.setSavepoint();
-               Messaging.sendEmail(msgList);
+       			Savepoint sp = Database.setSavepoint();
+        system.debug('msdList->'+msgList);
+               List<Messaging.SendEmailResult> resultsemail = Messaging.sendEmail(msgList);
+        	system.debug('resultsemail->'+resultsemail);
                Database.rollback(sp);
                List<Messaging.SingleEmailMessage> actualMessageList = new List<Messaging.SingleEmailMessage>();
                     for (Messaging.SingleEmailMessage email : msgList) {
@@ -234,6 +236,7 @@ vendorUserMap.put(usr.AccountId,usr);
                         system.debug('&&&&'+emailToSend);
                         actualMessageList.add(emailToSend);
                     }
+        system.debug('actualMessageList size->'+actualMessageList.size());
                     if(actualMessageList.size() > 0){
                       Messaging.SendEmailResult [] serList = Messaging.sendEmail(actualMessageList); 
                         for(Messaging.SendEmailResult res : serList){

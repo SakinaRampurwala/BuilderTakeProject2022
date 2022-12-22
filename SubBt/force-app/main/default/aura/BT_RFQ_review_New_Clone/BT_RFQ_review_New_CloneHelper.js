@@ -524,6 +524,8 @@
 			rfqToVendorLinkIds: JSON.stringify(selectedVendorIds)
 		});
 		action.setCallback(this, function (response) {
+            console.log('response---> '+response.getState());
+            console.log(component.isValid());
 			var toastEvent = $A.get("e.force:showToast");
           
 			if (component.isValid() && response.getState() === "SUCCESS") {

@@ -10,6 +10,7 @@ public class JWTBearerFlowCls {
      req.setEndpoint('https://account-d.docusign.com/oauth/token'); //tokenEndpoint
      req.setHeader('Content-type', 'application/x-www-form-urlencoded');
      req.setHeader('Authorization', 'Bearer '+jwt.assertion());
+     System.debug('Authorization Bearer' + jwt.assertion());
      req.setBody(body);
      Http http = new Http();               
      try{

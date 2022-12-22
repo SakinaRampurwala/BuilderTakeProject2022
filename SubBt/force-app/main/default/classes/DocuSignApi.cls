@@ -49,8 +49,10 @@ public class DocuSignApi {
         
         //Authorization header generating using DocuSign credentials. 
         
+        // String authorizationHeader = '<DocuSignCredentials><Username>'+userName+'</Username><Password>'+Password+'</Password><IntegratorKey>'+integratorKey+'</IntegratorKey></DocuSignCredentials>'; 
         String authorizationHeader = '<DocuSignCredentials><Username>'+userName+'</Username><Password>'+Password+'</Password><IntegratorKey>'+integratorKey+'</IntegratorKey></DocuSignCredentials>'; 
-        
+
+        System.debug(authorizationHeader);
         req.setHeader('X-DocuSign-Authentication', authorizationHeader); 
         
         req.setHeader('Accept','application/json'); 
@@ -101,7 +103,7 @@ public class DocuSignApi {
         
         req.setBody(json); 
         
-        
+        System.debug(json);
         
         
         Http http = new Http(); 
@@ -109,6 +111,8 @@ public class DocuSignApi {
         HTTPResponse res; 
         
         system.debug('Complete Response '+res);
+        system.debug('Complete request '+req);
+
         
         try{ 
             

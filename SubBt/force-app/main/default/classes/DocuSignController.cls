@@ -108,7 +108,7 @@ Sign.sendEnvelope(contactDetails[0].CustomerSigned.Email,contactDetails[0].Custo
         
         HttpRequest req = new HttpRequest();  
         String access_token = DocuSignTGen1.getAccessToken();
-        system.debug('accessToken'+access_token);
+        system.debug('accessToken           =>'+access_token);
         req.setMethod('GET');
         req.setEndpoint('https://demo.docusign.net/restapi/v2.1/accounts/'+docusignCredentials.buildertek__Account_Id__c+'/templates'); //tokenEndpoint
         // req.setHeader('Content-type', 'application/x-www-form-urlencoded');
@@ -135,6 +135,7 @@ Sign.sendEnvelope(contactDetails[0].CustomerSigned.Email,contactDetails[0].Custo
                 DocTemp.uri = templates.envelopeTemplates[i].uri;
                 DocTemp.name = templates.envelopeTemplates[i].name;
                 DocTemp.folderName = templates.envelopeTemplates[i].folderName;
+                System.debug(DocTemp.folderName);
                 if(ObjName =='Change Order'){
                      if(objAndFolderNameMap.get(ObjName) == DocTemp.folderName){
                         changeOrderFolderTemps.add(DocTemp);
