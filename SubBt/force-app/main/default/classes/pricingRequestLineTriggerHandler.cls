@@ -1,11 +1,15 @@
 public with sharing class pricingRequestLineTriggerHandler {
     public static boolean firstRun = true; 
-    public static void afterEvent(List<buildertek__Pricing_Request_Line__c> PRLList) {
+    public static void afterEvent(List<buildertek__Pricing_Request_Line__c> PRLList , Map<Id,buildertek__Pricing_Request_Line__c>PRLMap) {
         System.debug(firstRun);
         Set<Id> PricingReqLineSet =new Set<Id>();
 
         for(buildertek__Pricing_Request_Line__c PriReqLine:PRLList){
-            if(PriReqLine.buildertek__Status__c=='Pricing Complete'){
+            buildertek__Pricing_Request_Line__c oldPRL = PRLMap.get(PriReqLine.id);
+            // System.debug(oldPRL);
+            // System.debug(oldPRL.buildertek__Status__c=='Pricing Complete');
+            // System.debug(oldPRL.buildertek__Status__c);
+            if(PriReqLine.buildertek__Status__c=='Pricing Complete' && oldPRL.buildertek__Status__c!='Pricing Complete'){
                 PricingReqLineSet.add(PriReqLine.Id);
             }
         }
