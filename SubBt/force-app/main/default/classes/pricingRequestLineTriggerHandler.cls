@@ -25,10 +25,7 @@ public with sharing class pricingRequestLineTriggerHandler {
 
             if(optionList.size() > 0){
                 update optionList;
-                
-
                 pricingRequestLineTriggerHandler.firstRun = false; 
-
             }
         }
         System.debug(firstRun);        

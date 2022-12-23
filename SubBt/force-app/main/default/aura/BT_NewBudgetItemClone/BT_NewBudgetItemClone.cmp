@@ -197,6 +197,7 @@
     <aura:attribute name="duplicateExp" type="Boolean" default="false" />
 
     <aura:attribute name="addposection" type="Boolean" default="false" />
+    <aura:attribute name="addtcsection" type="Boolean" default="false" />
     <aura:attribute name="recordList" type="Purchase_Order__c[]" />
     <aura:attribute name="PageNumber" type="integer" default="1" />
     <aura:attribute name="pageSize" type="integer" default="15" />
@@ -312,6 +313,8 @@
                                         <!-- commented on 26thmay DFL <lightning:button iconName="utility:add" iconPosition="left" onclick="{!c.newGroup}" label="Add Group" class="sldsButtonGroup"/>-->
                                         <!--<aura:if isTrue="{!v.groupListSize > 0}">-->
                                         <lightning:button label="Add PO" onclick="{!c.addPO}" class="sldsButtonGroup" />
+                                        <lightning:button label="Add Invoice" onclick="{}" class="sldsButtonGroup" />
+                                        <lightning:button label="Add Time Card" onclick="{!c.addTimeCard}" class="sldsButtonGroup" />
                                         <lightning:button iconPosition="left" onclick="{!c.onClickAddlines}" label="Add Budget Lines" class="sldsButtonGroup" />
                                         <!-- <lightning:button label="Add Product" onclick="{!c.addProduct}" class="sldsButtonGroup" />-->
                                         <!--  <lightning:button label="Create Scheduled Items" onclick="{!c.checkSchedules}" class="sldsButtonGroup"/>-->
@@ -1513,6 +1516,87 @@
                                             </th>
                                             <th scope="col">
                                                 <div class="slds-truncate" title="Project Description">PO Total</div>
+                                            </th>
+                                            <th scope="col">
+                                                <div class="slds-truncate" title="Project Description">Vendor</div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <aura:iteration items="{!v.recordList}" var="item" indexVar="index">
+                                            <tr>
+                                                <!-- <td class="slds-truncate" style="width: 10px;">
+                                                    <lightning:input type="checkbox"
+                                                                         name="{!item.Id}"
+                                                                         onchange="{!c.selectedSchedule}" /> 
+                                                </td>-->
+                                                <td>
+                                                    <span id="{!item.Id}" onchange="{!c.saveSelectedPO}">
+                                                        <ui:inputRadio aura:id="radio" name="select" label=""
+                                                            value="{!item.selectedPurchaseOrder}" />
+                                                    </span>
+                                                </td>
+                                                <td class="slds-truncate" style="">
+                                                    {!item.Name}
+                                                </td>
+                                                <td>
+                                                    {!item.buildertek__Description__c}
+                                                </td>
+                                                <td>
+                                                    <!--<aura:if isTrue='{!v.multicurrency}'>
+                                                        <lightning:formattedNumber value="{!item.buildertek__PO_Total__c}" style="currency" currencyCode="{!item.CurrencyIsoCode}" currencyDisplayAs="code"/>
+                                                    </aura:if>
+                                                    <aura:if isTrue='{!!v.multicurrency}'>-->
+                                                    <lightning:formattedNumber value="{!item.buildertek__PO_Total__c}" style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
+                                                    <!--</aura:if>-->
+                                                    <!--<lightning:formattedNumber value="{!item.buildertek__PO_Total__c}" style="currency" currencyCode="USD"/>-->
+
+                                                </td>
+                                                <td>
+                                                    {!item.buildertek__Vendor__r.Name}
+                                                </td>
+                                            </tr>
+                                        </aura:iteration>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <footer class="slds-modal__footer">
+                                <lightning:button variant="neutral" title="Cancel" label="Cancel" onclick="{! c.doCancel }" />
+                                <lightning:button variant="brand" type="submit" name="Save" label="Save" onclick="{!c.newPO}" />
+                            </footer>
+                        </div>
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </aura:if>
+            <aura:if isTrue="{!v.addtcsection}">
+                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container" style="width: 50%;">
+                        <div aura:id="poContainer" class="c-container">
+                            <header class="slds-modal__header">
+                                <lightning:buttonIcon iconName="utility:close" onclick="{!c.doCancel}" alternativeText="close" variant="bare-inverse" class="slds-modal__close" />
+                                <p></p>
+                                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Time Cards
+                                </h2>
+                                <p></p>
+                            </header>
+                            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" style="height:80%">
+                                <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                                    <thead>
+                                        <tr class="slds-text-title_caps">
+                                            <th scope="col" class="slds-truncate">
+                                                <!-- <lightning:input type="checkbox"
+                                                                         name="{!item.Id}"
+                                                                         onchange="{!c.selectedSchedule}" /> -->
+                                            </th>
+                                            <th scope="col">
+                                                <div class="slds-truncate" title="Duration">TimeCard Name</div>
+                                            </th>
+                                            <th scope="col">
+                                                <div class="slds-truncate" title="Project Description">Description</div>
+                                            </th>
+                                            <th scope="col">
+                                                <div class="slds-truncate" title="Project Description">TimeCard Total</div>
                                             </th>
                                             <th scope="col">
                                                 <div class="slds-truncate" title="Project Description">Vendor</div>

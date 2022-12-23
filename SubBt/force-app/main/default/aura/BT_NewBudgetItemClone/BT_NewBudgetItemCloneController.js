@@ -396,6 +396,55 @@
         console.log(event);
         component.set("v.selectedExistingPO", event.currentTarget.id);
     },
+    addTimeCard: function(component, event, helper) {
+        var selectedRecs = component.get('v.selectedRecs');
+        console.log('v.selectedRecs ==> ', { selectedRecs });
+        if (selectedRecs.length > 0) {
+            var BudgetIds = [];
+            var rowData;
+            var newPOItems = [];
+
+            if (selectedRecs.length > 0) {
+                var budgetlineid = BudgetIds[0];
+                var action;
+                action = component.get("c.BudgetItemList");
+                action.setParams({
+                    BudgetIds: selectedRecs
+                });
+                action.setCallback(this, function(response) {
+                    if (component.isValid() && response.getState() === "SUCCESS") {
+                        for (var i = 0; i < response.getReturnValue().length; i++) {
+                            component.set("v.addtcsection", true);
+                            var pageNumber = component.get("v.PageNumber");
+                            var pageSize = component.get("v.pageSize");
+                            component.set("v.isExistingPo", true);
+                            helper.gettcList(component, pageNumber, pageSize);
+                        }
+
+                    }
+                });
+                $A.enqueueAction(action);
+
+
+            } else {
+                component.find('notifLib').showNotice({
+                    "variant": "error",
+                    "header": "Please Select Budget Line!",
+                    "message": "Please Select Budget Line to Create TimeCard.",
+                    closeCallback: function() {}
+                });
+            }
+        } else {
+            component.find('notifLib').showNotice({
+                "variant": "error",
+                "header": "Select Budget Line",
+                "message": "Please Select at least One Budget Line to Add TimeCard.",
+                //"header": "No Budget Lines",
+                //"message": "Please select a Budget Line.",
+                closeCallback: function() {}
+            });
+        }
+    },
     addPO: function(component, event, helper) {
         var selectedRecs = component.get('v.selectedRecs');
         console.log('v.selectedRecs ==> ', { selectedRecs });
@@ -1305,6 +1354,7 @@
         component.set("v.selectedExistingPO", "");
         component.set("v.isExistingPo", false);
         component.set("v.addposection", false);
+        component.set("v.addtcsection", false);
         component.set("v.showSelectSchedule", false);
         component.set("v.isNewExpense", false);
         component.set("v.duplicateExp", false);
@@ -1340,6 +1390,7 @@
         component.set("v.selectedExistingPO", "");
         component.set("v.isExistingPo", false);
         component.set("v.addposection", false);
+        component.set("v.addtcsection", false);
 
         // $A.get('e.force:refreshView').fire();
 

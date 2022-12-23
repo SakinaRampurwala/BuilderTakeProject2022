@@ -17,8 +17,14 @@
                     <apex:repeat value="{!wrapperlst}" var="wrapperData"> 
 
                         <tr style="line-height: 1.6; background-color: rgb(27 82 151); color: #fff;">
-                            <td style="font-size: 15px;border-bottom: 1px solid #ccc; border-right: 1px solid #ccc;padding: 5px 15px;" colspan="4"> {!wrapperData.budgetGroup.Name} </td>
-                            <td style="font-size: 15px;border-bottom: 1px solid #ccc; border-right: 1px solid #ccc;padding: 5px 15px; text-align: right;"> 
+                            <td style="font-size: 15px;border-bottom: 1px solid #ccc; border-right: 1px solid #ccc;padding: 5px 15px;" colspan="4"> 
+
+                                <apex:outputText value="{!IF(ISBLANK(wrapperData.budgetGroup.Name), 'No Grouping', wrapperData.budgetGroup.Name)}"/>
+                                
+                                <!-- {!wrapperData.budgetGroup.Name} -->
+                             </td>
+
+                                <td style="font-size: 15px;border-bottom: 1px solid #ccc; border-right: 1px solid #ccc;padding: 5px 15px; text-align: right;"> 
                                 <apex:outputText value="{0, number, {!orgCurr} ###,###,###,##0.00}">
                                     <apex:param value="{!wrapperData.totalGroupCost}" />
                                 </apex:outputText>
