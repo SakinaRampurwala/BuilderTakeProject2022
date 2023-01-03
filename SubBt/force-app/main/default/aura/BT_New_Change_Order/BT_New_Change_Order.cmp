@@ -2,7 +2,7 @@
 	access="global">
 	<ltng:require styles="{!$Resource.ModalPreviewWidth100}" />
 	<aura:attribute name="budgetlineid" type="string" />
-	<aura:attribute name="newCO" type="Change_Order__c" default="{ 'sobjectType': 'Change_Order__c'}"
+	<aura:attribute name="newCO" type="Change_Order__c" default="{ 'sobjectType': 'Change_Order__c', 'Name': ''}"
 		access="public" />
 	<aura:attribute name="newCOItems" type="Change_Order_Item__c[]" access="public" />
 	<aura:attribute name="newCOItem" type="Change_Order_Item__c"
@@ -20,6 +20,12 @@
 
 	<aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 
+	<aura:html tag="style">
+		.slds-m-right_xxx-small{
+			display: none;
+		}
+	</aura:html>
+
 	<div aura:id="btspinner" class="slds-hide" style="position: relative; height: 80px;">
 		<lightning:spinner alternativeText="Loading" size="medium" variant="brand" />
 	</div>
@@ -32,15 +38,15 @@
 		</h3>
 		<lightning:layout multipleRows="true">
 			<lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
-				CO Name
-				<lightning:input aura:id="coName" value="{!v.newCO.Name}" required="true" />
+				<!-- CO Name -->
+				<lightning:input label="CO Name" aura:id="coName" value="{!v.newCO.Name}" required="true" />
 			</lightning:layoutItem>
 			<lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
 				Status
 				<!--<lightning:input type="picklist" aura:id="coStatus" value="{!v.newCO.buildertek__Status__c}" required="true" /> -->
                
-                <lightning:select  value="{! v.newCO.buildertek__Status__c }"
-                                                class="select-class" required="true">
+                <lightning:select variant="label-hidden" value="{! v.newCO.buildertek__Status__c }"
+                                                class="select-class" >
                                                 <aura:iteration var="option" items="{! v.options }">
                                                     <option value="{! option.value }">{! option.key }</option>
                                                 </aura:iteration>

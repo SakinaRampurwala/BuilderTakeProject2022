@@ -317,24 +317,31 @@ public with sharing class QuoteDAO{
     }
 
     @AuraEnabled
-    public static List<buildertek__Quote_Item__c> saveQuoteLineItemsValues(String quoteRec, Decimal markupvalue){
-        system.debug(quoteRec + '<-----hello----->' + markupvalue);
+    public static List<buildertek__Quote_Item__c> saveQuoteLineItemsValues(String quoteRec, Decimal markupvalue, Decimal marginvalue){
+        system.debug(quoteRec + '<-----markup value----->' + markupvalue);
+        system.debug(quoteRec + '<-----margin value----->' + marginvalue);
         List<buildertek__Quote_Item__c> quoteItemListRec;
 
-        quoteItemListRec = [select Name, buildertek__Product__c, buildertek__Quote__c, buildertek__Grouping__c, buildertek__UOM__c, buildertek__Unit_Cost__c, buildertek__Unit_Price__c, buildertek__Quantity__c, buildertek__Cost_Code__c, buildertek__Markup__c
+        quoteItemListRec = [select Name, buildertek__Product__c, buildertek__Quote__c, buildertek__Grouping__c, buildertek__UOM__c, buildertek__Unit_Cost__c, buildertek__Unit_Price__c, buildertek__Quantity__c, buildertek__Cost_Code__c, buildertek__Markup__c,buildertek__Margin__c
                             from buildertek__Quote_Item__c
                             where buildertek__Quote__c = :quoteRec];
 
         for (buildertek__Quote_Item__c quoteItem : quoteItemListRec){
 
-            system.debug(quoteRec + '<-----hello----->' + quoteItem.buildertek__Markup__c);
+            system.debug(quoteRec + '<-----markup value----->' + markupvalue);
+            system.debug(quoteRec + '<-----margin value----->' + marginvalue);
+
 
             if (quoteItem.buildertek__Markup__c == null || quoteItem.buildertek__Markup__c <= 0){
                 quoteItem.buildertek__Markup__c = markupvalue;
             }
+            if (quoteItem.buildertek__Margin__c == null || quoteItem.buildertek__Margin__c <= 0){
+                quoteItem.buildertek__Margin__c = marginvalue;
+            }
         }
-        if (Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Markup__c.isupdateable()){
+        if (Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Markup__c.isupdateable() && Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Margin__c.isupdateable()){
             update quoteItemListRec;
+            System.debug('quoteItemListRec----->'+quoteItemListRec);
         }
 
         return quoteItemListRec;
@@ -1003,6 +1010,7 @@ public with sharing class QuoteDAO{
         System.debug('quoteLineRecords ::' + quoteLineRecords);
         List<buildertek__Quote_Item__c> QuoteRecs = new List<buildertek__Quote_Item__c>();
         QuoteRecs = (List<buildertek__Quote_Item__c>)System.JSON.deserialize(quoteLineRecords, List<buildertek__Quote_Item__c>.class);
+        System.debug('QuoteRecs------->>>>'+QuoteRecs);
         if (QuoteRecs.size() > 0){
 
             update QuoteRecs;

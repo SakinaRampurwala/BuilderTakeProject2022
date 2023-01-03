@@ -108,7 +108,8 @@ public class CreatePOFromCO {
                     poitem.Cost_Code__c = COItem.buildertek__Cost_Code__c;
                     poitem.Description__c = COItem.buildertek__Description__c;
                     poitem.Product__c = COItem.buildertek__Product__c;
-                    poitem.Unit_Price__c = COItem.buildertek__Total__c;
+                    //poitem.Unit_Price__c = COItem.buildertek__Total__c;
+                      poitem.Unit_Price__c = COItem.buildertek__Unit_Price__c;
                     poitem.buildertek__Budget_Item__c = COItem.buildertek__Budget_Item__c;
                     poitem.Quantity__c = COItem.buildertek__Quantity__c;
                     poitem.Tax__c = COItem.buildertek__Tax_Rate__c;
@@ -157,7 +158,8 @@ public class CreatePOFromCO {
                             poitem.Cost_Code__c = chngeOrder.buildertek__Cost_Code__c;
                             poitem.Description__c = chngeOrder.buildertek__Description__c;
                             poitem.Product__c = chngeOrder.buildertek__Product__c;
-                            poitem.Unit_Price__c = chngeOrder.buildertek__Total__c;
+                            //poitem.Unit_Price__c = chngeOrder.buildertek__Total__c;
+                            poitem.Unit_Price__c = chngeOrder.buildertek__Unit_Price__c;
                             poitem.buildertek__Budget_Item__c = chngeOrder.buildertek__Budget_Item__c;
                             poitem.Quantity__c = chngeOrder.buildertek__Quantity__c;
                             poitem.Tax__c = chngeOrder.buildertek__Tax_Rate__c;

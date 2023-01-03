@@ -126,7 +126,7 @@
     },
 
     updateMassRecords: function (component, event, helper, phase, contractor, contractorResources, TradeType) {
-        component.set('v.isLoading', true);
+        //component.set('v.isLoading', true);
         var listOfRecords = component.get('v.listOfRecords');
         // console.log({listOfRecords});
         var grpList = JSON.parse(JSON.stringify(component.get("v.grpByPhaseValuesMassUpdate")))
@@ -223,13 +223,16 @@
                     }).catch(function(error) {
                         component.set('v.massUpdateEnable', false);
                         // console.log(error);
+                        console.log('3rd condition');
                         var navEvt = $A.get("e.force:navigateToSObject");
                         navEvt.setParams({
                             "recordId": component.get("v.recordId"),
                             "slideDevName": "Schedule Table"
                         });
-                        navEvt.fire();
+                        // navEvt.fire();
+                        history.back();
                         $A.get('e.force:refreshView').fire();
+                        // component.set('v.isLoading', false);
                     });
                 }else{
                     component.set('v.massUpdateEnable', false);

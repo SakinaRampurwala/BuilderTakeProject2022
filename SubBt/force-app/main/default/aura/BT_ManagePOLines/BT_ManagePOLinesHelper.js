@@ -133,7 +133,7 @@
   },
 
   getPoLinesList: function (component, event, helper, pageNumber, pageSize) {
-    component.set("v.Spinner", true);
+    // component.set("v.Spinner", true);
     var vendorValue = component.get("v.searchVendorFilter");
     var categoryValue = component.get("v.searchCategoryFilter");
     var tradeTypeValue = component.get("v.searchTradeTypeFilter");
@@ -3610,9 +3610,15 @@
           if (singleRecord[k].Key === "Id") {
             var id = singleRecord[k].Value;
           }
-          if (singleRecord[k].Key === "buildertek__Markup") {
+          if (singleRecord[k].Key === "buildertek__Discount") {
             listOfLine.push(String(singleRecord[k].Value));
             listOfLine.push(String(groupName));
+          }
+          if (singleRecord[k].Key === "buildertek__Markup") {
+            listOfLine.push(String(singleRecord[k].Value));
+          }
+          if (singleRecord[k].Key === "buildertek__SalesTax") {
+            listOfLine.push(String(singleRecord[k].Value));
           }
           lineMap.set(id, listOfLine);
         }
@@ -3622,6 +3628,12 @@
   },
   quote: function (component, event, helper) {
     var myFieldMap = helper.getfieldData(component, event, helper);
+    console.log('************************************');
+    myFieldMap.forEach(element => {
+      // console.log('element ==> ',{element});
+      element[0] = Math.abs(element[0]).toFixed(2);
+    });
+    console.log('myFieldMap ===> ',{myFieldMap});
     var obj = Object.fromEntries(myFieldMap);
     var jsonString = JSON.stringify(obj);
     console.log("myFieldMap --> ", { myFieldMap });

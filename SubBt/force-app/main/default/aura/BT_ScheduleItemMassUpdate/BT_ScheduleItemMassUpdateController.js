@@ -336,7 +336,10 @@
                         "recordId": component.get("v.recordId"),
                         "slideDevName": "Schedule Table"
                     });
-                    navEvt.fire();
+                    //navEvt.fire();
+                    history.back();
+                    //$A.get('e.force:refreshView').fire();
+                    component.set('v.isLoading', false);
                 });
             }else{
                 component.set('v.massUpdateEnable', false);

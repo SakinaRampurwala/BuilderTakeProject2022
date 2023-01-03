@@ -125,7 +125,6 @@ function formatData(scheduleData,scheduleItemsData,scheduleItemsDataList){
                     rowChilObj["durationMile"] = taskListForPhase[i].buildertek__Duration__c;
                     rowChilObj["cls"] = 'milestoneCompleteColor'
                     rowChilObj['orgmilestone'] = taskListForPhase[i].buildertek__Milestone__c;
-                    rowChilObj['startDate'] = taskListForPhase[i].buildertek__Finish__c;
                     //rowChilObj['milestone'] = true;                           
                 }
                 rowChilObj["expanded"] = true
@@ -563,10 +562,10 @@ function formatData(scheduleData,scheduleItemsData,scheduleItemsDataList){
     formattedData['resourceRowData'] = resourceRowData;
     formattedData['assignmentRowData'] = assignmentRowData
     formattedData['taskDependencyData'] = taskDependencyData;
-    console.log('rows ==> ',rows);
-    console.log('resourceRowData ==> ',resourceRowData);
-    console.log('assignmentRowData ==> ',assignmentRowData);
-    console.log('taskDependencyData ==> ',taskDependencyData);
+    console.log('rows ==> '+rows);
+    console.log('resourceRowData ==> '+resourceRowData);
+    console.log('assignmentRowData ==> '+assignmentRowData);
+    console.log('taskDependencyData ==> '+taskDependencyData);
     return formattedData;
 }
 

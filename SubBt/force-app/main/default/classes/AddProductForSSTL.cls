@@ -1747,6 +1747,7 @@ public with sharing class AddProductForSSTL{
             }
             return null;
         } catch (Exception e) {
+            System.debug(e);
             System.debug('Error Message validateAndCreateBOMLines::' + e.getMessage());
             System.debug('Error Line validateAndCreateBOMLines::' + e.getLineNumber());
             throw new AuraHandledException(e.getMessage());
@@ -2249,7 +2250,7 @@ public with sharing class AddProductForSSTL{
                   system.debug('selectionList**'+JSON.serialize(selectionList));
 
                   if (selectionList.size() > 0){
-                      system.debug('selectionList size -----> '+selectionList.size());
+                      system.debug('selectionList size -----> '+selectionList.size());  
                       insert selectionList;
                       
                       // update BOM Line with pricebook values

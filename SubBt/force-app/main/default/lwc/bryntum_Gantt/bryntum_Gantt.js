@@ -32,7 +32,6 @@ import changeOriginalDates from "@salesforce/apex/BT_NewGanttChartCls.changeOrig
 import { formatData, saveeditRecordMethod } from "./bryntum_GanttHelper";
 
 import getRecordType from "@salesforce/apex/BT_NewGanttChartCls.getRecordType";
-import getholidays from "@salesforce/apex/BT_NewGanttChartCls.getholidays";
 import { getPicklistValues, getObjectInfo } from 'lightning/uiObjectInfoApi';
 
 export default class Gantt_component extends NavigationMixin(LightningElement) {
@@ -1179,25 +1178,11 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
     this.phaseFunction();
   }
 
-  holidaydata() {
-    getholidays()
-      .then((result) => {
-          console.log('this.holidays--->',this.holidays);
-          for (let i = 0; i < result.length; i++) {
-            this.holidays.push(result[i].ActivityDate);
-            }
-      })
-      .catch((error) => {
-          console.log('Holidays Error',{error});
-      });
-  }
-
   renderedCallback() {
     if (this.bryntumInitialized) {
       return;
     }
     this.bryntumInitialized = true;
-    this.holidaydata();
 
     Promise.all([
       loadScript(this, GANTTModule), //GanttDup ,SchedulerPro GANTTModule,GANTT + "/gantt.lwc.module.js"
@@ -1599,9 +1584,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
       assignmentRowData = formatedSchData["assignmentRowData"];
 
         console.log("tasks  ==> ", { tasks });
-
-        var holidayvalue = this.holidays;
-        console.log('holidayvalue-->',{holidayvalue});
 
       const project = new bryntum.gantt.ProjectModel({
         //enableProgressNotifications : true,

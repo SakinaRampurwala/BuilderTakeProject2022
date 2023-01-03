@@ -1188,6 +1188,8 @@ $A.enqueueAction(action1);*/
                         newMassQuoteItem.buildertek__Quantity__c = ListOfEachRecord[i].recordList[j].originalValue;
                     } else if (ListOfEachRecord[i].recordList[j].fieldName == 'buildertek__Unit_Cost__c') {
                         newMassQuoteItem.buildertek__Unit_Cost__c = ListOfEachRecord[i].recordList[j].originalValue;
+                    } else if (ListOfEachRecord[i].recordList[j].fieldName == 'buildertek__Margin__c') {
+                        newMassQuoteItem.buildertek__Margin__c = ListOfEachRecord[i].recordList[j].originalValue;
                     } else if (ListOfEachRecord[i].recordList[j].fieldName == 'buildertek__Markup__c') {
                         newMassQuoteItem.buildertek__Markup__c = ListOfEachRecord[i].recordList[j].originalValue;
                     } else if (ListOfEachRecord[i].recordList[j].fieldName == 'buildertek__Unit_Price__c') {
@@ -1208,6 +1210,7 @@ $A.enqueueAction(action1);*/
                 newMassQuoteItem.Id = ListOfEachRecord[i].recordId;
                 newMassQuoteItem.Name = ListOfEachRecord[i].recordName;
                 newMassQi.push(newMassQuoteItem);
+                console.log('newMassQi---->>>',newMassQi);
             }
             if (newMassQi.length > 0) {
                 var action = component.get("c.massUpdateQuoteLineItem");
@@ -1601,26 +1604,85 @@ $A.enqueueAction(action1);*/
         component.set("v.isMarkup", true);
 
     },
-    onMarkupChange: function(component, event, helper) {
-        var markup = component.get("v.QuoteRec").buildertek__Markup__c;
-        if (markup != '' && markup != null && markup != 'Undefined') {
-            component.set("v.isMarkup", true);
-            //component.set("v.PopupHeader", "Save Quote Line");
-            //component.set("v.PopupDescription", "Are you sure you want to update quote line markup?");
-            component.set("v.PopupHeader", "Update Markup");
-            component.set("v.PopupDescription", "Are you sure you want to Update Markup?");
+
+    onMarginChange: function(component, event, helper) {
+        var margin = component.get("v.QuoteMargin");
+        console.log({margin})
+
+        if((margin != '' && margin != null && margin != undefined) || margin == 0){
+            component.set("v.isMargin", true);
+            component.set("v.PopupHeader", "Update Margin");
+            component.set("v.PopupDescription", "Are you sure you want to Update Margin?");
             component.set("v.isQuoteRecChange", true);
-        } else {
-            /*  component.find('notifLib').showNotice({
-                "variant": "error",
-                "header": "No Markup",
-                "message": "Please enter a Markup value",
-                closeCallback: function () {}
-            }); */
+        }else{
+            
             var toastEvent = $A.get("e.force:showToast");
             toastEvent.setParams({
                 title: 'Error',
-                message: 'Please Enter a Markup Value.',
+                message: 'Please enter the value of Margin.',
+                duration: ' 5000',
+                key: 'info_alt',
+                type: 'error',
+                mode: 'pester'
+            });
+            toastEvent.fire();
+            
+    }
+    },
+    onMarkupChange: function(component, event, helper) {
+        var markup = component.get("v.QuoteRec").buildertek__Markup__c;
+        console.log({markup})
+        
+        if ((markup != '' && markup != null && markup != undefined) || markup == 0) {
+            component.set("v.isMarkup", true);
+            //component.set("v.PopupHeader", "Save Quote Line");
+            //component.set("v.PopupDescription", "Are you sure you want to update quote line markup?");
+            // let labelval = '';
+            // if(margin) {
+            //     labelval = 'Margin';
+            // } 
+            // if(markup) {
+            //     labelval = 'Markup';
+            // }
+            // if(markup && margin) {
+            //     labelval = 'Both';
+            // }
+
+            component.set("v.PopupHeader", "Update Markup");
+            component.set("v.PopupDescription", "Are you sure you want to Update Markup?");
+            component.set("v.isQuoteRecChange", true);
+        }
+        // } else {
+        //     /*  component.find('notifLib').showNotice({
+        //         "variant": "error",
+        //         "header": "No Markup",
+        //         "message": "Please enter a Markup value",
+        //         closeCallback: function () {}
+        //     }); */
+        //     var toastEvent = $A.get("e.force:showToast");
+        //     toastEvent.setParams({
+        //         title: 'Error',
+        //         message: 'Please enter the value of Markup.',
+        //         duration: ' 5000',
+        //         key: 'info_alt',
+        //         type: 'error',
+        //         mode: 'pester'
+        //     });
+        //     toastEvent.fire();
+        // }
+        // else if (margin != '' && margin != null && margin != 'Undefined') {
+        //     component.set("v.isMargin", true);
+        //     //component.set("v.PopupHeader", "Save Quote Line");
+        //     //component.set("v.PopupDescription", "Are you sure you want to update quote line markup?");
+        //     component.set("v.PopupHeader", "Update Margin");
+        //     component.set("v.PopupDescription", "Are you sure you want to Update Margin?");
+        //     component.set("v.isQuoteRecChange", true);
+        // } 
+        else {
+            var toastEvent = $A.get("e.force:showToast");
+            toastEvent.setParams({
+                title: 'Error',
+                message: 'Please enter the value of Markup.',
                 duration: ' 5000',
                 key: 'info_alt',
                 type: 'error',
@@ -1650,17 +1712,17 @@ $A.enqueueAction(action1);*/
         // var records = component.get("v.TotalRecords");
 
         /* for(var i =0; i<records.tarTable.ListOfEachRecord.length; i++){
-for(var j=0; j<records.tarTable.ListOfEachRecord[i].recordList.length; j++){
-if(records.tarTable.ListOfEachRecord[i].recordList[j].fieldName == 'buildertek__Markup__c'){
-if(records.tarTable.ListOfEachRecord[i].recordList[j].originalValue <=0 || records.tarTable.ListOfEachRecord[i].recordList[j].originalValue == '' ||records.tarTable.ListOfEachRecord[i].recordList[j].originalValue == null){
-records.tarTable.ListOfEachRecord[i].recordList[j].originalValue = markupvalue;
-}
+        for(var j=0; j<records.tarTable.ListOfEachRecord[i].recordList.length; j++){
+        if(records.tarTable.ListOfEachRecord[i].recordList[j].fieldName == 'buildertek__Markup__c'){
+        if(records.tarTable.ListOfEachRecord[i].recordList[j].originalValue <=0 || records.tarTable.ListOfEachRecord[i].recordList[j].originalValue == '' ||records.tarTable.ListOfEachRecord[i].recordList[j].originalValue == null){
+        records.tarTable.ListOfEachRecord[i].recordList[j].originalValue = markupvalue;
+        }
 
-}
-//alert(records.tarTable.ListOfEachRecord[i].recordList[j].fieldName);
-}
+        }
+        //alert(records.tarTable.ListOfEachRecord[i].recordList[j].fieldName);
+        }
 
-}*/
+        }*/
 
         // component.set("v.TotalRecords",records);
         //alert(JSON.stringify(records.tarTable));
@@ -1673,28 +1735,40 @@ records.tarTable.ListOfEachRecord[i].recordList[j].originalValue = markupvalue;
     saveQuoteSingleRecord: function(component, event, helper) {
         component.set("v.isQuoteRecChange", false);
         component.get("v.isMarkup", false);
+        component.set("v.isMargin", false);
         $A.get("e.c:BT_SpinnerEvent").setParams({
             "action": "SHOW"
         }).fire();
         var markupvalue = component.get("v.QuoteRec").buildertek__Markup__c;
+        var marginvalue = component.get("v.QuoteMargin");
         var actionLines = component.get("c.saveQuoteLineItemsValues");
         actionLines.setParams({
             "quoteRec": component.get("v.QuoteRec").Id,
-            markupvalue: markupvalue
+            markupvalue: markupvalue,
+            marginvalue:marginvalue
         });
         actionLines.setCallback(this, function(response) {
             if (response.getState() == "SUCCESS") {
+                component.set("v.QuoteMargin","");
                 var result = response.getReturnValue();
                 component.set("v.TotalRecords", result);
                 $A.get('e.force:refreshView').fire();
                 var page = component.get("v.page") || 1
                 helper.getGroups(component, event, helper, page);
+
+                var PopupHeader = component.get('v.PopupHeader');
+                var msg = '';
+                if (PopupHeader == 'Update Markup') {
+                    msg = 'Markup';
+                } else if(PopupHeader == 'Update Margin'){
+                    msg = 'Margin'
+                }
                 window.setTimeout(
                     $A.getCallback(function() {
                         var toastEvent = $A.get("e.force:showToast");
                         toastEvent.setParams({
                             mode: 'sticky',
-                            message: 'Quote line markup(%) updated successfully.',
+                            message: 'Quote line ' + msg + '(%) is updated successfully.',
                             type: 'success',
                             duration: '10000',
                             mode: 'dismissible'
@@ -2099,7 +2173,7 @@ component.set("v.StoreIdsOfDatatable2",'') */
                                     'buildertek__Grouping__c': row1.buildertek__Quote_Group__c,
                                     'buildertek__Quantity__c': '1',
                                     'buildertek__Additional_Discount__c': row1.PricebookEntries[0].buildertek__Discount__c ? row1.PricebookEntries[0].buildertek__Discount__c : 0,
-                                    'buildertek__Unit_Cost__c': row1.PricebookEntries[0].buildertek__Unit_Cost__c ? row1.PricebookEntries[0].buildertek__Unit_Cost__c : 0,
+                                    'buildertek__Unit_Cost__c': row1.PricebookEntries[0].buildertek__Unit_Cost__c ? row1.PricebookEntries[0].buildertek__Unit_Cost__c : row1.PricebookEntries[0].UnitPrice,
                                     'buildertek__Markup__c': row1.PricebookEntries[0].buildertek__Markup__c ? row1.PricebookEntries[0].buildertek__Markup__c : 0,
                                     'buildertek__Product__c': row1.Id,
                                     'buildertek__Size__c': row1.PricebookEntries[0].Pricebook2.Name
@@ -2112,7 +2186,7 @@ component.set("v.StoreIdsOfDatatable2",'') */
                                     'buildertek__Grouping__c': '',
                                     'buildertek__Quantity__c': '1',
                                     'buildertek__Additional_Discount__c': row1.PricebookEntries[0].buildertek__Discount__c ? row1.PricebookEntries[0].buildertek__Discount__c : 0,
-                                    'buildertek__Unit_Cost__c': row1.PricebookEntries[0].buildertek__Unit_Cost__c ? row1.PricebookEntries[0].buildertek__Unit_Cost__c : 0,
+                                    'buildertek__Unit_Cost__c': row1.PricebookEntries[0].buildertek__Unit_Cost__c ? row1.PricebookEntries[0].buildertek__Unit_Cost__c : row1.PricebookEntries[0].UnitPrice,
                                     'buildertek__Markup__c': row1.PricebookEntries[0].buildertek__Markup__c ? row1.PricebookEntries[0].buildertek__Markup__c : 0,
                                     'buildertek__Product__c': row1.Id,
                                     'buildertek__Size__c': row1.PricebookEntries[0].Pricebook2.Name
@@ -2278,7 +2352,7 @@ return other.Id == current.Id
             "Quotelines": listQlines,
             "QuoteId": component.get("v.recordId")
         });
-        console.log(component.get("v.recordId") + '---*****************');
+
         action10.setCallback(this, function(response) {
             component.set("v.openQuoteLineBox", false);
             $A.get("e.force:refreshView").fire();

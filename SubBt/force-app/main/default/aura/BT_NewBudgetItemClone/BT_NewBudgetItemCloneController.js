@@ -396,7 +396,20 @@
         console.log(event);
         component.set("v.selectedExistingPO", event.currentTarget.id);
     },
+
+    saveSelectedTC: function(component, event, helper) {
+        console.log(event);
+        component.set("v.selectedExistingTC", event.currentTarget.id);
+    },
+
+    saveSelectedINVO: function(component, event, helper) {
+        console.log(event);
+        component.set("v.selectedExistingINVO", event.currentTarget.id);
+    },
     addTimeCard: function(component, event, helper) {
+        $A.get("e.c:BT_SpinnerEvent").setParams({
+            "action": "SHOW"
+        }).fire();
         var selectedRecs = component.get('v.selectedRecs');
         console.log('v.selectedRecs ==> ', { selectedRecs });
         if (selectedRecs.length > 0) {
@@ -413,20 +426,25 @@
                 });
                 action.setCallback(this, function(response) {
                     if (component.isValid() && response.getState() === "SUCCESS") {
+                        $A.get("e.c:BT_SpinnerEvent").setParams({
+                            "action": "HIDE"
+                        }).fire();
                         for (var i = 0; i < response.getReturnValue().length; i++) {
                             component.set("v.addtcsection", true);
                             var pageNumber = component.get("v.PageNumber");
                             var pageSize = component.get("v.pageSize");
-                            component.set("v.isExistingPo", true);
+                            component.set("v.isExistingTc", true);
                             helper.gettcList(component, pageNumber, pageSize);
                         }
-
                     }
                 });
                 $A.enqueueAction(action);
 
 
             } else {
+                $A.get("e.c:BT_SpinnerEvent").setParams({
+                    "action": "HIDE"
+                }).fire();
                 component.find('notifLib').showNotice({
                     "variant": "error",
                     "header": "Please Select Budget Line!",
@@ -435,6 +453,69 @@
                 });
             }
         } else {
+            $A.get("e.c:BT_SpinnerEvent").setParams({
+                "action": "HIDE"
+            }).fire();
+            component.find('notifLib').showNotice({
+                "variant": "error",
+                "header": "Select Budget Line",
+                "message": "Please Select at least One Budget Line to Add TimeCard.",
+                //"header": "No Budget Lines",
+                //"message": "Please select a Budget Line.",
+                closeCallback: function() {}
+            });
+        }
+    },
+    addInvoice: function(component, event, helper) {
+        $A.get("e.c:BT_SpinnerEvent").setParams({
+            "action": "SHOW"
+        }).fire();
+        var selectedRecs = component.get('v.selectedRecs');
+        console.log('v.selectedRecs ==> ', { selectedRecs });
+        if (selectedRecs.length > 0) {
+            var BudgetIds = [];
+            var rowData;
+            var newPOItems = [];
+
+            if (selectedRecs.length > 0) {
+                var budgetlineid = BudgetIds[0];
+                var action;
+                action = component.get("c.BudgetItemList");
+                action.setParams({
+                    BudgetIds: selectedRecs
+                });
+                action.setCallback(this, function(response) {
+                    if (component.isValid() && response.getState() === "SUCCESS") {
+                        $A.get("e.c:BT_SpinnerEvent").setParams({
+                            "action": "HIDE"
+                        }).fire();
+                        for (var i = 0; i < response.getReturnValue().length; i++) {
+                            component.set("v.addinvsection", true);
+                            var pageNumber = component.get("v.PageNumber");
+                            var pageSize = component.get("v.pageSize");
+                            component.set("v.isExistingInvo", true);
+                            helper.getInvoiceList(component, pageNumber, pageSize);
+                        }
+                    }
+                });
+                $A.enqueueAction(action);
+
+
+            } else {
+                $A.get("e.c:BT_SpinnerEvent").setParams({
+                    "action": "HIDE"
+                }).fire();
+                component.find('notifLib').showNotice({
+                    "variant": "error",
+                    "header": "Please Select Budget Line!",
+                    "message": "Please Select Budget Line to Create TimeCard.",
+                    closeCallback: function() {}
+                });
+            }
+        } else {
+            $A.get("e.c:BT_SpinnerEvent").setParams({
+                "action": "HIDE"
+            }).fire();
             component.find('notifLib').showNotice({
                 "variant": "error",
                 "header": "Select Budget Line",
@@ -469,7 +550,6 @@
                             component.set("v.isExistingPo", true);
                             helper.getpoList(component, pageNumber, pageSize);
                         }
-
                     }
                 });
                 $A.enqueueAction(action);
@@ -907,6 +987,85 @@
                 closeCallback: function() {}
             });
         }
+    },
+
+    updateBudgetLineInvoice: function(component, event, helper) {
+        $A.get("e.c:BT_SpinnerEvent").setParams({
+            "action": "SHOW"
+        }).fire();
+        var timeCardId = component.get("v.selectedExistingINVO");
+        var selectedRecords = component.get('v.selectedRecs');
+        selectedRecords = selectedRecords.toString();
+        var action = component.get("c.updateInvoicePrice");
+        action.setParams({
+            recordId : timeCardId,
+            budgeLineIds : selectedRecords
+        });
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+            var result = response.getReturnValue();
+            if (result === 'Success') {
+                $A.get("e.c:BT_SpinnerEvent").setParams({
+                    "action": "HIDE"
+                }).fire();
+                helper.showToast(component, event, helper, 'Success', 'Invoice Price updated successfully', 'success');
+            }else if (result === 'null'){
+                $A.get("e.c:BT_SpinnerEvent").setParams({
+                    "action": "HIDE"
+                }).fire();
+                helper.showToast(component, event, helper, 'Error', 'Please Select Invoice', 'error');
+            }
+            else{
+                $A.get("e.c:BT_SpinnerEvent").setParams({
+                    "action": "HIDE"
+                }).fire();
+                helper.showToast(component, event, helper, 'Error', 'something goes wrong', 'error');
+            }
+
+        });
+        $A.enqueueAction(action);
+        
+        var a = component.get('c.doCancel');
+        $A.enqueueAction(a);
+    },
+    updateBudgetLine: function(component, event, helper) {
+        $A.get("e.c:BT_SpinnerEvent").setParams({
+            "action": "SHOW"
+        }).fire();
+        var timeCardId = component.get("v.selectedExistingTC");
+        var selectedRecords = component.get('v.selectedRecs');
+        selectedRecords = selectedRecords.toString();
+        var action = component.get("c.updateLaborPrice");
+        action.setParams({
+            recordId : timeCardId,
+            budgeLineIds : selectedRecords
+        });
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+            var result = response.getReturnValue();
+            if (result === 'Success') {
+                $A.get("e.c:BT_SpinnerEvent").setParams({
+                    "action": "HIDE"
+                }).fire();
+                helper.showToast(component, event, helper, 'Success', 'Labor Price updated successfully', 'success');
+            }else if (result === 'null'){
+                $A.get("e.c:BT_SpinnerEvent").setParams({
+                    "action": "HIDE"
+                }).fire();
+                helper.showToast(component, event, helper, 'Error', 'Please Select Time Card', 'error');
+            }
+            else{
+                $A.get("e.c:BT_SpinnerEvent").setParams({
+                    "action": "HIDE"
+                }).fire();
+                helper.showToast(component, event, helper, 'Error', 'something goes wrong', 'error');
+            }
+            console.log('selectedRecords --> ',{selectedRecords});
+        });
+        $A.enqueueAction(action);
+        
+        var a = component.get('c.doCancel');
+        $A.enqueueAction(a);
     },
 
     newPO: function(component, event, helper) {
@@ -1352,9 +1511,16 @@
     },*/
     doCancel: function(component, event, helper) {
         component.set("v.selectedExistingPO", "");
+        component.set("v.selectedExistingTC", "");
+        component.set("v.selectedExistingINVO", "");
         component.set("v.isExistingPo", false);
+        component.set("v.isExistingTc", false);
+        component.set("v.isExistingInvo", false);
         component.set("v.addposection", false);
         component.set("v.addtcsection", false);
+        component.set("v.addinvsection", false);
+        component.set("v.addcosection", false);
+
         component.set("v.showSelectSchedule", false);
         component.set("v.isNewExpense", false);
         component.set("v.duplicateExp", false);
@@ -1388,9 +1554,16 @@
         component.set("v.selectedScheduleRecords", []);
         component.set("v.isCreateNewSchedule", false);
         component.set("v.selectedExistingPO", "");
+        component.set("v.selectedExistingTC", "");
+        component.set("v.selectedExistingINVO", "");
         component.set("v.isExistingPo", false);
+        component.set("v.isExistingTc", false);
+        component.set("v.isExistingInvo", false);
+        
         component.set("v.addposection", false);
         component.set("v.addtcsection", false);
+        component.set("v.addinvsection", false);
+        component.set("v.addcosection", false);
 
         // $A.get('e.force:refreshView').fire();
 
@@ -1427,7 +1600,6 @@ toastEvent.setParams({
 "message": "Budget Line Added succesfully.",
 "type": "success"
 });
-
 //$A.enqueueAction(component.get('c.doInit'));
 $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
 }
@@ -3164,7 +3336,56 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
             helper.getBudgetGroups(component, event, helper, page);
         }
 
-    }
+    }, 
+
+    addCO: function(component, event, helper){
+        var selectedRecs = component.get('v.selectedRecs');
+        console.log('v.selectedRecs ==> ', { selectedRecs });
+        if (selectedRecs.length > 0){
+            helper.getcoList(component, event, helper);
+        } else{
+            component.find('notifLib').showNotice({
+                "variant": "error",
+                "header": "Please Select Budget Line!",
+                "message": "Please Select at least One Budget Line to Add CO.",
+                closeCallback: function() {}
+            });
+        }
+    }, 
+
+    saveSelectedCO: function(component, event, helper) {
+        var selectedCO = event.getSource().get("v.text");
+        console.log('selectedExistingCO --->'+selectedCO);
+        component.set("v.selectedExistingCO", selectedCO);
+    },
+
+    addNewCO: function(component, event, helper){     
+        var selectedRecords = component.get('v.selectedRecs');
+        selectedRecords = selectedRecords.toString();
+
+        var selectedCO = component.get("v.selectedExistingCO");   
+        var action = component.get("c.addCoToBudget");
+        action.setParams({
+            budgeLineIds: selectedRecords,
+            selectedCO: selectedCO
+        });
+        action.setCallback(this, function (result) {
+            var state = result.getState();
+            if (state === "SUCCESS") {
+                // add success toast
+            } else{
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    type: 'ERROR',
+                    message: 'Something Went Wrong',
+                    duration: '5000',
+                });
+                toastEvent.fire();
+            }
+            component.set("v.addcosection", false);
+        });
+        $A.enqueueAction(action);
+    }, 
 
 
 })

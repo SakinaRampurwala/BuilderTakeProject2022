@@ -365,17 +365,18 @@
         var selectedVendorList = component.get('v.selectedVendorList');
 
         selectedVendorList.filter(function(selectedVendor) {
+            console.log(selectedVendor);
             selectedVendor.buildertek__IS_VENDOR_SELECTED__c == true ? selectedvendors1.push(selectedVendor.Id) : '';
         });
 
-	
-        console.log({selectedVendorList});
+
+        console.log({ selectedVendorList });
         // debugger;
         var btadminaction = component.get("c.getadminvalues");
         btadminaction.setCallback(this, function(response) {
             if (response.getState() === 'SUCCESS') {
                 var result = response.getReturnValue();
-                console.log({result});
+                console.log({ result });
                 if (result == true) {
                     component.set("v.Isbtvalue", true);
 
@@ -387,7 +388,7 @@
                     });
                     action.setCallback(this, function(response) {
                         // debugger;
-                        console.log('response 390->'+response.getState());
+                        console.log('response 390->' + response.getState());
                         if (response.getState() == 'SUCCESS') {
                             var result = response.getReturnValue();
                             // debugger;
@@ -451,7 +452,7 @@
                                         });
                                         toastEvent.fire();
                                     } else {
-                                        console.log({selectedvendors})
+                                        console.log({ selectedvendors })
                                         if (selectedvendors.length > 0) {
 
                                             $A.createComponents(

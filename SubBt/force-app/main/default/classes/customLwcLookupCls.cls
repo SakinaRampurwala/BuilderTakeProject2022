@@ -11,7 +11,8 @@ public without sharing class customLwcLookupCls {
                 myQuery = 'Select Id, Name from '+myObject+' Where Name Like  \'%' + searchTerm + '%\' AND '+filter+'  AND buildertek__Schedule__c =: scheduleId LIMIT  5';
             }else {
                 if(searchTerm == null || searchTerm == ''){
-                    myQuery = 'Select Id, Name from '+myObject+' Where LastViewedDate != NULL  AND buildertek__Schedule__c =: scheduleId ORDER BY LastViewedDate DESC LIMIT  5';
+                    // myQuery = 'Select Id, Name from '+myObject+' Where LastViewedDate != NULL  AND buildertek__Schedule__c =: scheduleId ORDER BY LastViewedDate DESC LIMIT  5';
+                    myQuery = 'Select Id, Name from '+myObject+' Where buildertek__Schedule__c =: scheduleId ORDER BY LastViewedDate DESC LIMIT  5';
                 }
                 else {
                     myQuery = 'Select Id, Name from '+myObject+' Where Name Like  \'%' + searchTerm + '%\'  AND buildertek__Schedule__c =: scheduleId LIMIT  5';
@@ -24,7 +25,8 @@ public without sharing class customLwcLookupCls {
                 myQuery = 'Select Id, Name from '+myObject+' Where Name Like  \'%' + searchTerm + '%\' AND '+filter+' LIMIT  5';
             }else {
                 if(searchTerm == null || searchTerm == ''){
-                    myQuery = 'Select Id, Name from '+myObject+' Where LastViewedDate != NULL ORDER BY LastViewedDate DESC LIMIT  5';
+                    // myQuery = 'Select Id, Name from '+myObject+' Where LastViewedDate != NULL ORDER BY LastViewedDate DESC LIMIT  5';
+                    myQuery = 'Select Id, Name from '+myObject+' ORDER BY LastViewedDate DESC LIMIT  5';
                 }
                 else {
                     myQuery = 'Select Id, Name from '+myObject+' Where Name Like  \'%' + searchTerm + '%\' LIMIT  5';

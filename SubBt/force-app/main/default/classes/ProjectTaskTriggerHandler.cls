@@ -1,7 +1,6 @@
 /*
  Copyright (c) 2017-2018, BuilderTek.
  All rights reserved.
-
  Developed By: Sagar
  Date:  24-May-2018
  */
@@ -314,7 +313,6 @@ public class ProjectTaskTriggerHandler{
 		 projectids.add(schRec.buildertek__Project__c);
 		 }
 		 List<buildertek__Project__c> projectList = [select id,buildertek__Original_Start_Date__c,buildertek__Original_End_Date__c from buildertek__Project__c where id IN: projectids];
-
 		 for(buildertek__Project__c projectRec : projectList){
 		 for(buildertek__Schedule__c schAsc : scheduleListAscItems){
 		 for(buildertek__Project_Task__c item : schAsc.buildertek__Schedule_Tasks__r){

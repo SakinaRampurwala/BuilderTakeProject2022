@@ -34,6 +34,8 @@ public class DocuSignApi {
         //This Endpoint supports creating an envelope with the templateId. 
         
         String endPoint = 'https://demo.docusign.net/restapi/v2/accounts/'+accountID+'/envelopes'; 
+        // String endPoint = '/restapi/v2.1/accounts/{accountId}/envelopes/{envelopeId}/views/recipient'; 
+
         
         
         
@@ -100,8 +102,7 @@ public class DocuSignApi {
             
             ' "status": "sent"'+ 
             
-            '}'; 
-        
+            '}';         
         
         
         req.setBody(json); 
@@ -145,7 +146,6 @@ public class DocuSignApi {
                 system.debug(contactDetails);
                 for(Integer i=0;i<contactDetails.Size();i++){
                     contactDetails[i].Envelope_Sent__c = docuTemps.envelopeId; 
-                    contactDetails[i].buildertek__Customer_Accepted_Date__c=Date.today();
                 }
                 update contactDetails;
                 system.debug(contactDetails);

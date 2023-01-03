@@ -2041,6 +2041,7 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
                             OFFSET :offset];*/
         return objDT;
     }
+
     @AuraEnabled
     public static BudgetDataTableWrapperClone getTimeCardData(Integer pageNumber, Integer pageSize, string RecId){
         buildertek__Budget__c RFQRec = [SELECT Id, Name, buildertek__Project__c
@@ -2050,8 +2051,8 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
         Integer offset = (pageNumber - 1) * pageSize;
         //Total Records
         Integer totalRecords = [SELECT COUNT()
-                                FROM buildertek__Purchase_Order__c
-                                where buildertek__Project__c = :RFQRec.buildertek__Project__c AND buildertek__PO_Type__c = 'Master'];
+                                FROM buildertek__Time_Cards__c
+                                where buildertek__Project__c = :RFQRec.buildertek__Project__c];
         Integer recordEnd = pageSize * pageNumber;
         //Instance of Contact DataTable Wrapper Class
         BudgetDataTableWrapperClone objDT = new BudgetDataTableWrapperClone();
@@ -2060,15 +2061,17 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
         objDT.recordStart = offset + 1;
         objDT.recordEnd = totalRecords >= recordEnd ? recordEnd : totalRecords;
         objDT.totalRecords = totalRecords; 
-        objDT.selectedPurchaseOrder = false;
+        objDT.selectedTimeCards = false;
+        System.debug('pageSize -> '+pageSize);
+        System.debug('offset -> '+offset);
         if(UserInfo.isMultiCurrencyOrganization()){
-            string rfqrecords = 'SELECT Id, Name, buildertek__Project__c, buildertek__Project__r.Name,buildertek__PO_Type__c,buildertek__Description__c,'+
+            string rfqrecords = 'SELECT Id, Name, buildertek__Project__c, buildertek__Project__r.Name,buildertek__Description__c, buildertek__Budget_Line__c, buildertek__Budget__c, '+
                             'buildertek__Daily_Expense__c'+
                             ' FROM buildertek__Time_Cards__c'+
-                            ' where buildertek__Project__c =\'' +RFQRec.buildertek__Project__c+'\' ORDER BY Name LIMIT :pageSize OFFSET :offset';
+                            ' where buildertek__Project__c =\'' +RFQRec.buildertek__Project__c+'\' and buildertek__Budget_Line__c = null and buildertek__Budget__c = null ORDER BY Name LIMIT :pageSize OFFSET :offset';
                objDT.recordList = Database.query(rfqrecords);
             }else{
-                objDT.recordList = [SELECT Id, Name, buildertek__Project__c, buildertek__Project__r.Name,buildertek__Description__c,buildertek__Daily_Expense__c FROM buildertek__Time_Cards__c where buildertek__Project__c = :RFQRec.buildertek__Project__c
+                objDT.recordList = [SELECT Id, Name, buildertek__Project__c, buildertek__Budget__c, buildertek__Project__r.Name,buildertek__Description__c, buildertek__Budget_Line__c, buildertek__Daily_Expense__c FROM buildertek__Time_Cards__c where buildertek__Project__c = :RFQRec.buildertek__Project__c and buildertek__Budget_Line__c = null and buildertek__Budget__c = null
                             ORDER BY Name
                             LIMIT :pageSize
                             OFFSET :offset];
@@ -2082,6 +2085,113 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
                             OFFSET :offset];*/
         return objDT;
     }
+    @AuraEnabled
+    public static InvoiceWrapper getInvioceData(Integer pageNumber, Integer pageSize, string RecId){
+        buildertek__Budget__c RFQRec = [SELECT Id, Name, buildertek__Project__c
+                                        FROM buildertek__Budget__c
+                                        where Id = :RecId];
+        //Offset for SOQL
+        Integer offset = (pageNumber - 1) * pageSize;
+        //Total Records
+        Integer totalRecords = [SELECT COUNT()
+                                FROM buildertek__Account_Payable_Item_Clone__c
+                                where buildertek__Project__c = :RFQRec.buildertek__Project__c];
+        Integer recordEnd = pageSize * pageNumber;
+        //Instance of Contact DataTable Wrapper Class
+        InvoiceWrapper objDT = new InvoiceWrapper();
+        objDT.pageSize = pageSize;
+        objDT.pageNumber = pageNumber;
+        objDT.recordStart = offset + 1;
+        objDT.recordEnd = totalRecords >= recordEnd ? recordEnd : totalRecords;
+        objDT.totalRecords = totalRecords; 
+        objDT.selectedTimeCards = false;
+        System.debug('pageSize -> '+pageSize);
+        System.debug('offset -> '+offset);
+        if(UserInfo.isMultiCurrencyOrganization()){
+            string rfqrecords = 'SELECT Id, Name, buildertek__Project__c, buildertek__Budget__c, buildertek__Project__r.Name,buildertek__Description__c, buildertek__Budget_Line__c, buildertek__Total_Amount__c '+
+                            ' FROM buildertek__Account_Payable_Clone__c'+
+                            ' where buildertek__Project__c =\'' +RFQRec.buildertek__Project__c+'\' and buildertek__Budget_Line__c = null and buildertek__Budget__c = null ORDER BY Name LIMIT :pageSize OFFSET :offset';
+               objDT.recordList = Database.query(rfqrecords);
+            }else{
+                objDT.recordList = [SELECT Id, Name, buildertek__Project__c, buildertek__Budget__c, buildertek__Project__r.Name,buildertek__Description__c, buildertek__Budget_Line__c, buildertek__Total_Amount__c FROM buildertek__Account_Payable_Clone__c WHERE buildertek__Project__c =: RFQRec.buildertek__Project__c and buildertek__Budget_Line__c = null and buildertek__Budget__c = null
+                            ORDER BY Name
+                            LIMIT :pageSize
+                            OFFSET :offset];
+            }
+        /*objDT.recordList = [SELECT Id, Name, buildertek__Project__c, buildertek__Project__r.Name,buildertek__PO_Type__c,buildertek__Description__c,
+                            buildertek__Vendor__c,buildertek__Vendor__r.Name,buildertek__PO_Total__c
+                            FROM buildertek__Purchase_Order__c
+                            where buildertek__Project__c = :RFQRec.buildertek__Project__c
+                            ORDER BY Name
+                            LIMIT :pageSize
+                            OFFSET :offset];*/
+        return objDT;
+    }
+
+    @AuraEnabled
+    public static string updateLaborPrice(String recordId, String budgeLineIds){
+        List<String> strList = budgeLineIds.split(',');
+        String response;
+        if (String.isNotBlank(recordId)) {
+            try {
+                buildertek__Time_Cards__c timeCard = new buildertek__Time_Cards__c();
+                timeCard = [SELECT Id, Name, buildertek__Daily_Expense__c, buildertek__Budget__c, buildertek__Budget_Line__c FROM buildertek__Time_Cards__c WHERE Id =:recordId];
+                List<buildertek__Budget_Item__c> budgetItemList = new List<buildertek__Budget_Item__c>();
+                List<buildertek__Budget_Item__c> updateBudgetList = new List<buildertek__Budget_Item__c>();
+                budgetItemList = [SELECT Id, Name, buildertek__Labor__c, buildertek__Budget__c FROM buildertek__Budget_Item__c WHERE Id IN :strList];
+                if (budgetItemList.size() > 0) {
+                    timeCard.buildertek__Budget__c = budgetItemList[0].buildertek__Budget__c;
+                    timeCard.buildertek__Budget_Line__c = budgetItemList[0].Id;
+                    update timeCard;
+                    for (buildertek__Budget_Item__c bItem : budgetItemList) {
+                        bItem.buildertek__Labor__c = timeCard.buildertek__Daily_Expense__c;
+                        updateBudgetList.add(bItem);
+                    }
+                    update updateBudgetList;
+                }
+                response = 'Success';
+            } catch (Exception e) {
+                throw new AuraHandledException(e.getMessage());
+                response = 'Error';
+            }
+        }else{
+            response = 'null';
+        }
+        return response;
+    }
+
+    @AuraEnabled
+    public static string updateInvoicePrice(String recordId, String budgeLineIds){
+        List<String> strList = budgeLineIds.split(',');
+        String response;
+        if (String.isNotBlank(recordId)) {
+            try {
+                buildertek__Account_Payable_Clone__c invoiceAP = new buildertek__Account_Payable_Clone__c();
+                invoiceAP = [SELECT Id, Name, buildertek__Total_Amount__c, buildertek__Budget__c, buildertek__Budget_Line__c FROM buildertek__Account_Payable_Clone__c WHERE Id =:recordId];
+                buildertek__Budget_Item__c budgetItem = new buildertek__Budget_Item__c();
+
+                if (strList.size() > 0) {
+                    budgetItem = [SELECT Id, Name, buildertek__Invoice_total__c, buildertek__Budget__c FROM buildertek__Budget_Item__c WHERE Id IN :strList LIMIT 1];
+
+                    invoiceAP.buildertek__Budget__c = budgetItem.buildertek__Budget__c;
+                    invoiceAP.buildertek__Budget_Line__c = budgetItem.Id;
+                    update invoiceAP;
+
+                    budgetItem.buildertek__Invoice_total__c = invoiceAP.buildertek__Total_Amount__c;
+                    update budgetItem;
+                }
+
+                response = 'Success';
+            } catch (Exception e) {
+                throw new AuraHandledException(e.getMessage());
+                response = 'Error';
+            }
+        }else{
+            response = 'null';
+        }
+        return response;
+    }
+
     public class BudgetDataTableWrapper{
         @AuraEnabled
         public Integer pageSize{ get; set; }
@@ -2118,9 +2228,29 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
         @AuraEnabled
         public Integer recordEnd{ get; set; }
         @AuraEnabled
-        Public Boolean selectedPurchaseOrder {get;set;}
+        Public Boolean selectedTimeCards {get;set;}
         @AuraEnabled
         public List<buildertek__Time_Cards__c> recordList{ get; set; }
+    }
+    public class InvoiceWrapper{
+        @AuraEnabled
+        public Integer pageSize{ get; set; }
+        
+        @AuraEnabled
+        public Integer pageNumber{ get; set; }
+        
+        @AuraEnabled
+        public Integer totalRecords{ get; set; }
+        
+        @AuraEnabled
+        public Integer recordStart{ get; set; }
+        
+        @AuraEnabled
+        public Integer recordEnd{ get; set; }
+        @AuraEnabled
+        Public Boolean selectedTimeCards {get;set;}
+        @AuraEnabled
+        public List<buildertek__Account_Payable_Clone__c> recordList{ get; set; }
     }
     @AuraEnabled
     public static buildertek__Budget__c getbudget(String recordId){
@@ -2329,6 +2459,33 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
         }
         return COItemsClassList;
     }
+
+    @AuraEnabled
+    public static List<buildertek__Change_Order__c> getCoData(string RecId){
+        buildertek__Budget__c budgetRec = [SELECT Id, Name, buildertek__Project__c FROM buildertek__Budget__c where Id = :RecId];
+        
+        List<buildertek__Change_Order__c> changeOrderList = new List<buildertek__Change_Order__c>();
+
+        changeOrderList = [SELECT Id, Name, buildertek__Project__c, buildertek__Description__c, buildertek__Vendor__c, buildertek__Vendor__r.Name,
+                            buildertek__Total_Amount_Tax__c FROM buildertek__Change_Order__c
+                            WHERE buildertek__Project__c =: budgetRec.buildertek__Project__c AND buildertek__Status__c = 'Customer Approved'];
+                        
+        return changeOrderList;
+    }
+
+    @AuraEnabled
+    public static void addCoToBudget(String budgeLineIds, string selectedCO){
+        List<String> strList = budgeLineIds.split(',');
+
+        if (strList.size() > 0) {
+            List<buildertek__Budget_Item__c> budgetItem = new List<buildertek__Budget_Item__c>();
+            budgetItem = [SELECT Id, Name, buildertek__Budget__c FROM buildertek__Budget_Item__c WHERE Id IN :strList];
+
+            buildertek__Change_Order__c co = [SELECT Id, Name FROM buildertek__Change_Order__c WHERE Id =: selectedCO];
+
+        }
+    }
+    
 
     
     public class multipleBudgetLinesClass{

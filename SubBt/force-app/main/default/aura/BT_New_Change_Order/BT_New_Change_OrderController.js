@@ -56,53 +56,67 @@
     },
 
     doSave: function (component, event, helper) {
-        console.log(component.get("v.newCO").buildertek__Vendor__r);
-        component.set("v.Spinner", true);
-        var action;
-        action = component.get("c.createCO");
-        action.setParams({
-            coJson: component.get("v.newCO"),
-            coItemsJson: JSON.stringify(component.get("v.coItemsToInsert")),
-            budgetlineid: component.get("v.budgetlineid")
-        });
-        action.setCallback(this, function (response) {
-            if (component.isValid() && response.getState() === "SUCCESS") {
-                //$A.enqueueAction(component.get("v.saveCallback"));
-                var result = response.getReturnValue();
-                if (result.isSuccess === true) {
-                    component.set("v.Spinner", false);
-                    var sObjectEvent = $A.get("e.force:navigateToSObject");
-                    sObjectEvent.setParams({
-                        "recordId": result.strRecordId,
-                    })
-                    sObjectEvent.fire();
+        console.log(component.get("v.newCO").Name);
+        if (component.get("v.newCO").Name != null && component.get("v.newCO").Name != '') {
+            component.set("v.Spinner", true);
+            var action;
+            action = component.get("c.createCO");
+            action.setParams({
+                coJson: component.get("v.newCO"),
+                coItemsJson: JSON.stringify(component.get("v.coItemsToInsert")),
+                budgetlineid: component.get("v.budgetlineid")
+            });
+            action.setCallback(this, function (response) {
+                if (component.isValid() && response.getState() === "SUCCESS") {
+                    //$A.enqueueAction(component.get("v.saveCallback"));
+                    var result = response.getReturnValue();
+                    if (result.isSuccess === true) {
 
-                    /*  component.find('notifLib').showNotice({
-                        "variant": "success",
-                        "header": "Success",
-                        "message": 'Change Order created successfully',
-                        closeCallback: function() {
-                            var sObjectEvent = $A.get("e.force:navigateToSObject");
-                            sObjectEvent.setParams({
-                                "recordId": result.strRecordId,
-                            })
-                            sObjectEvent.fire(); 
-                        }
-                    });   */
+                        var toastEvent = $A.get("e.force:showToast");
+                        toastEvent.setParams({
+                            "type": "Success",
+                            "title": "Success!",
+                            "message": "Change Order has been created successfully."
+                        });
+                        toastEvent.fire();
 
-                } else {
-                    component.set("v.Spinner", false);
-                    component.find('notifLib').showNotice({
-                        "variant": "error",
-                        "header": "Error",
-                        "message": result.strMessage,
-                        closeCallback: function () {}
-                    });
+                        var sObjectEvent = $A.get("e.force:navigateToSObject");
+                        sObjectEvent.setParams({
+                            "recordId": result.strRecordId,
+                        })
+                        sObjectEvent.fire();
+
+                        setTimeout(function(){
+                            component.set("v.Spinner", false);
+                        }, 1000);
+                        
+
+                        /*  component.find('notifLib').showNotice({
+                            "variant": "success",
+                            "header": "Success",
+                            "message": 'Change Order created successfully',
+                            closeCallback: function() {
+                                var sObjectEvent = $A.get("e.force:navigateToSObject");
+                                sObjectEvent.setParams({
+                                    "recordId": result.strRecordId,
+                                })
+                                sObjectEvent.fire(); 
+                            }
+                        });   */
+
+                    } else {
+                        component.set("v.Spinner", false);
+                        component.find('notifLib').showNotice({
+                            "variant": "error",
+                            "header": "Error",
+                            "message": result.strMessage,
+                            closeCallback: function () {}
+                        });
+                    }
                 }
-            }
-        });
-
-        $A.enqueueAction(action);
+            });
+            $A.enqueueAction(action);
+        }
         /*var accountId = component.get("v.newCO.buildertek__Vendor__c");
         if(accountId != ''){
             component.set('v.newCO.buildertek__Customer_Account__c',component.get("v.newCO.buildertek__Vendor__c"));

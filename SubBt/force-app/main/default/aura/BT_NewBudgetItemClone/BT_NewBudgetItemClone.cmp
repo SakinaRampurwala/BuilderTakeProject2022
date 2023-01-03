@@ -57,6 +57,17 @@
     <!-- check existing po -->
     <aura:attribute name="isExistingPo" type="Boolean" default="false" access="public" />
     <aura:attribute name="selectedExistingPO" type="String" default="" access="public" />
+    
+    <!-- end-->
+
+    <!-- check existing tc -->
+    <aura:attribute name="isExistingTc" type="Boolean" default="false" access="public" />
+    <aura:attribute name="selectedExistingTC" type="String" default="" access="public" />
+    <!-- end-->
+
+    <!-- check existing tc -->
+    <aura:attribute name="isExistingInvo" type="Boolean" default="false" access="public" />
+    <aura:attribute name="selectedExistingINVO" type="String" default="" access="public" />
     <!-- end-->
 
     <aura:attribute name="newCO" type="Change_Order__c" default="{ 'sobjectType': 'Change_Order__c' }" access="public" />
@@ -198,6 +209,7 @@
 
     <aura:attribute name="addposection" type="Boolean" default="false" />
     <aura:attribute name="addtcsection" type="Boolean" default="false" />
+    <aura:attribute name="addinvsection" type="Boolean" default="false" />
     <aura:attribute name="recordList" type="Purchase_Order__c[]" />
     <aura:attribute name="PageNumber" type="integer" default="1" />
     <aura:attribute name="pageSize" type="integer" default="15" />
@@ -229,6 +241,13 @@
 
 
     <!-- Pagination End -->
+
+
+    <!-- Add CO Data Start -->
+    <aura:attribute name="addcosection" type="Boolean" default="false" />
+    <aura:attribute name="coRecordList" type="Change_Order__c[]" />
+    <aura:attribute name="selectedExistingCO" type="String" default="" access="public" />
+    <!--  End -->
 
     <aura:attribute name="isExpandGrp" type="Boolean" default="false" />
 
@@ -312,16 +331,17 @@
                             class="sldsButtonGroup" /> -->
                                         <!-- commented on 26thmay DFL <lightning:button iconName="utility:add" iconPosition="left" onclick="{!c.newGroup}" label="Add Group" class="sldsButtonGroup"/>-->
                                         <!--<aura:if isTrue="{!v.groupListSize > 0}">-->
+                                        <lightning:button label="Add CO" onclick="{!c.addCO}" class="sldsButtonGroup" />
                                         <lightning:button label="Add PO" onclick="{!c.addPO}" class="sldsButtonGroup" />
-                                        <lightning:button label="Add Invoice" onclick="{}" class="sldsButtonGroup" />
-                                        <lightning:button label="Add Time Card" onclick="{!c.addTimeCard}" class="sldsButtonGroup" />
+                                        <lightning:button label="Add Invoice" onclick="{!c.addInvoice}" class="sldsButtonGroup" />
+                                        <lightning:button label="Add Labor" onclick="{!c.addTimeCard}" class="sldsButtonGroup" />
                                         <lightning:button iconPosition="left" onclick="{!c.onClickAddlines}" label="Add Budget Lines" class="sldsButtonGroup" />
                                         <!-- <lightning:button label="Add Product" onclick="{!c.addProduct}" class="sldsButtonGroup" />-->
                                         <!--  <lightning:button label="Create Scheduled Items" onclick="{!c.checkSchedules}" class="sldsButtonGroup"/>-->
                                         <!--createScheduleItem-->
                                         <!-- <lightning:button label="New Invoice" onclick="{!c.newInvoice}" class="sldsButtonGroup" /> -->
                                         <lightning:button label="New RFQ" onclick="{!c.newRFQ}" class="sldsButtonGroup" />
-                                        <!--     <lightning:button label="New CO" onclick="{!c.newCO}" class="sldsButtonGroup" /> -->
+                                            <!-- <lightning:button label="New CO" onclick="{!c.newCO}" class="sldsButtonGroup" /> -->
                                         <lightning:button label="New PO" onclick="{!c.newPO}" class="sldsButtonGroup" />
                                         <lightning:button label="New Expense" onclick="{!c.newExpense}" class="sldsButtonGroup" />
                                         <lightning:button label="Contingency" onclick="{!c.onContingency}" class="sldsButtonGroup" />
@@ -1569,6 +1589,7 @@
                 </section>
                 <div class="slds-backdrop slds-backdrop_open"></div>
             </aura:if>
+
             <aura:if isTrue="{!v.addtcsection}">
                 <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
                     <div class="slds-modal__container" style="width: 50%;">
@@ -1596,11 +1617,12 @@
                                                 <div class="slds-truncate" title="Project Description">Description</div>
                                             </th>
                                             <th scope="col">
-                                                <div class="slds-truncate" title="Project Description">TimeCard Total</div>
+                                                <div class="slds-truncate" title="Project Description">Daily Expense</div>
                                             </th>
-                                            <th scope="col">
+                                            <!-- * commented this column becuase there is no vendor on the time card -->
+                                            <!-- <th scope="col">
                                                 <div class="slds-truncate" title="Project Description">Vendor</div>
-                                            </th>
+                                            </th> -->
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -1612,9 +1634,9 @@
                                                                          onchange="{!c.selectedSchedule}" /> 
                                                 </td>-->
                                                 <td>
-                                                    <span id="{!item.Id}" onchange="{!c.saveSelectedPO}">
+                                                    <span id="{!item.Id}" onchange="{!c.saveSelectedTC}">
                                                         <ui:inputRadio aura:id="radio" name="select" label=""
-                                                            value="{!item.selectedPurchaseOrder}" />
+                                                            value="{!item.selectedTimeCards}" />
                                                     </span>
                                                 </td>
                                                 <td class="slds-truncate" style="">
@@ -1628,14 +1650,15 @@
                                                         <lightning:formattedNumber value="{!item.buildertek__PO_Total__c}" style="currency" currencyCode="{!item.CurrencyIsoCode}" currencyDisplayAs="code"/>
                                                     </aura:if>
                                                     <aura:if isTrue='{!!v.multicurrency}'>-->
-                                                    <lightning:formattedNumber value="{!item.buildertek__PO_Total__c}" style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
+                                                    <lightning:formattedNumber value="{!item.buildertek__Daily_Expense__c}" style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
                                                     <!--</aura:if>-->
                                                     <!--<lightning:formattedNumber value="{!item.buildertek__PO_Total__c}" style="currency" currencyCode="USD"/>-->
 
                                                 </td>
-                                                <td>
+                                                <!-- * commented this column becuase there is no vendor on the time card -->
+                                                <!-- <td>
                                                     {!item.buildertek__Vendor__r.Name}
-                                                </td>
+                                                </td> -->
                                             </tr>
                                         </aura:iteration>
                                     </tbody>
@@ -1643,7 +1666,90 @@
                             </div>
                             <footer class="slds-modal__footer">
                                 <lightning:button variant="neutral" title="Cancel" label="Cancel" onclick="{! c.doCancel }" />
-                                <lightning:button variant="brand" type="submit" name="Save" label="Save" onclick="{!c.newPO}" />
+                                <lightning:button variant="brand" type="submit" name="Save" label="Save" onclick="{!c.updateBudgetLine}" />
+                            </footer>
+                        </div>
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </aura:if>
+            <aura:if isTrue="{!v.addinvsection}">
+                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container" style="width: 50%;">
+                        <div aura:id="poContainer" class="c-container">
+                            <header class="slds-modal__header">
+                                <lightning:buttonIcon iconName="utility:close" onclick="{!c.doCancel}" alternativeText="close" variant="bare-inverse" class="slds-modal__close" />
+                                <p></p>
+                                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Invoices (AP)
+                                </h2>
+                                <p></p>
+                            </header>
+                            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" style="height:80%">
+                                <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                                    <thead>
+                                        <tr class="slds-text-title_caps">
+                                            <th scope="col" class="slds-truncate">
+                                                <!-- <lightning:input type="checkbox"
+                                                                         name="{!item.Id}"
+                                                                         onchange="{!c.selectedSchedule}" /> -->
+                                            </th>
+                                            <th scope="col">
+                                                <div class="slds-truncate" title="Duration">Invoice Name</div>
+                                            </th>
+                                            <th scope="col">
+                                                <div class="slds-truncate" title="Project Description">Description</div>
+                                            </th>
+                                            <th scope="col">
+                                                <div class="slds-truncate" title="Project Description">Total Amount</div>
+                                            </th>
+                                            <!-- * commented this column becuase there is no vendor on the time card -->
+                                            <!-- <th scope="col">
+                                                <div class="slds-truncate" title="Project Description">Vendor</div>
+                                            </th> -->
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <aura:iteration items="{!v.recordList}" var="item" indexVar="index">
+                                            <tr>
+                                                <!-- <td class="slds-truncate" style="width: 10px;">
+                                                    <lightning:input type="checkbox"
+                                                                         name="{!item.Id}"
+                                                                         onchange="{!c.selectedSchedule}" /> 
+                                                </td>-->
+                                                <td>
+                                                    <span id="{!item.Id}" onchange="{!c.saveSelectedINVO}">
+                                                        <ui:inputRadio aura:id="radio" name="select" label=""
+                                                            value="{!item.selectedTimeCards}" />
+                                                    </span>
+                                                </td>
+                                                <td class="slds-truncate" style="">
+                                                    {!item.Name}
+                                                </td>
+                                                <td>
+                                                    {!item.buildertek__Description__c}
+                                                </td>
+                                                <td>
+                                                    <!--<aura:if isTrue='{!v.multicurrency}'>
+                                                        <lightning:formattedNumber value="{!item.buildertek__PO_Total__c}" style="currency" currencyCode="{!item.CurrencyIsoCode}" currencyDisplayAs="code"/>
+                                                    </aura:if>
+                                                    <aura:if isTrue='{!!v.multicurrency}'>-->
+                                                    <lightning:formattedNumber value="{!item.buildertek__Total_Amount__c}" style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
+                                                    <!--</aura:if>-->
+                                                    <!--<lightning:formattedNumber value="{!item.buildertek__PO_Total__c}" style="currency" currencyCode="USD"/>-->
+
+                                                </td>
+                                                <!-- * commented this column becuase there is no vendor on the time card -->
+                                                <!-- <td>
+                                                    {!item.buildertek__Vendor__r.Name}
+                                                </td> -->
+                                            </tr>
+                                        </aura:iteration>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <footer class="slds-modal__footer">
+                                <lightning:button variant="neutral" title="Cancel" label="Cancel" onclick="{! c.doCancel }" />
+                                <lightning:button variant="brand" type="submit" name="Save" label="Save" onclick="{!c.updateBudgetLineInvoice}" />
                             </footer>
                         </div>
                     </div>
@@ -1700,6 +1806,82 @@
                 </section>
                 <div class="slds-backdrop slds-backdrop_open"></div>
             </aura:if>
+
+            <aura:if isTrue="{!v.addcosection}">
+                <aura:html tag="style">
+                    .slds-modal__container{
+                        max-width: 50rem;
+                        width: 60%;
+                    }
+                    .coFildData{
+                        max-width: 60px;
+                    }
+                </aura:html>
+                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container">
+                        <div aura:id="poContainer" class="c-container">
+                            <header class="slds-modal__header">
+                                <lightning:buttonIcon iconName="utility:close" onclick="{!c.doCancel}" alternativeText="close" variant="bare-inverse" class="slds-modal__close" />
+                                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Change Orders</h2>
+                            </header>
+                            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" style="max-height:70vh;">
+                                <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                                    <thead>
+                                        <tr class="slds-text-title_caps">
+                                            <th scope="col" class="slds-truncate">
+                                            </th>
+                                            <th scope="col">
+                                                <div class="slds-truncate">CO Name</div>
+                                            </th>
+                                            <th scope="col">
+                                                <div class="slds-truncate">Description</div>
+                                            </th>
+                                            <th scope="col">
+                                                <div class="slds-truncate">CO Total</div>
+                                            </th>
+                                            <th scope="col">
+                                                <div class="slds-truncate">Vendor</div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <aura:iteration items="{!v.coRecordList}" var="item" indexVar="index">
+                                            <tr>
+                                                <td style="padding-left: 0.5rem; width: 30px;">
+                                                    <ui:inputRadio aura:id="radio" name="coSelect" text="{!item.Id}" label="" change="{!c.saveSelectedCO}" />
+                                                </td>
+                                                <td class="slds-truncate coFildData">
+                                                    {!item.Name}
+                                                </td>
+                                                <td class="slds-truncate coFildData">
+                                                    {!item.buildertek__Description__c}
+                                                </td>
+                                                <td>
+                                                    <lightning:formattedNumber value="{!item.buildertek__Total_Amount_Tax__c}" style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
+                                                </td>
+                                                <td class="slds-truncate coFildData">
+                                                    {!item.buildertek__Vendor__r.Name}
+                                                </td>
+                                            </tr>
+                                        </aura:iteration>
+                                        <aura:if isTrue="{!empty(v.coRecordList)}">
+                                            <td colspan="5" style="text-align: center; line-height: 10rem; font-size: 18px; ">
+                                                No Data Found
+                                            </td>
+                                        </aura:if>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <footer class="slds-modal__footer">
+                                <lightning:button variant="neutral" title="Cancel" label="Cancel" onclick="{! c.doCancel }" />
+                                <lightning:button variant="brand" type="submit" name="Save" label="Save" onclick="{!c.addNewCO}" />
+                            </footer>
+                        </div>
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </aura:if>
+
             <!-- End New Expense popup -->
             <lightning:notificationsLibrary aura:id="notifLib" />
             <lightning:overlayLibrary aura:id="overlayLib" />

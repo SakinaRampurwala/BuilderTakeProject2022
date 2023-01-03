@@ -1553,9 +1553,13 @@ public with sharing class ManagePOlinesController {
         Map<Id, buildertek__Quote_Item__c> qtLineMap = new Map<Id, buildertek__Quote_Item__c>();
         
         Map<String,List<String>> myMap = (Map<String,List<String>>)JSON.deserialize(mapFieldData, Map<String,List<String>>.class);
+        
+        for(Id key : myMap.keySet()){
+            system.debug('myMap --> '+myMap.get(key));
+        }
 
         try {
-            bom = [SELECT ID, Name,buildertek__BT_Quote__c,buildertek__Tax_Rate_1__c, (SELECT Id,Name,buildertek__Quantity__c, buildertek__BL_LIST_PRICE__c FROM buildertek__Selection_Sheet_Takeoff_Lines__r) FROM buildertek__Project_Selection_Sheet_Takeoff__c WHERE Id =:recordId];
+            bom = [SELECT ID, Name,buildertek__BT_Quote__c,buildertek__Tax_Rate_1__c, (SELECT Id,Name,buildertek__Quantity__c, buildertek__BL_LIST_PRICE__c, buildertek__Upgrade_Price__c FROM buildertek__Selection_Sheet_Takeoff_Lines__r) FROM buildertek__Project_Selection_Sheet_Takeoff__c WHERE Id =:recordId];
             buildPhaseList = [SELECT Id, Name FROM buildertek__Build_Phase__c];
             
             for (buildertek__Quote_Line_Group__c qtGroup : [SELECT Id, Name FROM buildertek__Quote_Line_Group__c]) {
@@ -1583,19 +1587,40 @@ public with sharing class ManagePOlinesController {
                     for (buildertek__Select_Sheet__c bomLine : bom[0].buildertek__Selection_Sheet_Takeoff_Lines__r) {
                         buildertek__Quote_Item__c qtLine = new buildertek__Quote_Item__c();
                         Decimal markUp;
-                        String str = myMap.get(bomLine.Id)[0];
+                        Decimal discount;
+                        Decimal salesTax;
+                        String str = myMap.get(bomLine.Id)[2];
+                        String str1 = myMap.get(bomLine.Id)[0];
+                        String str2 = myMap.get(bomLine.Id)[3];
                         String groupName = myMap.get(bomLine.Id)[1];
                         if (String.isNotBlank(str)) {
                             markUp = decimal.valueOf(str);
                         }else{
                             markUp = 0;
                         }
+                        if (String.isNotBlank(str1)) {
+                            discount = decimal.valueOf(str1);
+                        }else{
+                            discount = 0;
+                        }
+                        if (String.isNotBlank(str2)) {
+                            salesTax = decimal.valueOf(str2);
+                        }else{
+                            salesTax = 0;
+                        }
                         qtLine.Name = bomLine.Name;
                         qtLine.buildertek__Quantity__c = bomLine.buildertek__Quantity__c;
-                        qtLine.buildertek__Unit_Price__c = bomLine.buildertek__BL_LIST_PRICE__c;
+                        if (bomLine.buildertek__Upgrade_Price__c != null) {
+                            qtLine.buildertek__Unit_Cost__c = bomLine.buildertek__Upgrade_Price__c;
+                        } else{
+                            qtLine.buildertek__Unit_Cost__c = bomLine.buildertek__BL_LIST_PRICE__c;
+                        }
                         qtLine.buildertek__Quote__c = quote.Id;
                         qtLine.buildertek__Markup__c = markUp;
+                        qtLine.buildertek__Additional_Discount__c = discount;
+                        qtLine.buildertek__Sales_Tax_Amount_Manual__c = salesTax;
                         qtLine.buildertek__Tax__c = bom[0].buildertek__Tax_Rate_1__c;
+                        qtLine.buildertek__BOM_Line__c = bomLine.Id;
 
                         // *check if the value come for first time then newQuoteLineGroupMap should have the values
                         if (newQuoteLineGroupMap.containsKey(groupName)) {

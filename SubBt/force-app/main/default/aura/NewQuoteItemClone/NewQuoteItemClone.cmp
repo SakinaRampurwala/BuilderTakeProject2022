@@ -7,7 +7,7 @@
     <aura:attribute name="productfamily" type="string" />
     <aura:attribute name="Description" type="string" />
     <aura:attribute name="UOMvalues" type="string" />
-    <aura:attribute name="quoteGroupName" type="string" />
+    <aura:attribute name="quoteGroupName" type="string" default=""/>
     <aura:attribute name="quoteGroupNameDescription" type="string" />
     <aura:attribute name="budgetGroupId" type="string" />
     <aura:attribute name="quoteGroupId" type="string" />
@@ -123,8 +123,9 @@
     <aura:attribute name="isMassDuplicate" type="Boolean" default="false" />
     <aura:attribute name="isChangeData" type="Boolean" default="false" />
     <aura:attribute name="isMarkup" type="Boolean" default="false" />
+    <aura:attribute name="isMargin" type="Boolean" default="false" />
     <aura:attribute name="QuoteRec" type="Quote__c" default="{ 'sobjectType':'Quote__c','buildertek__Markup__c':'0'}" access="global" />
-    <aura:attribute name="QuoteRecCopy" type="Quote__c" default="{ 'sobjectType':'Quote__c','buildertek__Markup__c':'0'}" access="global" />
+    <aura:attribute name="QuoteMargin" type="Integer" default=""/>
     <aura:attribute name="isQuoteRecChange" type="Boolean" default="false" />
     <aura:attribute name="currentId" type="String" default="" />
 
@@ -208,7 +209,11 @@
                     value="{!v.QuoteRec.buildertek__Total_Customer_Quote_Amount__c}" class="uiInputCss">
                 </ui:inputNumber>-->
 
-
+                <div class="slds-truncate" title="test1" style="padding: 10px 0px 0px 10px; width:110px;">
+                    Global Margin</div>
+                    <ui:inputNumber aura:id="testId" value="{!v.QuoteMargin}" class="uiInputCss">
+                    </ui:inputNumber>
+                    <lightning:buttonIcon iconName="utility:save" class="saveInputCss slds-m-left_xx-small" onclick="{!c.onMarginChange}" alternativeText="Save" />
                     <div class="slds-truncate" title="test1" style="padding: 10px 0px 0px 10px; width:110px;">
                         Global Markup</div>
                     <ui:inputNumber aura:id="testId" value="{!v.QuoteRec.buildertek__Markup__c}" class="uiInputCss">
@@ -506,7 +511,7 @@
 
             <div aura:id="quoteItem" />
             <!-- <div class="av slds-box" id="{!v.recordId + 'groups'}" style="min-height:50vh;padding:0px !important;"> -->
-            <div class="av slds-box" id="{!v.recordId + 'groups'}" style="min-height:45vh;padding:0px !important;">
+            <div class="av slds-box" id="{!v.recordId + 'groups'}" style="min-height:55vh;padding:0px !important;">
                 <div>
                     <div style="padding:10px;margin-top: -5px;">
                         <br />
@@ -872,12 +877,23 @@
                                                     </td>
                                                     <aura:iteration items="{!tar.recordList}" var="value">
                                                         <td class="ShowIconClass" data-myvalue="{!value}">
-                                                            <aura:if isTrue="{!or(and(and(v.isEditMode, v.fieldName == value.fieldName),v.quoteItemId == tar.recordId),and(v.enableMassUpdate,or(or(or(or(or(or(or(value.fieldName=='buildertek__Quantity__c',or(or(value.fieldName == 'buildertek__Unit_Price__c',value.fieldName == 'buildertek__Priority__c'),value.fieldName == 'buildertek__Vendor__c')),value.fieldName=='buildertek__Additional_Discount__c'),value.fieldName=='buildertek__Unit_Cost__c'),value.fieldName=='buildertek__Applied_Markup__c'),value.fieldName == 'buildertek__UOM__c'),value.fieldName == 'buildertek__Markup__c'),value.fieldName=='buildertek__Notes__c')))}">
+                                                            <aura:if isTrue="{!or(and(and(v.isEditMode, v.fieldName == value.fieldName),v.quoteItemId == tar.recordId),and(v.enableMassUpdate,
+                                                                or(or(or(or(or(or(or(value.fieldName=='buildertek__Quantity__c',
+                                                                or(or(value.fieldName == 'buildertek__Unit_Price__c',value.fieldName == 'buildertek__Priority__c'),value.fieldName == 'buildertek__Vendor__c')
+                                                                ),value.fieldName=='buildertek__Additional_Discount__c'
+                                                                ),value.fieldName=='buildertek__Unit_Cost__c'
+                                                                ),value.fieldName=='buildertek__Applied_Markup__c'
+                                                                ),value.fieldName == 'buildertek__UOM__c'
+                                                                ),value.fieldName == 'buildertek__Markup__c'
+                                                                ),value.fieldName == 'buildertek__Margin__c'
+                                                                ),value.fieldName=='buildertek__Notes__c'
+                                                                ))
+                                                                }">
                                                                 <aura:if isTrue="{!value.fieldType != 'picklist'}">
                                                                     <aura:if isTrue="{!value.fieldType == 'reference'}">
                                                                         <c:BT_LookupFields childObjectName="buildertek__Quote_Item__c" selectedRecordId="{!value.originalValue}" fieldName="{!value.fieldName}" index="{!quoteIndex}" />
                                                                         <aura:set attribute="else">
-                                                                            <ui:inputText aura:id="inputId" value="{!value.originalValue}" change="{!c.updateQuoteData}" blur="{!c.onblur}" />
+                                                                           <ui:inputText aura:id="inputId" value="{!value.originalValue}" change="{!c.updateQuoteData}" blur="{!c.onblur}" />
                                                                         </aura:set>
                                                                     </aura:if>
 
@@ -1270,8 +1286,6 @@
                                                         <lightning:input name="input3" label="" value="{!item.buildertek__Description__c}" />
                                                     </td>
                                                     <td>
-
-
                                                         <lightning:select name="mySelect" label="" value="{!item.buildertek__Grouping__c}">
                                                             <option value="">No Grouping</option>
                                                             <aura:iteration items="{!v.quotelineRecords}" var="rec">

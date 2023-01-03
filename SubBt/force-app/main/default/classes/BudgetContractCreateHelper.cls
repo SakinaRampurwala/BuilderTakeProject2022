@@ -161,8 +161,38 @@ public without sharing class BudgetContractCreateHelper {
         }
         
         List<buildertek__Quote_Item__c> quoteItemList = getQuoteLines(quoteIdsList);
+
+        List<buildertek__Budget_Line_Group__c> groupList = [SELECT Id, Name FROM buildertek__Budget_Line_Group__c];
+
+        Map<String, Id> groupMap = new Map<String, Id>();
+
+        for (buildertek__Budget_Line_Group__c groupData : groupList) {
+            groupMap.put(groupData.Name, groupData.Id);
+        }
+
+        List<buildertek__Budget_Line_Group__c> newGroupList = new List<buildertek__Budget_Line_Group__c>();
+        String groupId = budGroup.Id;
+        for (buildertek__Quote_Item__c quoteLine : quoteItemList) {
+            if (quoteLine.buildertek__Grouping__c != null && quoteLine.buildertek__Grouping__c != groupId) {
+                if (!groupMap.containsKey(quoteLine.buildertek__Grouping__r.Name)) {
+                    buildertek__Budget_Line_Group__c newGroup = new buildertek__Budget_Line_Group__c();
+                    newGroup.Name = quoteLine.buildertek__Grouping__r.Name;
+                    newGroupList.add(newGroup);
+                }
+                groupId = quoteLine.buildertek__Grouping__c;
+            }
+        }
+
+        if (newGroupList.size() > 0) {
+            insert newGroupList;
+            for (buildertek__Budget_Line_Group__c groupData : newGroupList) {
+                groupMap.put(groupData.Name, groupData.Id);
+            }
+        }
+
         idMap.put(intIndex,new List<String>());
         for(buildertek__Quote_Item__c currQuoteLine : quoteItemList) {
+            System.debug('currQuoteLine.buildertek__Grouping__r.Name ==> '+currQuoteLine.buildertek__Grouping__r.Name);
             mapBudgetLinesIndex.get(intIndex).add(new buildertek__Budget_Item__c(
                 Name = currQuoteLine.Name,
                 buildertek__Product__c = currQuoteLine.buildertek__Product__c,
@@ -172,7 +202,8 @@ public without sharing class BudgetContractCreateHelper {
                 buildertek__Unit_Price__c = currQuoteLine.buildertek__Unit_Cost__c,
                 //buildertek__Unit_Price__c = currQuoteLine.buildertek__Net_Unit__c,
                 buildertek__Sales_Price__c = currQuoteLine.buildertek__Net_Total_Price__c, 
-                buildertek__Budget_Line_Group__c = currQuoteLine.buildertek__Grouping__c
+                buildertek__Budget_Line_Group__c = currQuoteLine.buildertek__Grouping__c,
+                buildertek__Group__c = groupMap.get(currQuoteLine.buildertek__Grouping__r.Name)
             ));
             if(currQuoteLine.buildertek__Purchase_Order__c!=null){
                 poIds.add(currQuoteLine.buildertek__Purchase_Order__c);    
@@ -545,7 +576,8 @@ public without sharing class BudgetContractCreateHelper {
                                     buildertek__Net_Total_Price__c, 
                                     buildertek__Notes__c,
                                      buildertek__Status__c,
-                                    buildertek__Purchase_Order__c 
+                                    buildertek__Purchase_Order__c, 
+                                    buildertek__Grouping__r.Name
                                     FROM buildertek__Quote_Item__c
                                     WHERE buildertek__Quote__c IN: quoteIds  And buildertek__Status__c != 'Reject'];      
         
