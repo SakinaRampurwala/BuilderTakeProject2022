@@ -232,10 +232,10 @@
     <lightning:workspaceAPI aura:id="workspace" />
     <aura:attribute name="groupByVendortoggle" type="Boolean" default="false" />
     <aura:attribute name="groupBytoggle" type="Boolean" default="false" />
-    <aura:attribute name="groupBytoggle1" type="Boolean" default="true" />
-    <aura:attribute name="groupByVendortoggle1" type="Boolean" default="true" />
-    <aura:attribute name="groupBytoggle2" type="Boolean" default="false" />
-    <aura:attribute name="groupByVendortoggle2" type="Boolean" default="false" />
+    <aura:attribute name="groupBytoggle1" type="Boolean" default="false" />
+    <aura:attribute name="groupByVendortoggle1" type="Boolean" default="false" />
+    <aura:attribute name="groupBytoggle2" type="Boolean" default="true" />
+    <aura:attribute name="groupByVendortoggle2" type="Boolean" default="true" />
     <aura:attribute name="Isbtvalue" type="Boolean" default="false" />
     <aura:attribute name="groupByCostCode" type="Boolean" default="false" />
 
@@ -245,8 +245,11 @@
 
     <!-- Add CO Data Start -->
     <aura:attribute name="addcosection" type="Boolean" default="false" />
+    <aura:attribute name="addExpenseSection" type="Boolean" default="false" />
     <aura:attribute name="coRecordList" type="Change_Order__c[]" />
+    <aura:attribute name="ExpenseRecordList" type="Expense__c[]" />
     <aura:attribute name="selectedExistingCO" type="String" default="" access="public" />
+    <aura:attribute name="selectedExistingExpense" type="String" default="" access="public" />
     <!--  End -->
 
     <aura:attribute name="isExpandGrp" type="Boolean" default="false" />
@@ -331,6 +334,7 @@
                             class="sldsButtonGroup" /> -->
                                         <!-- commented on 26thmay DFL <lightning:button iconName="utility:add" iconPosition="left" onclick="{!c.newGroup}" label="Add Group" class="sldsButtonGroup"/>-->
                                         <!--<aura:if isTrue="{!v.groupListSize > 0}">-->
+                                        <lightning:button label="Add Expense" onclick="{!c.addExpense}" class="sldsButtonGroup" />
                                         <lightning:button label="Add CO" onclick="{!c.addCO}" class="sldsButtonGroup" />
                                         <lightning:button label="Add PO" onclick="{!c.addPO}" class="sldsButtonGroup" />
                                         <lightning:button label="Add Invoice" onclick="{!c.addInvoice}" class="sldsButtonGroup" />
@@ -1834,9 +1838,6 @@
                                                 <div class="slds-truncate">CO Name</div>
                                             </th>
                                             <th scope="col">
-                                                <div class="slds-truncate">Description</div>
-                                            </th>
-                                            <th scope="col">
                                                 <div class="slds-truncate">CO Total</div>
                                             </th>
                                             <th scope="col">
@@ -1853,10 +1854,7 @@
                                                 <td class="slds-truncate coFildData">
                                                     {!item.Name}
                                                 </td>
-                                                <td class="slds-truncate coFildData">
-                                                    {!item.buildertek__Description__c}
-                                                </td>
-                                                <td>
+                                                <td class="coFildData">
                                                     <lightning:formattedNumber value="{!item.buildertek__Total_Amount_Tax__c}" style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
                                                 </td>
                                                 <td class="slds-truncate coFildData">
@@ -1881,6 +1879,84 @@
                 </section>
                 <div class="slds-backdrop slds-backdrop_open"></div>
             </aura:if>
+
+
+            <aura:if isTrue="{!v.addExpenseSection}">
+                <aura:html tag="style">
+                    .slds-modal__container{
+                        max-width: 50rem;
+                        width: 60%;
+                    }
+                    .coFildData{
+                        max-width: 60px;
+                    }
+                </aura:html>
+                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container">
+                        <div aura:id="poContainer" class="c-container">
+                            <header class="slds-modal__header">
+                                <lightning:buttonIcon iconName="utility:close" onclick="{!c.doCancel}" alternativeText="close" variant="bare-inverse" class="slds-modal__close" />
+                                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Expenses</h2>
+                            </header>
+                            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" style="max-height:70vh;">
+                                <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                                    <thead>
+                                        <tr class="slds-text-title_caps">
+                                            <th scope="col" class="slds-truncate">
+                                            </th>
+                                            <th scope="col">
+                                                <div class="slds-truncate">Expense Name</div>
+                                            </th>
+                                            <th scope="col">
+                                                <div class="slds-truncate">Description</div>
+                                            </th>
+                                            <th scope="col">
+                                                <div class="slds-truncate">Expense Total</div>
+                                            </th>
+                                            <th scope="col">
+                                                <div class="slds-truncate">Vendor</div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <aura:iteration items="{!v.ExpenseRecordList}" var="item" indexVar="index">
+                                            <tr>
+                                                <td style="padding-left: 0.5rem; width: 30px;">
+                                                    <ui:inputRadio aura:id="radio" name="coSelect" text="{!item.Id}" label="" change="{!c.saveSelectedExpense}" />
+                                                </td>
+                                                <td class="slds-truncate coFildData">
+                                                    {!item.Name}
+                                                </td>
+                                                <td class="slds-truncate coFildData">
+                                                    {!item.buildertek__Description__c}
+                                                </td>
+                                                <td>
+                                                    <lightning:formattedNumber value="{!item.buildertek__Total_Expense__c}" style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
+                                                </td>
+                                                <td class="slds-truncate coFildData">
+                                                    {!item.buildertek__Vendor__r.Name}
+                                                </td>
+                                            </tr>
+                                        </aura:iteration>
+                                        <aura:if isTrue="{!empty(v.ExpenseRecordList)}">
+                                            <td colspan="5" style="text-align: center; line-height: 10rem; font-size: 18px; ">
+                                                No Data Found
+                                            </td>
+                                        </aura:if>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <footer class="slds-modal__footer">
+                                <lightning:button variant="neutral" title="Cancel" label="Cancel" onclick="{! c.doCancel }" />
+                                <lightning:button variant="brand" type="submit" name="Save" label="Save" onclick="{!c.addNewExpense}" />
+                            </footer>
+                        </div>
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </aura:if>
+
+
 
             <!-- End New Expense popup -->
             <lightning:notificationsLibrary aura:id="notifLib" />

@@ -1234,6 +1234,7 @@
                 var budgetitemId = selectedRecs[0];
                 component.set('v.budgetItemId', budgetitemId);
                 component.set('v.isExpenseUpdate', true);
+                component.set("v.addExpenseSection", false);
             } else {
                 component.set('v.isExpenseUpdate', false);
             }
@@ -1520,6 +1521,7 @@
         component.set("v.addtcsection", false);
         component.set("v.addinvsection", false);
         component.set("v.addcosection", false);
+        component.set("v.addExpenseSection", false);
 
         component.set("v.showSelectSchedule", false);
         component.set("v.isNewExpense", false);
@@ -1564,6 +1566,8 @@
         component.set("v.addtcsection", false);
         component.set("v.addinvsection", false);
         component.set("v.addcosection", false);
+        component.set("v.addExpenseSection", false);
+
 
         // $A.get('e.force:refreshView').fire();
 
@@ -3359,7 +3363,7 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
         component.set("v.selectedExistingCO", selectedCO);
     },
 
-    addNewCO: function(component, event, helper){     
+    addNewCO: function(component, event, helper){  
         var selectedRecords = component.get('v.selectedRecs');
         selectedRecords = selectedRecords.toString();
 
@@ -3368,6 +3372,63 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
         action.setParams({
             budgeLineIds: selectedRecords,
             selectedCO: selectedCO
+        });
+        action.setCallback(this, function (result) {
+            var state = result.getState();
+            if (state === "SUCCESS") {
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    type: 'SUCCESS',
+                    message: 'CO added Successfully',
+                    duration: '5000',
+                });
+                toastEvent.fire();
+                var action1 = component.get("c.doInit");
+                $A.enqueueAction(action1);
+            } else{
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    type: 'ERROR',
+                    message: 'Something Went Wrong',
+                    duration: '5000',
+                });
+                toastEvent.fire();
+            }
+            component.set("v.addcosection", false);
+        });
+        $A.enqueueAction(action);
+    }, 
+
+    addExpense: function(component, event, helper){
+        var selectedRecs = component.get('v.selectedRecs');
+        console.log('v.selectedRecs ==> ', { selectedRecs });
+        if (selectedRecs.length > 0){
+            helper.getExpenseList(component, event, helper);
+        } else{
+            component.find('notifLib').showNotice({
+                "variant": "error",
+                "header": "Please Select Budget Line!",
+                "message": "Please Select at least One Budget Line to Add Expense.",
+                closeCallback: function() {}
+            });
+        }
+    }, 
+
+    saveSelectedExpense: function(component, event, helper) {
+        var selectedCO = event.getSource().get("v.text");
+        console.log('selectedExistingExpense --->'+selectedCO);
+        component.set("v.selectedExistingExpense", selectedCO);
+    },
+
+    addNewExpense: function(component, event, helper){     
+        var selectedRecords = component.get('v.selectedRecs');
+        selectedRecords = selectedRecords.toString();
+
+        var selectedExpense = component.get("v.selectedExistingExpense");   
+        var action = component.get("c.addExpenseToBudget");
+        action.setParams({
+            budgeLineIds: selectedRecords,
+            selectedExpense: selectedExpense
         });
         action.setCallback(this, function (result) {
             var state = result.getState();
@@ -3382,10 +3443,10 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
                 });
                 toastEvent.fire();
             }
-            component.set("v.addcosection", false);
+            component.set("v.addExpenseSection", false);
         });
         $A.enqueueAction(action);
-    }, 
+    },
 
 
 })

@@ -76,7 +76,7 @@
                 <p></p>
             </header>
             
-            <div class="slds-modal__content " id="modal-content-id-1" style= "height:50rem;">
+            <div class="slds-modal__content " id="modal-content-id-1" style= "height:21rem !important;">
                 <lightning:recordEditForm aura:id="recordViewForm" objectApiName="buildertek__Time_Cards__c"
                     onsubmit="{!c.handleSubmit}" onsuccess="{!c.onRecordSuccess}" onerror = "{!c.handleError}">
                     
@@ -97,8 +97,14 @@
                                             <aura:if  isTrue="{!field.name =='buildertek__Schedule_Item__c'}" >                                            
                                                 <lightning:inputField fieldName="{! field.name }" aura:id="scheduleitem" required="{!field.Required}" value = "{!v.parentprojecttaskRecordId}"/>
                                             </aura:if>
-                                            <aura:if  isTrue="{!field.name =='buildertek__Resource__c'}" >   
-                                                <lightning:inputField fieldName="{! field.name }"  value = "{!v.parentContactRecordId}"/>
+                                            <aura:if isTrue="{!field.name =='buildertek__Resource__c'}" >   
+                                                <aura:html tag="style">
+                                                    .slds-combobox .slds-dropdown_left{
+                                                        max-height: 185px ;
+                                                        overflow: auto;
+                                                    }
+                                                </aura:html>
+                                                <lightning:inputField  fieldName="{! field.name }"  value = "{!v.parentContactRecordId}"/>
                                             </aura:if>
                                           
                                             <aura:if  isTrue="{!field.name =='buildertek__Budget__c'}" >                                            
@@ -118,16 +124,14 @@
                             </lightning:layoutItem>
                         </aura:iteration>
                     </lightning:layout>
-                    
-               
-                    <footer aura:id="footer" class="slds-modal__footer" >
-                        <lightning:button variant="neutral" title="Cancel" label="Cancel" onclick="{! c.closeModel }" />
-                        <lightning:button variant="neutral" title="Save &amp; New" label="Save &amp; New"
-                            onclick="{!c.saveAndNew}" />
-                        <lightning:button variant="brand" type="submit" name="save" label="Save" />
-                    </footer>
                 </lightning:recordEditForm>
         </div>
+            <footer aura:id="footer" class="slds-modal__footer" >
+                <lightning:button variant="neutral" title="Cancel" label="Cancel" onclick="{! c.closeModel }" />
+                <lightning:button variant="neutral" title="Save &amp; New" label="Save &amp; New"
+                    onclick="{!c.saveAndNew}" />
+                <lightning:button variant="brand" type="submit" name="save" label="Save" />
+            </footer>
         </div>
       
     </section>

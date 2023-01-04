@@ -176,7 +176,7 @@
     <aura:attribute name="parentAttribute" type="Boolean" default="false" />
     <c:BT_Spinner />
 
-    <div style="background: white;border-radius: 5px;height: 100%;" class="slds-scrollable">
+    <div style="background: white;border-radius: 5px;height: 100%;" class="slds">
 
 
 
@@ -584,6 +584,17 @@
 
                                         </td>
                                         <td>
+                                            <aura:html tag="style">
+                                                .slds-lookup__menu{
+                                                    width: max-content !important; 
+                                                    height: 200px !important;
+                                                }
+                                                
+                                                .slds-lookup__list{
+                                                    width: max-content !important; 
+                                                    height: 190px !important;
+                                                }
+                                            </aura:html>
                                             <c:BT_LookUp aura:id="groupId" _field="buildertek__Grouping__c" _sobject="buildertek__Quote_Item__c" _value="{!v.newQuote.buildertek__Grouping__c}" _label="" _filter="" />
                                         </td>
 

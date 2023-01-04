@@ -454,15 +454,22 @@
                                             var listOfRecords = [];
                                             let recordsMap = new Map();
                                             for (var i in data) {
-                                                // alert(!recordsMap.has(data[i].groupId + '(#&%*)' + data[i].groupName));
-                                                if (data[i].groupId != undefined && data[i].groupName != undefined) {
-                                                    if (!recordsMap.has(data[i].groupId + '(#&%*)' + data[i].groupName)) {
-                                                        recordsMap.set(data[i].groupId + '(#&%*)' + data[i].groupName, []);
-                                                    }
-                                                    recordsMap.get(data[i].groupId + '(#&%*)' + data[i].groupName).push(JSON.parse(JSON.stringify(data[i])));
-                                                } else if (data[i].groupId == undefined && data[i].groupName == undefined) {
+                                                //// alert(!recordsMap.has(data[i].groupId + '(#&%*)' + data[i].groupName));
+                                                // if (data[i].groupId != undefined && data[i].groupName != undefined) {
+                                                //     if (!recordsMap.has(data[i].groupId + '(#&%*)' + data[i].groupName)) {
+                                                //         recordsMap.set(data[i].groupId + '(#&%*)' + data[i].groupName, []);
+                                                //     }
+                                                //     recordsMap.get(data[i].groupId + '(#&%*)' + data[i].groupName).push(JSON.parse(JSON.stringify(data[i])));
+                                                // } else if (data[i].groupId == undefined && data[i].groupName == undefined) {
+                                                //     data[i].groupName = 'No Grouping';
+                                                // }
+                                                if (data[i].groupId == undefined && data[i].groupName == undefined || data[i].groupId == '' && data[i].groupName == '') {
                                                     data[i].groupName = 'No Grouping';
                                                 }
+                                                if (!recordsMap.has(data[i].groupId + '(#&%*)' + data[i].groupName)) {
+                                                    recordsMap.set(data[i].groupId + '(#&%*)' + data[i].groupName, []);
+                                                }
+                                                recordsMap.get(data[i].groupId + '(#&%*)' + data[i].groupName).push(JSON.parse(JSON.stringify(data[i])));
                                             }
                                             var result = Array.from(recordsMap.entries());
                                             for (var i in result) {
@@ -1976,6 +1983,32 @@
                 console.log("resultData ---> ", {resultData});
                 component.set("v.coRecordList", resultData);
                 component.set("v.addcosection", true);
+            } else{
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    type: 'ERROR',
+                    message: 'There are no project on Budget',
+                    duration: '5000',
+                });
+                toastEvent.fire();
+            }
+        });
+        $A.enqueueAction(action);
+    },
+
+    getExpenseList: function (component, pageNumber, pageSize) {
+        var recId = component.get("v.recordId");
+        var action = component.get("c.getExpenseData");
+        action.setParams({
+            RecId: recId
+        });
+        action.setCallback(this, function (result) {
+            var state = result.getState();
+            if (state === "SUCCESS") {
+                var resultData = result.getReturnValue();
+                console.log("resultData ---> ", {resultData});
+                component.set("v.ExpenseRecordList", resultData);
+                component.set("v.addExpenseSection", true);
             } else{
                 var toastEvent = $A.get("e.force:showToast");
                 toastEvent.setParams({
