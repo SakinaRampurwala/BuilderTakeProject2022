@@ -14,3 +14,7 @@
     font-size: 1.1rem;
     margin-top: 1rem;
 }
+
+.THIS .slds-grid_align-end {
+    justify-content: flex-start !important;
+}

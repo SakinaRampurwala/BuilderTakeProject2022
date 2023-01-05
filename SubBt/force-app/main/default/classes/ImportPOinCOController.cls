@@ -1,5 +1,9 @@
 public with sharing class ImportPOinCOController {
 
+    /* ================================================
+        CreatedDate:-4th January 2023
+        Description:-Display purchase order List if Project related to change order is not empty and Purchase order related to Change order is Empty
+    ====================================================*/
     @AuraEnabled
     public static wrapperClass  getPoList(String recordId){
 
@@ -33,8 +37,10 @@ public with sharing class ImportPOinCOController {
    
     }
 
-
-     // This method used to create change order Line 
+    /* ================================================
+        CreatedDate:-4th January 2023
+        Description:-This method used to create change order Line when user click on Import po button from change order Record page
+     ====================================================*/
     @AuraEnabled
     public static String  createCoLine(String poRecordId , String coRecordId){
  

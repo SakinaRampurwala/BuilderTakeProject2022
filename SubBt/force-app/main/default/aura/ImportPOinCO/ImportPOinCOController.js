@@ -91,6 +91,7 @@
         }
 
     },
+
     createCO: function(component, event, helper) {
         let poId = component.get('v.poRecordId');
         let dataFound = component.get('v.isEmpty');
@@ -150,6 +151,7 @@
         }
 
     },
+
     cancel: function(component, event, helper) {
         $A.get("e.force:closeQuickAction").fire();
     },
