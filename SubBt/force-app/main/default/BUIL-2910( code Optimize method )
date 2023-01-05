@@ -1,0 +1,52 @@
+ @AuraEnabled
+    public static String  createCoLine(String poRecordId , String coRecordId){
+ 
+        List<buildertek__Change_Order_Item__c> changeOrderLineList= new List<buildertek__Change_Order_Item__c>();
+        buildertek__Purchase_Order__c purchaseOrder ;
+        List<buildertek__Purchase_Order_Item__c> poLineList ;
+
+        if(poRecordId != null && poRecordId!=''){
+            purchaseOrder = [Select Id , Name, buildertek__Vendor__c From buildertek__Purchase_Order__c  where Id=:poRecordId LIMIT 1];
+            poLineList = [SELECT Id, Name, buildertek__Quantity__c, buildertek__Unit_Price__c, buildertek__Purchase_Order__c FROM buildertek__Purchase_Order_Item__c where buildertek__Purchase_Order__c=:poRecordId];
+        }
+
+        if(poLineList.size() > 0){
+            try{
+                for(buildertek__Purchase_Order_Item__c poLine: poLineList){
+                    buildertek__Change_Order_Item__c changeOrderLine= new buildertek__Change_Order_Item__c();
+                    changeOrderLine.buildertek__Quantity__c = poLine.buildertek__Quantity__c;
+                    changeOrderLine.buildertek__Unit_Price__c = poLine.buildertek__Unit_Price__c;
+                    changeOrderLine.Name=poLine.Name;
+                    changeOrderLine.buildertek__Vendor__c=purchaseOrder.buildertek__Vendor__c;
+                    //  if(coRecordId != null && coRecordId != ''){
+                    changeOrderLine.buildertek__Change_Order__c = coRecordId;
+                    //  }
+                    changeOrderLineList.add(changeOrderLine);
+                }
+    
+                if(changeOrderLineList.size() > 0){
+                    insert changeOrderLineList;
+                    System.debug(changeOrderLineList);
+                    System.debug(changeOrderLineList.size());
+    
+                    // update change order vendor value equal to Purchase order vendor value
+                    buildertek__Change_Order__c changeOrder = new buildertek__Change_Order__c();
+                    changeOrder.Id = coRecordId;
+                    changeOrder.buildertek__Vendor__c = purchaseOrder.buildertek__Vendor__c;
+                    changeOrder.buildertek__Purchase_Order__c  = purchaseOrder.Id;
+
+                    
+                    update changeOrder;
+                    System.debug(changeOrder);
+                    
+                }
+            }catch(Exception e){
+
+            }
+             return 'success';
+ 
+        }else{
+             return 'noRecords';
+        }
+ 
+    }
