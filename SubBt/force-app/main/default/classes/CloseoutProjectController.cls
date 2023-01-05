@@ -63,11 +63,12 @@ public with sharing class CloseoutProjectController {
             EmailTemplate eTemp = [SELECT Id, Name FROM EmailTemplate WHERE Name =: emailLabel LIMIT 1];
             String templateId = eTemp.Id;
 
-            List<Contact> conToList =  [Select Id,Name,email from Contact where Id IN :to and email != null];
+            List<Contact> conToList =  [Select Id,Name,email,MailingStreet,MailingCity, MailingState,MailingPostalCode,MailingCountry from Contact where Id IN :to and email != null];
 
             List<Contact> conCcList = [Select Id, email from Contact where Id IN :cc and email != null];
 
-            String subject = 'Invoice';
+            // String address = conToList.MailingStreet;
+            String subject = 'Project Closeout';
             String body;
             List<Messaging.SingleEmailMessage> mails = new List<Messaging.SingleEmailMessage>();
             List<String> sendTo = new List<String>();
@@ -86,8 +87,13 @@ public with sharing class CloseoutProjectController {
                     ccTo.add(con.email);
                 }
                 mail.setCcAddresses(ccTo);
-                subject = subject + '[ref:' + recordId + ']';
-                mail.setSubject(subject);
+                if(myContact.MailingStreet==null){
+                    subject = subject;
+                    mail.setSubject(subject);
+                }else{
+                    subject = subject + '-' + myContact.MailingStreet;
+                    mail.setSubject(subject);
+                }
                 
                 body = '<html><body>Hello '+myContact.Name+',<br/><br/>Please review your attached Invoice.</body>  </html>';
 

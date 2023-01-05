@@ -2467,7 +2467,7 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
         List<buildertek__Change_Order__c> changeOrderList = new List<buildertek__Change_Order__c>();
 
         changeOrderList = [SELECT Id, Name, buildertek__Project__c, buildertek__Description__c, buildertek__Vendor__c, buildertek__Vendor__r.Name,
-                            buildertek__Total_Amount_Tax__c FROM buildertek__Change_Order__c
+                            buildertek__Total_Amount_Tax__c, buildertek__Total_Amount__c FROM buildertek__Change_Order__c
                             WHERE buildertek__Project__c =: budgetRec.buildertek__Project__c AND (buildertek__Status__c = 'Customer Approved' OR buildertek__Status__c = 'Approved')];
                         
         return changeOrderList;
@@ -2478,10 +2478,9 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
         buildertek__Budget__c budgetRec = [SELECT Id, Name, buildertek__Project__c FROM buildertek__Budget__c where Id = :RecId];
         
         List<buildertek__Expense__c> ExpenseList = new List<buildertek__Expense__c>();
-
-        ExpenseList = [SELECT Id, Name, buildertek__Project__c, buildertek__Description__c, buildertek__Vendor__c, buildertek__Vendor__r.Name,
+        ExpenseList = [SELECT Id, Name, buildertek__Project__c, buildertek__Description__c,buildertek__Budget_Line__c, buildertek__Vendor__c, buildertek__Vendor__r.Name, buildertek__Budget__c,
                             buildertek__Total_Expense__c FROM buildertek__Expense__c
-                            WHERE buildertek__Project__c =: budgetRec.buildertek__Project__c];
+                            WHERE buildertek__Budget_Line__c = null AND buildertek__Budget__c = null];
         System.debug('ExpenseList======>>>>>>'+ExpenseList);
                         
         return ExpenseList;
@@ -2500,6 +2499,17 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
         }
 
         if (coLineIds.size() > 0) {
+            String budgetGroupId;
+            List<buildertek__Budget_Line_Group__c> budgetLineGroupList = [SELECT Id, Name FROM buildertek__Budget_Line_Group__c WHERE Name = 'Change Order' LIMIT 1];
+            if (budgetLineGroupList.size() > 0) {
+                budgetGroupId = budgetLineGroupList[0].Id;
+            } else{
+                buildertek__Budget_Line_Group__c budgetGroup = new buildertek__Budget_Line_Group__c();
+                budgetGroup.Name = 'Change Order';
+                insert budgetGroup;
+
+                budgetGroupId = budgetGroup.Id;
+            }
             List<buildertek__Budget_Item__c> budgetItemList = [SELECT Id, Name,buildertek__Sales_Price__c, buildertek__Budget__c FROM buildertek__Budget_Item__c WHERE Id IN :strList];
     
             List<buildertek__CO_Item_To_Budget_Item_Link__c> BudgetCoLinkList = new List<buildertek__CO_Item_To_Budget_Item_Link__c>();
@@ -2517,15 +2527,18 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
                         }
                     }
                     if (!recordAvail) {
-                        CO_Item_To_Budget_Item_Link__c COItemToBudgetItemLink = new CO_Item_To_Budget_Item_Link__c();
+                        buildertek__CO_Item_To_Budget_Item_Link__c COItemToBudgetItemLink = new buildertek__CO_Item_To_Budget_Item_Link__c();
                         COItemToBudgetItemLink.CO_Item__c = coLine.Id;
                         COItemToBudgetItemLink.Budget_Item__c = budgetItem.Id;
                         COItemToBudgetItemLinks.add(COItemToBudgetItemLink);
                     }
                 }
+                budgetItem.buildertek__Group__c = budgetGroupId;
             }
+            update budgetItemList;
             insert COItemToBudgetItemLinks;
-            // update budgetItemList;
+
+            ChangeOrderDAO.RollUpChangeOrderItemAmount(coLineIds);
             return 'Success';
         } else{
             return 'No Co Line Found On Co.';
@@ -2536,43 +2549,57 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
     @AuraEnabled
     public static void addExpenseToBudget(String budgeLineIds, string selectedExpense){
         List<String> strList = budgeLineIds.split(',');
-        String response;
         if (String.isNotBlank(selectedExpense)) {
-            System.debug('<<<====If part====>>>');
-            try {
-                buildertek__Expense__c Expense = [SELECT Id, Name, buildertek__Total_Expense__c,buildertek__Budget__c, buildertek__Budget_Line__c FROM buildertek__Expense__c WHERE Id =: selectedExpense];            
-                System.debug('Expense--->>>'+Expense);
-                buildertek__Budget_Item__c budgetItem = new buildertek__Budget_Item__c();
+                buildertek__Expense__c Expense = [SELECT Id, Name,buildertek__Amount__c, buildertek__Total_Expense__c,buildertek__Budget__c, buildertek__Budget_Line__c FROM buildertek__Expense__c WHERE Id =: selectedExpense];
+                System.debug('selectedExpense====>>>'+selectedExpense);
+                System.debug('Expense====>>>'+Expense);
                 if (strList.size() > 0) {
-                    System.debug('<<<====strList====>>>');
-                    budgetItem = [SELECT Id, Name, buildertek__Additional_Costs__c, buildertek__Budget__c FROM buildertek__Budget_Item__c WHERE Id IN :strList LIMIT 1];
-                    System.debug('budgetItem--->>>>>>>>>'+budgetItem);
+                    System.debug('<<<====strList====>>>'+strList);
+                    List<buildertek__Budget_Item__c> budgetItemList = [SELECT Id, Name, buildertek__Additional_Costs__c, buildertek__Budget__c, buildertek__Budget__r.buildertek__Project__c FROM buildertek__Budget_Item__c WHERE Id IN :strList];
+                    System.debug('budgetItemList--->>>'+budgetItemList);
                     
-                    System.debug('buildertek__Additional_Costs__c--->>>>>>>>>'+budgetItem.buildertek__Additional_Costs__c);
+                    List<buildertek__Expense_To_Budget_Item_Link__c> ExpenseToBudgetItemLinks = new List<buildertek__Expense_To_Budget_Item_Link__c>();
+                    ExpenseToBudgetItemLinks = [SELECT Id,Name,buildertek__Budget_Line__c,buildertek__Expense__c,buildertek__Amount__c FROM buildertek__Expense_To_Budget_Item_Link__c WHERE buildertek__Budget_Line__c IN: strList AND buildertek__Expense__c =: Expense.Id];
+                    System.debug('ExpenseToBudgetItemLinks--->>>'+ExpenseToBudgetItemLinks);
 
-                    buildertek__Expense_To_Budget_Item_Link__c ExpBudget = [SELECT Id,Name,buildertek__Amount__c FROM buildertek__Expense_To_Budget_Item_Link__c Where buildertek__Budget_Line__c =: budgetItem.Id LIMIT 1];
-                    System.debug('ExpBudget--->>>'+ExpBudget);
-                    System.debug('ExpBudget--->>>'+ExpBudget.buildertek__Amount__c);
+                    List<Expense_To_Budget_Item_Link__c> ExpenseToBudgetItemLinks1 = new List<Expense_To_Budget_Item_Link__c>();
+                    for (buildertek__Budget_Item__c budgetItem : budgetItemList) {
+                        System.debug('===For Loop1===');
+                            Boolean recordAvail = false;
+                            for(buildertek__Expense_To_Budget_Item_Link__c ExpenseLink : ExpenseToBudgetItemLinks){
+                                System.debug('===For Loop3===');
+                                if (ExpenseLink.buildertek__Budget_Line__c == budgetItem.Id && ExpenseLink.buildertek__Expense__c == Expense.Id) {
+                                    recordAvail = true;
+                                }
+                            }
+                            if (!recordAvail) {
+                                System.debug('===If Block===');
+                                buildertek__Expense_To_Budget_Item_Link__c ExpenseItemToBudgetItemLink = new buildertek__Expense_To_Budget_Item_Link__c();
+                                ExpenseItemToBudgetItemLink.Expense__c = Expense.Id;
+                                System.debug('ExpenseItemToBudgetItemLink.Expense__c-->>'+ExpenseItemToBudgetItemLink.Expense__c);
+                                ExpenseItemToBudgetItemLink.Budget_Line__c = budgetItem.Id;
+                                System.debug('ExpenseItemToBudgetItemLink.Budget_Line__c-->>'+ExpenseItemToBudgetItemLink.Budget_Line__c);
+                                ExpenseItemToBudgetItemLink.buildertek__Amount__c = Expense.buildertek__Amount__c;
+                                System.debug('ExpenseItemToBudgetItemLink.buildertek__Amount__c-->>'+ExpenseItemToBudgetItemLink.buildertek__Amount__c);
+                                ExpenseToBudgetItemLinks1.add(ExpenseItemToBudgetItemLink);
+                            }
+                        
+                    }
 
-                    ExpBudget.buildertek__Amount__c = Expense.buildertek__Total_Expense__c;
-                    Update ExpBudget; 
+                    Expense.buildertek__Budget_Line__c = budgetItemList[0].Id;
+                    Expense.buildertek__Budget__c = budgetItemList[0].buildertek__Budget__c;
+                    Expense.buildertek__Project__c = budgetItemList[0].buildertek__Budget__r.buildertek__Project__c;
+                    update Expense;
 
-                    System.debug('Update Successfully');
-                    System.debug('ExpBudget--->>>'+ExpBudget.buildertek__Amount__c);
-                    System.debug('buildertek__Additional_Costs__c--------->>>>>>>>>'+budgetItem.buildertek__Additional_Costs__c);
-
-                }
-                response = 'Success';
-               // System.debug(response);
-            }catch (Exception e) {
-                throw new AuraHandledException(e.getMessage());
-                response = 'Error';
-            }
+                    insert ExpenseToBudgetItemLinks1;
+                    System.debug('ExpenseToBudgetItemLinks1'+ExpenseToBudgetItemLinks1);
+                    // if(!ExpenseToBudgetItemLinks.isEmpty()){
+                    //     insert ExpenseToBudgetItemLinks;
+                    //     system.debug('ExpenseToBudgetItemLinks-----'+ExpenseToBudgetItemLinks);
+                    // }
+                    System.debug('Insert ExpenseBudget Successfully');
+                }            
         }
-        else{
-            response = 'null';
-        }
-        // return budgetItem;
     }
     
 

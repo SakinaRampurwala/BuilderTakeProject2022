@@ -3368,35 +3368,61 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
         selectedRecords = selectedRecords.toString();
 
         var selectedCO = component.get("v.selectedExistingCO");   
-        var action = component.get("c.addCoToBudget");
-        action.setParams({
-            budgeLineIds: selectedRecords,
-            selectedCO: selectedCO
-        });
-        action.setCallback(this, function (result) {
-            var state = result.getState();
-            if (state === "SUCCESS") {
-                var toastEvent = $A.get("e.force:showToast");
-                toastEvent.setParams({
-                    type: 'SUCCESS',
-                    message: 'CO added Successfully',
-                    duration: '5000',
-                });
-                toastEvent.fire();
-                var action1 = component.get("c.doInit");
-                $A.enqueueAction(action1);
-            } else{
-                var toastEvent = $A.get("e.force:showToast");
-                toastEvent.setParams({
-                    type: 'ERROR',
-                    message: 'Something Went Wrong',
-                    duration: '5000',
-                });
-                toastEvent.fire();
-            }
-            component.set("v.addcosection", false);
-        });
-        $A.enqueueAction(action);
+        console.log('selectedCO ==> '+selectedCO);
+        if (selectedCO != '' && selectedCO != null) {
+            var action = component.get("c.addCoToBudget");
+            action.setParams({
+                budgeLineIds: selectedRecords,
+                selectedCO: selectedCO
+            });
+            action.setCallback(this, function (result) {
+                var state = result.getState();
+                if (state === "SUCCESS") {
+                    if (result.getReturnValue() == 'Success') {      
+                        var toastEvent = $A.get("e.force:showToast");
+                        toastEvent.setParams({
+                            type: 'SUCCESS',
+                            message: 'CO added Successfully',
+                            duration: '5000',
+                        });
+                        toastEvent.fire();
+                        
+                        var action1 = component.get("c.doInit");
+                        $A.enqueueAction(action1);
+                    }
+                    else{
+                        var toastEvent = $A.get("e.force:showToast");
+                        toastEvent.setParams({
+                            type: 'Error',
+                            message: 'There Are No CO Line In Selected CO',
+                            duration: '5000',
+                        });
+                        toastEvent.fire();
+                    }
+                } else{
+                    var toastEvent = $A.get("e.force:showToast");
+                    toastEvent.setParams({
+                        type: 'ERROR',
+                        message: 'Something Went Wrong',
+                        duration: '5000',
+                    });
+                    toastEvent.fire();
+                }
+                component.set("v.addcosection", false);
+                var a = component.get('c.doCancel');
+                $A.enqueueAction(a);
+            });
+            $A.enqueueAction(action);
+        } else{
+            var toastEvent = $A.get("e.force:showToast");
+            toastEvent.setParams({
+                type: 'Error',
+                message: 'Please Select CO First',
+                duration: '5000',
+            });
+        }
+
+        
     }, 
 
     addExpense: function(component, event, helper){
@@ -3433,7 +3459,16 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
         action.setCallback(this, function (result) {
             var state = result.getState();
             if (state === "SUCCESS") {
-                // add success toast
+                var toastEvent = $A.get("e.force:showToast");
+                        toastEvent.setParams({
+                            type: 'SUCCESS',
+                            message: 'Expense added Successfully',
+                            duration: '5000',
+                        });
+                        toastEvent.fire();
+
+                        var action1 = component.get("c.doInit");
+                        $A.enqueueAction(action1);
             } else{
                 var toastEvent = $A.get("e.force:showToast");
                 toastEvent.setParams({
@@ -3444,6 +3479,8 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
                 toastEvent.fire();
             }
             component.set("v.addExpenseSection", false);
+            var a = component.get('c.doCancel');
+            $A.enqueueAction(a);
         });
         $A.enqueueAction(action);
     },

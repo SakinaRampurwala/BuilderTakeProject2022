@@ -533,6 +533,77 @@
                                             return listOfRecords;
                                         }
                                     }
+                                    var records = []
+                                    var recordsList = [];
+                                    var recordsMap = {};
+                                    var subGroupRecordsMap = {};
+                                    var subGroupRecords = [];
+            
+                                    result.groupHierarchy.forEach(element => {
+                                        records = [];
+                                        subGroupRecordsMap = {};
+                                        subGroupRecords = [];
+                        
+                                        var totalObj = {};
+                        
+                                        totalObj['unitPrice'] = 0;
+                                        totalObj['unitPricekey'] = '';
+                                        totalObj['orignalbudget'] = 0;
+                                        totalObj['orignalbudgetkey'] = '';
+                                        totalObj['totalSalesPrice'] = 0;
+                                        totalObj['totalSalesPricekey'] = '';
+                                        totalObj['TotalApprovals'] = 0;
+                                        totalObj['TotalApprovalskey'] = '';
+                                        totalObj['CommittedCost'] = 0;
+                                        totalObj['CommittedCostkey'] = 0;
+                                        totalObj['AdditionalCosts'] = 0;
+                                        totalObj['AdditionalCostsKey'] = '';
+                                        totalObj['InvoiceCosts'] = 0;
+                                        totalObj['InvoiceCostsKey'] = '';
+                                        totalObj['ProjectedCosts'] = 0;
+                                        totalObj['ProjectedCostskey'] = '';
+                                        totalObj['Labor1'] = 0;
+                                        totalObj['Labor1key'] = '';
+                                        totalObj['Forecast'] = 0;
+                                        totalObj['Forecastskey'] = '';
+                                        totalObj['TotalCosts'] = 0;
+                                        totalObj['TotalCostsKey'] = '';
+                                        totalObj['ProfitLoss'] = 0;
+                                        totalObj['ProfitLosskey'] = '';
+                                        totalObj['fieldType'] = '';
+                        
+                        
+                                        result.tarTable.records.forEach((ele, index) => {
+                                            if (element['groupId'] == ele.buildertek__Group__c) {
+                                                recordsMap = {};
+                                                recordsList = (result.tarTable.ListOfEachRecord[index].recordList);
+                                                recordsMap['groupId'] = element['groupId'];
+                                                recordsMap['groupName'] = element['groupName'];
+                                                recordsMap['recordId'] = ele.Id;
+                                                recordsMap['recordName'] = ele.Name;
+                                                recordsMap['recordList'] = recordsList;
+                                                records.push(recordsMap);
+                        
+                                                totalObj = helper.setTotalHelper(recordsList, totalObj);
+                                            }else if(element['groupId'] == 'undefined'){
+                                                recordsMap = {};
+                                                recordsList = (result.tarTable.ListOfEachRecord[index].recordList);
+                                                recordsMap['groupId'] = 'undefined';
+                                                recordsMap['groupName'] = 'No Grouping';
+                                                recordsMap['recordId'] = ele.Id;
+                                                recordsMap['recordName'] = ele.Name;
+                                                recordsMap['recordList'] = recordsList;
+                                                records.push(recordsMap);
+                        
+                                                totalObj = helper.setTotalHelper(recordsList, totalObj);
+
+                                            }
+                                        });
+                                        element['totals'] = totalObj;
+                                        subGroupRecordsMap['records'] = records;
+                                        subGroupRecords.push(subGroupRecordsMap);
+                                        element['subGroupRecords'] = subGroupRecords;
+                                    });
                                 }
                             }
                             if (bt1 == false) {
@@ -970,7 +1041,7 @@
                         component.set("v.TotalRecordsCopy", totalRecords);
 
                     } else {
-
+                        console.log('e.recordList, totalObj --> ',{totalObj});
                         component.set("v.columns", result.columns);
                         component.set("v.page", result.page);
                         component.set("v.total", result.total);
@@ -987,10 +1058,6 @@
                         component.set("v.TotalRecordsCopy", result);
                         console.log('budget lines::', result);
                     }
-
-
-
-
 
                     $A.get("e.c:BT_SpinnerEvent").setParams({
                         action: "HIDE",

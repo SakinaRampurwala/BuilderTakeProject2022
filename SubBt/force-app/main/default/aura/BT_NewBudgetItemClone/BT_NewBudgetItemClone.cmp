@@ -293,7 +293,7 @@
                                 <!-- </aura:if>-->
                                 <aura:set attribute="else">
                                     <div style="width: fit-content;">
-                                        <lightning:input aura:id="Cost Code1" name="Group By Cost Code1" label="Group By Category" type="toggle" checked="{!v.groupByVendortoggle1}" onclick="{!c.checkToogle1}" />
+                                        <lightning:input aura:id="Cost Code1" name="Group By Cost Code1" label="Group By Category 1" type="toggle" checked="{!v.groupByVendortoggle1}" onclick="{!c.checkToogle1}" />
                                     </div>
                                 </aura:set>
                             </aura:if>
@@ -1160,7 +1160,7 @@
                                                     </aura:iteration>
                                                 </aura:iteration>
 
-
+                                                <!-- * this row is showing the total in copmonent -->
                                                     <tr class="groupFooter">
                                                         <td> </td>
                                                         <td> </td>
@@ -1838,7 +1838,7 @@
                                                 <div class="slds-truncate">CO Name</div>
                                             </th>
                                             <th scope="col">
-                                                <div class="slds-truncate">CO Total</div>
+                                                <div class="slds-truncate">CO Amount</div>
                                             </th>
                                             <th scope="col">
                                                 <div class="slds-truncate">Vendor</div>
@@ -1855,7 +1855,7 @@
                                                     {!item.Name}
                                                 </td>
                                                 <td class="coFildData">
-                                                    <lightning:formattedNumber value="{!item.buildertek__Total_Amount_Tax__c}" style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
+                                                    <lightning:formattedNumber value="{!item.buildertek__Total_Amount__c}" style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
                                                 </td>
                                                 <td class="slds-truncate coFildData">
                                                     {!item.buildertek__Vendor__r.Name}
