@@ -2579,8 +2579,9 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
                                 System.debug('ExpenseItemToBudgetItemLink.Expense__c-->>'+ExpenseItemToBudgetItemLink.Expense__c);
                                 ExpenseItemToBudgetItemLink.Budget_Line__c = budgetItem.Id;
                                 System.debug('ExpenseItemToBudgetItemLink.Budget_Line__c-->>'+ExpenseItemToBudgetItemLink.Budget_Line__c);
-                                ExpenseItemToBudgetItemLink.buildertek__Amount__c = Expense.buildertek__Amount__c;
-                                System.debug('ExpenseItemToBudgetItemLink.buildertek__Amount__c-->>'+ExpenseItemToBudgetItemLink.buildertek__Amount__c);
+                                ExpenseItemToBudgetItemLink.Auto_Roll_Up__c = true;
+                                // ExpenseItemToBudgetItemLink.buildertek__Amount__c = Expense.buildertek__Amount__c;
+                                // System.debug('ExpenseItemToBudgetItemLink.buildertek__Amount__c-->>'+ExpenseItemToBudgetItemLink.buildertek__Amount__c);
                                 ExpenseToBudgetItemLinks1.add(ExpenseItemToBudgetItemLink);
                             }
                         

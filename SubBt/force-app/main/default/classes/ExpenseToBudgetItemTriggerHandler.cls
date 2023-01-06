@@ -76,7 +76,7 @@ public class ExpenseToBudgetItemTriggerHandler {
      
     public void OnAfterUpdate(buildertek__Expense__c[] oldExpense, buildertek__Expense__c[] updatedExpense, Map<ID, buildertek__Expense__c> ExpenserecMap, Map<Id, buildertek__Expense__c> oldExpenseMap){
        // if(!CreateBudgetLineItemForExpenseAC.isUpdateExpense){
-            CreateBudgetLineItemForExpenseAC.createExpenseToBudgetItemLink(updatedExpense);  
+            // CreateBudgetLineItemForExpenseAC.createExpenseToBudgetItemLink(updatedExpense);  
       //  }
       CreateBudgetLineItemForExpenseAC.RollUpExpenseAmount(ExpenserecMap.KeySet());
        list<Id> budgetitemIds = new list<Id>();
