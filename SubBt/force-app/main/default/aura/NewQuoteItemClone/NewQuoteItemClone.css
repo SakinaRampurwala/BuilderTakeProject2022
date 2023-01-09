@@ -139,7 +139,14 @@
 .THIS .slds-button {
     border-radius: 0.25rem;
 }
-
+.THIS .elseMsg{
+    font-size: 17px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 150px
+}
 
 /*.THIS .slds-cell-fixed{
                         padding : 0px;

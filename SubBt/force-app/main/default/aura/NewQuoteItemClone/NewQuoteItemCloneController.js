@@ -20,6 +20,8 @@
     },
 
     doInit: function(component, event, helper) {
+        component.set("v.Spinner2", true);
+        component.set('v.runFirstTime' , true);
         var workspaceAPI = component.find("workspace");
         workspaceAPI.getEnclosingTabId().then((response) => {
             let opendTab = response.tabId;
@@ -88,6 +90,7 @@
             }
 
         }
+
     },
 
     onClickChangeGroupName: function(component, event, helper) {
@@ -145,11 +148,16 @@
         }
     },
     addProductFromGroup: function(component, event, helper) {
-        if (!component.get('v.isAddProductFromGroup')) {
+        if (!component.get('v.isAddProductFromGroup')){
+            console.log(component.get('v.runFirstTime'));
+            // if(component.get('v.runFirstTime') != true)){}
             var groups = component.get('v.TotalRecords').groups;
             var quote = component.get('v.newQuote');
             console.log("New Quote1")
-            console.log("New Quote : " + quote)
+            console.log("New Quote : " + quote);
+            console.log({groups});
+            console.log(event.getSource().get("v.name"));
+            console.log('*************');
             if (event.getSource().get("v.name") != undefined) {
                 var index = event.getSource().get("v.name");
                 var groupId = groups[index].Id != undefined ? groups[index].Id : '';
@@ -175,9 +183,11 @@
             var action4 = component.get("c.getProducts");
             action4.setCallback(this, function(response) {
                 //  alert("ok")
-                component.set("v.Spinner2", true)
-                if (response.getState() == "SUCCESS") {
-                    var rows = response.getReturnValue();
+                component.set("v.Spinner2", true);
+                var rows = response.getReturnValue();
+                console.log({rows});
+
+                if (response.getState() == "SUCCESS" && rows!= null) {
                     console.log('Rows =>', { rows });
                     for (var i = 0; i < rows.length; i++) {
                         var row = rows[i];
@@ -185,10 +195,12 @@
                             row.UnitPrice = row.PricebookEntries[0].UnitPrice;
                         }
                     }
-
-                    component.set("v.data1", rows);
-                    component.set("v.filteredData", rows);
-                    helper.sortData(component, component.get("v.sortedBy"), component.get("v.sortedDirection"));
+                    if(component.get('v.runFirstTime') != true){
+                        component.set("v.data1", rows);
+                        component.set("v.filteredData", rows);
+                        helper.sortData(component, component.get("v.sortedBy"), component.get("v.sortedDirection"));
+    
+                    }
 
                     //console.log("data : ",response.getReturnValue());
                     var actions = component.get("c.getpricebooks");
@@ -212,55 +224,64 @@
                                 var state = response.getState();
                                 if (state === 'SUCCESS') {
                                     var result = response.getReturnValue();
+                                    console.log({result});
                                     if (result != 'ERROR') {
-                                        component.set("v.pricebookName1", result);
+                                        // component.set("v.pricebookName1", result);
                                         component.set("v.data1", '');
-                                        var x;
-                                        if (component.find("getPriceBookId")) {
-                                            x = component.find("getPriceBookId").get("v.value");
-                                        } else {
-                                            x = '';
-                                        }
+                                        var x = component.find("getPriceBookId").get("v.value");
+                                        console.log({x});
+
+                                        // if (x) {
+                                        //     x = 
+                                        // } else {
+                                        //     x = '';
+                                        // }
 
 
-                                        if (x == '') {
-                                            console.log("Empty : ", x)
-                                            x = 'None';
+                                        // if (x == '' || x == undefined) {
+                                        //     console.log("Empty : ", x)
+                                        //     x = 'None';
 
-                                        }
+                                        // }
                                         console.log("Empty1 : ", x);
-                                        var selectedPricebookList = component.get("v.storePriceBookId");
-                                        for (var i = 0; i < selectedPricebookList.length; i++) {
-                                            selectedPricebookList.push(x);
-                                        }
-                                        component.set("v.storePriceBookId", selectedPricebookList)
-                                        var action21 = component.get("c.getProductsthroughPriceBook");
-                                        action21.setParams({
-                                            "pbookId": x
-                                        });
-                                        action21.setCallback(this, function(response) {
-                                            if (response.getState() == "SUCCESS") {
-                                                var rows = response.getReturnValue();
-                                                console.log("Rows : ", rows);
-                                                for (var i = 0; i < rows.length; i++) {
-                                                    var row = rows[i];
-                                                    row.UnitPrice = row.buildertek__Available_Quantity__c;
-                                                }
-                                                console.log("Get Products based on PriceBook : ", response.getReturnValue());
-                                                component.set("v.data1", rows);
-                                                component.set("v.filteredData", rows);
-                                                helper.sortData(component, component.get("v.sortedBy"), component.get("v.sortedDirection"));
-                                                component.set("v.checkFunctionCall", true);
-                                                var selectedRows = [];
-                                                var listIds = component.get("v.listOfSelectedIds");
-                                                for (var i = 0; i < listIds.length; i++) {
-                                                    selectedRows.push(listIds[i])
-                                                }
-                                                component.set("v.selectedRows", selectedRows)
+                                        if(x != ''  && x != undefined){
+                                            var selectedPricebookList = component.get("v.storePriceBookId");
+                                            for (var i = 0; i < selectedPricebookList.length; i++) {
+                                                selectedPricebookList.push(x);
                                             }
+                                            component.set("v.storePriceBookId", selectedPricebookList)
+                                            var action21 = component.get("c.getProductsthroughPriceBook");
+                                            action21.setParams({
+                                                "pbookId": x
+                                            });
+                                            action21.setCallback(this, function(response) {
+                                                if (response.getState() == "SUCCESS") {
+                                                    var rows = response.getReturnValue();
+                                                    console.log("Rows : ", rows);
+                                                    for (var i = 0; i < rows.length; i++) {
+                                                        var row = rows[i];
+                                                        row.UnitPrice = row.buildertek__Available_Quantity__c;
+                                                    }
+                                                    console.log("Get Products based on PriceBook : ", response.getReturnValue());
+                                                    component.set("v.data1", rows);
+                                                    component.set("v.filteredData", rows);
+                                                    helper.sortData(component, component.get("v.sortedBy"), component.get("v.sortedDirection"));
+                                                    component.set("v.checkFunctionCall", true);
+                                                    var selectedRows = [];
+                                                    var listIds = component.get("v.listOfSelectedIds");
+                                                    for (var i = 0; i < listIds.length; i++) {
+                                                        selectedRows.push(listIds[i])
+                                                    }
+                                                    component.set("v.selectedRows", selectedRows)
+                                                }
+                                                component.set("v.Spinner2", false);
+                                            });
+                                            $A.enqueueAction(action21);
+                                        }else{
                                             component.set("v.Spinner2", false);
-                                        });
-                                        $A.enqueueAction(action21);
+                                            console.log(component.get('v.data1'));
+
+                                        }
                                     }
 
 
@@ -2407,7 +2428,9 @@ return other.Id == current.Id
 
     changeEvent1: function(component, event, helper) {
         // debugger
-        component.set("v.data1", '');
+        component.set("v.Spinner2", true);
+        console.log('inside change event 1');
+        component.set("v.data1", []);
         var x = component.find("getPriceBookId").get("v.value");
 
         if (x == '') {
@@ -2416,6 +2439,9 @@ return other.Id == current.Id
 
         }
         console.log("Empty1 : ", x);
+        if(x == 'None'){
+            component.set("v.data1", '');
+        }
         var selectedPricebookList = component.get("v.storePriceBookId");
         for (var i = 0; i < selectedPricebookList.length; i++) {
             selectedPricebookList.push(x);
@@ -2426,8 +2452,9 @@ return other.Id == current.Id
             "pbookId": x
         });
         action.setCallback(this, function(response) {
-            if (response.getState() == "SUCCESS") {
-                var rows = response.getReturnValue();
+            component.set("v.Spinner2", false);
+            var rows = response.getReturnValue();
+            if (response.getState() == "SUCCESS" && rows != null) {
                 console.log("Rows : ", rows);
                 for (var i = 0; i < rows.length; i++) {
                     var row = rows[i];

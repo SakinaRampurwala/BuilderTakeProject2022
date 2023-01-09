@@ -139,6 +139,8 @@
     <aura:attribute name="isAddProductFromGroup" type="Boolean" default="false" />
     <aura:attribute name="addGroupPopup" type="Boolean" default="false" />
     <aura:attribute name="currentTab" type="String" default="" />
+    <aura:attribute name="runFirstTime" type="Boolean" default="false" />
+
     <lightning:workspaceAPI aura:id="workspace" />
 
     <!-- MassUpdate End -->
@@ -1160,9 +1162,9 @@
                                             <div style="padding-top:18px">
                                                 <ui:inputSelect value="{! v.pricebookName1 }" change="{!c.changeEvent1}" class="pricebook-class" aura:id="getPriceBookId">
                                                     <aura:iteration var="option" items="{! v.pricebookoptions }">
-                                                        <aura:if isTrue="{! option.key != 'None'}">
+                                                        <!-- <aura:if isTrue="{! option.key != 'None'}"> -->
                                                             <option value="{! option.value }" selected="{!option.value == v.pricebookName1}">{! option.key }</option>
-                                                        </aura:if>
+                                                        <!-- </aura:if> -->
                                                     </aura:iteration>
                                                 </ui:inputSelect>
                                             </div>
@@ -1186,10 +1188,13 @@
 
 
                                     <br />
-                                    <div style="height: 500px">
-
-                                        <lightning:datatable aura:id="accountDataTable" keyField="Id" data="{! v.data1 }" hideCheckboxColumn="false" columns="{! v.columns1 }" selectedRows="{! v.selectedRows }" onrowselection="{! c.updateSelectedText }" onsort="{!c.updateColumnSorting}" sortedBy="{!v.sortedBy}"
+                                    <div style="height: auto; min-height:150px;">
+                                            <lightning:datatable aura:id="accountDataTable" keyField="Id" data="{! v.data1 }" hideCheckboxColumn="false" columns="{! v.columns1 }" selectedRows="{! v.selectedRows }" onrowselection="{! c.updateSelectedText }" onsort="{!c.updateColumnSorting}" sortedBy="{!v.sortedBy}"
                                             sortedDirection="{!v.sortedDirection}" />
+                                            <aura:if isTrue="{!v.data1 == ''}">
+                                                <center class="elseMsg">Please Select PriceBook!!</center>
+                                            <!-- <aura:set attribute="else">Please Select PriceBook!! </aura:set> -->
+                                            </aura:if>
                                     </div>
                                 </div>
                                 <aura:if isTrue="{!v.Spinner2}">
