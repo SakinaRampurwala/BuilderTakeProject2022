@@ -160,6 +160,34 @@ public with sharing class CreateBudgetLineItemForExpenseAC {
         }
     }
 
+
+    //added By Ritu
+    public static void deletemethodJunction(List<buildertek__Expense__c> expenseList, list<Id> budgetitemIds) {
+        // Map<Id,List<buildertek__Expense__c>> expMap = new Map<List<buildertek__Expense__c>>();
+        Set<Id> idset1 = new Set<Id>();
+        for(buildertek__Expense__c obj : expenseList){
+            idset1.add(obj.Id);
+        }
+
+
+        System.debug('idset1==='+idset1);
+        List<buildertek__Expense_To_Budget_Item_Link__c> ExpenseToBudgetItemLinks = [Select Id,Name,buildertek__Budget_Line__c,buildertek__Expense__c from buildertek__Expense_To_Budget_Item_Link__c
+                                                                                     where buildertek__Budget_Line__c IN: budgetitemIds];
+
+        List<buildertek__Expense_To_Budget_Item_Link__c> IdSet = new List<buildertek__Expense_To_Budget_Item_Link__c>();                                                                                    
+        for(buildertek__Expense_To_Budget_Item_Link__c obj1 : ExpenseToBudgetItemLinks) {
+            for(buildertek__Expense__c obj : expenseList){
+                if(obj.Id == obj1.buildertek__Expense__c){
+                    System.debug('inside if==');
+                    IdSet.add(obj1);
+                }
+            }
+        }                                                                           
+        if(IdSet.size () > 0){
+            delete IdSet;
+        }
+    }
+
     public class MessageClass{
         @AuraEnabled
         public String Status {get;set;}

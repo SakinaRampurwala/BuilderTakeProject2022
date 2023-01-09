@@ -142,7 +142,7 @@ public static List<ListView> getListViews() {
            sovRecordType =[select Id,Name from RecordType where Id =: recTypeId];
             
         }else{
-           sovRecordType =[select Id,Name from RecordType where sObjectType='buildertek__Change_Order__c' AND Name = 'Vendor'];
+           sovRecordType =[select Id,Name from RecordType where sObjectType='buildertek__Change_Order__c' AND Name = 'Customer'];
             
         }
         

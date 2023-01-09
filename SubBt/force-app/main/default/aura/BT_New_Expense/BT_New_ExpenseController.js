@@ -5,7 +5,7 @@
         if(fieldValue != null){
            component.set("v.parentRecordId",fieldValue);
         } 
-       /* var value = helper.getParameterByName(component, event, 'inContextOfRef');
+       var value = helper.getParameterByName(component, event, 'inContextOfRef');
         var context = '';
         var parentRecordId = '';
         component.set("v.parentRecordId", parentRecordId);
@@ -24,7 +24,7 @@
             component.set("v.parentRecordId", parentRecordId);
             //component.find("projectlookupid").set("v.value", parentRecordId);
             //alert(component.get("v.parentRecordId"));
-        }  */
+        }  
         setTimeout(function () {
                 helper.getName(component,helper,event);
                 helper.getFields(component, event, helper);
@@ -36,9 +36,10 @@
     },
 
     closeModel: function (component, event, helper) {
+        var workspaceAPI = component.find("workspace");
+        workspaceAPI.isConsoleNavigation().then(function(response) {
         if(component.get("v.parentRecordId") != null && component.get("v.parentRecordId") != undefined && component.get("v.parentRecordId") != ''){
-         var workspaceAPI = component.find("workspace");
-        workspaceAPI.getFocusedTabInfo().then(function (response) {
+            workspaceAPI.getFocusedTabInfo().then(function (response) {
                 var focusedTabId = response.tabId;
                 workspaceAPI.closeTab({
                     tabId: focusedTabId
@@ -47,8 +48,8 @@
             .catch(function (error) {
                 console.log(error);
             });
-        $A.get("e.force:closeQuickAction").fire();
-        window.setTimeout(
+            $A.get("e.force:closeQuickAction").fire();
+            window.setTimeout(
             $A.getCallback(function () {
                 $A.get('e.force:refreshView').fire();
             }), 1000
@@ -59,6 +60,33 @@
                 "slideDevName": "related"
             });
             navEvt.fire(); 
+        }else if(response == true){
+            workspaceAPI.getFocusedTabInfo().then(function(response) {
+                var focusedTabId = response.tabId;
+                workspaceAPI.closeTab({
+                    tabId: focusedTabId
+                });
+
+                var recordId = component.get("v.recordId");
+                if (recordId) {
+                    var navEvt = $A.get("e.force:navigateToSObject");
+                    navEvt.setParams({
+                        "recordId": recordId,
+                        "slideDevName": "detail"
+                    });
+                    navEvt.fire();
+                } else {
+                    var urlEvent = $A.get("e.force:navigateToURL");
+                    urlEvent.setParams({
+                        "url": "/lightning/o/buildertek__Expense__c/list?filterName=Recent"
+                    });
+                    urlEvent.fire();
+                }
+
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
         }else{
             var action = component.get("c.getListViews");
             action.setCallback(this, function(response){
@@ -76,6 +104,7 @@
             });
             $A.enqueueAction(action); 
         }
+    });
     },
     handleLoad : function (component, event, helper) {
         component.set('v.typevalue', 'Material');
@@ -167,10 +196,34 @@
         var expenseId = (payload.id).replace('"','').replace('"',''); 
         component.set("v.expenseRecordId",payload.id);
         component.set("v.expenseRecordName",payload.Name);
-        if(component.get('v.btadminvalue') == 'Message'){
-            component.set("v.ismessage",true);
-            component.set("v.isnew",false);  
-            helper.getMessage(component, event, helper);
+        if(component.get('v.budgetId')){
+            setTimeout(function () {
+                component.set('v.isLoading', false);
+                // var payload = event.getParams().response;
+                var url = location.href;
+                var baseURL = url.substring(0, url.indexOf('/', 14));
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    mode: 'sticky',
+                    message: 'Your Expense was added to the Budget.',
+                    messageTemplate: "Your Expense was added to the Budget.",
+                    messageTemplateData: [{
+                        url: baseURL + '/lightning/r/buildertek__Expense__c/' + escape(payload.id) + '/view',
+                        label: payload.name,
+                    }],
+                    type: 'success',
+                    duration: '10000',
+                    mode: 'dismissible'
+                });
+                toastEvent.fire();
+                
+                var navEvt = $A.get("e.force:navigateToSObject");
+                navEvt.setParams({
+                    "recordId": payload.id,
+                    "slideDevName": "related"
+                });
+                navEvt.fire();
+            }, 100);
         }else{
             var workspaceAPI = component.find("workspace");
             workspaceAPI.getFocusedTabInfo().then(function (response) {

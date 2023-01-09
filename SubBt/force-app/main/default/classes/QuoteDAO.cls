@@ -1938,7 +1938,13 @@ public with sharing class QuoteDAO{
         for(buildertek__Quote_Item__c qql : Quotelines){
             System.debug('Record => ' + qql);
             buildertek__Quote_Item__c newQline = new    buildertek__Quote_Item__c();
-            newQline.Name = qql.Name;
+
+            if (qql.Name.length() > 80) {
+                string subStr = qql.Name.subString(0,76);
+                newQline.Name = subStr.subString(0, subStr.lastIndexOf(' ')) + '...';
+            } else {
+                newQline.Name = qql.Name;
+            }
             newQline.buildertek__Product__c = qql.buildertek__Product__c;
             if(qql.buildertek__Unit_Price__c != null){
                 newQline.buildertek__Unit_Price__c = qql.buildertek__Unit_Price__c;               

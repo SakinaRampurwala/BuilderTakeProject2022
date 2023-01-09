@@ -3469,6 +3469,7 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
 
                         var action1 = component.get("c.doInit");
                         $A.enqueueAction(action1);
+                        $A.get('e.force:refreshView').fire();
             } else{
                 var toastEvent = $A.get("e.force:showToast");
                 toastEvent.setParams({
