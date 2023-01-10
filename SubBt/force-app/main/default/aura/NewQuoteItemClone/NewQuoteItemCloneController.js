@@ -1761,17 +1761,22 @@ $A.enqueueAction(action1);*/
             "action": "SHOW"
         }).fire();
         var markupvalue = component.get("v.QuoteRec").buildertek__Markup__c;
+        console.log('markupvalue-->>>',{markupvalue});
         var marginvalue = component.get("v.QuoteMargin");
+        console.log('marginvalue-->>>',{marginvalue});
         var actionLines = component.get("c.saveQuoteLineItemsValues");
         actionLines.setParams({
             "quoteRec": component.get("v.QuoteRec").Id,
             markupvalue: markupvalue,
             marginvalue:marginvalue
         });
+        console.log('actionLines-->>>',{actionLines});
         actionLines.setCallback(this, function(response) {
             if (response.getState() == "SUCCESS") {
+                console.log('<<<---Success--->>>');
                 component.set("v.QuoteMargin","");
                 var result = response.getReturnValue();
+                console.log('result--->'+result);
                 component.set("v.TotalRecords", result);
                 $A.get('e.force:refreshView').fire();
                 var page = component.get("v.page") || 1
