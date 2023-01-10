@@ -105,15 +105,16 @@ public with sharing class QuoteDAO{
         list<pricebook2> PriceList;
         /* if(Schema.sObjectType.pricebook2.fields.Id.isAccessible()&&
          Schema.sObjectType.pricebook2.fields.Name.isAccessible()){ */
-        PriceList = [select Id, Name
-                     from pricebook2
-                     ORDER BY Name ASC ];
-        /*} */
-        for (pricebook2 p : PriceList){
-            //Put Picklist Value & Label in Map
-            options.put(p.name, p.Id);
+        PriceList = [select Id, Name from pricebook2 where buildertek__Visible__c = True ORDER BY Name ASC ];
+        if(PriceList.size()>0){
+            for (pricebook2 p : PriceList){
+                //Put Picklist Value & Label in Map
+                options.put(p.name, p.Id);
+            }
+            return options;
+        }else{
+            return null;
         }
-        return options;
     }
 
     @AuraEnabled

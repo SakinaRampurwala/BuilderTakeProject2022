@@ -12,13 +12,9 @@ public class QuoteDAOTest {
     }
 
     public static testMethod void test1() {
-        Test.startTest();
+        
         Project__c proj = [Select Id from Project__c LIMIT 1];
-        Quote__c qt = [Select Id from Quote__c LIMIT 1];
-        QuoteDAO.retrieveGroups(qt.id, 1, 10, 'Accept');
-        QuoteDAO.retrieveGroups(qt.id, 1, 10, 'Reject');
-        QuoteDAO.getQuoteGrouping(qt.id);
-        QuoteDAO.getQuoteTemplates();
+        // Quote__c qt = [Select Id from Quote__c LIMIT 1];
 
         buildertek__Quote__c quoteRec = new buildertek__Quote__c(Name='test');
         insert quoteRec;
@@ -74,11 +70,13 @@ public class QuoteDAOTest {
         poTest1.buildertek__Project__c=proj.id;
         poTest1.buildertek__Vendor__c = accRec.Id;
         insert poTest1;
+
+        Test.startTest();
+
         // 	update quoteItem;
         String myJSONQuote1 = JSON.serialize(quoteItem1);
         String myJSONQuote = JSON.serialize(quoteItem);
 
-        buildertek__Quote_Item__c qutItem = new buildertek__Quote_Item__c();
         List<String> budgetItemIds = new List<String>();
         budgetItemIds.add(quoteListRef[0].Id);
 
@@ -96,13 +94,13 @@ public class QuoteDAOTest {
 
         QuoteDAO.updateQuoteLineItem(myJSONQuote);
         QuoteDAO.updateQuoteLineItem(myJSONQuote1);
+
         QuoteDAO.insertQuoteLineItem(myJSONQuote);
         QuoteDAO.saveQuoteLineItem(myJSONQuote);
         QuoteDAO.saveQuoteLineItem(myJSONQuote1);
         QuoteDAO.createQuoteItem(JSON.serialize(new list<Quote_Item__c>{quoteItem}));
         quoteItem.buildertek__Grouping__c=null;
         QuoteDAO.createQuoteItem(JSON.serialize(new list<Quote_Item__c>{quoteItem}));
-        QuoteDAO.insertQuoteLines(new List<Quote_Item__c>());
         QuoteDAO.updateGroupsOrder(grouplist);
 
 
@@ -117,10 +115,6 @@ public class QuoteDAOTest {
         List<string> massupdateQI=new List<String>();
         massupdateQI.add(quoteItem.Id);
 
-        QuoteDAO.getQuoteItem(quoteItemId);
-        QuoteDAO.getselectOptions(qutItem, 'buildertek__UOM__c');
-        QuoteDAO.deleteLineItems(new List<String>{quoteItemId});
-        QuoteDAO.cloneQuote(quoteRec.Id);
         QuoteDAO.massDuplicateQuoteLineItem(massupdateQI);
         QuoteDAO.massUpdateQuoteLineItem(myJson);
         QuoteDAO.prepareString(myJson);
@@ -130,9 +124,6 @@ public class QuoteDAOTest {
         QuoteDAO.groupValues(quoteRec.Id, currencyFields, allFields, groupIds, 10, 0);
         QuoteDAO.getQuoteItemData(quoteRec.Id, allFields, fieldString, 10, 0, 'Accept');
         QuoteDAO.getQuoteItemData(quoteRec.Id, allFields, fieldString, 10, 0, 'Reject');
-        QuoteDAO.getpricebooks();
-        QuoteDAO.getpricebook(quoteRec.Id);
-
 
         quoteListRef1.add(quoteItem1);
         QuoteDAO.saveUpdatedValues(quoteListRef1);
@@ -154,22 +145,16 @@ public class QuoteDAOTest {
         qi1.buildertek__Quote__c=quoteRec.Id;
         insert qi1;
 
-        QuoteDAO.getLookupData('Account', '');
-        QuoteDAO.getLookupData('Contact', '');
-        QuoteDAO.getLookupData('', '');
-        QuoteDAO.getBaseData();
         QuoteDAO.deleteGroups(grouplist);
         QuoteDAO.deleteItem(quoteListRef, grouplist[0].id, quoteRec.Id, 'Accept');
         QuoteDAO.deleteItem(quoteListRef, grouplist[0].id, quoteRec.Id, 'Reject');
-        QuoteDAO.deleteQuoteItem(quoteItem1.Id);
-        QuoteDAO.getRfqTo();
-        QuoteDAO.getmulticurrency();
+
         System.assertEquals('Test','Test');
         Test.stopTest();
     }
     @isTest
     public static void testMethod2(){
-     Test.startTest();
+     
      buildertek__Schedule__c scheRec = new buildertek__Schedule__c();
      scheRec.buildertek__Primary_Schedule__c = true;
      insert scheRec;
@@ -200,7 +185,7 @@ public class QuoteDAOTest {
 
 
      Map<Id, buildertek__RFQ__c> rfq = new Map<Id, buildertek__RFQ__c> ([SELECT Id , Name , buildertek__Project__c FROM buildertek__RFQ__c ]);
-
+     Test.startTest();
 
      QuoteDAO.getProductfamilyRecords('Product2' , priceBookId );
      QuoteDAO.getTasksInSchedule('test', 'buildertek__Project_Task__c' , null , scheRec.Id);
@@ -218,11 +203,11 @@ public class QuoteDAOTest {
      quoteItem.buildertek__Grouping__c = groupRef.Id;
      insert quoteItem;
 
-   buildertek__Quote_Item__c quoteItem1 = new buildertek__Quote_Item__c();
-   quoteItem1.Name = '%test';
-   quoteItem1.buildertek__Quote__c = qt.Id;
-   quoteItem1.buildertek__Grouping__c = null;
-   insert quoteItem1;
+        buildertek__Quote_Item__c quoteItem1 = new buildertek__Quote_Item__c();
+        quoteItem1.Name = '%test';
+        quoteItem1.buildertek__Quote__c = qt.Id;
+        quoteItem1.buildertek__Grouping__c = null;
+        insert quoteItem1;
 
 
 
@@ -232,14 +217,16 @@ public class QuoteDAOTest {
      insert rfqItems;
 
      String myJSONQuote1 = JSON.serialize(quoteItem1);
+
      QuoteDAO.fillqtItemFromRFQItem(quoteItem ,rfqItems , groupRef.Id );
      QuoteDAO.updateQuoteLineItem(myJSONQuote1);
+
      Test.stopTest();
     }
 
      @isTest
-     public static void testMethod3(){
-      Test.startTest();
+    public static void testMethod3(){
+      
       buildertek__Schedule__c scheRec = new buildertek__Schedule__c();
       scheRec.buildertek__Primary_Schedule__c = true;
       insert scheRec;
@@ -304,7 +291,7 @@ public class QuoteDAOTest {
       insert quoteItem;
       quoteListRef.add(quoteItem);
 
-
+      Test.startTest();
       QuoteDAO.getProductRecords('Sample', 'Product2',null, priceBookId, null);
       QuoteDAO.getTaskName(projectTask1.Id);
       QuoteDAO.getContractResource('Test' , 'Contact' ,  null , acc.Id);
@@ -326,7 +313,52 @@ public class QuoteDAOTest {
       QuoteDAO.getquote(quoteItem.Id);
 
       Test.stopTest();
-     }
+    }
+    @isTest
+    public static void testMethod4() {
+        
+        buildertek__Quote__c quoteRec = new buildertek__Quote__c(Name='test',buildertek__Markup__c=2 );
+        insert quoteRec;
+        buildertek__Quote_Item__c quoteItem = new buildertek__Quote_Item__c();
+        quoteItem.Name = 'test';
+        quoteItem.buildertek__Quote__c = quoteRec.Id;
+        quoteItem.buildertek__Markup__c = null;
+        insert quoteItem;
+
+        buildertek__Quote_Item__c quoteItem1 = new buildertek__Quote_Item__c();
+        quoteItem1=quoteItem.clone();
+        quoteItem1.buildertek__Grouping__c = null;
+        insert quoteItem1;
+        Quote__c qt = [Select Id from Quote__c LIMIT 1];
+        String quoteItemId = [Select Id from Quote_Item__c LIMIT 1].Id;
+        buildertek__Quote_Item__c qutItem = new buildertek__Quote_Item__c();
+
+        Test.startTest();
+
+        String myJSONQuote1 = JSON.serialize(quoteItem1);
+        String quoteJson = JSON.serialize(quoteRec);
+        QuoteDAO.saveQuoteSingleRec(quoteJson);
+        QuoteDAO.getRfqTo();
+        QuoteDAO.getmulticurrency();
+        QuoteDAO.deleteQuoteItem(quoteItem1.Id);
+        QuoteDAO.getBaseData();
+        QuoteDAO.getLookupData('', '');
+        QuoteDAO.getpricebooks();
+        QuoteDAO.cloneQuote(quoteRec.Id);
+        QuoteDAO.getQuoteTemplates();
+        QuoteDAO.getLookupData('Account', '');
+        QuoteDAO.getLookupData('Contact', '');
+        QuoteDAO.retrieveGroups(qt.id, 1, 10, 'Accept');
+        QuoteDAO.retrieveGroups(qt.id, 1, 10, 'Reject');
+        QuoteDAO.getQuoteGrouping(qt.id);
+        QuoteDAO.insertQuoteLines(new List<Quote_Item__c>());
+        QuoteDAO.getQuoteItem(quoteItemId);
+        QuoteDAO.deleteLineItems(new List<String>{quoteItemId});
+        QuoteDAO.getpricebook(quoteRec.Id);
+        QuoteDAO.getselectOptions(qutItem, 'buildertek__UOM__c');
+        Test.stopTest();
+
+    }
 
 
     
