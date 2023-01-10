@@ -325,13 +325,13 @@ public with sharing class QuoteDAO{
         quoteItemListRec = [select Name, buildertek__Product__c, buildertek__Quote__c, buildertek__Grouping__c, buildertek__UOM__c, buildertek__Unit_Cost__c, buildertek__Unit_Price__c, buildertek__Quantity__c, buildertek__Cost_Code__c, buildertek__Markup__c,buildertek__Margin__c
                             from buildertek__Quote_Item__c
                             where buildertek__Quote__c = :quoteRec];
+        System.debug(quoteItemListRec + 'LIST');
 
         for (buildertek__Quote_Item__c quoteItem : quoteItemListRec){
 
             system.debug(quoteRec + '<-----markup value----->' + markupvalue);
             system.debug(quoteRec + '<-----margin value----->' + marginvalue);
-
-
+            System.debug(quoteItem + 'Item Quote');
             if (quoteItem.buildertek__Markup__c == null || quoteItem.buildertek__Markup__c <= 0){
                 quoteItem.buildertek__Markup__c = markupvalue;
             }
@@ -1424,6 +1424,9 @@ public with sharing class QuoteDAO{
 
         List<Quote_Item__c> qtItems = new List<Quote_Item__c>();
         for (RFQ__c rfq : rfqs.values()){
+            System.debug('Inside RFQ');
+            System.debug(rfq);
+
             for (RFQ_Item__c rfqItem : rfq.RFQ_Items__r){
 
                 Quote_Item__c qtItem = new Quote_Item__c();

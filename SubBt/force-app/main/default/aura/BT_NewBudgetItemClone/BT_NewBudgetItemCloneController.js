@@ -905,7 +905,9 @@
     },
 
     newCO: function(component, event, helper) {
+        component.set("v.disableAddCO", true);
         var selectedRecs = component.get('v.selectedRecs');
+        console.log('selectedRecs ==> ',{selectedRecs});
         if (selectedRecs.length > 0) {
             var rowData;
             var newCOItems = [];
@@ -928,6 +930,7 @@
                             newCOItem.buildertek__Description__c = rowData.Name;
                             newCOItem.buildertek__Quantity__c = rowData.buildertek__Quantity__c;
                             newCOItem.buildertek__Unit_Price__c = rowData.buildertek__Unit_Price__c;
+                            newCOItem.buildertek__Markup__c = rowData.buildertek__Gross_Profit_Percemtage__c;
                             newCOItems.push(newCOItem);
                         }
                         // component.set("v.selectedCol", []);
@@ -946,6 +949,7 @@
                                     "saveCallback": component.get("v.refreshGridAction"),
                                     "cancelCallback": function() {
                                         overlayLib.close();
+                                        component.set("v.disableAddCO", false);
                                     }
                                 }],
                             ],
@@ -958,7 +962,7 @@
                                         showCloseButton: true,
                                         cssClass: 'slds-modal_medium',
                                         closeCallback: function() {
-
+                                            component.set("v.disableAddCO", false);
                                         }
                                     }).then(function(overlay) {
                                         overlayLib = overlay;
@@ -976,6 +980,7 @@
                     "message": "Please Select Budget Line to Create Change Order.",
                     closeCallback: function() {}
                 });
+                component.set("v.disableAddCO", false);
             }
         } else {
             component.find('notifLib').showNotice({
@@ -986,6 +991,7 @@
                 //"message": "No Budget Lines Records.",
                 closeCallback: function() {}
             });
+            component.set("v.disableAddCO", false);
         }
     },
 
@@ -3363,7 +3369,8 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
         component.set("v.selectedExistingCO", selectedCO);
     },
 
-    addNewCO: function(component, event, helper){  
+    addNewCO: function(component, event, helper){
+        var recId = component.get("v.recordId");
         var selectedRecords = component.get('v.selectedRecs');
         selectedRecords = selectedRecords.toString();
 
@@ -3373,7 +3380,8 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
             var action = component.get("c.addCoToBudget");
             action.setParams({
                 budgeLineIds: selectedRecords,
-                selectedCO: selectedCO
+                selectedCO: selectedCO,
+                RecId: recId
             });
             action.setCallback(this, function (result) {
                 var state = result.getState();

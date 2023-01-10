@@ -178,6 +178,43 @@
             return false;
         }
         return true;
+    },
+
+    getResponseFromCustomSettings: function(component, event, helper){
+        var action = component.get("c.checkCustomSettings");
+        action.setParams({
+
+        });
+        action.setCallback(this, function(response){
+            if (response.getState() == 'SUCCESS') {
+                debugger
+                var getBoolValue = response.getReturnValue();
+                if (getBoolValue) {
+                    component.set('v.isopen',false);
+                    component.set('v.ischangeorder',true);
+                    component.set('v.ischangeorderline',false);
+                    component.set('v.isproduct',true);
+                }else if (!getBoolValue){
+                    component.set('v.isopen',false);
+                    component.set('v.ischangeorder',true);
+                    component.set('v.isproduct',false);
+                    component.set('v.ischangeorderline',true);
+                    var listofchange = component.get("v.listOfFields");
+                    var collist = [];
+                    if(component.get('v.ischangeorderline') == true){
+                        for (var i = 0; i < listofchange.length; i++) {
+                            if(listofchange[i].name != 'buildertek__Product__c'){
+                                collist.push(listofchange[i]);
+                            }
+                        }
+                        component.set("v.listOfFields",collist);
+                    }
+                }else if(getBoolValue == null){
+                    this.showToast(component, event, helper,'Error','Something went wrong','error');
+                }
+            }
+        });
+        $A.enqueueAction(action);
     }
         
         

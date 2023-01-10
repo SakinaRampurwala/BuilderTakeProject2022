@@ -42,6 +42,7 @@
     <aura:attribute name="newbudgetgrouprec" type="Budget_Line_Group__c" default="{ 'sobjectType': 'Budget_Line_Group__c'}" access="global" />
 
     <aura:attribute name="newBudgetLine" type="Budget_Item__c" default="{ 'sobjectType':'Budget_Item__c',
+                                                                        'Name':'',
                                                                         'buildertek__Quantity__c':1}" access="global" />
     <aura:attribute name="selectedLookUpRecord" type="sObject" default="{}" />
 
@@ -250,6 +251,7 @@
     <aura:attribute name="ExpenseRecordList" type="Expense__c[]" />
     <aura:attribute name="selectedExistingCO" type="String" default="" access="public" />
     <aura:attribute name="selectedExistingExpense" type="String" default="" access="public" />
+    <aura:attribute name="disableAddCO" type="Boolean" default="false" />
     <!--  End -->
 
     <aura:attribute name="isExpandGrp" type="Boolean" default="false" />
@@ -344,10 +346,10 @@
                                         <!--  <lightning:button label="Create Scheduled Items" onclick="{!c.checkSchedules}" class="sldsButtonGroup"/>-->
                                         <!--createScheduleItem-->
                                         <!-- <lightning:button label="New Invoice" onclick="{!c.newInvoice}" class="sldsButtonGroup" /> -->
-                                        <lightning:button label="New RFQ" onclick="{!c.newRFQ}" class="sldsButtonGroup" />
-                                            <!-- <lightning:button label="New CO" onclick="{!c.newCO}" class="sldsButtonGroup" /> -->
-                                        <lightning:button label="New PO" onclick="{!c.newPO}" class="sldsButtonGroup" />
-                                        <lightning:button label="New Expense" onclick="{!c.newExpense}" class="sldsButtonGroup" />
+                                        <!-- <lightning:button label="New RFQ" onclick="{!c.newRFQ}" class="sldsButtonGroup" /> -->
+                                        <lightning:button label="New CO" onclick="{!c.newCO}" class="sldsButtonGroup" disabled="{!v.disableAddCO}"/>
+                                        <!-- <lightning:button label="New PO" onclick="{!c.newPO}" class="sldsButtonGroup" /> -->
+                                        <!-- <lightning:button label="New Expense" onclick="{!c.newExpense}" class="sldsButtonGroup" /> -->
                                         <lightning:button label="Contingency" onclick="{!c.onContingency}" class="sldsButtonGroup" />
                                         <!-- commented on 26thmay DFL <lightning:button label="New Sub-Contract" onclick="{!c.newSubContract}" class="sldsButtonGroup"/>-->
                                         <!-- <lightning:button label="Import CSV" onclick="{!c.importCSV}"/> -->
@@ -418,14 +420,17 @@
                                                 <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white;">
                                                     <div class="slds-truncate" title="Contractor">Cost Code</div>
                                                 </th>
-                                                <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white;">
+                                                <!-- <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white;">
                                                     <div class="slds-truncate" title="Contractor">Notes</div>
-                                                </th>
+                                                </th> -->
                                                 <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white;">
                                                     <div class="slds-truncate" title="Quantity">Quantity</div>
                                                 </th>
                                                 <th style="background-color:rgba(27, 82, 151, 1.0); color:white;">
                                                     <div class="slds-truncate" title="Unit Cost">Unit Cost</div>
+                                                </th>
+                                                <th style="background-color:rgba(27, 82, 151, 1.0); color:white;">
+                                                    <div class="slds-truncate" title="Unit Cost">Unit Sales Price</div>
                                                 </th>
                                                 <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white; border-top-right-radius:5px;">
                                                     <div class="slds-truncate" title="Save">Save</div>
@@ -509,18 +514,20 @@
                                                                     IconName="standard:account" selectedRecord="{!v.selectedCostcode}" />-->
                                                     <!--<force:inputField aura:id="accountId" value="{!v.newBudgetLine.buildertek__Contractor__c}" />-->
                                                 </td>
-                                                <td>
+                                                <!-- <td>
                                                     <ui:inputTextArea value="{!v.newBudgetLine.buildertek__Notes__c}"/>
-                                                </td>
+                                                </td> -->
                                                 <td>
                                                     <!--<force:inputField value="{!v.newBudgetLine.buildertek__Quantity__c}"/>-->
-                                                    <ui:inputNumber value="{!v.newBudgetLine.buildertek__Quantity__c}" />
+                                                    <ui:inputNumber class="costInputField" value="{!v.newBudgetLine.buildertek__Quantity__c}" />
                                                 </td>
                                                 <td>
                                                     <!--<force:inputField value="{!v.newBudgetLine.buildertek__Unit_Price__c}" />-->
-                                                    <ui:inputCurrency value="{!v.newBudgetLine.buildertek__Unit_Price__c}" aura:id="unitPriceId" />
+                                                    <ui:inputCurrency class="costInputField" value="{!v.newBudgetLine.buildertek__Unit_Price__c}" aura:id="unitPriceId" />
                                                 </td>
-
+                                                <td>
+                                                    <ui:inputCurrency class="costInputField" value="{!v.newBudgetLine.buildertek__Sales_Price__c}" />
+                                                </td>
                                                 <td>
                                                     <lightning:buttonIcon iconName="utility:save" alternativeText="save" onclick="{!c.saveBudgetItemRecord}" />
                                                 </td>

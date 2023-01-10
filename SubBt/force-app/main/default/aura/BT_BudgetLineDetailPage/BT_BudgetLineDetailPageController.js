@@ -10,14 +10,12 @@
     }, 
 
     leaveEditForm : function(component, event, helper){
-        console.log('Leave Edit Form');
         $A.get('e.force:refreshView').fire();
         component.set("v.viewMode", true);
     }, 
 
     saveRecord : function(component, event, helper){
         console.log('Save Record');
-
         var action = component.get("c.updateRecord");
         action.setParams({            
             BudgetLine : component.get("v.BudgetLine")
@@ -42,13 +40,16 @@
     }, 
 
     editProductName : function(component, event, helper){
-        try{
-            //on change of product id get the product name
-            var selectedProductId = component.get("v.BudgetLine.buildertek__Product__c");
-            console.log('selectedProductId ==> '+selectedProductId);
-            var action = component.get("c.getProductName");
+        var selectedRecord = component.get("v.BudgetLine.buildertek__Product__c")[0];
+        console.log('selectedRecord ==> '+selectedRecord);
+        if(selectedRecord == null || selectedRecord == undefined || selectedRecord == '' || selectedRecord == ' ' ){
+            component.set("v.BudgetLine.buildertek__Product_Name__c", '');
+        }
+        else{
+            helper.unitPriceChange(component, event, helper);
+            var action = component.get("c.getProductName"); 
             action.setParams({
-                productId : selectedProductId
+                "productId" : component.get('v.BudgetLine.buildertek__Product__c')[0]
             });
             action.setCallback(this, function (response) {
                 var state = response.getState();
@@ -61,14 +62,12 @@
                     toastEvent.setParams({
                         "type": "Error",
                         "title": "Error!",
-                        "message": "Something Went Wrong."
+                        "message": "Error in calling method."
                     });
                     toastEvent.fire();
                 }
-            });
-            $A.enqueueAction(action);
-        } catch (error) {
-            console.log('error ==> '+error);
+            }); $A.enqueueAction(action);      
         }
     }
+
 })

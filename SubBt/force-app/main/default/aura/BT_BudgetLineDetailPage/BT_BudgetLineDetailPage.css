@@ -28,3 +28,15 @@
     font-size: 1rem;
     padding: 5px 10px;
 }
+.THIS .save{
+    background-color: rgba(236, 235, 234, 0.9);
+    margin: auto;
+    text-align: center;
+    width: 100%;
+    padding: 10px;
+    height: auto;
+}
+
+.THIS .save .saveBtn{
+    padding-left: 10px;
+}

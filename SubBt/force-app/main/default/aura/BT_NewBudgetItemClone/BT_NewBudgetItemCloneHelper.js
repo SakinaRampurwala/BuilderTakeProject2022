@@ -318,6 +318,8 @@
             action.setCallback(this, function (response) {
                 var state = response.getState();
                 if (state === "SUCCESS") {
+                    var originalResult = response.getReturnValue();
+                    console.log('originalResult ==> ',{originalResult});
                     var result = response.getReturnValue();
                     //  alert('result---------->'+JSON.stringify(result));
                     if (result.formulaFields != undefined) {

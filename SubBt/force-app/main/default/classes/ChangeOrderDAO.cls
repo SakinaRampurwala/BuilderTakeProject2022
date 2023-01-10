@@ -578,4 +578,20 @@ public with sharing class ChangeOrderDAO{
         return pickListValuesList;
     }
         
+    @AuraEnabled
+    public static Boolean checkCustomSettings(){
+        Boolean getConfigSetting;
+        //* default value is always set to false in custom settings;
+        try {
+            List<buildertek__BT_CO_Lines_From_Product__c> coSettingList = new List<buildertek__BT_CO_Lines_From_Product__c>();
+            coSettingList = [SELECT Id,buildertek__CO_Lines_Using_Product__c FROM buildertek__BT_CO_Lines_From_Product__c];
+            if (coSettingList.size() > 0) {
+                getConfigSetting = coSettingList[0].buildertek__CO_Lines_Using_Product__c;
+            }
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+            getConfigSetting = null;
+        }
+        return getConfigSetting;
+    }
 }

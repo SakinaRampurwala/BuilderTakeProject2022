@@ -1204,7 +1204,7 @@ Schema.sObjectType.pricebook2.fields.Name.isAccessible()){*/
     public static list<Budget_Item__c> BudgetItemList(list<string> BudgetIds){
         list<Budget_Item__c> BudgetItemList;
         //if (Schema.sObjectType.buildertek__Budget_Item__c.fields.Id.isAccessible() && Schema.sObjectType.buildertek__Budget_Item__c.fields.Name.isAccessible() && Schema.sObjectType.buildertek__Budget_Item__c.fields.buildertek__Product__c.isAccessible() && Schema.sObjectType.buildertek__Budget_Item__c.fields.buildertek__Quantity__c.isAccessible() && Schema.sObjectType.buildertek__Budget_Item__c.fields.buildertek__Amount_In__c.isAccessible() && Schema.sObjectType.buildertek__Budget_Item__c.fields.buildertek__Unit_Price__c.isAccessible() && Schema.sObjectType.buildertek__Budget_Item__c.fields.buildertek__Description__c.isAccessible() && Schema.sObjectType.buildertek__Budget_Item__c.fields.buildertek__Budget__c.isAccessible()){
-        BudgetItemList = [select Id, Name, buildertek__Product__c, buildertek__Description__c, buildertek__Quantity__c, buildertek__Unit_Price__c,buildertek__Trade_Type__c
+        BudgetItemList = [select Id, Name, buildertek__Product__c, buildertek__Description__c, buildertek__Quantity__c, buildertek__Unit_Price__c, buildertek__Gross_Profit_Percemtage__c,buildertek__Trade_Type__c
                           from buildertek__Budget_Item__c
                           where id IN :BudgetIds];
         //}
@@ -1416,7 +1416,7 @@ insert s;*/
         }
         String myqueries = '';
       string myquerie = '';
-                myqueries = 'select buildertek__Budget__c  ' + aggregateFields + ' from buildertek__Budget_Item__c where buildertek__Budget__c =: recordId ORDER BY buildertek__CostCodeDivision__c ASC NULLS LAST  limit ' + recordToDisply + ' OFFSET ' + offset;
+                myqueries = 'select buildertek__Budget__c  ' + aggregateFields + ' from buildertek__Budget_Item__c where buildertek__Budget__c =: recordId ORDER BY buildertek__CostCodeDivision__c ASC NULLS LAST, Name Asc limit ' + recordToDisply + ' OFFSET ' + offset;
                // myquerie = 'select buildertek__Budget__c  ' + aggregateFields + ' from buildertek__Budget_Item__c where buildertek__Budget__c =: recordId and buildertek__Group_Name__c = No Grouping Order By buildertek__Group_Name__c ASC limit ' + recordToDisply + ' OFFSET ' + offset;
 
            // if(nullspoRecList.size()>0){
@@ -2468,7 +2468,7 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
 
         changeOrderList = [SELECT Id, Name, buildertek__Project__c, buildertek__Description__c, buildertek__Vendor__c, buildertek__Vendor__r.Name,
                             buildertek__Total_Amount_Tax__c, buildertek__Total_Amount__c FROM buildertek__Change_Order__c
-                            WHERE buildertek__Project__c =: budgetRec.buildertek__Project__c AND (buildertek__Status__c = 'Customer Approved' OR buildertek__Status__c = 'Approved')];
+                            WHERE buildertek__Project__c =: budgetRec.buildertek__Project__c AND (buildertek__Status__c = 'Customer Approved' OR buildertek__Status__c = 'Approved') AND buildertek__Budget__c = null];
                         
         return changeOrderList;
     }
@@ -2487,7 +2487,7 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
     }
 
     @AuraEnabled
-    public static String addCoToBudget(String budgeLineIds, string selectedCO){
+    public static String addCoToBudget(String budgeLineIds, string selectedCO, string RecId){
         List<String> strList = budgeLineIds.split(',');
 
         buildertek__Change_Order__c co = [SELECT Id, Name, buildertek__Total_Amount_Tax__c FROM buildertek__Change_Order__c WHERE Id =: selectedCO];
@@ -2533,10 +2533,13 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
                         COItemToBudgetItemLinks.add(COItemToBudgetItemLink);
                     }
                 }
-                budgetItem.buildertek__Group__c = budgetGroupId;
+                // budgetItem.buildertek__Group__c = budgetGroupId;
             }
             update budgetItemList;
             insert COItemToBudgetItemLinks;
+
+            co.buildertek__Budget__c = RecId;
+            update co;
 
             ChangeOrderDAO.RollUpChangeOrderItemAmount(coLineIds);
             return 'Success';

@@ -2,7 +2,6 @@
     doInit: function (component, event, helper) {
 
         
-        
         var action = component.get("c.getUser");
         action.setCallback(this, function(response){
             if(response.getState() === "SUCCESS"){
@@ -29,17 +28,21 @@
                     
                   
                 }else{
-                     component.set('v.isopen',true); 
-                      component.set('v.ischangeorderline',false);
+                    debugger;
+                    /* component.set('v.isopen',true); 
+                    component.set('v.ischangeorderline',false);
                     component.set('v.isproduct',false);
-                    component.set('v.ischangeorder',false);
+                    component.set('v.ischangeorder',false); */
+                    helper.getResponseFromCustomSettings(component, event, helper);
                 } 
-                }else{
-                   component.set('v.isopen',true); 
-                      component.set('v.ischangeorderline',false);
-                    component.set('v.isproduct',false);
-                    component.set('v.ischangeorder',false); 
-                }
+            }else{
+                debugger
+                component.set('v.isopen',true); 
+                component.set('v.ischangeorderline',false);
+                component.set('v.isproduct',false);
+                component.set('v.ischangeorder',false); 
+                helper.getResponseFromCustomSettings(component, event, helper);
+            }
                 
                 
             }

@@ -9,19 +9,28 @@ public with sharing class BT_BudgetLineDetailPage {
     
     @AuraEnabled
     public static void updateRecord(buildertek__Budget_Item__c BudgetLine){
-
-        System.debug('BudgetLine: ' + BudgetLine);
-        System.debug('BudgetLine.buildertek__Product__c' + BudgetLine.buildertek__Product__c);
-        // set 
         update BudgetLine;
     }    
-
+    
     @AuraEnabled
     public static String getProductName(String productId){
-        System.debug('ProductID: ' + productId);
-        buildertek__Product__c Product = [SELECT Id, Name FROM buildertek__Product__c WHERE Id =: ProductID];
-        System.debug('Product: ' + Product);
-        System.debug('Product.Name: ' + Product.Name); 
-        return Product.Name;      
+        System.debug('productId: ' + productId);
+        String productName = [SELECT Name FROM Product2 WHERE Id =: productId].Name;
+        return productName;
+    }
+
+    @AuraEnabled
+    public static Decimal getunitPrice(String productId){
+        List<PricebookEntry> pricebookEntries = [SELECT Id, UnitPrice,buildertek__Unit_Cost__c FROM PricebookEntry WHERE Product2Id =: productId AND IsActive = true];
+        System.debug('pricebookEntries: ' + pricebookEntries);
+        if(pricebookEntries.size() == 0){
+            return null;
+        }
+        else if (pricebookEntries[0].buildertek__Unit_Cost__c == null){
+            return pricebookEntries[0].UnitPrice;
+        }
+        else{
+            return pricebookEntries[0].buildertek__Unit_Cost__c;
+        }
     }
 }
