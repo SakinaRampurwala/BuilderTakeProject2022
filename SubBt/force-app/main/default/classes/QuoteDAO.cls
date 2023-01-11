@@ -333,16 +333,34 @@ public with sharing class QuoteDAO{
             system.debug(quoteRec + '<-----markup value----->' + markupvalue);
             system.debug(quoteRec + '<-----margin value----->' + marginvalue);
             System.debug(quoteItem + 'Item Quote');
+            System.debug('quoteItem.buildertek__Markup__c====>>>'+quoteItem.buildertek__Markup__c);
+            System.debug(quoteItem.buildertek__Markup__c == null);
+            System.debug(quoteItem.buildertek__Markup__c <= 0);
             if (quoteItem.buildertek__Markup__c == null || quoteItem.buildertek__Markup__c <= 0){
+                System.debug('----1st If----');
                 quoteItem.buildertek__Markup__c = markupvalue;
+                System.debug('quoteItem.buildertek__Markup__c---->>>>'+quoteItem.buildertek__Markup__c);
             }
             if (quoteItem.buildertek__Margin__c == null || quoteItem.buildertek__Margin__c <= 0){
+                System.debug('----2nd If----');
                 quoteItem.buildertek__Margin__c = marginvalue;
+                System.debug('quoteItem.buildertek__Margin__c--->>>'+quoteItem.buildertek__Margin__c);
             }
+            
         }
+        System.debug('==========');
+        System.debug(Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Markup__c.isupdateable());
+        System.debug(Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Margin__c.isupdateable());
+        System.debug('==========');
         if (Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Markup__c.isupdateable() && Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Margin__c.isupdateable()){
             update quoteItemListRec;
+            System.debug('Update Successfully');
             System.debug('quoteItemListRec----->'+quoteItemListRec);
+
+            for (buildertek__Quote_Item__c quoteLine : quoteItemListRec) {
+                System.debug('quoteLine ==> '+quoteLine);
+                System.debug('quoteLine Markup -> '+quoteLine.buildertek__Markup__c );
+            }
         }
 
         return quoteItemListRec;

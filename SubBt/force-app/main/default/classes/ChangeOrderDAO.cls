@@ -164,9 +164,21 @@ public with sharing class ChangeOrderDAO{
 
             for (Change_Order_Item__c coItem : changeOrderItemList){
                 if (productNameMap.containskey(coItem.buildertek__Product__c)){
-                    coItem.Name = productNameMap.get(coItem.buildertek__Product__c);
+                    // coItem.Name = productNameMap.get(coItem.buildertek__Product__c);
+                    if (productNameMap.get(coItem.buildertek__Product__c).length() > 80) {
+                        string subStr = productNameMap.get(coItem.buildertek__Product__c).subString(0,76);
+                        coItem.Name = subStr.subString(0, subStr.lastIndexOf(' ')) + '...';
+                    } else {
+                        coItem.Name = productNameMap.get(coItem.buildertek__Product__c);
+                    }
                 } else{
-                    coItem.Name = coJson.Name;
+                    // coItem.Name = coJson.Name;
+                    if (coJson.Name.length() > 80) {
+                        string subStr = coJson.Name.subString(0,76);
+                        coItem.Name = subStr.subString(0, subStr.lastIndexOf(' ')) + '...';
+                    } else {
+                        coItem.Name = coJson.Name;
+                    }
                 }
                 coItem.Change_Order__c = coJson.Id;
                 if (coItem.buildertek__Budget_Item__c == null){

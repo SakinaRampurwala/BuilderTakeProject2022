@@ -97,7 +97,7 @@
 							<div class="slds-truncate" title="Quantity">Quantity</div>
 						</th>
 						<th scope="col" width="5%">
-							<div class="slds-truncate" title="Unit Price">Unit Price</div>
+							<div class="slds-truncate" title="Unit Price">Unit Cost</div>
 						</th>
 						<th scope="col" width="5%">
 							<div class="slds-truncate" title="Markup">Markup</div>

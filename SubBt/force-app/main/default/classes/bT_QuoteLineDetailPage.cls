@@ -2,7 +2,10 @@ public with sharing class bT_QuoteLineDetailPage {
 
     @AuraEnabled(cacheable=true)
     public static String getProductName(Id id) {
+        System.debug('id: '+id);
         Product2 p = [SELECT Name FROM Product2 WHERE Id = :id];
+        System.debug('p: '+p);
+        System.debug('Name: '+p.Name);
         return p.Name;
     }
 

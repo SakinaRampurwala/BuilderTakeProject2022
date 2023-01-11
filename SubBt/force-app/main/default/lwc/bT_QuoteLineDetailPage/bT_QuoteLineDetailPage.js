@@ -37,29 +37,38 @@ export default class BT_QuoteLineDetailPage extends LightningElement {
     }
 
     hnadleChange(event){
+        console.log('hnadleChange');
         var id = event.target.value;
         console.log(id);
-        getProductName({id:id})
-        .then(result => {
-            console.log(result);
-            this.ProductName = result;
+        try{
+            getProductName({id:id})
+            .then(result => {
+                console.log("Product Name: " + result);
+                this.ProductName = result;
+            }
+            )
+            .catch(error => {
+                this.error = error;
+            }
+            );
+        }catch(e){
+            console.log(e);
         }
-        )
-        .catch(error => {
-            this.error = error;
-        }
-        );
 
-        getUnitPrice({id:id})
-        .then(result => {
-            console.log(result);
-            this.UnitPrice = result;
+        try{
+            getUnitPrice({id:id})
+            .then(result => {
+                console.log("Unit Price: " + result);
+                this.UnitPrice = result;
+            }
+            )
+            .catch(error => {
+                this.error = error;
+            }
+            );
+        }catch(e){
+            console.log(e);
         }
-        )
-        .catch(error => {
-            this.error = error;
-        }
-        );
 
 
     }

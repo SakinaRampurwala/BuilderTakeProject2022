@@ -92,82 +92,45 @@ access="global" controller="BT_BudgetLineDetailPage" >
                         </div>
                     </div>
                 </lightning:recordViewForm>
-                <lightning:accordion allowMultipleSectionsOpen="true" title="Update Information">
-                    <lightning:accordionSection label="Update Information">
-                        <lightning:recordViewForm recordId="{!v.BudgetLine.Id}" objectApiName="buildertek__Budget_Item__c">
-                            <div class="slds-grid ">
-                                <div class="slds-col slds-size_1-of-2">
-                                    <lightning:outputField class="bottom-line" fieldName="CreatedById" />
-                                    <lightning:outputField class="bottom-line" fieldName="LastModifiedDate" />         
-                                </div>
-                                <div class="slds-col slds-size_1-of-2">
-                                    <lightning:outputField class="bottom-line" fieldName="LastModifiedById" />
-                                    <lightning:outputField class="bottom-line" fieldName="CreatedDate" />
-                                </div>
-                            </div>
-                        </lightning:recordViewForm> 
-                    </lightning:accordionSection>
-                </lightning:accordion>
+                <div class="headingDiv "> Update Information </div>
+                <lightning:recordViewForm recordId="{!v.BudgetLine.Id}" objectApiName="buildertek__Budget_Item__c">
+                    <div class="slds-grid ">
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning:outputField class="bottom-line" fieldName="CreatedById" />
+                            <lightning:outputField class="bottom-line" fieldName="LastModifiedDate" />         
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning:outputField class="bottom-line" fieldName="LastModifiedById" />
+                            <lightning:outputField class="bottom-line" fieldName="CreatedDate" />
+                        </div>
+                    </div>
+                </lightning:recordViewForm> 
                 <aura:set attribute="else">
                     <lightning:recordEditForm recordId="{!v.BudgetLine.Id}" objectApiName="buildertek__Budget_Item__c">
                         <div class="slds-grid ">
                             <div class="slds-col slds-size_1-of-2">
-                                <div class="field-container">
-                                    <lightning:inputField fieldName="buildertek__Product__c" value="{!v.BudgetLine.buildertek__Product__c}" onchange="{!c.editProductName}" />
-                                </div>
-                                <div class="field-container">
-                                    <lightning:outputField fieldName="buildertek__Product_Name__c"/>
-                                </div>
-                                <div class="field-container">
-                                    <lightning:inputField fieldName="Name" value="{!v.BudgetLine.Name}" />
-                                </div>
-                                <div class="field-container">
-                                    <lightning:inputField fieldName="buildertek__Group__c" value="{!v.BudgetLine.buildertek__Group__c}" />
-                                </div>
-                                <div class="field-container">
-                                    <lightning:inputField fieldName="buildertek__Quantity__c" value="{!v.BudgetLine.buildertek__Quantity__c}" />
-                                </div>
-                                <div class="field-container">
-                                    <lightning:inputField fieldName="buildertek__Unit_Price__c" value="{!v.BudgetLine.buildertek__Unit_Price__c}" />
-                                </div>
-                                <div class="field-container">
-                                    <lightning:inputField fieldName="buildertek__UOM__c" value="{!v.BudgetLine.buildertek__UOM__c}" />
-                                </div>
-                                <div class="field-container">
-                                    <lightning:outputField fieldName="buildertek__Original_Budget__c"/>
-                                </div>
-                                <div class="field-container">
-                                    <lightning:inputField fieldName="buildertek__Committed_Costs__c" value="{!v.BudgetLine.buildertek__Committed_Costs__c}"  />
-                                </div>
-                                <div class="field-container">
-                                    <lightning:inputField fieldName="buildertek__Additional_Costs__c" value="{!v.BudgetLine.buildertek__Additional_Costs__c}" />
-                                </div>
-                                <div class="field-container">
-                                    <lightning:inputField fieldName="buildertek__Invoice_total__c" value="{!v.BudgetLine.buildertek__Invoice_total__c}" />
-                                </div>
-                                <div class="field-container">
-                                    <lightning:inputField class="bottom-line" fieldName="buildertek__Approved_CO__c"  />
-                                </div>
-                                <div class="field-container">
-                                    <lightning:inputField class="bottom-line" fieldName="buildertek__Total_Costs__c"  />
-                                </div>
+                                <lightning:inputField fieldName="buildertek__Product__c" value="{!v.BudgetLine.buildertek__Product__c}" onchange="{!c.editProductName}" />
+                                <lightning:inputField fieldName="buildertek__Product_Name__c"  value="{!v.BudgetLine.buildertek__Product_Name__c}"/>
+                                <lightning:inputField fieldName="Name" value="{!v.BudgetLine.Name}" />
+                                <lightning:inputField fieldName="buildertek__Group__c" value="{!v.BudgetLine.buildertek__Group__c}" />
+                                <lightning:inputField fieldName="buildertek__Quantity__c" value="{!v.BudgetLine.buildertek__Quantity__c}" />
+                                <lightning:inputField fieldName="buildertek__Unit_Price__c" value="{!v.BudgetLine.buildertek__Unit_Price__c}" />
+                                <lightning:inputField fieldName="buildertek__UOM__c" value="{!v.BudgetLine.buildertek__UOM__c}" />
+                                <lightning:outputField fieldName="buildertek__Original_Budget__c"/>
+                                <lightning:outputField fieldName="buildertek__Committed_Costs__c"  />
+                                <lightning:outputField fieldName="buildertek__Additional_Costs__c"  />
+                                <lightning:inputField fieldName="buildertek__Labor__c" value="{!v.BudgetLine.buildertek__Labor__c}"/>
+                                <lightning:inputField fieldName="buildertek__Invoice_total__c" value="{!v.BudgetLine.buildertek__Invoice_total__c}" />
+                                <lightning:outputField  fieldName="buildertek__Approved_CO__c"  />
+                                <lightning:outputField  fieldName="buildertek__Total_Costs__c"  />
+
                             </div>
                             <div class="slds-col slds-size_1-of-2">
-                                <div class="field-container">
-                                    <lightning:inputField class="bottom-line" fieldName="buildertek__Budget__c"  />
-                                </div>
-                                <div class="field-container">
-                                    <lightning:inputField fieldName="buildertek__Contractor__c" value="{!v.BudgetLine.buildertek__Contractor__c}"/> 
-                                </div>
-                                <div class="field-container">
-                                    <lightning:inputField fieldName="buildertek__Cost_Code__c" value="{!v.BudgetLine.buildertek__Cost_Code__c}" />
-                                </div>
-                                <div class="field-container">
-                                    <lightning:inputField fieldName="buildertek__Profit_Loss__c" value="{!v.BudgetLine.buildertek__Profit_Loss__c}" />
-                                </div>
-                                <div class="field-container">
-                                    <lightning:inputField fieldName="buildertek__Complete__c" value="{!v.BudgetLine.buildertek__Complete__c}" />
-                                </div>
+                                <lightning:outputField fieldName="buildertek__Budget__c"  />
+                                <lightning:inputField fieldName="buildertek__Contractor__c" value="{!v.BudgetLine.buildertek__Contractor__c}"/> 
+                                <lightning:inputField fieldName="buildertek__Cost_Code__c" value="{!v.BudgetLine.buildertek__Cost_Code__c}" />
+                                <lightning:outputField fieldName="buildertek__Profit_Loss__c" />
+                                <lightning:inputField fieldName="buildertek__Complete__c" value="{!v.BudgetLine.buildertek__Complete__c}" />
                             </div>
                         </div>
                     </lightning:recordEditForm>
