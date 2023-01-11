@@ -1833,6 +1833,8 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
         for (var i in totalRecords.groupHierarchy[parentIndex].subGroupRecords[0].records) {
             console.log({i});
             console.log(totalRecords.groupHierarchy[parentIndex].subGroupRecords[0].records);
+            // var recordIdList=totalRecords.groupHierarchy[parentIndex].subGroupRecords[0].records;
+            // var budgetId =totalRecords.groupHierarchy[parentIndex].subGroupRecords[0].records[i].recordId
 
             if (isSelected) {
                 document.getElementById(parentIndex + '-0-' + i + '-' + tabId + '-' + budgetId).checked = true;
@@ -1843,8 +1845,12 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
                 console.log('no selected');
                 totalRecords.groupHierarchy[parentIndex].subGroupRecords[0].records[i].isSelected = false;
                 document.getElementById(parentIndex + '-0-' + i + '-' + tabId + '-' + budgetId).checked = false;
-                console.log(otalRecords.groupHierarchy[parentIndex].subGroupRecords[0].records[i].recordId);
-                selectedRecs.splice(totalRecords.groupHierarchy[parentIndex].subGroupRecords[0].records[i].recordId, 1);
+                selectedRecs.forEach((element , index)=>{
+                    if(element ==  totalRecords.groupHierarchy[parentIndex].subGroupRecords[0].records[i].recordId){
+                        selectedRecs.splice( index , 1);
+                    }
+                })
+                // selectedRecs.splice(totalRecords.groupHierarchy[parentIndex].subGroupRecords[0].records[i].recordId, 1);
             }
         }
         //component.set('v.TotalRecords', totalRecords);
