@@ -908,6 +908,7 @@
                                                                     <div class="slds-form-element__control">
                                                                         <div class="slds-checkbox">
                                                                             <input type="checkbox" name="{!parentGroupIndex+'-'+subGroupIndex+'-'+recIndex+'-'+v.currentTab}" checked="{!recs.isSelected}" id="{!parentGroupIndex+'-'+subGroupIndex+'-'+recIndex+'-'+v.currentTab+'-'+v.budgetId}" onclick="{!c.unCheckAll}" />
+
                                                                             <label class="slds-checkbox__label" for="{!parentGroupIndex+'-'+subGroupIndex+'-'+recIndex+'-'+v.currentTab+'-'+v.budgetId}">
                                                                                 <span class="slds-checkbox_faux"></span>
                                                                                 <span

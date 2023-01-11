@@ -1772,9 +1772,12 @@ $A.enqueueAction(action1);*/
         });
         console.log('actionLines-->>>',{actionLines});
         actionLines.setCallback(this, function(response) {
+            var error = response.getError();
+            console.log('Error =>',{error});
+
             if (response.getState() == "SUCCESS") {
                 console.log('<<<---Success--->>>');
-                component.set("v.QuoteMargin","");
+                component.set("v.QuoteMargin",'');
                 var result = response.getReturnValue();
                 console.log('result--->'+result);
                 component.set("v.TotalRecords", result);

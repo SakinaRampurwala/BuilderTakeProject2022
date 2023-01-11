@@ -930,7 +930,7 @@
                             newCOItem.buildertek__Description__c = rowData.Name;
                             newCOItem.buildertek__Quantity__c = rowData.buildertek__Quantity__c;
                             newCOItem.buildertek__Unit_Price__c = rowData.buildertek__Unit_Price__c;
-                            newCOItem.buildertek__Markup__c = rowData.buildertek__Gross_Profit_Percemtage__c;
+                            // newCOItem.buildertek__Markup__c = rowData.buildertek__Gross_Profit_Percemtage__c;
                             newCOItems.push(newCOItem);
                         }
                         // component.set("v.selectedCol", []);
@@ -1814,11 +1814,11 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
     },
 
     handleSelectAll: function(component, event, helper) {
-        debugger;
+        // debugger;
         var selectedIndex = event.getSource().get("v.name");
         //  alert(selectedIndex);
         var isSelected = event.getSource().get('v.checked');
-        debugger;
+        // debugger;
         var parentIndex = selectedIndex.split('-')[0];
         var childIndex = selectedIndex.split('-')[1];
         var totalRecords = component.get('v.TotalRecords');
@@ -1827,16 +1827,23 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
         var budgetId = component.get("v.budgetId");
         console.log('totalRecords::::::', totalRecords);
         var selectedRecs = component.get('v.selectedRecs');
+        console.log(selectedIndex +':' + selectedRecs);
         console.log('records:', totalRecords.groupHierarchy[parentIndex].subGroupRecords[0].records);
+
         for (var i in totalRecords.groupHierarchy[parentIndex].subGroupRecords[0].records) {
+            console.log({i});
+            console.log(totalRecords.groupHierarchy[parentIndex].subGroupRecords[0].records);
+
             if (isSelected) {
                 document.getElementById(parentIndex + '-0-' + i + '-' + tabId + '-' + budgetId).checked = true;
                 console.log('true or false::::::', totalRecords.groupHierarchy[parentIndex].subGroupRecords[0].records[i].isSelected);
                 totalRecords.groupHierarchy[parentIndex].subGroupRecords[0].records[i].isSelected = true;
                 selectedRecs.push(totalRecords.groupHierarchy[parentIndex].subGroupRecords[0].records[i].recordId);
             } else {
+                console.log('no selected');
                 totalRecords.groupHierarchy[parentIndex].subGroupRecords[0].records[i].isSelected = false;
                 document.getElementById(parentIndex + '-0-' + i + '-' + tabId + '-' + budgetId).checked = false;
+                console.log(otalRecords.groupHierarchy[parentIndex].subGroupRecords[0].records[i].recordId);
                 selectedRecs.splice(totalRecords.groupHierarchy[parentIndex].subGroupRecords[0].records[i].recordId, 1);
             }
         }
@@ -2526,21 +2533,30 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
     },
 
     unCheckAll: function(component, event, helper) {
+        console.log('call uncheck All');
+
+        console.log(event.currentTarget.Id + '::::::ID:::::');
         var selectedIndex = event.currentTarget.name; //event.getSource().get("v.name");
         var isSelected = event.currentTarget.checked //event.getSource().get('v.checked');
+        console.log(isSelected);
         var parentIndex = selectedIndex.split('-')[0];
         var childIndex = selectedIndex.split('-')[1];
         var recordIndex = selectedIndex.split('-')[2];
         var totalRecords = component.get('v.TotalRecords').groupHierarchy;
         var listofRecs = component.get('v.selectedRecs');
 
+        var getId=totalRecords[parentIndex].subGroupRecords[childIndex].records[recordIndex].recordId;
         if (isSelected) {
             listofRecs.push(totalRecords[parentIndex].subGroupRecords[childIndex].records[recordIndex].recordId);
         } else {
-            listofRecs.splice(totalRecords[parentIndex].subGroupRecords[childIndex].records[recordIndex].recordId, 1);
+            listofRecs.forEach((value , index)=>{
+                if(value == getId){
+                    listofRecs.splice(index , 1);
+                }
+            });
+            // listofRecs.splice(totalRecords[parentIndex].subGroupRecords[childIndex].records[recordIndex].recordId, 1);
         }
         component.set('v.selectedRecs', listofRecs);
-
         console.log(listofRecs);
 
         // var records = totalRecords.tarTable.ListOfEachRecord;
