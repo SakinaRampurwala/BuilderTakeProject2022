@@ -66,7 +66,7 @@
     		if (response.getState() == "SUCCESS") {
     		    var result  = response.getReturnValue();
     			var opts = [];
-    			opts.push({key: "None", value: "" });
+                opts.push({key: "None", value: "" });
                 for(var key in result){
                     opts.push({key: key, value: result[key]});
                 }

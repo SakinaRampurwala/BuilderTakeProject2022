@@ -18,7 +18,7 @@ public class OverrideNewQuoteLineItemController {
         
         list<pricebook2> PriceList;
         
-            PriceList = [select Id,Name from pricebook2 WHERE Name!=null];
+            PriceList = [select Id,Name from pricebook2 WHERE Name!=null order by Name asc];
         
         for (pricebook2 p: PriceList) {
             //Put Picklist Value & Label in Map
@@ -100,6 +100,9 @@ public class OverrideNewQuoteLineItemController {
             
         return QuoteitemToInsert;     
     }
+
+    //Beyond Code is edted regarding ticket for creating custom form using field set
+
     
 
 }

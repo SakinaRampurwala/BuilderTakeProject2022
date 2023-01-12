@@ -1046,8 +1046,11 @@
 
         if (!component.get("v.enableMassUpdate")) {
             var recordId = component.get("v.quoteItemId");
+            console.log('recordId--->>>',{recordId});
             var quoteList = component.get("v.datalist");
+            console.log('quoteList--->>>',{quoteList});
             var initialString = component.get("v.finalString");
+            console.log('initialString--->>>',{initialString});
             var delId = {};
             var newId = {};
             if (initialString == null) {
@@ -1118,7 +1121,7 @@
                     //Bakul - 12/16 - commented as component attribut already has latest data
                     //component.set("v.quoteItemList", result);
                     /*var action1 = component.get('c.doInit');
-$A.enqueueAction(action1);*/
+                    $A.enqueueAction(action1);*/
                     var page = component.get("v.page") || 1
                     helper.getGroups(component, event, helper, page);
                 }
@@ -1195,8 +1198,11 @@ $A.enqueueAction(action1);*/
                 "action": "SHOW"
             }).fire();
             var TotalRecords = component.get("v.TotalRecords");
+            console.log('TotalRecords--->>',{TotalRecords});
             var ListOfEachRecord = TotalRecords.tarTable.ListOfEachRecord;
+            console.log('ListOfEachRecord--->>',{ListOfEachRecord});
             var ListOfEachRecordLength = ListOfEachRecord.length;
+            console.log('ListOfEachRecordLength--->>',{ListOfEachRecordLength});
 
             var newMassQi = [];
 

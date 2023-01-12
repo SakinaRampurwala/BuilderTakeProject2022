@@ -79,12 +79,13 @@ public static void setDefaultGrouping(List<buildertek__Budget_Item__c> BudgetIte
         
         list<pricebook2> PriceList;
         
-            PriceList = [select Id,Name from pricebook2 WHERE Name!=null];
+            PriceList = [select Id,Name from pricebook2 WHERE Name!=null order by Name asc];
         
         for (pricebook2 p: PriceList) {
             //Put Picklist Value & Label in Map
             options.put(p.name, p.Id); 
         }
+        //System.debug('options '+options);
         return options;
     } 
     

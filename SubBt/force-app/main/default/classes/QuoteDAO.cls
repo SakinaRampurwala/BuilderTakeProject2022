@@ -330,8 +330,8 @@ public with sharing class QuoteDAO{
 
         for (buildertek__Quote_Item__c quoteItem : quoteItemListRec){
 
-            system.debug(quoteRec + '<-----markup value----->' + markupvalue);
-            system.debug(quoteRec + '<-----margin value----->' + marginvalue);
+            system.debug(quoteRec + 'Markup value----->' + markupvalue);
+            system.debug(quoteRec + 'Margin value----->' + marginvalue);
             System.debug(quoteItem + 'Item Quote');
             System.debug('quoteItem.buildertek__Markup__c====>>>'+quoteItem.buildertek__Markup__c);
             System.debug(quoteItem.buildertek__Markup__c == null);
@@ -346,13 +346,19 @@ public with sharing class QuoteDAO{
                 quoteItem.buildertek__Margin__c = marginvalue;
                 System.debug('quoteItem.buildertek__Margin__c--->>>'+quoteItem.buildertek__Margin__c);
             }
-            
+            // update quoteItem;
+            // System.debug('Update Successfully');
+
+            // quoteItemListRec.add(quoteItem);
         }
+        // update quoteItemListRec;
         System.debug('==========');
         System.debug(Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Markup__c.isupdateable());
         System.debug(Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Margin__c.isupdateable());
         System.debug('==========');
+        update quoteItemListRec;
         if (Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Markup__c.isupdateable() && Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Margin__c.isupdateable()){
+            System.debug('<<<<----In If Block---->>>>');
             update quoteItemListRec;
             System.debug('Update Successfully');
             System.debug('quoteItemListRec----->'+quoteItemListRec);
