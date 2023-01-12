@@ -2501,7 +2501,7 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
     unCheckAll: function(component, event, helper) {
         console.log('call uncheck All');
 
-        console.log(event.currentTarget.Id + '::::::ID:::::');
+        console.log(event.currentTarget.id + '::::::ID:::::');
         var selectedIndex = event.currentTarget.name; //event.getSource().get("v.name");
         var isSelected = event.currentTarget.checked //event.getSource().get('v.checked');
         console.log(isSelected);
@@ -2511,20 +2511,29 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
         var totalRecords = component.get('v.TotalRecords').groupHierarchy;
         var listofRecs = component.get('v.selectedRecs');
 
+
+
         var getId=totalRecords[parentIndex].subGroupRecords[childIndex].records[recordIndex].recordId;
         if (isSelected) {
             listofRecs.push(totalRecords[parentIndex].subGroupRecords[childIndex].records[recordIndex].recordId);
         } else {
-            console.log(totalRecords[parentIndex].groupId);
-            console.log(totalRecords[parentIndex]);
+
+            console.log(document.getElementById(totalRecords[parentIndex].groupId));
+            document.getElementById(totalRecords[parentIndex].groupId).checked=false;
             listofRecs.forEach((value , index)=>{
                 if(value == getId){
                     listofRecs.splice(index , 1);
                 }
             });
-            totalRecords[parentIndex].isSelected=false;
-            console.log(totalRecords[parentIndex].isSelected);
+            // try {
+            //     var totalRecordsTest = component.get('v.TotalRecords');
+            //     totalRecordsTest.groupHierarchy[parentIndex].isSelected = false;
+            //     component.set('v.TotalRecords',totalRecordsTest);
+            //     console.log('totalRecordsTest ==> ',{totalRecordsTest});
 
+            // } catch (error) {
+            //     console.log('error==>',{error});
+            // }
         }
         component.set('v.selectedRecs', listofRecs);
         console.log(listofRecs);

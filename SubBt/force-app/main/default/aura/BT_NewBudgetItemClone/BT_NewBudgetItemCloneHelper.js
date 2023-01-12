@@ -2091,11 +2091,11 @@
         $A.enqueueAction(action);
     },
     handleSelectAll: function(component, event, helper) {
-        // debugger;
-        var selectedIndex = event.getSource().get("v.name");
-        //  alert(selectedIndex);
-        var isSelected = event.getSource().get('v.checked');
-        // debugger;
+        console.log(event.target.name);
+        console.log(event.target.checked);
+
+        var selectedIndex = event.target.name;
+        var isSelected = event.target.checked;
         var parentIndex = selectedIndex.split('-')[0];
         var childIndex = selectedIndex.split('-')[1];
         var totalRecords = component.get('v.TotalRecords');
@@ -2110,9 +2110,6 @@
         for (var i in totalRecords.groupHierarchy[parentIndex].subGroupRecords[0].records) {
             console.log({i});
             console.log(totalRecords.groupHierarchy[parentIndex].subGroupRecords[0].records);
-            // var recordIdList=totalRecords.groupHierarchy[parentIndex].subGroupRecords[0].records;
-            // var budgetId =totalRecords.groupHierarchy[parentIndex].subGroupRecords[0].records[i].recordId
-
             if (isSelected) {
                 document.getElementById(parentIndex + '-0-' + i + '-' + tabId + '-' + budgetId).checked = true;
                 console.log('true or false::::::', totalRecords.groupHierarchy[parentIndex].subGroupRecords[0].records[i].isSelected);
@@ -2127,7 +2124,6 @@
                         selectedRecs.splice( index , 1);
                     }
                 })
-                // selectedRecs.splice(totalRecords.groupHierarchy[parentIndex].subGroupRecords[0].records[i].recordId, 1);
             }
         }
         console.log({selectedRecs});
