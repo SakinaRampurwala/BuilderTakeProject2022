@@ -1814,47 +1814,7 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
     },
 
     handleSelectAll: function(component, event, helper) {
-        // debugger;
-        var selectedIndex = event.getSource().get("v.name");
-        //  alert(selectedIndex);
-        var isSelected = event.getSource().get('v.checked');
-        // debugger;
-        var parentIndex = selectedIndex.split('-')[0];
-        var childIndex = selectedIndex.split('-')[1];
-        var totalRecords = component.get('v.TotalRecords');
-
-        var tabId = component.get("v.currentTab")
-        var budgetId = component.get("v.budgetId");
-        console.log('totalRecords::::::', totalRecords);
-        var selectedRecs = component.get('v.selectedRecs');
-        console.log(selectedIndex +':' + selectedRecs);
-        console.log('records:', totalRecords.groupHierarchy[parentIndex].subGroupRecords[0].records);
-
-        for (var i in totalRecords.groupHierarchy[parentIndex].subGroupRecords[0].records) {
-            console.log({i});
-            console.log(totalRecords.groupHierarchy[parentIndex].subGroupRecords[0].records);
-            // var recordIdList=totalRecords.groupHierarchy[parentIndex].subGroupRecords[0].records;
-            // var budgetId =totalRecords.groupHierarchy[parentIndex].subGroupRecords[0].records[i].recordId
-
-            if (isSelected) {
-                document.getElementById(parentIndex + '-0-' + i + '-' + tabId + '-' + budgetId).checked = true;
-                console.log('true or false::::::', totalRecords.groupHierarchy[parentIndex].subGroupRecords[0].records[i].isSelected);
-                totalRecords.groupHierarchy[parentIndex].subGroupRecords[0].records[i].isSelected = true;
-                selectedRecs.push(totalRecords.groupHierarchy[parentIndex].subGroupRecords[0].records[i].recordId);
-            } else {
-                console.log('no selected');
-                totalRecords.groupHierarchy[parentIndex].subGroupRecords[0].records[i].isSelected = false;
-                document.getElementById(parentIndex + '-0-' + i + '-' + tabId + '-' + budgetId).checked = false;
-                selectedRecs.forEach((element , index)=>{
-                    if(element ==  totalRecords.groupHierarchy[parentIndex].subGroupRecords[0].records[i].recordId){
-                        selectedRecs.splice( index , 1);
-                    }
-                })
-                // selectedRecs.splice(totalRecords.groupHierarchy[parentIndex].subGroupRecords[0].records[i].recordId, 1);
-            }
-        }
-        //component.set('v.TotalRecords', totalRecords);
-        component.set('v.selectedRecs', selectedRecs);
+        helper.handleSelectAll(component, event, helper);
 
     },
 
@@ -2555,48 +2515,19 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
         if (isSelected) {
             listofRecs.push(totalRecords[parentIndex].subGroupRecords[childIndex].records[recordIndex].recordId);
         } else {
+            console.log(totalRecords[parentIndex].groupId);
+            console.log(totalRecords[parentIndex]);
             listofRecs.forEach((value , index)=>{
                 if(value == getId){
                     listofRecs.splice(index , 1);
                 }
             });
-            // listofRecs.splice(totalRecords[parentIndex].subGroupRecords[childIndex].records[recordIndex].recordId, 1);
+            totalRecords[parentIndex].isSelected=false;
+            console.log(totalRecords[parentIndex].isSelected);
+
         }
         component.set('v.selectedRecs', listofRecs);
         console.log(listofRecs);
-
-        // var records = totalRecords.tarTable.ListOfEachRecord;
-        // let deSelectGroup = new Set()
-
-        // for (var i in records) {
-        // 	if (selectedId === records[i].recordId) {
-        // 		if (records[i].isSelected === false) {
-        // 			deSelectGroup.add(records[i].groupId);
-        // 		}
-        // 	}
-        // }
-
-        // for (var i in totalRecords.groups) {
-        // 	if (deSelectGroup.has(totalRecords.groups[i].Id)) {
-        // 		totalRecords.groups[i].isSelected = false;
-        // 	}
-        // }
-        // component.set('v.TotalRecords', totalRecords);
-        // var checkQuoteItem = component.find("checkQuoteItem");
-        // var checkvalue = component.find("selectAll");
-        // var checkBool = 0;
-
-        // for (var i = 0; i < checkQuoteItem.length; i++) {
-        // 	if (checkQuoteItem[i].get("v.value")) {
-        // 		checkBool++;
-        // 	}
-        // }
-
-        // if (checkBool == checkQuoteItem.length) {
-        // 	checkvalue.set("v.value", true);
-        // } else {
-        // 	checkvalue.set("v.value", false);
-        // }
     },
 
     //mass Functionality end

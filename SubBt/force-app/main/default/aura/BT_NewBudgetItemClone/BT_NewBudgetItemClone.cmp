@@ -255,6 +255,8 @@
     <!--  End -->
 
     <aura:attribute name="isExpandGrp" type="Boolean" default="false" />
+    <aura:attribute name="isSelected" type="Boolean" />
+
 
     <force:recordData aura:id="newforcerecord" layoutType="FULL" recordId="{!v.recordId}" targetRecord="{!v.newRecord}" targetFields="{!v.sampleNewRecord}" targetError="{!v.newRecordError}" />
 
@@ -814,8 +816,10 @@
                                                     <!-- <th></th>-->
                                                     <th class="slds-is-sortable" scope="col" width="5px">
                                                         <span data-headcheckbox="{!parentGroupIndex+'-'+subGroupIndex}">
+
                                                             <lightning:input type="checkbox"
                                                                 name="{!parentGroupIndex+'-'+subGroupIndex}"
+                                                                id="{!group.groupId}"
                                                                 checked="{!group.isSelected}"
                                                                 onchange="{!c.handleSelectAll}" />
                                                         </span>
@@ -907,7 +911,7 @@
                                                                 <div class="slds-form-element">
                                                                     <div class="slds-form-element__control">
                                                                         <div class="slds-checkbox">
-                                                                            <input type="checkbox" name="{!parentGroupIndex+'-'+subGroupIndex+'-'+recIndex+'-'+v.currentTab}" checked="{!recs.isSelected}" id="{!parentGroupIndex+'-'+subGroupIndex+'-'+recIndex+'-'+v.currentTab+'-'+v.budgetId}" onclick="{!c.unCheckAll}" />
+                                                                            <input type="checkbox"  name="{!parentGroupIndex+'-'+subGroupIndex+'-'+recIndex+'-'+v.currentTab}" checked="{!recs.isSelected}" id="{!parentGroupIndex+'-'+subGroupIndex+'-'+recIndex+'-'+v.currentTab+'-'+v.budgetId}" onclick="{!c.unCheckAll}" />
 
                                                                             <label class="slds-checkbox__label" for="{!parentGroupIndex+'-'+subGroupIndex+'-'+recIndex+'-'+v.currentTab+'-'+v.budgetId}">
                                                                                 <span class="slds-checkbox_faux"></span>

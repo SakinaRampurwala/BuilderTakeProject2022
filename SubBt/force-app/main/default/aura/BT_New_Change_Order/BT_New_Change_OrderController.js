@@ -12,6 +12,7 @@
             var state = response.getState();
             if (state === "SUCCESS") {
                 var result = response.getReturnValue();
+                console.log({result});
                 component.set("v.coItemsToInsert", result);
                 component.set("v.Spinner", false);
             }
