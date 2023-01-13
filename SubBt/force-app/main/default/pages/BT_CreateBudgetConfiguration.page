@@ -12,6 +12,8 @@
                 </apex:inputcheckbox> 
                  <apex:inputcheckbox value="{!isCostCode}" label="Group by Cost Code for Budget">
                 </apex:inputcheckbox> 
+                <apex:inputcheckbox value="{!isGroupByVendor}" label="Group by Vendor for Budget">
+                </apex:inputcheckbox> 
                 <center>
                 <apex:commandButton value="Save" id="onCreateChangeOrderonOverage" styleClass="slds-button slds-button_brand" action="{!onQuoteAccepted}"></apex:commandButton>
                 </center>

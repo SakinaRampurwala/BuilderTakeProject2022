@@ -5,18 +5,25 @@
     checkToogle: function(component, event, helper) {
         event.preventDefault();
         var page = component.get("v.page") || 1;
-        var checked = event.getSource().get("v.name");
-        if (checked == "Group By Vendor") {
+        // var checked = event.getSource().get("v.name");
+        var name = event.target.name;
+        console.log(event.target.checked);
+        console.log(event.target.name);
+
+
+        if (name == "Group By Vendor") {
             component.set("v.groupBytoggle2", false);
-            if (!event.getSource().get("v.checked")) {
-                component.find("vendor").set("v.checked", true);
+            if (!event.target.checked) {
+                // component.find("vendor").set("v.checked", true);
+                document.getElementById('vendor').checked=false;
                 component.set("v.groupBytoggle", true);
                 component.set("v.groupByVendortoggle2", false);
                 component.set("v.groupByVendortoggle1", false);
                 component.set("v.groupByCostCode", false);
 
             } else {
-                component.find("vendor").set("v.checked", false);
+                // component.find("vendor").set("v.checked", false);
+                document.getElementById('vendor').checked=true;
                 component.set("v.groupBytoggle", false);
                 component.set("v.groupByVendortoggle1", false);
                 component.set("v.groupByVendortoggle2", false);
@@ -38,7 +45,7 @@
             if (!event.getSource().get("v.checked")) {
                 component.find("Cost Code1").set("v.checked", true);
                 component.get("v.groupBytoggle1");
-                component.find("vendor").set("v.checked", false);
+                document.getElementById('vendor').checked= false;
                 component.set("v.groupBytoggle", false);
                 component.set("v.groupByVendortoggle1", true);
                 component.set("v.groupByCostCode", false);
@@ -46,7 +53,7 @@
                 // component.set("v.groupByVendortoggle1",true);
             } else {
                 component.find("Cost Code1").set("v.checked", false);
-                component.find("vendor").set("v.checked", true);
+                document.getElementById('vendor').checked= true;
                 component.set("v.groupBytoggle", true);
 
                 //alert( component.set("v.groupBytoggle",true));
@@ -84,6 +91,32 @@
         var toggleVal = component.get("v.groupBytoggle2");
         helper.getBudgetGroups(component, event, helper, page);
     },
+    // checkToogle0: function(component, event, helper) {
+    //     console.log('---toogle2---');
+    //     event.preventDefault();
+    //     var page = component.get("v.page") || 1;
+    //     var checked = event.getSource().get("v.name");
+    //     var bt = component.get("v.isGroupByVendor");
+    //     // alert('bt'+bt);
+    //     if (checked == "Group By Vendor") {
+    //         if (!event.getSource().get("v.checked")) {
+    //             component.find("groupByVendor").set("v.checked", true);
+    //             component.set("v.groupBytoggle", true);
+    //             component.set("v.groupByVendortoggle2", false);
+    //             component.set("v.groupByVendortoggle1", false);
+    //             component.set("v.groupByCostCode", false);
+    //         } else {
+    //             component.find("vendor").set("v.checked", false);
+    //             component.set("v.groupBytoggle", false);
+    //             component.set("v.groupByVendortoggle1", false);
+    //             component.set("v.groupByVendortoggle2", false);
+    //             component.set("v.groupByCostCode", false);
+    //         }
+
+    //     }
+    //     var toggleVal = component.get("v.groupBytoggle");
+    //     helper.getBudgetGroups(component, event, helper, page);
+    // },
 
     closetab: function(component, event, helper) {
         var workspaceAPI = component.find("workspace");
@@ -219,18 +252,29 @@
         btadminaction.setCallback(this, function(response) {
             if (response.getState() === 'SUCCESS') {
                 var result = response.getReturnValue();
-                if (result == true) {
-
+                console.log({result});
+               if(result == 'groupByVendor'){
+                    document.getElementById('vendor').checked= true;
+                    component.set("v.groupBytoggle", false);
+                    component.set("v.groupByVendortoggle1", false);
+                    component.set("v.groupByVendortoggle2", false);
+                    component.set("v.groupByCostCode", false);
+                    helper.getBudgetGroups(component, event, helper, page);
+                }else if(result == 'groupByCostCode'){
                     component.set("v.Isbtvalue", true);
+                    document.getElementById('vendor').checked= false;
                     helper.getBudgetGroups(component, event, helper, page);
-
-                } else {
+                    
+                }else{
                     component.set("v.Isbtvalue", false);
-                    helper.getBudgetGroups(component, event, helper, page);
+                    document.getElementById('vendor').checked= false;
                 }
             }
         });
         $A.enqueueAction(btadminaction);
+        console.log(component.get('v.isGroupByVendor'));
+        console.log(component.get('v.Isbtvalue'));
+
 
 
 

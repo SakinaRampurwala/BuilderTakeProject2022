@@ -672,15 +672,13 @@ Returns: Pricebookentry List
 Throws [Exceptions]:
 **********************************************************************************************************************/
     @AuraEnabled
-    public static list<PricebookEntry> getProductPrice(string productId){
+    public static list<PricebookEntry> getProductPrice(string productId, String pricebookId){
      //   System.debug('########pricebook' + productId);
         list<PricebookEntry> pList;
         
         pList = [select id, UnitPrice, buildertek__Unit_Cost__c, buildertek__Markup__c, buildertek__Discount__c
                  from PricebookEntry
-                 where product2Id = :productId and isActive = true and pricebook2Id IN (select id
-                                                                                        from Pricebook2
-                                                                                        Where isActive = true)];
+                 where product2Id = :productId and isActive = true and pricebook2Id =: pricebookId];
         
       //  system.debug('====pList' + pList);
         return pList;
@@ -2665,19 +2663,19 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
     }
     
     @AuraEnabled
-    public static Boolean getadminvalues(){
-        buildertek__Admin_Interface_Node_Configuration__c adminInterfaceNodeConfigurations = [Select Id, buildertek__Group_by_Cost_Code__c
-                                                                                              from buildertek__Admin_Interface_Node_Configuration__c
-                                                                                              WHERE Name = :'Budget Configuration'];
-        Boolean islien = false;
-        if(adminInterfaceNodeConfigurations.buildertek__Group_by_Cost_Code__c == true){
-            islien = true;
+    public static String getadminvalues(){
+        buildertek__Admin_Interface_Node_Configuration__c adminInterfaceNodeConfigurations = [Select Id, buildertek__Group_by_Cost_Code__c , buildertek__Group_by_vendor__c
+                                                                                                from buildertek__Admin_Interface_Node_Configuration__c
+                                                                                                WHERE Name = :'Budget Configuration'];
+        String islien;
+        if(adminInterfaceNodeConfigurations.buildertek__Group_by_vendor__c == true){
+            islien = 'groupByVendor';
+            return islien;
+        }else if(adminInterfaceNodeConfigurations.buildertek__Group_by_Cost_Code__c == true){
+            islien = 'groupByCostCode';
+            return islien;
+        }else{
+            return null;
         }
-        return islien;
     }   
-    
-    
-    
-    
-    
 }

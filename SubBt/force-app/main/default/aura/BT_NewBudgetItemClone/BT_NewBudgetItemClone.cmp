@@ -238,6 +238,8 @@
     <aura:attribute name="groupBytoggle2" type="Boolean" default="true" />
     <aura:attribute name="groupByVendortoggle2" type="Boolean" default="true" />
     <aura:attribute name="Isbtvalue" type="Boolean" default="false" />
+    <!-- <aura:attribute name="Isbtvalue" type="Boolean" default="false" /> -->
+
     <aura:attribute name="groupByCostCode" type="Boolean" default="false" />
 
 
@@ -288,7 +290,7 @@
                     <div style="display:flex;justify-content:space-between;" class="slds-m-top_medium slds-m-bottom_medium slds-m-right_small">
                         <div style="display:flex;">
                             <div style="width: fit-content;">
-                                <lightning:input aura:id="vendor" name="Group By Vendor" label="Group By Vendor" type="toggle" checked="{!v.groupByVendortoggle}" onclick="{!c.checkToogle}" />
+                                <input id="vendor" name="Group By Vendor" label="Group By Vendor" type="checkbox" onclick="{!c.checkToogle}"/>
                             </div>
                             <aura:if isTrue='{!v.Isbtvalue}'>
                                 <div style="width: fit-content;">
