@@ -191,6 +191,9 @@
                 if (res[0].buildertek__Unit_Cost__c != null) {
                     getProductDetails.buildertek__Unit_Price__c =
                         res[0].buildertek__Unit_Cost__c;
+                    }else{
+                    getProductDetails.buildertek__Unit_Price__c =
+                        res[0].UnitPrice;
                 }
 
                 if (res[0].buildertek__Discount__c != null) {

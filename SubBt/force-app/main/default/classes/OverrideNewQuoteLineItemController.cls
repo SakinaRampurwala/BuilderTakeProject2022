@@ -101,7 +101,17 @@ public class OverrideNewQuoteLineItemController {
         return QuoteitemToInsert;     
     }
 
-    //Beyond Code is edted regarding ticket for creating custom form using field set
+    @AuraEnabled(cacheable=true)
+    public static List<BT_Lightning_Utils.FieldSetWrapper> getfield(string objectName, string fieldSetName){
+        List<Schema.FieldSetMember> fieldSet = BT_UTILS.getFieldSetMembers(fieldSetName, objectName);
+        //System.debug('fieldSet-->'+fieldSet);
+        List<BT_Lightning_Utils.FieldSetWrapper> fMaplist = new List<BT_Lightning_Utils.FieldSetWrapper>();
+        for (Schema.FieldSetMember fmem : fieldSet){
+            fMaplist.add(new BT_Lightning_Utils.FieldSetWrapper(fmem.getLabel(), fmem.getFieldPath(), fmem, Schema.getGlobalDescribe().get(objectName).newSObject()));
+        }
+        System.debug('fMaplist-->'+fMaplist);
+        return fMaplist;
+    }
 
     
 

@@ -808,6 +808,49 @@ budgetChangeOrderSet.add(oldChangeOrderItem.Id);
             }
         }
     }
+
+    public void BudgetLineUpdate(List<buildertek__Change_Order__c> newList, Map<Id,buildertek__Change_Order__c> oldMap) {
+        System.debug('newList--->>>'+newList);
+
+        set<id> COIds=new set<id>();
+        for(buildertek__Change_Order__c co:newList){
+            buildertek__Change_Order__c coOld=oldmap.get(co.id);
+            if(co.buildertek__Budget_Line__c!=coOld.buildertek__Budget_Line__c){
+                COIds.add(co.Id);
+                System.debug('COIds====>>>>'+COIds);
+            }
+        }
+        List<buildertek__Change_Order_Item__c> coLineList = [SELECT Id, Name, buildertek__Budget_Item__c FROM buildertek__Change_Order_Item__c WHERE buildertek__Change_Order__c =: COIds];
+        List<CO_Item_To_Budget_Item_Link__c> COItemToBudgetItemLinks = new List<CO_Item_To_Budget_Item_Link__c>();
+        System.debug('coLineList===>>>'+coLineList);
+        if(COIds.size()>0){
+            map<id,buildertek__Change_Order__c> coMap=new map<id,buildertek__Change_Order__c>([select id,Name,(select id,Name from buildertek__Change_Order_Items__r) from buildertek__Change_Order__c where id in:COIds]);
+            List<buildertek__CO_Item_To_Budget_Item_Link__c> BudgetCoLinkList = new List<buildertek__CO_Item_To_Budget_Item_Link__c>();
+
+            for(buildertek__Change_Order__c coRecord: newList){
+                buildertek__Change_Order__c coOld=oldmap.get(coRecord.id);
+
+                if(coRecord.buildertek__Budget_Line__c != coOld.buildertek__Budget_Line__c){
+                    System.debug('===In If===');
+                    if(coMap.containskey(coRecord.id)){
+                        buildertek__Change_Order__c ac1=coMap.get(coRecord.id);
+                        List<buildertek__Change_Order_Item__c> lstCo = ac1.buildertek__Change_Order_Items__r;
+                        System.debug('lstCo===>>>'+lstCo);
+
+                        for (buildertek__Change_Order_Item__c coLine : lstCo) {
+                                buildertek__CO_Item_To_Budget_Item_Link__c COItemToBudgetItemLink = new buildertek__CO_Item_To_Budget_Item_Link__c();
+                                COItemToBudgetItemLink.CO_Item__c = coLine.Id;
+                                COItemToBudgetItemLink.Budget_Item__c = coRecord.buildertek__Budget_Line__c;
+                                COItemToBudgetItemLinks.add(COItemToBudgetItemLink);
+                        }
+                    }
+                }
+            }
+            insert COItemToBudgetItemLinks;
+            System.debug('COItemToBudgetItemLinks--->>>'+COItemToBudgetItemLinks);
+            System.debug('<<<---Inserting Successfully--->>>');
+        }
+    }
     
     public void UpdateDateApproved(List<buildertek__Change_Order__c> coList,  Map<ID, buildertek__Change_Order__c> oldCOMap){
         List<Id> coIds = new List<Id>();

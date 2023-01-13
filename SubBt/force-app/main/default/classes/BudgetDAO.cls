@@ -1147,14 +1147,8 @@ budgetGroup = Database.query('Select Id, Name,('+soql+') from budget_line_group_
     public static Map<String, String> getpricebooks(){
         Map<String, String> options = new Map<String, String>();
         list<pricebook2> PriceList;
-        /* if(Schema.sObjectType.pricebook2.fields.Id.isAccessible()&&
-Schema.sObjectType.pricebook2.fields.Name.isAccessible()){*/
-        PriceList = [select Id, Name
-                     from pricebook2 
-                     Where isActive = true ORDER BY Name ASC];
-        /* }*/
+        PriceList = [select Id, Name from pricebook2  Where buildertek__BT_Visible__c = true ORDER BY Name ASC];
         for (pricebook2 p : PriceList){
-            //Put Picklist Value & Label in Map
             options.put(p.name, p.Id);
         }
         return options;
@@ -2539,6 +2533,7 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
             insert COItemToBudgetItemLinks;
 
             co.buildertek__Budget__c = RecId;
+            co.buildertek__Budget_Line__c = strList[0];
             update co;
 
             ChangeOrderDAO.RollUpChangeOrderItemAmount(coLineIds);

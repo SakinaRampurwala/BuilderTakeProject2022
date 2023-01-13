@@ -23,18 +23,16 @@ trigger ChangeOrderTrigger on Change_Order__c (after delete, after insert, after
         else if(Trigger.isUpdate && Trigger.isBefore){
             
             handler.OnBeforeUpdate(Trigger.old, Trigger.new, Trigger.newMap);
-          //  handler.changeOrderBeforeUpdate(Trigger.new);
-           handler.checkPOBeforeUpdate(Trigger.new);
-           handler.checkParentPOBeforeUpdate(Trigger.new);
+            //handler.changeOrderBeforeUpdate(Trigger.new);
+            handler.checkPOBeforeUpdate(Trigger.new);
+            handler.checkParentPOBeforeUpdate(Trigger.new);
             handler.UpdateDateApproved(Trigger.new, trigger.oldMap);
-            
-            
+            handler.BudgetLineUpdate(Trigger.new, trigger.oldMap);            
         }
         
         else if(Trigger.isUpdate && Trigger.isAfter){
             handler.OnAfterUpdate(Trigger.old, Trigger.new, Trigger.newMap, trigger.oldMap);
-            handler.UpdateProjectValueInChangeOrder(Trigger.new, trigger.oldMap);
-            
+            handler.UpdateProjectValueInChangeOrder(Trigger.new, trigger.oldMap);            
         }
         
         else if(Trigger.isDelete && Trigger.isBefore){

@@ -79,6 +79,30 @@
     	});
     	$A.enqueueAction(actions);
     },
+
+    fetchfields:function(component,event,helper){
+        var action = component.get("c.getfield");
+        action.setParams({
+            "objectName" : 'buildertek__Quote_Item__c',
+            "fieldSetName" : 'buildertek__BT_Detail_Page_Fields'
+        });
+        action.setCallback(this, function(response) {
+            if (response.getState() == "SUCCESS") {
+                var result  = response.getReturnValue();
+                console.log('result',result);
+                component.set("v.fieldLst", result);
+                //loop through the result and store fAPIName into reqList
+                var reqList = [];
+                for(var i=0; i<result.length; i++){
+                    reqList.push(result[i].fAPIName);
+                }
+                component.set("v.reqList", reqList);
+                console.log('reqList',reqList);
+                component.set("v.loading", false);
+            }
+        })
+        $A.enqueueAction(action);
+    },
     
      
 })

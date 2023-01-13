@@ -252,7 +252,30 @@ PurchaseOrderDAO.isUpdatePurchaseOrder = true;
 }
 }
 */
-    public void OnBeforeUpdate(Purchase_Order__c[] newPurchaseOrders, Map<ID, Purchase_Order__c> newPurchaseOrdersMap){
+    public void OnBeforeUpdate(Purchase_Order__c[] newPurchaseOrders, Map<ID, Purchase_Order__c> newPurchaseOrdersMap, Map<ID, Purchase_Order__c> oldPurchaseOrdersMap){
+        //* added this lines by Nishit (MV Clouds)
+        Set<Id> scheduleItemId = new Set<Id>();
+        System.debug('in before update method');
+        for (buildertek__Purchase_Order__c po : newPurchaseOrders) {
+            if (oldPurchaseOrdersMap.get(po.Id).buildertek__Schedule_Item__c != newPurchaseOrdersMap.get(po.Id).buildertek__Schedule_Item__c) {
+                if (po.buildertek__Schedule_Item__c != null) {
+                    scheduleItemId.add(po.buildertek__Schedule_Item__c);
+                }else {
+                    po.buildertek__Start_Date__c = null;
+                    po.buildertek__End_Date__c = null;
+                }
+            }
+        }
+        Map<Id, buildertek__Project_Task__c> taskMap = new Map<Id, buildertek__Project_Task__c>([SELECT Id, Name, buildertek__Start__c, buildertek__Finish__c FROM	buildertek__Project_Task__c WHERE Id IN: scheduleItemId]);
+
+        if (taskMap.size() > 0) {
+            for (buildertek__Purchase_Order__c po : newPurchaseOrders) {
+                if (po.buildertek__Schedule_Item__c != null){
+                    po.buildertek__Start_Date__c = taskMap.get(po.buildertek__Schedule_Item__c).buildertek__Start__c;
+                    po.buildertek__End_Date__c = taskMap.get(po.buildertek__Schedule_Item__c).buildertek__Finish__c;
+                }
+            }
+        }
     }
     
     public void OnAfterDelete(Purchase_Order__c[] oldPurchaseOrders){

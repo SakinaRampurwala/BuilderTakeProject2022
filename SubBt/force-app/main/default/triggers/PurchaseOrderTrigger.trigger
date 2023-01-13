@@ -18,7 +18,8 @@ trigger PurchaseOrderTrigger on Purchase_Order__c(after delete, after insert, af
             handler.OnAfterInsert(Trigger.new, Trigger.newMap);
             handler.updateTotalCostOnBudgetLine(Trigger.new, Trigger.newMap,trigger.oldMap);
         } else if (Trigger.isUpdate && Trigger.isBefore){
-           // handler.OnBeforeUpdate(Trigger.old, Trigger.new, Trigger.oldMap, Trigger.newMap);
+        //    handler.OnBeforeUpdate(Trigger.old, Trigger.new, Trigger.oldMap, Trigger.newMap);
+           handler.OnBeforeUpdate(Trigger.new, Trigger.newMap, Trigger.oldMap);
         } else if (Trigger.isUpdate && Trigger.isAfter ){
                  handler.updateTotalCostOnBudgetLine(Trigger.new, Trigger.newMap,trigger.oldMap);
             handler.OnAfterUpdate(Trigger.old, Trigger.new, Trigger.newMap, trigger.oldMap);

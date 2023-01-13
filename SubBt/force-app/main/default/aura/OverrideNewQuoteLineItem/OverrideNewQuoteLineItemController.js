@@ -1,7 +1,6 @@
 ({
 	doInit : function(component, event, helper) {
 	    component.set("v.isOpen", true);
-	  //  component.set("v.Spinner", true);
 	    var value = helper.getParameterByName(component , event, 'inContextOfRef');
     	var context = '';
     	var parentRecordId = '';
@@ -21,13 +20,21 @@
             }
 		    component.set("v.parentRecordId",parentRecordId);
 		}
-        
         component.find('quantityId').set("v.value", 1);
-        //alert('parent-------'+ parentRecordId);
-		//component.find('QuoteId').set("v.value", parentRecordId);
 		helper.fetchpricebooks(component, event, helper);
-		//component.set("v.Spinner", false);
-	}, 
+
+        // helper.fetchfields(component, event, helper);
+	},
+    
+    // handleSubmit : function(component, event, helper) {
+    //     event.preventDefault();
+    //     //save reqList from component attribute 
+    //     var arr = component.get("v.reqList");
+    //     var fields = event.getParam(arr);
+    //     console.log('fields',fields);
+    //     component.find('recordEditForm').submit(fields);
+
+    // },
 	
 	handleComponentEvent : function(component, event, helper) {
 	    var selectedAccountGetFromEvent = event.getParam("recordByEvent");
@@ -324,4 +331,9 @@
       // enqueue the Action  
         $A.enqueueAction(action);
     },
+
+    handlefieldChange : function(component, event, helper) {
+        console.log('handlefieldChange');
+    }
+
 })
