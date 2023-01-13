@@ -238,8 +238,6 @@
     <aura:attribute name="groupBytoggle2" type="Boolean" default="true" />
     <aura:attribute name="groupByVendortoggle2" type="Boolean" default="true" />
     <aura:attribute name="Isbtvalue" type="Boolean" default="false" />
-    <!-- <aura:attribute name="Isbtvalue" type="Boolean" default="false" /> -->
-
     <aura:attribute name="groupByCostCode" type="Boolean" default="false" />
 
 
@@ -290,7 +288,7 @@
                     <div style="display:flex;justify-content:space-between;" class="slds-m-top_medium slds-m-bottom_medium slds-m-right_small">
                         <div style="display:flex;">
                             <div style="width: fit-content;">
-                                <input id="vendor" name="Group By Vendor" label="Group By Vendor" type="checkbox" onclick="{!c.checkToogle}"/>
+                                <lightning:input aura:id="vendor" name="Group By Vendor" label="Group By Vendor" type="toggle" checked="{!v.groupByVendortoggle}" onclick="{!c.checkToogle}" />
                             </div>
                             <aura:if isTrue='{!v.Isbtvalue}'>
                                 <div style="width: fit-content;">
@@ -352,7 +350,7 @@
                                         <!-- <lightning:button label="New Invoice" onclick="{!c.newInvoice}" class="sldsButtonGroup" /> -->
                                         <!-- <lightning:button label="New RFQ" onclick="{!c.newRFQ}" class="sldsButtonGroup" /> -->
                                         <lightning:button label="New CO" onclick="{!c.newCO}" class="sldsButtonGroup" disabled="{!v.disableAddCO}"/>
-                                        <lightning:button label="New PO" onclick="{!c.newPO}" class="sldsButtonGroup" />
+                                        <!-- <lightning:button label="New PO" onclick="{!c.newPO}" class="sldsButtonGroup" /> -->
                                         <!-- <lightning:button label="New Expense" onclick="{!c.newExpense}" class="sldsButtonGroup" /> -->
                                         <lightning:button label="Contingency" onclick="{!c.onContingency}" class="sldsButtonGroup" />
                                         <!-- commented on 26thmay DFL <lightning:button label="New Sub-Contract" onclick="{!c.newSubContract}" class="sldsButtonGroup"/>-->

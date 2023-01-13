@@ -152,6 +152,7 @@
 
         var productId = component.get("v.productId");
         var productName = component.get("v.productName");
+        var pribooknames = component.get("v.pricebookName");
         /* if(productName.length > 80){
              alert("1");
                 component.set("v.Spinner", false);
@@ -176,9 +177,11 @@
 
         action.setParams({
             productId: productId,
+            pricebookId: pribooknames
         });
         action.setCallback(this, function (respo) {
             var res = respo.getReturnValue();
+            console.log('Product List ==>',res);
             var getProductDetails = component.get("v.newBudgetLine");
             delete getProductDetails.buildertek__Group__r;
             ////console.log("@Budgetline@",component.get("v.recordId"));

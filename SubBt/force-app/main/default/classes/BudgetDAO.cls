@@ -673,17 +673,17 @@ Throws [Exceptions]:
 **********************************************************************************************************************/
     @AuraEnabled
     public static list<PricebookEntry> getProductPrice(string productId, String pricebookId){
-     //   System.debug('########pricebook' + productId);
+    //   System.debug('########pricebook' + productId);
         list<PricebookEntry> pList;
         
         pList = [select id, UnitPrice, buildertek__Unit_Cost__c, buildertek__Markup__c, buildertek__Discount__c
-                 from PricebookEntry
-                 where product2Id = :productId and isActive = true and pricebook2Id =: pricebookId];
+                from PricebookEntry
+                where product2Id = :productId and pricebook2Id =: pricebookId];
         
-      //  system.debug('====pList' + pList);
+    //  system.debug('====pList' + pList);
         return pList;
     }
-    
+        
     @AuraEnabled
     public static buildertek__Budget_Item__c saveBudgetLineItem(string budgetLineRecord, String recordId, String contractor){
      //   System.debug('---Budget Line Items' + budgetLineRecord);
@@ -1145,8 +1145,14 @@ budgetGroup = Database.query('Select Id, Name,('+soql+') from budget_line_group_
     public static Map<String, String> getpricebooks(){
         Map<String, String> options = new Map<String, String>();
         list<pricebook2> PriceList;
-        PriceList = [select Id, Name from pricebook2  Where buildertek__BT_Visible__c = true ORDER BY Name ASC];
+        /* if(Schema.sObjectType.pricebook2.fields.Id.isAccessible()&&
+Schema.sObjectType.pricebook2.fields.Name.isAccessible()){*/
+        PriceList = [select Id, Name
+                     from pricebook2 
+                     Where isActive = true ORDER BY Name ASC];
+        /* }*/
         for (pricebook2 p : PriceList){
+            //Put Picklist Value & Label in Map
             options.put(p.name, p.Id);
         }
         return options;
@@ -2663,19 +2669,19 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
     }
     
     @AuraEnabled
-    public static String getadminvalues(){
-        buildertek__Admin_Interface_Node_Configuration__c adminInterfaceNodeConfigurations = [Select Id, buildertek__Group_by_Cost_Code__c , buildertek__Group_by_vendor__c
-                                                                                                from buildertek__Admin_Interface_Node_Configuration__c
-                                                                                                WHERE Name = :'Budget Configuration'];
-        String islien;
-        if(adminInterfaceNodeConfigurations.buildertek__Group_by_vendor__c == true){
-            islien = 'groupByVendor';
-            return islien;
-        }else if(adminInterfaceNodeConfigurations.buildertek__Group_by_Cost_Code__c == true){
-            islien = 'groupByCostCode';
-            return islien;
-        }else{
-            return null;
+    public static Boolean getadminvalues(){
+        buildertek__Admin_Interface_Node_Configuration__c adminInterfaceNodeConfigurations = [Select Id, buildertek__Group_by_Cost_Code__c
+                                                                                              from buildertek__Admin_Interface_Node_Configuration__c
+                                                                                              WHERE Name = :'Budget Configuration'];
+        Boolean islien = false;
+        if(adminInterfaceNodeConfigurations.buildertek__Group_by_Cost_Code__c == true){
+            islien = true;
         }
+        return islien;
     }   
+    
+    
+    
+    
+    
 }
