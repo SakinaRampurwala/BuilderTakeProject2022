@@ -297,7 +297,7 @@
                                 <!-- </aura:if>-->
                                 <aura:set attribute="else">
                                     <div style="width: fit-content;">
-                                        <lightning:input aura:id="Cost Code1" name="Group By Cost Code1" label="Group By Category 1" type="toggle" checked="{!v.groupByVendortoggle1}" onclick="{!c.checkToogle1}" />
+                                        <lightning:input aura:id="Cost Code1" name="Group By Cost Code1" label="Group By Category" type="toggle" checked="{!v.groupByVendortoggle1}" onclick="{!c.checkToogle1}" />
                                     </div>
                                 </aura:set>
                             </aura:if>

@@ -219,13 +219,21 @@
         btadminaction.setCallback(this, function(response) {
             if (response.getState() === 'SUCCESS') {
                 var result = response.getReturnValue();
+                component.set("v.Isbtvalue", true);
                 if (result == true) {
 
-                    component.set("v.Isbtvalue", true);
+                    component.set("v.groupByVendortoggle", true);
+                    // component.set("v.groupByVendortoggle2", false);
+                    component.set("v.groupBytoggle", true);
+                    component.set("v.groupByVendortoggle2", false);
+                    component.set("v.groupByVendortoggle1", false);
+                    component.set("v.groupByCostCode", false);
+
+                    
                     helper.getBudgetGroups(component, event, helper, page);
 
                 } else {
-                    component.set("v.Isbtvalue", false);
+                    component.set("v.groupByVendortoggle", false);
                     helper.getBudgetGroups(component, event, helper, page);
                 }
             }
