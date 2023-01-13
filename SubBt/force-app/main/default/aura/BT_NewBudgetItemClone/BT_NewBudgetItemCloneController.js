@@ -221,15 +221,12 @@
                 var result = response.getReturnValue();
                 component.set("v.Isbtvalue", true);
                 if (result == true) {
-
-                    component.set("v.groupByVendortoggle", true);
-                    // component.set("v.groupByVendortoggle2", false);
-                    component.set("v.groupBytoggle", true);
-                    component.set("v.groupByVendortoggle2", false);
+                    var page = component.get("v.page") || 1;
+                    component.find("vendor").set("v.checked", true);
                     component.set("v.groupByVendortoggle1", false);
+                    component.set("v.groupByVendortoggle2", false);
                     component.set("v.groupByCostCode", false);
 
-                    
                     helper.getBudgetGroups(component, event, helper, page);
 
                 } else {
