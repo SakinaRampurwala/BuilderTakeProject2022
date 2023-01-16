@@ -7,14 +7,9 @@ public with sharing class NewRecordCustomController{
     @AuraEnabled
     public static String getBudgetNameFromProject(String recordId){
         try{
-            if (String.isNotBlank(recordId)){
-                
-                buildertek__Budget__c budgetName = [SELECT Id, Name, buildertek__Project__c
-                                                    FROM buildertek__Budget__c
-                                                    WHERE buildertek__Project__c = :recordId
-                                                    ORDER BY CreatedDate DESC Limit 1];
-                return budgetName.Id;
-                
+        if (String.isNotBlank(recordId)){
+            buildertek__Budget__c budgetName = [SELECT Id, Name, buildertek__Project__c FROM buildertek__Budget__c    WHERE buildertek__Project__c = :recordId   ORDER BY CreatedDate DESC Limit 1];
+            return budgetName.Id;            
             }
         } catch (Exception e){
             throw new AuraHandledException(e.getMessage());
@@ -45,9 +40,17 @@ public with sharing class NewRecordCustomController{
                     jsonPart += '"required":"' + (f.getDBRequired() || f.getRequired())+'",';
                     jsonPart += '"type":"' + (f.getType())+'",';
                     jsonPart += '"name":"' + f.getFieldPath()+'"';
+                    System.debug(String.valueOf(f.getType()));
+
                     if (String.valueOf(f.getType()) == 'PICKLIST'){
+
                         pickListValuesList = getDropDown(objectName, String.valueOf(f.getFieldPath()));
                         jsonPart += ',"pickListValuesList":' + JSON.serialize(pickListValuesList);
+
+                        System.debug(pickListValuesList);
+                        System.debug(jsonPart);
+
+
                     }
                     jsonPart += '}';
                     result += jsonPart;
@@ -59,6 +62,7 @@ public with sharing class NewRecordCustomController{
             System.debug('Error::' + e.getMessage());
             System.debug('Error At Line::' + e.getLineNumber());
         }
+        System.debug('[' + result + ']');
         return '[' + result + ']';
     }
     
@@ -195,5 +199,4 @@ public with sharing class NewRecordCustomController{
             return 'Empty';
         }
     }
-        
 }

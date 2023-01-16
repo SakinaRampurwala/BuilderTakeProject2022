@@ -9,6 +9,7 @@
 		return decodeURIComponent(results[2].replace(/\+/g, " "));
 	},
 	getName: function (component, event, helper) {
+        // component.set('v.isLoading' , true);
 		var action = component.get("c.getBudgetNameFromProject");
 		action.setParams({
 			recordId: component.get("v.parentRecordId")
@@ -18,7 +19,7 @@
 				var budgetId = response.getReturnValue();
 				component.set("v.budgetId", budgetId);
 			} else {
-				console.log('Error');
+				console.log('Error :::' , response.getReturnValue());
 			}
 		});
 		$A.enqueueAction(action);
@@ -40,6 +41,9 @@
 						//projectfield = true
                         component.set('v.isProjectFieldExist',true);
 					}
+                    if(listOfFields[i].name =='buildertek__Budget_Line__c'){
+                        console.log('yes budget line');
+					}
 				}
 				/*if(!flag){
 					var obj = {};
@@ -52,6 +56,7 @@
 					component.set("v.listOfFields", listOfFields);
 				}*/
                 component.set("v.listOfFields", listOfFields);
+                console.log(component.get('v.listOfFields'));
 			} else {
 				console.log('Error');
 			}
@@ -64,6 +69,8 @@
             parentrecordid :  component.get("v.parentRecordId")
         });
         action.setCallback(this, function(response) {
+            component.set('v.isLoading' , false);
+
             if (response.getState() === "SUCCESS") {
                 var response = response.getReturnValue();
                 var lookuprec = response.LookupRec;
@@ -73,6 +80,7 @@
             }
             });
             $A.enqueueAction(action);
+
         },
     getbtadminrecord : function (component, event, helper) {
         var action = component.get("c.getbudgetrecord");
@@ -80,6 +88,7 @@
             Expenserecid :  component.get("v.ExpenseId")
         });
         action.setCallback(this, function(response) {
+
             if (response.getState() === "SUCCESS") {
                 var TimeCard = response.getReturnValue();
                     if(TimeCard == 'Message'){

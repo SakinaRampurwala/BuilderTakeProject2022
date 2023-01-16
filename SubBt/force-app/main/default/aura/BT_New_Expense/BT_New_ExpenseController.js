@@ -1,5 +1,6 @@
 ({
     doInit: function (component, event, helper) {
+        component.set('v.isLoading' , true);
         var myPageRef = component.get("v.pageReference"); 
         var fieldValue = myPageRef.state.buildertek__fieldValue;
         if(fieldValue != null){
@@ -36,77 +37,51 @@
     },
 
     closeModel: function (component, event, helper) {
-        var workspaceAPI = component.find("workspace");
-        workspaceAPI.isConsoleNavigation().then(function(response) {
-        if(component.get("v.parentRecordId") != null && component.get("v.parentRecordId") != undefined && component.get("v.parentRecordId") != ''){
-            workspaceAPI.getFocusedTabInfo().then(function (response) {
-                var focusedTabId = response.tabId;
-                workspaceAPI.closeTab({
-                    tabId: focusedTabId
-                });
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-            $A.get("e.force:closeQuickAction").fire();
-            window.setTimeout(
-            $A.getCallback(function () {
-                $A.get('e.force:refreshView').fire();
-            }), 1000
-        );
-            var navEvt = $A.get("e.force:navigateToSObject");
-            navEvt.setParams({
-                "recordId": component.get("v.parentRecordId"),
-                "slideDevName": "related"
-            });
-            navEvt.fire(); 
-        }else if(response == true){
+        component.set('v.isLoading' , true);
+        console.log('quick action close');
+        console.log(component.get('v.parentRecordId'));
+        console.log(event.getSource().get('v.label'));
+        let getLabel=event.getSource().get('v.label');
+        if(getLabel == 'Cancel'){
+            var workspaceAPI = component.find("workspace");
             workspaceAPI.getFocusedTabInfo().then(function(response) {
                 var focusedTabId = response.tabId;
-                workspaceAPI.closeTab({
-                    tabId: focusedTabId
-                });
-
-                var recordId = component.get("v.recordId");
-                if (recordId) {
-                    var navEvt = $A.get("e.force:navigateToSObject");
-                    navEvt.setParams({
-                        "recordId": recordId,
-                        "slideDevName": "detail"
-                    });
-                    navEvt.fire();
-                } else {
-                    var urlEvent = $A.get("e.force:navigateToURL");
-                    urlEvent.setParams({
-                        "url": "/lightning/o/buildertek__Expense__c/list?filterName=Recent"
-                    });
-                    urlEvent.fire();
-                }
-
+                workspaceAPI.closeTab({tabId: focusedTabId});
             })
             .catch(function(error) {
-                console.log(error);
+            console.log(error);
             });
-        }else{
             var action = component.get("c.getListViews");
             action.setCallback(this, function(response){
                 var state = response.getState();
+                component.set('v.isLoading' , false);
                 if (state === "SUCCESS") {
-                    var listviews = response.getReturnValue();
-                    var navEvent = $A.get("e.force:navigateToList");
+                     var listviews = response.getReturnValue();
+                     var navEvent = $A.get("e.force:navigateToList");
                     navEvent.setParams({
-                        "listViewId": listviews.Id,
-                        "listViewName": 'All',
-                        "scope": "buildertek__Expense__c"
+                    "listViewId": listviews.Id,
+                    "listViewName": null,
+                    "scope": "buildertek__Expense__c"
                     });
                     navEvent.fire();
                 }
             });
-            $A.enqueueAction(action); 
+            $A.enqueueAction(action);
+            component.set('v.isLoading' , false);
+
+
+        }else{
+            component.set('v.isLoading' , false);
+            component.set("v.duplicateExp",false); 
+
+            var x= document.querySelector('.maindiv');
+            x.style.visibility='visible';
         }
-    });
+       
     },
     handleLoad : function (component, event, helper) {
+        console.log('On load handle');
+        console.log(component.get('v.parentobjectName'));
         component.set('v.typevalue', 'Material');
         var RecordId = component.get("v.parentRecordId");
         if(component.get('v.parentobjectName') == 'buildertek__Budget__c'){
@@ -120,78 +95,76 @@
        
     },
     submitForm :  function(component, event, helper) {
-       // component.set("v.duplicateExp", false);
-         //component.set("v.isnew", true);
-        //var globalId = component.getGlobalId();
-        //alert('globalId'+globalId);
-        //document.getElementById(globalId + '_submit').click();
-        document.getElementById('submitForm').click();
+       console.log('Submit form');
+       console.log(document.getElementById('submitForm'));
+       document.getElementById('submitForm').click();
        component.set("v.duplicateExp",false); 
-       // helper.getbtadminrecord(component,event,helper);
+
     },
     handleSubmit: function (component, event, helper) {
-       // alert('hello');
-        event.preventDefault(); // stop form submission
-        var eventFields = event.getParam("fields");
-        var expenseDescription = eventFields["buildertek__Description__c"];
-		var expenseType = component.get("v.typevalue");
-		var expensePaymentMethod = eventFields["buildertek__Payment_Method__c"];
-        if(eventFields["buildertek__Amount__c"] != null && eventFields["buildertek__Amount__c"] != ''){
-            var expenseAmount = eventFields["buildertek__Amount__c"];
-        }else{
-            var expenseAmount = null;
-        }
-        if(component.get("v.duplicateExp") == false){
-            var action = component.get("c.duplicateExpense");
-            action.setParams({
-                "expenseDescription": expenseDescription,
-                "expenseType": expenseType,
-                "expensePaymentMethod": expensePaymentMethod,
-                "expenseAmount": expenseAmount,
-            });
-            action.setCallback(this, function (response) {
-                if (response.getState() === "SUCCESS") {
-                    var result = response.getReturnValue();
-                    if(result == 'DuplicateExpense'){
-                        //component.set("v.isnew", false);
-                        component.set("v.duplicateExp",true); 
-                    }else{
-                        if(component.get('v.parentobjectName') == 'buildertek__Project__c'){
-                            eventFields["buildertek__Project__c"] = component.get("v.parentRecordId");
-                        }
-                        component.set('v.isLoading', true);
-                        component.find('recordViewForm').submit(eventFields); // Submit form
-                        helper.getbtadminrecord(component,event,helper);
-                    }
-                }
-            });
-            $A.enqueueAction(action);
-        }
-        else{
-            
-           // component.set("v.isnew", false); 
+        console.log('handle submit');
+        component.set('v.isLoading' , true);
+         event.preventDefault(); // stop form submission
+         var eventFields = event.getParam("fields");
+         var expenseDescription = eventFields["buildertek__Description__c"];
+         var expenseType = component.get("v.typevalue");
+         var expensePaymentMethod = eventFields["buildertek__Payment_Method__c"];
+         if(eventFields["buildertek__Amount__c"] != null && eventFields["buildertek__Amount__c"] != ''){
+             var expenseAmount = eventFields["buildertek__Amount__c"];
+         }else{
+             var expenseAmount = null;
+         }
+         console.log(component.get("v.duplicateExp") + 'Duplicate xp' );
+         if(component.get("v.duplicateExp") == false){
+             var action = component.get("c.duplicateExpense");
+             action.setParams({
+                 "expenseDescription": expenseDescription,
+                 "expenseType": expenseType,
+                 "expensePaymentMethod": expensePaymentMethod,
+                 "expenseAmount": expenseAmount,
+             });
+             action.setCallback(this, function (response) {
+                 if (response.getState() === "SUCCESS") {
+                    component.set('v.isLoading', false);
+
+                     var result = response.getReturnValue();
+                     if(result == 'DuplicateExpense'){
+                         //component.set("v.isnew", false);
+                         component.set("v.duplicateExp",true); 
+                         var x= document.querySelector('.maindiv');
+                         x.style.visibility='hidden';
+                  
+                        //  component.set("v.isnew",false); 
+
+                     }else{
+                         if(component.get('v.parentobjectName') == 'buildertek__Project__c'){
+                             eventFields["buildertek__Project__c"] = component.get("v.parentRecordId");
+                         }
+                         console.log(component.find('recordViewForm'));
+                         component.find('recordViewForm').submit(eventFields); // Submit form
+                         helper.getbtadminrecord(component,event,helper);
+                     }
+                 }
+             });
+             $A.enqueueAction(action);
+         }
+         else{
             if(component.get('v.parentobjectName') == 'buildertek__Project__c'){
-                eventFields["buildertek__Project__c"] = component.get("v.parentRecordId");
-            }
-            component.set('v.isLoading', true);
-            component.find('recordViewForm').submit(eventFields); // Submit form
-            helper.getbtadminrecord(component,event,helper);
-        }
-           
-       // var flag = false;
-       /* for(var i in eventFields){
-            if(eventFields[i].name =='buildertek__Project__c'){
-                flag = true;
-            }
-        }
-        if(!flag){ 
-            eventFields["buildertek__Project__c"] = component.get("v.parentRecordId");
-        }*/
+                 eventFields["buildertek__Project__c"] = component.get("v.parentRecordId");
+             }
+             component.set('v.isLoading', true);
+             component.find('recordViewForm').submit(eventFields); // Submit form
+             helper.getbtadminrecord(component,event,helper);
+         } 
+         component.set('v.isLoading' , false);
         
-        
-    },
+         
+     },
+
+ 
 
     onRecordSuccess: function (component, event, helper) {
+        console.log('on record success');
         var payload = event.getParams().response;
         var expenseId = (payload.id).replace('"','').replace('"',''); 
         component.set("v.expenseRecordId",payload.id);
@@ -265,10 +238,12 @@
     },
 
     saveAndNew: function (component, event, helper) {
+        console.log('Save and new');
         component.set('v.isLoading', true);
         event.preventDefault(); // Prevent default submit
         var fields = event.getParam("listOfFields");
         component.find('recordViewForm').submit(fields); // Submit form
         $A.get('e.force:refreshView').fire();
-    }
+    },
+
 })

@@ -1,8 +1,5 @@
-<!-- <aura:component implements="force:hasRecordId,force:lightningQuickActionWithoutHeader,lightning:actionOverride"
-    access="global" controller="NewRecordCustomController"> -->
-    <aura:component implements="lightning:isUrlAddressable,force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:hasSObjectName,forceCommunity:availableForAllPageTypes,force:lightningQuickAction,lightning:availableForFlowScreens,lightning:actionOverride"  
+<aura:component implements="force:lightningQuickAction,lightning:isUrlAddressable,force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:hasSObjectName,forceCommunity:availableForAllPageTypes,lightning:availableForFlowScreens,lightning:actionOverride"  
                     controller="NewRecordCustomController" access="global">
-
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     <aura:handler name="change" value="{!v.pageReference}" action="{!c.reInit}" />
     <aura:attribute name="parentRecordId" type="String" default="" />
@@ -18,34 +15,41 @@
     <aura:attribute name="expenseRecordName" type="String" default="" />
 	<aura:attribute name="btadminvalue" type="String" />
     <aura:attribute name="duplicateExp" type="Boolean" default="false" />
+    <aura:attribute name="budgetLine" type="list" />
+
         
     <lightning:workspaceAPI aura:id="workspace" />
-        <!-- <aura:if isTrue="{!v.ismessage}">
-            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
-                     aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
-                <div class="slds-modal__container">
-                    <header class="slds-modal__header">
-                        <lightning:buttonIcon iconName="utility:close" onclick="{! c.closeModel }" alternativeText="close"
-                                              variant="bare-inverse" class="slds-modal__close" />
-                        <p></p>
-                        <p></p>
-                    </header>
-                    
-                    
-                    <div class="slds-modal__content" id="modal-content-id-1">
-                        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
-                            <p><center style=" font-size: medium ">Your Expense was added to the Budget.</center>
-                            </p>
-                        </div>
-                        <br/>
-                    </div>
-                </div>
-            </section>
-        </aura:if> -->
+    <ltng:require styles="{!$Resource.MOdalPreviewWidth72}"/>
+    <aura:html tag="style">
+        .slds-modal__content{
+             padding: 0px !important;
+        }
+        .slds-modal__container{
+            width:60% !important; 
+            margin:7rem auto !important;
+        
+        }
+
+    </aura:html> 
+
     <aura:if isTrue="{!v.isnew}">
-    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
-        aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
-        <div class="slds-modal__container">
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="maindiv slds-modal slds-fade-in-open">
+    
+        <div class="slds-modal__container" >
+            <!-- spinner -->   
+    <aura:if isTrue="{!v.isLoading}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+            <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+                <div class="custom-loading-text">
+                        <b>Processing, Please Wait</b>
+                </div>
+            </div>
+        </div>
+    </aura:if>
+    <!-- spinner -->
             <header class="slds-modal__header">
                 <lightning:buttonIcon iconName="utility:close" onclick="{! c.closeModel }" alternativeText="close"
                     variant="bare-inverse" class="slds-modal__close" />
@@ -54,13 +58,11 @@
                 <p></p>
             </header>
             <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
-                <br />
                 <lightning:recordEditForm aura:id="recordViewForm" objectApiName="buildertek__Expense__c" onload="{!c.handleLoad}"
                     onsubmit="{!c.handleSubmit}" onsuccess="{!c.onRecordSuccess}" >
+                    <div style="height:20rem; overflow-y:scroll">
                     <lightning:layout multipleRows="true">
                         <aura:iteration items="{!v.listOfFields}" var="field">
-                            <br />
-                            <br />
                             <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
                                 <div>
                                     <aura:if isTrue="{!and(and(field.name!='buildertek__Budget__c' ,field.name!='buildertek__Type__c'), field.name!='buildertek__Project__c')}">
@@ -75,25 +77,20 @@
                                             <aura:if isTrue="{!field.name =='buildertek__Project__c'}" >
                                                 <lightning:inputField fieldName="buildertek__Project__c"  aura:id="projectlookupid"/>
                                             </aura:if>
-                                          <!-- <aura:if isTrue="{!!v.isProjectFieldExist}">
-                                                <lightning:inputField class="slds-hide" fieldName="buildertek__Project__c" value="{!v.parentRecordId}" aura:id="projectlookupid"/>
-                                            </aura:if> -->
+
                                         </aura:set>
                                     </aura:if>
                                 </div>
                             </lightning:layoutItem>
-                            <br />
                         </aura:iteration>
                     </lightning:layout>
-                    <br />
-                    <br />
-                    <br />
+                </div>
                     <footer aura:id="footer" class="slds-modal__footer">
                         <lightning:button variant="neutral" title="Cancel" label="Cancel" onclick="{! c.closeModel }" />
                         <lightning:button variant="neutral" title="Save &amp; New" label="Save &amp; New"
                             onclick="{!c.saveAndNew}" />
                        <!-- <button  type="submit" id="submitForm"/> -->
-                     <button  class="slds-button slds-button_brand" type="submit" variant="neutral" name="submitForm" aura:id="submitForm" id="submitForm">Save</button>
+                     <button  class="slds-button slds-button_brand" type="submit" variant="neutral" name="submitForm"  id="submitForm">Save</button>
 
                     </footer>
                 </lightning:recordEditForm>
@@ -114,7 +111,7 @@
                             <p></p>
                         </header>
                         <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" style="height:100%">
-                            <p><center style=" font-size: medium ">This looks like a duplicate entry. Would you like to continue adding this Expense to the Budget?</center>
+                            <p><center style=" font-size: medium ; padding:2rem">This looks like a duplicate entry. Would you like to continue adding this Expense to the Budget?</center>
                             </p> 
                             <br />
                         </div>
@@ -131,16 +128,5 @@
             </section>
             <div class="slds-backdrop slds-backdrop_open"></div>
         </aura:if>
-    <aura:if isTrue="{!v.isLoading}">
-        <div aura:id="spinnerId" class="slds-spinner_container">
-            <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
-                <span class="slds-assistive-text">Loading</span>
-                <div class="slds-spinner__dot-a"></div>
-                <div class="slds-spinner__dot-b"></div>
-                 <div class="custom-loading-text">
-                           <b>Processing, Please Wait</b>
-                       </div>
-            </div>
-        </div>
-    </aura:if>
+
 </aura:component>
