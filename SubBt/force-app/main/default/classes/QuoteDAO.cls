@@ -591,15 +591,13 @@ public with sharing class QuoteDAO{
    
  
     @AuraEnabled
-    public static list<PricebookEntry> getProductPrice(string productId){
+    public static list<PricebookEntry> getProductPrice(string productId, String pricebookId){
         System.debug('########pricebook' + productId);
         list<PricebookEntry> pList = new list<PricebookEntry>();
 
         pList = [select id, UnitPrice, buildertek__Unit_Cost__c, buildertek__Markup__c, buildertek__Discount__c, Product2Id, Product2.buildertek__Quote_Group__r.Name
                  from PricebookEntry
-                 where product2Id = :productId and isActive = true and pricebook2Id IN (select id
-                                                                                        from Pricebook2
-                                                                                        Where isActive = true)];
+                 where product2Id = :productId and pricebook2Id =: pricebookId];
 
         system.debug('====pList' + pList);
         return pList;

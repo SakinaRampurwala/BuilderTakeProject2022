@@ -414,7 +414,7 @@ public with sharing class PurchaseOrderDAO{
 		if (Schema.sObjectType.pricebook2.fields.Id.isAccessible() && Schema.sObjectType.pricebook2.fields.Name.isAccessible()){
 			PriceList = [select Id, Name
 			             from pricebook2
-			             WHERE Name != null];
+			             WHERE Name != null ORDER BY Name ASC];
 		}
 		for (pricebook2 p : PriceList){
 			//Put Picklist Value & Label in Map

@@ -1149,7 +1149,7 @@ budgetGroup = Database.query('Select Id, Name,('+soql+') from budget_line_group_
 Schema.sObjectType.pricebook2.fields.Name.isAccessible()){*/
         PriceList = [select Id, Name
                      from pricebook2 
-                     Where isActive = true ORDER BY Name ASC];
+                     Where buildertek__BT_Visible__c = true AND isActive = true ORDER BY Name ASC];
         /* }*/
         for (pricebook2 p : PriceList){
             //Put Picklist Value & Label in Map

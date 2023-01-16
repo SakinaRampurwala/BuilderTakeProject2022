@@ -1,4 +1,4 @@
-<aura:component controller="BudgetItemOverrideController" implements="force:hasRecordId,force:lightningQuickActionWithoutHeader,lightning:actionOverride" access="global">
+<aura:component controller="BudgetItemOverrideController" implements="force:hasRecordId,force:lightningQuickActionWithoutHeader,lightning:isUrlAddressable,lightning:actionOverride,force:hasSObjectName" access="global">
     <aura:attribute name="parentRecordId" type="String"/>
     <aura:attribute name="isOpen" type="boolean" default="false"/>
     <aura:attribute name="Spinner" type="boolean" default="false"/>
@@ -11,6 +11,7 @@
     <aura:attribute name="selectedGroup" type="sObject"/>
     <aura:attribute name="selectedLookUpRecord" type="string" />
     <aura:attribute name="budgetID" type="sObject"/>
+
     
     <aura:attribute name="productfamily" type="string"/>
     <aura:attribute name="productfamilyoptions" type="List"/>
@@ -24,20 +25,20 @@
     <aura:handler name="oSelectedRecordEvent" event="c:BT_LightningLookupEvent" action="{!c.handleComponentEvent}"/>
 	<aura:handler name="SelectedRecordEvent" event="c:BT_LightningLookupEvent" action="{!c.handleComponentEvents}"/>
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
-   
+    
     <ltng:require styles="{!$Resource.ModalPreview62moreMedia}"/>
     <lightning:notificationsLibrary aura:id="notifLib"/>
     <lightning:workspaceAPI aura:id="workspace"/>
-   <!-- <div class="slds-m-around_small">-->
+	<c:BT_Spinner/>
+    <!-- <div class="slds-m-around_small">-->
         <!--<aura:if isTrue="{!v.IsConsole}" >--> 
-            <aura:if isTrue="{!v.isOpen}"> 
-                <!--<section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">-->
+            <!-- <aura:if isTrue="{!v.isOpen}"> 
                     <div class="consoleModal slds-modal__container">
                         <div class="consoleModalContent slds-modal__content slds-p-around_small" id="modal-content-id-1">
                             <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">New Budget Line</h2>
                             <lightning:recordEditForm aura:id="recordViewForm" objectApiName="buildertek__Budget_Item__c">
-                            	<lightning:layout multipleRows="true" >
-                                    <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
+                            <lightning:layout multipleRows="true" >
+                            <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
                             	        <label>Pricebook</label>
                      
 										<ui:inputSelect value="{! v.pricebookName }" change="{!c.changeEvent}" class="pricebook-class">
@@ -86,15 +87,15 @@
                             			<lightning:input aura:id="quantityId" type="number" value="{!v.newBudgetItem.buildertek__Quantity__c}" label="Quantity" autocomplete="off"/>
                             		</lightning:layoutItem>
                             		<lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
-                            		    <label>Trade Type</label>
+                                        <label>Trade Type</label>
                             		    <c:customLookup aura:id="tradeTypeId" objectAPIName="buildertek__Trade_Type__c" IconName="custom:custom5" selectedRecord="{!v.selectedTradeType}" />
                             		</lightning:layoutItem>
                             		<lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
-                            			<lightning:input type="number" formatter="currency" aura:id="unitPriceId" value="{!v.newBudgetItem.buildertek__Unit_Price__c}" label="Unit Cost" autocomplete="off" step="0.01" />
+                            			<lightning:input type="number" formatter="currency" aura:id="unitPriceId2" value="{!v.newBudgetItem.buildertek__Unit_Price__c}" label="Unit Cost" autocomplete="off" step="0.01" />
                             		</lightning:layoutItem>
                                     
                                     <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
-                            			<lightning:input type="number" formatter="currency" aura:id="salesPriceId" value="{!v.newBudgetItem.buildertek__Sales_Price__c}" label="Sales Price" autocomplete="off" step="0.01" />
+                                        <lightning:input type="number" formatter="currency" aura:id="salesPriceId" value="{!v.newBudgetItem.buildertek__Sales_Price__c}" label="Sales Price" autocomplete="off" step="0.01" />
                             		</lightning:layoutItem>
                             		<lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
                             		    <label>Contractor</label>
@@ -110,9 +111,9 @@
                         
                         <aura:if isTrue="{!v.Spinner}">
                             <div aura:id="spinnerId" class="slds-spinner_container">
-                               <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
-                                 <span class="slds-assistive-text">Loading</span>
-                                 <div class="slds-spinner__dot-a"></div>
+                               <div class="slds-spinner-brand  slds-spinner slds-spinner-large slds-is-relative" role="alert">
+                                   <span class="slds-assistive-text">Loading</span>
+                                   <div class="slds-spinner__dot-a"></div>
                                  <div class="slds-spinner__dot-b"></div>
                                     <div class="custom-loading-text">
                            <b>Processing, Please Wait</b>
@@ -122,21 +123,160 @@
                          </aura:if>
                          <div class="Console">
                             <lightning:button variant="neutral" 
-                                              label="Cancel"
+                            label="Cancel"
                                               title="Cancel"
                                               onclick="{! c.closeModel }"/>
-                            <lightning:button variant="neutral" 
+                                              <lightning:button variant="neutral" 
                                               label="Save &amp; New"
                                               title="Save &amp; New"
                                               onclick="{!c.saveAndNew}"/>                  
                             <lightning:button variant="brand" 
-                                              label="Save"
+                            label="Save"
                                               title="Save"
                                               onclick="{!c.save}"/>
-                        </div>
-                    </div>
-                <!--</section>-->
-            </aura:if>    
-        <!--</aura:if>-->
-    <!--</div>-->
+                                            </div>
+                                        </div>
+                </aura:if>   -->      
+                <!--</aura:if>-->
+            <!--</div>-->
+
+            <!-- <lightning:recordEditForm objectApiName="buildertek__Budget_Item__c" onsubmit="{!c.handleSubmit}">
+                <aura:iteration items="{!v.fieldsetvalues}" var="res">
+                    <lightning:inputField fieldName="{!res}" value = />
+                </aura:iteration>
+            </lightning:recordEditForm>
+            save -->
+            <!-- <lightning:button label="Save" onclick="{!c.save}"/> -->
+
+    <aura:attribute name="listOfFields0" type="List" />
+    <!-- <aura:attribute name="UnitCost" type="Decimal" /> -->
+    <aura:attribute name="SalesPrice" type="Decimal" />
+    <aura:attribute name="Quantity" type="Decimal" default="1" />
+    <aura:attribute name="BudgetLineName" type="string" />
+    <!-- <aura:attribute name="productId" type="String" /> -->
+    <aura:attribute name="selectedPricebookEntry" type="Name" />
+    
+
+    
+    
+    <!-- <aura:html Ztag="style">
+        .slds-modal__container { width: 80% !important; max-width: 70rem !important; min-width: 80rem; margin-bottom:3rem !important; margin-top:4rem !important; }
+    </aura:html> -->
+    <!--  <div class="slds-scrollable" style="height:80rem;width:72rem">-->
+    <div class="slds-modal__container">
+        <header class="slds-modal__header">
+            <lightning:buttonIcon iconName="utility:close" onclick="{! c.closeModel }" alternativeText="close" variant="bare-inverse" class="slds-modal__close" />
+            <p></p>
+            <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">New Budget Line</h2>
+            <p></p>
+        </header>
+            
+        <lightning:recordEditForm aura:id="recordViewForm" objectApiName="buildertek__Budget_Item__c" onsubmit="{!c.handleSubmit}" >
+            <div class="slds-modal__content " id="modal-content-id-1">
+                <div class="slds-scrollable" style="height:33.5rem;">
+                    <lightning:layout multipleRows="true">
+                        
+                    <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
+                        <label>Pricebook</label>
+     
+                        <ui:inputSelect value="{! v.pricebookName }" change="{!c.changeEvent}" class="pricebook-class">
+                            <aura:iteration var="option" items="{! v.pricebookoptions }">
+                                <option value="{! option.value }" selected="{!option.value == v.pricebookName}">{! option.key }</option>
+                            </aura:iteration>
+                        </ui:inputSelect>  
+                    </lightning:layoutItem> 
+                    
+                    <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
+                        <label>Product Family</label>
+                         <ui:inputSelect value="{!v.productfamily}" change="{!c.changefamily}" class="pricebook-class">
+                                <aura:iteration var="option" items="{!v.listofproductfamily}">
+                                    <option value="{!option.productfamilyvalues}" selected="{!option.productfamilyvalues == v.productfamily}">{!option.productfamilyvalues}</option>
+                                </aura:iteration>
+                            </ui:inputSelect>
+                    </lightning:layoutItem> 
+                    <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
+                        <label>Product</label>
+                        <c:BT_LightningLookup aura:id="productId" objectAPIName="Product2" IconName="standard:product" selectedRecord="{!v.selectedLookUpRecord}" parentId="{! v.pricebookName }" prodctfamly ="{!v.productfamily}" />
+                    </lightning:layoutItem>
+
+                        <aura:iteration items="{!v.listOfFields0}" var="field">
+                            
+                            <aura:if isTrue="{!field.name == 'Name'}">
+                                <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
+                                    <lightning:inputField fieldName="{!field.name}" value="{!v.newBudgetItem.buildertek__Item_Name__c}"/>
+                                </lightning:layoutItem>
+                                <aura:set attribute="else">
+                                    <!-- product look up -->
+                                            <aura:if isTrue="{!field.name == 'buildertek__Quantity__c'}">
+                                                <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
+                                                    <lightning:inputField fieldName="{!field.name}" value="{!v.Quantity}" />
+                                                </lightning:layoutItem>
+
+                                                <aura:set attribute="else">
+                                                    <aura:if isTrue="{!field.name == 'buildertek__Sales_Price__c'}">
+                                                        <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
+                                                            <lightning:inputField fieldName="{!field.name}" value="{!v.newBudgetItem.buildertek__Sales_Price__c}" />
+                                                        </lightning:layoutItem>
+
+                                                        <aura:set attribute="else">
+                                                            <aura:if isTrue="{!field.name == 'buildertek__Unit_Price__c'}">
+                                                                <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
+                                                                    <lightning:inputField fieldName="{!field.name}" formatter="currency" aura:id="unitPriceId" value="{!v.newBudgetItem.buildertek__Unit_Price__c}" />
+                                                                </lightning:layoutItem>
+                                                                <aura:set attribute="else">
+                                                                    <aura:if isTrue="{!field.name == 'buildertek__Budget__c'}">
+                                                                        <aura:if isTrue="{!v.budgetID != null}">
+                                                                <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
+
+                                                                            <lightning:inputField fieldName="{!field.name}" value="{!v.budgetID}" />
+                                                                </lightning:layoutItem>
+
+                                                                            <!-- <lightning:inputField aura:id="MBId" fieldName="buildertek__Budget__c" variant="label-hidden" value="{!v.budgetID}"/> -->
+                                                                            <aura:set attribute="else">
+                                                                <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
+
+                                                                                <lightning:inputField fieldName="{!field.name}" value="" />
+                                                                </lightning:layoutItem>
+
+                                                                            </aura:set>
+                                                                        </aura:if>
+                                                                        <aura:set attribute="else">
+                                                                            <!-- Code when is false -->
+                                                                            <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">                                       
+                                                                                <lightning:inputField fieldName="{!field.name}" value="" />
+                                                                    </lightning:layoutItem>
+                                                                        </aura:set>
+                                                                    </aura:if>
+                                                        </aura:set>
+                                                    </aura:if>
+                                                </aura:set>
+                                            </aura:if>
+                                        </aura:set>
+                                    </aura:if>
+                                </aura:set>
+                            </aura:if>    
+                        </aura:iteration>
+                    </lightning:layout>
+                </div>
+            </div>
+            <footer aura:id="footer" class="slds-modal__footer">
+                <lightning:button variant="neutral" title="Cancel" label="Cancel" onclick="{! c.closeModel }" />
+                <!-- <lightning:button variant="neutral" title="Save &amp; New" label="Save &amp; New" onclick="{!c.handelsaveAndNew}" /> -->
+                <lightning:button variant="brand" type="submit" name="save" label="Save" disabled="{!v.isDisabled}" />
+            </footer>
+        </lightning:recordEditForm>
+    </div>
+    <aura:if isTrue="{!v.isLoading}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+            <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+                <div class="custom-loading-text">
+                    <b>Processing, Please Wait</b>
+                </div>
+            </div>
+        </div>
+    </aura:if>
+
 </aura:component>

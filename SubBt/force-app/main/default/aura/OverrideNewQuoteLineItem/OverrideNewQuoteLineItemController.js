@@ -4,50 +4,142 @@
 	    var value = helper.getParameterByName(component , event, 'inContextOfRef');
     	var context = '';
     	var parentRecordId = '';
-    	component.set("v.parentRecordId",parentRecordId);
-    	if(value != null){
-    		context = JSON.parse(window.atob(value));
-    		parentRecordId = context.attributes.recordId;
-            component.set("v.parentRecordId",parentRecordId);
-		}else{
-		    var relatedList = window.location.pathname;
-		    var stringList = relatedList.split("/"); 
-           // alert('stringList---'+stringList);
-		    parentRecordId = stringList[4];
-            if(parentRecordId == 'related'){
-                var stringList = relatedList.split("/");
-                parentRecordId = stringList[3];
-            }
-		    component.set("v.parentRecordId",parentRecordId);
-		}
-        component.find('quantityId').set("v.value", 1);
+    	//component.set("v.parentRecordId",parentRecordId);
+    	// if(value != null){
+    	// 	context = JSON.parse(window.atob(value));
+    	// 	parentRecordId = context.attributes.recordId;
+        //     component.set("v.parentRecordId",parentRecordId);
+		// }else{
+		//     var relatedList = window.location.pathname;
+		//     var stringList = relatedList.split("/"); 
+        //    // alert('stringList---'+stringList);
+		//     parentRecordId = stringList[4];
+        //     if(parentRecordId == 'related'){
+        //         var stringList = relatedList.split("/");
+        //         parentRecordId = stringList[3];
+        //     }
+		//     component.set("v.parentRecordId",parentRecordId);
+		// }
+        //component.find('quantityId').set("v.value", 1);
 		helper.fetchpricebooks(component, event, helper);
 
-        // helper.fetchfields(component, event, helper);
-	},
-    
-    // handleSubmit : function(component, event, helper) {
-    //     event.preventDefault();
-    //     //save reqList from component attribute 
-    //     var arr = component.get("v.reqList");
-    //     var fields = event.getParam(arr);
-    //     console.log('fields',fields);
-    //     component.find('recordEditForm').submit(fields);
+        //helper.fetchfields(component, event, helper);
 
+        var action = component.get("c.getFieldSet");
+        action.setParams({
+            objectName: 'buildertek__Quote_Item__c',
+            fieldSetName: 'buildertek__BT_Detail_Page_Fields'
+        });
+        action.setCallback(this, function (response) {
+            if (response.getState() == 'SUCCESS' && response.getReturnValue()) {
+                var listOfFields0 = JSON.parse(response.getReturnValue());
+                console.log(listOfFields0);
+                component.set("v.listOfFields0", listOfFields0);
+                component.set("v.isLoading", false);
+            }
+        });
+        $A.enqueueAction(action);
+
+	},
+
+    handleSubmit : function(component, event, helper) {
+        console.log('handleSubmit');
+        event.preventDefault();  
+        var fields = event.getParam('fields');
+        if (component.get("v.productId") == undefined || component.get("v.productId") == null) {
+            var toastEvent = $A.get("e.force:showToast");
+            toastEvent.setParams({
+                "type": "Error",
+                "title": "Error!",
+                "message": "Please Select Product Id"
+            });
+            toastEvent.fire();
+        } else{
+            console.log('fields: ' + JSON.stringify(fields));
+            var data = JSON.stringify(fields);
+            var action = component.get("c.saveRecord");
+            action.setParams({
+                "data": data,
+                "productid": component.get("v.productId")
+            });
+            action.setCallback(this, function (response) {
+                var state = response.getState();
+                if (state === "SUCCESS") {
+                    
+                    console.log(response.getReturnValue());
+                    var recordId = response.getReturnValue();
+                    
+                    var toastEvent = $A.get("e.force:showToast");
+                    toastEvent.setParams({
+                        "type": "Success",
+                        "title": "Success!",
+                        "message": "The record has been created successfully."
+                    });
+                    toastEvent.fire();
+                    
+    
+                    var saveAndNew = component.set("v.saveAndNew");
+                    if (saveAndNew) {
+                        window.location.reload();
+                    } else{
+                        var navEvt = $A.get("e.force:navigateToSObject");
+                        navEvt.setParams({
+                            "recordId": recordId,
+                            "slideDevName": "detail"
+                        });
+                        navEvt.fire();
+    
+                        var workspaceAPI = component.find("workspace");
+                        workspaceAPI.getFocusedTabInfo().then(function(response) {
+                            var focusedTabId = response.tabId;
+                            workspaceAPI.closeTab({tabId: focusedTabId});
+                        })
+                        .catch(function(error) {
+                            console.log(error);
+                        });
+    
+                        $A.get("e.force:closeQuickAction").fire();
+                        component.set("v.isOpen", false);
+                        window.setTimeout(
+                            $A.getCallback(function() {
+                                $A.get('e.force:refreshView').fire();
+                            }), 1000
+                        );
+                    }
+         
+    
+                }
+                else if (state === "ERROR") {
+                    var toastEvent = $A.get("e.force:showToast");
+                    toastEvent.setParams({
+                        "type": "Error",
+                        "title": "Error!",
+                        "message": "Something Went Wrong"
+                    });
+                    toastEvent.fire();
+                    console.log('error', response.getError());
+                }
+            });
+            $A.enqueueAction(action);
+        }
+       
+
+
+    },
+    
+	// handleComponentEvent : function(component, event, helper) {
+	//     var selectedAccountGetFromEvent = event.getParam("recordByEvent");
+	//     component.set("v.newQuoteItem.Name",selectedAccountGetFromEvent.Name);
+	//     component.set("v.newQuoteItem.buildertek__Product__c",selectedAccountGetFromEvent.Id);
+	//     component.set("v.productId", selectedAccountGetFromEvent.Id);
+	// 	component.set("v.productName", selectedAccountGetFromEvent.Name);
+    //     console.log('productId ==> '+selectedAccountGetFromEvent.Id);
+	//     helper.getProductDetails(component, event, helper);
+    //     //alert('test');
     // },
-	
-	handleComponentEvent : function(component, event, helper) {
-	    var selectedAccountGetFromEvent = event.getParam("recordByEvent");
-	    component.set("v.newQuoteItem.Name",selectedAccountGetFromEvent.Name);
-	    component.set("v.newQuoteItem.buildertek__Product__c",selectedAccountGetFromEvent.Id);
-	    component.set("v.productId", selectedAccountGetFromEvent.Id);
-		component.set("v.productName", selectedAccountGetFromEvent.Name);
-	    helper.getProductDetails(component, event, helper);
-        //alert('test');
-    },
-    ClearhandleComponentEvent: function (component, event, helper) {
+    // ClearhandleComponentEvent: function (component, event, helper) {
         
-    },
+    // },
     handleComponentEvents : function(component, event, helper) {
 	    var selectedAccountGetFromEvent = event.getParam("recordByEvent");
 	    component.set("v.newQuoteItem.Name",selectedAccountGetFromEvent.Name);
@@ -334,6 +426,75 @@
 
     handlefieldChange : function(component, event, helper) {
         console.log('handlefieldChange');
-    }
+        var productId = component.get("v.productId");
+        console.log('productId ==> '+productId);
+    },
+
+
+    saveAndNewLine : function(component, event, helper) {
+        component.set("v.saveAndNew", true);
+
+        event.preventDefault();  
+        var fields = component.find('newQuoteLine').submit(fields); 
+        fields = event.getParam('fields');
+
+        console.log('fields: ' + JSON.stringify(fields));
+        var data = JSON.stringify(fields);
+        var action = component.get("c.saveRecord");
+        action.setParams({
+            "data": data,
+            "productid": component.get("v.productId")
+        });
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                
+                console.log(response.getReturnValue());
+                var recordId = response.getReturnValue();
+                
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    "type": "Success",
+                    "title": "Success!",
+                    "message": "The record has been created successfully."
+				});
+				toastEvent.fire();
+                
+
+                var saveAndNew = component.set("v.saveAndNew");
+                if (saveAndNew) {
+                    window.location.reload();
+                } else{
+                    var navEvt = $A.get("e.force:navigateToSObject");
+                    navEvt.setParams({
+                        "recordId": recordId,
+                        "slideDevName": "detail"
+                    });
+                    navEvt.fire();
+
+                    var workspaceAPI = component.find("workspace");
+                    workspaceAPI.getFocusedTabInfo().then(function(response) {
+                        var focusedTabId = response.tabId;
+                        workspaceAPI.closeTab({tabId: focusedTabId});
+                    })
+                }
+     
+
+            }
+            else if (state === "ERROR") {
+                var toastEvent = $A.get("e.force:showToast");
+				toastEvent.setParams({
+					"type": "Error",
+					"title": "Error!",
+					"message": "Something Went Wrong"
+				});
+				toastEvent.fire();
+                console.log('error', response.getError());
+            }
+        });
+        $A.enqueueAction(action);
+
+    },
+
 
 })

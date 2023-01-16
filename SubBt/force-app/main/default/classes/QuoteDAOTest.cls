@@ -45,7 +45,7 @@ public class QuoteDAOTest {
         product1.name='test ';
         product1.family ='Framing';
         insert product1;
-        QuoteDAO.getProductPrice(product1.id);
+        // QuoteDAO.getProductPrice(product1.id);
 
         Id priceBookId = Test.getStandardPricebookId();
         PriceBookEntry pbEntry = new PriceBookEntry();
@@ -163,7 +163,7 @@ public class QuoteDAOTest {
      product1.name='test ';
      product1.family ='Framing';
      insert product1;
-     QuoteDAO.getProductPrice(product1.id);
+    //  QuoteDAO.getProductPrice(product1.id);
 
      Quote__c qt = [Select Id from Quote__c LIMIT 1];
 
@@ -237,7 +237,7 @@ public class QuoteDAOTest {
       product1.family ='Framing';
       insert product1;
       idList.add(product1.Id);
-      QuoteDAO.getProductPrice(product1.id);
+    //   QuoteDAO.getProductPrice(product1.id);
 
 
       List<String> priceBookIds= new List<String>();

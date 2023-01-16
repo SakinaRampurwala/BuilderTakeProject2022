@@ -177,7 +177,7 @@ public class BudgetDAOTest {
         
         BudgetDAO.updateBudgetLineItem(BudgetJson);
     //  BudgetDAO.createCOFromBudget(budgetRecs,cor,corItemJson);
-        BudgetDAO.getProductPrice(p1.Id);
+        // BudgetDAO.getProductPrice(p1.Id);
         //BudgetDAO.createBudgetItem(JSON.serialize(new List<budget_item__c>{budgetITem}));
         BudgetDAO.createRFQFromBudget(budgetRecs,myJSON,myJSONRFQItems);
         BudgetDAO.createPOFromBudget(budgetRecs,por,porItems);

@@ -792,11 +792,14 @@
         var action = component.get("c.getProductPrice");
         var productId = component.get("v.productId");
         var productName = component.get("v.productName");
+        var pribooknames = component.get("v.pricebookName");
         action.setParams({
-            "productId": productId
+            "productId": productId,
+            pricebookId: pribooknames
         });
         action.setCallback(this, function(respo) {
             var res = respo.getReturnValue();
+            console.log('Product List ==>',res);
             console.log(JSON.stringify(res))
             var ProductDetails = component.get("v.newQuote");
             delete ProductDetails.buildertek__Grouping__r;

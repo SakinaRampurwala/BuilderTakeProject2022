@@ -44,6 +44,7 @@
             getProductDetails.buildertek__Product__c = productId;
             
             getProductDetails.Name = productName;
+            console.log('getProductDetails ==> ',{getProductDetails});
             component.set("v.newQuoteItem",getProductDetails);
         });
         $A.enqueueAction(action);
