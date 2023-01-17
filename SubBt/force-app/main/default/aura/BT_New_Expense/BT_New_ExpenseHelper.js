@@ -83,6 +83,8 @@
 
         },
     getbtadminrecord : function (component, event, helper) {
+        console.log('admin records');
+        console.log(component.get("v.ExpenseId"));
         var action = component.get("c.getbudgetrecord");
          action.setParams({ 
             Expenserecid :  component.get("v.ExpenseId")

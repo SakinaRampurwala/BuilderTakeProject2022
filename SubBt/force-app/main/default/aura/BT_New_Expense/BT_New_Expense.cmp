@@ -25,8 +25,10 @@
              padding: 0px !important;
         }
         .slds-modal__container{
-            width:60% !important; 
-            margin:7rem auto !important;
+            width:50% !important;
+            max-height:100rem !important; 
+            <!-- margin:7rem auto !important; -->
+            
         
         }
 
@@ -52,43 +54,45 @@
     <!-- spinner -->
             <header class="slds-modal__header">
                 <lightning:buttonIcon iconName="utility:close" onclick="{! c.closeModel }" alternativeText="close"
-                    variant="bare-inverse" class="slds-modal__close" />
+                    variant="bare-inverse" class="slds-modal__close" name="close" />
                 <p></p>
                 <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">New Expense</h2>
                 <p></p>
             </header>
             <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
-                <lightning:recordEditForm aura:id="recordViewForm" objectApiName="buildertek__Expense__c" onload="{!c.handleLoad}"
+                <lightning:recordEditForm class="recordViewForm" aura:id="recordViewForm" objectApiName="buildertek__Expense__c" onload="{!c.handleLoad}"
                     onsubmit="{!c.handleSubmit}" onsuccess="{!c.onRecordSuccess}" >
-                    <div style="height:20rem; overflow-y:scroll">
+                    <div  class='fieldDiv'>
                     <lightning:layout multipleRows="true">
-                        <aura:iteration items="{!v.listOfFields}" var="field">
-                            <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
-                                <div>
-                                    <aura:if isTrue="{!and(and(field.name!='buildertek__Budget__c' ,field.name!='buildertek__Type__c'), field.name!='buildertek__Project__c')}">
-                                         <lightning:inputField fieldName="{!field.name}" value="" />
-                                        <aura:set attribute="else">
-                                            <aura:if isTrue="{!field.name=='buildertek__Budget__c'}" > 
-                                                <lightning:inputField fieldName="{!field.name}" value="{!v.budgetId}" aura:id="incidentlookupid"/>
-                                            </aura:if>
-                                            <aura:if isTrue="{!field.name =='buildertek__Type__c'}" >
-                                                <lightning:inputField fieldName="buildertek__Type__c" value="{!v.typevalue}" />
-                                            </aura:if>
-                                            <aura:if isTrue="{!field.name =='buildertek__Project__c'}" >
-                                                <lightning:inputField fieldName="buildertek__Project__c"  aura:id="projectlookupid"/>
-                                            </aura:if>
+                        <!-- <div style="height:40rem; overflow-y:scroll"> -->
+                            <aura:iteration items="{!v.listOfFields}" var="field">
+                                <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
+                                    <div>
+                                        <aura:if isTrue="{!and(and(field.name!='buildertek__Budget__c' ,field.name!='buildertek__Type__c'), field.name!='buildertek__Project__c')}">
+                                            <lightning:inputField fieldName="{!field.name}" value="" />
+                                            <aura:set attribute="else">
+                                                <aura:if isTrue="{!field.name=='buildertek__Budget__c'}" > 
+                                                    <lightning:inputField fieldName="{!field.name}" value="{!v.budgetId}" aura:id="incidentlookupid"/>
+                                                </aura:if>
+                                                <aura:if isTrue="{!field.name =='buildertek__Type__c'}" >
+                                                    <lightning:inputField fieldName="buildertek__Type__c" value="{!v.typevalue}" />
+                                                </aura:if>
+                                                <aura:if isTrue="{!field.name =='buildertek__Project__c'}" >
+                                                    <lightning:inputField fieldName="buildertek__Project__c"  aura:id="projectlookupid"/>
+                                                </aura:if>
 
-                                        </aura:set>
-                                    </aura:if>
-                                </div>
-                            </lightning:layoutItem>
-                        </aura:iteration>
+                                            </aura:set>
+                                        </aura:if>
+                                    </div>
+                                </lightning:layoutItem>
+                            </aura:iteration>
+                    <!-- </div> -->
                     </lightning:layout>
+
                 </div>
                     <footer aura:id="footer" class="slds-modal__footer">
-                        <lightning:button variant="neutral" title="Cancel" label="Cancel" onclick="{! c.closeModel }" />
-                        <lightning:button variant="neutral" title="Save &amp; New" label="Save &amp; New"
-                            onclick="{!c.saveAndNew}" />
+                        <lightning:button variant="neutral" title="Cancel" name='Cancel' label="Cancel" onclick="{! c.closeModel }" />
+                        <!-- <lightning:button variant="neutral" title="Save &amp; New"  name='Save' label="Save &amp; New" onclick="{!c.saveAndNew}" /> -->
                        <!-- <button  type="submit" id="submitForm"/> -->
                      <button  class="slds-button slds-button_brand" type="submit" variant="neutral" name="submitForm"  id="submitForm">Save</button>
 
@@ -116,7 +120,7 @@
                             <br />
                         </div>
                         <footer class="slds-modal__footer">
-                            <lightning:button variant="neutral" title="No" label="No" onclick="{! c.closeModel }" />
+                            <lightning:button variant="neutral" title="No" name='No' label="No" onclick="{! c.closeModel }" />
                             <!--<lightning:button variant="brand" type="submit" name="save" label="Save" />-->
                             <lightning:button variant="brand" type="submit" name="save" label="Save" onclick="{!c.submitForm}"/>
 

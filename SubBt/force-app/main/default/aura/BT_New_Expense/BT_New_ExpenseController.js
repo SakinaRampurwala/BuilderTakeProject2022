@@ -40,9 +40,9 @@
         component.set('v.isLoading' , true);
         console.log('quick action close');
         console.log(component.get('v.parentRecordId'));
-        console.log(event.getSource().get('v.label'));
-        let getLabel=event.getSource().get('v.label');
-        if(getLabel == 'Cancel'){
+        console.log(event.getSource().get('v.name'));
+        let getName=event.getSource().get('v.name');
+        if(getName == 'Cancel' || getName == 'close'){
             var workspaceAPI = component.find("workspace");
             workspaceAPI.getFocusedTabInfo().then(function(response) {
                 var focusedTabId = response.tabId;
@@ -116,6 +116,7 @@
          }
          console.log(component.get("v.duplicateExp") + 'Duplicate xp' );
          if(component.get("v.duplicateExp") == false){
+            console.log('inside loop');
              var action = component.get("c.duplicateExpense");
              action.setParams({
                  "expenseDescription": expenseDescription,
@@ -149,6 +150,7 @@
              $A.enqueueAction(action);
          }
          else{
+            console.log('outside loop');
             if(component.get('v.parentobjectName') == 'buildertek__Project__c'){
                  eventFields["buildertek__Project__c"] = component.get("v.parentRecordId");
              }
@@ -241,7 +243,8 @@
         console.log('Save and new');
         component.set('v.isLoading', true);
         event.preventDefault(); // Prevent default submit
-        var fields = event.getParam("listOfFields");
+        // var fields = event.getParam("listOfFields");
+        var fields=component.get("v.listOfFields");
         component.find('recordViewForm').submit(fields); // Submit form
         $A.get('e.force:refreshView').fire();
     },

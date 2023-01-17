@@ -16,3 +16,12 @@
     white-space: nowrap;
     font-size: 20px;
 }
+.THIS .fieldDiv{
+    max-height:30rem;
+    min-height:25rem;
+    overflow-y:scroll;
+    height: auto;
+}
+.THIS .fieldDiv::-webkit-scrollbar{
+    display: none;
+}
