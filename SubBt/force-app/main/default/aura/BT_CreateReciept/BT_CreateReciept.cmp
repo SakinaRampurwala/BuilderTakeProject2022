@@ -61,7 +61,7 @@
        <div class="slds-modal__content" id="modal-content-id-1" style="height:100%">
         <!--<div class="slds-modal__content slds-p-around-large" >-->
               <lightning:recordEditForm aura:id="recordViewFormNew" objectApiName="buildertek__Receipt__c"
-                        onsubmit="{!c.handleSubmit}" onsuccess="{!c.onRecordSuccess}">
+                        onsubmit="{!c.handleSubmit}" onsuccess="{!c.onRecordSuccess}" onerror="{!c.handleError}">
                         <lightning:layout multipleRows="true">
                             <aura:iteration items="{!v.listOfFields}" var="field">
                                 <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">

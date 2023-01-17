@@ -105,7 +105,7 @@ public with sharing class QuoteDAO{
         list<pricebook2> PriceList;
         /* if(Schema.sObjectType.pricebook2.fields.Id.isAccessible()&&
          Schema.sObjectType.pricebook2.fields.Name.isAccessible()){ */
-        PriceList = [select Id, Name from pricebook2 where buildertek__BT_Visible__c = True ORDER BY Name ASC ];
+        PriceList = [select Id, Name from pricebook2 where buildertek__BT_Visible__c = true AND isActive = true ORDER BY Name ASC];
         if(PriceList.size()>0){
             for (pricebook2 p : PriceList){
                 //Put Picklist Value & Label in Map

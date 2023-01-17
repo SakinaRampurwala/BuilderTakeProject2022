@@ -1,4 +1,4 @@
-<aura:component implements="force:appHostable,flexipage:availableForRecordHome,flexipage:availableForAllPageTypes,lightning:actionOverride,force:hasRecordId,forceCommunity:availableForAllPageTypes" access="global" >
+<aura:component controller="RFQLinesDAO" implements="force:appHostable,flexipage:availableForRecordHome,flexipage:availableForAllPageTypes,lightning:actionOverride,force:hasRecordId,forceCommunity:availableForAllPageTypes" access="global" >
     <aura:attribute name="rfqRecord" type="Object"/>
     <aura:attribute name="objectAPI" type="String" access="global" default="buildertek__RFQ__c"/>
     <aura:attribute name="recordId" type="String" access="global"/>

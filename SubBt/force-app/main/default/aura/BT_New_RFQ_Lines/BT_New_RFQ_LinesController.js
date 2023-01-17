@@ -3,9 +3,29 @@
               
     //},
     addNewRFQLine : function(component, event, helper) {
-        if(!component.get('v.openModel')){
-             component.set('v.open',true)
-        }
+
+        // action
+        var action = component.get("c.getRFQLinesUsingProduct");
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                var result = response.getReturnValue();
+                if(result){
+                    // call below yes 
+                    var action2 = component.get("c.Yes");
+                    $A.enqueueAction(action2);
+                }else{
+                    // call below no
+                    var action3 = component.get("c.No");
+                    $A.enqueueAction(action3);
+                }
+            }
+        });
+        $A.enqueueAction(action);
+                    
+        // if(!component.get('v.openModel')){
+        //      component.set('v.open',true)
+        // }
       
         if(component.get('v.openModel')){
             component.set('v.openModel',false);
@@ -204,15 +224,10 @@ toastEvent.fire();
                 component.set('v.openModel',true);
                 component.set('v.open',false)
                 component.set("v.showProductFields",true);
-                var action = component.get("c.addNewRFQLine")
-                $A.enqueueAction(action)
                 },
        No : function(component, event, helper) {
                 component.set('v.openModel',true);
                 component.set('v.open',false)
                  component.set("v.showProductFields",false);
-                var action = component.get("c.addNewRFQLine")
-                $A.enqueueAction(action)
-                },       
-                
-                })
+       }                        
+})

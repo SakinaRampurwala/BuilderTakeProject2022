@@ -26,7 +26,7 @@
     
     <!-- https://www.lightningdesignsystem.com/components/lookups/ --> 
     
-    <div  aura:id="searchRes" class="slds-form-element slds-lookup slds-is-close" data-select="single" style="width:100%; padding-top:0.2rem;">
+    <div  aura:id="searchRes" class="slds-form-element slds-lookup slds-is-close" data-select="single" style="width:100%; padding-top:3%;">
         <label class="slds-form-element__label" for="lookup-348">{!v.label}</label>
         <!--This part is for display search bar for lookup-->  
         <div class="slds-form-element__control" style="margin-top: -21px;">
@@ -54,6 +54,11 @@
         </div>
         <!--This part is for Display typehead lookup result List-->  
         <ul style="min-height:40px;margin-top:0px !important; text-align: left;" class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid slds-lookup__menu slds" role="listbox" >
+            <aura:html tag="style">
+                    .slds-lookup__menu{
+                        width: 100% !important;
+                    }
+                </aura:html>
             <lightning:spinner class="slds-hide" variant="brand" size="small" aura:id="mySpinner"/>
             <center> {!v.Message}</center>
             <aura:iteration items="{!v.listOfSearchRecords}" var="singleRec">

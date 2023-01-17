@@ -102,11 +102,14 @@
     <aura:attribute name="mapDistances" type="Map" default="{}" />
     <aura:attribute name="searchKey2" type="string" />
     <aura:attribute name="clickRejectBtn" type="Boolean" default="false" />
+
+    <aura:attribute name="unitCost" type="currency" default="0" />
+
     <!-- <aura:attribute name="getRejectQuoteLine" type="Quote_Item__c[]" />-->
 
     <!-- <aura:attribute name="rejectData" type="Object" /> -->
     <!-- <aura:attribute name="rejectColumns" type="List" /> -->
-
+    
 
 
 
@@ -614,7 +617,7 @@
                                             <ui:inputNumber value="{!v.newQuote.buildertek__Quantity__c}" />
                                         </td>
                                         <td style="width: 6% !important;">
-                                            <ui:inputCurrency value="{!v.newQuote.buildertek__Unit_Cost__c}" aura:id="unitCostId" />
+                                            <ui:inputCurrency value="{!v.unitCost}" aura:id="unitCostId" />
                                         </td>
                                         <td style="padding-bottom:22px; width: 6% !important;">
                                             <lightning:input type="number" name="input6" label="" value="{!v.newQuote.buildertek__Markup__c}" formatter="percent-fixed" aura:id="markUpId" />

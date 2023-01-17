@@ -134,4 +134,12 @@ public with sharing class RFQLinesDAO {
         @AuraEnabled
         public string productfamilyvalues{ get; set; }
     }
+
+    // create a boolean method to get the value of buildertek__Admin_Interface_Node_Configuration__c objects , buildertek__RFQLines_Using_Product__c field value\
+    @AuraEnabled
+    public static boolean getRFQLinesUsingProduct(){
+        Boolean UsingProducts = [SELECT buildertek__RFQLines_Using_Product__c FROM buildertek__Admin_Interface_Node_Configuration__c WHERE Name=:'RFQ Configuration'].buildertek__RFQLines_Using_Product__c;
+        System.debug('UsingProducts--->'+UsingProducts);
+        return UsingProducts; 
+    }
 }

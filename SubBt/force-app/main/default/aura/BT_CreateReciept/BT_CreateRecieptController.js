@@ -35,6 +35,10 @@
         helper.getFields(component, event, helper);
     },
 
+    handleError: function (component, event, helper) {
+        var error = event.getParam("error");
+        console.error(JSON.stringify(error));
+    },
     closeModel: function (component, event, helper) {
         component.set('v.isLoading', true);
         //var workspaceAPI = component.find("workspace");
@@ -63,7 +67,7 @@
     },
 
     handleSubmit: function (component, event, helper) {
-        debugger;
+        // debugger;
         component.set('v.isdisabled', true);
         component.set('v.isLoading', true);
         var fields = event.getParam("fields");

@@ -842,6 +842,14 @@
 
             console.log("Quote 21")
             component.set("v.newQuote", ProductDetails);
+            if(ProductDetails.buildertek__Unit_Cost__c == undefined || ProductDetails.buildertek__Unit_Cost__c == null){
+                component.set("v.unitCost",ProductDetails.buildertek__Unit_Price__c );
+                console.log("Used unit price --->", ProductDetails.buildertek__Unit_Price__c)
+            }
+            else{
+                component.set("v.unitCost", ProductDetails.buildertek__Unit_Cost__c);
+                console.log("unitCost----->"+ProductDetails.buildertek__Unit_Cost__c);
+            }
         });
         $A.enqueueAction(action);
     },

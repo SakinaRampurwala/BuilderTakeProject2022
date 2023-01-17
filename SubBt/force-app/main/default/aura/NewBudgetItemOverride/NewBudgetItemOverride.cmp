@@ -11,6 +11,7 @@
     <aura:attribute name="selectedGroup" type="sObject"/>
     <aura:attribute name="selectedLookUpRecord" type="string" />
     <aura:attribute name="budgetID" type="sObject"/>
+    <aura:attribute name="isSaveNew" type="boolean" default="false"/>
 
     
     <aura:attribute name="productfamily" type="string"/>
@@ -171,7 +172,7 @@
             <p></p>
         </header>
             
-        <lightning:recordEditForm aura:id="recordViewForm" objectApiName="buildertek__Budget_Item__c" onsubmit="{!c.handleSubmit}" >
+        <lightning:recordEditForm aura:id="recordViewForm" objectApiName="buildertek__Budget_Item__c" onsubmit="{!c.handleSubmit}" density="Comfy" >
             <div class="slds-modal__content " id="modal-content-id-1">
                 <div class="slds-scrollable" style="height:33.5rem;">
                     <lightning:layout multipleRows="true">
@@ -261,7 +262,7 @@
             </div>
             <footer aura:id="footer" class="slds-modal__footer">
                 <lightning:button variant="neutral" title="Cancel" label="Cancel" onclick="{! c.closeModel }" />
-                <!-- <lightning:button variant="neutral" title="Save &amp; New" label="Save &amp; New" onclick="{!c.handelsaveAndNew}" /> -->
+                <lightning:button variant="neutral" type="submit" title="Save &amp; New" label="Save &amp; New" onclick="{!c.handlesaveNnew}" />
                 <lightning:button variant="brand" type="submit" name="save" label="Save" disabled="{!v.isDisabled}" />
             </footer>
         </lightning:recordEditForm>

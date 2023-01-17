@@ -100,28 +100,23 @@
     },
 
 	closeModel: function(component, event, helper) {
-      // for Hide/Close Model,set the "isOpen" attribute to "Fasle" 
-        var workspaceAPI = component.find("workspace");
-        workspaceAPI.getFocusedTabInfo().then(function(response) {
-            var focusedTabId = response.tabId;
-            workspaceAPI.closeTab({tabId: focusedTabId});
-        })
-        .catch(function(error) {
-            console.log(error);
-        });
-        $A.get("e.force:closeQuickAction").fire();
-        component.set("v.isOpen", false);
-        var parentRecordId = component.get("v.parentRecordId");
-        if(parentRecordId != undefined){
-               
-        }else{
-            var url = location.href;
-            var baseURL = url.substring(0, url.indexOf('/', 14));
-            //alert('baseURL -------> '+baseURL);
-            window.open(baseURL+'/lightning/o/buildertek__Budget_Item__c/list?filterName=Recent', '_self');
-        }
-        
-   },
+        // for Hide/Close Model,set the "isOpen" attribute to "Fasle" 
+          var workspaceAPI = component.find("workspace");
+          workspaceAPI.getFocusedTabInfo().then(function(response) {
+              var focusedTabId = response.tabId;
+              workspaceAPI.closeTab({tabId: focusedTabId});
+          })
+          .catch(function(error) {
+              console.log(error);
+          });
+          $A.get("e.force:closeQuickAction").fire();
+          component.set("v.isOpen", false);
+          window.setTimeout(
+              $A.getCallback(function() {
+                  $A.get('e.force:refreshView').fire();
+              }), 1000
+          );
+     },
 
    save : function(component, event, helper) {
       // alert('test');
@@ -439,12 +434,34 @@
                         );
 
                         console.log({result});
-                        var navEvt = $A.get("e.force:navigateToSObject");
-                        navEvt.setParams({
-                            "recordId": result,
-                            "slideDevName": "Detail"
-                        });
-                        navEvt.fire();
+
+                        var saveNnew = component.get("v.isSaveNew");
+
+                        if(saveNnew){
+                            $A.get('e.force:refreshView').fire();
+                            component.set("v.isSaveNew", false);
+                        }
+                        else{
+                            var navEvt = $A.get("e.force:navigateToSObject");
+                            navEvt.setParams({
+                                "recordId": result,
+                                "slideDevName": "Detail"
+                            });
+                            navEvt.fire();
+                            debugger
+                            var workspaceAPI = component.find("workspace");
+                            workspaceAPI.getFocusedTabInfo().then(function(response) {
+                            var focusedTabId = response.tabId;
+                            workspaceAPI.closeTab({tabId: focusedTabId});
+                    })
+                        }
+
+                        // var navEvt = $A.get("e.force:navigateToSObject");
+                        // navEvt.setParams({
+                        //     "recordId": result,
+                        //     "slideDevName": "Detail"
+                        // });
+                        // navEvt.fire();
 
                         var toastEvent = $A.get("e.force:showToast");
                         toastEvent.setParams({
@@ -454,7 +471,7 @@
                             type: 'success'
                         });
                         toastEvent.fire();
-                        $A.get('e.force:refreshView').fire();
+                        // $A.get('e.force:refreshView').fire();
                         $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
 
                     }else{
@@ -470,6 +487,10 @@
                 });
                 $A.enqueueAction(action);
             }
+    },
+
+    handlesaveNnew : function(component, event, helper) {
+        component.set("v.isSaveNew", true);
     },
 
     handelsaveAndNew: function (component, event, helper) {
