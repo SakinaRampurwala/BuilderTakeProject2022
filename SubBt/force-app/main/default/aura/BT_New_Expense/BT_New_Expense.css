@@ -25,3 +25,22 @@
 .THIS .fieldDiv::-webkit-scrollbar{
     display: none;
 }
+
+.THIS .searchResult{
+    position: relative;
+}
+.THIS .slds-form-element__control{
+    padding-left: 0px !important;
+    clear: left;
+}
+/* @media (min-width:1025px) { 
+    .THIS .budgetBox{
+        display: flex  !important;
+    
+    }
+} */
+
+
+/* .THIS .budgetBox .slds-form-element__control{
+    margin-left:2.8rem;
+} */

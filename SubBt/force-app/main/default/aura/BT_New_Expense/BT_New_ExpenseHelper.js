@@ -23,6 +23,7 @@
 			}
 		});
 		$A.enqueueAction(action);
+
 	},
 	getFields: function (component, event, helper) {
 		var action = component.get("c.getFieldSet");
@@ -64,12 +65,14 @@
 		$A.enqueueAction(action);
 	},
     getparentrecord : function (component, event, helper) {
+        console.log('Parent records');
         var action = component.get("c.getParentObjRec");
           action.setParams({ 
             parentrecordid :  component.get("v.parentRecordId")
         });
         action.setCallback(this, function(response) {
             component.set('v.isLoading' , false);
+            console.log(response.getReturnValue());
 
             if (response.getState() === "SUCCESS") {
                 var response = response.getReturnValue();
@@ -90,6 +93,8 @@
             Expenserecid :  component.get("v.ExpenseId")
         });
         action.setCallback(this, function(response) {
+            console.log(response.getState());
+            console.log(response.getError());
 
             if (response.getState() === "SUCCESS") {
                 var TimeCard = response.getReturnValue();
@@ -166,6 +171,24 @@
             });
             navEvt.fire(); 
         }, 2000);
+    },
+    getBudgetValue:function (component, event, helper) {
+        console.log(event.getSource().get('v.value'));
+        var getId=event.getSource().get('v.value');
+        component.set('v.parentBudgetId' , getId[0]);
+
+        console.log('On option chage');
+        var action = component.get("c.getBudgetline");
+		action.setParams({
+            recordId:component.get('v.parentBudgetId')
+        });
+		action.setCallback(this, function (response) {
+           component.set('v.budgetLineList' , response.getReturnValue());
+           console.log(component.get('v.budgetLineList'));
+        })
+        $A.enqueueAction(action);
+
+
     },
 
 })

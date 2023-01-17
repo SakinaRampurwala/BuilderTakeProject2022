@@ -16,6 +16,21 @@ public with sharing class NewRecordCustomController{
         }
         return null;
     }
+
+    @AuraEnabled
+    public static List<buildertek__Budget_Item__c> getBudgetline(String recordId) {
+
+        List<buildertek__Budget_Item__c> budgetLine = [SELECT Id , buildertek__Budget__c, Name FROM buildertek__Budget_Item__c WHERE buildertek__Budget__c =: recordId];
+        List<buildertek__Budget_Item__c> budgetLineList = new List<buildertek__Budget_Item__c>();
+
+        // for(buildertek__Budget_Item__c getLine :  budgetLine){
+        //     budgetLineList.add(getLine.Name);
+
+        // }
+        return budgetLine;
+    }
+
+
       @AuraEnabled
     public static String getobjectName(Id recordId){
         String sObjName = recordId.getSObjectType().getDescribe().getName();  
@@ -62,7 +77,6 @@ public with sharing class NewRecordCustomController{
             System.debug('Error::' + e.getMessage());
             System.debug('Error At Line::' + e.getLineNumber());
         }
-        System.debug('[' + result + ']');
         return '[' + result + ']';
     }
     
@@ -199,4 +213,6 @@ public with sharing class NewRecordCustomController{
             return 'Empty';
         }
     }
+
+
 }
