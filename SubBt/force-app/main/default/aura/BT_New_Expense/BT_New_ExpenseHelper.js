@@ -73,7 +73,6 @@
         action.setCallback(this, function(response) {
             component.set('v.isLoading' , false);
             console.log(response.getReturnValue());
-
             if (response.getState() === "SUCCESS") {
                 var response = response.getReturnValue();
                 var lookuprec = response.LookupRec;
@@ -86,7 +85,7 @@
 
         },
     getbtadminrecord : function (component, event, helper) {
-        alert('admin records');
+        console.log('admin records');
         console.log(component.get("v.ExpenseId"));
         var action = component.get("c.getbudgetrecord");
          action.setParams({ 
@@ -172,23 +171,6 @@
             navEvt.fire(); 
         }, 2000);
     },
-    getBudgetValue:function (component, event, helper) {
-        console.log(event.getSource().get('v.value'));
-        var getId=event.getSource().get('v.value');
-        component.set('v.parentBudgetId' , getId[0]);
 
-        console.log('On option chage');
-        var action = component.get("c.getBudgetline");
-		action.setParams({
-            recordId:component.get('v.parentBudgetId')
-        });
-		action.setCallback(this, function (response) {
-           component.set('v.budgetLineList' , response.getReturnValue());
-           console.log(component.get('v.budgetLineList'));
-        })
-        $A.enqueueAction(action);
-
-
-    },
 
 })

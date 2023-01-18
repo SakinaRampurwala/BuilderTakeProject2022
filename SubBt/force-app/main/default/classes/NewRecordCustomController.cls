@@ -20,14 +20,23 @@ public with sharing class NewRecordCustomController{
     @AuraEnabled
     public static List<buildertek__Budget_Item__c> getBudgetline(String recordId) {
 
-        List<buildertek__Budget_Item__c> budgetLine = [SELECT Id , buildertek__Budget__c, Name FROM buildertek__Budget_Item__c WHERE buildertek__Budget__c =: recordId];
-        List<buildertek__Budget_Item__c> budgetLineList = new List<buildertek__Budget_Item__c>();
+        System.debug(recordId);
+        List<buildertek__Budget_Item__c> budgetLineList = [SELECT Id , buildertek__Budget__c, Name FROM buildertek__Budget_Item__c WHERE buildertek__Budget__c =: recordId];
+        System.debug(budgetLineList);
 
         // for(buildertek__Budget_Item__c getLine :  budgetLine){
         //     budgetLineList.add(getLine.Name);
 
         // }
-        return budgetLine;
+        return budgetLineList;
+    }
+    @AuraEnabled
+    public static List<buildertek__Budget__c> getBudget(String recordId) {
+
+        System.debug(recordId);
+        List<buildertek__Budget__c> budgetList = [SELECT Id , buildertek__Project__c, Name FROM buildertek__Budget__c WHERE buildertek__Project__c =: recordId];
+        System.debug(budgetList);
+        return budgetList;
     }
 
 
@@ -212,6 +221,14 @@ public with sharing class NewRecordCustomController{
         else{
             return 'Empty';
         }
+    }
+    @AuraEnabled
+    public static void saveExpenseRecords(List<buildertek__Expense__c> expenseList){
+        System.debug(expenseList);
+        if(expenseList.size() > 0){
+            insert expenseList;
+        }
+       
     }
 
 

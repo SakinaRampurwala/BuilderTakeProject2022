@@ -19,9 +19,18 @@
     <aura:attribute name="duplicateExp" type="Boolean" default="false" />
     <aura:attribute name="budgetLine" type="list" />
     <aura:attribute name="parentBudgetId" type="String" />
+    <aura:attribute name="projectId" type="String" />
+
     <aura:attribute name="selectBudgetLine" type="Sobject" />
     <aura:attribute name="displayuBudgetLine" type="boolean" default="false" />
+    <aura:attribute name="displayuBudget" type="boolean" default="false" />
+
     <aura:attribute name="selectedLine" type="String" default="" />
+    <aura:attribute name="selectedBudget" type="String" default="" />
+    <aura:attribute name="budgetList" type="List"  />
+
+
+    
 
 
 
@@ -81,14 +90,42 @@
                                         <aura:if isTrue="{!and(and(and(field.name!='buildertek__Budget__c' ,field.name!='buildertek__Type__c'),field.name!='buildertek__Project__c'),field.name != 'buildertek__Budget_Line__c')}">
                                             <lightning:inputField fieldName="{!field.name}" value="" />                                            
                                             <aura:set attribute="else">
-                                                <aura:if isTrue="{!field.name=='buildertek__Budget__c'}" > 
+                                                <!-- <aura:if isTrue="{!field.name=='buildertek__Budget__c'}" > 
                                                     <lightning:inputField fieldName="{!field.name}" value="{!v.budgetId}" aura:id="incidentlookupid" onchange="{!c.getBudgetValue}"/>
+                                                </aura:if> -->
+                                                <aura:if isTrue="{!field.name =='buildertek__Budget__c'}" >
+                                                    <lightning:input  fieldName="buildertek__Budget__c" class='budgetBox' type="search" label='Budget' aura:id="incidentlookupid"  placeholder="Search Budget" value="{!v.budgetId}"   onclick="{!c.displayBudgetRelatedProject}" />
+                                                    <aura:if isTrue="{!v.displayuBudget}" >
+                                                        <div id="listbox-id-11" class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid searchResult" role="listbox">
+                                                            <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                                                                <aura:iteration items="{!v.budgetList}" var="result">
+                                                                    <li role="presentation" class="slds-listbox__item" id='{!result.Id}' data-value="{!result.Name}"  onclick="{!c.clickHandler0}">
+                                                                        <div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small" role="option">
+                                                                            <span class="slds-media__body">
+                                                                                <span class="slds-truncate" title="All Budget">
+                                                                                    <span>{!result.Name}</span>
+                                                                                </span>
+                                                                            </span>
+                                                                        </div>
+                                                                    </li>
+                                                                </aura:iteration>
+                                                                <aura:if isTrue="{!empty(v.displayuBudget)}">
+                                                                    <span>
+                                                                        <p class="blank-lst">
+                                                                            There Are No Budget Line Related To Budget
+                                                                        </p>
+                                                                    </span>
+                                                                </aura:if>
+                                                            </ul>
+                                                        </div>
+                                                    </aura:if>
                                                 </aura:if>
+
                                                 <aura:if isTrue="{!field.name =='buildertek__Type__c'}" >
                                                     <lightning:inputField fieldName="buildertek__Type__c" value="{!v.typevalue}" />
                                                 </aura:if>
-                                                <aura:if isTrue="{!field.name =='buildertek__Project__c'}" >
-                                                    <lightning:inputField fieldName="buildertek__Project__c"  aura:id="projectlookupid"/>
+                                                <aura:if isTrue="{!field.name =='buildertek__Project__c'}"  >
+                                                    <lightning:inputField fieldName="buildertek__Project__c"  aura:id="projectlookupid" onchange="{!c.getProjectValue}" />
                                                 </aura:if>
 
                                                 <aura:if isTrue="{!field.name =='buildertek__Budget_Line__c'}" >
@@ -97,7 +134,7 @@
                                                         <div id="listbox-id-11" class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid searchResult" role="listbox">
                                                             <ul class="slds-listbox slds-listbox_vertical" role="presentation">
                                                                 <aura:iteration items="{!v.budgetLineList}" var="result">
-                                                                    <li role="presentation" class="slds-listbox__item" data-value="{!result.Id}"  onclick="{!c.clickHandler}">
+                                                                    <li role="presentation" class="slds-listbox__item" id='{!result.Id}' data-value="{!result.Name}"  onclick="{!c.clickHandler}">
                                                                         <div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small" role="option">
                                                                             <span class="slds-media__body">
                                                                                 <span class="slds-truncate" title="All Opportunities">
