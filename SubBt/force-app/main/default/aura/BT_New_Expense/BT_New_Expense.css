@@ -33,6 +33,9 @@
     padding-left: 0px !important;
     clear: left;
 }
+.THIS .slds-form-element__label{
+    max-width: 10rem !important;
+}
 /* @media (min-width:1025px) { 
     .THIS .budgetBox{
         display: flex  !important;

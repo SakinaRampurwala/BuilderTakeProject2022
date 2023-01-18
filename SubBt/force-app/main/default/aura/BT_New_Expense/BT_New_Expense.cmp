@@ -69,8 +69,10 @@
             </header>
             <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
                 <lightning:recordEditForm  aura:id="recordViewForm" objectApiName="buildertek__Expense__c" onload="{!c.handleLoad}"
-                    onsubmit="{!c.handleSubmit}" onsuccess="{!c.onRecordSuccess}" >
+                    onsubmit="{!c.handleSubmit}" onsuccess="{!c.onRecordSuccess}"  >
                     <div  class='fieldDiv'>
+                        <!-- <lightning:messages /> -->
+
                     <lightning:layout multipleRows="true">
                         <!-- <div style="height:40rem; overflow-y:scroll"> -->
                             <aura:iteration items="{!v.listOfFields}" var="field">
@@ -90,13 +92,12 @@
                                                 </aura:if>
 
                                                 <aura:if isTrue="{!field.name =='buildertek__Budget_Line__c'}" >
-                                                    <!-- <lightning:inputField fieldName="buildertek__Budget_Line__c" /> -->
                                                     <lightning:input  class='budgetBox' type="search" label='Budget Line' placeholder="Search Budget Line" value="{!v.selectedLine}" onclick="{!c.displayBudget}" />
                                                     <aura:if isTrue="{!v.displayuBudgetLine}" >
                                                         <div id="listbox-id-11" class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid searchResult" role="listbox">
                                                             <ul class="slds-listbox slds-listbox_vertical" role="presentation">
                                                                 <aura:iteration items="{!v.budgetLineList}" var="result">
-                                                                    <li role="presentation" class="slds-listbox__item" data-value="{!result.Name}"  onclick="{!c.clickHandler}">
+                                                                    <li role="presentation" class="slds-listbox__item" data-value="{!result.Id}"  onclick="{!c.clickHandler}">
                                                                         <div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small" role="option">
                                                                             <span class="slds-media__body">
                                                                                 <span class="slds-truncate" title="All Opportunities">
@@ -125,8 +126,7 @@
                             </aura:iteration>
                     <!-- </div> -->
                     </lightning:layout>
-
-                </div>
+                    </div>
                     <footer aura:id="footer" class="slds-modal__footer" style="position:relative; z-index:10000;">
                         <lightning:button variant="neutral" title="Cancel" name='Cancel' label="Cancel" onclick="{! c.closeModel }" />
                         <lightning:button variant="neutral" title="Save &amp; New"  name='Save' label="Save &amp; New" onclick="{!c.saveAndNew}" />
