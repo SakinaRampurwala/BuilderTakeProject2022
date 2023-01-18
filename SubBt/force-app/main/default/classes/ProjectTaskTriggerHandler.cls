@@ -24,6 +24,50 @@ public class ProjectTaskTriggerHandler{
 		// this.oldMapValue = oldMap;
 	}
 
+	public void checkCircular(buildertek__Project_Task__c[] updatedProjectTasks, Map<ID, buildertek__Project_Task__c> oldProjectTaskMap){
+
+        Set<Id> schedulerIds = new Set<Id>();
+
+        for (buildertek__Project_Task__c projectTask : updatedProjectTasks) {
+            if (string.valueOf(projectTask.buildertek__Dependency__c) != string.valueOf(oldProjectTaskMap.get(projectTask.Id).buildertek__Dependency__c) && projectTask.buildertek__Dependency__c != null) {
+                schedulerIds.add(projectTask.buildertek__Schedule__c);
+            }
+        }
+		System.debug('schedulerIds ==> '+schedulerIds);
+        if (schedulerIds.size() > 0) {
+            Map<id, buildertek__Project_Task__c> projectTaskMap = new Map<id, buildertek__Project_Task__c>([SELECT Id, buildertek__Dependency__c, buildertek__Schedule__c FROM buildertek__Project_Task__c WHERE buildertek__Schedule__c IN : schedulerIds]);
+
+			System.debug('projectTaskMap ==> '+projectTaskMap);
+            for (buildertek__Project_Task__c projectTask : updatedProjectTasks) {
+				System.debug('projectTask.buildertek__Schedule__c ==> '+projectTask.buildertek__Dependency__c);
+                if (schedulerIds.contains(projectTask.buildertek__Schedule__c)) {
+					System.debug('projectTaskMap.get(projectTask.buildertek__Dependency__c) ==> '+projectTaskMap.get(projectTask.buildertek__Dependency__c));
+					if (projectTaskMap.get(projectTask.buildertek__Dependency__c) != null) {
+						Id taskId = projectTask.Id;
+						Id parentId = projectTaskMap.get(projectTask.buildertek__Dependency__c).buildertek__Dependency__c;
+
+						System.debug('taskId ==> '+taskId);
+						System.debug('parentId ==> '+parentId);
+						Boolean flag = true;
+						while (flag) {
+							if (taskId != parentId) {
+								if (projectTaskMap.get(parentId).buildertek__Dependency__c != null) {
+									parentId = projectTaskMap.get(parentId).buildertek__Dependency__c;
+								} else {
+									flag = false;
+								}
+							} else {
+								flag = false;
+								System.debug('Circular Dependency');
+								projectTask.Id.addError('Circular Dependency');				   
+							}
+						}
+					}
+                }
+            }
+        }
+    }
+
 	public void OnBeforeInsert(Project_Task__c[] newProjectTasks){
 		Set<id> accountIds = new Set<id>();
 		System.debug('OnBeforeInsert-->');

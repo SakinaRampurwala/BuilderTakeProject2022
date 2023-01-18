@@ -2,6 +2,9 @@
 	doInit : function(component, event, helper) {
 	    component.set("v.Spinner", true);
         var action = component.get("c.getMasterQuotes");
+        action.setParams({			
+            'searchKeyword' : ''
+        });
         action.setCallback(this, function(response){
             var state = response.getState();
             if(state === "SUCCESS"){
@@ -20,6 +23,9 @@
                 //alert('PaginationList Length ------> '+PaginationList.length);
                 component.set('v.PaginationList', PaginationList);
                 component.set("v.Spinner", false);
+                var pag = component.get('v.PaginationList');
+                console.log({pag});
+                 
                 console.log('Start Page ----------> '+component.get("v.startPage"));
                 console.log('End Page ----------> '+component.get("v.endPage"));
             }
@@ -225,4 +231,8 @@
         component.set("v.endPage",end);
         component.set('v.PaginationList', Paginationlist);
     },
+
+    onSearch: function (component, event, helper) {
+        helper.doSearchHelper(component, event, helper);
+   },
 })

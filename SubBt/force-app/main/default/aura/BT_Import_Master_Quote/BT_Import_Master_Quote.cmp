@@ -9,6 +9,10 @@
     <aura:attribute name="endPage" type="Integer"/>
     <aura:attribute name="totalRecords" type="Integer"/>
     <aura:attribute name="pageSize" type="Integer" default="10"/>
+	<aura:attribute name="searchKeyword" type="String" default="" />
+    <aura:attribute name="quotId" type="String" />
+    <aura:attribute name="rfqs" type="List" />
+    <aura:attribute name="disableBtn" type="Boolean" default="false" />
     
     <!-- Attribute Declration For Pagination End-->
     
@@ -18,23 +22,33 @@
     <div class="slds-modal__header" style="font-size:17px;">
         Import Master Quotes
     </div>
+
+	<aura:html tag="style">
+		.slds-form-element__label{
+			display: none;;
+		}
+	</aura:html>
+	
     <div class="slds-modal__content slds-p-around--large">
         <div class="slds slds-scope">
+			<lightning:layoutItem padding="around-small" size="12">
+				<lightning:input value="{!v.searchKeyword}" placeholder="Search By Quote Name..." name="searchField" onchange="{! c.onSearch }"/>
+			</lightning:layoutItem>
     		<table class="slds-table slds-table_bordered slds-table_fixed-layout" role="grid">
     		    <thead>
     				<tr class="slds-text-title_caps">
-    					<th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white; border-top-left-radius:5px;vertical-align: top;line-height: 2;">
+    					<th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white; border-top-left-radius:5px;vertical-align: top;line-height: 2; width:30px;">
     				        <ui:inputCheckbox aura:id="checkContractors" change="{!c.selectAll}" />		
     					</th>
     					<th  style="background-color:rgba(27, 82, 151, 1.0); color:white;vertical-align: top;line-height: 2;">
-    						Title
+    						Quote Name
     					</th>
     					<th  style="background-color:rgba(27, 82, 151, 1.0); color:white;vertical-align: top;line-height: 2;">
     						Project
     					</th>
-    					<th  style="background-color:rgba(27, 82, 151, 1.0); color:white;vertical-align: top;line-height: 2;">
+    					<!-- <th  style="background-color:rgba(27, 82, 151, 1.0); color:white;vertical-align: top;line-height: 2;">
     						Type
-    					</th>
+    					</th> -->
     					<th style="background-color:rgba(27, 82, 151, 1.0); color:white;vertical-align: top;line-height: 2;">
     						Quote Amount
     					</th>
@@ -54,9 +68,9 @@
         			            <td role="gridcell">
         			                <ui:outputText value="{!rec.masterQuoteRecord.buildertek__Project__r.Name}" />  
         			            </td>
-        			            <td role="gridcell">
+        			            <!-- <td role="gridcell">
         			                <ui:outputText value="{!rec.masterQuoteRecord.buildertek__Type__c}" />  
-        			            </td>
+        			            </td> -->
         			            <td  role="gridcell">
         			                <lightning:formattedNumber value="{!rec.masterQuoteRecord.buildertek__Quote_Amount__c}" style="currency" />
         						</td>
@@ -71,11 +85,11 @@
             			            <td role="gridcell">
             			                <ui:outputText value="{!rec.quoteRecord.buildertek__Project__r.Name}" />  
             			            </td>
-            			            <td role="gridcell">
+            			            <!-- <td role="gridcell">
             			                <ui:outputText value="{!rec.quoteRecord.buildertek__Type__c}" />  
-            			            </td>
+            			            </td> -->
             			            <td  role="gridcell">
-            						    <ui:outputText value="{!rec.quoteRecord.buildertek__Quote_Amount__c}" />	    
+										<lightning:formattedNumber value="{!rec.quoteRecord.buildertek__Quote_Amount__c}" style="currency" />    
             						</td>    
         						</aura:set>
     			            </aura:if>
@@ -86,11 +100,11 @@
     		</table>
     		<br/>
             <lightning:buttonGroup >
-                <lightning:button label="Previous" disabled="{!v.startPage == 0}"  
+                <lightning:button label="Previous" disabled="{!or(v.startPage == 0, v.disableBtn)}"
                                   onclick="{!c.previous}" variant="brand"
                                   iconName='utility:back'/>
                 &nbsp; &nbsp; &nbsp;
-                <lightning:button label="Next" disabled="{!v.endPage >= v.totalRecords}" 
+                <lightning:button label="Next" disabled="{!or(v.endPage >= v.totalRecords, v.disableBtn)}"
                                   onclick="{!c.next}" variant="brand"
                                   iconName='utility:forward' iconPosition='right'/>
             </lightning:buttonGroup>

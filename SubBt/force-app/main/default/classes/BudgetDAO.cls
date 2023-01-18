@@ -844,7 +844,7 @@ budgetRec.buildertek__Budget_Line_Group__c = budGroup.Id;
             return wrap;
         } catch (Exception e){
             //System.debug('Error Message::' + e.getMessage());
-           // System.debug('Error Line::' + e.getLineNumber());
+           System.debug('Error Line::' + e.getLineNumber());
             throw new AuraHandledException(e.getMessage());
         }
     }

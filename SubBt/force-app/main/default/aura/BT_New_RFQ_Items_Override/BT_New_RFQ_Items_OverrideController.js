@@ -118,7 +118,7 @@
     
     doSave : function(component, event, helper) {
         //  alert('%%%'+component.get("v.selectedTradeTypeId"));
-        component.set("v.Spinner", true);
+        // component.set("v.Spinner", true);
         var rfqLineToInsert = JSON.stringify(component.get("v.newRFQLine"));
         //alert(rfqLineToInsert);
         var Name = component.get("v.newRFQLine.Name");
@@ -158,7 +158,7 @@
                component.set("v.Spinner", false);*/
         }else{ 
             if( Name == undefined || Name == null || Name == "" || Name == " "){
-                component.set("v.Spinner", false);
+                // component.set("v.Spinner", false);
                 component.set("v.isName", true);
                 var toastEvent = $A.get("e.force:showToast");
                 toastEvent.setParams({
@@ -173,7 +173,7 @@
             else{
                 if(Name.length > 80){
                     //alert("2");
-                    component.set("v.Spinner", false);
+                    // component.set("v.Spinner", false);
                     component.set("v.isName", true);
                     // alert("5");
                     var toastEvent = $A.get("e.force:showToast");
@@ -208,19 +208,44 @@
                 var state = response.getState();
                 //alert(JSON.stringify(state));
                 if(state === "SUCCESS"){
-                    component.set("v.Spinner", false);
+                    // component.set("v.Spinner", false);
+
+                    var res = response.getReturnValue();
+                    console.log('res',res);
+                    if(res == 'Failed'){
+                        var toastEvent = $A.get("e.force:showToast");
+                        toastEvent.setParams({
+                            message: 'RFQ is already Accepted.',
+                            duration:' 5000',
+                            key: 'info_alt',
+                            type: 'error',
+                            mode: 'dismissible'
+                        });
+                        component.get("v.onSuccess")(); 
+                        toastEvent.fire();
+                    }
+                    else{
+                        var toastEvent = $A.get("e.force:showToast");
+                        toastEvent.setParams({
+                            message: 'RFQ Item created successfully.',
+                            duration:' 5000',
+                            key: 'info_alt',
+                            type: 'success',
+                            mode: 'dismissible'
+                        });
+                        component.get("v.onSuccess")(); 
+                        toastEvent.fire();
+                    }
+                    /* component.set("v.rfqItemId", response.getReturnValue());
                     
-                    component.get("v.onSuccess")(); 
-               /* component.set("v.rfqItemId", response.getReturnValue());
-                
-                
-                var urlEvent = $A.get("e.force:navigateToURL");
-                var recordId = component.get("v.rfqItemId");
-               // alert(recordId);
-                urlEvent.setParams({
-                    "url": '/lightning/r/buildertek__RFQ_Items__c/'+recordId+'/view'
-                });
-               urlEvent.fire();*/
+                    
+                    var urlEvent = $A.get("e.force:navigateToURL");
+                    var recordId = component.get("v.rfqItemId");
+                    // alert(recordId);
+                    urlEvent.setParams({
+                        "url": '/lightning/r/buildertek__RFQ_Items__c/'+recordId+'/view'
+                    });
+                    urlEvent.fire();*/
                 } 
                 
             });
@@ -231,7 +256,7 @@
     },
     
     doSaveAndNew : function(component, event, helper) {
-        component.set("v.Spinner", true);
+        // component.set("v.Spinner", true);
         var Name = component.get("v.newRFQLine.Name");
         var rfqLineToInsert = JSON.stringify(component.get("v.newRFQLine"));
         var rfqId = component.get("v.mainObjectId");
@@ -251,11 +276,11 @@
         }
         if( rfqname == ''){
             //alert("1");
-            component.set("v.Spinner", false);
+            // component.set("v.Spinner", false);
             component.set("v.isName", true);
         }else{ 
             if( Name == undefined || Name == null || Name == "" || Name == " "){
-                component.set("v.Spinner", false);
+                // component.set("v.Spinner", false);
                 component.set("v.isName", true);
                 var toastEvent = $A.get("e.force:showToast");
                 toastEvent.setParams({
@@ -270,7 +295,7 @@
             else{
                 if(Name.length > 80){
                     //alert("2");
-                    component.set("v.Spinner", false);
+                    // component.set("v.Spinner", false);
                     component.set("v.isName", true);
                     // alert("5");
                     var toastEvent = $A.get("e.force:showToast");
@@ -301,28 +326,45 @@
                 
                 var state = response.getState();
                 if(state === "SUCCESS"){
-                    var product = component.get('v.selectedLookUpRecord');
-                    var compEvent = $A.get('e.c:BT_CLearLightningLookupEvent');
-                    compEvent.setParams({"recordByEvent" : product });  
-                    compEvent.fire();
-                    component.set("v.newRFQLine.buildertek__Quantity__c", '1');
-                    component.set("v.newRFQLine.Name", '');
-                    component.set("v.newRFQLine.buildertek__Master_Item__c", false);
-                    component.set("v.newRFQLine.buildertek__Description__c", '');
-                    component.set("v.newRFQLine.buildertek__Trade_Type__c", null);
-                    component.set("v.newRFQLine.buildertek__Cost_Code__c", null);
-                    component.set("v.newRFQLine.buildertek__Unit_Price__c", null);
-                    component.set("v.Spinner", false);
-                    //$A.get('e.force:refreshView').fire();
-                    var toastEvent = $A.get("e.force:showToast");
-                    toastEvent.setParams({
-                        mode: 'sticky',
-                        message: 'RFQ Line created successfully',
-                        type : 'success',
-                        duration: '10000',
-                        mode: 'dismissible'
-                    });
-                    toastEvent.fire();
+                    var res = response.getReturnValue();
+                    console.log('res',res);
+                    if(res == 'Failed'){
+                        var toastEvent = $A.get("e.force:showToast");
+                        toastEvent.setParams({
+                            message: 'RFQ is already Accepted.',
+                            duration:' 5000',
+                            key: 'info_alt',
+                            type: 'error',
+                            mode: 'dismissible'
+                        });
+                        toastEvent.fire();
+                        // component.set("v.Spinner", false);
+                        component.get("v.onSuccess")();
+                    }
+                    else{
+                        var product = component.get('v.selectedLookUpRecord');
+                        var compEvent = $A.get('e.c:BT_CLearLightningLookupEvent');
+                        compEvent.setParams({"recordByEvent" : product });  
+                        compEvent.fire();
+                        component.set("v.newRFQLine.buildertek__Quantity__c", '1');
+                        component.set("v.newRFQLine.Name", '');
+                        component.set("v.newRFQLine.buildertek__Master_Item__c", false);
+                        component.set("v.newRFQLine.buildertek__Description__c", '');
+                        component.set("v.newRFQLine.buildertek__Trade_Type__c", null);
+                        component.set("v.newRFQLine.buildertek__Cost_Code__c", null);
+                        component.set("v.newRFQLine.buildertek__Unit_Price__c", null);
+                        // component.set("v.Spinner", false);
+                        //$A.get('e.force:refreshView').fire();
+                        var toastEvent = $A.get("e.force:showToast");
+                        toastEvent.setParams({
+                            mode: 'sticky',
+                            message: 'RFQ Line created successfully',
+                            type : 'success',
+                            duration: '10000',
+                            mode: 'dismissible'
+                        });
+                        toastEvent.fire();
+                    }    
                 }
             });
             $A.enqueueAction(action);

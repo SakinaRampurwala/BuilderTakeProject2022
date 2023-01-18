@@ -57,15 +57,15 @@
                             modal.close();
                         });
                         $A.get('e.force:refreshView').fire();
-                        var toastEvent = $A.get("e.force:showToast");
-                        toastEvent.setParams({
-                            mode: 'sticky',
-                            message: 'RFQ Line created successfully',
-                            type : 'success',
-                            duration: '10000',
-                            mode: 'dismissible'
-                        });
-                        toastEvent.fire();
+                        // var toastEvent = $A.get("e.force:showToast");
+                        // toastEvent.setParams({
+                        //     mode: 'sticky',
+                        //     message: 'RFQ Line created successfully',
+                        //     type : 'success',
+                        //     duration: '10000',
+                        //     mode: 'dismissible'
+                        // });
+                        // toastEvent.fire();
                     }
                 }], 
                 

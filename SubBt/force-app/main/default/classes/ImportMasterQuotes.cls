@@ -1,16 +1,17 @@
 public with sharing class ImportMasterQuotes {
     
     @AuraEnabled
-    public static object getMasterQuotes(){
+    public static object getMasterQuotes(String searchKeyword){
         list<buildertek__Master_Quote__c> masterQuoteList;
+        String searchString = '%' + searchKeyword + '%';
         If(Schema.sObjectType.buildertek__Master_Quote__c.fields.Name.isAccessible() &&
               Schema.sObjectType.buildertek__Master_Quote__c.fields.Id.isAccessible() &&
               Schema.sObjectType.buildertek__Master_Quote__c.fields.buildertek__Type__c.isAccessible() &&
               Schema.sObjectType.buildertek__Master_Quote__c.fields.buildertek__Quote_Amount__c.isAccessible()){
                masterQuoteList= [select id, Name, buildertek__Type__c, buildertek__Quote_Amount__c 
-                                                                        from buildertek__Master_Quote__c ORDER BY Name ASC limit 50000];
+                                                                        from buildertek__Master_Quote__c WHERE Name LIKE:searchString  ORDER BY Name ASC limit 50000];
               }
-                                                                        
+            System.debug('masterQuoteList--->>>'+masterQuoteList);                                               
         List<MasterQuotesClass> MasterQuotesClassList = new List<MasterQuotesClass>();
         for(buildertek__Master_Quote__c masterQuote : masterQuoteList){
             MasterQuotesClass MasterQuotesClassRecord = new MasterQuotesClass(); 
@@ -18,6 +19,13 @@ public with sharing class ImportMasterQuotes {
             MasterQuotesClassRecord.quoteCheck = false;
             MasterQuotesClassList.add(MasterQuotesClassRecord);
         }
+        string type1 = 'Master';
+        String query= 'SELECT Id, Name, buildertek__Project__r.Name, buildertek__Quote_Amount__c FROM buildertek__Master_Quote__c ';
+        if ( searchKeyword != '' && searchKeyword != null ) {
+            query = query + ' WHERE Name LIKE \'' + searchKeyword + '%\'';
+        }
+        masterQuoteList = Database.query(query); 
+
         List<buildertek__Quote__c> quotesList;
         If(Schema.sObjectType.buildertek__Quote__c.fields.Name.isAccessible() &&
               Schema.sObjectType.buildertek__Quote__c.fields.Id.isAccessible() &&
@@ -31,7 +39,7 @@ public with sharing class ImportMasterQuotes {
                                         buildertek__Project__r.Name,
                                         buildertek__Type__c
                                         FROM buildertek__Quote__c
-                                        WHERE buildertek__Type__c = 'Master'];    
+                                        WHERE buildertek__Type__c = 'Master' AND Name LIKE:searchString];    
         
               }
         for(buildertek__Quote__c qut : quotesList){
@@ -42,6 +50,20 @@ public with sharing class ImportMasterQuotes {
         }
         return  MasterQuotesClassList;                                               
     }
+
+    @AuraEnabled
+    public static List<buildertek__Quote__c> getQuoteSearch (String searchKeyword){
+        // buildertek__Quote__c quote = [SELECT Id,Name FROM buildertek__Quote__c WHERE Id = :quotId];
+        // System.debug('quote--->>>'+quote);
+        string type1 = 'Master';
+        string type2 = 'Standard';
+        String query= 'SELECT Id, Name, buildertek__Project__r.Name, buildertek__Quote_Amount__c FROM buildertek__Quote__c WHERE buildertek__Type__c = \''+type1+'\'';
+        if ( searchKeyword != '' && searchKeyword != null ) {
+            query = query + ' AND Name LIKE \'' + searchKeyword + '%\'';
+        }
+        System.debug('query--->>>'+query);
+        return Database.query(query);
+    } 
     
     @AuraEnabled
     public static MessageClass importMasterQuoteLines(List<String> quoteIds, String recordId){

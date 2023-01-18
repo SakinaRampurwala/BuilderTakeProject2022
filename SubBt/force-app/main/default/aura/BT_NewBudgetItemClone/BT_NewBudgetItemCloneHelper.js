@@ -1076,7 +1076,7 @@
                     $A.get("e.c:BT_SpinnerEvent").setParams({
                         action: "HIDE",
                     }).fire();
-                    console.log('Error');
+                    console.log('Error ',response.getError());
                 }
             });
             $A.enqueueAction(action);

@@ -564,6 +564,15 @@
         $A.enqueueAction(action);
     },
 
+    getProductDetailValues: function (component, event, helper) {
+        debugger;
+        var productId = component.get('v.productId');
+        // get pricebook id
+        var pricebookId = component.get("c.getPriceBookId");
+        console.log('pricebookId', pricebookId);
+        console.log('productId', productId);
+    },
+
 
         
 

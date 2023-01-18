@@ -49,15 +49,18 @@ public static void setDefaultGrouping(List<buildertek__Budget_Item__c> BudgetIte
     }
     
     @AuraEnabled
-    public static list<PricebookEntry> getProductPrice(string productId){
-        System.debug('########pricebook'+productId);
+    public static list<PricebookEntry> getProductPrice(string productId , String pricebookId){
+
+        System.debug('########ProductId'+productId);
+        System.debug('########pricebook ---> '+pricebookId);
         list<PricebookEntry> pList;
         
-            pList = [select id,UnitPrice,buildertek__Unit_Cost__c,buildertek__Markup__c from PricebookEntry where 
-            product2Id =: productId and
-            isActive = true and 
-            pricebook2Id IN (select id from Pricebook2 Where isActive =true)];
+            // pList = [select id,UnitPrice,buildertek__Unit_Cost__c,buildertek__Markup__c from PricebookEntry where 
+            // product2Id =: productId and
+            // isActive = true and 
+            // pricebook2Id IN (select id from Pricebook2 Where isActive =true)];
             
+        plist = [select id,UnitPrice,buildertek__Unit_Cost__c,buildertek__Markup__c from PricebookEntry where Product2Id =: productId and pricebook2Id =: pricebookId and isActive = true ];
         system.debug('====pList'+pList);
         return pList;
     }    

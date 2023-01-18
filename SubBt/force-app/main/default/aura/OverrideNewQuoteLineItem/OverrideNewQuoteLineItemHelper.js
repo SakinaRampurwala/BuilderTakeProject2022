@@ -17,6 +17,7 @@
         action.setParams({"productId":productId});
         action.setCallback(this,function(respo){
             var res = respo.getReturnValue();
+            console.log('res ==> ',{res});
             var getProductDetails = component.get("v.newQuoteItem");
             ////console.log("@Budgetline@",component.get("v.recordId"));
             getProductDetails.buildertek__Quote__c = component.get("v.mainObjectId");
@@ -45,6 +46,7 @@
             
             getProductDetails.Name = productName;
             console.log('getProductDetails ==> ',{getProductDetails});
+            console.log('getProductDetails.buildertek__Unit_Cost__c' ,getProductDetails.buildertek__Unit_Cost__c);
             component.set("v.newQuoteItem",getProductDetails);
         });
         $A.enqueueAction(action);

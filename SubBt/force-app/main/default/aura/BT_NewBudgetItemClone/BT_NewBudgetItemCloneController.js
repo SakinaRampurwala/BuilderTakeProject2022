@@ -222,15 +222,18 @@
                 component.set("v.Isbtvalue", true);
                 if (result == true) {
                     var page = component.get("v.page") || 1;
+                    console.log('page --> ',page);
                     component.find("vendor").set("v.checked", true);
                     component.set("v.groupByVendortoggle1", false);
                     component.set("v.groupByVendortoggle2", false);
                     component.set("v.groupByCostCode", false);
-
+                    
                     helper.getBudgetGroups(component, event, helper, page);
-
+                    
                 } else {
                     component.set("v.groupByVendortoggle", false);
+                    var page = component.get("v.page") || 1;
+                    console.log('page --> ',page);
                     helper.getBudgetGroups(component, event, helper, page);
                 }
             }
