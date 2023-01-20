@@ -31,6 +31,24 @@
                 helper.getFields(component, event, helper);
                 helper.getparentrecord(component,event,helper);
             }, 100);
+
+            var action = component.get("c.getFieldSet");
+            action.setParams({
+                objectName: 'buildertek__Expense__c',
+                fieldSetName: 'buildertek__New_Expense_Field_Set'
+            });
+            action.setCallback(this, function (response) {
+                if (response.getState() == 'SUCCESS' && response.getReturnValue()) {
+                    var listOfFields0 = JSON.parse(response.getReturnValue());
+                    console.log(listOfFields0);
+                    component.set("v.listOfFields0", listOfFields0);
+                    component.set("v.isLoading", false);
+                }
+            });
+            $A.enqueueAction(action);
+
+            //helper.getBudgetvalue(component, event, helper);
+        
     },
     reInit : function(component, event, helper) {
         $A.get('e.force:refreshView').fire();
@@ -452,4 +470,132 @@
         })
         $A.enqueueAction(action);
     },
+
+    // ********************************************************************************************************************************** 
+
+    getBudgetvalue:function (component, event, helper) {
+       console.log('getBudgetvalue');
+       helper.getBudgetvalue(component, event, helper);
+    },
+
+    budgetchange:function (component, event, helper) {
+        console.log('budgetchange');
+        var budgetName = component.get("v.budgetName");
+        console.log('budgetNameStr ==> '+budgetName);
+        var action = component.get("c.getBudgetline");
+		action.setParams({
+            recordId:budgetName
+        });
+		action.setCallback(this, function (response) {
+           component.set('v.budgetLineList' , response.getReturnValue());
+           console.log(component.get('v.budgetLineList'));
+        })
+        $A.enqueueAction(action);
+    },
+
+    closeModel: function(component, event, helper) {
+        // for Hide/Close Model,set the "isOpen" attribute to "Fasle" 
+          var workspaceAPI = component.find("workspace");
+          workspaceAPI.getFocusedTabInfo().then(function(response) {
+              var focusedTabId = response.tabId;
+              workspaceAPI.closeTab({tabId: focusedTabId});
+          })
+          .catch(function(error) {
+              console.log(error);
+          });
+          $A.get("e.force:closeQuickAction").fire();
+          component.set("v.isOpen", false);
+          window.setTimeout(
+              $A.getCallback(function() {
+                  $A.get('e.force:refreshView').fire();
+              }), 1000
+          );
+     },
+
+     handlesubmit: function(component, event, helper) {
+        component.set("v.isLoading", true);
+        console.log('handleSumit');
+        var fields = event.getParam('fields');
+        console.log('fields: ' + JSON.stringify(fields));
+        console.log('Budget: ' + component.get('v.budgetName'));
+        console.log('BudgetLine: ' + component.get('v.budgetLineName'));
+        fields["buildertek__Budget__c"] = component.get("v.budgetName");
+        fields["buildertek__Budget_Line__c"] = component.get("v.budgetLineName");
+        var expenseAmount = fields["buildertek__Amount__c"];
+        var expenseType;
+        if (fields["buildertek__Type__c"] == undefined) {
+            expenseType = component.get("v.typevalue");
+        } else{
+            expenseType = fields["buildertek__Type__c"];
+        }
+        var expensePaymentMethod = fields["buildertek__Payment_Method__c"];
+        var expenseDescription = fields["buildertek__Description__c"];
+        console.log('expenseAmount: ' + expenseAmount);
+        console.log('expenseType: ' + expenseType);
+        console.log('expensePaymentMethod: ' + expensePaymentMethod);
+        console.log('expenseDescription: ' + expenseDescription);
+        var action = component.get("c.duplicateExpense")
+        action.setParams({
+            "expenseAmount": expenseAmount,
+            "expenseType": expenseType,
+            "expensePaymentMethod": expensePaymentMethod,
+            "expenseDescription": expenseDescription
+        });
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                var result = response.getReturnValue();
+                console.log('result: ' + result);
+                if (result == true) {
+                    console.log('It is a duplicate');
+                    component.set("v.isLoading", false);
+                    component.set("v.isDuplicate", true);
+                } else {
+                    helper.saveExpense(component, event, helper, fields);
+                }
+            } else{
+                helper.saveExpense(component, event, helper, fields);
+            }
+        });
+        $A.enqueueAction(action);
+
+        // if (component.get("v.isDuplicate") == true) {
+        //     console.log('It is a duplicate');
+        // }
+        // else {
+        //     console.log('It is not a duplicate');
+        //     helper.saveExpense(component, event, helper, fields);
+        // }
+
+        
+        //helper.saveExpense(component, event, helper, fields);
+        
+     },
+
+     handlesaveandnew: function(component, event, helper) {
+        console.log('handlesaveandnew');
+        component.set("v.SaveNnew", true);
+     },
+
+     cancelBtn : function(component, event, helper) {
+		component.set("v.displayModal", true);
+	},
+	saveBtn : function(component, event, helper) {
+		//create server calls
+	},
+	closeBtn : function(component, event, helper) {
+        	component.set("v.displayModal", false);
+	},
+	yesBtn : function(component, event, helper) {
+   	var urlEvent = $A.get("e.force:navigateToURL");
+		urlEvent.setParams({
+			"url": "https://www.google.com"
+		});
+		urlEvent.fire();
+    		component.set("v.displayModal", false);
+	},
+	noBtn : function(component, event, helper) {
+        	component.set("v.displayModal", false);
+	}
+
 })

@@ -1021,10 +1021,14 @@
             var state = response.getState();
             var result = response.getReturnValue();
             if (result === 'Success') {
+                component.set('v.selectedRecs',[]);
                 $A.get("e.c:BT_SpinnerEvent").setParams({
                     "action": "HIDE"
                 }).fire();
                 helper.showToast(component, event, helper, 'Success', 'Invoice Price updated successfully', 'success');
+
+                var action1 = component.get("c.doInit");
+                $A.enqueueAction(action1);
             }else if (result === 'null'){
                 $A.get("e.c:BT_SpinnerEvent").setParams({
                     "action": "HIDE"
@@ -3358,7 +3362,8 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
             action.setCallback(this, function (result) {
                 var state = result.getState();
                 if (state === "SUCCESS") {
-                    if (result.getReturnValue() == 'Success') {      
+                    if (result.getReturnValue() == 'Success') {   
+                        component.set('v.selectedRecs',[]);
                         var toastEvent = $A.get("e.force:showToast");
                         toastEvent.setParams({
                             type: 'SUCCESS',
@@ -3439,6 +3444,7 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
         action.setCallback(this, function (result) {
             var state = result.getState();
             if (state === "SUCCESS") {
+                component.set('v.selectedRecs',[]);
                 var toastEvent = $A.get("e.force:showToast");
                         toastEvent.setParams({
                             type: 'SUCCESS',
@@ -3449,7 +3455,9 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
 
                         var action1 = component.get("c.doInit");
                         $A.enqueueAction(action1);
-                        $A.get('e.force:refreshView').fire();
+                        // $A.get('e.force:refreshView').fire();
+                        // window.location.reload();
+                        //location.reload();
             } else{
                 var toastEvent = $A.get("e.force:showToast");
                 toastEvent.setParams({

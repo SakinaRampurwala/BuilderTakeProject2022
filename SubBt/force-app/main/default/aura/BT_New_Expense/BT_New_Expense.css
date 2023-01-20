@@ -1,4 +1,4 @@
-.THIS .popupsize{
+/* .THIS .popupsize{
      width: 43%;
 }
 .THIS .slds-modal__container{
@@ -38,7 +38,7 @@
 }
 .THIS .slds-form-element__label{
     max-width: 10rem !important;
-}
+} */
 /* @media (min-width:1025px) { 
     .THIS .budgetBox{
         display: flex  !important;
@@ -50,3 +50,12 @@
 /* .THIS .budgetBox .slds-form-element__control{
     margin-left:2.8rem;
 } */
+
+.THIS .custom-loading-text {
+    transform: rotate(-90deg);
+    position: absolute;
+    top: -0.5rem;
+    left: 1rem;
+    white-space: nowrap;
+    font-size: 20px;
+}

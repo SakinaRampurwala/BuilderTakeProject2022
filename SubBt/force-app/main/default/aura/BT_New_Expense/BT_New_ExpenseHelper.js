@@ -172,13 +172,14 @@
         }, 2000);
     },
     getProjectValue:function (component, event, helper) {
-        console.log('inside pro ifd');
+        console.log('getting budget value');
         var getId=event.getSource().get('v.value');
         console.log(getId);
         component.set('v.projectId' , getId);
         var action = component.get("c.getBudget");
+
 		action.setParams({
-            recordId:component.get('v.projectId')
+            "recordId":component.get('v.projectId')
         });
 		action.setCallback(this, function (response) {
             console.log(response.getReturnValue());
@@ -190,6 +191,98 @@
             }
 
         })
+        $A.enqueueAction(action);
+    },
+
+
+    // ********************************************************************************************************************************** 
+
+    getBudgetvalue: function (component, event, helper) {
+        var getId=event.getSource().get('v.value');
+        console.log('Project Id ==>'+getId);
+        getId = JSON.stringify(getId);
+        getId = getId.substring(2, getId.length - 2);
+        console.log(getId);
+        var action = component.get("c.getBudget");
+		action.setParams({
+            "recordId":getId
+        });
+		action.setCallback(this, function (response) {
+            console.log(response.getReturnValue());
+            console.log(response.getState());
+
+            if(response.getState() == 'SUCCESS'){
+                component.set('v.budgetList' , response.getReturnValue());
+                console.log(component.get('v.budgetList'));
+            }
+
+        })
+        $A.enqueueAction(action);
+        
+
+        
+        
+    },
+
+    saveExpense: function (component, event, helper, fields) {
+        var action = component.get("c.creteExpense");
+        action.setParams({ 
+            expenseData : fields
+        });
+        action.setCallback(this, function(response) {
+            component.set('v.isLoading', false);
+            console.log('State => '+response.getState());
+            if(response.getState() == 'SUCCESS'){
+                var response = response.getReturnValue();
+                console.log('response ==> ',{response});
+
+                // var navEvt = $A.get("e.force:navigateToSObject");
+                // navEvt.setParams({
+                //     "recordId": response,
+                //     "slideDevName": "detail"
+                // });
+                // navEvt.fire();
+                var saveNnew = component.get("v.SaveNnew");
+                console.log('saveNnew: ' + saveNnew);
+
+                if(saveNnew){
+                    $A.get('e.force:refreshView').fire();
+                }
+                else{
+                    console.log('saveAndClose');
+                    var navEvt = $A.get("e.force:navigateToSObject");
+                    navEvt.setParams({
+                        "recordId": response,
+                        "slideDevName": "Detail"
+                    });
+                    navEvt.fire();
+
+                    var workspaceAPI = component.find("workspace");
+                    workspaceAPI.getFocusedTabInfo().then(function(response) {
+                        var focusedTabId = response.tabId;
+                        workspaceAPI.closeTab({tabId: focusedTabId});
+                    })
+                }
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    "type": "Success",
+                    "title": "Success!",
+                    "message": "The record has been created successfully."
+				});
+				toastEvent.fire();
+            } else{
+                var error = response.getError();
+                console.log('Error =>',{error});
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    "title": 'Error',
+                    "type": 'Error',
+                    "message": 'Something Went Wrong',
+                    "duration": '5000'
+                });
+                toastEvent.fire();
+            }
+        });
         $A.enqueueAction(action);
     },
 
