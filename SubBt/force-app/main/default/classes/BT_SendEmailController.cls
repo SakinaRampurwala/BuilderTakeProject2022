@@ -860,7 +860,6 @@ public with sharing class BT_SendEmailController{
         pdf.getParameters().put('recordId', recordId);
         pdf.getParameters().put('templateId', templateId);
         pdf.setRedirect(true);
-
         Blob blobbody = !Test.isRunningTest() ? pdf.getContent() : Blob.ValueOf('dummy text');
         return blobbody;
     }

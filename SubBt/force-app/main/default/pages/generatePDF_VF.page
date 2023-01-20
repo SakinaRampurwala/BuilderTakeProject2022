@@ -38,7 +38,7 @@
         }
         </script>
         
-                <style>
+                <style>                
             @media (min-width: 768px) { .container { max-width: 970px; } }
         .user_name{
         font-size:14px;
