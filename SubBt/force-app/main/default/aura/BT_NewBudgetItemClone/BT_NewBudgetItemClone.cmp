@@ -452,8 +452,9 @@
 
                                                 <td>
                                                     <ui:inputSelect value="{!v.productfamily}" change="{!c.changefamily}" class="pricebook-class pointer1">
+                                                        <option value="">--None--</option>
                                                         <aura:iteration var="option" items="{!v.listofproductfamily}">
-                                                            <option value="{!option.productfamilyvalues}" selected="{!option.productfamilyvalues == v.productfamily}">
+                                                            <option value="{!option.productfamilyvalues}" >
                                                                 {!option.productfamilyvalues}</option>
                                                         </aura:iteration>
                                                     </ui:inputSelect>

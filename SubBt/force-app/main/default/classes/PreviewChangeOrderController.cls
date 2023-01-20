@@ -306,7 +306,7 @@ public with sharing class PreviewChangeOrderController {
              efa.setFileName('ChangeOrder.pdf');
               system.debug('templateid-----'+templateId+'record---> '+recordId);
              system.debug('Blob ---> '+setAttachmentBody(recordId, templateId,fileid));
-             efa.setBody(setAttachmentBody(recordId, templateId,fileid));
+             efa.setBody(setAttachmentBody(recordId, templateId,fileid));             
              fileAttachments.add(efa); 
              mail.setFileAttachments(fileAttachments);
              mails.add(mail);

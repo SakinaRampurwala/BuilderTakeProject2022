@@ -66,7 +66,7 @@ trigger ProjectTaskTrigger on buildertek__Project_Task__c(after insert, after up
 				System.debug('at the end of IS update trigger');
 			}
 			if (Trigger.isBefore){
-				// handler.checkCircular(Trigger.new, Trigger.oldMap);
+				handler.checkCircular(Trigger.new, Trigger.oldMap);
 				handler.OnBeforeUpdate(Trigger.old, Trigger.new, Trigger.newMap, trigger.oldMap);
 			}
 			//insert update milestones

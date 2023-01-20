@@ -14,8 +14,8 @@
             if(state === "SUCCESS"){
                 var result = response.getReturnValue();
                 console.log('result ==> ',{result});
-				component.set("v.PaginationList", result);
-				if (searchKeyword == '') {
+				// component.set("v.PaginationList", result);
+				// if (searchKeyword == '') {
                     component.set("v.disableBtn", false);
 					var pageSize = component.get("v.pageSize");
                 	var result = response.getReturnValue();
@@ -34,9 +34,9 @@
                 	component.set("v.Spinner", false);
                 	var pag = component.get('v.PaginationList');
                 	console.log({pag});
-                } else{
-                    component.set("v.disableBtn", true);
-                }
+                // } else{
+                //     component.set("v.disableBtn", true);
+                // }
             } else{
                 var error = response.getError();
                 console.log('Error =>',{error});

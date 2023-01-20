@@ -51,7 +51,7 @@ public class ProjectTaskTriggerHandler{
 						Boolean flag = true;
 						while (flag) {
 							if (taskId != parentId) {
-								if (projectTaskMap.get(parentId).buildertek__Dependency__c != null) {
+								if (parentId != null && projectTaskMap.get(parentId).buildertek__Dependency__c != null) {
 									parentId = projectTaskMap.get(parentId).buildertek__Dependency__c;
 								} else {
 									flag = false;

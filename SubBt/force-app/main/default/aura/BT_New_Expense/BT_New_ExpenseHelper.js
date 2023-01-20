@@ -10,14 +10,35 @@
 	},
 	getName: function (component, event, helper) {
         // component.set('v.isLoading' , true);
+        console.log('get name');
+        console.log(component.get("v.parentRecordId"));
 		var action = component.get("c.getBudgetNameFromProject");
 		action.setParams({
 			recordId: component.get("v.parentRecordId")
 		});
 		action.setCallback(this, function (response) {
 			if (response.getState() == 'SUCCESS' && response.getReturnValue()) {
-				var budgetId = response.getReturnValue();
-				component.set("v.budgetId", budgetId);
+				var budgetList = response.getReturnValue();
+                console.log('budgetList ==> ',{budgetList});
+                if (budgetList.length > 0) {
+                    component.set("v.selectedBudget", budgetList[0].Id);
+                    component.set("v.selectedBudgetName", budgetList[0].Name);
+
+                    var action = component.get("c.getBudgetline");
+                    action.setParams({
+                        recordId:budgetList[0].Id
+                    });
+                    action.setCallback(this, function (response) {
+                       component.set('v.budgetLineList' , response.getReturnValue());
+                       console.log(component.get('v.budgetLineList'));
+                    })
+                    $A.enqueueAction(action);
+
+                    component.set("v.budgetList", budgetList);
+                }
+                // console.log('budget ==> ',{budget});
+
+                // component.set("v.selectedBudget", budget.Id);
 			} else {
 				console.log('Error :::' , response.getReturnValue());
 			}
@@ -104,28 +125,7 @@
         });
         $A.enqueueAction(action);
     },
-  /* getMessage : function (component, event, helper) {
-        setTimeout(function () {
-            component.set("v.ismessage",false);
-            var workspaceAPI = component.find("workspace");
-            workspaceAPI.getFocusedTabInfo().then(function (response) {
-                var focusedTabId = response.tabId;
-                workspaceAPI.closeTab({
-                    tabId: focusedTabId
-                });
-            }).catch(function (error) {
-                console.log('Error', JSON.stringify(error));
-            });
-             $A.get("e.force:closeQuickAction").fire();
-            var navEvt = $A.get("e.force:navigateToSObject");
-            navEvt.setParams({
-                "recordId": component.get("v.expenseRecordId"),
-                "slideDevName": "related"
-            });
-            navEvt.fire();
-            
-        }, 2000);
-    },*/
+  
     getMessage : function (component, event, helper) {
         var expenseId;
         component.set('v.isLoading', false);
@@ -170,6 +170,27 @@
             });
             navEvt.fire(); 
         }, 2000);
+    },
+    getProjectValue:function (component, event, helper) {
+        console.log('inside pro ifd');
+        var getId=event.getSource().get('v.value');
+        console.log(getId);
+        component.set('v.projectId' , getId);
+        var action = component.get("c.getBudget");
+		action.setParams({
+            recordId:component.get('v.projectId')
+        });
+		action.setCallback(this, function (response) {
+            console.log(response.getReturnValue());
+            console.log(response.getState());
+
+            if(response.getState() == 'SUCCESS'){
+                component.set('v.budgetList' , response.getReturnValue());
+                console.log(component.get('v.budgetList'));
+            }
+
+        })
+        $A.enqueueAction(action);
     },
 
 

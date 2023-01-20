@@ -99,8 +99,6 @@
     doInit: function(component, event, helper) {
 
 
-
-
         var workspaceAPI = component.find("workspace");
         workspaceAPI.getEnclosingTabId().then((response) => {
             let opendTab = response.tabId;
@@ -210,11 +208,11 @@
         helper.getcurr(component, event, helper);
         helper.getmulticur(component, event, helper);
         component.set("v.listofproductfamily", '');
-
+        
         //var bt = component.get("v.Isbtvalues");
         //alert('kkkkkk'+bt);
         var btadminaction = component.get("c.getadminvalues");
-
+        
         //alert("haii");
         btadminaction.setCallback(this, function(response) {
             if (response.getState() === 'SUCCESS') {
@@ -304,6 +302,7 @@
             "recordByEvent": product
         });
         compEvent.fire();
+        component.set('v.productfamily', undefined);
         component.set('v.newBudgetLine.Name', '');
         component.set('v.selectedContractor', null);
         component.set('v.newBudgetLine.buildertek__Group__c', null);
@@ -334,6 +333,7 @@
             if (state === "SUCCESS") {
                 helper.fetchPickListVal(component, event, helper);
                 var storeResponse = response.getReturnValue();
+                console.log('storeResponse --> ', storeResponse);
                 // if storeResponse size is equal 0 ,display No Result Found... message on screen.                }
                 if (storeResponse.length == 0) {
                     component.set("v.Message", 'No Result Found...');
@@ -345,6 +345,8 @@
                 if (component.get("v.listofproductfamily").length > 0) {
                     component.set("v.productfamily", component.get("v.listofproductfamily")[0].productfamilyvalues);
                 }
+                console.log('productfamily --> ', component.get("v.productfamily"));
+                console.log('listofproductfamily --> ', component.get("v.listofproductfamily"));
             }
 
         });

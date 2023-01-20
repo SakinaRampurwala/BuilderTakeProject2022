@@ -2,8 +2,13 @@
 private class ImportMasterQuotesTest {
 
 	private static testMethod void getQuotes() {
+		Account a = new Account();
+		a.Name = 'test Account';
+		insert a;
+
 	    buildertek__Project__c proj = new buildertek__Project__c();
 	    proj.Name = 'Test Project';
+	    proj.buildertek__Customer__c = a.Id;
 	    insert proj;
 	    
         List<buildertek__Quote__c> quoteList = new List<buildertek__Quote__c>();
@@ -40,13 +45,19 @@ private class ImportMasterQuotesTest {
         MQ.quoteRecord = quoteList[0];
         MQ.quoteCheck = true;
         MQList.add(MQ);
-        ImportMasterQuotes.getMasterQuotes();
+        ImportMasterQuotes.getMasterQuotes('test');
         system.assertEquals('test', 'test');
 	}
 	
 	private static testMethod void importQuotes() {
+		
+		Account a = new Account();
+		a.Name = 'test Account';
+		insert a;
+		
 	    buildertek__Project__c proj = new buildertek__Project__c();
 	    proj.Name = 'Test Project';
+	    proj.buildertek__Customer__c = a.Id;
 	    insert proj;
 	    
         List<buildertek__Quote__c> quoteList = new List<buildertek__Quote__c>();

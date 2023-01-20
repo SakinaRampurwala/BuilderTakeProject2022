@@ -5,11 +5,11 @@ public with sharing class NewRecordCustomController{
         return recRec.buildertek__Project__c;
     }
     @AuraEnabled
-    public static String getBudgetNameFromProject(String recordId){
+    public static List<buildertek__Budget__c> getBudgetNameFromProject(String recordId){
         try{
         if (String.isNotBlank(recordId)){
-            buildertek__Budget__c budgetName = [SELECT Id, Name, buildertek__Project__c FROM buildertek__Budget__c    WHERE buildertek__Project__c = :recordId   ORDER BY CreatedDate DESC Limit 1];
-            return budgetName.Id;            
+            List<buildertek__Budget__c> budgetList = [SELECT Id, Name, buildertek__Project__c FROM buildertek__Budget__c  WHERE buildertek__Project__c = :recordId  ORDER BY CreatedDate DESC];
+            return budgetList;            
             }
         } catch (Exception e){
             throw new AuraHandledException(e.getMessage());
@@ -37,6 +37,35 @@ public with sharing class NewRecordCustomController{
         List<buildertek__Budget__c> budgetList = [SELECT Id , buildertek__Project__c, Name FROM buildertek__Budget__c WHERE buildertek__Project__c =: recordId];
         System.debug(budgetList);
         return budgetList;
+    }
+
+
+    @AuraEnabled
+    public static List<buildertek__Budget__c> getBudgetNew(String recordId, String budgetNameStr) {
+        List<buildertek__Budget__c> budgetList;
+        if (recordId != '' && budgetNameStr == '' && budgetNameStr == null) {
+            budgetList = [SELECT Id , buildertek__Project__c, Name FROM buildertek__Budget__c WHERE buildertek__Project__c =: recordId];
+        } else {
+            String bName = '\''+budgetNameStr+'%\'';
+            string Query = 'SELECT Id , buildertek__Project__c, Name FROM buildertek__Budget__c WHERE buildertek__Project__c =: recordId AND Name LIKE '+bName; 
+            System.debug('Query ==> '+Query);
+            budgetList = Database.query(Query);
+        }
+        return budgetList;
+    }
+
+    @AuraEnabled
+    public static List<buildertek__Budget_Item__c> getBudgetlineNew(String recordId,  String budgetLineNameStr) {
+        List<buildertek__Budget_Item__c> budgetLineList;
+        if (recordId != '' && budgetLineNameStr == '' && budgetLineNameStr == null){
+            budgetLineList = [SELECT Id , buildertek__Budget__c, Name FROM buildertek__Budget_Item__c WHERE buildertek__Budget__c =: recordId];
+        } else {
+            String bName = '\''+budgetLineNameStr+'%\'';
+            string Query = 'SELECT Id , buildertek__Budget__c, Name FROM buildertek__Budget_Item__c WHERE buildertek__Budget__c =: recordId AND Name LIKE '+bName; 
+            System.debug('Query ==>'+Query);
+            budgetLineList = Database.query(Query);
+        }
+        return budgetLineList;
     }
 
 
@@ -184,8 +213,15 @@ public with sharing class NewRecordCustomController{
         }else{
             return null;
         }
-        
     } 
+
+    @AuraEnabled
+    public static void bypassTrigger(){
+        System.debug('bypassTrigger');
+        ExpenseToBudgetItemTriggerHandler.blnSkipExpenseUpdateTrigger = true;
+
+        System.debug('ExpenseToBudgetItemTriggerHandler.blnSkipExpenseUpdateTrigger  ==> '+ExpenseToBudgetItemTriggerHandler.blnSkipExpenseUpdateTrigger );
+    }
     
      @AuraEnabled
     public static string getBudgets(String RecordId){
@@ -222,14 +258,20 @@ public with sharing class NewRecordCustomController{
             return 'Empty';
         }
     }
-    @AuraEnabled
-    public static void saveExpenseRecords(List<buildertek__Expense__c> expenseList){
-        System.debug(expenseList);
-        if(expenseList.size() > 0){
-            insert expenseList;
-        }
-       
-    }
 
+    @AuraEnabled
+    public static String creteExpense(buildertek__Expense__c expenseData) {
+        System.debug('expenseData ==> '+expenseData);
+        System.debug('expenseData.buildertek__Budget_Line__c =>'+expenseData.buildertek__Budget_Line__c);
+
+        String budgetLine = expenseData.buildertek__Budget_Line__c;
+        if (expenseData.buildertek__Budget_Line__c != null && budgetLine != '') {
+            BudgetDAO.isCreateExpense = true;
+        }
+        System.debug('BudgetDAO.isCreateExpense ==> '+BudgetDAO.isCreateExpense);
+        insert expenseData;
+        BudgetDAO.isCreateExpense = false;
+        return expenseData.Id;
+    }
 
 }

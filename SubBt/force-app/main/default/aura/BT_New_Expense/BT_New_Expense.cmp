@@ -27,6 +27,9 @@
 
     <aura:attribute name="selectedLine" type="String" default="" />
     <aura:attribute name="selectedBudget" type="String" default="" />
+    <aura:attribute name="selectedBudgetName" type="String" default="" />
+    <aura:attribute name="selectedBudgetLine" type="String" default="" />
+
     <aura:attribute name="budgetList" type="List"  />
 
 
@@ -76,7 +79,7 @@
                 <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">New Expense</h2>
                 <p></p>
             </header>
-            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" onclick="{!c.closeModal}">
                 <lightning:recordEditForm  aura:id="recordViewForm" objectApiName="buildertek__Expense__c" onload="{!c.handleLoad}"
                     onsubmit="{!c.handleSubmit}" onsuccess="{!c.onRecordSuccess}"  >
                     <div  class='fieldDiv'>
@@ -85,7 +88,7 @@
                     <lightning:layout multipleRows="true">
                         <!-- <div style="height:40rem; overflow-y:scroll"> -->
                             <aura:iteration items="{!v.listOfFields}" var="field">
-                                <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
+                                <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small" class="build-budget-div">
                                     <div>
                                         <aura:if isTrue="{!and(and(and(field.name!='buildertek__Budget__c' ,field.name!='buildertek__Type__c'),field.name!='buildertek__Project__c'),field.name != 'buildertek__Budget_Line__c')}">
                                             <lightning:inputField fieldName="{!field.name}" value="" />                                            
@@ -94,7 +97,7 @@
                                                     <lightning:inputField fieldName="{!field.name}" value="{!v.budgetId}" aura:id="incidentlookupid" onchange="{!c.getBudgetValue}"/>
                                                 </aura:if> -->
                                                 <aura:if isTrue="{!field.name =='buildertek__Budget__c'}" >
-                                                    <lightning:input  fieldName="buildertek__Budget__c" class='budgetBox' type="search" label='Budget' aura:id="incidentlookupid"  placeholder="Search Budget" value="{!v.budgetId}"   onclick="{!c.displayBudgetRelatedProject}" />
+                                                    <lightning:input  fieldName="buildertek__Budget__c" class='budgetBox' type="search" label='Budget' aura:id="incidentlookupid"  placeholder="Search Budget" value="{!v.selectedBudgetName}"   onclick="{!c.displayBudgetRelatedProject}" onchange="{!c.changeBudget}" />
                                                     <aura:if isTrue="{!v.displayuBudget}" >
                                                         <div id="listbox-id-11" class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid searchResult" role="listbox">
                                                             <ul class="slds-listbox slds-listbox_vertical" role="presentation">
@@ -112,7 +115,7 @@
                                                                 <aura:if isTrue="{!empty(v.displayuBudget)}">
                                                                     <span>
                                                                         <p class="blank-lst">
-                                                                            There Are No Budget Line Related To Budget
+                                                                            There Are No Budget Related To Project
                                                                         </p>
                                                                     </span>
                                                                 </aura:if>
@@ -129,7 +132,7 @@
                                                 </aura:if>
 
                                                 <aura:if isTrue="{!field.name =='buildertek__Budget_Line__c'}" >
-                                                    <lightning:input  class='budgetBox' type="search" label='Budget Line' placeholder="Search Budget Line" value="{!v.selectedLine}" onclick="{!c.displayBudget}" />
+                                                    <lightning:input  fieldName="buildertek__Budget_Line__c" aura:id="incidentlookupids"  class='budgetBox' type="search" label='Budget Line' placeholder="Search Budget Line" value="{!v.selectedLine}" onclick="{!c.displayBudget}" onchange="{!c.changeBudgetLine}" />
                                                     <aura:if isTrue="{!v.displayuBudgetLine}" >
                                                         <div id="listbox-id-11" class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid searchResult" role="listbox">
                                                             <ul class="slds-listbox slds-listbox_vertical" role="presentation">

@@ -1175,18 +1175,21 @@
     },
 
     fetchpricebooks: function (component, event, helper) {
-        var action = component.get("c.getpricebook");
-        action.setParams({
+        // var action = component.get("c.getpricebook");
+        // action.setParams({
+        //     BudgetId: component.get("v.recordId"),
+        // });
+        // var opts = [];
+        // action.setCallback(this, function (response) {
+        //     if (response.getState() == "SUCCESS") {
+        //         component.set("v.pricebookName", response.getReturnValue());
+        //     }
+        // });
+        // $A.enqueueAction(action);
+        var actions = component.get("c.getpricebooks");
+        actions.setParams({
             BudgetId: component.get("v.recordId"),
         });
-        var opts = [];
-        action.setCallback(this, function (response) {
-            if (response.getState() == "SUCCESS") {
-                component.set("v.pricebookName", response.getReturnValue());
-            }
-        });
-        $A.enqueueAction(action);
-        var actions = component.get("c.getpricebooks");
         var opts = [];
         actions.setCallback(this, function (response) {
             if (response.getState() == "SUCCESS") {
@@ -1203,6 +1206,7 @@
                     });
                 }
                 component.set("v.pricebookoptions", opts);
+                component.set("v.pricebookName", opts[0].value);                
             }
         });
         $A.enqueueAction(actions);
