@@ -271,12 +271,44 @@ public with sharing class NewRecordCustomController{
         System.debug('expenseData ==> '+expenseData);
         System.debug('expenseData.buildertek__Budget_Line__c =>'+expenseData.buildertek__Budget_Line__c);
 
+        BudgetDAO.isCreateExpense = true;
+
         String budgetLine = expenseData.buildertek__Budget_Line__c;
         if (expenseData.buildertek__Budget_Line__c != null && budgetLine != '') {
-            BudgetDAO.isCreateExpense = true;
+            insert expenseData;
+            
+        } else {
+            insert expenseData;
+
+            String BudgetId = expenseData.buildertek__Budget__c;
+            System.debug('BudgetId ==> '+BudgetId);
+            if (BudgetId != null && BudgetId != '') {
+
+                buildertek__Budget_Line_Group__c  budgetlinegroup =[select id,Name from buildertek__Budget_Line_Group__c  where Name = 'Expense' limit 1];
+
+                buildertek__Budget_Item__c budgetitem = new buildertek__Budget_Item__c();
+                budgetitem.buildertek__Budget__c = BudgetId;
+                budgetitem.Name = expenseData.buildertek__Description__c;
+                budgetitem.buildertek__Quantity__c = 1;
+                budgetitem.buildertek__UOM__c = 'Each';
+                budgetitem.buildertek__Group__c  = budgetlinegroup.id; 
+                budgetitem.buildertek__Cost_Code__c = expenseData.buildertek__Cost_Code__c;
+                budgetitem.buildertek__Contractor__c = expenseData.buildertek__Vendor__c;
+                budgetitem.buildertek__Unit_Price__c = expenseData.buildertek__Amount__c;
+                insert budgetitem;
+
+                expenseData.buildertek__Budget_Line__c = budgetitem.id;
+                update expenseData;
+
+                buildertek__Expense_To_Budget_Item_Link__c ExpnseToBudgetItemLink = new buildertek__Expense_To_Budget_Item_Link__c();
+                ExpnseToBudgetItemLink.buildertek__Expense__c = expenseData.Id;
+                ExpnseToBudgetItemLink.buildertek__Budget_Line__c = budgetitem.Id;
+                ExpnseToBudgetItemLink.Auto_Roll_Up__c = true;
+                insert ExpnseToBudgetItemLink;
+
+            }
         }
-        System.debug('BudgetDAO.isCreateExpense ==> '+BudgetDAO.isCreateExpense);
-        insert expenseData;
+
         BudgetDAO.isCreateExpense = false;
         return expenseData.Id;
     }
