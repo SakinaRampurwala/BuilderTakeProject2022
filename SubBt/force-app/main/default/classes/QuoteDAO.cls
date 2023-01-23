@@ -327,49 +327,28 @@ public with sharing class QuoteDAO{
                             from buildertek__Quote_Item__c
                             where buildertek__Quote__c = :quoteRec];
         System.debug(quoteItemListRec + 'LIST');
+        List<buildertek__Quote_Item__c> newQuoteItemListRec = new List<buildertek__Quote_Item__c>();
 
         for (buildertek__Quote_Item__c quoteItem : quoteItemListRec){
-
-            system.debug(quoteRec + 'Markup value----->' + markupvalue);
-            system.debug(quoteRec + 'Margin value----->' + marginvalue);
-            System.debug(quoteItem + 'Item Quote');
-            System.debug('quoteItem.buildertek__Markup__c====>>>'+quoteItem.buildertek__Markup__c);
-            System.debug(quoteItem.buildertek__Markup__c == null);
-            System.debug(quoteItem.buildertek__Markup__c <= 0);
-            if (quoteItem.buildertek__Markup__c == null || quoteItem.buildertek__Markup__c <= 0){
-                System.debug('----1st If----');
-                quoteItem.buildertek__Markup__c = markupvalue;
-                System.debug('quoteItem.buildertek__Markup__c---->>>>'+quoteItem.buildertek__Markup__c);
-            }
-            if (quoteItem.buildertek__Margin__c == null || quoteItem.buildertek__Margin__c <= 0){
-                System.debug('----2nd If----');
-                quoteItem.buildertek__Margin__c = marginvalue;
-                System.debug('quoteItem.buildertek__Margin__c--->>>'+quoteItem.buildertek__Margin__c);
-            }
-            // update quoteItem;
-            // System.debug('Update Successfully');
-
-            // quoteItemListRec.add(quoteItem);
+            quoteItem.buildertek__Markup__c = markupvalue;
+            quoteItem.buildertek__Margin__c = marginvalue;
+            newQuoteItemListRec.add(quoteItem);
         }
-        // update quoteItemListRec;
-        System.debug('==========');
-        System.debug(Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Markup__c.isupdateable());
-        System.debug(Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Margin__c.isupdateable());
-        System.debug('==========');
-        update quoteItemListRec;
         if (Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Markup__c.isupdateable() && Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Margin__c.isupdateable()){
             System.debug('<<<<----In If Block---->>>>');
-            update quoteItemListRec;
+            update newQuoteItemListRec;
             System.debug('Update Successfully');
-            System.debug('quoteItemListRec----->'+quoteItemListRec);
+            System.debug('quoteItemListRec----->'+newQuoteItemListRec);
 
-            for (buildertek__Quote_Item__c quoteLine : quoteItemListRec) {
+            for (buildertek__Quote_Item__c quoteLine : newQuoteItemListRec) {
                 System.debug('quoteLine ==> '+quoteLine);
                 System.debug('quoteLine Markup -> '+quoteLine.buildertek__Markup__c );
+                System.debug('quoteLine Margin -> '+quoteLine.buildertek__Margin__c );
+
             }
         }
 
-        return quoteItemListRec;
+        return newQuoteItemListRec;
     }
 
     @AuraEnabled

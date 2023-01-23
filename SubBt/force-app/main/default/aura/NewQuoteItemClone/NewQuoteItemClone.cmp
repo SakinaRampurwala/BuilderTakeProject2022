@@ -517,7 +517,7 @@
             <div aura:id="quoteItem" />
             <!-- <div class="av slds-box" id="{!v.recordId + 'groups'}" style="min-height:50vh;padding:0px !important;"> -->
             <div class="av slds-box" id="{!v.recordId + 'groups'}" style="min-height:55vh;padding:0px !important;">
-                <div>
+                <div >
                     <div style="padding:10px;margin-top: -5px;">
                         <br />
                         <div aura:id="inlineEditQuote" style="margin-top:25px; margin-bottom:25px;">
@@ -617,7 +617,9 @@
                                             <ui:inputNumber value="{!v.newQuote.buildertek__Quantity__c}" />
                                         </td>
                                         <td style="width: 6% !important;">
-                                            <ui:inputCurrency value="{!v.unitCost}" aura:id="unitCostId" />
+                                            <!-- <ui:inputCurrency value="{!v.unitCost}" aura:id="unitCostId" /> -->
+                                            <ui:inputCurrency value="{!v.newQuote.buildertek__Unit_Cost__c}" aura:id="unitCostId" />
+
                                         </td>
                                         <td style="padding-bottom:22px; width: 6% !important;">
                                             <lightning:input type="number" name="input6" label="" value="{!v.newQuote.buildertek__Markup__c}" formatter="percent-fixed" aura:id="markUpId" />
@@ -709,7 +711,7 @@
                         </div>
                     </aura:if>
 
-                    <div class="slds">
+                    <div class="slds" style=" overflow-y:scroll">
 
                         <div>
                             <!--<div class="slds-scrollable" style="width:100%;height: 35rem;">-->

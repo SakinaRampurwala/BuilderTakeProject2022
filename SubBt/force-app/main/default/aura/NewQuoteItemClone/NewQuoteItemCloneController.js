@@ -569,11 +569,12 @@
     },
     saveQuoteRecord: function(component, event, helper) {
         console.log('========================Save method fire======================');
+        console.log(component.get('v.unitCost'));
         $A.get("e.c:BT_SpinnerEvent").setParams({
             "action": "SHOW"
         }).fire();
         var quoteObject = component.get("v.newQuote");
-
+        console.log(component.get("v.newQuote"));
         console.log(' Quote Data ==> ' + JSON.stringify(quoteObject));
 
         var recordId = component.get("v.recordId");
@@ -1785,7 +1786,7 @@
                 console.log('<<<---Success--->>>');
                 component.set("v.QuoteMargin",null);
                 var result = response.getReturnValue();
-                console.log('result--->'+result);
+                console.log({result});
                 component.set("v.TotalRecords", result);
                 $A.get('e.force:refreshView').fire();
                 var page = component.get("v.page") || 1
@@ -1815,51 +1816,6 @@
         });
         $A.enqueueAction(actionLines);
         helper.getQuoteInfo(component, event, helper);
-
-        /* var actions = component.get("c.saveQuoteSingleRec");
-actions.setParams({
-"quoteRec": JSON.stringify(component.get("v.QuoteRec"))
-});
-actions.setCallback(this, function(response) {
-if (response.getState() == "SUCCESS") {
-var result  = response.getReturnValue();
-console.log('retVal :'+JSON.stringify(result));
-component.set("v.QuoteRec",result);
-$A.get('e.force:refreshView').fire();
-helper.getGroups(component, event, helper, page);
-
-window.setTimeout(
-$A.getCallback(function() {
-var toastEvent = $A.get("e.force:showToast");
-toastEvent.setParams({
-mode: 'sticky',
-message: 'Quote line markup(%) updated successfully.',
-type : 'success',
-duration: '10000',
-mode: 'dismissible'
-});
-toastEvent.fire();
-}), 3000
-);
-}else{
-window.setTimeout(
-$A.getCallback(function() {
-var toastEvent = $A.get("e.force:showToast");
-toastEvent.setParams({
-mode: 'sticky',
-message: 'Something Went Wrong!!',
-type : 'error',
-duration: '10000',
-mode: 'dismissible'
-});
-toastEvent.fire();
-}), 3000
-);
-}
-});
-$A.enqueueAction(actions);
-helper.getQuoteInfo(component,event,helper);*/
-
     },
 
     refreshComponentHandler: function(component, event, helper) {
