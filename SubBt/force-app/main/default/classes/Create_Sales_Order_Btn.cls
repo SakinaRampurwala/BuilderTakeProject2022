@@ -5,7 +5,7 @@ public with sharing class Create_Sales_Order_Btn {
             
             buildertek__Quote__c quote = [SELECT Id, buildertek__Primary_Contact__c, buildertek__Primary_Contact__r.AccountId, buildertek__Primary_Contact__r.Email, buildertek__Project__c, buildertek__Notes__c FROM buildertek__Quote__c where Id=:recordId];
 
-            List<buildertek__Quote_Item__c> quoteItemList = [SELECT Id, buildertek__Quantity__c, buildertek__Unit_Cost__c, buildertek__Discount__c, buildertek__Markup__c FROM buildertek__Quote_Item__c WHERE buildertek__Quote__c =: recordId];
+            List<buildertek__Quote_Item__c> quoteItemList = [SELECT Id, buildertek__Quantity__c, buildertek__Unit_Cost__c, buildertek__Additional_Discount__c, buildertek__Markup__c FROM buildertek__Quote_Item__c WHERE buildertek__Quote__c =: recordId];
             
             System.debug('quote => '+quote);
             buildertek__Sales_Order__c salesOrder = new buildertek__Sales_Order__c();
@@ -26,7 +26,7 @@ public with sharing class Create_Sales_Order_Btn {
                orderLine.buildertek__Sales_Order__c = salesOrder.Id;
                orderLine.buildertek__Quantity__c = quoteItem.buildertek__Quantity__c;
                orderLine.buildertek__Unit_Cost__c = quoteItem.buildertek__Unit_Cost__c;
-               orderLine.buildertek__Discount__c = quoteItem.buildertek__Discount__c;
+               orderLine.buildertek__Discount__c = quoteItem.buildertek__Additional_Discount__c;
                orderLine.buildertek__Markup__c = quoteItem.buildertek__Markup__c;
                System.debug('orderLine => '+orderLine);
                salesLineList.add(orderLine);
