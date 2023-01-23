@@ -897,34 +897,34 @@ return getBudgetGroupDetails(budgetId, groupId, 50, 50)[0];
         }
         
         List<buildertek__Budget_Line_Group__c> budgetGroup;
-        String query = 'SELECT Id, Name ';
-        query = query + ', buildertek__Group__c,Budget_Line_Group__c, Description__c, Product__c ';
+    //     String query = 'SELECT Id, Name ';
+    //     query = query + ', buildertek__Group__c,Budget_Line_Group__c, Description__c, Product__c ';
         
-        String namespacePrefix1 = BT_Utils.getNamespacePrefix();
-        List<Schema.FieldSetMember> fieldSetMemberList1 = BT_Utils.getFieldSetMembers(fieldSetAPI, objectName);
-       // system.debug('fieldSetMemberList -----> ' + fieldSetMemberList1);
-        for (Schema.FieldSetMember fieldSetMemberObj : fieldSetMemberList1){
+    //     String namespacePrefix1 = BT_Utils.getNamespacePrefix();
+    //     List<Schema.FieldSetMember> fieldSetMemberList1 = BT_Utils.getFieldSetMembers(fieldSetAPI, objectName);
+    //    // system.debug('fieldSetMemberList -----> ' + fieldSetMemberList1);
+    //     for (Schema.FieldSetMember fieldSetMemberObj : fieldSetMemberList1){
             
-            if (!query.contains(fieldSetMemberObj.getFieldPath())){
-              //  system.debug('fieldSetMemberObj ********' + fieldSetMemberObj.getFieldPath());
-                query = query + ',' + fieldSetMemberObj.getFieldPath();
-            }
+    //         if (!query.contains(fieldSetMemberObj.getFieldPath())){
+    //           //  system.debug('fieldSetMemberObj ********' + fieldSetMemberObj.getFieldPath());
+    //             query = query + ',' + fieldSetMemberObj.getFieldPath();
+    //         }
             
-            if (String.ValueOf(fieldSetMemberObj.getType()).toUpperCase() == 'REFERENCE'){
-                if (!fieldSetMemberObj.getFieldPath().Contains('__c')){
-                    query = query + ',' + fieldSetMemberObj.getFieldPath().replace('Id', '.Name');
-                } else{
-                    query = query + ',' + fieldSetMemberObj.getFieldPath().replace('__c', '__r.Name');
-                }
-            }
-        }
-        query = query + ' FROM Budget_Items__r';
+    //         if (String.ValueOf(fieldSetMemberObj.getType()).toUpperCase() == 'REFERENCE'){
+    //             if (!fieldSetMemberObj.getFieldPath().Contains('__c')){
+    //                 query = query + ',' + fieldSetMemberObj.getFieldPath().replace('Id', '.Name');
+    //             } else{
+    //                 query = query + ',' + fieldSetMemberObj.getFieldPath().replace('__c', '__r.Name');
+    //             }
+    //         }
+    //     }
+    //     query = query + ' FROM Budget_Items__r';
         
-        if (budgetId != null){
-            query = query + ' WHERE Id != null AND buildertek__budget__c =: budgetId ORDER BY Name ASC';
-        } else{
-            query = query + ' WHERE Id != null ORDER BY Name ASC';
-        }
+    //     if (budgetId != null){
+    //         query = query + ' WHERE Id != null AND buildertek__budget__c =: budgetId ORDER BY Name ASC';
+    //     } else{
+    //         query = query + ' WHERE Id != null ORDER BY Name ASC';
+    //     }
         
         if (groupId != null){
             
@@ -980,30 +980,30 @@ budgetGroup = Database.query('Select Id, Name,('+soql+') from budget_line_group_
             }
         }
         List<buildertek__Budget_Line_Sub_Group__c> budgetGroup;
-        String query = 'SELECT Id, Name ';
-        query = query + ', buildertek__Sub_Grouping__c,Budget_Line_Group__c, Description__c, Product__c ';
+        // String query = 'SELECT Id, Name ';
+        // query = query + ', buildertek__Sub_Grouping__c,Budget_Line_Group__c, Description__c, Product__c ';
         
-        String namespacePrefix1 = BT_Utils.getNamespacePrefix();
-        List<Schema.FieldSetMember> fieldSetMemberList1 = BT_Utils.getFieldSetMembers(fieldSetAPI, objectName);
-        for (Schema.FieldSetMember fieldSetMemberObj : fieldSetMemberList1){
-            if (!query.contains(fieldSetMemberObj.getFieldPath())){
-                query = query + ',' + fieldSetMemberObj.getFieldPath();
-            }
-            if (String.ValueOf(fieldSetMemberObj.getType()).toUpperCase() == 'REFERENCE'){
-                if (!fieldSetMemberObj.getFieldPath().Contains('__c')){
-                    query = query + ',' + fieldSetMemberObj.getFieldPath().replace('Id', '.Name');
-                } else{
-                    query = query + ',' + fieldSetMemberObj.getFieldPath().replace('__c', '__r.Name');
-                }
-            }
-        }
-        query = query + ' FROM Budget_Items__r';
+        // String namespacePrefix1 = BT_Utils.getNamespacePrefix();
+        // List<Schema.FieldSetMember> fieldSetMemberList1 = BT_Utils.getFieldSetMembers(fieldSetAPI, objectName);
+        // for (Schema.FieldSetMember fieldSetMemberObj : fieldSetMemberList1){
+        //     if (!query.contains(fieldSetMemberObj.getFieldPath())){
+        //         query = query + ',' + fieldSetMemberObj.getFieldPath();
+        //     }
+        //     if (String.ValueOf(fieldSetMemberObj.getType()).toUpperCase() == 'REFERENCE'){
+        //         if (!fieldSetMemberObj.getFieldPath().Contains('__c')){
+        //             query = query + ',' + fieldSetMemberObj.getFieldPath().replace('Id', '.Name');
+        //         } else{
+        //             query = query + ',' + fieldSetMemberObj.getFieldPath().replace('__c', '__r.Name');
+        //         }
+        //     }
+        // }
+        // query = query + ' FROM Budget_Items__r';
         
-        if (budgetId != null){
-            query = query + ' WHERE Id != null AND buildertek__budget__c =: budgetId ORDER BY Name ASC';
-        } else{
-            query = query + ' WHERE Id != null ORDER BY Name ASC';
-        }
+        // if (budgetId != null){
+        //     query = query + ' WHERE Id != null AND buildertek__budget__c =: budgetId ORDER BY Name ASC';
+        // } else{
+        //     query = query + ' WHERE Id != null ORDER BY Name ASC';
+        // }
         
         if (groupId != null){
             budgetGroup = Database.query('Select Id, Name from buildertek__Budget_Line_Sub_Group__c where Id =: groupId ORDER BY Name ASC');

@@ -188,6 +188,44 @@ public with sharing class CreateBudgetLineItemForExpenseAC {
         }
     }
 
+    //added By Jaimin
+    public static void updateBudgetItem(Id ExpId){
+
+        System.debug('ExpId==>'+ExpId);
+
+        buildertek__Expense__c expenseData = [Select Id,buildertek__Budget__c, buildertek__Budget_Line__c, buildertek__Description__c, buildertek__Cost_Code__c,buildertek__Vendor__c, buildertek__Amount__c from buildertek__Expense__c where Id =:ExpId limit 1];
+        buildertek__Budget_Line_Group__c  budgetlinegroup =[select id,Name from buildertek__Budget_Line_Group__c  where Name = 'Expense' limit 1];
+
+        if(expenseData.buildertek__Budget_Line__c != null) {
+            return;
+        }
+
+        if(expenseData.buildertek__Budget__c == null){
+            return;
+        }
+
+        buildertek__Budget_Item__c budgetitem = new buildertek__Budget_Item__c();
+        budgetitem.buildertek__Budget__c = expenseData.buildertek__Budget__c;
+        budgetitem.Name = expenseData.buildertek__Description__c;
+        budgetitem.buildertek__Quantity__c = 0; 
+        budgetitem.buildertek__UOM__c = 'Each';
+        budgetitem.buildertek__Group__c  = budgetlinegroup.id; 
+        budgetitem.buildertek__Cost_Code__c = expenseData.buildertek__Cost_Code__c;
+        budgetitem.buildertek__Contractor__c = expenseData.buildertek__Vendor__c;
+        budgetitem.buildertek__Unit_Price__c = expenseData.buildertek__Amount__c;
+        insert budgetitem;
+
+        expenseData.buildertek__Budget_Line__c = budgetitem.id;
+        update expenseData;
+
+        buildertek__Expense_To_Budget_Item_Link__c ExpnseToBudgetItemLink = new buildertek__Expense_To_Budget_Item_Link__c();
+        ExpnseToBudgetItemLink.buildertek__Expense__c = expenseData.Id;
+        ExpnseToBudgetItemLink.buildertek__Budget_Line__c = budgetitem.id;
+        ExpnseToBudgetItemLink.Auto_Roll_Up__c = true;
+        insert ExpnseToBudgetItemLink;
+        
+    }
+
     public class MessageClass{
         @AuraEnabled
         public String Status {get;set;}

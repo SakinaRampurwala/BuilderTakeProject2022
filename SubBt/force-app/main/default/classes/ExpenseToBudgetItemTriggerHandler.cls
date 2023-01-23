@@ -81,16 +81,30 @@ public class ExpenseToBudgetItemTriggerHandler {
       CreateBudgetLineItemForExpenseAC.RollUpExpenseAmount(ExpenserecMap.KeySet());
        list<Id> budgetitemIds = new list<Id>();
        List<buildertek__Expense__c> expenseList = new List<buildertek__Expense__c>();
+       List<buildertek__Expense__c> expenseWObudget = new List<buildertek__Expense__c>();
         for(buildertek__Expense__c exp : updatedExpense){
             if(oldExpenseMap.get(exp.Id).buildertek__Budget_Line__c != exp.buildertek__Budget_Line__c){
                 expenseList.add(oldExpenseMap.get(exp.Id));
                 budgetitemIds.add(oldExpenseMap.get(exp.Id).buildertek__Budget_Line__c);
             }
+            // if(oldExpenseMap.get(exp.Id).buildertek__Budget__c == null && exp.buildertek__Budget__c != null){
+            //     expenseWObudget.add(exp);
+            // }
+            if(oldExpenseMap.get(exp.Id).buildertek__Budget__c != exp.buildertek__Budget__c){
+                expenseWObudget.add(exp);
+            }
         }
+
         if(budgetitemIds.size() > 0){
             
            //CreateBudgetLineItemForExpenseAC.deletemethod(budgetitemIds); 
            CreateBudgetLineItemForExpenseAC.deletemethodJunction(expenseList,budgetitemIds); 
+        }
+
+        if(expenseWObudget.size() > 0){
+            for(buildertek__Expense__c exp : expenseWObudget){
+                CreateBudgetLineItemForExpenseAC.updateBudgetItem(exp.Id); 
+            }
         }
     }
 

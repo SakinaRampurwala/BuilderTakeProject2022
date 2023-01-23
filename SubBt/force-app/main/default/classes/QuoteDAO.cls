@@ -375,7 +375,7 @@ public with sharing class QuoteDAO{
         }
         // update quoteItemListRec;
         //* old code
-        
+
         update quoteItemListRec;
         for (buildertek__Quote_Item__c quoteLine : quoteItemListRec) {
             System.debug('quoteLine ==> '+quoteLine);
@@ -384,15 +384,12 @@ public with sharing class QuoteDAO{
             System.debug('formula field  -> '+quoteLine.buildertek__Margin_To_Markup__c );
     
         }
+        System.debug(Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Markup__c.isupdateable());
+        System.debug(Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Margin__c.isupdateable());
 
         if (Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Markup__c.isupdateable() && Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Margin__c.isupdateable()){
             System.debug('<<<<----In If Block---->>>>');
-            if (markupvalue != null){
-                update quoteItemListRec;
-                System.debug('Update Successfully');
-                System.debug('quoteItemListRec----->'+quoteItemListRec);
-                }
-            // update quoteItemListRec;
+            update quoteItemListRec;
         }
 
         return quoteItemListRec;

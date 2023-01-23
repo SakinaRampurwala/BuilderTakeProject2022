@@ -203,10 +203,10 @@
         //   helper.getBudgetGroups(component, event, helper, page); //, start, output);
         helper.fetchPickListVal(component, event, helper);
         helper.fetchpricebooks(component, event, helper);
-        helper.fetchCORecordType(component, event, helper);
-        helper.fetchInvoiceRecordType(component, event, helper);
+        //helper.fetchCORecordType(component, event, helper);
+        //helper.fetchInvoiceRecordType(component, event, helper);
         helper.getcurr(component, event, helper);
-        helper.getmulticur(component, event, helper);
+        //helper.getmulticur(component, event, helper);
         component.set("v.listofproductfamily", '');
         
         //var bt = component.get("v.Isbtvalues");
@@ -918,6 +918,7 @@
         component.set("v.disableAddCO", true);
         var selectedRecs = component.get('v.selectedRecs');
         console.log('selectedRecs ==> ',{selectedRecs});
+        helper.fetchCORecordType(component, event, helper);
         if (selectedRecs.length > 0) {
             var rowData;
             var newCOItems = [];
@@ -1297,6 +1298,7 @@
 
     newInvoice: function(component, event, helper) {
         var selectedRecs = component.get('v.selectedRecs');
+        helper.fetchInvoiceRecordType(component, event, helper);
         if (selectedRecs.length > 0) {
             var rowData;
             var newInvoiceItems = [];
