@@ -387,7 +387,12 @@ public with sharing class QuoteDAO{
 
         if (Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Markup__c.isupdateable() && Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Margin__c.isupdateable()){
             System.debug('<<<<----In If Block---->>>>');
-            update quoteItemListRec;
+            if (markupvalue != null){
+                update quoteItemListRec;
+                System.debug('Update Successfully');
+                System.debug('quoteItemListRec----->'+quoteItemListRec);
+                }
+            // update quoteItemListRec;
         }
 
         return quoteItemListRec;
