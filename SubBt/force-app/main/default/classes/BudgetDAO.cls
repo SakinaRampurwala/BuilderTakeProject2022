@@ -2478,7 +2478,7 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
         List<buildertek__Expense__c> ExpenseList = new List<buildertek__Expense__c>();
         ExpenseList = [SELECT Id, Name, buildertek__Project__c, buildertek__Description__c,buildertek__Budget_Line__c, buildertek__Vendor__c, buildertek__Vendor__r.Name, buildertek__Budget__c,
                             buildertek__Total_Expense__c FROM buildertek__Expense__c
-                            WHERE buildertek__Budget_Line__c = null AND buildertek__Budget__c = null ORDER BY Name DESC];
+                            WHERE buildertek__Budget_Line__c = null AND buildertek__Budget__c = null AND buildertek__Project__c=: budgetRec.buildertek__Project__c ORDER BY Name DESC];
         System.debug('ExpenseList======>>>>>>'+ExpenseList);
                         
         return ExpenseList;
