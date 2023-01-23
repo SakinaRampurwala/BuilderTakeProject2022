@@ -2167,7 +2167,9 @@ component.set("v.StoreIdsOfDatatable2",'') */
                                     'buildertek__Unit_Cost__c': row1.PricebookEntries[0].buildertek__Unit_Cost__c ? row1.PricebookEntries[0].buildertek__Unit_Cost__c : row1.PricebookEntries[0].UnitPrice,
                                     'buildertek__Markup__c': row1.PricebookEntries[0].buildertek__Markup__c ? row1.PricebookEntries[0].buildertek__Markup__c : 0,
                                     'buildertek__Product__c': row1.Id,
-                                    'buildertek__Size__c': row1.PricebookEntries[0].Pricebook2.Name
+                                    'buildertek__Size__c': row1.PricebookEntries[0].Pricebook2.Name,
+                                    'buildertek__Description__c': row1.Name
+
                                 })
                             } else {
                                 xyz.push({
@@ -2180,7 +2182,8 @@ component.set("v.StoreIdsOfDatatable2",'') */
                                     'buildertek__Unit_Cost__c': row1.PricebookEntries[0].buildertek__Unit_Cost__c ? row1.PricebookEntries[0].buildertek__Unit_Cost__c : row1.PricebookEntries[0].UnitPrice,
                                     'buildertek__Markup__c': row1.PricebookEntries[0].buildertek__Markup__c ? row1.PricebookEntries[0].buildertek__Markup__c : 0,
                                     'buildertek__Product__c': row1.Id,
-                                    'buildertek__Size__c': row1.PricebookEntries[0].Pricebook2.Name
+                                    'buildertek__Size__c': row1.PricebookEntries[0].Pricebook2.Name,
+                                    'buildertek__Description__c': row1.Name
                                 })
                             }
                         }
@@ -2345,6 +2348,7 @@ return other.Id == current.Id
         });
 
         action10.setCallback(this, function(response) {
+            console.log(response.getReturnValue());
             component.set("v.openQuoteLineBox", false);
             $A.get("e.force:refreshView").fire();
             component.set("v.Spinner", false);

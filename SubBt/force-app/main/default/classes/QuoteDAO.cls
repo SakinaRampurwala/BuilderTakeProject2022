@@ -2008,9 +2008,22 @@ public with sharing class QuoteDAO{
             newQline.buildertek__Notes__c = newQline.buildertek__Notes__c;
             newQline.buildertek__Status__c = 'Accept';
             newQline.buildertek__Quote__c = QuoteId;
+            newQline.buildertek__Description__c = qql.buildertek__Description__c;
+
             insertListofQuoteLines.add(newQline); 
         }
+        // for(buildertek__Quote_Item__c q2:insertListofQuoteLines){
+        //     System.debug(q2.buildertek__Description__c);
+        //     System.debug(q2.Name);
+
+        // }
         insert insertListofQuoteLines;
+        System.debug('====> After Insert Quote Line ===>');
+        for(buildertek__Quote_Item__c q:insertListofQuoteLines){
+            System.debug(q.buildertek__Description__c);
+            System.debug(q.Name);
+
+        }
         return insertListofQuoteLines;
     }
     

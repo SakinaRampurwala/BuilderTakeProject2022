@@ -711,7 +711,7 @@
                         </div>
                     </aura:if>
 
-                    <div class="slds" style=" overflow-y:scroll">
+                    <div class="slds mainTablediv">
 
                         <div>
                             <!--<div class="slds-scrollable" style="width:100%;height: 35rem;">-->
@@ -1249,31 +1249,32 @@
                                                     </label>
                                                 </th>  -->
 
-                                                <th style="width: 200px;padding-left: 10px">
+                                                <th class="tableHeader" style="padding-left: 10px">
                                                     Price Book
                                                 </th>
-                                                <th style="width: 270px;padding-left: 10px">
+                                                <th class="tableHeader" style="padding-left: 10px">
                                                     Product
                                                 </th>
-                                                <th style="width: 150px;padding-left: 12px">
-                                                    Unit Cost
-                                                </th>
-                                                <th style="width: 100px; padding-left: 12px">
-                                                    List Price
-                                                </th>
-                                                <th style="width: 100px; padding-left: 10px">
+                                                <th class="tableHeader" style="padding-left: 10px">
                                                     Description
                                                 </th>
-                                                <th style="width: 200px; padding-left: 10px">
+                                                <th class="tableHeader" style="padding-left: 12px">
+                                                    Unit Cost
+                                                </th>
+                                                <th class="tableHeader" style="padding-left: 12px">
+                                                    List Price
+                                                </th>
+
+                                                <th class="tableHeader" style="padding-left: 10px">
                                                     Grouping
                                                 </th>
-                                                <th style="width: 100px; padding-left: 10px">
+                                                <th class="tableHeader" style="padding-left: 10px">
                                                     Quantity
                                                 </th>
-                                                <th style="width: 100px;padding-left: 10px">
+                                                <th class="tableHeader" style="padding-left: 10px">
                                                     Markup %
                                                 </th>
-                                                <th style="width: 100px;padding-left: 10px">
+                                                <th class="tableHeader" style="padding-left: 10px">
                                                     Discount %
                                                 </th>
 
@@ -1298,13 +1299,13 @@
                                                         <lightning:input name="input1" label="" value="{!item.Name}" disabled="true" />
                                                     </td>
                                                     <td>
+                                                        <lightning:input name="input3" label="" value="{!item.buildertek__Description__c}" />
+                                                    </td>
+                                                    <td>
                                                         <lightning:input name="input6" label="" value="{!item.buildertek__Unit_Cost__c}" formatter="currency" type="number" maximumFractionDigits="5" step="0.01" />
                                                     </td>
                                                     <td>
                                                         <lightning:input name="input2" label="" value="{!item.buildertek__Unit_Price__c}" formatter="currency" type="number" maximumFractionDigits="5" step="0.01" />
-                                                    </td>
-                                                    <td>
-                                                        <lightning:input name="input3" label="" value="{!item.buildertek__Description__c}" />
                                                     </td>
                                                     <td>
                                                         <lightning:select name="mySelect" label="" value="{!item.buildertek__Grouping__c}">

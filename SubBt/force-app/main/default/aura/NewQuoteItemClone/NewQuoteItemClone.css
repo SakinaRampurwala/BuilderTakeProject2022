@@ -147,7 +147,15 @@
     align-items: center;
     height: 150px
 }
-
+.THIS .tableHeader{
+    width: 15%;
+}
+.THIS .mainTablediv{
+    overflow-y:scroll;
+}
+.THIS .mainTablediv::-webkit-scrollbar{
+    display: none;
+}
 /*.THIS .slds-cell-fixed{
                         padding : 0px;
                     } */
