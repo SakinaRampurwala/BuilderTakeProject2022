@@ -19,6 +19,6 @@ trigger AccountPayableTrigger on buildertek__Account_Payable__c (before insert,b
     }else if(Trigger.isDelete && Trigger.isBefore){
         AccountPayableHelper.beforeDelete(Trigger.old);    
     }else if(Trigger.isUpdate && Trigger.isAfter){
-        AccountPayableHelper.afterUpdate(Trigger.old, Trigger.new, Trigger.newMap, trigger.oldMap);       
+        AccountPayableHelper.afterUpdate(Trigger.old, Trigger.new, Trigger.newMap, trigger.oldMap);    
     }
 }

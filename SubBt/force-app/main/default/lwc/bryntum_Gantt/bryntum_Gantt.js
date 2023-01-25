@@ -795,7 +795,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
   callinsertUpdateTaskList(taskData) {
     var that = this;
     this.isLoaded = true;
-    console.log('======================================================');
+    console.log('============In method==========================================');
     console.log('taskData',{taskData});
     insertUpdateTaskList({ taskJSON: JSON.stringify(taskData), isUpdate: true })
       .then(function (response) {
@@ -804,6 +804,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
         });
         that.isLoaded = false;
         that.dispatchEvent(filterChangeEvent);
+        window.location.reload();
       })
       .catch((error) => {
         this.isLoaded = false;

@@ -1775,7 +1775,7 @@
         actionLines.setParams({
             "quoteRec": component.get("v.QuoteRec").Id,
             markupvalue: markupvalue,
-            marginvalue:marginvalue
+            marginvalue: marginvalue
         });
         console.log('actionLines-->>>',{actionLines});
         actionLines.setCallback(this, function(response) {

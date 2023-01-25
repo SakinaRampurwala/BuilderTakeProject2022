@@ -226,6 +226,16 @@ public with sharing class CreateBudgetLineItemForExpenseAC {
         
     }
 
+    //developed by Jaimin
+    public static void deleteBudgetItem(Id ExpId, Id BudgetLineId){
+        buildertek__Expense__c expenseData = [Select Id,buildertek__Description__c, buildertek__Budget_Line__c from buildertek__Expense__c where Id =:ExpId limit 1];
+        buildertek__Budget_Item__c budgetitem = [Select Id, Name from buildertek__Budget_Item__c where Id =:BudgetLineId limit 1];
+        
+        if(expenseData.buildertek__Description__c == budgetitem.Name){
+            delete budgetitem;
+        }
+    }
+
     public class MessageClass{
         @AuraEnabled
         public String Status {get;set;}

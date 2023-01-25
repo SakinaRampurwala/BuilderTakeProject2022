@@ -82,6 +82,7 @@ public class ExpenseToBudgetItemTriggerHandler {
        list<Id> budgetitemIds = new list<Id>();
        List<buildertek__Expense__c> expenseList = new List<buildertek__Expense__c>();
        List<buildertek__Expense__c> expenseWObudget = new List<buildertek__Expense__c>();
+       List<buildertek__Expense__c> expenseWOBL = new List<buildertek__Expense__c>();
         for(buildertek__Expense__c exp : updatedExpense){
             if(oldExpenseMap.get(exp.Id).buildertek__Budget_Line__c != exp.buildertek__Budget_Line__c){
                 expenseList.add(oldExpenseMap.get(exp.Id));
@@ -92,6 +93,10 @@ public class ExpenseToBudgetItemTriggerHandler {
             // }
             if(oldExpenseMap.get(exp.Id).buildertek__Budget__c != exp.buildertek__Budget__c){
                 expenseWObudget.add(exp);
+            }
+
+            if(oldExpenseMap.get(exp.Id).buildertek__Budget_Line__c != null && exp.buildertek__Budget_Line__c == null){
+                expenseWOBL.add(exp);
             }
         }
 
@@ -104,6 +109,12 @@ public class ExpenseToBudgetItemTriggerHandler {
         if(expenseWObudget.size() > 0){
             for(buildertek__Expense__c exp : expenseWObudget){
                 CreateBudgetLineItemForExpenseAC.updateBudgetItem(exp.Id); 
+            }
+        }
+
+        if(expenseWOBL.size() > 0){
+            for(buildertek__Expense__c exp : expenseWOBL){
+                CreateBudgetLineItemForExpenseAC.deleteBudgetItem(exp.Id, oldExpenseMap.get(exp.Id).buildertek__Budget_Line__c);
             }
         }
     }

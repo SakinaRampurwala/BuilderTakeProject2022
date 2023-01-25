@@ -31,6 +31,19 @@
       </div>
     <div class="slds-backdrop slds-backdrop_open" style="opacity: 0;"></div>
   </template>
+  <template if:true={isLoaded2}>
+    <div  class="slds-spinner_container" style="position:fixed;opacity:1;">
+      <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+          <span class="slds-assistive-text">Loading</span>
+          <div class="slds-spinner__dot-a"></div>
+          <div class="slds-spinner__dot-b"></div>
+          <div class="custom-loading-text">
+              <b>Processing, Please Wait</b>
+          </div>
+      </div>
+      </div>
+    <div class="slds-backdrop slds-backdrop_open" style="opacity: 0;"></div>
+  </template>
 
   <template if:true={showpopup}>
       <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">

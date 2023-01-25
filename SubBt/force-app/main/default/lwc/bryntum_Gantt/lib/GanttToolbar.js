@@ -562,7 +562,6 @@ export default base => class GanttToolbar extends base {
                     updateDataList.push(updateData)
                 }
                 
-                console.log('=============================================================================');
                 console.log('updateDataList ==> ',{updateDataList});
                         
                 if(this.gantt.callGanttComponent){
@@ -601,7 +600,6 @@ export default base => class GanttToolbar extends base {
                 // console.log('---------------------------------------');
                 // console.log('updateDataCloneList ==> ',{updateDataCloneList});
 
-
                 this.gantt.callGanttComponent.callinsertUpdateTaskList(updateDataCloneList)
                 this.gantt.callGanttComponent.scheduleItemsDataList = updateDataList;
                 
@@ -620,7 +618,8 @@ export default base => class GanttToolbar extends base {
             }
         }
         // eval("$A.get('e.force:refreshView').fire();");
-        window.location.reload();
+        
+        // window.location.reload();
         //send only task rows to apex and update/insert them
         //for newly added tasks we getting id="_generated+index" so while sending data to apex we can check to insert them
     }
