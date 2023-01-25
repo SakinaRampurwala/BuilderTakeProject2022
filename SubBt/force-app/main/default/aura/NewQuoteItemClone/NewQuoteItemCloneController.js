@@ -446,11 +446,14 @@
                 }
                 // set searchResult list with return value from server.
                 component.set("v.listofproductfamily", storeResponse);
-                if(component.get("v.listofproductfamily").length ===1 && component.get("v.listofproductfamily")[0].productfamilyvalues=='None'){
-                    component.set("v.productfamily", 'None');
-                    document.getElementById('noneValue').style.display='None';
-                }else if (component.get("v.listofproductfamily").length > 0) {
-                    component.set("v.productfamily", 'None');
+                // if(component.get("v.listofproductfamily").length ===1 && component.get("v.listofproductfamily")[0].productfamilyvalues=='None'){
+                //     component.set("v.productfamily", 'None');
+                //     document.getElementById('noneValue').style.display='None';
+                // }else 
+                if (component.get("v.listofproductfamily").length > 0) {
+                    component.set("v.productfamily", '--None--');
+                    // component.set("v.productfamily", component.get("v.listofproductfamily")[0].productfamilyvalues);
+
                     
                 } else {
                     component.set("v.productfamily", 'None');
