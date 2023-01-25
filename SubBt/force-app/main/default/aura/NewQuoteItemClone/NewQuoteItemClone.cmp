@@ -336,11 +336,6 @@
                                         </ui:inputSelect>
                                     </div>
                                     <div class="slds-col slds-size_6-of-12">
-                                        <!-- <label class="slds-form-element__label">Markup</label>-->
-                                        <!-- <ui:inputNumber value="{!v.newQuote.buildertek__Markup__c}" aura:id="markUpId"
-                                                format=".00%" />-->
-                                        <!-- <ui:inputNumber value="{!v.newQuote.buildertek__Markup__c}" aura:id="markUpId"
-                                              format="%" formatter="percent"/>-->
                                         <lightning:input value="{!v.newQuote.buildertek__Markup__c}" label="Markup" aura:id="markUpId" type="number" step="0.01" />
                                     </div>
 
@@ -349,7 +344,7 @@
                                 <div class="slds-grid slds-gutters">
                                     <div class="slds-col slds-size_6-of-12">
                                         <label class="slds-form-element__label">Product Family</label>
-                                        <ui:inputSelect value="{!v.productfamily}" change="{!c.changefamily}" class="pricebook-class">
+                                        <ui:inputSelect value="{!v.productfamily}" change="{!c.changefamily}" class="pricebook-class"> 
                                             <aura:iteration var="option" items="{!v.listofproductfamily}">
                                                 <option value="{!option.productfamilyvalues}" selected="{!option.productfamilyvalues == v.productfamily}">
                                                     {!option.productfamilyvalues}</option>
@@ -568,6 +563,7 @@
                                         </td>
                                         <td>
                                             <ui:inputSelect value="{!v.productfamily}" change="{!c.changefamily}" class="pricebook-class">
+                                                <option value="--None--" id="noneValue">None</option>
                                                 <aura:iteration var="option" items="{!v.listofproductfamily}">
                                                     <option value="{!option.productfamilyvalues}" selected="{!option.productfamilyvalues == v.productfamily}">
                                                         {!option.productfamilyvalues}</option>

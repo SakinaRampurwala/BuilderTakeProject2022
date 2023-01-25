@@ -387,7 +387,7 @@
 
     },
     changefamily: function(component, event, helper) {
-
+        console.log('changefamily');
         var product = component.get('v.selectedLookUpRecord');
         var compEvent = $A.get('e.c:BT_CLearLightningLookupEvent');
         compEvent.setParams({
@@ -437,6 +437,7 @@
             if (state === "SUCCESS") {
                 helper.fetchPickListVal(component, event, helper);
                 var storeResponse = response.getReturnValue();
+                console.log({storeResponse});
                 // if storeResponse size is equal 0 ,display No Result Found... message on screen.                }
                 if (storeResponse.length == 0) {
                     component.set("v.Message", 'No Result Found...');
@@ -445,11 +446,14 @@
                 }
                 // set searchResult list with return value from server.
                 component.set("v.listofproductfamily", storeResponse);
-
-                if (component.get("v.listofproductfamily").length > 0) {
-                    component.set("v.productfamily", component.get("v.listofproductfamily")[0].productfamilyvalues);
+                if(component.get("v.listofproductfamily").length ===1 && component.get("v.listofproductfamily")[0].productfamilyvalues=='None'){
+                    component.set("v.productfamily", 'None');
+                    document.getElementById('noneValue').style.display='None';
+                }else if (component.get("v.listofproductfamily").length > 0) {
+                    component.set("v.productfamily", 'None');
+                    
                 } else {
-                    component.set("v.productfamily", null)
+                    component.set("v.productfamily", 'None');
                 }
 
             }

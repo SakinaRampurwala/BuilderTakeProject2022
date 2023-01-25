@@ -377,14 +377,6 @@ public with sharing class QuoteDAO{
         //* old code
 
         update quoteItemListRec;
-        for (buildertek__Quote_Item__c quoteLine : quoteItemListRec) {
-            System.debug('quoteLine ==> '+quoteLine);
-            System.debug('quoteLine Markup -> '+quoteLine.buildertek__Markup__c );
-            System.debug('quoteLine Margin -> '+quoteLine.buildertek__Margin__c );
-            System.debug('formula field  -> '+quoteLine.buildertek__Margin_To_Markup__c );
-            
-        }
-
         if (Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Markup__c.isupdateable() && Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Margin__c.isupdateable()){
             System.debug('<<<<----In If Block---->>>>');
             update quoteItemListRec;
