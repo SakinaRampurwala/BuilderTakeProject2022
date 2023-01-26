@@ -2151,9 +2151,19 @@ public with sharing class QuoteDAO{
             System.debug(e.getMessage() + ':' + e.getLineNumber());
             return null;
         }
-        
     }
+    @AuraEnabled
+    public static Boolean getadminvalues(){
+        buildertek__Admin_Interface_Node_Configuration__c adminInterfaceNodeConfigurations = [Select Id, buildertek__Remove_Single_Quote_Line_Option__c
+                                                                                              from buildertek__Admin_Interface_Node_Configuration__c
+                                                                                              WHERE Name = :'Quote Configuration'];
+        Boolean islien = false;
+        if(adminInterfaceNodeConfigurations.buildertek__Remove_Single_Quote_Line_Option__c == true){
+            islien = true;
+        }
+        return islien;
+    }   
 
-
+    
     
 }

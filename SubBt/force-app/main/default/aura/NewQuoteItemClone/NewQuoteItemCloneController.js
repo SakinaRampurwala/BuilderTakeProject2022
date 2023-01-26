@@ -91,6 +91,25 @@
 
         }
 
+        var btadminaction = component.get("c.getadminvalues");
+        btadminaction.setCallback(this, function(response) {
+            console.log(response.getState());
+            console.log(response.getReturnValue());
+            console.log('admnvalues');
+
+            if (response.getState() === 'SUCCESS') {
+                var result = response.getReturnValue();
+                if (result == true) {
+                    document.getElementById('Tablebox').style.display='none';
+                    component.set('v.removeSingleQuoteLineOption' , true);
+                }else{
+                    component.set('v.removeSingleQuoteLineOption' , false);
+                }
+            }
+
+        });
+        $A.enqueueAction(btadminaction);
+
     },
 
     onClickChangeGroupName: function(component, event, helper) {
