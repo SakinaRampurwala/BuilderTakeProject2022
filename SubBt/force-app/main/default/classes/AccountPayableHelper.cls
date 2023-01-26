@@ -9,7 +9,7 @@ public with sharing class AccountPayableHelper {
             }
         }
     }
-    
+   
     public static void afterUpdate(buildertek__Account_Payable__c[] oldPayableList, buildertek__Account_Payable__c[] updatedPayableList, Map<ID, buildertek__Account_Payable__c> PayableMap, Map<Id, buildertek__Account_Payable__c> oldPayableMap){
         SET<Id> purchaseOderIdSet = new SET<Id>();
         SET<Id> budgetIdSet = new SET<Id>();
@@ -112,7 +112,10 @@ public with sharing class AccountPayableHelper {
                  }
              }
              
-         } 
+         }
+         
+            
+         
        
     }
     

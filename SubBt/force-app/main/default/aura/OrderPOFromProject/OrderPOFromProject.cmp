@@ -118,17 +118,17 @@
                                 <tr>
                                     <td style="text-align:right;"><b>Total PO Amount</b></td>
                                     <td>:&nbsp;&nbsp;</td>
-                                    <td><lightning:formattedNumber value="{!v.totalPOAmount}" currencyCode="USD" style="currency" currencyDisplayAs="code"/></td>
+                                    <td><lightning:formattedNumber value="{!v.totalPOAmount}" currencyCode="{!v.orgCurr}" style="currency" currencyDisplayAs="code"/></td>
                                 </tr>
                                 <tr>
                                     <td style="text-align:right;"><b>Total Paid Amount</b></td>
                                     <td>:&nbsp;&nbsp;</td>
-                                    <td><lightning:formattedNumber value="{!v.totalPaidAmount}" currencyCode="USD" style="currency" currencyDisplayAs="code"/></td>
+                                    <td><lightning:formattedNumber value="{!v.totalPaidAmount}" currencyCode="{!v.orgCurr}" style="currency" currencyDisplayAs="code"/></td>
                                 </tr>
                                 <tr>
                                     <td style="text-align:right;"><b>Total Remaining Amount </b></td>
                                     <td>:&nbsp;&nbsp;</td>
-                                    <td><lightning:formattedNumber value="{!v.totalRemainingAmount}" currencyCode="USD" style="currency" currencyDisplayAs="code"/></td>
+                                    <td><lightning:formattedNumber value="{!v.totalRemainingAmount}" currencyCode="{!v.orgCurr}" style="currency" currencyDisplayAs="code"/></td>
                                 </tr>
                             </tbody>
                         </table>

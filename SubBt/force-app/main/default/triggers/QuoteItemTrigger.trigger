@@ -9,7 +9,7 @@ trigger QuoteItemTrigger on Quote_Item__c (after delete, after insert, after und
         
            if(Trigger.isUpdate && Trigger.isBefore){
             system.debug('Trigger.New: ' + Trigger.New);
-            handler.OnBeforeUpdateQuoteLine(Trigger.new);
+            handler.OnBeforeUpdateQuoteLine(Trigger.new, Trigger.oldMap);
         }
          
     }
