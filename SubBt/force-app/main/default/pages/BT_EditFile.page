@@ -10,7 +10,7 @@
 * - Modifications:
 * - Sagar - Initial 
 ***********************************************************************************-->
-<apex:page extensions="BT_EditFileController" title="{!$Label.buildertek__new} {!$ObjectType.File__c.label}" sidebar="false" showHeader="true"  standardController="File__c">
+<apex:page extensions="BT_EditFileController" title="{!$Label.buildertek__New} {!$ObjectType.File__c.label}" sidebar="false" showHeader="true"  standardController="File__c">
     <c:BT_JsAndCssIncludeComponent importJquery="true"
                               importAppurinUtil="true"
                               importJQueryLayout="false"

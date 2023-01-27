@@ -1580,7 +1580,7 @@ public with sharing class ManagePOlinesController {
             if (bom.size() > 0 && bom[0].buildertek__BT_Quote__c == null) {
                 if (bom[0].buildertek__Selection_Sheet_Takeoff_Lines__r.size() > 0) {
                     buildertek__Quote__c quote = new buildertek__Quote__c();
-                    quote.Name = bom[0].Name;
+                    quote.Name = 'Quote - '+bom[0].Name;
                     insert quote;
                     bom[0].buildertek__BT_Quote__c = quote.Id;
                     update bom[0];
@@ -1608,7 +1608,7 @@ public with sharing class ManagePOlinesController {
                         }else{
                             salesTax = 0;
                         }
-                        qtLine.Name = bomLine.Name;
+                        qtLine.Name = 'Qt '+bomLine.Name;
                         qtLine.buildertek__Quantity__c = bomLine.buildertek__Quantity__c;
                         if (bomLine.buildertek__Upgrade_Price__c != null) {
                             qtLine.buildertek__Unit_Cost__c = bomLine.buildertek__Upgrade_Price__c;

@@ -70,8 +70,8 @@
     	              	</div>
               		</div>
     	            <div style="float:right;" class="apPageHeaderMediaButtons">
-    	                <apex:commandButton styleClass="slds-button slds-button--neutral" value="{!$Label.buildertek__reset_to_system_default_button}" action="{!initialize}" onComplete="easyToolTipForAll();" reRender="fielUploadConfigurationPanel" status="splashStatus"/>
-    	                <apex:commandButton styleClass="slds-button slds-button--brand" value="{!$Label.buildertek__save}" action="{!Save}" status="splashStatus" onComplete="easyToolTipForAll();" reRender="fielUploadConfigurationPanel"/>
+    	                <apex:commandButton styleClass="slds-button slds-button--neutral" value="{!$Label.buildertek__Reset_to_System_Default_Button}" action="{!initialize}" onComplete="easyToolTipForAll();" reRender="fielUploadConfigurationPanel" status="splashStatus"/>
+    	                <apex:commandButton styleClass="slds-button slds-button--brand" value="{!$Label.buildertek__Save}" action="{!Save}" status="splashStatus" onComplete="easyToolTipForAll();" reRender="fielUploadConfigurationPanel"/>
     	            </div>
     	           <script>
     	           		Appurin.lightning.createPageHeader('PageHeader');
@@ -219,7 +219,7 @@
                             <apex:outputPanel layout="block" style="padding-left:0px;" styleClass="slds-p-horizontal--medium">
                                 <apex:outputPanel layout="block" styleClass="slds-form-element">
                                     <apex:outputPanel layout="block" styleClass="slds-form-element__label avLightningFormElementLabel">
-                                        <apex:outputLabel value="{!$Label.buildertek__available} {!$Label.buildertek__file_administrative_fields}"></apex:outputLabel>
+                                        <apex:outputLabel value="{!$Label.buildertek__Available} {!$Label.buildertek__File_Administrative_Fields}"></apex:outputLabel>
                                     </apex:outputPanel>
                                     <apex:outputPanel layout="block" styleClass="slds-form-element__control">
                                         <apex:selectList styleClass="selectListStyle slds-select" style="width:200px; height: 200px;" multiselect="true" size="7"
@@ -239,7 +239,7 @@
                             <apex:outputPanel layout="block" styleClass="slds-p-horizontal--medium">
                                 <apex:outputPanel layout="block" styleClass="slds-form-element">
                                     <apex:outputPanel layout="block" styleClass="slds-form-element__label avLightningFormElementLabel">
-                                        <apex:outputLabel value="{!$Label.buildertek__selected} {!$Label.buildertek__file_administrative_fields}"></apex:outputLabel>
+                                        <apex:outputLabel value="{!$Label.buildertek__Selected} {!$Label.buildertek__File_Administrative_Fields}"></apex:outputLabel>
                                     </apex:outputPanel>
                                     <apex:outputPanel layout="block" styleClass="slds-form-element__control">
                                          <apex:selectList styleClass="selectListStyle slds-select" style="width:200px; height: 200px;" multiselect="true" size="7"
@@ -270,7 +270,7 @@
                             <apex:outputPanel layout="block" style="padding-left:0px;" styleClass="slds-p-horizontal--medium">
                                 <apex:outputPanel layout="block" styleClass="slds-form-element">
                                     <apex:outputPanel layout="block" styleClass="slds-form-element__label avLightningFormElementLabel">
-                                        <apex:outputLabel value="{!$Label.buildertek__available} {!$Label.buildertek__grantees}"></apex:outputLabel>
+                                        <apex:outputLabel value="{!$Label.buildertek__Available} {!$Label.buildertek__Grantees}"></apex:outputLabel>
                                     </apex:outputPanel>
                                     <apex:outputPanel layout="block" styleClass="slds-form-element__control">
                                         <apex:selectList styleClass="selectListStyle slds-select" style="width:200px; height: 200px;" multiselect="true" size="7"
@@ -290,7 +290,7 @@
                             <apex:outputPanel layout="block" styleClass="slds-p-horizontal--medium">
                                 <apex:outputPanel layout="block" styleClass="slds-form-element">
                                     <apex:outputPanel layout="block" styleClass="slds-form-element__label avLightningFormElementLabel">
-                                        <apex:outputLabel value="{!$Label.buildertek__selected} {!$Label.buildertek__grantees}"></apex:outputLabel>
+                                        <apex:outputLabel value="{!$Label.buildertek__Selected} {!$Label.buildertek__Grantees}"></apex:outputLabel>
                                     </apex:outputPanel>
                                     <apex:outputPanel layout="block" styleClass="slds-form-element__control">
                                          <apex:selectList styleClass="selectListStyle slds-select" style="width:200px; height: 200px;" multiselect="true" size="7"

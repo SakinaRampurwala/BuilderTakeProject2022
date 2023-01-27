@@ -10,7 +10,7 @@
 * - Modifications:
 * - Sagar - Initial - 12/03/2016
 ***********************************************************************************-->
-<apex:page controller="BT_FileManagementConfigurationController" title="{!$Label.buildertek__file_management_configuration}"  >
+<apex:page controller="BT_FileManagementConfigurationController" title="{!$Label.buildertek__File_Management_Configuration}"  >
     <c:BT_JsAndCssIncludeComponent importJquery="true"
                               importAppurinUtil="true"
                               importJQueryLayout="false"
@@ -70,14 +70,14 @@
     	            </div>
     	            <div class="apPageHeaderMediaBody">
     	                <p class="slds-text-title--caps slds-line-height--reset">{!$Label.Configuration}</p>
-    					<div class="apPageHeaderTitle" title="{!$Label.File_Explorer_Configuration_Subtitle}">{!$Label.buildertek__file_management_configuration}</div>
+    					<div class="apPageHeaderTitle" title="{!$Label.File_Explorer_Configuration_Subtitle}">{!$Label.buildertek__File_Management_Configuration}</div>
     	              	<div class="apPageHeaderInfo">
     	              		<label>Control file management. Set access levels for various file operations.</label>
     	              	</div>
               		</div>
     	            <div style="float:right;" class="apPageHeaderMediaButtons">
-    	                <apex:commandButton styleClass="slds-button slds-button_brand" value="{!$Label.buildertek__save}" action="{!Save}" status="splashStatus" onComplete="easyToolTipForAll();" reRender="mainSection"/>
-                        <apex:commandButton styleClass="slds-button slds-button_brand" value="{!$Label.buildertek__reset_to_system_default_button}" action="{!Intialize}" onComplete="easyToolTipForAll();" reRender="mainSection" status="splashStatus"/>
+    	                <apex:commandButton styleClass="slds-button slds-button_brand" value="{!$Label.buildertek__Save}" action="{!Save}" status="splashStatus" onComplete="easyToolTipForAll();" reRender="mainSection"/>
+                        <apex:commandButton styleClass="slds-button slds-button_brand" value="{!$Label.buildertek__Reset_to_System_Default_Button}" action="{!Intialize}" onComplete="easyToolTipForAll();" reRender="mainSection" status="splashStatus"/>
     	            </div>
     	           <script>
     	           		Appurin.lightning.createPageHeader('PageHeader');
@@ -100,7 +100,7 @@
                     <h3 class="slds-section__title">
                         <apex:outputPanel id="configurationHeader" layout="block" styleclass="slds-button slds-section__title-action">
                             <c:BT_LightningSvg parentId="configurationHeader" parentType="div" styleClass="slds-section__title-action-icon slds-button__icon slds-button__icon--left" path="/assets/icons/utility-sprite/svg/symbols.svg#switch"/>
-                            <label class="avLightningFormElementLabel">{!$Label.buildertek__file_management_configuration}</label>
+                            <label class="avLightningFormElementLabel">{!$Label.buildertek__File_Management_Configuration}</label>
                         </apex:outputPanel>
                     </h3>
                     <apex:outputPanel layout="block" styleClass="slds-section__content">

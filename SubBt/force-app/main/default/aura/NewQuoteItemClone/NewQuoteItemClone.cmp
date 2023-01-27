@@ -199,9 +199,7 @@
         </div>
 
     <div style="margin: -8px 0px;">  
-        <aura:if isTrue="{!v.removeSingleQuoteLineOption}" >
-            <aura:set attribute="else">
-        <div id='btnDiv' style="float: right;margin-top: 25px;" class="slds-m-top_medium slds-m-bottom_medium slds-m-right_small">
+        <div id='btnDiv' style="display:flex; justify-content: right; margin-top: 25px;" class="slds-m-top_medium slds-m-bottom_medium slds-m-right_small">
             <lightning:buttonGroup>
 
 
@@ -259,13 +257,8 @@
             </lightning:buttonGroup>
         </div>
         <br />
-        <div id='collapseBtn' class="slds-float_left" style="padding: 1rem; margin-top: -5px;">
-            <!-- <span style="display:inline-block;" class="{!'expandAllBtn_'+v.quoteId}" data-iconattr ="{!'expandAllBtn_'+v.quoteId}" data-iconname="Expand All" onclick="{!c.expandCollapeAll}">
-            <lightning:buttonIcon aura:id="expandCollapeseAllBtn" iconName="utility:add"  variant="border-filled" iconClass="dark" alternativeText="Expand All" title="Expand All"  />                       
-        </span> 
-        <span style="display:none;" class="{!'CollapeseAllBtn_'+v.quoteId}" data-iconattr ="{!'CollapeseAllBtn_'+v.quoteId}" data-iconname="Collapse All"  onclick="{!c.expandCollapeAll}">
-            <lightning:buttonIcon aura:id="expandCollapeseAllBtn2" iconName="utility:dash"  variant="border-filled" iconClass="dark" alternativeText="Collapse All" title="Collapse All"/>                       
-        </span> inline-block-->
+        <div id='collapseBtn' class="slds-float_left" style="padding: 0.5rem; margin-top: -5px;display:contents">
+            <!-- <aura:if isTrue="{!!v.removeSingleQuoteLineOption}" > -->
             <span style="display:none;" class="{!'expandAllBtn_'+v.quoteId}" data-iconattr="{!'expandAllBtn_'+v.quoteId}" data-iconname="Expand All" onclick="{!c.expandCollapeAll}">
                 <lightning:buttonIcon aura:id="expandCollapeseAllBtn" iconName="utility:add" variant="border-filled"
                     iconClass="dark" alternativeText="Expand All" title="Expand All" />
@@ -274,11 +267,8 @@
                 <lightning:buttonIcon aura:id="expandCollapeseAllBtn2" iconName="utility:dash"
                     variant="border-filled" iconClass="dark" alternativeText="Collapse All" title="Collapse All" />
             </span>
-            <!-- <lightning:buttonIcon aura:id="expandCollapeseAllBtn" iconName="utility:add"  variant="border-filled" iconClass="dark" alternativeText="Expand All" title="Expand All"   onclick="{!c.expandCollapeAll}" /> -->
-            <!-- <lightning:button aura:id="expandCollapeseAllBtn" variant="neutral" label="" title="Expand All"  iconName="utility:add" iconPosition="left" onclick="{!c.expandCollapeAll}"/> -->
+            <!-- </aura:if> -->
         </div>
-    </aura:set>
-</aura:if>
         <aura:if isTrue="{!v.addGroupPopup}">
             <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
                 <div class="slds-modal__container">
@@ -505,121 +495,123 @@
         <!-- <div class="av slds-box" id="{!v.recordId + 'groups'}" style="min-height:50vh;padding:0px !important;"> -->
         <div class="av slds-box" id="{!v.recordId + 'groups'}" style="min-height:55vh;padding:0px !important;">
             <div >
-                <div id='Tablebox' style="padding:10px;margin-top: -5px;">
-                    <br />
-                    <div  aura:id="inlineEditQuote" style="margin-top:25px; margin-bottom:25px;">
-                        <table class="slds-table slds-table_bordered slds-table_cell-buffer" style="border:1px solid grey;border-radius: 5px;">
-                            <thead style="border:1px solid rgb(216, 237, 255);">
-                                <tr class="slds-text-title_caps">
-                                    <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white; border-top-left-radius:5px;">
-                                        <div class="slds-truncate" title="Pricebook">Pricebook</div>
-                                    </th>
-                                    <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white; ">
-                                        <div class="slds-truncate" title="Product Family">Product Family</div>
-                                    </th>
-                                    <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white; ">
-                                        <div class="slds-truncate" title="Product">Product</div>
-                                    </th>
-                                    <th style="background-color:rgba(27, 82, 151, 1.0); color:white; ">
-                                        <div class="slds-truncate" title="Description">Description</div>
-                                    </th>
-                                    <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white;  ">
-                                        <div class="slds-truncate" title="Grouping">Grouping</div>
-                                    </th>
-                                    <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white; ">
-                                        <div class="slds-truncate" title="note">Note</div>
-                                    </th>
-                                    <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white;">
-                                        <div class="slds-truncate" title="Quantity">Quantity</div>
-                                    </th>
-                                    <th style="background-color:rgba(27, 82, 151, 1.0); color:white;">
-                                        <div class="slds-truncate" title="Unit Price">Unit Cost</div>
-                                    </th>
-                                    <th style="background-color:rgba(27, 82, 151, 1.0); color:white;">
-                                        <div class="slds-truncate" title="Mark Up">Markup</div>
-                                    </th>
-                                    <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white; border-top-right-radius:5px; ">
-                                        <div class="slds-truncate" title="save">Save</div>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <ui:inputSelect value="{! v.pricebookName }" change="{!c.changeEvent}" class="pricebook-class">
-                                            <aura:iteration var="option" items="{! v.pricebookoptions }">
-                                                <option value="{! option.value }" selected="{!option.value == v.pricebookName}">{! option.key }
-                                                </option>
-                                            </aura:iteration>
-                                        </ui:inputSelect>
-                                    </td>
-                                    <td>
-                                        <ui:inputSelect value="{!v.productfamily}" change="{!c.changefamily}" class="pricebook-class">
-                                            <option value="--None--" id="noneValue">--None--</option>
-                                            <aura:iteration var="option" items="{!v.listofproductfamily}">
-                                                <option value="{!option.productfamilyvalues}" selected="{!option.productfamilyvalues == v.productfamily}">
-                                                    {!option.productfamilyvalues}</option>
-                                            </aura:iteration>
-                                        </ui:inputSelect>
-                                    </td>
-                                    <td style="width:200px;">
-                                        <!--   <c:BT_LightningLookup objectAPIName="Product2" IconName="standard:product"
-                                            selectedRecord="{!v.selectedLookUpRecord}" aura:id="productId"
-                                            parentId="{! v.pricebookName }"/> -->
-                                        <c:BT_LightningLookup objectAPIName="Product2" IconName="standard:product" selectedRecord="{!v.selectedLookUpRecord}" aura:id="productId" parentId="{! v.pricebookName }" prodctfamly="{!v.productfamily}" />
-                                    </td>
-                                    <!-- <td>
-                                        <ui:inputText value="{!v.newQuote.Name}" aura:id="quoteLineID" />
-                                    </td> -->
-                                    <td>
-                                        <!-- <aura:if isTrue="{!v.newQuote.Name != ''}"> -->
-                                        <ui:inputText value="{!v.newQuote.Name}" aura:id="quoteLineID1" />
+                <aura:if isTrue="{!!v.removeSingleQuoteLineOption}" >
+                    <div id='Tablebox' style="padding:10px;margin-top: -5px;">
+                        <br />
+                        <div  aura:id="inlineEditQuote" style="margin-top:25px; margin-bottom:25px;">
+                            <table class="slds-table slds-table_bordered slds-table_cell-buffer" style="border:1px solid grey;border-radius: 5px;">
+                                <thead style="border:1px solid rgb(216, 237, 255);">
+                                    <tr class="slds-text-title_caps">
+                                        <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white; border-top-left-radius:5px;">
+                                            <div class="slds-truncate" title="Pricebook">Pricebook</div>
+                                        </th>
+                                        <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white; ">
+                                            <div class="slds-truncate" title="Product Family">Product Family</div>
+                                        </th>
+                                        <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white; ">
+                                            <div class="slds-truncate" title="Product">Product</div>
+                                        </th>
+                                        <th style="background-color:rgba(27, 82, 151, 1.0); color:white; ">
+                                            <div class="slds-truncate" title="Description">Description</div>
+                                        </th>
+                                        <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white;  ">
+                                            <div class="slds-truncate" title="Grouping">Grouping</div>
+                                        </th>
+                                        <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white; ">
+                                            <div class="slds-truncate" title="note">Note</div>
+                                        </th>
+                                        <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white;">
+                                            <div class="slds-truncate" title="Quantity">Quantity</div>
+                                        </th>
+                                        <th style="background-color:rgba(27, 82, 151, 1.0); color:white;">
+                                            <div class="slds-truncate" title="Unit Price">Unit Cost</div>
+                                        </th>
+                                        <th style="background-color:rgba(27, 82, 151, 1.0); color:white;">
+                                            <div class="slds-truncate" title="Mark Up">Markup</div>
+                                        </th>
+                                        <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white; border-top-right-radius:5px; ">
+                                            <div class="slds-truncate" title="save">Save</div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <ui:inputSelect value="{! v.pricebookName }" change="{!c.changeEvent}" class="pricebook-class">
+                                                <aura:iteration var="option" items="{! v.pricebookoptions }">
+                                                    <option value="{! option.value }" selected="{!option.value == v.pricebookName}">{! option.key }
+                                                    </option>
+                                                </aura:iteration>
+                                            </ui:inputSelect>
+                                        </td>
+                                        <td>
+                                            <ui:inputSelect value="{!v.productfamily}" change="{!c.changefamily}" class="pricebook-class">
+                                                <option value="--None--" id="noneValue">--None--</option>
+                                                <aura:iteration var="option" items="{!v.listofproductfamily}">
+                                                    <option value="{!option.productfamilyvalues}" selected="{!option.productfamilyvalues == v.productfamily}">
+                                                        {!option.productfamilyvalues}</option>
+                                                </aura:iteration>
+                                            </ui:inputSelect>
+                                        </td>
+                                        <td style="width:200px;">
+                                            <!--   <c:BT_LightningLookup objectAPIName="Product2" IconName="standard:product"
+                                                selectedRecord="{!v.selectedLookUpRecord}" aura:id="productId"
+                                                parentId="{! v.pricebookName }"/> -->
+                                            <c:BT_LightningLookup objectAPIName="Product2" IconName="standard:product" selectedRecord="{!v.selectedLookUpRecord}" aura:id="productId" parentId="{! v.pricebookName }" prodctfamly="{!v.productfamily}" />
+                                        </td>
+                                        <!-- <td>
+                                            <ui:inputText value="{!v.newQuote.Name}" aura:id="quoteLineID" />
+                                        </td> -->
+                                        <td>
+                                            <!-- <aura:if isTrue="{!v.newQuote.Name != ''}"> -->
+                                            <ui:inputText value="{!v.newQuote.Name}" aura:id="quoteLineID1" />
 
-                                    </td>
-                                    <td>
-                                        <aura:html tag="style">
-                                            .slds-lookup__menu{
-                                                width: max-content !important; 
-                                                height: 200px !important;
-                                            }
-                                            
-                                            .slds-lookup__list{
-                                                width: max-content !important; 
-                                                height: 190px !important;
-                                            }
-                                        </aura:html>
-                                        <c:BT_LookUp aura:id="groupId" _field="buildertek__Grouping__c" _sobject="buildertek__Quote_Item__c" _value="{!v.newQuote.buildertek__Grouping__c}" _label="" _filter="" />
-                                    </td>
+                                        </td>
+                                        <td>
+                                            <aura:html tag="style">
+                                                .slds-lookup__menu{
+                                                    width: max-content !important; 
+                                                    height: 200px !important;
+                                                }
+                                                
+                                                .slds-lookup__list{
+                                                    width: max-content !important; 
+                                                    height: 190px !important;
+                                                }
+                                            </aura:html>
+                                            <c:BT_LookUp aura:id="groupId" _field="buildertek__Grouping__c" _sobject="buildertek__Quote_Item__c" _value="{!v.newQuote.buildertek__Grouping__c}" _label="" _filter="" />
+                                        </td>
 
-                                    <!-- <td>
-                                        <ui:inputSelect value="{! v.newQuote.buildertek__UOM__c }" class="select-class">
-                                            <aura:iteration var="option" items="{! v.options }">
-                                                <option value="{! option.value }">{! option.label }</option>
-                                            </aura:iteration>
-                                        </ui:inputSelect>
-                                    </td> -->
-                                    <td>
-                                        <ui:inputTextArea value="{!v.newQuote.buildertek__Notes__c}" />
-                                    </td>
-                                    <td style="width: 6% !important;">
-                                        <ui:inputNumber value="{!v.newQuote.buildertek__Quantity__c}" />
-                                    </td>
-                                    <td style="width: 6% !important;">
-                                        <!-- <ui:inputCurrency value="{!v.unitCost}" aura:id="unitCostId" /> -->
-                                        <ui:inputCurrency value="{!v.newQuote.buildertek__Unit_Cost__c}" aura:id="unitCostId" />
+                                        <!-- <td>
+                                            <ui:inputSelect value="{! v.newQuote.buildertek__UOM__c }" class="select-class">
+                                                <aura:iteration var="option" items="{! v.options }">
+                                                    <option value="{! option.value }">{! option.label }</option>
+                                                </aura:iteration>
+                                            </ui:inputSelect>
+                                        </td> -->
+                                        <td>
+                                            <ui:inputTextArea value="{!v.newQuote.buildertek__Notes__c}" />
+                                        </td>
+                                        <td style="width: 6% !important;">
+                                            <ui:inputNumber value="{!v.newQuote.buildertek__Quantity__c}" />
+                                        </td>
+                                        <td style="width: 6% !important;">
+                                            <!-- <ui:inputCurrency value="{!v.unitCost}" aura:id="unitCostId" /> -->
+                                            <ui:inputCurrency value="{!v.newQuote.buildertek__Unit_Cost__c}" aura:id="unitCostId" />
 
-                                    </td>
-                                    <td style="padding-bottom:22px; width: 6% !important;">
-                                        <lightning:input type="number" name="input6" label="" value="{!v.newQuote.buildertek__Markup__c}" formatter="percent-fixed" aura:id="markUpId" />
-                                    </td>
-                                    <td>
-                                        <lightning:buttonIcon iconName="utility:save" alternativeText="save" onclick="{!c.saveQuoteRecord}" />
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                        </td>
+                                        <td style="padding-bottom:22px; width: 6% !important;">
+                                            <lightning:input type="number" name="input6" label="" value="{!v.newQuote.buildertek__Markup__c}" formatter="percent-fixed" aura:id="markUpId" />
+                                        </td>
+                                        <td>
+                                            <lightning:buttonIcon iconName="utility:save" alternativeText="save" onclick="{!c.saveQuoteRecord}" />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
+                </aura:if>
 
                 <aura:if isTrue="{!or(or(or(v.isDuplicate,v.isMassDuplicate),v.isOpen),v.isQuoteRecChange)}">
                     <div class="slds-m-around_xx-large">

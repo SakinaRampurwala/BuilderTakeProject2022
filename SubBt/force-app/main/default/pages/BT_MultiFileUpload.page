@@ -10,7 +10,7 @@
 * - Modifications:
 * - Sagar - Initial 
 ***********************************************************************************-->
-<apex:page extensions="BT_MultiFileUploadController" title="{!$Label.buildertek__new} {!$ObjectType.Folder__c.label}" sidebar="false" showHeader="{!!isChildWindow}"  standardController="Folder__c">
+<apex:page extensions="BT_MultiFileUploadController" title="{!$Label.buildertek__New} {!$ObjectType.Folder__c.label}" sidebar="false" showHeader="{!!isChildWindow}"  standardController="Folder__c">
 	<c:BT_JsAndCssIncludeComponent importJquery="true"
                               importAppurinUtil="true"
                               importJQueryLayout="false"
@@ -100,7 +100,7 @@
 			                        <div class="slds-panel__section slds-has-divider--bottom">
 			                            <div class="slds-media">
 			                                <div class="slds-media__body">
-			                                    <p class="slds-truncate slds-text-heading--small"><a href="javascript:void(0);">{!$Label.buildertek__new} {!$Objecttype.Folder__c.label}</a></p>
+			                                    <p class="slds-truncate slds-text-heading--small"><a href="javascript:void(0);">{!$Label.buildertek__New} {!$Objecttype.Folder__c.label}</a></p>
 			                                </div>
 			                            </div>
 			                        </div>
@@ -111,7 +111,7 @@
 			                            </script>
 			                        </apex:outputPanel>
 			                        <div class="slds-panel__section">
-			                            <h3 class="slds-text-heading--small slds-m-bottom--medium">{!$Label.buildertek__detail}</h3>
+			                            <h3 class="slds-text-heading--small slds-m-bottom--medium">{!$Label.buildertek__Detail}</h3>
 			                            <apex:outputPanel layout="block">
 			                                <apex:outputPanel layout="block" styleClass="slds-form-element">
 			                                    <apex:outputPanel layout="block" styleClass="slds-form-element__label avLightningFormElementLabel">
@@ -145,8 +145,8 @@
 			                    </div>
 			                    <div class="slds-panel__actions slds-has-divider--top">
 			                        <div class="slds-grid slds-grid--align-center">
-			                            <apex:commandButton styleClass="slds-button slds-button_neutral" value="{!$Label.buildertek__cancel}" immediate="true" onClick="return closeWindow();"/>
-			                            <apex:commandButton styleClass="slds-button slds-button_brand" value="{!$Label.buildertek__create}" action="{!save}" status="splashStatus" onComplete="if({!isSuccess} && Appurin.lightning.isLightningExperience()){Appurin.lightning.back(true);} else{easyToolTipForAll();}" rerender="form"/>
+			                            <apex:commandButton styleClass="slds-button slds-button_neutral" value="{!$Label.buildertek__Cancel}" immediate="true" onClick="return closeWindow();"/>
+			                            <apex:commandButton styleClass="slds-button slds-button_brand" value="{!$Label.buildertek__Create}" action="{!save}" status="splashStatus" onComplete="if({!isSuccess} && Appurin.lightning.isLightningExperience()){Appurin.lightning.back(true);} else{easyToolTipForAll();}" rerender="form"/>
 			                        </div>
 			                    </div>
 			                </div>

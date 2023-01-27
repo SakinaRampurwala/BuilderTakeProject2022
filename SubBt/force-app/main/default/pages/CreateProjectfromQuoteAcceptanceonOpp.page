@@ -15,6 +15,8 @@
                 </apex:inputcheckbox>
                 <apex:inputField value="{!admininterface.Default_Project_Owner__c}" styleClass="slds-input" style="width:320px;"/>
                 <apex:inputtext value="{!isBaseUrl}" label="Org URL"/>
+                <apex:inputcheckbox value="{!isRemovesingleQuoteLineOption}" label="Remove Single Quote Line Option">
+                </apex:inputcheckbox>
                 <center>
                     <apex:commandButton value="Save" id="onCreateProjectfromQuoteAcceptanceonOpp" styleClass="slds-button slds-button_brand" action="{!onCreateProjectfromQuoteAcceptanceonOpp}"></apex:commandButton>
                 </center>

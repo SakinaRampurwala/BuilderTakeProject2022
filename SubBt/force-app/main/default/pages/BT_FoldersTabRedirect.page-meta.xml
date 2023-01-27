@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApexPage xmlns="http://soap.sforce.com/2006/04/metadata">
-    <apiVersion>28.0</apiVersion>
+    <apiVersion>50.0</apiVersion>
     <availableInTouch>false</availableInTouch>
     <confirmationTokenRequired>false</confirmationTokenRequired>
     <label>BT_FoldersTabRedirect</label>
+    <packageVersions>
+        <majorNumber>1</majorNumber>
+        <minorNumber>160</minorNumber>
+        <namespace>agf</namespace>
+    </packageVersions>
     <packageVersions>
         <majorNumber>1</majorNumber>
         <minorNumber>19</minorNumber>
@@ -11,7 +16,7 @@
     </packageVersions>
     <packageVersions>
         <majorNumber>1</majorNumber>
-        <minorNumber>19</minorNumber>
+        <minorNumber>20</minorNumber>
         <namespace>sf_chttr_apps</namespace>
     </packageVersions>
     <packageVersions>

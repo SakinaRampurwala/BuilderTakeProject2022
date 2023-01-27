@@ -10,7 +10,7 @@
 * - Modifications:
 * - Sagar - Initial 
 ***********************************************************************************-->
-<apex:page controller="BT_EmailFilesToUsersController" docType="html-5.0" sidebar="false" title="{!$Label.buildertek__email_files}" >
+<apex:page controller="BT_EmailFilesToUsersController" docType="html-5.0" sidebar="false" title="{!$Label.buildertek__Email_Files}" >
 	<c:BT_JsAndCssIncludeComponent importJquery="true"
                               importAppurinUtil="true"
                               importJQueryLayout="true"
@@ -88,9 +88,9 @@
     	              	</div>
               		</div>
     	            <div style="float:right;" class="apPageHeaderMediaButtons">
-                        <apex:commandButton styleClass="slds-button slds-button_neutral" value="{!$Label.buildertek__cancel}" rendered="{!!isShowClose}" action="{!Cancel}" status="splashStatus" reRender="formContent" onComplete="if(Appurin.lightning.isLightningExperience()){Appurin.lightning.back(true);} easyToolTipForAll();"/>
-                    	<apex:commandButton styleClass="slds-button slds-button_neutral" value="{!$Label.buildertek__close}" rendered="{!isShowClose}" onClick="if(Appurin.lightning.isLightningExperience()){Appurin.lightning.back(true);} else{ window.close();} return false;" status="splashStatus" rerender="formContent" onComplete="if(Appurin.lightning.isLightningExperience()){Appurin.lightning.back(true);} easyToolTipForAll();"/>
-                    	<apex:commandButton styleClass="slds-button slds-button_brand" value="{!$Label.buildertek__send}" action="{!sendEmail}" onclick="assignRichTextHtml();" status="splashStatus" reRender="formContent" onComplete="if({!isSuccess} && Appurin.lightning.isLightningExperience()){Appurin.lightning.back(true);} else{easyToolTipForAll();}"/>
+                        <apex:commandButton styleClass="slds-button slds-button_neutral" value="{!$Label.buildertek__Cancel}" rendered="{!!isShowClose}" action="{!Cancel}" status="splashStatus" reRender="formContent" onComplete="if(Appurin.lightning.isLightningExperience()){Appurin.lightning.back(true);} easyToolTipForAll();"/>
+                    	<apex:commandButton styleClass="slds-button slds-button_neutral" value="{!$Label.buildertek__Close}" rendered="{!isShowClose}" onClick="if(Appurin.lightning.isLightningExperience()){Appurin.lightning.back(true);} else{ window.close();} return false;" status="splashStatus" rerender="formContent" onComplete="if(Appurin.lightning.isLightningExperience()){Appurin.lightning.back(true);} easyToolTipForAll();"/>
+                    	<apex:commandButton styleClass="slds-button slds-button_brand" value="{!$Label.buildertek__Send}" action="{!sendEmail}" onclick="assignRichTextHtml();" status="splashStatus" reRender="formContent" onComplete="if({!isSuccess} && Appurin.lightning.isLightningExperience()){Appurin.lightning.back(true);} else{easyToolTipForAll();}"/>
                     </div>
                     <script>
                         Appurin.lightning.createPageHeader('PageHeader');
@@ -122,14 +122,14 @@
                 	                    	treeType="{!FileTreeType}"
                 	                        treeConfigName="{!FilePickerConfigName}"
                 	                        checkableTreeNodes="{!FilePickerCheckableObjectTypes}"
-                	                        title="{!$ObjectType.File__c.Label} {!$Label.buildertek__picker}" 
+                	                        title="{!$ObjectType.File__c.Label} {!$Label.buildertek__Picker}" 
                 	                        treeWidth="auto" 
                 	                        treeHeight="300"
                 	                        selectedNodes="{!selectedFileNodes}"
                 	                        searchableObjectTypes="{!searchableFileObjectTypes}"
                 	                        selectableObjectNamesForHeader="File"
                 	                        treePickerLabel="{!$ObjectType.File__c.Label}"
-                	                        selectButtonLabel="{!$Label.buildertek__add_files_button}"
+                	                        selectButtonLabel="{!$Label.buildertek__Add_Files_Button}"
                 	                        queryParameters="{!queryParameters}">
                 	                    </c:BT_TreePickerWithSelectComponent>
                                     </apex:outputPanel>
@@ -142,14 +142,14 @@
                 	                    	treeType="{!UserTreeType}"
                 	                        treeConfigName="{!UserPickerConfigName}"
                 	                        checkableTreeNodes="{!UserPickerCheckableObjectTypes}"
-                	                        title="{!$ObjectType.User.Label} {!$Label.buildertek__picker}" 
+                	                        title="{!$ObjectType.User.Label} {!$Label.buildertek__Picker}" 
                 	                        treeWidth="auto" 
                 	                        treeHeight="300"
                 	                        selectedNodes="{!selectedUserNodes}"
                 	                        searchableObjectTypes="{!searchableUserObjectTypes}"
                 	                        selectableObjectNamesForHeader="user"
-                	                        treePickerLabel="{!$Label.buildertek__to}"
-                	                        selectButtonLabel="{!$Label.buildertek__add_recipients_button}">
+                	                        treePickerLabel="{!$Label.buildertek__To}"
+                	                        selectButtonLabel="{!$Label.buildertek__Add_Recipients_Button}">
                 	                    </c:BT_TreePickerWithSelectComponent>
                                     </apex:outputPanel>
                                 </apex:outputPanel>
@@ -198,7 +198,7 @@
                             <apex:outputPanel layout="block" styleClass="slds-col slds-p-horizontal--medium slds-size--1-of-1">
                                 <apex:outputPanel layout="block" styleClass="slds-form-element">
                                     <apex:outputPanel layout="block" styleClass="slds-form-element__label avLightningFormElementLabel">
-                                        <apex:outputLabel for="subject" value="{!$Label.buildertek__email_subject}"></apex:outputLabel>
+                                        <apex:outputLabel for="subject" value="{!$Label.buildertek__Email_Subject}"></apex:outputLabel>
                                     </apex:outputPanel>
                                     <apex:outputPanel layout="block" styleClass="slds-form-element__control">
                                         <apex:inputText id="subject" styleClass="slds-input" value="{!emailSubject}"/>

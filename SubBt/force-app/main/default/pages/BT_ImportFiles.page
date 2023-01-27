@@ -10,7 +10,7 @@
 * - Modifications:
 * - Sagar - Initial 
 ***********************************************************************************-->
-<apex:page controller="BT_ImportFilesController" title="{!$Label.buildertek__import_files}" >
+<apex:page controller="BT_ImportFilesController" title="{!$Label.buildertek__Import_Files}" >
 	<c:BT_JsAndCssIncludeComponent importJquery="true"
                               importAppurinUtil="true"
                               importJQueryLayout="true"
@@ -76,7 +76,7 @@
         <apex:actionFunction name="afImportFiles" action="{!importFiles}" rerender="" onComplete="getFilesNeedsToImport();">
 			<apex:param name="selectedNodeKeys" value=""/>
 		</apex:actionFunction>
-		<apex:actionFunction name="getFilesNeedsToImport" action="{!getFilesNeedsToImport}" rerender="form" onComplete="endSplash();if({!isSuccess}){Appurin.lightning.showAlertPrompt({'modalPopupId':'lightningInfoPopup', 'messageType':'Info', 'title': 'Success', 'message': '{!JSENCODE($Label.buildertek__imprort_file_job_started_message)}', 'buttonLabel': '{!JSENCODE($Label.buildertek__ok)}', 'isRedirect' : false});}"/>
+		<apex:actionFunction name="getFilesNeedsToImport" action="{!getFilesNeedsToImport}" rerender="form" onComplete="endSplash();if({!isSuccess}){Appurin.lightning.showAlertPrompt({'modalPopupId':'lightningInfoPopup', 'messageType':'Info', 'title': 'Success', 'message': '{!JSENCODE($Label.buildertek__Imprort_File_Job_Started_Message)}', 'buttonLabel': '{!JSENCODE($Label.buildertek__Ok)}', 'isRedirect' : false});}"/>
 		
         <apex:outputPanel styleClass="slds" rendered="{!AND(NOT(isJobQueued), treeNodesString != '[]')}">
     		<div class="apPageHeader" id="PageHeader">
@@ -87,7 +87,7 @@
     	            <div class="apPageHeaderMediaBody">
     					<div class="apPageHeaderTitle" title="Import {!$ObjectType.File__c.labelPlural}">Import {!$ObjectType.File__c.labelPlural}</div>
     	              	<apex:outputPanel styleClass="apPageHeaderInfo" rendered="{!AND(NOT(isJobQueued), treeNodesString != '[]')}">
-    	              		<label>{!$Label.buildertek__import_files_message}</label>
+    	              		<label>{!$Label.buildertek__Import_Files_Message}</label>
     	              	</apex:outputPanel>
               		</div>
     	            <div style="float:right;" class="apPageHeaderMediaButtons">
@@ -97,7 +97,7 @@
                                 <span class="slds-assistive-text">Settings</span>
                             </button>
     	                </apex:outputPanel>
-    	                <apex:commandButton styleClass="slds-button slds-button--brand" value="{!$Label.buildertek__import_file_button}" rendered="{!AND(NOT(isJobQueued), treeNodesString != '[]')}" onClick="return importFiles();" status="splashStatus" onComplete="easyToolTipForAll();"/>
+    	                <apex:commandButton styleClass="slds-button slds-button--brand" value="{!$Label.buildertek__Import_File_Button}" rendered="{!AND(NOT(isJobQueued), treeNodesString != '[]')}" onClick="return importFiles();" status="splashStatus" onComplete="easyToolTipForAll();"/>
     	            </div>
     	           <script>
     	           		Appurin.lightning.createPageHeader('PageHeader');
@@ -131,7 +131,7 @@
                                             <h3 class="slds-section__title">
                                                 <apex:outputPanel id="settingsSectionHeader" layout="block" styleclass="slds-button slds-section__title-action">
                                                     <c:BT_LightningSvg parentId="settingsSectionHeader"  parentType="div" styleClass="slds-section__title-action-icon slds-button__icon slds-button__icon--left" path="/assets/icons/utility-sprite/svg/symbols.svg#switch"/>
-                                                    <label class="avLightningFormElementLabel">{!$Label.buildertek__sharing} {!$Label.buildertek__settings}</label>
+                                                    <label class="avLightningFormElementLabel">{!$Label.buildertek__Sharing} {!$Label.buildertek__Settings}</label>
                                                 </apex:outputPanel>
                                             </h3>
                                             <apex:outPutPanel layout="block" styleClass="slds-section__content">
@@ -168,7 +168,7 @@
                                             <h3 class="slds-section__title">
                                                 <apex:outputPanel id="presignedURLSectionHeader" layout="block" styleclass="slds-button slds-section__title-action">
                                                     <c:BT_LightningSvg parentId="presignedURLSectionHeader"  parentType="div" styleClass="slds-section__title-action-icon slds-button__icon slds-button__icon--left" path="/assets/icons/utility-sprite/svg/symbols.svg#switch"/>
-                                                    <label class="avLightningFormElementLabel">{!$Label.buildertek__presigned_url_settings}</label>
+                                                    <label class="avLightningFormElementLabel">{!$Label.buildertek__Presigned_URL_Settings}</label>
                                                 </apex:outputPanel>
                                             </h3>
                                             <apex:outPutPanel layout="block" styleClass="slds-section__content">
@@ -205,7 +205,7 @@
                                             <h3 class="slds-section__title">
                                                 <apex:outputPanel id="otherSectionHeader" layout="block" styleclass="slds-button slds-section__title-action">
                                                     <c:BT_LightningSvg parentId="otherSectionHeader"  parentType="div" styleClass="slds-section__title-action-icon slds-button__icon slds-button__icon--left" path="/assets/icons/utility-sprite/svg/symbols.svg#switch"/>
-                                                    <label class="avLightningFormElementLabel">{!$Label.buildertek__other} {!$Label.buildertek__settings}</label>
+                                                    <label class="avLightningFormElementLabel">{!$Label.buildertek__Other} {!$Label.buildertek__Settings}</label>
                                                 </apex:outputPanel>
                                             </h3>
                                             <apex:outPutPanel layout="block" styleClass="slds-section__content">
@@ -278,13 +278,13 @@
             <apex:outputPanel layout="block" rendered="{!AND(NOT(isJobQueued),treeNodesString == '[]')}">
             	<div id="noFileMessageDiv"/>
                 <script>
-                    Appurin.lightning.createLightningPageMessage({'lightningPageMessageId' : 'noFileMessageDiv', 'severity' : 'success', 'summary' : '{!JSENCODE($Label.buildertek__no_file_for_import_message)}'});   
+                    Appurin.lightning.createLightningPageMessage({'lightningPageMessageId' : 'noFileMessageDiv', 'severity' : 'success', 'summary' : '{!JSENCODE($Label.buildertek__No_File_For_Import_Message)}'});   
                 </script>
             </apex:outputPanel>
             <apex:outputPanel layout="block" rendered="{!isJobQueued}">
             	<div id="improtJobInprogressMessageDiv"/>
                 <script>
-                    Appurin.lightning.createLightningPageMessage({'lightningPageMessageId' : 'improtJobInprogressMessageDiv', 'severity' : 'info', 'summary' : '{!JSENCODE($Label.buildertek__import_files_job_queued_message)}'});   
+                    Appurin.lightning.createLightningPageMessage({'lightningPageMessageId' : 'improtJobInprogressMessageDiv', 'severity' : 'info', 'summary' : '{!JSENCODE($Label.buildertek__Import_Files_Job_Queued_Message)}'});   
                 </script>
             </apex:outputPanel>
         </apex:outputPanel>

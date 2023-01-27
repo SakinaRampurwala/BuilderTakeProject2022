@@ -10,7 +10,7 @@
 * - Modifications:
 * - Sagar - Initial 
 ***********************************************************************************-->
-<apex:page controller="BT_ApplicationConfigurationController" title="{!$Label.buildertek__file_control_system_configuration}"  >
+<apex:page controller="BT_ApplicationConfigurationController" title="{!$Label.buildertek__File_Control_System_Configuration}"  >
     <c:BT_JsAndCssIncludeComponent importJquery="true"
                               importAppurinUtil="true"
                               importJQueryLayout="false"
@@ -135,7 +135,7 @@
                                         <apex:outputPanel layout="block" styleClass="slds-form-element__label avLightningFormElementLabel">
                                             <abbr class="slds-required" title="required">*</abbr><apex:outputLabel value="{!$ObjectType.Folder__c.fields.Bucket_Name__c.Label}"></apex:outputLabel>
                                         </apex:outputPanel>
-                                        <c:BT_LightningHelpText rendered="{!$Label.buildertek__new_bucket_name_helptext != null}" helptext="{!$Label.buildertek__new_bucket_name_helptext}"/>
+                                        <c:BT_LightningHelpText rendered="{!$Label.buildertek__New_Bucket_Name_Helptext != null}" helptext="{!$Label.buildertek__New_Bucket_Name_Helptext}"/>
                                         <apex:outputPanel layout="block" styleClass="slds-form-element__control">
                                             <apex:inputField id="newBucketNameField" styleClass="slds-input" required="true" value="{!newBucketFolder.Name}"/>
                                         </apex:outputPanel>
@@ -168,8 +168,8 @@
                             </div>
                         </div>
                         <div class="apModalFooter">
-                            <apex:commandButton value="{!$Label.buildertek__cancel}" id="newBucketCancelButton" styleClass="slds-button slds-button--neutral" onClick="Appurin.lightning.hideModalPopup({'modalPopupId':'{!$Component.newBucketPopup}'});" action="{!hideNewBucket}"  immediate="true" status="splashStatus" reRender="form" onComplete="easyToolTipForAll();"/>
-                            <apex:commandButton value="{!$Label.buildertek__create}" styleClass="slds-button slds-button--brand" onClick="Appurin.lightning.hideModalPopup({'modalPopupId':'{!$Component.newBucketPopup}'});" action="{!createNewBucket}" status="splashStatus" reRender="form" onComplete="easyToolTipForAll();"/>
+                            <apex:commandButton value="{!$Label.buildertek__Cancel}" id="newBucketCancelButton" styleClass="slds-button slds-button--neutral" onClick="Appurin.lightning.hideModalPopup({'modalPopupId':'{!$Component.newBucketPopup}'});" action="{!hideNewBucket}"  immediate="true" status="splashStatus" reRender="form" onComplete="easyToolTipForAll();"/>
+                            <apex:commandButton value="{!$Label.buildertek__Create}" styleClass="slds-button slds-button--brand" onClick="Appurin.lightning.hideModalPopup({'modalPopupId':'{!$Component.newBucketPopup}'});" action="{!createNewBucket}" status="splashStatus" reRender="form" onComplete="easyToolTipForAll();"/>
                         </div>
                     </div>
                 </div>
@@ -185,7 +185,7 @@
                             <button id="mapBucketCloseButton"  class="slds-button slds-modal__close slds-button--icon-inverse" onClick="j$('input[id$=\'mapBucketCancelButton\']').click(); return false;" title="Close">
                                 <c:BT_LightningSvg parentId="mapBucketCloseButton" styleClass="slds-button__icon slds-button__icon--large" path="/assets/icons/utility-sprite/svg/symbols.svg#close"/>
                             </button>
-                            <h2 class="apModalHeading" id="mapBucketPopupHeader">{!$Label.buildertek__link_amazon_buckets}</h2>
+                            <h2 class="apModalHeading" id="mapBucketPopupHeader">{!$Label.buildertek__Link_Amazon_Buckets}</h2>
                         </div>
                         <div class="apModalContent">
                             <div class="apNotifyContainer" style="position: relative; text-align:left;">
@@ -196,7 +196,7 @@
                                             Appurin.lightning.createLightningPageMessage({'classicPageMessageId' : '{!$Component.mapBucketErrorMessage}'});   
                                         </script>
                                     </apex:outputPanel>
-                                    <apex:outputLabel value="{!$Label.buildertek__no_bucket_on_amazon_message}" rendered="{!OR(bucketsToMap == null, bucketsToMap.size == 0)}"/>
+                                    <apex:outputLabel value="{!$Label.buildertek__No_Bucket_On_Amazon_Message}" rendered="{!OR(bucketsToMap == null, bucketsToMap.size == 0)}"/>
                                     <apex:outputPanel layout="block" id="mapAWSBucketsGrid" rendered="{!AND(bucketsToMap != null, bucketsToMap.size > 0)}">
                                         <table class="slds-table slds-table--bordered slds-no-row-hover slds-table--cell-buffer">
                                             <thead>
@@ -248,8 +248,8 @@
                             </div>
                         </div>
                         <div class="apModalFooter">
-                            <apex:commandButton value="{!$Label.buildertek__cancel}" id="mapBucketCancelButton" styleClass="slds-button slds-button--neutral" onClick="Appurin.lightning.hideModalPopup({'modalPopupId':'{!$Component.mapBucketPopup}'});" action="{!hideMapBucket}" status="splashStatus" reRender="form" onComplete="easyToolTipForAll();"/>
-                            <apex:commandButton value="{!$Label.buildertek__save}" rendered="{!bucketsToMap.size > 0}" styleClass="slds-button slds-button--brand" onClick="Appurin.lightning.hideModalPopup({'modalPopupId':'{!$Component.mapBucketPopup}'});" action="{!mapBuckets}" status="splashStatus" reRender="form" onComplete="easyToolTipForAll();"/>
+                            <apex:commandButton value="{!$Label.buildertek__Cancel}" id="mapBucketCancelButton" styleClass="slds-button slds-button--neutral" onClick="Appurin.lightning.hideModalPopup({'modalPopupId':'{!$Component.mapBucketPopup}'});" action="{!hideMapBucket}" status="splashStatus" reRender="form" onComplete="easyToolTipForAll();"/>
+                            <apex:commandButton value="{!$Label.buildertek__Save}" rendered="{!bucketsToMap.size > 0}" styleClass="slds-button slds-button--brand" onClick="Appurin.lightning.hideModalPopup({'modalPopupId':'{!$Component.mapBucketPopup}'});" action="{!mapBuckets}" status="splashStatus" reRender="form" onComplete="easyToolTipForAll();"/>
                         </div>
                     </div>
                 </div>
@@ -264,12 +264,12 @@
                         <apex:outputPanel layout="block"  styleClass="slds-panel__section slds-has-divider--bottom">
                             <div class="slds-media">
                                 <div class="slds-media__body">
-                                    <p class="slds-truncate slds-text-heading--small" title="{!$Label.buildertek__system_configuration}">{!$Label.buildertek__system_configuration}</p>
-                                    <p class="slds-truncate slds-text-body--small">{!$Label.buildertek__system_configuration_description}</p>
+                                    <p class="slds-truncate slds-text-heading--small" title="{!$Label.buildertek__System_Configuration}">{!$Label.buildertek__System_Configuration}</p>
+                                    <p class="slds-truncate slds-text-body--small">{!$Label.buildertek__System_Configuration_Description}</p>
                                 </div>
                                 <div class="slds-m-top--small" style="float:right;">
-                                    <apex:commandButton styleClass="slds-button slds-button--neutral" value="{!$Label.buildertek__reset_to_system_default_button}" action="{!Initialize}" status="splashStatus" rerender="form" onComplete="easyToolTipForAll();"/>
-                                    <apex:commandButton styleClass="slds-button slds-button--brand" action="{!save}" value="{!$Label.buildertek__save}" status="splashStatus" rerender="form" onComplete="easyToolTipForAll();"/>
+                                    <apex:commandButton styleClass="slds-button slds-button--neutral" value="{!$Label.buildertek__Reset_to_System_Default_Button}" action="{!Initialize}" status="splashStatus" rerender="form" onComplete="easyToolTipForAll();"/>
+                                    <apex:commandButton styleClass="slds-button slds-button--brand" action="{!save}" value="{!$Label.buildertek__Save}" status="splashStatus" rerender="form" onComplete="easyToolTipForAll();"/>
                                     
                                 </div>
                             </div>
@@ -327,7 +327,7 @@
                                 <div class="slds-no-flex">
                                 	 <apex:commandButton id="mapBucketButton" value="Link Buckets"
                                             styleClass="slds-button slds-button--neutral" 
-                                            title="{!$Label.buildertek__link_bucket_helptext}" 
+                                            title="{!$Label.buildertek__Link_Bucket_Helptext}" 
                                             disabled="{! !isAmazonCredentialProvided}"
                                             action="{!showMapBucket}"
                                             status="splashStatus"
@@ -336,7 +336,7 @@
                                     </apex:commandButton>
                                     <apex:commandButton id="newBucketButton" value="New Bucket"
                                             styleClass="slds-button slds-button--brand" 
-                                            title="{!$Label.buildertek__new_bucket_helptext}" 
+                                            title="{!$Label.buildertek__New_Bucket_Helptext}" 
                                             disabled="{! !isAmazonCredentialProvided}"
                                             action="{!showNewBucket}"
                                             status="splashStatus"
@@ -351,7 +351,7 @@
                                         <tbody>
                                             <tr class="slds-hint-parent">
                                                 <td scope="row">
-                                                    <div class="slds-truncate">{!$Label.buildertek__no_bucket_linked_message}</div>
+                                                    <div class="slds-truncate">{!$Label.buildertek__No_Bucket_Linked_Message}</div>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -374,7 +374,7 @@
                                                     </div>
                                                 </th>
                                                 <th scope="col">
-                                                    <div class="slds-truncate">{!$Label.buildertek__action}</div>
+                                                    <div class="slds-truncate">{!$Label.buildertek__Action}</div>
                                                 </th>
                                             </tr>
                                         </thead>
@@ -400,7 +400,7 @@
                                                     <td>
                                                        <apex:commandButton styleClass="apLightningButtonIcon" 
                                                                     image="{!URLFOR($Resource.SLDS, 'assets/icons/utility/close_60.png')}" 
-                                                                    title="{!$Label.buildertek__hide_bucket_in_file_explorer_helptext}" 
+                                                                    title="{!$Label.buildertek__Hide_Bucket_In_File_Explorer_Helptext}" 
                                                                     id="deleteBucketButton"
                                                                     reRender="bucketBlock" 
                                                                     action="{!removeBucketMap}"

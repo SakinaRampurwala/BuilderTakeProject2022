@@ -3,25 +3,39 @@ public with sharing class InvoiceTrigger_HDL {
         
     }
     public void OnAfterInsert(buildertek__Billings__c[] newInvoiceList, Map<ID, buildertek__Billings__c> newInvoiceMap){ 
-       
+        Set<Id> invoiceIds = new Set<Id>();
+        for (buildertek__Billings__c invoice : newInvoiceList) {
+            invoiceIds.add(invoice.Id);
+        }
+        if (invoiceIds.size() > 0) {
+            List<buildertek__Finance_Transaction__c> transactionList = [SELECT Id, Name, buildertek__Sales_Invoice_AR__c FROM buildertek__Finance_Transaction__c WHERE buildertek__Payable_Invoice_AP__c IN: invoiceIds];
+            for (buildertek__Finance_Transaction__c fTransaction : transactionList) {
+                fTransaction.buildertek__Amount__c = newInvoiceMap.get(fTransaction.buildertek__Sales_Invoice_AR__c).buildertek__Total_Amount_Tax__c;
+                fTransaction.buildertek__Credit_Amount__c = newInvoiceMap.get(fTransaction.buildertek__Sales_Invoice_AR__c).buildertek__Total_Amount_Tax__c;
+            }
+            if (transactionList.size() > 0) {
+                update transactionList;
+            }
+        }
     }
-     public void OnBeforeInsert(buildertek__Billings__c[] updatedInvoiceList){ 
-         for(buildertek__Billings__c inv : updatedInvoiceList){ 
-             if(inv.buildertek__Terms__c == 'Due on Receipt'){
-                inv.buildertek__Due_Date__c = Date.today();
-             }if(inv .buildertek__Invoiced_Date__c != null && inv.buildertek__Terms__c != 'Due on Receipt'){
-                 if(inv.buildertek__Terms__c == 'Net 10'){
-                     inv.buildertek__Due_Date__c = inv .buildertek__Invoiced_Date__c + 10;
-                 }else if(inv.buildertek__Terms__c == 'Net 15'){
-                     inv.buildertek__Due_Date__c = inv.buildertek__Invoiced_Date__c + 15;
-                 }else if(inv.buildertek__Terms__c == 'Net 30'){
-                     inv.buildertek__Due_Date__c = inv.buildertek__Invoiced_Date__c + 30;
-                 }else if(inv.buildertek__Terms__c == 'Net 60'){
-                     inv.buildertek__Due_Date__c = inv.buildertek__Invoiced_Date__c + 60;
-                 }
-             }
-             
-         } 
+
+    public void OnBeforeInsert(buildertek__Billings__c[] updatedInvoiceList){ 
+        for(buildertek__Billings__c inv : updatedInvoiceList){ 
+            if(inv.buildertek__Terms__c == 'Due on Receipt'){
+            inv.buildertek__Due_Date__c = Date.today();
+            }if(inv .buildertek__Invoiced_Date__c != null && inv.buildertek__Terms__c != 'Due on Receipt'){
+                if(inv.buildertek__Terms__c == 'Net 10'){
+                    inv.buildertek__Due_Date__c = inv .buildertek__Invoiced_Date__c + 10;
+                }else if(inv.buildertek__Terms__c == 'Net 15'){
+                    inv.buildertek__Due_Date__c = inv.buildertek__Invoiced_Date__c + 15;
+                }else if(inv.buildertek__Terms__c == 'Net 30'){
+                    inv.buildertek__Due_Date__c = inv.buildertek__Invoiced_Date__c + 30;
+                }else if(inv.buildertek__Terms__c == 'Net 60'){
+                    inv.buildertek__Due_Date__c = inv.buildertek__Invoiced_Date__c + 60;
+                }
+            }
+            
+        } 
        
     }
     public void onbeforeUpdate(buildertek__Billings__c[] updatedInvoiceList, Map<ID, buildertek__Billings__c> oldInvoiceMap){ 
@@ -53,8 +67,13 @@ public with sharing class InvoiceTrigger_HDL {
         Map<String, String> changeOrderMap = new Map<String, String>();
         Map<String, Decimal> budgetMap = new Map<String, Decimal>();
         List<buildertek__Budget__c> budgetListToUpdate = new List<buildertek__Budget__c>();
+        Set<Id> invoiceIds = new Set<Id>();
         for(buildertek__Billings__c inv : updatedInvoiceList){ 
             changerOderIdSet.add(inv.buildertek__Change_Order__c); 
+            
+            if (inv.buildertek__Total_Amount_Tax__c != oldInvoiceMap.get(inv.Id).buildertek__Total_Amount_Tax__c) {
+                invoiceIds.add(inv.Id);
+            }
         } 
         system.debug('changerOderIdSet --------> '+changerOderIdSet);
         List<buildertek__Change_Order__c> changeOrderList = new List<buildertek__Change_Order__c>();
@@ -135,6 +154,17 @@ public with sharing class InvoiceTrigger_HDL {
         } 
         if(budgetListToUpdate.size() > 0){
             update budgetListToUpdate;    
+        }
+
+        if (invoiceIds.size() > 0) {
+            List<buildertek__Finance_Transaction__c> transactionList = [SELECT Id, Name, buildertek__Sales_Invoice_AR__c FROM buildertek__Finance_Transaction__c WHERE buildertek__Sales_Invoice_AR__c IN: invoiceIds];
+            for (buildertek__Finance_Transaction__c fTransaction : transactionList) {
+                fTransaction.buildertek__Amount__c = InvoiceMap.get(fTransaction.buildertek__Sales_Invoice_AR__c).buildertek__Total_Amount_Tax__c;
+                fTransaction.buildertek__Credit_Amount__c = InvoiceMap.get(fTransaction.buildertek__Sales_Invoice_AR__c).buildertek__Total_Amount_Tax__c;
+            }
+            if (transactionList.size() > 0) {
+                update transactionList;
+            }
         }
     }
 }

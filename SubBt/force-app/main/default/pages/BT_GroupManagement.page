@@ -10,7 +10,7 @@
 * - Modifications:
 * - Sagar - Initial 
 ***********************************************************************************-->
-<apex:page controller="BT_GroupManagementController" title="{!$Label.buildertek__public_groups}" >
+<apex:page controller="BT_GroupManagementController" title="{!$Label.buildertek__Public_Groups}" >
     <c:BT_JsAndCssIncludeComponent importJquery="true"
                                   importAppurinUtil="true"
                                   importJQueryLayout="false"
@@ -52,7 +52,7 @@
     	            </div>
     	            <div class="apPageHeaderMediaBody">
     	                <p class="slds-text-title--caps slds-line-height--reset">Manage</p>
-    					<div class="apPageHeaderTitle" title="{!$Label.File_Explorer_Configuration_Subtitle}">{!$Label.buildertek__public_groups}</div>
+    					<div class="apPageHeaderTitle" title="{!$Label.File_Explorer_Configuration_Subtitle}">{!$Label.buildertek__Public_Groups}</div>
     	              	<div class="apPageHeaderInfo">
     	              		<label>{!$Label.Public_Group_Description}</label>
     	              	</div>
@@ -67,7 +67,7 @@
 	        <table class="slds-table slds-table--bordered slds-table--cell-buffer">
             	<tr class="slds-text-heading--label">
                 	<th scope="col">
-                    	<div class="slds-truncate">{!$Label.buildertek__group}</div>
+                    	<div class="slds-truncate">{!$Label.buildertek__Group}</div>
                     </th>
                 	<th scope="col">
                     	<div class="slds-truncate">{!$ObjectType.Group.fields.CreatedById.Label}</div>

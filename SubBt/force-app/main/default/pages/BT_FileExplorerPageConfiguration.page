@@ -10,7 +10,7 @@
 * - Modifications:
 * - Sagar - Initial 
 ***********************************************************************************-->
-<apex:page controller="BT_FileExplorerPageConfigController" title="{!$Label.buildertek__file_explorer_configuration}"  >
+<apex:page controller="BT_FileExplorerPageConfigController" title="{!$Label.buildertek__File_Explorer_Configuration}"  >
 <c:BT_JsAndCssIncludeComponent importJquery="true"
                               importAppurinUtil="true"
                               importJQueryLayout="false"
@@ -76,8 +76,8 @@
     	              	</div>
               		</div>
     	            <div style="float:right;" class="apPageHeaderMediaButtons">
-    	                <apex:commandButton styleClass="slds-button slds-button--neutral" value="{!$Label.buildertek__reset_to_system_default_button}" action="{!initialize}" onComplete="easyToolTipForAll();" reRender="fielExplorerConfigurationPanel" status="splashStatus"/>
-    	                <apex:commandButton styleClass="slds-button slds-button--brand" value="{!$Label.buildertek__save}" action="{!Save}" status="splashStatus" onComplete="easyToolTipForAll();" reRender="fielExplorerConfigurationPanel"/>
+    	                <apex:commandButton styleClass="slds-button slds-button--neutral" value="{!$Label.buildertek__Reset_to_System_Default_Button}" action="{!initialize}" onComplete="easyToolTipForAll();" reRender="fielExplorerConfigurationPanel" status="splashStatus"/>
+    	                <apex:commandButton styleClass="slds-button slds-button--brand" value="{!$Label.buildertek__Save}" action="{!Save}" status="splashStatus" onComplete="easyToolTipForAll();" reRender="fielExplorerConfigurationPanel"/>
     	            </div>
     	           <script>
     	           		Appurin.lightning.createPageHeader('PageHeader');
@@ -100,7 +100,7 @@
                         <apex:outputPanel id="typeSectionHeader" layout="block" styleclass="slds-button slds-section__title-action">
                             <c:BT_LightningSvg parentId="typeSectionHeader"  parentType="div" styleClass="slds-section__title-action-icon slds-button__icon slds-button__icon--left" path="/assets/icons/utility-sprite/svg/symbols.svg#switch"/>
                             <label class="avLightningFormElementLabel">Type</label>
-                            <c:BT_LightningHelpText rendered="{!$Label.buildertek__file_explorer_name_helptext != null}" helptext="{!$Label.buildertek__file_explorer_name_helptext}"/>
+                            <c:BT_LightningHelpText rendered="{!$Label.buildertek__File_Explorer_Name_Helptext != null}" helptext="{!$Label.buildertek__File_Explorer_Name_Helptext}"/>
                         </apex:outputPanel>
                     </h3>
                     <apex:outPutPanel layout="block" styleClass="slds-section__content">
@@ -126,7 +126,7 @@
                     <h3 class="slds-section__title">
                         <apex:outputPanel id="pageConfigSectionHeader" layout="block" styleclass="slds-button slds-section__title-action">
                             <c:BT_LightningSvg parentId="pageConfigSectionHeader"  parentType="div" styleClass="slds-section__title-action-icon slds-button__icon slds-button__icon--left" path="/assets/icons/utility-sprite/svg/symbols.svg#switch"/>
-                            <label class="avLightningFormElementLabel">{!$Label.buildertek__page_layout}</label>
+                            <label class="avLightningFormElementLabel">{!$Label.buildertek__Page_Layout}</label>
                         </apex:outputPanel>
                     </h3>
                     <apex:outputPanel layout="block" styleClass="slds-section__content">
@@ -294,7 +294,7 @@
                     <h3 class="slds-section__title">
                         <apex:outputPanel id="searchConfigSectionHeader" layout="block" styleclass="slds-button slds-section__title-action">
                             <c:BT_LightningSvg parentId="searchConfigSectionHeader"  parentType="div" styleClass="slds-section__title-action-icon slds-button__icon slds-button__icon--left" path="/assets/icons/utility-sprite/svg/symbols.svg#switch"/>
-                            <label class="avLightningFormElementLabel">{!$Label.buildertek__search_configuration}</label>
+                            <label class="avLightningFormElementLabel">{!$Label.buildertek__Search_Configuration}</label>
                         </apex:outputPanel>
                     </h3>
                     <apex:outputPanel layout="block" styleClass="slds-section__content">
@@ -372,7 +372,7 @@
                             <apex:outputPanel layout="block" style="padding-left:0px;" styleClass="slds-p-horizontal--medium">
                                 <apex:outputPanel layout="block" styleClass="slds-form-element">
                                     <apex:outputPanel layout="block" styleClass="slds-form-element__label avLightningFormElementLabel">
-                                        <apex:outputLabel value="{!$Label.buildertek__available} {!$Label.buildertek__fields}"></apex:outputLabel>
+                                        <apex:outputLabel value="{!$Label.buildertek__Available} {!$Label.buildertek__Fields}"></apex:outputLabel>
                                     </apex:outputPanel>
                                     <apex:outputPanel layout="block" styleClass="slds-form-element__control">
                                         <apex:selectList styleClass="selectListStyle slds-select" style="width:200px; height: 200px;" multiselect="true" size="7"
@@ -392,7 +392,7 @@
                             <apex:outputPanel layout="block" styleClass="slds-p-horizontal--medium">
                                 <apex:outputPanel layout="block" styleClass="slds-form-element">
                                     <apex:outputPanel layout="block" styleClass="slds-form-element__label avLightningFormElementLabel">
-                                        <apex:outputLabel value="{!$Label.buildertek__selected} {!$Label.buildertek__fields}"></apex:outputLabel>
+                                        <apex:outputLabel value="{!$Label.buildertek__Selected} {!$Label.buildertek__Fields}"></apex:outputLabel>
                                     </apex:outputPanel>
                                     <apex:outputPanel layout="block" styleClass="slds-form-element__control">
                                          <apex:selectList styleClass="selectListStyle slds-select" style="width:200px; height: 200px;" multiselect="true" size="7"

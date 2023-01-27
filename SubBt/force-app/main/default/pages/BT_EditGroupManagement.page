@@ -10,7 +10,7 @@
 * - Modifications:
 * - Sagar - Initial 
 ***********************************************************************************-->
-<apex:page controller="BT_GroupManagementController"  title="{!$Label.buildertek__manage_group_members}"  sidebar="false" >
+<apex:page controller="BT_GroupManagementController"  title="{!$Label.buildertek__Manage_Group_Members}"  sidebar="false" >
 <c:BT_JsAndCssIncludeComponent importJquery="true"
                               importAppurinUtil="true"
                               importJQueryLayout="true"
@@ -74,8 +74,8 @@
     	              	</div>
               		</div>
 					<div style="float:right;" class="apPageHeaderMediaButtons">
-    	                <apex:commandButton styleClass="slds-button slds-button_brand" value="{!$Label.buildertek__save}" action="{!Save}" status="splashStatus" onComplete="easyToolTipForAll();" reRender="form"/>
-						<apex:commandButton styleClass="slds-button slds-button_neutral" value="{!$Label.buildertek__cancel}" action="{!Cancel}" onComplete="easyToolTipForAll();" reRender="form" status="splashStatus"/>
+    	                <apex:commandButton styleClass="slds-button slds-button_brand" value="{!$Label.buildertek__Save}" action="{!Save}" status="splashStatus" onComplete="easyToolTipForAll();" reRender="form"/>
+						<apex:commandButton styleClass="slds-button slds-button_neutral" value="{!$Label.buildertek__Cancel}" action="{!Cancel}" onComplete="easyToolTipForAll();" reRender="form" status="splashStatus"/>
     	            </div>
     	           <script>
     	           		Appurin.lightning.createPageHeader('PageHeader');
@@ -104,8 +104,8 @@
 					selectedNodes="{!selectedUserNodes}"
 					searchableObjectTypes="{!searchableObjectTypes}"
 					selectableObjectNamesForHeader="user"
-					treePickerLabel="{!$Label.buildertek__users}"
-					selectButtonLabel="{!$Label.buildertek__select_button}">
+					treePickerLabel="{!$Label.buildertek__Users}"
+					selectButtonLabel="{!$Label.buildertek__Select_Button}">
 				</c:BT_TreePickerWithSelectComponent>
 			</apex:outputPanel>
 		</apex:outputPanel>

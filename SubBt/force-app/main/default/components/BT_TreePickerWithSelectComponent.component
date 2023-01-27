@@ -246,7 +246,7 @@
                                                         </th>
                                             	        <th scope="col" style="{!IF(contains(UPPER(sObjectType),'TRUE'), '', 'display:none;')}">
                                             	            <apex:outputPanel rendered="{!contains(UPPER(sObjectType),'TRUE')}">
-                                            	                <div class="slds-truncate">{!$Label.buildertek__record_type}</div>
+                                            	                <div class="slds-truncate">{!$Label.buildertek__Record_Type}</div>
                                             	            </apex:outputPanel>
                                             	        </th>
                                                     </tr>
@@ -286,7 +286,7 @@
     	        	<div class="apModalFooter">
                         <apex:actionFunction name="createSearchNodeList" action="{!processSearched}" status="splashStatus" reRender="pickerSelectedRecords"/>
    	                    <apex:actionFunction name="createTreeNodeList" action="{!createNodeList}" status="splashStatus" reRender="pickerSelectedRecords"/>
-                        <apex:commandButton onclick="closePicker('{!JSENCODE(treeId)}');" styleClass="apButton slds-button slds-button_neutral" value="{!$Label.buildertek__cancel}" rerender="addButtonId"/>
+                        <apex:commandButton onclick="closePicker('{!JSENCODE(treeId)}');" styleClass="apButton slds-button slds-button_neutral" value="{!$Label.buildertek__Cancel}" rerender="addButtonId"/>
                         <apex:commandButton status="splashStatus" styleClass="slds-button slds-button_brand" value="{!selectButtonLabel}" onclick="return addRecords('{!JSENCODE(treeId)}', '{!JSENCODE(treeSelectMode)}');"/>
     	        	</div>
     	        </div>

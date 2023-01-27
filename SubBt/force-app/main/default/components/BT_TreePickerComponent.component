@@ -118,14 +118,14 @@
                         	<thead>
                         		<tr class="slds-text-title--caps">
                         			<th scope="col">
-                        				<div class="slds-truncate"><apex:outputLabel value="{!$Label.buildertek__selected} {!selectableObjectNamesForHeader} {!$Label.buildertek__name}"/></div>
+                        				<div class="slds-truncate"><apex:outputLabel value="{!$Label.buildertek__Selected} {!selectableObjectNamesForHeader} {!$Label.buildertek__Name}"/></div>
                         			</th>
                         		</tr>
                         	</thead>
                         	<tbody id="treeSelectedRecordsTableBody">
                         		<tr id="treeNoRecordSelectedRow">
                         			<th scope="row">
-                        				<div class="slds-truncate"><apex:outputLabel value="{!$Label.buildertek__no} {!selectableObjectNamesForHeader} {!$Label.buildertek__selected}"/></div>
+                        				<div class="slds-truncate"><apex:outputLabel value="{!$Label.buildertek__No} {!selectableObjectNamesForHeader} {!$Label.buildertek__Selected}"/></div>
                         			</th>
                         		</tr>
                         	</tbody>

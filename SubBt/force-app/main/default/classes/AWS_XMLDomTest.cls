@@ -9,7 +9,7 @@
 ************************************************************************** */
 @isTest
 public with sharing class AWS_XMLDomTest {
-	public static testmethod void testGeneral() { 
+    public static testmethod void testGeneral() { 
         AWS_XMLDom d = new AWS_XMLDom('<book  author="Manoj" >My Book</book>');       
         AWS_XMLDom.Element e = d.getElementsByTagName('book')[0];
         system.assert(e.getAttribute('author') =='Manoj' ); 
@@ -21,24 +21,24 @@ public with sharing class AWS_XMLDomTest {
         system.assert (d.getElementsByTagName('book')[0].nodeValue == 'My Book' );
         
         d = new AWS_XMLDom('<books><book author="Manoj" date="1999" >My Book</book><book author="Ron" >Your Book</book></books>'); 
-	}
-	
-	public static testmethod void testListBucketResponse() {         
+    }
+    
+    public static testmethod void testListBucketResponse() {         
         string testListBucketResponse = 
-			'<?xml version="1.0" encoding="UTF-8"?>'+ 
-			'<ListBucketResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><Name>klklklk-test-bucket</Name><Prefix>'+
-			'</Prefix><Marker></Marker><MaxKeys>1000</MaxKeys><IsTruncated>false</IsTruncated><Contents><Key>/apex/adnDevSignup</Key>'+
-			'<LastModified>2008-01-27T21:13:58.000Z</LastModified><ETag>&quot;630581ddc40fa0a3b7e521c67962baba&quot;</ETag><Size>27411</Size>'+
-			'<Owner><ID>173ea00b3418d9a715d5f5a0d85290c3be11135ecf9a085504a4b1bbb6ea1</ID><DisplayName>vne</DisplayName></Owner>'+
-			'<StorageClass>STANDARD</StorageClass></Contents><Contents><Key>apedfx/adnDevSignup</Key><LastModified>2008-01-31T09:50:41.000Z</LastModified>'+
-			'<ETag>&quot;2d9ab36295e58d32db358aae0195c164&quot;</ETag><Size>27410</Size><Owner><ID>owner_id</ID><DisplayName>foobar</DisplayName></Owner>'+
-			'<StorageClass>STANDARD</StorageClass></Contents><Contents><Key>apex/adnRoot</Key><LastModified>2008-01-31T09:50:40.000Z</LastModified>'+
-			'<ETag>&quot;f956a9612c95c206f3208f023d1edefb&quot;</ETag><Size>20036</Size><Owner><ID>owner_id</ID><DisplayName>foobar</DisplayName></Owner>'+
-			'<StorageClass>STANDARD</StorageClass></Contents><Contents><Key>test-key-public</Key><LastModified>2008-02-02T04:02:59.000Z</LastModified>'+
-			'<ETag>&quot;12f3e46f80c24c997c4304953edc3612&quot;</ETag><Size>32</Size><Owner><ID>99999999999</ID>'+
-			'<DisplayName>foobar</DisplayName></Owner><StorageClass>STANDARD</StorageClass></Contents><Contents><Key>test-two</Key>'+
-			'<LastModified>2008-02-02T00:40:29.000Z</LastModified><ETag>&quot;327b6f07435811239bc47e1544353273&quot;</ETag><Size>7</Size>'+
-			'<Owner><ID>173</ID><DisplayName>foobar</DisplayName></Owner><StorageClass>STANDARD</StorageClass></Contents></ListBucketResult>';
+            '<?xml version="1.0" encoding="UTF-8"?>'+ 
+            '<ListBucketResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><Name>klklklk-test-bucket</Name><Prefix>'+
+            '</Prefix><Marker></Marker><MaxKeys>1000</MaxKeys><IsTruncated>false</IsTruncated><Contents><Key>/apex/adnDevSignup</Key>'+
+            '<LastModified>2008-01-27T21:13:58.000Z</LastModified><ETag>&quot;630581ddc40fa0a3b7e521c67962baba&quot;</ETag><Size>27411</Size>'+
+            '<Owner><ID>173ea00b3418d9a715d5f5a0d85290c3be11135ecf9a085504a4b1bbb6ea1</ID><DisplayName>vne</DisplayName></Owner>'+
+            '<StorageClass>STANDARD</StorageClass></Contents><Contents><Key>apedfx/adnDevSignup</Key><LastModified>2008-01-31T09:50:41.000Z</LastModified>'+
+            '<ETag>&quot;2d9ab36295e58d32db358aae0195c164&quot;</ETag><Size>27410</Size><Owner><ID>owner_id</ID><DisplayName>foobar</DisplayName></Owner>'+
+            '<StorageClass>STANDARD</StorageClass></Contents><Contents><Key>apex/adnRoot</Key><LastModified>2008-01-31T09:50:40.000Z</LastModified>'+
+            '<ETag>&quot;f956a9612c95c206f3208f023d1edefb&quot;</ETag><Size>20036</Size><Owner><ID>owner_id</ID><DisplayName>foobar</DisplayName></Owner>'+
+            '<StorageClass>STANDARD</StorageClass></Contents><Contents><Key>test-key-public</Key><LastModified>2008-02-02T04:02:59.000Z</LastModified>'+
+            '<ETag>&quot;12f3e46f80c24c997c4304953edc3612&quot;</ETag><Size>32</Size><Owner><ID>99999999999</ID>'+
+            '<DisplayName>foobar</DisplayName></Owner><StorageClass>STANDARD</StorageClass></Contents><Contents><Key>test-two</Key>'+
+            '<LastModified>2008-02-02T00:40:29.000Z</LastModified><ETag>&quot;327b6f07435811239bc47e1544353273&quot;</ETag><Size>7</Size>'+
+            '<Owner><ID>173</ID><DisplayName>foobar</DisplayName></Owner><StorageClass>STANDARD</StorageClass></Contents></ListBucketResult>';
         
         AWS_XMLDom d = new AWS_XMLDom(testListBucketResponse); 
         
@@ -55,25 +55,25 @@ public with sharing class AWS_XMLDomTest {
         keys = d.root.getElementsByTagName('Key');
         count = keys.size();
         system.assert(count > 1);
-	}
-	 
-	public static testmethod void testErrorResponse() {    
-    	string testErrorResponse = 
-			'<?xml version="1.0" encoding="UTF-8"?>'+ 
-			'<Error><Code>NoSuchKey</Code><Message>The specified key does not exist.</Message><Key>test-key</Key><RequestId>49D135DD55EBD</RequestId>'+
-			'<HostId>PB4hNZ</HostId></Error>';
+    }
+     
+    public static testmethod void testErrorResponse() {    
+        string testErrorResponse = 
+            '<?xml version="1.0" encoding="UTF-8"?>'+ 
+            '<Error><Code>NoSuchKey</Code><Message>The specified key does not exist.</Message><Key>test-key</Key><RequestId>49D135DD55EBD</RequestId>'+
+            '<HostId>PB4hNZ</HostId></Error>';
     
         AWS_XMLDom d = new AWS_XMLDom(testErrorResponse); 
         List<AWS_XMLDom.Element> errors = d.getElementsByTagName('Error');
         system.assert(errors.size() == 1);
-	}
-	
-	public static testmethod void testACLResponse() {
-		string testACLResponse = 
-			'<?xml version="1.0" encoding="UTF-8"?>'+ 
-			'<AccessControlPolicy xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><Owner><ID>owner_id</ID><DisplayName>foobar</DisplayName></Owner>'+
-			'<AccessControlList><Grant><Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser" foo="bar" ><ID>owner_id</ID>'+
-			'<DisplayName>foobar</DisplayName></Grantee><Permission>FULL_CONTROL</Permission></Grant></AccessControlList></AccessControlPolicy>';
+    }
+    
+    public static testmethod void testACLResponse() {
+        string testACLResponse = 
+            '<?xml version="1.0" encoding="UTF-8"?>'+ 
+            '<AccessControlPolicy xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><Owner><ID>owner_id</ID><DisplayName>foobar</DisplayName></Owner>'+
+            '<AccessControlList><Grant><Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser" foo="bar" ><ID>owner_id</ID>'+
+            '<DisplayName>foobar</DisplayName></Grantee><Permission>FULL_CONTROL</Permission></Grant></AccessControlList></AccessControlPolicy>';
         AWS_XMLDom d = new AWS_XMLDom(testACLResponse); 
         system.assert(d.root.hasChildNodes()); 
         system.assert(d.root.isEqualNode(d.root) ,' is equal node');
@@ -91,17 +91,17 @@ public with sharing class AWS_XMLDomTest {
     
     public static testmethod void testNotificationTruncated() { 
          string testNotification = 
-         	'<?xml version="1.0" encoding="UTF-8"?>' +
+            '<?xml version="1.0" encoding="UTF-8"?>' +
             '<bookstore><book><title lang="eng">Harry Potter</title><price>29.99</price>' +
             '</book><book><title lang="eng">Learning ';
-		AWS_XMLDom f = new AWS_XMLDom( testNotification );
-		system.assert( f.getElementsByTagName('title')[0].nodeValue == 'Harry Potter' );
-		system.assert( f.getElementsByTagName('title')[1].nodeValue == '' );
+        AWS_XMLDom f = new AWS_XMLDom( testNotification );
+        system.assert( f.getElementsByTagName('title')[0].nodeValue == 'Harry Potter' );
+        system.assert( f.getElementsByTagName('title')[1].nodeValue == '' );
     }
     
     public static testmethod void testNotification() { 
          string testNotification = 
-         	'<?xml version="1.0" encoding="UTF-8"?>' +
+            '<?xml version="1.0" encoding="UTF-8"?>' +
             '<bookstore><book><title lang="eng">Harry Potter</title><price>29.99</price>' +
             '</book><book><title lang="eng">Learning XML</title><price>39.95</price></book></bookstore>';
 

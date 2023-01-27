@@ -10,7 +10,7 @@
 * - Modifications:
 * - Sagar - Initial 
 ***********************************************************************************-->
-<apex:page controller="BT_FileDetailController" showHeader="false" title="{!$Label.buildertek__file_download}" tabStyle="File__c">
+<apex:page controller="BT_FileDetailController" showHeader="false" title="{!$Label.buildertek__File_Download}" tabStyle="File__c">
     <c:BT_JsAndCssIncludeComponent importJquery="true" importAppurinUtil="true" importJQueryLayout="false" importFancyTree="false"
         importJqGrid="false" importEasyTooltip="false" importAppurinCss="true" importCkEditor="false" importGnattChart="false"
         importLightningDesign="true" />
@@ -78,18 +78,18 @@
                         <apex:outputPanel id="errorMessage" layout="block" rendered="{!isShowMsg}">
                             <div style="padding:10px 0px 10px 0px;">
                                 <apex:outputLabel value="{!errMessage}"></apex:outputLabel>
-                                <apex:outputLabel value="{!$Label.buildertek__close_window_message}"></apex:outputLabel>
+                                <apex:outputLabel value="{!$Label.buildertek__Close_Window_Message}"></apex:outputLabel>
                             </div>
                             <div>
-                                <apex:commandButton value="{!$Label.buildertek__close}" style="width:100%; margin:0px !important;" styleClass="slds-button slds-button_neutral"
+                                <apex:commandButton value="{!$Label.buildertek__Close}" style="width:100%; margin:0px !important;" styleClass="slds-button slds-button_neutral"
                                     onClick="cancel(); return false;" />
                             </div>
                         </apex:outputPanel>
                         <apex:outputPanel id="downloadindMessage" layout="block" rendered="{!!isShowMsg}">
                             <div>
                                 <div style="padding:10px 0px 10px 0px;">
-                                    <apex:outputLabel value="{!$Label.buildertek__downloading}"></apex:outputLabel>
-                                    <apex:outputLabel value="{!$Label.buildertek__manual_file_download_message}"></apex:outputLabel>
+                                    <apex:outputLabel value="{!$Label.buildertek__Downloading}"></apex:outputLabel>
+                                    <apex:outputLabel value="{!$Label.buildertek__Manual_File_Download_Message}"></apex:outputLabel>
                                 </div>
                                 <apex:outputPanel layout="block" styleClass="slds-form-element">
                                     <apex:outputPanel layout="block" styleClass="slds-form-element__label avLightningFormElementLabel">
@@ -113,10 +113,10 @@
                                 </apex:outputPanel>
                             </div>
                             <div>
-                                <apex:commandButton value="{!$Label.buildertek__download}" styleClass="apLightningOneTileButton slds-button slds-button_brand"
+                                <apex:commandButton value="{!$Label.buildertek__Download}" styleClass="apLightningOneTileButton slds-button slds-button_brand"
                                     onClick="downloadFile(); return false;" />
                                 <!--<button class="slds-button slds-button_neutral" onClick="cancel();">Close</button>-->
-                                <apex:commandButton value="{!$Label.buildertek__close}" style="width:100%; margin:0px !important;" styleClass="slds-button slds-button_neutral"
+                                <apex:commandButton value="{!$Label.buildertek__Close}" style="width:100%; margin:0px !important;" styleClass="slds-button slds-button_neutral"
                                     onClick="cancel();return false;" />
                             </div>
                         </apex:outputPanel>
