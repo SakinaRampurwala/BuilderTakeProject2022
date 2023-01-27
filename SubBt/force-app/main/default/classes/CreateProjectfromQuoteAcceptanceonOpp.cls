@@ -1,4 +1,4 @@
-public class CreateProjectfromQuoteAcceptanceonOpp {
+public class  {
 
  public Boolean isCreateProjectfromQuoteAcceptanceonOpp{get;set;}
  public Boolean isCreatesendcustomerquoteaftersignature{get;set;}

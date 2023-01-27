@@ -21,12 +21,7 @@
     
     <aura:attribute name="value" type="string" default=""/>
     <aura:attribute name="checkBoxValue" type="string" default=""/>
-    <aura:attribute name="options" type="string[]" default="[
-                                                            {'label': 'New Payment Application', 'value': 'option1'},
-                                                           
-                                                            {'label': 'Import Company Accepted Vendor Payment Apps', 'value': 'option4'},
-                                                            {'label': 'Import Company Approved / Import Customer Approved SOVs', 'value': 'option5'}
-                                                            ]"/>
+    <aura:attribute name="options" type="string[]" default="[]"/>
     
     <!--  {'label': 'New Payment Application', 'value': 'option1'},
 {'label': 'Import Master SOVs', 'value': 'option2'},
