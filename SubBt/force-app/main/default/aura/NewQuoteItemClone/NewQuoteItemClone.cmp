@@ -199,66 +199,77 @@
         </div>
 
     <div style="margin: -8px 0px;">  
-        <div id='btnDiv' style="display:flex; justify-content: right; margin-top: 25px;" class="slds-m-top_medium slds-m-bottom_medium slds-m-right_small">
-            <lightning:buttonGroup>
+        <div style="display:block">
+            <div id='collapseBtn' class="slds-float_left" style="margin-top: 5px;">
+                <span style="display:none;margin-left:1.6rem" class="{!'expandAllBtn_'+v.quoteId}" data-iconattr="{!'expandAllBtn_'+v.quoteId}" data-iconname="Expand All" onclick="{!c.expandCollapeAll}">
+                    <lightning:buttonIcon aura:id="expandCollapeseAllBtn" iconName="utility:add" variant="border-filled"
+                        iconClass="dark" alternativeText="Expand All" title="Expand All" />
+                </span>
+                <span style="display:inline-block;margin-left:1.6rem" class="{!'CollapeseAllBtn_'+v.quoteId}" data-iconattr="{!'CollapeseAllBtn_'+v.quoteId}" data-iconname="Collapse All" onclick="{!c.expandCollapeAll}">
+                    <lightning:buttonIcon aura:id="expandCollapeseAllBtn2" iconName="utility:dash"
+                        variant="border-filled" iconClass="dark" alternativeText="Collapse All" title="Collapse All" />
+                </span>
+            </div>
+            <div id='btnDiv' style="display:flex; justify-content: right; margin-top: 30px;" class="slds-m-top_medium slds-m-right_small">
+                <lightning:buttonGroup>
 
 
-            <div class="slds-truncate" title="test1" style="padding: 10px 0px 0px 10px; width:110px;">
-                Global Margin</div>
-                <ui:inputNumber aura:id="testId" value="{!v.QuoteMargin}" class="uiInputCss">
-                </ui:inputNumber>
-                <lightning:buttonIcon iconName="utility:save" class="saveInputCss slds-m-left_xx-small" onclick="{!c.onMarginChange}" alternativeText="Save" />
                 <div class="slds-truncate" title="test1" style="padding: 10px 0px 0px 10px; width:110px;">
-                    Global Markup</div>
-                <ui:inputNumber aura:id="testId" value="{!v.QuoteRec.buildertek__Markup__c}" class="uiInputCss">
-                </ui:inputNumber>
-                <lightning:buttonIcon iconName="utility:save" class="saveInputCss slds-m-left_xx-small" onclick="{!c.onMarkupChange}" alternativeText="Save" />
-                <aura:if isTrue="{!v.enableMassUpdate}">
-                    <div>
-                        <lightning:button iconName="utility:save" iconPosition="left" onclick="{!c.onClickMassUpdate}" label="{!v.enableMassUpdate==true?'Save':'Mass Update'}" class="sldsButtonGroup" />
-                    </div>&nbsp;
-                    <div>
-                        <lightning:button iconName="utility:close" iconPosition="left" onclick="{!c.onClickMassUpdateCancel}" label="Cancel" class="sldsButtonGroup" />
-                    </div>
-                    <aura:set attribute="else">
+                    Global Margin</div>
+                    <ui:inputNumber aura:id="testId" value="{!v.QuoteMargin}" class="uiInputCss">
+                    </ui:inputNumber>
+                    <lightning:buttonIcon iconName="utility:save" class="saveInputCss slds-m-left_xx-small" onclick="{!c.onMarginChange}" alternativeText="Save" />
+                    <div class="slds-truncate" title="test1" style="padding: 10px 0px 0px 10px; width:110px;">
+                        Global Markup</div>
+                    <ui:inputNumber aura:id="testId" value="{!v.QuoteRec.buildertek__Markup__c}" class="uiInputCss">
+                    </ui:inputNumber>
+                    <lightning:buttonIcon iconName="utility:save" class="saveInputCss slds-m-left_xx-small" onclick="{!c.onMarkupChange}" alternativeText="Save" />
+                    <aura:if isTrue="{!v.enableMassUpdate}">
                         <div>
-                            <lightning:button iconPosition="left" onclick="{!c.addProductFromGroup}" label="Add Lines" class="sldsButtonGroup" />
+                            <lightning:button iconName="utility:save" iconPosition="left" onclick="{!c.onClickMassUpdate}" label="{!v.enableMassUpdate==true?'Save':'Mass Update'}" class="sldsButtonGroup" />
                         </div>&nbsp;
-
                         <div>
-                            <lightning:button aura:id='rejectBtn' disabled="true" iconPosition="left" label="Rejected Lines" class="sldsButtonGroup" onclick="{!c.clickRejectLinesBtn}" />
-                        </div>&nbsp;
-
-
-                        <div>
-                            <lightning:button iconPosition="left" onclick="{!c.onClickAddlines}" label="Mass Add Line" class="sldsButtonGroup" />
-                        </div>&nbsp;
-
-                        <div>
-                            <lightning:button iconName="utility:edit" iconPosition="left" onclick="{!c.onClickMassUpdate}" label="{!v.enableMassUpdate==true?'Save':'Mass Update'}" class="sldsButtonGroup" />
-                        </div>&nbsp;
-
-                        <!-- <lightning:button iconName="utility:groups" iconPosition="left"
-                        onclick="{!c.onClickCreateNewGroup}" label="Add Group" class="sldsButtonGroup" />-->
-                        <div>
-                            <lightning:button iconName="utility:copy" iconPosition="left" onclick="{!c.onClickMassDuplicate}" label="Duplicate Lines" class="sldsButtonGroup" />
-                        </div>&nbsp;
-
-                        <!-- <lightning:button label="Add Product" onclick="{!c.addProduct}" class="sldsButtonGroup" />-->
-                        <div>
-                            <lightning:button label="Import RFQ's" onclick="{!c.addRFQ}" class="sldsButtonGroup" />
-                        </div>&nbsp;
-                        <div style="border-radius: 0.25rem;">
-                            <lightning:button label="Delete" onclick="{!c.deleteSelectedQuoteItem}" class="sldsButtonGroup" />
+                            <lightning:button iconName="utility:close" iconPosition="left" onclick="{!c.onClickMassUpdateCancel}" label="Cancel" class="sldsButtonGroup" />
                         </div>
+                        <aura:set attribute="else">
+                            <div>
+                                <lightning:button iconPosition="left" onclick="{!c.addProductFromGroup}" label="Add Lines" class="sldsButtonGroup" />
+                            </div>&nbsp;
 
-                    </aura:set>
-                </aura:if>
-            </lightning:buttonGroup>
+                            <div>
+                                <lightning:button aura:id='rejectBtn' disabled="true" iconPosition="left" label="Rejected Lines" class="sldsButtonGroup" onclick="{!c.clickRejectLinesBtn}" />
+                            </div>&nbsp;
+
+
+                            <div>
+                                <lightning:button iconPosition="left" onclick="{!c.onClickAddlines}" label="Mass Add Line" class="sldsButtonGroup" />
+                            </div>&nbsp;
+
+                            <div>
+                                <lightning:button iconName="utility:edit" iconPosition="left" onclick="{!c.onClickMassUpdate}" label="{!v.enableMassUpdate==true?'Save':'Mass Update'}" class="sldsButtonGroup" />
+                            </div>&nbsp;
+
+                            <!-- <lightning:button iconName="utility:groups" iconPosition="left"
+                            onclick="{!c.onClickCreateNewGroup}" label="Add Group" class="sldsButtonGroup" />-->
+                            <div>
+                                <lightning:button iconName="utility:copy" iconPosition="left" onclick="{!c.onClickMassDuplicate}" label="Duplicate Lines" class="sldsButtonGroup" />
+                            </div>&nbsp;
+
+                            <!-- <lightning:button label="Add Product" onclick="{!c.addProduct}" class="sldsButtonGroup" />-->
+                            <div>
+                                <lightning:button label="Import RFQ's" onclick="{!c.addRFQ}" class="sldsButtonGroup" />
+                            </div>&nbsp;
+                            <div style="border-radius: 0.25rem;">
+                                <lightning:button label="Delete" onclick="{!c.deleteSelectedQuoteItem}" class="sldsButtonGroup" />
+                            </div>
+
+                        </aura:set>
+                    </aura:if>
+                </lightning:buttonGroup>
+            </div>
         </div>
         <br />
-        <div id='collapseBtn' class="slds-float_left" style="padding: 0.5rem; margin-top: -5px;display:contents">
-            <!-- <aura:if isTrue="{!!v.removeSingleQuoteLineOption}" > -->
+        <!-- <div id='collapseBtn' class="slds-float_left" style="padding: 0.5rem; margin-top: -5px;display:contents">
             <span style="display:none;" class="{!'expandAllBtn_'+v.quoteId}" data-iconattr="{!'expandAllBtn_'+v.quoteId}" data-iconname="Expand All" onclick="{!c.expandCollapeAll}">
                 <lightning:buttonIcon aura:id="expandCollapeseAllBtn" iconName="utility:add" variant="border-filled"
                     iconClass="dark" alternativeText="Expand All" title="Expand All" />
@@ -267,8 +278,7 @@
                 <lightning:buttonIcon aura:id="expandCollapeseAllBtn2" iconName="utility:dash"
                     variant="border-filled" iconClass="dark" alternativeText="Collapse All" title="Collapse All" />
             </span>
-            <!-- </aura:if> -->
-        </div>
+        </div> -->
         <aura:if isTrue="{!v.addGroupPopup}">
             <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
                 <div class="slds-modal__container">
@@ -498,7 +508,7 @@
                 <aura:if isTrue="{!!v.removeSingleQuoteLineOption}" >
                     <div id='Tablebox' style="padding:10px;margin-top: -5px;">
                         <br />
-                        <div  aura:id="inlineEditQuote" style="margin-top:25px; margin-bottom:25px;">
+                        <div  aura:id="inlineEditQuote" style="margin-bottom:18px;">
                             <table class="slds-table slds-table_bordered slds-table_cell-buffer" style="border:1px solid grey;border-radius: 5px;">
                                 <thead style="border:1px solid rgb(216, 237, 255);">
                                     <tr class="slds-text-title_caps">

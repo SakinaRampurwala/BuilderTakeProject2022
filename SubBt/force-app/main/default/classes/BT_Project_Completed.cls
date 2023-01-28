@@ -20,7 +20,7 @@ public class BT_Project_Completed {
                 if(!Task.buildertek__Milestone__c){
                  system.debug(Task);
                     Task.buildertek__Completion__c = 100;
-                    system.debug(Task);
+                    system.debug('task percent '+Task.buildertek__Completion__c);
                     updateLineList.add(Task);
                 }
             }

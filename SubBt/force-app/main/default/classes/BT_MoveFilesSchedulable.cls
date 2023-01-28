@@ -12,10 +12,10 @@
 * - Sagar, 04/09/2017 - Initial Development
 ************************************************************************** */
 public with sharing class BT_MoveFilesSchedulable implements Schedulable{
-	// Files to move.
+    // Files to move.
     List<File__c> filesNeedsToMoveFromSource;
     
-	//========================================================//
+    //========================================================//
     //Constructor
     //Initialize variables and objects
     //========================================================//
@@ -29,14 +29,14 @@ public with sharing class BT_MoveFilesSchedulable implements Schedulable{
     *   UnitTests:  
     */
     public void execute(SchedulableContext context) {
-    	
-		try{
+        
+        try{
             // If there are still files to move, queue it using another job
-    		if(filesNeedsToMoveFromSource != null && !filesNeedsToMoveFromSource.isEmpty()){
-    			System.enqueueJob(new BT_MoveFilesQueueable(filesNeedsToMoveFromSource));
-    		}
+            if(filesNeedsToMoveFromSource != null && !filesNeedsToMoveFromSource.isEmpty()){
+                System.enqueueJob(new BT_MoveFilesQueueable(filesNeedsToMoveFromSource));
+            }
         } catch(Exception e){
             BT_Utils.sendJobFailureEmail('Move File Schedule Job failed.', e.getMessage());
-		}
+        }
     }
 }

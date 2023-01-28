@@ -21,9 +21,9 @@ public with sharing class SOQLManager {
     public virtual class SOQLManagerException extends Exception{
         public SObjectType objType {get; private set;}
     }
-	
-	
-	// Custom FLS Exception Classe 
+    
+    
+    // Custom FLS Exception Classe 
     public class FLSException extends SOQLManagerException{
         public SObjectField field{get; private set;}    
         public FLSException(SObjectType objType, SObjectField field){

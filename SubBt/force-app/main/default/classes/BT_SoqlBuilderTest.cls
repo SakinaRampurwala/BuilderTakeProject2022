@@ -412,10 +412,10 @@ private class BT_SoqlBuilderTest {
                 .toSoql());
         system.assertEquals('test', 'test');        
     }
-	
+    
     private static void assertEquals(String expected, String actual){
-    	expected = expected.trim().toLowerCase().replaceAll('\n','');
-    	actual = actual.trim().toLowerCase().replaceAll('\n','');
+        expected = expected.trim().toLowerCase().replaceAll('\n','');
+        actual = actual.trim().toLowerCase().replaceAll('\n','');
         System.assert(
             expected.equalsIgnoreCase(actual),
             'Assertion failed, the following two SOQLs are not equal.  Expected: ' + expected + ', Actual: ' + actual);

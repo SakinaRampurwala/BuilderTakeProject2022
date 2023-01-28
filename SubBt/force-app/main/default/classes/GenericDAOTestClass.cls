@@ -14,11 +14,11 @@
 private class GenericDAOTestClass 
 {       
     @testSetup static void insertTestData(){
-		// Create AWS Credentials
+        // Create AWS Credentials
         BT_TestUtils.createAWSCredentials();
         Map<String, Amazon_S3_Key__c> awsCredentials = Amazon_S3_Key__c.getAll();
         System.assertEquals(awsCredentials.size(), 2);
-	}
+    }
     static testMethod void getObjectTest(){   
         
         // create Test Folder
@@ -86,10 +86,10 @@ private class GenericDAOTestClass
         // System.assert(objectsArray.size() == 1); 
         
        // objectsArray = GenericDAO.getSObjects('Folder__c', 10, fields, queryFieldNameValue, 'and', new List<String>{'name'}, folderIdStringList, false, true);
-		
-	//	objectsArray = GenericDAO.getSObjects('Folder__c', 10, fields, queryFieldNameValue, 'and', new List<String>{'name'}, folderIdStringList, false, true);
-	//	objectsArray = GenericDAO.getSObjects('Folder__c', 10, fields, queryFieldNameValue, 'and', new List<String>{'name'}, folderIdStringList, true, true);
-	//	objectsArray = GenericDAO.getSObjects('Folder__c', 10, fields, queryFieldNameValue, 'or', new List<String>{'name'}, folderIdStringList, true, true);
+        
+    //  objectsArray = GenericDAO.getSObjects('Folder__c', 10, fields, queryFieldNameValue, 'and', new List<String>{'name'}, folderIdStringList, false, true);
+    //  objectsArray = GenericDAO.getSObjects('Folder__c', 10, fields, queryFieldNameValue, 'and', new List<String>{'name'}, folderIdStringList, true, true);
+    //  objectsArray = GenericDAO.getSObjects('Folder__c', 10, fields, queryFieldNameValue, 'or', new List<String>{'name'}, folderIdStringList, true, true);
 
         String soql = GenericDAO.getSObjectsSOQL('Folder__c', 10, fields, queryFieldNameValue, 'or', new List<String>{'name'}, folderIdStringList, false, true); 
         System.assert(soql != null);
@@ -130,8 +130,8 @@ private class GenericDAOTestClass
                                     'or', null);                          
                                      
         List<BT_SoqlCondition> fieldConditions = new List<BT_SoqlCondition>();
-		fieldConditions.add(new BT_SoqlFieldCondition('Access_Type__c', BT_SoqlBuilder.Operator.NOT_EQUALS, BT_Constants.FILE_ACCESS_PRIVATE));
-		
+        fieldConditions.add(new BT_SoqlFieldCondition('Access_Type__c', BT_SoqlBuilder.Operator.NOT_EQUALS, BT_Constants.FILE_ACCESS_PRIVATE));
+        
        /* sObject[] result3 = GenericDAO.getObjectGroupByCount('Folder__c', 
                                     'Name', 
                                     fieldConditions,

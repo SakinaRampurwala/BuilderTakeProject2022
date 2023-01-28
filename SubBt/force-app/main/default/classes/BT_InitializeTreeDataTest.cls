@@ -15,7 +15,7 @@ private class BT_InitializeTreeDataTest {
 
     static testMethod void myUnitTest() 
     {
-    	Test.startTest();
+        Test.startTest();
         BT_InitializeTreeData.clearConfiguration();
        // BT_InitializeTreeData.initialize();
         Test.stopTest();
@@ -25,6 +25,6 @@ private class BT_InitializeTreeDataTest {
         
         //Tree_Node_Configuration__c filesNode = [select id, name from Tree_Node_Configuration__c where name = 'File Explorer - Home' and Tree_Configuration__c = :treeConfig.id and Parent__c = null];
        // System.assert(filesNode != null);
-       	System.assertEquals('Test','Test');
+        System.assertEquals('Test','Test');
     }
 }

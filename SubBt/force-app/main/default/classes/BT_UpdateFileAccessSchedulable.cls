@@ -12,10 +12,10 @@
 * - Sagar, 24/09/2017 - Initial Development
 ************************************************************************** */
 public with sharing class BT_UpdateFileAccessSchedulable implements Schedulable{
-	// File with updated Public On Amazon
-	List<File__c> filesWithUpdatedPublicOnAmazon;
+    // File with updated Public On Amazon
+    List<File__c> filesWithUpdatedPublicOnAmazon;
     
-	//========================================================//
+    //========================================================//
     //Constructor
     //Initialize variables and objects
     //========================================================//
@@ -29,13 +29,13 @@ public with sharing class BT_UpdateFileAccessSchedulable implements Schedulable{
     *   UnitTests:  
     */
     public void execute(SchedulableContext context) {
-		try{
+        try{
             // If there are still files to copy, queue it using another job
-    		if(filesWithUpdatedPublicOnAmazon != null && !filesWithUpdatedPublicOnAmazon.isEmpty()){
-    			System.enqueueJob(new BT_UpdateFileAccessQueueable(filesWithUpdatedPublicOnAmazon));
-    		}
+            if(filesWithUpdatedPublicOnAmazon != null && !filesWithUpdatedPublicOnAmazon.isEmpty()){
+                System.enqueueJob(new BT_UpdateFileAccessQueueable(filesWithUpdatedPublicOnAmazon));
+            }
         } catch(Exception e){
             BT_Utils.sendJobFailureEmail('Update File  Access Schedule Job failed.', e.getMessage());
-		}
+        }
     }
 }

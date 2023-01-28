@@ -12,31 +12,31 @@
 * - Sagar, 04/08/2017 – Initial Development
 ************************************************************************** */
 public with sharing class BT_SoqlUtils {
-	/*
-	*	Purpose:    For a given object type and field list, build a select clause. If includeId is set to true, add
-					Id field to the select list.
+    /*
+    *   Purpose:    For a given object type and field list, build a select clause. If includeId is set to true, add
+                    Id field to the select list.
     *   Parameters: objectType            
                     fields
                     includeId
     *   UnitTests:  
-    */	
+    */  
     public Static String buildSelectClause(String objectType, List<String> fields, Boolean includeId) {
-    	if(fields == null || fields.size() == 0){
-    		return '';
-    	}
-    	Boolean firstField = true;
+        if(fields == null || fields.size() == 0){
+            return '';
+        }
+        Boolean firstField = true;
         String soql = 'SELECT ';
         if(includeId){
-        	soql = soql + ' Id';
-        	firstField = false;
+            soql = soql + ' Id';
+            firstField = false;
         }
         for(String field : fields){
-        	if(includeId && field.equals('Id')){
-        		continue;
-        	}
-        	if(!firstField){
-        		soql = soql + ', ';
-        	}
+            if(includeId && field.equals('Id')){
+                continue;
+            }
+            if(!firstField){
+                soql = soql + ', ';
+            }
             soql = soql + String.escapeSingleQuotes(field);
             firstField = false;
         }
@@ -44,31 +44,31 @@ public with sharing class BT_SoqlUtils {
         return soql;
     }
     /*
-	*	Purpose: Using the given fields, build an order by clause
+    *   Purpose: Using the given fields, build an order by clause
     *   Parameters: fields            
                     ascending
     *   UnitTests:  
     */
     public Static String buildOrderByClause(List<String> fields, Boolean ascending) {
-    	if(fields == null || fields.size() == 0){
-    		return '';
-    	}
-    	Boolean firstField = true;
-    	String orderBy = ' ORDER BY ';
-    	for(String field : fields){
-        	if(!firstField){
-        		orderBy = orderBy + ', ';
-        	}
-    		orderBy = orderBy + field;
-    		firstField = false;
-    	}
-    	if(!ascending){
-    		orderBy = orderBy + ' DESC';
-    	}
-    	return orderBy;
+        if(fields == null || fields.size() == 0){
+            return '';
+        }
+        Boolean firstField = true;
+        String orderBy = ' ORDER BY ';
+        for(String field : fields){
+            if(!firstField){
+                orderBy = orderBy + ', ';
+            }
+            orderBy = orderBy + field;
+            firstField = false;
+        }
+        if(!ascending){
+            orderBy = orderBy + ' DESC';
+        }
+        return orderBy;
     }
     /*
-	*	Purpose: Given the order by string from a tree node, generate a SOQL order by clause.
+    *   Purpose: Given the order by string from a tree node, generate a SOQL order by clause.
     *   Parameters: orderChildrenBy 
     *   UnitTests:  
     */
@@ -121,19 +121,19 @@ public with sharing class BT_SoqlUtils {
         String literal = '';
         if(value == null){
             literal += 'null'; 
-        } else if(	value instanceof BT_Soqlable ){
+        } else if(  value instanceof BT_Soqlable ){
             return ((BT_Soqlable)value).toSoql(options);
-        } else if(	value instanceof String  || value instanceOf ID){
+        } else if(  value instanceof String  || value instanceOf ID){
             String manipulated = (String) value;
             if(options.escapeSingleQuotes == true){
                 manipulated = String.escapeSingleQuotes(manipulated);
             }
             literal += '\'' + manipulated + '\''; 
-        } else if(	value instanceOf Boolean ||
-					value instanceOf Integer || 
-					value instanceOf Long    || 
-					value instanceOf Double  || 
-					value instanceOf Decimal){
+        } else if(  value instanceOf Boolean ||
+                    value instanceOf Integer || 
+                    value instanceOf Long    || 
+                    value instanceOf Double  || 
+                    value instanceOf Decimal){
             literal += value;
         } else if(  value instanceOf Date){
             literal += Datetime.newInstance(((Date)value).year(), ((Date)value).month(), ((Date)value).day()).format('yyyy-MM-dd');

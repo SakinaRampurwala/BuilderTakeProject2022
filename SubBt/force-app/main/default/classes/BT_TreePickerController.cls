@@ -32,9 +32,9 @@ public with sharing class BT_TreePickerController {
     
     public String selectedRecordType{get;set{
         if(value != null){
-        	selectedRecordType = value;
+            selectedRecordType = value;
         } else{
-        	selectedRecordType = System.Label.Records;
+            selectedRecordType = System.Label.Records;
         }
         initColumns();
         }
@@ -49,9 +49,9 @@ public with sharing class BT_TreePickerController {
             if (value != null) {
                 checkedObjectIds.clear();
                 for (TreePickerNode tpn : value) {
-            		checkedObjectIds.add(tpn.fullpath);
+                    checkedObjectIds.add(tpn.fullpath);
                     checkedObjectsMap.put(tpn.fullpath, tpn);
-            		checkedObjectsMapForSort.put(tpn.fullpath, tpn);
+                    checkedObjectsMapForSort.put(tpn.fullpath, tpn);
                 }
                 
                 // Old objs
@@ -74,12 +74,12 @@ public with sharing class BT_TreePickerController {
     Map<String, TreePickerNode> CheckedObjectsMapForSort;
     // List of object types whose nodes can be checkable in the tree.
     public List<String> checkableNodes {get;set;}
-	public Boolean storeFullPathInTreePickerNodeFlag{get; set;} // If true, full path of selected node will be store in TreePickerNode
-	public String rootTreeName{get;set{
-        	rootTreeName = value;
+    public Boolean storeFullPathInTreePickerNodeFlag{get; set;} // If true, full path of selected node will be store in TreePickerNode
+    public String rootTreeName{get;set{
+            rootTreeName = value;
         }
-	}
-	
+    }
+    
     public BT_TreePickerController() {
         treeWidth = 350;
         totalHeight = 350;
@@ -92,9 +92,9 @@ public with sharing class BT_TreePickerController {
     private void initColumns() {
         columnsToDisplay = new List<Column>();
         if(selectedRecordType != null){
-        	columnsToDisplay.add(new Column('name', String.format(system.Label.Selected_Record_Name,new String[]{selectedRecordType}))); 
+            columnsToDisplay.add(new Column('name', String.format(system.Label.Selected_Record_Name,new String[]{selectedRecordType}))); 
         } else {
-        	columnsToDisplay.add(new Column('name', System.Label.Selected_Records_Name)); 
+            columnsToDisplay.add(new Column('name', System.Label.Selected_Records_Name)); 
         }          
     }
     
@@ -122,9 +122,9 @@ public with sharing class BT_TreePickerController {
     }
     
     public List<String> getNoSelectedItemList(){
-    	List<String> emptyListMessage  = new List<string>();
-    	emptyListMessage.add(String.format(system.Label.No_Record_Selected, new String[]{selectedRecordType}));
-    	return emptyListMessage;
+        List<String> emptyListMessage  = new List<string>();
+        emptyListMessage.add(String.format(system.Label.No_Record_Selected, new String[]{selectedRecordType}));
+        return emptyListMessage;
     }
     
     // Return list of columns
@@ -135,21 +135,21 @@ public with sharing class BT_TreePickerController {
     // If Checkable Nodes in Tree Configuration is not null then we need to use those values.
     // If Checkable nodes is empty then we need to use as is(hard coded).
     public List<String> getUpdatedCheckableNodes(){
-    	if(rootTreeName != null){
-    	    List<String> fields = new List<String>{'Id', 'Checkable_Nodes__c'};
+        if(rootTreeName != null){
+            List<String> fields = new List<String>{'Id', 'Checkable_Nodes__c'};
             SOQLManager.checkFieldAccess(Tree_Configuration__c.sObjectType, fields);        
-    		List<Tree_Configuration__c> treeConfigList = Database.query(String.escapeSingleQuotes('Select '+BT_Utils.buildSelectListFragment(null, null, fields) + ' from Tree_Configuration__c where Name =: rootTreeName'));
-    		if(treeConfigList != null && treeConfigList.size() > 0){
-    			if(treeConfigList[0].Checkable_Nodes__c != null){
-    				String trimCheckableNodes = treeConfigList[0].Checkable_Nodes__c.trim();
-	    			List<String> tempCheckableNodesList = trimCheckableNodes.split(',');
-	    			if(tempCheckableNodesList != null && tempCheckableNodesList.size() > 0){
-	    				return tempCheckableNodesList;
-	    			}
-    			}
-    		}
-    	}
-    	return checkableNodes;
+            List<Tree_Configuration__c> treeConfigList = Database.query(String.escapeSingleQuotes('Select '+BT_Utils.buildSelectListFragment(null, null, fields) + ' from Tree_Configuration__c where Name =: rootTreeName'));
+            if(treeConfigList != null && treeConfigList.size() > 0){
+                if(treeConfigList[0].Checkable_Nodes__c != null){
+                    String trimCheckableNodes = treeConfigList[0].Checkable_Nodes__c.trim();
+                    List<String> tempCheckableNodesList = trimCheckableNodes.split(',');
+                    if(tempCheckableNodesList != null && tempCheckableNodesList.size() > 0){
+                        return tempCheckableNodesList;
+                    }
+                }
+            }
+        }
+        return checkableNodes;
     }
     
     // Has results?
@@ -182,10 +182,10 @@ public with sharing class BT_TreePickerController {
             // Use the object id and name to create TreePickerNode to add into the map
             TreePickerNode tpe;
             
-        	tpe = new TreePickerNode(checkObjectId, checkObjectTitle, checkObjectPath);
-        	checkedObjectIds.add(checkObjectPath);
-        	checkedObjectsMap.put(checkObjectPath, tpe);
-        	CheckedObjectsMapForSort.put(checkObjectPath, tpe);
+            tpe = new TreePickerNode(checkObjectId, checkObjectTitle, checkObjectPath);
+            checkedObjectIds.add(checkObjectPath);
+            checkedObjectsMap.put(checkObjectPath, tpe);
+            CheckedObjectsMapForSort.put(checkObjectPath, tpe);
         } else {
             // Object unchecked
             checkedObjectIds.remove(checkObjectPath);

@@ -14,7 +14,7 @@
 public with sharing class GenericDAO {
     
     /*
-*	Purpose:	Given the object type and id, return the object. Only the name and
+*   Purpose:    Given the object type and id, return the object. Only the name and
 id fields of the object are populated.
 *   Parameters: objectType            
 id
@@ -32,7 +32,7 @@ id
     }   
     
     /*
-*	Purpose:	Given the object type and id, return the object. All the fields in
+*   Purpose:    Given the object type and id, return the object. All the fields in
 the specified parameter list are populated
 *   Parameters: objectType            
 id
@@ -60,7 +60,7 @@ fields
         return Database.query(soql);
     }   
     /*
-*	Purpose:	Given the object type and a set of ids, return the list of objects. All the fields in
+*   Purpose:    Given the object type and a set of ids, return the list of objects. All the fields in
 the specified parameter list are populated
 *   Parameters: objectType            
 ids
@@ -93,11 +93,11 @@ fields
     }
     
     /*
-*	Purpose:	Find object by id, note that still returns objects array with one object in it
-*   Parameters: objType				-type of object          
-id					-object identifier
+*   Purpose:    Find object by id, note that still returns objects array with one object in it
+*   Parameters: objType             -type of object          
+id                  -object identifier
 nMaxCount
-dataFields			-comma separated data field names to return as object attributes, if null returns only id and name
+dataFields          -comma separated data field names to return as object attributes, if null returns only id and name
 validateFields
 *   UnitTests:  
 */
@@ -111,7 +111,7 @@ validateFields
                                                 Schema.SObjectType sot = BT_Utils.getObjectTypeFromTypeName(objType);
                                                 if (sot == null) {
                                                     throw new BT_ApplicationException(String.format(system.Label.Object_Name_Not_Valid,new String[]{objType}));
-                                                    return null;
+                                                   // return null;
                                                 }       
                                                 
                                                 BT_SoqlBuilder soqlB = new BT_SoqlBuilder()
@@ -135,7 +135,7 @@ validateFields
                                                             Schema.SObjectField sof = gf.get(s);
                                                             if (sof == null) {
                                                                 throw new BT_ApplicationException(String.format(system.Label.Field_Not_Valid_For_Object,new String[]{s, objType}));
-                                                                return null;
+                                                               // return null;
                                                             }
                                                             soqlB.selectx(s);
                                                         }
@@ -152,7 +152,7 @@ validateFields
                                                 }
                                                 catch (QueryException e) {
                                                     throw e;
-                                                    return null;
+                                                  //  return null;
                                                 }
                                                 return L;
                                             }
@@ -167,7 +167,7 @@ validateFields
                                             Schema.SObjectType sot = BT_Utils.getObjectTypeFromTypeName(obj);
                                             if (sot == null) {
                                                 throw new BT_ApplicationException(String.format(system.Label.Object_Name_Not_Valid,new String[]{obj}));
-                                                return null;
+                                              //  return null;
                                             }       
                                             
                                             BT_SoqlBuilder soqlB = new BT_SoqlBuilder()
@@ -196,7 +196,7 @@ validateFields
                                                         Schema.SObjectField sof = gf.get(s);
                                                         if (sof == null) {
                                                             throw new BT_ApplicationException(String.format(system.Label.Field_Not_Valid_For_Object,new String[]{s, obj}));
-                                                            return null;
+                                                           // return null;
                                                         }
                                                     }
                                                     orC.add(new BT_SoqlFieldCondition(s).likex(qry));
@@ -216,17 +216,17 @@ validateFields
                                             }
                                             catch (QueryException e) {
                                                 throw e;
-                                                return null;
+                                              //  return null;
                                             }
                                             return L;
                                         }
     /*
-*	Purpose:	Queries for set of objects
-*   Parameters: qry				-for set of objects
-nMaxCount		-runs the query on specified object and returns nMaxCounts objects.
-dataFields 		-contains list of fields to return.
-queryFields 	-specify fields for where condition to check for value specified by qry
-orderbyField	-specifies order by logic	
+*   Purpose:    Queries for set of objects
+*   Parameters: qry             -for set of objects
+nMaxCount       -runs the query on specified object and returns nMaxCounts objects.
+dataFields      -contains list of fields to return.
+queryFields     -specify fields for where condition to check for value specified by qry
+orderbyField    -specifies order by logic   
 includeObjectwithIDs - if not null, only returns objects that are in the list of ids
 *   UnitTests:  
 */  
@@ -242,13 +242,13 @@ includeObjectwithIDs - if not null, only returns objects that are in the list of
                                             
                                             if (nMaxCount == null) {
                                                 nMaxCount = 1000;
-                                            }		
+                                            }       
                                             
                                             //Check to see if the object passed is valid
                                             Schema.SObjectType sot = BT_Utils.getObjectTypeFromTypeName(obj);
                                             if (sot == null) {
                                                 throw new BT_ApplicationException(String.format(system.Label.Object_Name_Not_Valid,new String[]{obj}));
-                                                return null;
+                                              //  return null;
                                             }       
                                             //Get a map of all fields in the object
                                             Map<String, Schema.SObjectField> gf = sot.getDescribe().fields.getMap();
@@ -272,7 +272,7 @@ includeObjectwithIDs - if not null, only returns objects that are in the list of
                                                         Schema.SObjectField sof = gf.get(s);
                                                         if (sof == null) {
                                                             throw new BT_ApplicationException(String.format(system.Label.Field_Not_Valid_For_Object,new String[]{s, obj}));
-                                                            return null;
+                                                         //   return null;
                                                         }
                                                     }
                                                 }
@@ -291,7 +291,7 @@ includeObjectwithIDs - if not null, only returns objects that are in the list of
                                                         Schema.SObjectField sof = gf.get(s);
                                                         if (sof == null) {
                                                             throw new BT_ApplicationException(String.format(system.Label.Field_Not_Valid_For_Object,new String[]{s, obj}));
-                                                            return null;
+                                                         //   return null;
                                                         }
                                                     }
                                                     //TODO: based on the field type, create condition
@@ -325,7 +325,7 @@ includeObjectwithIDs - if not null, only returns objects that are in the list of
                                             }
                                             catch (QueryException e) {
                                                 throw e;
-                                                return null;
+                                               // return null;
                                             }
                                             return L;
                                         }
@@ -371,7 +371,7 @@ includeObjectwithIDs - if not null, only returns objects that are in the list of
         }
     }
     /*
-*	Purpose:	Queries for set of objects
+*   Purpose:    Queries for set of objects
 *   Parameters: nMaxCount - runs the query on specified object and returns nMaxCount objects.
 dataFields contains list of fields to return.
 queryFieldNameValue specify (name, value) pairs for query field. if a single field
@@ -379,7 +379,7 @@ can have multiple values, provide comma separated values in the value
 field.
 conditionType specifies or v/s and condition
 includeObjectwithIDs - if not null, only returns objects that are in the list of ids
-orderbyField specifies order by logic	
+orderbyField specifies order by logic   
 checkForDeprecated - if not null, checks for deprecated value set to true or false. if null
 does not add deprecated condition.
 *   UnitTests:  
@@ -397,13 +397,13 @@ does not add deprecated condition.
                                             
                                             if (nMaxCount == null) {
                                                 nMaxCount = 1000;
-                                            }		
+                                            }       
                                             
                                             //Check to see if the object passed is valid
                                             Schema.SObjectType sot = BT_Utils.getObjectTypeFromTypeName(obj);
                                             if (sot == null) {
                                                 throw new BT_ApplicationException(String.format(system.Label.Object_Name_Not_Valid,new String[]{obj}));
-                                                return null;
+                                              //  return null;
                                             }       
                                             //Get a map of all fields in the object
                                             Map<String, Schema.SObjectField> gf = sot.getDescribe().fields.getMap();
@@ -433,7 +433,7 @@ does not add deprecated condition.
                                                         Schema.SObjectField sof = gf.get(s);
                                                         if (sof == null) {
                                                             throw new BT_ApplicationException(String.format(system.Label.Field_Not_Valid_For_Object,new String[]{s, obj}));
-                                                            return null;
+                                                        //    return null;
                                                         }
                                                     }
                                                 }
@@ -456,7 +456,7 @@ does not add deprecated condition.
                                                                 Schema.SObjectField sof = gf.get(s);
                                                                 if (sof == null) {
                                                                     throw new BT_ApplicationException(String.format(system.Label.Field_Not_Valid_For_Object,new String[]{s, obj}));
-                                                                    return null;
+                                                                 //   return null;
                                                                 }
                                                             }
                                                             
@@ -507,7 +507,7 @@ does not add deprecated condition.
                                                                 Schema.SObjectField sof = gf.get(s);
                                                                 if (sof == null) {
                                                                     throw new BT_ApplicationException(String.format(system.Label.Field_Not_Valid_For_Object,new String[]{s, obj}));
-                                                                    return null;
+                                                                   // return null;
                                                                 }
                                                             }
                                                             
@@ -590,7 +590,7 @@ does not add deprecated condition.
                                                     
                                                 }catch(QueryException queryException){
                                                      throw queryException;
-                                                    return null;
+                                                  //  return null;
                                                 }
                                                
                                                 return L;
@@ -599,16 +599,16 @@ does not add deprecated condition.
                                         }
     
                                                 /*
-                                            *	Purpose:	Queries for set of objects
+                                            *   Purpose:    Queries for set of objects
                                             Runs the query on specified object and returns nMaxCount objects.
-                                            *   Parameters:	nMaxCount - Runs the query on specified object and returns nMaxCount objects.
+                                            *   Parameters: nMaxCount - Runs the query on specified object and returns nMaxCount objects.
                                             dataFields contains list of fields to return.
                                             queryFieldNameValue specify (name, value) pairs for query field. if a single field
                                             can have multiple values, provide comma separated values in the value
                                             field.
                                             conditionType specifies or v/s and condition
                                             includeObjectwithIDs - if not null, only returns objects that are in the list of ids
-                                            orderbyField specifies order by logic	
+                                            orderbyField specifies order by logic   
                                             checkForDeprecated - if not null, checks for deprecated value set to true or false. if null
                                             does not add deprecated condition.
                                             *   UnitTests:  
@@ -624,13 +624,13 @@ does not add deprecated condition.
                                          Boolean validateFields) {
                                              if (nMaxCount == null) {
                                                  nMaxCount = 1000;
-                                             }		
+                                             }      
                                              
                                              // Check to see if the object passed is valid
                                              Schema.SObjectType sot = BT_Utils.getObjectTypeFromTypeName(obj);
                                              if (sot == null) {
                                                  throw new BT_ApplicationException(String.format(system.Label.Object_Name_Not_Valid,new String[]{obj}));
-                                                 return null;
+                                              //   return null;
                                              }       
                                              //Get a map of all fields in the object
                                              Map<String, Schema.SObjectField> gf = sot.getDescribe().fields.getMap();
@@ -660,7 +660,7 @@ does not add deprecated condition.
                                                          Schema.SObjectField sof = gf.get(s);
                                                          if (sof == null) {
                                                              throw new BT_ApplicationException(String.format(system.Label.Field_Not_Valid_For_Object,new String[]{s, obj}));
-                                                             return null;
+                                                           //  return null;
                                                          }
                                                      }
                                                  }
@@ -682,7 +682,7 @@ does not add deprecated condition.
                                                                  Schema.SObjectField sof = gf.get(s);
                                                                  if (sof == null) {
                                                                      throw new BT_ApplicationException(String.format(system.Label.Field_Not_Valid_For_Object,new String[]{s, obj}));
-                                                                     return null;
+                                                                    // return null;
                                                                  }
                                                              }
                                                              
@@ -728,7 +728,7 @@ does not add deprecated condition.
                                                                  Schema.SObjectField sof = gf.get(s);
                                                                  if (sof == null) {
                                                                      throw new BT_ApplicationException(String.format(system.Label.Field_Not_Valid_For_Object,new String[]{s, obj}));
-                                                                     return null;
+                                                                   //  return null;
                                                                  }
                                                              }
                                                              
@@ -779,7 +779,7 @@ does not add deprecated condition.
                                          }
     
     /*
-*	Purpose:	Get count of objects grouped by specified groupByField. 
+*   Purpose:    Get count of objects grouped by specified groupByField. 
 The result will be aggregate result with two aliased fields fieldValue, fieldCount). AggregateResult[] groupedResults e.g. [(status1, 20), (status2, 20)]
 *   Parameters: obj - object name
 groupByField - group by field name
@@ -799,12 +799,12 @@ orderbyField - order result by this field
                                                       //Group By query will possible only if filter parameters will only on parent objects, for example
                                                       //To get the source type we grup by the Name of "Source type" and we need to get all source types from the salesforce org
                                                       //so we directly pass Group By Query as "Select Count(id) fieldCount, Name fieldValue from Source_Type__c Group By Name Order By Name"
-                                                      if(groupByQuery == null){			
+                                                      if(groupByQuery == null){         
                                                           //Check to see if the object passed is valid
                                                           Schema.SObjectType sot = BT_Utils.getObjectTypeFromTypeName(obj);
                                                           if (sot == null) {
                                                               throw new BT_ApplicationException(String.format(system.Label.Object_Name_Not_Valid,new String[]{obj}));
-                                                              return null;
+                                                           //   return null;
                                                           }       
                                                           //Get a map of all fields in the object
                                                           Map<String, Schema.SObjectField> gf = sot.getDescribe().fields.getMap();
@@ -873,7 +873,7 @@ orderbyField - order result by this field
                                                                               ftype = dfr.getType();
                                                                           }
                                                                           
-                                                                          String value = queryFieldNameValue.get(s);												                       
+                                                                          String value = queryFieldNameValue.get(s);                                                                       
                                                                           
                                                                           List<String> andMultiValues = new List<String>();
                                                                           List<String> orMultiValues = new List<String>();
@@ -935,7 +935,7 @@ orderbyField - order result by this field
                                                       }
                                                       catch (QueryException e) {
                                                           throw e;
-                                                          return null;
+                                                        //  return null;
                                                       }
                                                       return L;
                                                   }
@@ -948,7 +948,7 @@ orderbyField - order result by this field
                                                       Schema.SObjectType sot = BT_Utils.getObjectTypeFromTypeName(obj);
                                                       if (sot == null) {
                                                           throw new BT_ApplicationException(String.format(system.Label.Object_Name_Not_Valid,new String[]{obj}));
-                                                          return null;
+                                                      //    return null;
                                                       }       
                                                       //Get a map of all fields in the object
                                                       Map<String, Schema.SObjectField> gf = sot.getDescribe().fields.getMap();
@@ -988,12 +988,12 @@ orderbyField - order result by this field
                                                       }
                                                       catch (QueryException e) {
                                                           throw e;
-                                                          return null;
+                                                        //  return null;
                                                       }
                                                       return L;
                                                   }
     /*
-*	Purpose:	Returns the all objects of the specified type
+*   Purpose:    Returns the all objects of the specified type
 *   Parameters: objectType            
 maxLimit
 fields
@@ -1018,14 +1018,14 @@ orderBy
         }
         catch (QueryException e) {
             throw e;
-            return null;
+           // return null;
         }
         return L;
     }           
     
     
     /*
-*	Purpose:	Returns the child of an object using children__r, if there are any
+*   Purpose:    Returns the child of an object using children__r, if there are any
 *   Parameters: objectType            
 id
 fields

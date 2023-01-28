@@ -14,11 +14,11 @@
 public with sharing class BT_TreePickerWithSelectControllerTest 
 {
     @testSetup static void insertTestData(){
-		// Create AWS Credentials
+        // Create AWS Credentials
         BT_TestUtils.createAWSCredentials();
         Map<String, Amazon_S3_Key__c> awsCredentials = Amazon_S3_Key__c.getAll();
         System.assertEquals(awsCredentials.size(), 2);
-	}
+    }
     static testMethod void testController1(){
         Boolean found=false;
         BT_TreePickerWithSelectController controller=new BT_TreePickerWithSelectController();
@@ -51,9 +51,9 @@ public with sharing class BT_TreePickerWithSelectControllerTest
         
         controller.jsonStringForSelectedNodes = JSON.serialize(new List<TreePickerNode>{});
       
-      	//testing createLinks method
-     	PageReference pg = controller.createNodeList();
-     	
+        //testing createLinks method
+        PageReference pg = controller.createNodeList();
+        
         //test processChecked()
         controller.processChecked();
         System.assert(!controller.displayPopup);
@@ -92,15 +92,15 @@ public with sharing class BT_TreePickerWithSelectControllerTest
         system.assertEquals(controller.selectedNodes1.size(),1);
         
          //testing wrapper class. Adding 1 entry to wrapper class list.
-      	 //creating wrapper class object and creating list<wrapper class>
-     	 BT_TreePickerWithSelectController.sObjectWrapperClass wrapperClassObject = new BT_TreePickerWithSelectController.sObjectWrapperClass(testFile);
-	     wrapperClassObject.isSelected = true;
-	     List<BT_TreePickerWithSelectController.sObjectWrapperClass> wrapperClassList = new List<BT_TreePickerWithSelectController.sObjectWrapperClass>();
-	     wrapperClassList.add(wrapperClassObject);  
-	     //assigning wrapper class list
-	     Map<String, List<BT_TreePickerWithSelectController.sObjectWrapperClass>> testMap = new Map<String, List<BT_TreePickerWithSelectController.sObjectWrapperClass>>();
-	     testMap.put('File__c', wrapperClassList);
-	     controller.sObjectRecList = testMap;
+         //creating wrapper class object and creating list<wrapper class>
+         BT_TreePickerWithSelectController.sObjectWrapperClass wrapperClassObject = new BT_TreePickerWithSelectController.sObjectWrapperClass(testFile);
+         wrapperClassObject.isSelected = true;
+         List<BT_TreePickerWithSelectController.sObjectWrapperClass> wrapperClassList = new List<BT_TreePickerWithSelectController.sObjectWrapperClass>();
+         wrapperClassList.add(wrapperClassObject);  
+         //assigning wrapper class list
+         Map<String, List<BT_TreePickerWithSelectController.sObjectWrapperClass>> testMap = new Map<String, List<BT_TreePickerWithSelectController.sObjectWrapperClass>>();
+         testMap.put('File__c', wrapperClassList);
+         controller.sObjectRecList = testMap;
         
         //Added searchable object
         List<String> searchableObjectList = new List<String>();
@@ -113,7 +113,7 @@ public with sharing class BT_TreePickerWithSelectControllerTest
         
         controller.processSearched();
         
-		controller.searchText = 'bye';
+        controller.searchText = 'bye';
         controller.doSearch();
         controller.processSearched();
         system.assert(!controller.displaySearchResult);

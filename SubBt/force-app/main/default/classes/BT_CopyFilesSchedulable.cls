@@ -12,10 +12,10 @@
 * - Sagar, 04/09/2017 - Initial Development
 ************************************************************************** */
 public with sharing class BT_CopyFilesSchedulable implements Schedulable{
-	// Files to copy.
+    // Files to copy.
     List<File__c> filesNeedsToCopyFromSource;
     
-	//========================================================//
+    //========================================================//
     //Constructor
     //Initialize variables and objects
     //========================================================//
@@ -31,12 +31,12 @@ public with sharing class BT_CopyFilesSchedulable implements Schedulable{
     public void execute(SchedulableContext context) {
         try{
             // If there are still files to copy, queue it using another job
-    		if(filesNeedsToCopyFromSource != null && !filesNeedsToCopyFromSource.isEmpty()){
-    			System.enqueueJob(new BT_CopyFilesQueueable(filesNeedsToCopyFromSource));
-    		} 
+            if(filesNeedsToCopyFromSource != null && !filesNeedsToCopyFromSource.isEmpty()){
+                System.enqueueJob(new BT_CopyFilesQueueable(filesNeedsToCopyFromSource));
+            } 
         } catch(Exception e){
             BT_Utils.sendJobFailureEmail('Copy File Schedule Job failed.', e.getMessage());
-		}
-    	
+        }
+        
     }
 }

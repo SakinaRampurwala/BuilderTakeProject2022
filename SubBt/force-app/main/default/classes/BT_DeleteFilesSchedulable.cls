@@ -12,10 +12,10 @@
 * - Sagar, 27/03/201 - Initial Development
 ************************************************************************** */
 public with sharing class BT_DeleteFilesSchedulable implements Schedulable{
-	// Files to delete.
+    // Files to delete.
     List<File__c> filesToDelete;
     
-	//========================================================//
+    //========================================================//
     //Constructor
     //Initialize variables and objects
     //========================================================//
@@ -29,14 +29,14 @@ public with sharing class BT_DeleteFilesSchedulable implements Schedulable{
     *   UnitTests:  
     */
     public void execute(SchedulableContext context) {
-    	try{
+        try{
             // If there are still files to delete, queue it using another job
-    		if(filesToDelete != null && !filesToDelete.isEmpty()){
-    			System.enqueueJob(new BT_DeleteFilesQueueable(filesToDelete));
-    		}
+            if(filesToDelete != null && !filesToDelete.isEmpty()){
+                System.enqueueJob(new BT_DeleteFilesQueueable(filesToDelete));
+            }
         } catch(Exception e){
             BT_Utils.sendJobFailureEmail('Delete File Schedule Job failed.', e.getMessage());
-		}
-    	
+        }
+        
     }
 }

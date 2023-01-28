@@ -106,8 +106,8 @@ public with sharing class AccountPayableHelper {
         if (invoiceIds.size() > 0) {
             List<buildertek__Finance_Transaction__c> transactionList = [SELECT Id, Name, buildertek__Contractor_Invoice_PO__c FROM buildertek__Finance_Transaction__c WHERE buildertek__Contractor_Invoice_PO__c IN: invoiceIds];
             for (buildertek__Finance_Transaction__c fTransaction : transactionList) {
-                fTransaction.buildertek__Amount__c = PayableMap.get(fTransaction.buildertek__Contractor_Invoice_PO__c).buildertek__Net_Amount__c;
-                fTransaction.buildertek__Debit_Amount__c = PayableMap.get(fTransaction.buildertek__Contractor_Invoice_PO__c).buildertek__Net_Amount__c * (-1);
+                fTransaction.buildertek__Amount__c = PayableMap.get(fTransaction.buildertek__Contractor_Invoice_PO__c).buildertek__Net_Amount__c * (-1);
+                fTransaction.buildertek__Debit_Amount__c = PayableMap.get(fTransaction.buildertek__Contractor_Invoice_PO__c).buildertek__Net_Amount__c;
             }
             if (transactionList.size() > 0) {
                 update transactionList;
@@ -140,8 +140,8 @@ public with sharing class AccountPayableHelper {
         if (invoiceIds.size() > 0) {
             List<buildertek__Finance_Transaction__c> transactionList = [SELECT Id, Name, buildertek__Contractor_Invoice_PO__c FROM buildertek__Finance_Transaction__c WHERE buildertek__Contractor_Invoice_PO__c IN: invoiceIds];
             for (buildertek__Finance_Transaction__c fTransaction : transactionList) {
-                fTransaction.buildertek__Amount__c = invoiceNewMap.get(fTransaction.buildertek__Contractor_Invoice_PO__c).buildertek__Net_Amount__c;
-                fTransaction.buildertek__Debit_Amount__c = invoiceNewMap.get(fTransaction.buildertek__Contractor_Invoice_PO__c).buildertek__Net_Amount__c * (-1);
+                fTransaction.buildertek__Amount__c = invoiceNewMap.get(fTransaction.buildertek__Contractor_Invoice_PO__c).buildertek__Net_Amount__c * (-1);
+                fTransaction.buildertek__Debit_Amount__c = invoiceNewMap.get(fTransaction.buildertek__Contractor_Invoice_PO__c).buildertek__Net_Amount__c;
             }
             if (transactionList.size() > 0) {
                 update transactionList;

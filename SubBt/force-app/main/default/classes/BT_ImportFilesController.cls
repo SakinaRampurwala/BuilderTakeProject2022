@@ -11,9 +11,9 @@
 * - Sagar – Initial Development
 ************************************************************************** */
 public with sharing class BT_ImportFilesController {
-	public String S3Key;
-	public Boolean isNoAmazonCredential{get; set;}
-	public Boolean isJobQueued{get; set;}
+    public String S3Key;
+    public Boolean isNoAmazonCredential{get; set;}
+    public Boolean isJobQueued{get; set;}
     public S3.AmazonS3 as3;    //This object represents an instance of the Amazon S3 toolkit and makes all the Web Service calls to AWS. 
     public S3.ListBucketResult listbucket;
     public String treeNodesString {get; set;}
@@ -28,10 +28,10 @@ public with sharing class BT_ImportFilesController {
     //========================================================//
     public BT_ImportFilesController(){
         isSuccess = false;
-		isJobQueued = false;
-		isFileDownloadHistoryActivate = BT_HomeUtils.getIsFileDownloadHistoryActivate();
-    	file = BT_HomeUtils.getDefaultFile();
-    	getFilesNeedsToImport();
+        isJobQueued = false;
+        isFileDownloadHistoryActivate = BT_HomeUtils.getIsFileDownloadHistoryActivate();
+        file = BT_HomeUtils.getDefaultFile();
+        getFilesNeedsToImport();
     }
     
     /*
@@ -52,14 +52,14 @@ public with sharing class BT_ImportFilesController {
     *   UnitTests:  
     */
     public void getFilesNeedsToImport(){
-		// Check that user is System Admin
-		try{
-		    User currentUser;
-		    if(Schema.sObjectType.User.fields.Id.isAccessible()
-		        && Schema.sObjectType.Profile.fields.Name.isAccessible()){
-		        
-		        currentUser = [Select Id, Profile.Name From User Where Id = :UserInfo.getUserId() LIMIT 1];    
-		    }
+        // Check that user is System Admin
+        try{
+            User currentUser;
+            if(Schema.sObjectType.User.fields.Id.isAccessible()
+                && Schema.sObjectType.Profile.fields.Name.isAccessible()){
+                
+                currentUser = [Select Id, Profile.Name From User Where Id = :UserInfo.getUserId() LIMIT 1];    
+            }
             
             if(currentUser.Profile.Name != 'System Administrator'){
                 throw new BT_ApplicationException(System.Label.Page_Access_Error);
@@ -70,23 +70,23 @@ public with sharing class BT_ImportFilesController {
             return;
         }
         
-		// Check if the job for import is already queued or not
-		String jobId = BT_HomeUtils.getFileImportJobId();
-		List<AsyncApexJob> jobsQueuedForImportFiles;
-		if(Schema.sObjectType.AsyncApexJob.fields.Id.isAccessible()){
-		    jobsQueuedForImportFiles = [Select Id From AsyncApexJob Where Id = :jobId AND Status = 'Queued'];    
-		}
-		
-		if(!jobsQueuedForImportFiles.isEmpty()){
-			isJobQueued = true;
-			return;
-		}
-		
-		//Check for the amazon keys
-		Datetime now = Datetime.now();
+        // Check if the job for import is already queued or not
+        String jobId = BT_HomeUtils.getFileImportJobId();
+        List<AsyncApexJob> jobsQueuedForImportFiles;
+        if(Schema.sObjectType.AsyncApexJob.fields.Id.isAccessible()){
+            jobsQueuedForImportFiles = [Select Id From AsyncApexJob Where Id = :jobId AND Status = 'Queued'];    
+        }
+        
+        if(!jobsQueuedForImportFiles.isEmpty()){
+            isJobQueued = true;
+            return;
+        }
+        
+        //Check for the amazon keys
+        Datetime now = Datetime.now();
         AmazonS3Credential credential;
         try{
-	        credential = new AmazonS3Credential();
+            credential = new AmazonS3Credential();
         }catch(AmazonS3Credential.AmazonS3CredentialException AmazonS3CredentialEx){
             ApexPages.Message errorMsg = new ApexPages.Message(ApexPages.Severity.FATAL, AmazonS3CredentialEx.getMessage());
             ApexPages.addMessage(errorMsg);
@@ -94,22 +94,22 @@ public with sharing class BT_ImportFilesController {
             return;
         }
         S3.AmazonS3 amazonS3 = new S3.AmazonS3(credential.key,credential.secret);
-	    as3 = new S3.AmazonS3(amazonS3.key,amazonS3.secret);
-		
-    	//Nodes for files needs to be deleted
-    	treeNodesString = '';
-    	
-    	//Get the configured buckets
-    	List<String> fields = new List<String>{'Id', 'Name', 'Bucket_Name__c'};
-		SOQLManager.checkFieldAccess(Folder__c.sObjectType, fields);
+        as3 = new S3.AmazonS3(amazonS3.key,amazonS3.secret);
+        
+        //Nodes for files needs to be deleted
+        treeNodesString = '';
+        
+        //Get the configured buckets
+        List<String> fields = new List<String>{'Id', 'Name', 'Bucket_Name__c'};
+        SOQLManager.checkFieldAccess(Folder__c.sObjectType, fields);
         List<Folder__c> configuredBuckets = Database.query(String.escapeSingleQuotes('Select '+BT_Utils.buildSelectListFragment(null, null, fields) + ' From Folder__c Where Parent__c = null'));
         
         // Set of configrued buckets
         Set<String> configuredBucketNames = new Set<String>();
         for(Folder__c configuredBucket : configuredBuckets){
-        	configuredBucketNames.add(configuredBucket.Name);	
+            configuredBucketNames.add(configuredBucket.Name);   
         }
-		
+        
         //Get all files available in amazon
         //This performs the Web Service call to Amazon S3 and retrieves all the Buckets in your AWS Account. 
         S3.ListAllMyBucketsResult allBuckets = as3.ListAllMyBuckets(amazonS3.key,now,as3.signature('ListAllMyBuckets',now));
@@ -123,7 +123,7 @@ public with sharing class BT_ImportFilesController {
         Map<String, S3.ListEntry> bucketEntryByPath = new Map<String, S3.ListEntry>();
         
         // File Names to import
-	    Set<String> fileNames = new Set<String>();
+        Set<String> fileNames = new Set<String>();
         
         for(S3.ListAllMyBucketsEntry bucket: buckets){
             Integer maxNumberToList = 125000;     //Set the number of Objects to return for a specific Bucket
@@ -132,44 +132,44 @@ public with sharing class BT_ImportFilesController {
             String delimiter = null;          //Causes keys that contain the same string between the prefix and the first occurrence of the delimiter to be rolled up into a single result element in the CommonPrefixes collection. These rolled-up keys are not returned elsewhere in the response. 
             
             if(configuredBucketNames.contains(bucket.Name)){
-	            //This performs the Web Service call to Amazon S3 and retrieves all the objects in the specified bucket
-	            S3.ListBucketResult objectsForBucket = as3.ListBucket(bucket.Name, prefix, marker,maxNumberToList, delimiter, amazonS3.key,now,as3.signature('ListBucket',now),amazonS3.secret);
-	            
-	            if(objectsForBucket.Contents != null){
-	                for(S3.ListEntry bucketEntry : objectsForBucket.Contents){
-	                	String keyWithBucket = bucket.Name+'/'+bucketEntry.Key;
-	                	
-	                	// Don't add key for folder only
-	                	List<String> keyTokens = keyWithBucket.split('/');
-	                	
-	                	if(keyTokens.size() > 0 && keyTokens[keyTokens.size() - 1].indexOf('.') != -1){
-		                    fileNames.add(keyTokens[keyTokens.size() - 1]);
-		                    bucketFiles.add(keyWithBucket);
-		                    bucketEntryByPath.put(keyWithBucket, bucketEntry);
-	                	}
-	                }
-	            }
+                //This performs the Web Service call to Amazon S3 and retrieves all the objects in the specified bucket
+                S3.ListBucketResult objectsForBucket = as3.ListBucket(bucket.Name, prefix, marker,maxNumberToList, delimiter, amazonS3.key,now,as3.signature('ListBucket',now),amazonS3.secret);
+                
+                if(objectsForBucket.Contents != null){
+                    for(S3.ListEntry bucketEntry : objectsForBucket.Contents){
+                        String keyWithBucket = bucket.Name+'/'+bucketEntry.Key;
+                        
+                        // Don't add key for folder only
+                        List<String> keyTokens = keyWithBucket.split('/');
+                        
+                        if(keyTokens.size() > 0 && keyTokens[keyTokens.size() - 1].indexOf('.') != -1){
+                            fileNames.add(keyTokens[keyTokens.size() - 1]);
+                            bucketFiles.add(keyWithBucket);
+                            bucketEntryByPath.put(keyWithBucket, bucketEntry);
+                        }
+                    }
+                }
             }
         }
         
         //Query all those files which are on amazon server.
         fields = new List<String>{'Id', 'Bucket_Name__c', 'Amazon_File_Key__c'};
-		SOQLManager.checkFieldAccess(File__c.sObjectType, fields);
+        SOQLManager.checkFieldAccess(File__c.sObjectType, fields);
         List<File__c> files = Database.query(String.escapeSingleQuotes('Select '+BT_Utils.buildSelectListFragment(null, null, fields) + ', Folder__r.Amazon_File_Key__c From File__c Where Name In: fileNames LIMIT 1000000'));
         
         //Check if File is there in Amazon
         for(File__c file : files){
-        	String filePathWithBucket = FileUtils.getAmazonFilePathWithBucket(file);
+            String filePathWithBucket = FileUtils.getAmazonFilePathWithBucket(file);
             if(bucketFiles.contains(filePathWithBucket)){
-            	bucketFiles.remove(filePathWithBucket);
+                bucketFiles.remove(filePathWithBucket);
             }
         }
-		
+        
         //Map for file size by file path
         fileSizeByPath = new Map<String, Double>();
         for(String filePath : bucketFiles){
-        	S3.ListEntry bucketEntry = bucketEntryByPath.get(filePath);
-        	fileSizeByPath.put(filePath,bucketEntry.size);
+            S3.ListEntry bucketEntry = bucketEntryByPath.get(filePath);
+            fileSizeByPath.put(filePath,bucketEntry.size);
         }
         
         // JSON string for tree nodes for import file tree
@@ -183,17 +183,17 @@ public with sharing class BT_ImportFilesController {
     */
     public void importFiles(){
         isSuccess = false;
-    	// Amazon file keys
-    	String selectedNodeKeys = ApexPages.CurrentPage().getParameters().Get('selectedNodeKeys');
-    	
-    	// Queue the job to import.
-    	String jobId = System.enqueueJob(new BT_ImportFilesQueueable(selectedNodeKeys, file, fileSizeByPath));
-		
-		// Set the Job is so next time we can use it to track.
-		BT_HomeUtils.setFileImportJobId(jobId); 
-		
-		// Set success message
-		isSuccess = true;
-		return;
-	}
+        // Amazon file keys
+        String selectedNodeKeys = ApexPages.CurrentPage().getParameters().Get('selectedNodeKeys');
+        
+        // Queue the job to import.
+        String jobId = System.enqueueJob(new BT_ImportFilesQueueable(selectedNodeKeys, file, fileSizeByPath));
+        
+        // Set the Job is so next time we can use it to track.
+        BT_HomeUtils.setFileImportJobId(jobId); 
+        
+        // Set success message
+        isSuccess = true;
+        return;
+    }
 }

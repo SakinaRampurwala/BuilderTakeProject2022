@@ -191,7 +191,7 @@
                                                                         <lightning:inputField fieldName="{!field.name}" aura:id="vendorName" disabled = "true"></lightning:inputField>
                                                                         <aura:set attribute="else">
                                                                             <aura:if isTrue="{!field.name =='buildertek__Period_To__c'}">
-                                                                        <lightning:inputField fieldName="{!field.name}" value="" required="true"/>
+                                                                        <lightning:inputField fieldName="{!field.name}" value=""  required="true"/>
                                                                         <aura:set attribute="else">
                                                                         <lightning:inputField fieldName="{!field.name}" value=""/>
                                                                             </aura:set>
@@ -222,7 +222,7 @@
                                             
                                             <lightning:inputField fieldName="{!field.name}" value="0" required="true"/>
                                             <aura:set attribute="else">
-                                                <lightning:inputField fieldName="{!field.name}" value="0"/>
+                                                <lightning:inputField fieldName="{!field.name}" value=""/>
                                             </aura:set>
                                             
                                         </aura:if>
@@ -358,7 +358,7 @@
                                                                             <lightning:inputField fieldName="{!field.name}" aura:id="companyName"></lightning:inputField>
                                                                             <aura:set attribute="else">
                                                                                 <aura:if isTrue="{!field.name =='buildertek__Period_To__c'}">
-                                                                                    <lightning:inputField fieldName="{!field.name}" value="" required="true"/>
+                                                                                    <lightning:inputField fieldName="{!field.name}" value="" required="true" />
                                                                                 <aura:set attribute="else">
                                                                                 <lightning:inputField fieldName="{!field.name}" value=""/>
                                                                                     </aura:set>
@@ -390,7 +390,7 @@
                                                     <lightning:inputField fieldName="{!field.name}" value="0" required="true"/>
                                                     <aura:set attribute="else">
                                                         
-                                                        <lightning:inputField fieldName="{!field.name}" value="0"/>
+                                                        <lightning:inputField fieldName="{!field.name}" value=""/>
                                                     </aura:set>
                                                     
                                                 </aura:if>
@@ -434,7 +434,7 @@
 
                                     <!--Modal Footer-->
                                     <footer role="contentinfo"  class="slds-docked-form-footer fixedFooter" style="display:block;text-align:right;padding-right:5px;background:transparent;box-shadow: unset;">
-                                    <div style="padding:10px;background:rgb(243,243,243);margin-left:23px;margin-right:7px;padding-right:25px">
+                                    <div class="subFixedFooter" >
                                     <lightning:button variant="Neutral" class="slds-button" label="Cancel" onclick="{!c.CloseScreen}"/>
                                     <aura:if isTrue="{!or(v.isOption4,v.isOption5)}">
                                     <lightning:button type="submit" label="Next" variant="Neutral"/>

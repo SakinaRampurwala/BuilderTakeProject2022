@@ -14,11 +14,11 @@
 private class BT_ApplicationExceptionTest {
 
     static testMethod void exceptionTest() {
-    	String message = 'This is a test';
+        String message = 'This is a test';
         try {
-        	throw new BT_ApplicationException(message);
+            throw new BT_ApplicationException(message);
         } catch (BT_ApplicationException ex){
-        	System.assertEquals(message, ex.getMessage());
+            System.assertEquals(message, ex.getMessage());
         }
     }
 }

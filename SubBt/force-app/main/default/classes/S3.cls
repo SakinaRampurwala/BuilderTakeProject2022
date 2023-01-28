@@ -662,7 +662,7 @@ public class S3 {
             
             //Default Owner to FULL_CONTROL
             if(canonicalUserId != null && canonicalUserId != ''){
-            	S3XMLSoapRequest.soapBody += '<Grant><Grantee xsi:type="CanonicalUser"><ID>'+canonicalUserId+'</ID></Grantee><Permission>FULL_CONTROL</Permission></Grant>';
+                S3XMLSoapRequest.soapBody += '<Grant><Grantee xsi:type="CanonicalUser"><ID>'+canonicalUserId+'</ID></Grantee><Permission>FULL_CONTROL</Permission></Grant>';
             }
             S3XMLSoapRequest.soapBody += '</AccessControlList>';
             
@@ -715,7 +715,7 @@ public class S3 {
             
             //Default Owner to FULL_CONTROL
             if(canonicalUserId != null && canonicalUserId != ''){
-            	S3XMLSoapRequest.soapBody += '<Grant><Grantee xsi:type="CanonicalUser"><ID>'+canonicalUserId+'</ID></Grantee><Permission>FULL_CONTROL</Permission></Grant>';
+                S3XMLSoapRequest.soapBody += '<Grant><Grantee xsi:type="CanonicalUser"><ID>'+canonicalUserId+'</ID></Grantee><Permission>FULL_CONTROL</Permission></Grant>';
             }
             S3XMLSoapRequest.soapBody += '</AccessControlList>';
             S3XMLSoapRequest.soapBody +='<AWSAccessKeyId>' + AWSAccessKeyId + '</AWSAccessKeyId>';
@@ -728,18 +728,18 @@ public class S3 {
              
             System.debug('SOAP REQUEST BODY: ' + S3XMLSoapRequest.soapBody);
             if(!Test.isRunningTest()){
-	            httpresponse res = S3XMLSoapRequest.makeRequest();
-	            System.debug('SOAP RESPONSE: ' + res.getBody());
-	            AWS_XMLDom dom = new AWS_XMLDom( res.getBody() ); 
-	             
-	            if(dom.getElementsByTagName('LastModified')!=null){
-		            return true;  
-	            }
-	            else{
-		            return false;
-	            }
+                httpresponse res = S3XMLSoapRequest.makeRequest();
+                System.debug('SOAP RESPONSE: ' + res.getBody());
+                AWS_XMLDom dom = new AWS_XMLDom( res.getBody() ); 
+                 
+                if(dom.getElementsByTagName('LastModified')!=null){
+                    return true;  
+                }
+                else{
+                    return false;
+                }
             } else {
-            	return true;
+                return true;
             }
         }  
         /*
@@ -772,7 +772,7 @@ public class S3 {
             
             //Default Owner to FULL_CONTROL
             if(canonicalUserId != null && canonicalUserId != ''){
-            	S3XMLSoapRequest.soapBody += '<Grant><Grantee xsi:type="CanonicalUser"><ID>'+canonicalUserId+'</ID></Grantee><Permission>FULL_CONTROL</Permission></Grant>';
+                S3XMLSoapRequest.soapBody += '<Grant><Grantee xsi:type="CanonicalUser"><ID>'+canonicalUserId+'</ID></Grantee><Permission>FULL_CONTROL</Permission></Grant>';
             }
             
             S3XMLSoapRequest.soapBody += '</AccessControlList>';
@@ -786,18 +786,18 @@ public class S3 {
              
             System.debug('SOAP REQUEST BODY: ' + S3XMLSoapRequest.soapBody);
             if(!Test.isRunningTest()){
-	            httpresponse res = S3XMLSoapRequest.makeRequest();
-	            System.debug('SOAP RESPONSE: ' + res.getBody());
-	            AWS_XMLDom dom = new AWS_XMLDom( res.getBody() ); 
-	             
-	            if(dom.getElementsByTagName('LastModified')!=null){
-	            	return true;  
-	            }
-	            else{
-	            	return false;
-	            }
+                httpresponse res = S3XMLSoapRequest.makeRequest();
+                System.debug('SOAP RESPONSE: ' + res.getBody());
+                AWS_XMLDom dom = new AWS_XMLDom( res.getBody() ); 
+                 
+                if(dom.getElementsByTagName('LastModified')!=null){
+                    return true;  
+                }
+                else{
+                    return false;
+                }
             } else {
-            	return true;
+                return true;
             }
         }
     }

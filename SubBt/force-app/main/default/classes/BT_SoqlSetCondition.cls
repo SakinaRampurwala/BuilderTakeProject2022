@@ -92,20 +92,20 @@ public with sharing class BT_SoqlSetCondition implements BT_SoqlCondition{
         }
         String insideParams = null;
         if(builder == null){ 
-        	Boolean firstObject = true;
-        	for(Object value : this.values){
-        		String stringValue = BT_SoqlUtils.toLiteral(value);
-        		if(stringValue == null){
-        			continue;
-        		}
-        	   if(firstObject){
-        	   	   firstObject = false;
+            Boolean firstObject = true;
+            for(Object value : this.values){
+                String stringValue = BT_SoqlUtils.toLiteral(value);
+                if(stringValue == null){
+                    continue;
+                }
+               if(firstObject){
+                   firstObject = false;
                    insideParams = stringValue;
-        	   } else {
-        	   	   insideParams += ',' + stringValue;
-        	   }
-        	}
-        } else	insideParams = builder.toSoql(options);
+               } else {
+                   insideParams += ',' + stringValue;
+               }
+            }
+        } else  insideParams = builder.toSoql(options);
         return field + ' ' + operatorToString(operator) + ' (' + insideParams + ')'; 
     }
 

@@ -1,0 +1,5 @@
+<aura:component implements="force:hasRecordId,flexipage:availableForRecordHome" controller="BOM_Line_Grouping_On_Quote" access="global">
+    <aura:attribute name="recordId" type="string" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+</aura:component>

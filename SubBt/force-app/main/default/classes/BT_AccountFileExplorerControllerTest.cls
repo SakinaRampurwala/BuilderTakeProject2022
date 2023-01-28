@@ -12,7 +12,7 @@
 ************************************************************************** */
 @isTest
 public with sharing class BT_AccountFileExplorerControllerTest {
-	static testMethod void myUnitTest1() {
+    static testMethod void myUnitTest1() {
         BT_TestUtils.createFileExplorerConfiguration();
         Account testAccount = BT_TestUtils.createAccount();
         ApexPages.currentPage().getParameters().put('retURL', '/home/home.jsp');

@@ -334,6 +334,35 @@
 		if (!results[2]) return '';
 		return decodeURIComponent(results[2].replace(/\+/g, " "));
 	},
+    closeEditPopup1 : function(component, event, helper) {
+        var workspaceAPI = component.find("workspace");
+        
+        workspaceAPI.getFocusedTabInfo().then(function (response) {
+            var focusedTabId = response.tabId;
+            workspaceAPI.closeTab({
+                tabId: focusedTabId
+            });
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+        var action = component.get("c.getListViews1");
+        action.setCallback(this, function(response){
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                var listviews = response.getReturnValue();
+                var navEvent = $A.get("e.force:navigateToList");
+                navEvent.setParams({
+                    "listViewId": listviews.Id,
+                    "listViewName": null,
+                    "scope": "buildertek__SOV_Payment_Application__c"
+                });
+                navEvent.fire();
+            }
+        });
+        $A.enqueueAction(action);
+        
+    },
     
     
 })

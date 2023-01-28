@@ -13,7 +13,7 @@
 @isTest
 public with sharing class BT_GroupManagementControllerTest {
     static testMethod void testMethod1() {
-    	//create a user
+        //create a user
         Profile p = [select id from profile where name = 'System Administrator'];
         User testUser = new User(alias='mausam12', email='sagar@thoriyas.com', 
                     emailencodingkey='UTF-8', lastname='testing', languagelocalekey='en_US',

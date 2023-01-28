@@ -34,10 +34,10 @@ private class BT_ApplicationConfigurationTest {
         System.assert(url != null);
         System.assertEquals('Test','Test');
         List<BT_ApplicationConfigurationController.WrappedAppConfig> apps = controller.getApplicationConfigurationData();
-		System.assert(apps != null);
-		  
-		Application_Configuration__c testapp = new Application_Configuration__c(name = 'Use Files', Configured_Value__c ='True', Description__c = 'Use files', Display_Layout__c = 'Radio');
-		insert testapp;
+        System.assert(apps != null);
+          
+        Application_Configuration__c testapp = new Application_Configuration__c(name = 'Use Files', Configured_Value__c ='True', Description__c = 'Use files', Display_Layout__c = 'Radio');
+        insert testapp;
         controller.save();
         controller.mapBuckets();
         controller.getConfiguredBuckets();            
@@ -48,11 +48,11 @@ private class BT_ApplicationConfigurationTest {
         controller.hideNewBucket();
         controller.removeBucketMap();
         controller.getAmazonBucketsToMap();
-        System.assertEquals('Use Files', testapp.Name); 		     
+        System.assertEquals('Use Files', testapp.Name);              
         List<Selectoption> options = controller.getRadioOptions();
         System.assertEquals(2, options.size());
         System.assertEquals('Test','Test');      
-	
+    
         
     }
     static testMethod void testInitSystem1() {
@@ -70,10 +70,10 @@ private class BT_ApplicationConfigurationTest {
         System.assert(url1 == null);
         System.assertEquals('','');
         List<BT_ApplicationConfigurationController.WrappedAppConfig> apps = controller.getApplicationConfigurationData();
-		System.assert(apps != null);
-		  
-		Application_Configuration__c testapp = new Application_Configuration__c(name = 'Use Files', Configured_Value__c ='', Description__c = 'Use files', Display_Layout__c = 'Radio');
-		insert testapp;
+        System.assert(apps != null);
+          
+        Application_Configuration__c testapp = new Application_Configuration__c(name = 'Use Files', Configured_Value__c ='', Description__c = 'Use files', Display_Layout__c = 'Radio');
+        insert testapp;
         controller.save();
         controller.mapBuckets();
         controller.getConfiguredBuckets();            
@@ -84,11 +84,11 @@ private class BT_ApplicationConfigurationTest {
         controller.hideNewBucket();
         controller.removeBucketMap();
         controller.getAmazonBucketsToMap();
-        System.assertEquals('Use Files', testapp.Name); 		     
+        System.assertEquals('Use Files', testapp.Name);              
         List<Selectoption> options = controller.getRadioOptions();
         System.assertEquals(2, options.size());
         System.assertEquals('Test','Test');      
-	
+    
         
     }
     

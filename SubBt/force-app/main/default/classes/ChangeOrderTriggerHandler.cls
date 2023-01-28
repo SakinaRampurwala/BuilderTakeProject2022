@@ -32,7 +32,7 @@ public with sharing class ChangeOrderTriggerHandler {
         }                            
     }
     
-    public void OnBeforeUpdate(buildertek__Change_Order__c[] oldChangeOrder, buildertek__Change_Order__c[] updatedChangeOrder, Map<ID, buildertek__Change_Order__c> ChangeOrderMap){
+    public void OnBeforeUpdate(buildertek__Change_Order__c[] oldChangeOrder, buildertek__Change_Order__c[] updatedChangeOrder, Map<ID, buildertek__Change_Order__c> ChangeOrderMap, Map<ID, buildertek__Change_Order__c> oldChangeOrderMap){
         Boolean isPaid = false;
         Boolean isPartiallyPaid = false;
         List<buildertek__Billings__c> invoiceList ;
@@ -81,9 +81,41 @@ public with sharing class ChangeOrderTriggerHandler {
                 } 
             }    
         }
+
+        List<buildertek__Budget_Line_Group__c> budgetLineGroup = [SELECT Id FROM buildertek__Budget_Line_Group__c WHERE Name = 'Change Order' LIMIT 1];
+        Id budgetLineGroupId;
+        if (budgetLineGroup.size() > 0) {
+            budgetLineGroupId = budgetLineGroup[0].Id;
+        } else {
+            buildertek__Budget_Line_Group__c lineGroup = new buildertek__Budget_Line_Group__c();
+            lineGroup.Name = 'Change Order';
+            insert lineGroup;
+            budgetLineGroupId = lineGroup.Id;
+        }
+        Map<Id, buildertek__Budget_Item__c> budgetLineMap = new Map<Id, buildertek__Budget_Item__c>();
         for(buildertek__Change_Order__c newCO : updatedChangeOrder){
-            newCO.buildertek__Date_Created__c = system.today();        
-        }        
+            newCO.buildertek__Date_Created__c = system.today();       
+            
+            if (newCO.buildertek__Budget__c != oldChangeOrderMap.get(newCO.Id).buildertek__Budget__c && newCO.buildertek__Budget__c != null && newCO.buildertek__Budget_Line__c == null) {
+                buildertek__Budget_Item__c budgetLine = new buildertek__Budget_Item__c();
+                budgetLine.Name = newCO.Name + ' budget line';
+                budgetLine.buildertek__Budget__c = newCO.buildertek__Budget__c;
+                budgetLine.buildertek__Group__c = budgetLineGroupId;
+                budgetLineMap.put(newCO.Id, budgetLine);
+            } 
+        }
+
+        insert budgetLineMap.values();
+
+
+        for(buildertek__Change_Order__c changeOrder : updatedChangeOrder){
+            for (Id key : budgetLineMap.keySet()) {
+                if (changeOrder.Id == key) {
+                    changeOrder.buildertek__Budget_Line__c = budgetLineMap.get(changeOrder.Id).Id;
+                }
+            }
+        }
+
     }
     
     public void OnBeforeDelete(buildertek__Change_Order__c[] ChangeOrderToDelete, Map<ID, buildertek__Change_Order__c> ChangeOrderMap){
@@ -193,13 +225,39 @@ public with sharing class ChangeOrderTriggerHandler {
         buildertek__Quote_Line_Group__c newContractGroup = new buildertek__Quote_Line_Group__c();
         buildertek__Budget_Line_Group__c newBudgetGroup = new buildertek__Budget_Line_Group__c();
         Map<String, String> groupNameMap = new  Map<String, String>();
+
+        Map<Id, buildertek__Budget_Item__c> budgetLineMap = new Map<Id, buildertek__Budget_Item__c>();
+
+        List<buildertek__Budget_Line_Group__c> budgetLineGroup = [SELECT Id FROM buildertek__Budget_Line_Group__c WHERE Name = 'Change Order' LIMIT 1];
+        Id budgetLineGroupId;
+        if (budgetLineGroup.size() > 0) {
+            budgetLineGroupId = budgetLineGroup[0].Id;
+        } else {
+            buildertek__Budget_Line_Group__c lineGroup = new buildertek__Budget_Line_Group__c();
+            lineGroup.Name = 'Change Order';
+            insert lineGroup;
+            budgetLineGroupId = lineGroup.Id;
+        }
+
         for(buildertek__Change_Order__c changeOrder : newChangeOrder){
             if(changeOrder.buildertek__Status__c == 'Customer Approved'){
                 changeOrderIdSet.add(changeOrder.Id);
                 changeOrderContractIdSet.add(changeOrder.buildertek__Contract__c);
             }
+
+            if (changeOrder.buildertek__Budget__c != null && changeOrder.buildertek__Budget_Line__c == null) {
+                buildertek__Budget_Item__c budgetLine = new buildertek__Budget_Item__c();
+                budgetLine.Name = changeOrder.Name + ' budget line';
+                budgetLine.buildertek__Budget__c = changeOrder.buildertek__Budget__c;
+                budgetLine.buildertek__Group__c = budgetLineGroupId;
+                budgetLineMap.put(changeOrder.Id, budgetLine);
+            }
             
         }
+
+        insert budgetLineMap.values();
+
+
         List<buildertek__Change_Order__c> changeOrdersList ;
         
         changeOrdersList= [SELECT Id,
@@ -275,6 +333,20 @@ public with sharing class ChangeOrderTriggerHandler {
 groupNameMap.put(grp.buildertek__Contract__c, grp.Id);        
 }*/
         } 
+
+
+        List<buildertek__Change_Order__c> newCOList = new List<buildertek__Change_Order__c>();
+        for(buildertek__Change_Order__c changeOrder : newChangeOrder){
+            for (Id key : budgetLineMap.keySet()) {
+                if (changeOrder.Id == key) {
+                    changeOrder.buildertek__Budget_Line__c = budgetLineMap.get(changeOrder.Id).Id;
+                    newCOList.add(changeOrder);
+                }
+            }
+        }
+        if (newCOList.size() > 0) {
+            update newCOList;
+        }
         
         
         

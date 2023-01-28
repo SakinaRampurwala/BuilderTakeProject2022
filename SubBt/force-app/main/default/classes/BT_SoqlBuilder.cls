@@ -27,28 +27,28 @@ public with sharing class BT_SoqlBuilder{
     private String          groupByx    = null;
     private Integer         limitx      = null;
     
-	public enum Operator {
-	
-	    //===============================
-	    // FIELD OPERATORS
-	    //===============================
-	    EQUALS,                   // =
-	    NOT_EQUALS,               // !=
-	    LESS_THAN,                // <
-	    LESS_THAN_OR_EQUAL_TO,    // <=
-	    GREATER_THAN,             // >
-	    GREATER_THAN_OR_EQUAL_TO, // >=
-	    LIKEX,                    // like
-	    
-	    //===============================
-	    // SET OPERATORS
-	    //===============================
-	    INCLUDES,                 // includes
-	    EXCLUDES,                 // excludes
-	    INX,                      // in
-	    NOT_IN                    // not in 
-	
-	}
+    public enum Operator {
+    
+        //===============================
+        // FIELD OPERATORS
+        //===============================
+        EQUALS,                   // =
+        NOT_EQUALS,               // !=
+        LESS_THAN,                // <
+        LESS_THAN_OR_EQUAL_TO,    // <=
+        GREATER_THAN,             // >
+        GREATER_THAN_OR_EQUAL_TO, // >=
+        LIKEX,                    // like
+        
+        //===============================
+        // SET OPERATORS
+        //===============================
+        INCLUDES,                 // includes
+        EXCLUDES,                 // excludes
+        INX,                      // in
+        NOT_IN                    // not in 
+    
+    }
         
     public BT_SoqlBuilder(){}
     
@@ -234,15 +234,15 @@ public with sharing class BT_SoqlBuilder{
             
             Boolean firstField = true;
             for(String oneField : distinctFields.values()){
-            	if(oneField == null || oneField.trim() == ''){
-            		continue;
-            	}
-            	if(firstField){
-            		firstField = false;
+                if(oneField == null || oneField.trim() == ''){
+                    continue;
+                }
+                if(firstField){
+                    firstField = false;
                     soql += String.escapeSingleQuotes(oneField);
-            	} else {
-            		soql += ',' + String.escapeSingleQuotes(oneField);
-            	}
+                } else {
+                    soql += ',' + String.escapeSingleQuotes(oneField);
+                }
             }
         }
         soql += ' FROM ' + String.escapeSingleQuotes(fromx);

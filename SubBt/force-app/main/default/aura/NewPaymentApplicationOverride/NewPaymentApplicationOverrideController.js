@@ -1,6 +1,6 @@
 ({
     doInit : function(component, event, helper) {
-
+        component.set("v.Spinner", true);
         var getPatmentType = component.get("c.getPaymentTypeDetails");
         getPatmentType.setCallback(this, function (result) {
             var result = result.getReturnValue();
@@ -131,12 +131,12 @@
         component.set("v.isopen", false);
         var action = component.get("c.getUser");
         action.setCallback(this, function(response){
-            debugger;
+            // debugger;
             if(response.getState() === "SUCCESS"){
                 var result = response.getReturnValue();
                 var commUserId = result.Id;
                 if(result.IsPortalEnabled == true){
-                    debugger;
+                    // debugger;
                     var PATyle = component.get("c.getSovType");
                     PATyle.setCallback(this, function (response1) {
                         if (response1.getState() == 'SUCCESS') {
@@ -165,7 +165,7 @@
                 }else{
                     component.set("v.isnew", true);
                     
-                    debugger;
+                    // debugger;
                     var PATyle = component.get("c.getARSovType");
                     PATyle.setCallback(this, function (response1) {
                         if (response1.getState() == 'SUCCESS') {
@@ -181,7 +181,7 @@
                     
                 }
                 var action1 = component.get("c.getParentProject");
-                debugger;
+                // debugger;
                 var value = helper.getParameterByName(component, event, 'inContextOfRef');
                 var context = '';
                 var parentRecordId = '';
@@ -220,6 +220,8 @@
             }
         });
         $A.enqueueAction(action);
+        component.set("v.Spinner", false);
+
     },
     
     getSelectedName: function (component, event) {
@@ -283,7 +285,7 @@
     },
     
     isNext:function(component, event, helper){
-      debugger;
+    //   debugger;
         
         var optionSelected = component.get("v.checkBoxValue");
         
@@ -335,7 +337,7 @@
             
             // import company approved sov's
             
-            debugger;
+            // debugger;
              var action = component.get("c.getCompanyApprovedScheduleOValues");
             action.setParams({
                 "projectId" : component.get("v.parentprojectRecordId") 
@@ -614,6 +616,7 @@
     },
     
     handleOnSubmit : function(component, event, helper) {
+        console.log('handle submit');
            event.preventDefault();
         if(component.get("v.Iscommunity") == true){
             var inputname1 = component.find("inputname1#"); 
@@ -686,53 +689,45 @@
         }
         }
         else{
+            console.log('inisde else condition');
             if(component.get("v.isOption4") != true && component.get("v.isOption5") != true){
-             var inputname = component.find("inputname#"); 
-            var inputnameval = inputname.get("v.value");
-          var a =  inputnameval.trim();
-            if(a != "" && a != null){
-            var label = event.getSource().get("v.label");
-            
-            if(label == "Save and Import SOVs"){
-                component.set("v.iscall",true);
-            }
-            component.set("v.Spinner", true);
-            
-            /*component.set("v.message", true);*/
-            
-            
-            if(component.get("v.Iscommunity") == true){
+                console.log('inisde sub if condition');
+                var inputname = component.find("inputname#"); 
+                var inputnameval = inputname.get("v.value");
+                var a =  inputnameval.trim();
+                console.log({a});
+                if(a != "" && a != null){
+                    var label = event.getSource().get("v.label");
                 
-                component.set("v.IsBudgetLines",false);
-                
-                event.preventDefault(); //Prevent default submit
-                var eventFields = event.getParam("fields"); //get the fields
-                //eventFields['buildertek__Owner_Account__c'] = accountId
-                component.find('leadCreateForm').submit(eventFields);
-                component.set("v.applicationValues",eventFields)
-                
-                
-                
-            }else{
-                /*component.set("v.IsBudgetLines",true);
-                component.set("v.Spinner", false);
-                component.set("v.isOpen", true);
-                event.preventDefault(); //Prevent default submit
-                var eventFields = event.getParam("fields"); //get the fields
-                //  component.find('leadCreateForm').submit(eventFields);
-                component.set("v.applicationValues",eventFields) */
-                
-                 component.set("v.IsBudgetLines",false);
-                
-                //Prevent default submit
-                var eventFields = event.getParam("fields"); //get the fields
-                //eventFields['buildertek__Owner_Account__c'] = accountId
-                component.find('leadCreateForm').submit(eventFields);
-                component.set("v.applicationValues",eventFields)
-                
-            }
-        }
-            else{
+                if(label == "Save and Import SOVs"){
+                    component.set("v.iscall",true);
+                }
+                component.set("v.Spinner", true);
+                            
+                if(component.get("v.Iscommunity") == true){
+                    
+                    component.set("v.IsBudgetLines",false);
+                    
+                    event.preventDefault(); //Prevent default submit
+                    var eventFields = event.getParam("fields"); //get the fields
+                    component.find('leadCreateForm').submit(eventFields);
+                    component.set("v.applicationValues",eventFields)
+                    
+                    
+                    
+                }else{                    
+                    component.set("v.IsBudgetLines",false);
+                    //Prevent default submit
+                    var eventFields = event.getParam("fields"); //get the fields
+                    console.log({eventFields});
+                    component.find('leadCreateForm').submit(eventFields);
+                    component.set("v.applicationValues",eventFields)
+
+                    console.log(component.get("v.applicationValues"));
+
+                    
+                }
+                }else{
                    var toastEvent = $A.get("e.force:showToast");
                     toastEvent.setParams({
                         title: 'ERROR',
@@ -743,69 +738,67 @@
                         mode: "pester",
                     });
                     toastEvent.fire();
-            }
-        }
-             else{
-          
-                  var inputname = component.find("inputname#"); 
-            var inputnameval = inputname.get("v.value");
-          var a =  inputnameval.trim();
-            if(a != "" && a != null){
-            var label = event.getSource().get("v.label");
-            
-            if(label == "Save and Import SOVs"){
-                component.set("v.iscall",true);
-            }
-            component.set("v.Spinner", true);
-            
-            /*component.set("v.message", true);*/
-            
-            
-            if(component.get("v.Iscommunity") == true){
-                
-                component.set("v.IsBudgetLines",false);
-                
-                event.preventDefault(); //Prevent default submit
-                var eventFields = event.getParam("fields"); //get the fields
-                //eventFields['buildertek__Owner_Account__c'] = accountId
-                component.find('leadCreateForm').submit(eventFields);
-                component.set("v.applicationValues",eventFields)
-                
-                
-                
+                }
             }else{
-                /*component.set("v.IsBudgetLines",true);
-                component.set("v.Spinner", false);
-                component.set("v.isOpen", true);
-                event.preventDefault(); //Prevent default submit
-                var eventFields = event.getParam("fields"); //get the fields
-                //  component.find('leadCreateForm').submit(eventFields);
-                component.set("v.applicationValues",eventFields) */
-                
-                 component.set("v.IsBudgetLines",false);
-                
-                //Prevent default submit
-                var eventFields = event.getParam("fields"); //get the fields
-                //eventFields['buildertek__Owner_Account__c'] = accountId
-                component.find('leadCreateForm').submit(eventFields);
-                component.set("v.applicationValues",eventFields)
-                
-            }
-        }
-            else{
-                   var toastEvent = $A.get("e.force:showToast");
-                    toastEvent.setParams({
-                        title: 'ERROR',
-                        message: 'Payment application name is required',
-                        duration: "3000",
-                        key: "info_alt",
-                        type: "error",
-                        mode: "pester",
-                    });
-                    toastEvent.fire();
-            }
+                console.log('inisde sub else condition');
+                var inputname = component.find("inputname#"); 
+                var inputnameval = inputname.get("v.value");
+                var a =  inputnameval.trim();
+                if(a != "" && a != null){
+                    var label = event.getSource().get("v.label");
+                    
+                    if(label == "Save and Import SOVs"){
+                        component.set("v.iscall",true);
+                    }
+                    component.set("v.Spinner", true);
+                    
+                    /*component.set("v.message", true);*/
+                    
+                    
+                    if(component.get("v.Iscommunity") == true){
+                        
+                        component.set("v.IsBudgetLines",false);
+                        
+                        event.preventDefault(); //Prevent default submit
+                        var eventFields = event.getParam("fields"); //get the fields
+                        //eventFields['buildertek__Owner_Account__c'] = accountId
+                        component.find('leadCreateForm').submit(eventFields);
+                        component.set("v.applicationValues",eventFields)
+                        
+                        
+                        
+                    }else{
+                        /*component.set("v.IsBudgetLines",true);
+                        component.set("v.Spinner", false);
+                        component.set("v.isOpen", true);
+                        event.preventDefault(); //Prevent default submit
+                        var eventFields = event.getParam("fields"); //get the fields
+                        //  component.find('leadCreateForm').submit(eventFields);
+                        component.set("v.applicationValues",eventFields) */
+                        
+                        component.set("v.IsBudgetLines",false);
+                        
+                        //Prevent default submit
+                        var eventFields = event.getParam("fields"); //get the fields
+                        //eventFields['buildertek__Owner_Account__c'] = accountId
+                        component.find('leadCreateForm').submit(eventFields);
+                        component.set("v.applicationValues",eventFields)
+                        
+                    }
+                }else{
+                        var toastEvent = $A.get("e.force:showToast");
+                        toastEvent.setParams({
+                            title: 'ERROR',
+                            message: 'Payment application name is required',
+                            duration: "3000",
+                            key: "info_alt",
+                            type: "error",
+                            mode: "pester",
+                        });
+                        toastEvent.fire();
+                    }
             
-        }
+            }
         }
        
         
@@ -883,6 +876,7 @@
     },
     
     handleOnSuccess : function(component, event, helper) {
+        console.log('handle success');
         component.set("v.Spinner", false);
         component.set("v.message", false);
         var pageNumber = component.get("v.PageNumber");
@@ -1092,101 +1086,17 @@
         component.set("v.isnew", false);
     },
     closeEditPopup1 : function(component, event, helper) {
-        /* var action = component.get("c.getPaymentListViews");
-        action.setCallback(this, function(response){
-            var state = response.getState();
-            if (state === "SUCCESS") {
-                var listviews = response.getReturnValue();
-                var navEvent = $A.get("e.force:navigateToList");
-                navEvent.setParams({
-                    "listViewId": listviews.Id,
-                    "listViewName": null,
-                    "scope": "buildertek__SOV_Payment_Application__c"
-                    
-                    
-                });
-                navEvent.fire();
-            }
-        });
-        $A.enqueueAction(action);*/
-        
-        var workspaceAPI = component.find("workspace");
-        
-        workspaceAPI.getFocusedTabInfo().then(function (response) {
-            var focusedTabId = response.tabId;
-            workspaceAPI.closeTab({
-                tabId: focusedTabId
-            });
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
-        var action = component.get("c.getListViews1");
-        action.setCallback(this, function(response){
-            var state = response.getState();
-            if (state === "SUCCESS") {
-                var listviews = response.getReturnValue();
-                var navEvent = $A.get("e.force:navigateToList");
-                navEvent.setParams({
-                    "listViewId": listviews.Id,
-                    "listViewName": null,
-                    "scope": "buildertek__SOV_Payment_Application__c"
-                });
-                navEvent.fire();
-            }
-        });
-        $A.enqueueAction(action);
-        
-        /* debugger;
- 
-        var action = component.get("c.getListViews1");
-        action.setCallback(this, function(response){
-            var state = response.getState();
-            if (state === "SUCCESS") {
-                var listviews = response.getReturnValue();
-                debugger;
-               // alert(listviews)
-                var navEvent = $A.get("e.force:navigateToList");
-                navEvent.setParams({
-                    "listViewId": listviews[0].Id,
-                    "listViewName": null,
-                    "scope": "buildertek__SOV_Payment_Application__c"
-                });
-                navEvent.fire();
-            }
-        });
-        $A.enqueueAction(action);*/
-        
-        /* var workspaceAPI = component.find("workspace");
-        workspaceAPI.getFocusedTabInfo().then(function (response) {
-                var focusedTabId = response.tabId;
-                workspaceAPI.closeTab({
-                    tabId: focusedTabId
-                });
-            })
-            .catch(function (error) {
-                console.log(error);
-            }); 
-        component.set("v.isOpen", false);
-        component.set("v.IsBudgetLines",false);
-        component.set("v.isnew", false);*/
-        
-        
-        
-        
-        
-        /*  var urlEvent = $A.get("e.force:navigateToURL");
-        urlEvent.setParams({
-            "url": 'lightning/o/buildertek__SOV_Payment_Application__c/home'
-        });
-        urlEvent.fire(); */
+        helper.closeEditPopup1(component, event, helper);
     },
     CloseScreen : function(component, event, helper) {
+        console.log('close the screen');
         if(component.get("v.Iscommunity") == true){
             component.set("v.isnew", false);
             location.reload();
         }else{
-            component.set("v.isnew", true);  
+            // component.set("v.isnew", true); 
+            helper.closeEditPopup1(component, event, helper);
+ 
         }
         
         component.set("v.isnewpayment", false);
@@ -1226,7 +1136,7 @@
     },  
     selectAllPayApp : function (component, event, helper) {
         
-        debugger;
+        // debugger;
         var checkStatus = event.getSource().get("v.checked");
         var rfqRecordList = JSON.parse(JSON.stringify(component.get("v.ImportVendorPaymentAppsList")));
         var getAllId = component.find("checkPayApp");
@@ -1375,7 +1285,7 @@
     },
     
     importCompanyApprovedLines : function (component, event, helper) {
-        debugger;
+        // debugger;
         console.log("recordId 2 : ",component.get("v.recordId"));
         if(component.get("v.isCompanyApprovedSOV") == true){
             var action2 = component.get("c.importCompanyApprovedSOVLines");
@@ -1524,7 +1434,7 @@
     
     
     importCustomerApprovedLines : function (component, event, helper) {
-        debugger;
+        // debugger;
         if(component.get("v.isCustomerApprovedSOV") == true){
             var action2 = component.get("c.importCustomerApprovedSOVLines");
             

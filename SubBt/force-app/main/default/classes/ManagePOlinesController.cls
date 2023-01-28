@@ -1554,12 +1554,17 @@ public with sharing class ManagePOlinesController {
         
         Map<String,List<String>> myMap = (Map<String,List<String>>)JSON.deserialize(mapFieldData, Map<String,List<String>>.class);
         
-        for(Id key : myMap.keySet()){
-            system.debug('myMap --> '+myMap.get(key));
-        }
+        // for(Id key : myMap.keySet()){
+        //     system.debug('myMap --> '+myMap.get(key));
+        // }
 
         try {
-            bom = [SELECT ID, Name,buildertek__BT_Quote__c,buildertek__Tax_Rate_1__c, (SELECT Id,Name,buildertek__Quantity__c, buildertek__BL_LIST_PRICE__c, buildertek__Upgrade_Price__c FROM buildertek__Selection_Sheet_Takeoff_Lines__r) FROM buildertek__Project_Selection_Sheet_Takeoff__c WHERE Id =:recordId];
+            bom = [SELECT ID, Name,buildertek__BT_Quote__c,buildertek__Tax_Rate_1__c, 
+                    (SELECT Id,Name,buildertek__Quantity__c, buildertek__BL_LIST_PRICE__c, buildertek__Upgrade_Price__c, buildertek__Build_Phase__c, 
+                    buildertek__Build_Reference_1__c, buildertek__Base_Location__c, buildertek__Location_Picklist__c, buildertek__Location_Detailed_Area__c, 
+                    buildertek__Location_Detail_Reference_1__c, buildertek__BL_SERVICE_CATEGORY__c FROM buildertek__Selection_Sheet_Takeoff_Lines__r) 
+                    FROM buildertek__Project_Selection_Sheet_Takeoff__c WHERE Id =:recordId];
+            
             buildPhaseList = [SELECT Id, Name FROM buildertek__Build_Phase__c];
             
             for (buildertek__Quote_Line_Group__c qtGroup : [SELECT Id, Name FROM buildertek__Quote_Line_Group__c]) {
@@ -1621,6 +1626,13 @@ public with sharing class ManagePOlinesController {
                         qtLine.buildertek__Sales_Tax_Amount_Manual__c = salesTax;
                         qtLine.buildertek__Tax__c = bom[0].buildertek__Tax_Rate_1__c;
                         qtLine.buildertek__BOM_Line__c = bomLine.Id;
+                        qtLine.buildertek__Build_Phase__c = bomLine.buildertek__Build_Phase__c;
+                        qtLine.buildertek__Build_Reference_1__c = bomLine.buildertek__Build_Reference_1__c;
+                        qtLine.buildertek__Base_Location__c = bomLine.buildertek__Base_Location__c;
+                        qtLine.buildertek__Location_Picklist__c = bomLine.buildertek__Location_Picklist__c;
+                        qtLine.buildertek__Location_Detailed_Area__c = bomLine.buildertek__Location_Detailed_Area__c;
+                        qtLine.buildertek__Location_Detail_Reference_1__c = bomLine.buildertek__Location_Detail_Reference_1__c;
+                        qtLine.buildertek__BL_SERVICE_CATEGORY__c = bomLine.buildertek__BL_SERVICE_CATEGORY__c;
 
                         // *check if the value come for first time then newQuoteLineGroupMap should have the values
                         if (newQuoteLineGroupMap.containsKey(groupName)) {

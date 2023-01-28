@@ -13,7 +13,7 @@
     </aura:html>
     
     <lightning:card iconName="custom:custom5" class="slds-card_boundary" title="Schedule of Values Lines">
-		<div style="height: 200px">        
+		<div style="max-height:48vh;overflow: auto;">        
         <lightning:datatable aura:id="itemsTable"   data="{!v.ScheduleOfValuesLineList}" 
                              columns="{!v.columns }" 
                              keyField="Id"                         

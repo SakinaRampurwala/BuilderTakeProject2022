@@ -15,16 +15,16 @@ public with sharing class BT_FileExplorerPageConfigController {
     public List<SelectOption> configurations{get; set;}
     public string selectedConfigurationType{get; set;}
     
-    public File_Explorer_Page_Configuration__c edConfiguration {get;set;}									//Custom setting for configuration
-	
-	public List<SelectOption> leftAvailableFields{get; set;}                             // List of available customers on left side.
+    public File_Explorer_Page_Configuration__c edConfiguration {get;set;}                                   //Custom setting for configuration
+    
+    public List<SelectOption> leftAvailableFields{get; set;}                             // List of available customers on left side.
     public List<SelectOption> rightAvailableFields{get; set;}                            // List of available customers on right side.
     public List<String> leftSelectedFields {get; set;}                                   // Selected customers from selft side
     public List<String> rightSelectedFields {get; set;}                                  // Selected customers from right side
     
     public BT_FileExplorerPageConfigController() {
-    	isError = false;
-    	
+        isError = false;
+        
         configurations = new List<SelectOption>(getConfigurations());
         selectedConfigurationType = BT_Constants.FILE_EXPLORER_CONFIGURATION;
         
@@ -36,8 +36,8 @@ public with sharing class BT_FileExplorerPageConfigController {
         
         leftAvailableFields = getAllFields();
         
-		refreshOnConfigurationChange();
-		
+        refreshOnConfigurationChange();
+        
     }
     
     /*
@@ -70,20 +70,20 @@ public with sharing class BT_FileExplorerPageConfigController {
     *   UnitTests:  
     */
     public void initialize(){
-    	Map<String, File_Explorer_Page_Configuration__c> fileExplorerConfigurationMap = File_Explorer_Page_Configuration__c.getAll();
+        Map<String, File_Explorer_Page_Configuration__c> fileExplorerConfigurationMap = File_Explorer_Page_Configuration__c.getAll();
         
         File_Explorer_Page_Configuration__c config = fileExplorerConfigurationMap.get(selectedConfigurationType);
         if(config == null){
-        	 config  = new File_Explorer_Page_Configuration__c(name=selectedConfigurationType);
+             config  = new File_Explorer_Page_Configuration__c(name=selectedConfigurationType);
         }
         
         // Set Default configuration
         setDefaultConfiguration(config);
         
-		DMLManager.upsertAsUser(config);
-		
-		// Refreshig configuration in UI.
-		refreshOnConfigurationChange();
+        DMLManager.upsertAsUser(config);
+        
+        // Refreshig configuration in UI.
+        refreshOnConfigurationChange();
     }
     
     /*
@@ -94,13 +94,13 @@ public with sharing class BT_FileExplorerPageConfigController {
     private void setDefaultConfiguration(File_Explorer_Page_Configuration__c config){
         // Show the heirarchical file ui only for File System Tab.
         if(!config.Name.contains('__c')){
-    		config.Show_Hierarchical_File_UI__c = true;
-    		config.Show_Header__c = true;
-    		config.Page_Size__c = 10;
+            config.Show_Hierarchical_File_UI__c = true;
+            config.Show_Header__c = true;
+            config.Page_Size__c = 10;
         } else{
-        	config.Show_Hierarchical_File_UI__c = false;
-        	config.Show_Header__c = false;
-        	config.Page_Size__c = 5;
+            config.Show_Hierarchical_File_UI__c = false;
+            config.Show_Header__c = false;
+            config.Page_Size__c = 5;
         }
         
         // Set other fields to default value.
@@ -113,7 +113,7 @@ public with sharing class BT_FileExplorerPageConfigController {
         config.File_Detail_Fields__c = 'Name,Description__c,CreatedBy,CreatedDate,Size__c,Download__c,Extension__c';
         // Check if the download tracking is enabled. If it is then also display the link for donwloads
         if(BT_HomeUtils.getIsFileDownloadHistoryActivate()){
-        	config.File_Detail_Fields__c += ',File_Downloads__c';
+            config.File_Detail_Fields__c += ',File_Downloads__c';
         }
     }
     
@@ -129,16 +129,16 @@ public with sharing class BT_FileExplorerPageConfigController {
             configurations.add(new SelectOption(config, config));
         }
         if(!fileExplorerConfigurations.contains(BT_Constants.FILE_EXPLORER_CONFIGURATION)){
-        	configurations.add(new SelectOption(BT_Constants.FILE_EXPLORER_CONFIGURATION, BT_Constants.FILE_EXPLORER_CONFIGURATION));
+            configurations.add(new SelectOption(BT_Constants.FILE_EXPLORER_CONFIGURATION, BT_Constants.FILE_EXPLORER_CONFIGURATION));
         }
-		List<Schema.SObjectField> parentsForFolder = BT_HomeUtils.getAllParentsForFolder();
-		for(Schema.SObjectField objSchemaField: parentsForFolder) {
-			Schema.DescribeFieldResult objFieldDescribe = objSchemaField.getDescribe();
-			if(!fileExplorerConfigurations.contains(objFieldDescribe.getName())){
-			    configurations.add(new SelectOption(objFieldDescribe.getName(), objFieldDescribe.getLabel()));
-			}
-		}
-		return configurations;
+        List<Schema.SObjectField> parentsForFolder = BT_HomeUtils.getAllParentsForFolder();
+        for(Schema.SObjectField objSchemaField: parentsForFolder) {
+            Schema.DescribeFieldResult objFieldDescribe = objSchemaField.getDescribe();
+            if(!fileExplorerConfigurations.contains(objFieldDescribe.getName())){
+                configurations.add(new SelectOption(objFieldDescribe.getName(), objFieldDescribe.getLabel()));
+            }
+        }
+        return configurations;
     }
     
     /*
@@ -156,11 +156,11 @@ public with sharing class BT_FileExplorerPageConfigController {
         leftAvailableFields = getAllFields();
         
         // Get the confugration done for Amazon S3
-		edConfiguration  = File_Explorer_Page_Configuration__c.getValues(selectedConfigurationType);
+        edConfiguration  = File_Explorer_Page_Configuration__c.getValues(selectedConfigurationType);
         
-		// If configuration is not done means we have to create new configration so here we are initializing new configuration
-		if(edConfiguration  == null){
-			// Set the name to "Amazon S3"
+        // If configuration is not done means we have to create new configration so here we are initializing new configuration
+        if(edConfiguration  == null){
+            // Set the name to "Amazon S3"
             edConfiguration = new File_Explorer_Page_Configuration__c(Name = selectedConfigurationType);
             // Set Default configuration
             setDefaultConfiguration(edConfiguration);
@@ -170,7 +170,7 @@ public with sharing class BT_FileExplorerPageConfigController {
             leftSelectedFields = edConfiguration.File_Detail_Fields__c.split(',');
         }
         movingFieldsToRight();
-    	return;
+        return;
     }
     
     /*
@@ -187,7 +187,7 @@ public with sharing class BT_FileExplorerPageConfigController {
         allFields.add(new SelectOption('Size__c','Size'));
         allFields.add(new SelectOption('Download__c', 'Download'));
         if(BT_HomeUtils.getIsFileDownloadHistoryActivate()){
-        	allFields.add(new SelectOption('File_Downloads__c', 'Total Downloads'));
+            allFields.add(new SelectOption('File_Downloads__c', 'Total Downloads'));
         }
         return allFields;
     }
@@ -211,7 +211,7 @@ public with sharing class BT_FileExplorerPageConfigController {
     public void movingFieldsToRight(){
         leftAvailableFields = BT_Utils.movingSelectOptionsToRight(leftAvailableFields, leftSelectedFields, rightAvailableFields );
     }
-	/*
+    /*
     *   Executed:   On click of "Save"
     *   Purpose:    Save the selected buckets and configuration
     *   Parameters: 
@@ -220,27 +220,27 @@ public with sharing class BT_FileExplorerPageConfigController {
     public pageReference Save() {
         if(edConfiguration.Max_Search_Records__c != null && edConfiguration.Max_Search_Records__c > 1000){
             ApexPages.Message errorMsg = new ApexPages.Message(ApexPages.Severity.FATAL, 'Max Search Records cannot be greater than 1000.');
-        	ApexPages.addMessage(errorMsg);
-        	return null;
+            ApexPages.addMessage(errorMsg);
+            return null;
         }
         if(edConfiguration.Max_Sub_Folders_Files_Count__c != null && edConfiguration.Max_Sub_Folders_Files_Count__c > 100){
             ApexPages.Message errorMsg = new ApexPages.Message(ApexPages.Severity.FATAL, 'Max Sub folders/files Count cannot be greater than 100.');
-        	ApexPages.addMessage(errorMsg);
-        	return null;
+            ApexPages.addMessage(errorMsg);
+            return null;
         }
-    	if(edConfiguration.Static_Resource_Name__c != null && edConfiguration.Static_Resource_Name__c.trim() != ''){
-    		List<StaticResource> staticResources;
-    		if(Schema.sObjectType.StaticResource.fields.Id.isAccessible() &&
-    		Schema.sObjectType.StaticResource.fields.Name.isAccessible()){
-    		    staticResources = [Select Id From StaticResource Where Name =: edConfiguration.Static_Resource_Name__c LIMIT 1];    
-    		}
-    		if(staticResources.isEmpty()){
-    			ApexPages.Message errorMsg = new ApexPages.Message(ApexPages.Severity.FATAL, 'Static Resource Name:  \''+edConfiguration.Static_Resource_Name__c+'\' doesn\'t exist.');
-	        	ApexPages.addMessage(errorMsg);
-	        	return null;
-    		}
-    	}
-    	
+        if(edConfiguration.Static_Resource_Name__c != null && edConfiguration.Static_Resource_Name__c.trim() != ''){
+            List<StaticResource> staticResources;
+            if(Schema.sObjectType.StaticResource.fields.Id.isAccessible() &&
+            Schema.sObjectType.StaticResource.fields.Name.isAccessible()){
+                staticResources = [Select Id From StaticResource Where Name =: edConfiguration.Static_Resource_Name__c LIMIT 1];    
+            }
+            if(staticResources.isEmpty()){
+                ApexPages.Message errorMsg = new ApexPages.Message(ApexPages.Severity.FATAL, 'Static Resource Name:  \''+edConfiguration.Static_Resource_Name__c+'\' doesn\'t exist.');
+                ApexPages.addMessage(errorMsg);
+                return null;
+            }
+        }
+        
         String fields = '';
         if(rightAvailableFields != null && !rightAvailableFields.isEmpty()){
             for(SelectOption rightAvailableField : rightAvailableFields){
@@ -255,25 +255,25 @@ public with sharing class BT_FileExplorerPageConfigController {
         
         if(selectedConfigurationType.contains('__c')){
             edConfiguration.Show_Hierarchical_File_UI__c = false;
-        	edConfiguration.Show_Header__c = false;
+            edConfiguration.Show_Header__c = false;
         }
         try{
             DMLManager.upsertAsUser(edConfiguration);
         } catch(Exception ex){
-        	ApexPages.Message errorMsg = new ApexPages.Message(ApexPages.Severity.FATAL, ex.getMessage());
-        	ApexPages.addMessage(errorMsg);
-        	return null;
+            ApexPages.Message errorMsg = new ApexPages.Message(ApexPages.Severity.FATAL, ex.getMessage());
+            ApexPages.addMessage(errorMsg);
+            return null;
         }
         return null;
     }
     
-	/*
+    /*
     *   Executed:   On click of "Cancel"
     *   Purpose:    User will be redirected to home page
     *   Parameters: 
     *   UnitTests:  
     */
     public pageReference Cancel() {
-    	return new pageReference('/home/home.jsp');    
+        return new pageReference('/home/home.jsp');    
     }
 }

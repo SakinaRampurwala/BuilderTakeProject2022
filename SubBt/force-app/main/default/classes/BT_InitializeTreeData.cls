@@ -51,15 +51,15 @@ public with sharing class BT_InitializeTreeData {
     
     
     /*
-	Create objects for Tree_Configuration__c
-	*/    
+    Create objects for Tree_Configuration__c
+    */    
     private static Tree_Configuration__c createTreeConfiguration(string treeName, boolean showSystemDefaultTreeNode, string whereUsed, string treeType, string CheckableNodes){
-    	Tree_Configuration__c tree = new Tree_Configuration__c(name = treeName,
+        Tree_Configuration__c tree = new Tree_Configuration__c(name = treeName,
                                        Show_System_Default_Tree_Nodes__c = showSystemDefaultTreeNode,
                                        Where_it_is_used1__c = whereUsed,
                                        Tree_Type__c = treeType,
                                        Checkable_Nodes__c = CheckableNodes);
-		return tree;
+        return tree;
     }
     
     /**
@@ -85,15 +85,15 @@ public with sharing class BT_InitializeTreeData {
         
         createTrees(trees);
     }
-	
-	/*
-	Create objects for Tree_Node_Configuration__c
-	*/
-	private static Tree_Node_Configuration__c createTreeNodeConfiguration(string treeNodeName, Id parent, Id treeConfiguration, string caption, string captionFieldName,
-																			string childObjType, string description, boolean disabled, string queryString, boolean showChildrenAsTreeNode,
-																			boolean showThisNodeInTree, string sortId, string nodeType,
-																			string orderChildrenBy){
-		Tree_Node_Configuration__c treeNode = 
+    
+    /*
+    Create objects for Tree_Node_Configuration__c
+    */
+    private static Tree_Node_Configuration__c createTreeNodeConfiguration(string treeNodeName, Id parent, Id treeConfiguration, string caption, string captionFieldName,
+                                                                            string childObjType, string description, boolean disabled, string queryString, boolean showChildrenAsTreeNode,
+                                                                            boolean showThisNodeInTree, string sortId, string nodeType,
+                                                                            string orderChildrenBy){
+        Tree_Node_Configuration__c treeNode = 
                 new Tree_Node_Configuration__c(name = treeNodeName,
                                               Parent__c = parent,
                                               Tree_Configuration__c = treeConfiguration,
@@ -109,8 +109,8 @@ public with sharing class BT_InitializeTreeData {
                                               Type__c = nodeType,
                                               Order_Children_By__c = orderChildrenBy);
         return treeNode;       
-	}
-	   
+    }
+       
     /**
     Intialize the root nodes for the trees
     **/
@@ -133,15 +133,15 @@ public with sharing class BT_InitializeTreeData {
                                                'User picker tree root node - Account', true, null, true, true, '003', BT_Constants.TREE_NODE_TYPE_QUERY, 'Name');
         rootNodes.add(treeNode);
         
-		treeNode = createTreeNodeConfiguration('User Picker Tree Root - Contact', null, tree.id, System.Label.Contacts_Node_Title, null, 'Contact',
-					                       'User picker tree root node - Contact', false, 'Id#!null', false, true, '004', BT_Constants.TREE_NODE_TYPE_QUERY, 'Name');
-		rootNodes.add(treeNode);
-						                       
-		treeNode = createTreeNodeConfiguration('User Picker Tree Root - Title', null, tree.id, System.Label.Titles_Node_Title, 'Title', 'User',
-						                       'User picker tree root node - Title', false, 'Title#!null~IsActive#true', true, true, '005', BT_Constants.TREE_NODE_TYPE_GROUPBY_ROOT, 'Name');
-	    rootNodes.add(treeNode);
-	    
-	    //Root nodes for File Explorer Tree
+        treeNode = createTreeNodeConfiguration('User Picker Tree Root - Contact', null, tree.id, System.Label.Contacts_Node_Title, null, 'Contact',
+                                           'User picker tree root node - Contact', false, 'Id#!null', false, true, '004', BT_Constants.TREE_NODE_TYPE_QUERY, 'Name');
+        rootNodes.add(treeNode);
+                                               
+        treeNode = createTreeNodeConfiguration('User Picker Tree Root - Title', null, tree.id, System.Label.Titles_Node_Title, 'Title', 'User',
+                                               'User picker tree root node - Title', false, 'Title#!null~IsActive#true', true, true, '005', BT_Constants.TREE_NODE_TYPE_GROUPBY_ROOT, 'Name');
+        rootNodes.add(treeNode);
+        
+        //Root nodes for File Explorer Tree
         tree = getTreeNodeByName('Files Tree');
         
         treeNode = createTreeNodeConfiguration('File Explorer - Home', null, tree.Id, System.Label.Home, null, 'Folder__c',
@@ -154,7 +154,7 @@ public with sharing class BT_InitializeTreeData {
         treeNode = createTreeNodeConfiguration('File Picker - Home', null, tree.Id, System.Label.Home, null, 'Folder__c',
                                                'Root node for File Picker.', false, 'Parent__c#null~Active__c#true', true, true, '001', BT_Constants.TREE_NODE_TYPE_QUERY, 'Name');
         rootNodes.add(treeNode);
-	    
+        
         createRootNodes(rootNodes);
     }
        
@@ -189,13 +189,13 @@ public with sharing class BT_InitializeTreeData {
                                             null, false, 'Type#Regular', true, false, null, BT_Constants.TREE_NODE_TYPE_QUERY, null);
         leafNodes.add(uptGroupByType);
        
-		//Root : User Picker Tree Root - Account
-		Tree_Node_Configuration__c userPickerTreeRootAccount = getRootNodeByName('User Picker Tree Root - Account');
-		
-		Tree_Node_Configuration__c accountTreeByTypeForUserPicker =
-				createTreeNodeConfiguration('Accounts by Type - User Picker', userPickerTreeRootAccount.Id, upTree.id, 'By Type', 'Type', 'Account',
-											null, false, 'Id#!null', true, true, null, BT_Constants.TREE_NODE_TYPE_GROUPBY_ROOT, null);
-		leafNodes.add(accountTreeByTypeForUserPicker);
+        //Root : User Picker Tree Root - Account
+        Tree_Node_Configuration__c userPickerTreeRootAccount = getRootNodeByName('User Picker Tree Root - Account');
+        
+        Tree_Node_Configuration__c accountTreeByTypeForUserPicker =
+                createTreeNodeConfiguration('Accounts by Type - User Picker', userPickerTreeRootAccount.Id, upTree.id, 'By Type', 'Type', 'Account',
+                                            null, false, 'Id#!null', true, true, null, BT_Constants.TREE_NODE_TYPE_GROUPBY_ROOT, null);
+        leafNodes.add(accountTreeByTypeForUserPicker);
      }
    
     /**
@@ -299,9 +299,9 @@ public with sharing class BT_InitializeTreeData {
         Set<Id> treeConfigurationIds = new Set<Id>();
         Set<Id> parentIds = new Set<Id>();
         for(Tree_Node_Configuration__c node : nodes){
-        	nodeNames.add(node.name);
-        	treeConfigurationIds.add(node.Tree_Configuration__c);
-        	parentIds.add(node.Parent__c);
+            nodeNames.add(node.name);
+            treeConfigurationIds.add(node.Tree_Configuration__c);
+            parentIds.add(node.Parent__c);
         }
         
         List<String> fields = new List<String>{'Id', 'Name', 'Tree_Configuration__c', 'Parent__c'};
@@ -310,8 +310,8 @@ public with sharing class BT_InitializeTreeData {
         //Build a map for quick lookup by name, tree node id and parent node id
         Map<String, Tree_Node_Configuration__c> existingNodesMap = new Map<String, Tree_Node_Configuration__c>();
         for(Tree_Node_Configuration__c existingNode : existingNodes){
-        	String key = existingNode.name + existingNode.Tree_Configuration__c + (existingNode.Parent__c == null ? 'NULL' : existingNode.Parent__c);
-        	existingNodesMap.put(key, existingNode);
+            String key = existingNode.name + existingNode.Tree_Configuration__c + (existingNode.Parent__c == null ? 'NULL' : existingNode.Parent__c);
+            existingNodesMap.put(key, existingNode);
         }
         
         

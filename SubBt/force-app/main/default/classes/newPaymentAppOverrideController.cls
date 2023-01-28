@@ -1108,5 +1108,16 @@ public class newPaymentAppOverrideController {
         buildertek__SOV_Payment_Application__c a = [select id from buildertek__SOV_Payment_Application__c where id =:recordId];
         return a;
     }
+
+    @AuraEnabled
+    public static buildertek__Admin_Interface_Node_Configuration__c getPaymentTypeDetails(){
+        buildertek__Admin_Interface_Node_Configuration__c adminInterfaceNodeConfigurations = [SELECT Id, 
+                                                                                                    buildertek__New_Payment_Application__c,
+                                                                                                    buildertek__Import_Company_Accepted_Vendor_Payment_A__c, 
+                                                                                                    buildertek__Import_Approved_SOV_s_Payment_Apps__c
+                                                                                                    FROM buildertek__Admin_Interface_Node_Configuration__c 
+                                                                                                    WHERE Name=:'Payment Application Configuration'];
+        return adminInterfaceNodeConfigurations;
+    }
     
 }

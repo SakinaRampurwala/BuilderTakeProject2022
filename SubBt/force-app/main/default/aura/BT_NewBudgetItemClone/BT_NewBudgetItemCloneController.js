@@ -2169,12 +2169,13 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
 
     deleteSelectedBudgetItemlines: function(component, event, helper) {
         var selectedRecs = component.get('v.selectedRecs');
-        console.log('selected:id when delete', selectedRecs);
+        console.log('selected:id when delete--->>>', selectedRecs);
         if (component.get('v.selectedRecs') != undefined) {
             $A.get("e.c:BT_SpinnerEvent").setParams({
                 "action": "SHOW"
             }).fire();
             var BudgetIds = component.get('v.selectedRecs');
+            console.log('BudgetIds--->>>',{BudgetIds});
             var rowData;
             var newRFQItems = [];
             var delId = [];

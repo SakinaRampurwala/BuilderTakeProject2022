@@ -15,17 +15,17 @@
 ************************************************************************** */
 public with sharing class BT_RenameFilesSchedulable implements Schedulable{
     // New Amazon File Paths  by Id.
-	Map<Id, String> newAmazonFilePathsById = new Map<Id, String>();
-	// Old Amazon File Paths by Id.
-	Map<Id, String> oldAmazonFilePathsById = new Map<Id, String>();
+    Map<Id, String> newAmazonFilePathsById = new Map<Id, String>();
+    // Old Amazon File Paths by Id.
+    Map<Id, String> oldAmazonFilePathsById = new Map<Id, String>();
     
-	//========================================================//
+    //========================================================//
     //Constructor
     //Initialize variables and objects
     //========================================================//
     public BT_RenameFilesSchedulable(Map<Id, String> newAmazonFilePathsById, Map<Id, String> oldAmazonFilePathsById) {
         this.newAmazonFilePathsById = newAmazonFilePathsById;
-		this.oldAmazonFilePathsById = oldAmazonFilePathsById;
+        this.oldAmazonFilePathsById = oldAmazonFilePathsById;
     }
     
     /*
@@ -34,13 +34,13 @@ public with sharing class BT_RenameFilesSchedulable implements Schedulable{
     *   UnitTests:  
     */
     public void execute(SchedulableContext context) {
-		try{
+        try{
             // If there are still files to delete, queue it using another job
-    		if(newAmazonFilePathsById != null && !newAmazonFilePathsById.keySet().isEmpty()){
-    			System.enqueueJob(new BT_RenameFilesQueueable(newAmazonFilePathsById, oldAmazonFilePathsById));
-    		}
+            if(newAmazonFilePathsById != null && !newAmazonFilePathsById.keySet().isEmpty()){
+                System.enqueueJob(new BT_RenameFilesQueueable(newAmazonFilePathsById, oldAmazonFilePathsById));
+            }
         } catch(Exception e){
             BT_Utils.sendJobFailureEmail('Rename File Schedule Job failed.', e.getMessage());
-		}
+        }
     }
 }

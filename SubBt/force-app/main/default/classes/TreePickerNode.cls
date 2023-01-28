@@ -51,9 +51,9 @@ public with sharing virtual class TreePickerNode {
         this.idString = idString;
         this.name = name;
         if(fullPath != null && fullPath != ''){
-        	this.fullPath = fullPath.replace('\'','&#39;');
+            this.fullPath = fullPath.replace('\'','&#39;');
         } else {
-        	this.fullPath = fullPath;
+            this.fullPath = fullPath;
         }   
     }
     

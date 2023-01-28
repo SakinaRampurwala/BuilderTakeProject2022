@@ -37,12 +37,12 @@ public with sharing class BT_EmailFilesToUsersControllerTest {
     }
     
     public static testmethod void testSendFile(){
-    	
-    	// Creating user
-    	User user = BT_TestUtils.createUser('anlmegh', 'rertest@test.com1', 'tytytest@test1.com');
-    	List<File__c> files = [Select Id, Folder__c, Name From File__c];
-    	ApexPages.currentPage().getParameters().put('folderId', files[0].Folder__c);
-    	
+        
+        // Creating user
+        User user = BT_TestUtils.createUser('anlmegh', 'rertest@test.com1', 'tytytest@test1.com');
+        List<File__c> files = [Select Id, Folder__c, Name From File__c];
+        ApexPages.currentPage().getParameters().put('folderId', files[0].Folder__c);
+        
         BT_EmailFilesToUsersController con = new BT_EmailFilesToUsersController();
         
         // Check the checkable object type

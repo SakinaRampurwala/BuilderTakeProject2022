@@ -1303,6 +1303,9 @@ insert s;*/
                                where id IN :recordIds];
         }
         if (buildertek__Budget_Item__c.sObjectType.getDescribe().isDeletable()){
+            for(buildertek__Budget_Item__c budgetLine: budgetItemLists){
+                System.debug('budgetLine--->>>>'+budgetLine);
+            }
             delete budgetItemLists;
         }
     }
