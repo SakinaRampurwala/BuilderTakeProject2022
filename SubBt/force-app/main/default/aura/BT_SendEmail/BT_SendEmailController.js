@@ -24,8 +24,9 @@
                 helper.getbodyTemplate(component, event, helper);
             }
             helper.getTemplate(component, event, helper);
-           // helper.getFiles(component, event, helper);    
         }
+        helper.getProjectName(component, event, helper);    
+
        
 	},
     emailTemplate : function(component, event, helper) {
@@ -69,6 +70,9 @@
         }
 	},
 	uploadFileAdd : function(component, event, helper) {
+        console.log(component.get("v.selectedFiles"));
+        console.log(component.get("v.objectAPI"));
+
 		$A.createComponents(
             [
                 ["aura:html", {

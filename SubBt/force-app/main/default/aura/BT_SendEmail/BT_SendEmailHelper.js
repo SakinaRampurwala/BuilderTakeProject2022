@@ -152,7 +152,7 @@
     },
 	
 	send:function(component, event, helper) {
-        debugger;
+        // debugger;
 		var to, cc, toIds = [], ccIds = [], files, fileIds = [], subject, body, recordId, templateId, pdfFileName;
 		
         body = '';
@@ -160,23 +160,13 @@
 		cc = component.get("v.selectedCcContact");
         var emailIds = component.get("v.emailIds");
 		files = component.get("v.selectedFillIds"); //selectedFillIds  //selectedFiles
-		//alert('files length ---------> '+files.length);
-		//alert('files ---------> '+JSON.stringify(files));
 		to.forEach(function(v){ toIds.push(v.Id) });
 		cc.forEach(function(v){ ccIds.push(v.Id) }); 
-		
         files.forEach(function(v){ fileIds.push(v) });
-        //alert(files);
-		//files.forEach(function(v){ fileIds.push(v.Id) });
-		//var selectedFiles = $('[id$=fileList]').select2("val");
-		
-		/*if(component.get("v.selectedInvoiceBodyContent")){
-            body += component.get("v.selectedInvoiceBodyContent");
-        }*/
 		body += component.get("v.templateBody");
-      //  alert('hii'+component.get("v.selectedInvoiceBodyContent"));
-		//alert('body -------> '+body);
-		//alert('body -------> '+fileIds);
+
+        // helper.getProjectName(component, event, helper);
+
 
         console.log('fileIds ==>',{fileIds});
 
@@ -186,7 +176,7 @@
 		recordId = component.get("v.recordId");
 		pdfFileName = component.get("v.pdfFileName");
 		var dbAction = component.get("c.SendEmail");
-        //alert('Hiiii');
+        console.log('pdfFileName' + component.get("v.pdfFileName"));
         dbAction.setParams({
             to:toIds,
             cc: ccIds,
@@ -199,7 +189,7 @@
             emailIds: emailIds,
         });
         dbAction.setCallback(this, function (response) {
-           debugger;
+        //    debugger;
             var state = response.getState();
             if (state === "SUCCESS") {
                 if(response.getReturnValue() == 'Success'){
@@ -486,6 +476,24 @@
         });
         toastEvent.fire();
     },
+    getProjectName:function(component, event, helper) {
+        var action = component.get('c.getProNameAndAutoNum');
+        console.log('get  proj name heloper');
+        action.setParams({
+            recordId : component.get("v.recordId"),
+            objectAPIName: component.get("v.objectAPI"),
+        });
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+            var result= response.getReturnValue();
+            console.log({result});
+            if (state === "SUCCESS") {
+				component.set("v.pdfFileName", result);
+
+            }
+        });
+        $A.enqueueAction(action);
+    }
            
     
     

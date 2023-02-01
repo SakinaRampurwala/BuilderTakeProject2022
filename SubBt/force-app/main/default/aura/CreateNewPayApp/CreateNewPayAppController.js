@@ -14,16 +14,18 @@
             $A.enqueueAction(action);
         
         
-        debugger;
+        // debugger;
         component.set("v.Spinner", true);
         component.set("v.showMessage", true);
-        debugger;
+        // debugger;
         var action = component.get("c.getIsNextPAyment");
         action.setParams({"recordId": component.get("v.recordId")});
         action.setCallback(this, function(response) {
             var state = response.getState(); 
             if(state === "SUCCESS") {
                 var resultData = response.getReturnValue();
+                console.log(resultData.payment);
+                console.log(resultData.payment.buildertek__SOV_Payment_Application__r.buildertek__Status__c );
                 //if((resultData.payment.buildertek__IsNextPayment__c == true) /*&& resultData.userrec.isPortalEnabled == true*/){
                 if(resultData.NoSOVLines == true){
                     component.set("v.Spinner", false);
@@ -95,7 +97,8 @@
                         var toastEvent = $A.get("e.force:showToast");
                         toastEvent.setParams({
                             title: '',
-                            message: 'You cannot create another Payment Application until this Payment Application is Customer Accepted',
+                            // message: 'You cannot create another Payment Application until this Payment Application is Customer Accepted',
+                            message: 'You have an existing Payment Application that is Pending for this Project.  You cannot create a new Payment Application until all Payment Apps are Customer Approved.',
                             duration: "5000",
                             key: "info_alt",
                             type: "error",
