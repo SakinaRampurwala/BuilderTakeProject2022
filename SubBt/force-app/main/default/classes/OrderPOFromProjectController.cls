@@ -568,6 +568,8 @@ public class OrderPOFromProjectController {
                     body += '<a href='+ SiteUrl +'buildertek__ConfirmationPage?Id='+myContact.Id+'&templateId='+et.Id+'>Click here</a>';
                     body += '&nbsp;to confirm your Purchase Order details.' ;
 
+
+
                     //email.setPlainTextBody(emailBody);
                     email.setHtmlBody(body);
 
