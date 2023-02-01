@@ -158,6 +158,7 @@
                 </aura:if>
             </lightning:buttonGroup>
         </div>
+        Jon Snow
         <br />
 
         <div aura:id="quoteItem" />

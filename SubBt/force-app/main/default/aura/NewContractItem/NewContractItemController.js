@@ -639,5 +639,68 @@
         }
         
     },
+
+    expandCollapseGroups: function(component, event, helper) {
+        var quoteId = component.get("v.quoteId")
+        var grpIndex = event.currentTarget.dataset.grpindex;
+        var expandicon = document.getElementsByClassName(quoteId + ' expandGrpIcon_' + grpIndex);
+        var collapeIcon = document.getElementsByClassName(quoteId + ' collapseGrpIcon_' + grpIndex);
+        var className = quoteId + " groupRows_" + grpIndex;
+        var grpRows = document.getElementsByClassName(className);
+        var allGroups = component.get("v.TotalRecords").groups;
+        console.log(expandicon[0].style.display)
+        console.log(collapeIcon[0].style.display)
+        if (expandicon[0].style.display == "inline-block" && collapeIcon[0].style.display == "none") {
+            component.set("v.isExpandGrp", true);
+            expandicon[0].style.display = 'none';
+            collapeIcon[0].style.display = 'inline-block';
+
+            if (!expandicon[0].classList.contains('hideExpandIcon')) {
+                expandicon[0].classList.add('hideExpandIcon')
+            }
+            if (expandicon[0].classList.contains('hideExpandIconhideCollapseIcon')) {
+                expandicon[0].classList.remove('hideExpandIconhideCollapseIcon')
+            }
+            for (var i = 0; i < grpRows.length; i++) {
+                var item = grpRows[i];
+                if (item.style.display == "none") {
+                    item.style.display = 'table-row';
+                }
+            }
+            var hideCollapseIconEles = document.getElementsByClassName(quoteId + ' hideExpandIcon')
+            if (hideCollapseIconEles.length == allGroups.length) {
+                var expandallicon = document.getElementsByClassName('expandAllBtn_' + quoteId);
+                var collapeallIcon = document.getElementsByClassName('CollapeseAllBtn_' + quoteId);
+                collapeallIcon[0].style.display = "inline-block";
+                expandallicon[0].style.display = "none";
+            }
+
+
+        } else if (expandicon[0].style.display == "none" && collapeIcon[0].style.display == "inline-block") {
+            collapeIcon[0].style.display = 'none';
+            expandicon[0].style.display = 'inline-block';
+
+            if (!expandicon[0].classList.contains('hideExpandIconhideCollapseIcon')) {
+                expandicon[0].classList.add('hideExpandIconhideCollapseIcon')
+            }
+            if (expandicon[0].classList.contains('hideExpandIcon')) {
+                expandicon[0].classList.remove('hideExpandIcon')
+            }
+            for (var i = 0; i < grpRows.length; i++) {
+                var item = grpRows[i];
+                if (item.style.display == "table-row") {
+                    item.style.display = 'none';
+                }
+            }
+            var hideExpandIconEles = document.getElementsByClassName(quoteId + ' hideExpandIconhideCollapseIcon')
+            if (hideExpandIconEles.length == allGroups.length) {
+                var expandallicon = document.getElementsByClassName('expandAllBtn_' + quoteId);
+                var collapeallIcon = document.getElementsByClassName('CollapeseAllBtn_' + quoteId);
+                expandallicon[0].style.display = "inline-block";
+                collapeallIcon[0].style.display = "none";
+            }
+        }
+
+    },
         
 })

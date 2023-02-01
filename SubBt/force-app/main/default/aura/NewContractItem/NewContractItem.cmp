@@ -277,106 +277,181 @@
                             <div class="slds-backdrop slds-backdrop_open"></div>
                         </div>
                     </aura:if>
-                <div class="slds">
-                    <div class="slds-scrollable" style="height: 30rem;">
-                        <table class="slds-table slds-table--bordered slds-max-medium-table--stacked-horizontal"><!--Table must be responsive-->
-                            <thead>
-                                <tr class="slds-text-heading--label" style="line-height: 2">
-                                    <th></th> 
-                                    <th class="slds-is-sortable" scope="col" width="5px">
-                                        <!-- <ui:inputCheckbox value="{!v.isSelectAll}" change="{!c.handleSelectAll}" aura:id="selectAll"/>-->
-                                        <div class="slds-form-element">
-                                            <div class="slds-form-element__control">
-                                                <label class="slds-checkbox" style="width:10px;">
-                                                    <ui:inputCheckbox value="{!v.isSelectAll}" change="{!c.handleSelectAll}" aura:id="selectAll"/>
-                                                    <span class="slds-checkbox--faux" style="top:-2px"></span>
-                                                    <span class="slds-form-element__label text"></span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </th>
-                                    <aura:iteration items="{!v.columns}" var="col">
-                                        <th class="slds-is-sortable" scope="col" ><div class="slds-truncate" title="{!col.label}">{!col.label}</div></th>
-                                    </aura:iteration>
-                                    <th >
-                                    </th>
-                                    <th>
-                                        
-                                    </th>
-                                    <th>
-                                        
-                                    </th>
-                                </tr>
-                            </thead>
+                
+                <div class="slds mainTablediv">
+
+                    <div>
+                        <!--<div class="slds-scrollable" style="width:100%;height: 35rem;">-->
+
+                        <table class="slds-table slds-table--bordered slds-max-medium-table--stacked-horizontal tablecls">
+                            <!--Table must be responsive-->
                             <tbody>
-                                <aura:iteration items="{!v.TotalRecords.groups}" var="group">
-                                    <tr class="groupHeader" >
-                                        <th></th>
-                                        <th>
-                                            
-                                        </th>
-                                        <th>
-                                            {!group.Name}    
-                                        </th>
-                                        <aura:iteration items="{!v.TotalRecords.wrapperList}" var="rec">
-                                            <aura:if isTrue="{!group.Name == rec.groupName &amp;&amp; rec.fieldType != 'false'}">
-                                                <aura:if isTrue="{!rec.fieldType == 'CURRENCY'}">
-                                                    <th>
-                                                        <aura:if isTrue="{!rec.totalValue != null}">
-                                                            <lightning:formattedNumber value="{!rec.totalValue}" style="currency"/>
-                                                            <aura:set attribute="else">
-                                                                $0.00    
-                                                            </aura:set>
-                                                        </aura:if>
-                                                        <button class="slds-button slds-button_icon slds-cell-edit__button slds-m-left_x-small" tabindex="-1" title="">
-                                                            <span style="display:none;">
-                                                                
-                                                            </span>
-                                                            <span class="slds-assistive-text">Edit</span>
-                                                        </button>
-                                                    </th>
+                                <aura:iteration items="{!v.TotalRecords.groups}" var="group" indexVar="groupIndex">
+                                    <tr class="groupHeader">
+                                        <td colspan="{!v.TotalRecords.totalColumns}" style="line-height:3vh;">
+                                            <div class="slds-grid slds-gutters  ">
+                                                <!-- <div style="float: right !important;">-->
+                                                <!-- <div style="float: right;" class="slds-p-right_small">-->
+
+                                                <div class="slds-p-left_x-large">
+                                                    <!-- Icon -->
+                                                    <!-- <span style="display: none; margin-top:-0.9rem;" class="{!v.quoteId+' expandGrpIcon_'+groupIndex}" data-grpindex="{!groupIndex}" onclick="{!c.expandCollapseGroups}">
+                                                        <lightning:icon iconName="utility:add" size="xx-small"
+                                                            alternativeText="add"
+                                                            style="border: 1px solid #b9b9b9; padding: 0.1rem 0.3rem 0.3rem 0.3rem" />
+                                                    </span> -->
+                                                </div>
+                                                <!-- <span style="display:inline-block;" class="{!v.quoteId+' collapseGrpIcon_'+groupIndex}" data-grpindex="{!groupIndex}" onclick="{!c.expandCollapseGroups}">
+                                                    <lightning:icon iconName="utility:dash" size="xx-small"
+                                                        alternativeText="dash"
+                                                        style="border: 1px solid #b9b9b9; padding: 0.1rem 0.3rem 0.3rem 0.3rem" />
+                                                </span> -->
+
+
+
+                                                <!-- <span class="{!'expandGrpIcon_'+groupIndex}" style="" data-grpindex="{!groupIndex}" onclick="{!c.expandCollapseGroups}">
+                                                <lightning:icon
+                                                                iconName="utility:add"
+                                                                size="xx-small"
+                                                                alternativeText="add"  style="border: 1px solid #b9b9b9; padding: 0.1rem 0.3rem 0.3rem 0.3rem"/>
+                                            </span>
+                                            <span class="{!'hideCollapseIcon collapseGrpIcon_'+groupIndex}" data-grpindex="{!groupIndex}" onclick="{!c.expandCollapseGroups}">
+                                                <lightning:icon
+                                                                iconName="utility:dash"
+                                                                size="xx-small"
+                                                                alternativeText="dash"  style="border: 1px solid #b9b9b9; padding: 0.1rem 0.3rem 0.3rem 0.3rem"/>
+                                            </span> -->
+                                                <!-- <div class="slds-col slds-size_6-of-12" data-index='{!groupIndex}'
+                                                onclick="{!c.onClickChangeGroupName}"> -->
+                                                <div class="slds-col slds-size_6-of-12" style="font-size: 17px;">
+                                                    <!-- <span style=" margin-right:-60px; margin-left: -60px; !important;" >-->
+                                                    {!group.Name}
+
+                                                </div>
+                                            </div>
+                                            <!-- <div class="slds-grid slds-gutters">
+                                            <div class="slds-col slds-size_1-of-12">
+                                                <aura:if
+                                                    isTrue="{!if(group.buildertek__Description__c!=null,true,false)}">
+                                                    <div title="Description" onclick="{!c.addGroupDescription}"
+                                                        data-index='{!groupIndex}'
+                                                        style="font-size: 14px !important;">
+                                                        {!group.buildertek__Description__c}
+                                                    </div>
+                                                    <aura:set attribute="else">
+                                                        <div onclick="{!c.addGroupDescription}"
+                                                            data-index='{!groupIndex}'
+                                                            style="font-size: 14px !important;">
+                                                            Click to edit description.
+                                                        </div>
+                                                    </aura:set>
                                                 </aura:if>
-                                            </aura:if>
-                                            <aura:if isTrue="{!group.Name == rec.groupName &amp;&amp; rec.fieldType == 'false'}">
-                                                <th >
-                                                    
-                                                </th>        
+                                            </div>
+                                        </div> -->
+
+                                        </td>
+                                        <td colspan="{!v.TotalRecords.totalColumns}">
+                                            <td>
+                                            </td>
+                                        </td>
+                                        <td>
+                                        </td>
+                                        <td>
+                                        </td>
+                                        <td>
+                                        </td>
+                                        <td>
+                                        </td>
+                                        <td>
+                                        </td>
+                                        <td>
+                                        </td>
+                                        <th data-aura-rendered-by="464:15076;a"></th>
+                                        <!-- <td></td>-->
+                                    </tr>
+                                    <tr class="slds-text-heading--label" style="line-height: 2;font-size: 12px;">
+                                            <th></th>
+                                        <th class="slds-is-sortable tabletitle" scope="col" width="5px">
+                                            <div class="slds-form-element">
+                                                <div class="slds-form-element__control">
+                                                    <label class="slds-checkbox" width="10px">
+                                                        <ui:inputCheckbox value="{!group.isSelected}"
+                                                            name="{!group.Name}" change="{!c.handleSelectAll}"
+                                                            aura:id="selectAll" class="" />
+                                                        <span class="slds-checkbox--faux" style="top:-2px;"></span>
+                                                        <span class="slds-form-element__label text"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </th>
+                                        <aura:iteration items="{!v.columns}" var="col">
+                                            <aura:if isTrue="{!and(col.fieldName!='Name',and(col.fieldName!='buildertek__Notes__c',col.fieldType!='reference'))}">
+                                                <th class="slds-is-sortable inputCss tabletitle" scope="col" style="padding-right:5px !important;padding-left:5px !important;">
+                                                    <div class="slds-truncate" title="{!col.label}">{!col.label}
+                                                    </div>
+                                                </th>
+                                                <aura:set attribute="else">
+                                                    <aura:if isTrue="{!and(col.fieldType=='reference')}">
+                                                        <th class="slds-is-sortable lookupCss" scope="col" style="padding-right:5px !important;padding-left:5px !important;">
+                                                            <div class="slds-truncate" title="{!col.label}">
+                                                                {!col.label}
+                                                            </div>
+                                                        </th>
+                                                        <aura:set attribute="else">
+                                                            <th class="slds-is-sortable" scope="col" style="padding-right:5px !important;padding-left:5px !important;">
+                                                                <div class="slds-truncate" title="{!col.label}">
+                                                                    {!col.label}
+                                                                </div>
+                                                            </th>
+                                                        </aura:set>
+                                                    </aura:if>
+                                                </aura:set>
                                             </aura:if>
                                         </aura:iteration>
                                         <th>
-                                            
+                                        </th>
+                                        <th>
                                         </th>
                                     </tr>
-                                    
-                                    <aura:iteration items="{!v.TotalRecords.tarTable.ListOfEachRecord}" var="tar">
-                                        <tr class="slds-hint-parent">
+                                    <aura:iteration items="{!v.TotalRecords.tarTable.ListOfEachRecord}" var="tar" indexVar="quoteIndex">
+                                        <tr style="line-height: 2.5;display:table-row;" class="{!v.quoteId+' slds-hint-parent groupRows_'+groupIndex}">
+                                            <!-- quoteId -->
+
                                             <aura:if isTrue="{!group.Id == tar.groupId}">
+                                                    <td >
+                                                        {!tar.recordCount +1}
+                                                    </td>
                                                 <td>
-                                                    {!tar.recordCount +1}   
-                                                </td>
-                                                <td>
-                                                    <!--<div class="slds-truncate" title=""><ui:inputCheckbox class="green-checkbox" aura:id="checkQuoteItem" value="" text="{!tar.recordId}"/></div>-->
                                                     <div class="slds-form-element">
                                                         <div class="slds-form-element__control">
                                                             <label class="slds-checkbox" style="width:2px;">
-                                                                <ui:inputCheckbox text="{!tar.recordId}" aura:id="checkQuoteItem" value="" change="{!c.unCheckAll}"/>
-                                                                <span class="slds-checkbox--faux" style="top:-2px"></span>
+                                                                <ui:inputCheckbox text="{!tar.recordId}"
+                                                                    aura:id="checkQuoteItem"
+                                                                    value="{!tar.isSelected}"
+                                                                    change="{!c.unCheckAll}" />
+                                                                <span class="slds-checkbox--faux"
+                                                                    style="top:-2px;"></span>
                                                                 <span class="slds-form-element__label text"></span>
                                                             </label>
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td scope="row"  class="slds-cell-edit" data-label="Name">
-                                                    <aura:if isTrue="{!and(and(v.isEditMode, v.fieldName == 'Name'), v.quoteItemId == tar.recordId)}">
-                                                        <ui:inputText aura:id="inputId" value="{!tar.recordName}" change="{!c.updateQuoteData}" blur="{!c.onblur}"/> 
-                                                        <aura:set attribute="else" >
+                                                <td scope="row" class="slds-cell-edit" data-label="Name">
+                                                    <aura:if isTrue="{!or(and(and(v.isEditMode, v.fieldName == 'Name'), v.quoteItemId == tar.recordId),and(v.enableMassUpdate))}">
+                                                        <ui:inputText aura:id="inputId" value="{!tar.recordName}" change="{!c.updateQuoteData}" blur="{!c.onblur}" />
+                                                        <aura:set attribute="else">
                                                             <div class="slds-truncate" title="{!tar.recordName}">
                                                                 <a href="javascript:void(0);" role="menuitem" tabindex="-1" data-record="{!tar.recordId}" onclick="{!c.doView}">
                                                                     {!tar.recordName}
                                                                 </a>
                                                                 <button class="slds-button slds-button_icon slds-cell-edit__button slds-m-left_x-small" tabindex="-1" title="">
-                                                                    <span style="display:none;" data-id="{!tar.recordId}" data-label="Name" data-group="{!tar.groupId}" onclick="{!c.inlineEdit}">
-                                                                        <lightning:icon iconName="utility:edit" size="xx-small" alternativeText="edit"/>
+                                                                    <span style="display:none;"
+                                                                        data-id="{!tar.recordId}" data-label="Name"
+                                                                        data-group="{!tar.groupId}"
+                                                                        onclick="{!c.inlineEdit}">
+                                                                        <lightning:icon iconName="utility:edit"
+                                                                            size="xx-small"
+                                                                            alternativeText="edit" />
                                                                     </span>
                                                                     <span class="slds-assistive-text">Edit</span>
                                                                 </button>
@@ -385,70 +460,199 @@
                                                     </aura:if>
                                                 </td>
                                                 <aura:iteration items="{!tar.recordList}" var="value">
-                                                    <td class="ShowIconClass" >
-                                                        <aura:if isTrue="{!or(and(and(v.isEditMode, v.fieldName == value.fieldName), v.quoteItemId == tar.recordId),and(v.enableMassUpdate,or(value.fieldName=='buildertek__Quantity__c',value.fieldName=='buildertek__Unit_Price__c')))}">
-                                                            <ui:inputText aura:id="inputId" value="{!value.originalValue}" change="{!c.updateQuoteData}" blur="{!c.onblur}"/>
-                                                            <aura:set attribute="else" >
-                                                                <div class="slds-truncate" >
+                                                    <td class="ShowIconClass" data-myvalue="{!value}">
+                                                        <aura:if isTrue="{!or(and(and(v.isEditMode, v.fieldName == value.fieldName),v.quoteItemId == tar.recordId),and(v.enableMassUpdate,
+                                                            or(or(or(or(or(or(or(value.fieldName=='buildertek__Quantity__c',
+                                                            or(or(value.fieldName == 'buildertek__Unit_Price__c',value.fieldName == 'buildertek__Priority__c'),value.fieldName == 'buildertek__Vendor__c')
+                                                            ),value.fieldName=='buildertek__Additional_Discount__c'
+                                                            ),value.fieldName=='buildertek__Unit_Cost__c'
+                                                            ),value.fieldName=='buildertek__Applied_Markup__c'
+                                                            ),value.fieldName == 'buildertek__UOM__c'
+                                                            ),value.fieldName == 'buildertek__Markup__c'
+                                                            ),value.fieldName == 'buildertek__Margin__c'
+                                                            ),value.fieldName=='buildertek__Notes__c'
+                                                            ))
+                                                            }">
+                                                            <aura:if isTrue="{!value.fieldType != 'picklist'}">
+                                                                <aura:if isTrue="{!value.fieldType == 'reference'}">
+                                                                    <c:BT_LookupFields childObjectName="buildertek__Quote_Item__c" selectedRecordId="{!value.originalValue}" fieldName="{!value.fieldName}" index="{!quoteIndex}" />
+                                                                    <aura:set attribute="else">
+                                                                    <ui:inputText aura:id="inputId" value="{!value.originalValue}" change="{!c.updateQuoteData}" blur="{!c.onblur}" />
+                                                                    </aura:set>
+                                                                </aura:if>
+
+                                                                <aura:set attribute="else">
+                                                                    <ui:inputSelect value="{! value.originalValue }" class="select-class">
+                                                                        <aura:iteration var="option" items="{! v.options }">
+                                                                            <option value="{! option.value }" selected="{!value.originalValue == option.value}">
+                                                                                {! option.label }</option>
+                                                                        </aura:iteration>
+                                                                    </ui:inputSelect>
+                                                                </aura:set>
+                                                            </aura:if>
+                                                            <aura:set attribute="else">
+                                                                <div class="slds-truncate">
                                                                     <aura:if isTrue="{!value.fieldType == 'currency'}">
                                                                         <aura:if isTrue="{!value.originalValue != ''}">
-                                                                            <lightning:formattedNumber value="{!value.originalValue}" style="currency"/> 
+                                                                            <aura:if isTrue="{!value.fieldName != 'buildertek__Net_Unit__c'}">
+                                                                                <lightning:formattedNumber value="{!value.originalValue}" style="currency" class="inputCss" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
+                                                                                <aura:set attribute="else">
+                                                                                    <span data-id="{!tar.recordId}" onclick="{!c.editUnitPrice}">
+                                                                                        <lightning:icon
+                                                                                            iconName="utility:edit"
+                                                                                            size="xx-small" />
+                                                                                        &nbsp;
+                                                                                    </span>
+                                                                                    <lightning:formattedNumber value="{!value.originalValue}" style="currency" class="inputCss" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
+                                                                                </aura:set>
+                                                                            </aura:if>
                                                                             <aura:set attribute="else">
-                                                                                <lightning:formattedNumber value="0.00" style="currency"/>    
+                                                                                <lightning:formattedNumber value="0.00" style="currency" class="inputCss" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
                                                                             </aura:set>
                                                                         </aura:if>
-                                                                        
+
                                                                     </aura:if>
+
                                                                     <aura:if isTrue="{!value.fieldType == 'number'}">
-                                                                        <lightning:formattedNumber value="{!value.originalValue}"/>    
+
+                                                                        <lightning:formattedNumber value="{!value.originalValue}" class="inputCss" />
                                                                     </aura:if>
                                                                     <aura:if isTrue="{!value.fieldType == 'string'}">
-                                                                        <lightning:formattedNumber value="{!value.originalValue/100}" style="percent"  minimumFractionDigits="2"/>     
+
+                                                                        <lightning:formattedNumber value="{!value.originalValue/100}" style="percent" minimumFractionDigits="2" class="inputCss" />
                                                                     </aura:if>
-                                                                    <!--{!value.recordValue}-->
+                                                                    <aura:if isTrue="{!value.fieldType == 'textarea'}">
+                                                                        <lightning:formattedRichText value="{!value.originalValue}" class="textAreaCss" />
+                                                                    </aura:if>
+                                                                    <aura:if isTrue="{!value.fieldType == 'picklist'}">
+                                                                        {!value.originalValue}
+                                                                    </aura:if>
+                                                                    <aura:if isTrue="{!value.referenceValue}">
+                                                                        <ui:outputURL value="{!'/one/one.app?#/sObject/'+ value.originalValue + '/view'}" target="_blank" label="{!value.referenceValue}" />
+                                                                    </aura:if>
                                                                     <button class="slds-button slds-button_icon slds-cell-edit__button slds-m-left_x-small" tabindex="-1" title="">
-                                                                        <aura:if isTrue="{!value.isEditable == true}">
-                                                                            <span style="display:none;" data-id="{!tar.recordId}" data-label="{!value.fieldName}" data-group="{!tar.groupId}" onclick="{!c.inlineEdit}">
-                                                                                <lightning:icon iconName="utility:edit" size="xx-small" alternativeText="edit"/>
+                                                                        <aura:if
+                                                                            isTrue="{!value.isEditable == true}">
+                                                                            <span style="display:none;"
+                                                                                data-id="{!tar.recordId}"
+                                                                                data-label="{!value.fieldName}"
+                                                                                data-group="{!tar.groupId}"
+                                                                                onclick="{!c.inlineEdit}">
+                                                                                <lightning:icon
+                                                                                    iconName="utility:edit"
+                                                                                    size="xx-small"
+                                                                                    alternativeText="edit" />
                                                                             </span>
                                                                         </aura:if>
-                                                                        <span class="slds-assistive-text">Edit</span>
+                                                                        <span
+                                                                            class="slds-assistive-text">Edit</span>
                                                                     </button>
-                                                                </div>    
+                                                                </div>
                                                             </aura:set>
                                                         </aura:if>
                                                     </td>
-                                                </aura:iteration> 
-                                                <td style="text-align: right;">
-                                                    <div class="slds-truncate" >
+                                                </aura:iteration>
+                                                <td style="text-align:right">
+                                                    <div class="slds-truncate">
                                                         <span data-id="{!tar.recordId}" onclick="{!c.onclickDuplicate}">
-                                                            <lightning:icon iconName="utility:copy" size="xx-small" /> &nbsp;    
+                                                            <lightning:icon iconName="utility:copy"
+                                                                size="xx-small" />
+                                                            &nbsp;
                                                         </span>
                                                         <span data-id="{!tar.recordId}" onclick="{!c.editQuote}">
-                                                            <lightning:icon iconName="utility:edit" size="xx-small" /> &nbsp;    
+                                                            <lightning:icon iconName="utility:edit"
+                                                                size="xx-small" />
+                                                            &nbsp;
                                                         </span>
                                                         <span data-id="{!tar.recordId}" onclick="{!c.deleteQuote}">
-                                                            <lightning:icon iconName="utility:delete" size="xx-small" />    
+                                                            <lightning:icon iconName="utility:delete"
+                                                                size="xx-small" />
                                                         </span>
                                                     </div>
                                                 </td>
-                                                <td></td>
-                                                <td></td>
+                                                <td>
+                                                </td>
                                             </aura:if>
                                         </tr>
-                                    </aura:iteration> 
+                                    </aura:iteration>
+                                    <tr class="groupFooter">
+                                        <td>
+                                        </td>
+                                        <td>
+                                        </td>
+                                        <td>
+                                        </td>
+                                        <aura:iteration items="{!v.TotalRecords.wrapperList}" var="rec" indexVar="totalRecordsIndex">
+                                            <aura:if isTrue="{!group.Name == rec.groupName &amp;&amp; rec.fieldType != 'false'}">
+                                                <aura:if isTrue="{!rec.fieldType == 'CURRENCY'}">
+                                                    <td>
+                                                        <aura:if isTrue="{!rec.totalValue != null}">
+                                                            <span style="font-weight: bold;">
+                                                                <!--<aura:if isTrue='{!v.multicurrency}'>
+                                                                <lightning:formattedNumber value="{!rec.totalValue}"
+                                                            style="currency" currencyCode="{!rec.CurrencyIsoCode}" currencyDisplayAs="code"/>
+                                                            </aura:if>
+                                                            <aura:if isTrue='{!!v.multicurrency}'>-->
+                                                                <lightning:formattedNumber value="{!rec.totalValue}"
+                                                                    style="currency"
+                                                                    currencyCode="{!v.currencycode}"
+                                                                    currencyDisplayAs="code" />
+                                                                <!--</aura:if>-->
+                                                                <aura:set attribute="else">
+                                                                    <!--<aura:if isTrue='{!v.multicurrency}'>
+                                                                <lightning:formattedNumber value="0.00"
+                                                                                        style="currency" class="inputCss" currencyCode="{!rec.CurrencyIsoCode}" currencyDisplayAs="code"/>
+                                                            </aura:if>
+                                                            <aura:if isTrue='{!!v.multicurrency}'>-->
+                                                                    <lightning:formattedNumber value="0.00"
+                                                                        style="currency" class="inputCss"
+                                                                        currencyCode="{!v.currencycode}"
+                                                                        currencyDisplayAs="code" />
+                                                                    <!--</aura:if>-->
+                                                                </aura:set>
+                                                            </span>
+                                                        </aura:if>
+                                                        <button class="slds-button slds-button_icon slds-cell-edit__button slds-m-left_x-small" tabindex="-1" title="">
+                                                            <span style="display:none;">
+                                                            </span>
+                                                            <span class="slds-assistive-text">Edit</span>
+                                                        </button>
+                                                    </td>
+                                                </aura:if>
+                                            </aura:if>
+                                            <!-- <aura:if isTrue="{!v.wrapperListLength != totalRecordsIndex}">  -->
+                                            <aura:if isTrue="{!group.Name == rec.groupName &amp;&amp; rec.fieldType == 'false'}">
+                                                <td style="text-align:right">
+
+                                                </td>
+                                            </aura:if>
+                                            <!-- </aura:if> -->
+                                        </aura:iteration>
+                                    </tr>
+                                    <br />
+
+                                    <!--<br />
+                                <br />-->
                                 </aura:iteration>
+                                <aura:if isTrue="{!empty(v.TotalRecords.groups)}">
+                                    <div class="slds-col slds-size_6-of-12 slds-float_right" style="font-size: 10px; height:1.5rem;">
+                                    </div>
+                                </aura:if>
                             </tbody>
                         </table>
+
                     </div>
-                    <br/>
+                    <!--<br />-->
                     <aura:if isTrue="{!v.total > 50}">
-                        <div class="slds-align_absolute-center">            
-                            <lightning:button disabled="{!v.page == 1}" variant="brand" label="Previous" onclick="{! c.navigate }" />            
+                        <div class="slds-align_absolute-center">
+                            <lightning:button disabled="{!v.page == 1}" variant="brand" label="Previous" onclick="{! c.navigate }" />
                             <lightning:button disabled="{!v.page == v.pages}" aura:id="previousPage" variant="brand" label="Next" onclick="{! c.navigate }" />
                         </div>
                     </aura:if>
-                    <br/>
+
+
+
+                    <!-- <br />-->
                 </div>
                 <div class="slds-align_absolute-center">
                     <aura:if isTrue="{!v.showButtons}">

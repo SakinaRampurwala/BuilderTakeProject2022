@@ -71,6 +71,7 @@ public class ClonePaymentApp {
             
             if(!VendorPayApps.isEmpty()){
                 for(buildertek__SOV_Payment_Application__c PA :VendorPayApps){
+                    System.debug('check PA --> '+PA);
                     if(PA.buildertek__Status__c != 'Company Accepted'){
                         AllVendorsApproved = false;
                     }
@@ -121,6 +122,7 @@ public class ClonePaymentApp {
             if(sovConLinesList.isEmpty()){
                 inn.NoSOVLines = true;
             }
+            System.debug('inn wrapper --> '+inn);
             return inn;
         }
         return null;

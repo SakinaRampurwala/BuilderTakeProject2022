@@ -2521,7 +2521,43 @@ return other.Id == current.Id
         }
         $A.get('e.force:refreshView').fire();
 
-    }
+    },
+
+    onclickBOMGrouping : function(component, event, helper){
+        component.set("v.isBOMmodalOpen", true);
+        var opts = [
+            {label: "Build Phase", value:"buildertek__Build_Phase__c"},
+            {label: "Build Reference 1", value:"buildertek__Build_Reference_1__c"},
+            {label: "Base Location", value:"buildertek__Base_Location__c"},
+            {label: "Location (PL)", value:"buildertek__Location_Picklist__c"},
+            {label: "Location Detailed Area", value:"buildertek__Location_Detailed_Area__c"},
+            {label: "Location Detail Reference 1", value:"buildertek__Location_Detail_Reference_1__c"},
+            {label: "Service Category", value:"buildertek__BL_SERVICE_CATEGORY__c"}
+        ]
+        component.set("v.GroupingOptions", opts);
+    },
+
+    closeModel: function(component, event, helper) { 
+        component.set("v.isBOMmodalOpen", false);
+     },
+    
+     submitDetails: function(component, event, helper) {
+        var valueofField1 = component.get("v.valueofField1")
+        var valueofField2 = component.get("v.valueofField2")
+        var valueofField3 = component.get("v.valueofField3")
+        var valueofField4 = component.get("v.valueofField4")
+
+        if(valueofField1 != "" && valueofField2 != "" && valueofField3 != "" && valueofField4 != ""){
+            component.set("v.isBOMmodalOpen", false);            
+        }
+        else{
+            alert('Please fill all the fields');
+        }
+        console.log('valueofField1-->',valueofField1);
+        console.log('valueofField2-->',valueofField2);
+        console.log('valueofField3-->',valueofField3);
+        console.log('valueofField4-->',valueofField4);
+     },
 
 
 })

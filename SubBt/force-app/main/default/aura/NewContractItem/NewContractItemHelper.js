@@ -12,6 +12,7 @@
                 var state = response.getState();
                 if (state === "SUCCESS") {
                     var result = response.getReturnValue()
+                    console.log("result",result);
                     component.set("v.TotalRecords", result);
                     component.set("v.columns", result.columns);
                     component.set("v.page", result.page);

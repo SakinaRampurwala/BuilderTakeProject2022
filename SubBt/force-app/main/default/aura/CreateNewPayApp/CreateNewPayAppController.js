@@ -4,6 +4,7 @@
         action.setCallback(this, function(response){
             if(response.getState() === "SUCCESS"){
                 var result = response.getReturnValue();
+                console.log('result ==> ',{result});
                 if(result.IsPortalEnabled == true){
                     component.set("v.Iscommunity",true);
                 }
@@ -86,6 +87,8 @@
                         toastEvent.fire();
                     }
                     else if(resultData.payment.buildertek__SOV_Payment_Application__r.buildertek__Status__c != "Customer Accepted" && component.get("v.Iscommunity") == false){
+                        var IsCommunity = component.get("v.Iscommunity")
+                        console.log('IsCommunity ==> ',{IsCommunity});
                         component.set("v.Spinner", false);
                         component.set("v.showMessage", false);
                         $A.get("e.force:closeQuickAction").fire();
