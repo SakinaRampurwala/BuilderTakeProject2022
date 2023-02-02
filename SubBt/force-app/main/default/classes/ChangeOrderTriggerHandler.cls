@@ -99,8 +99,17 @@ public with sharing class ChangeOrderTriggerHandler {
                 buildertek__Budget_Item__c budgetLine = new buildertek__Budget_Item__c();
                 budgetLine.Name = newCO.Name + ' budget line';
                 budgetLine.buildertek__Budget__c = newCO.buildertek__Budget__c;
+                budgetLine.buildertek__Invoice_total__c = newCO.buildertek__Total_Amount_Tax__c;
                 budgetLine.buildertek__Group__c = budgetLineGroupId;
                 budgetLineMap.put(newCO.Id, budgetLine);
+                // insert budgetLine;
+                
+                // buildertek__CO_Item_To_Budget_Item_Link__c linkObj = new buildertek__CO_Item_To_Budget_Item_Link__c();
+                // linkObj.buildertek__CO_Item__c = newCO.Id;
+                // linkObj.buildertek__Budget_Item__c = budgetLine.Id;
+                // linkObj.buildertek__Auto_Roll_Up__c = true;
+                // insert linkObj;
+
             } 
         }
 
@@ -114,15 +123,32 @@ public with sharing class ChangeOrderTriggerHandler {
             }
         }
 
+        //will delete automatically created budget line if unlinked from the change order on update
+        for(buildertek__Change_Order__c changeOrder : oldChangeOrder){
+            for(buildertek__Change_Order__c changeOrder2 : updatedChangeOrder){
+                if(changeOrder.Id == changeOrder2.Id){
+                    if(changeOrder.buildertek__Budget_Line__c != changeOrder2.buildertek__Budget_Line__c && changeOrder.buildertek__Budget_Line__c != null) 
+                    {
+                        string Name  = changeOrder.Name + ' budget line';
+                        buildertek__Budget_Item__c  oldBudgetLine = [SELECT Id, buildertek__Item_Name__c, Name FROM buildertek__Budget_Item__c WHERE ID =: changeOrder.buildertek__Budget_Line__c];
+                        if(oldBudgetLine.Name == Name){
+                            delete oldBudgetLine;
+                        }
+                    }
+                }
+            }
+        }
+        
+
+
     }
     
     public void OnBeforeDelete(buildertek__Change_Order__c[] ChangeOrderToDelete, Map<ID, buildertek__Change_Order__c> ChangeOrderMap){
         system.debug('ChangeOrderToDelete------->'+ChangeOrderToDelete);
         for(buildertek__Change_Order__c changeOrder : ChangeOrderToDelete) {
             if(changeOrder.buildertek__Status__c != null){
-                
-                if(changeOrder.buildertek__Status__c.equalsIgnoreCase('Approved') || changeOrder.buildertek__Status__c.equalsIgnoreCase('Paid') 
-                   || changeOrder.buildertek__Status__c.equalsIgnoreCase('Partially Paid') || changeOrder.buildertek__Status__c.equalsIgnoreCase('Customer Approved')) {
+                //* whole condition breakDown {changeOrder.buildertek__Status__c.equalsIgnoreCase('Approved') || changeOrder.buildertek__Status__c.equalsIgnoreCase('Paid')|| changeOrder.buildertek__Status__c.equalsIgnoreCase('Partially Paid') || changeOrder.buildertek__Status__c.equalsIgnoreCase('Customer Approved')}
+                if(changeOrder.buildertek__Status__c.equalsIgnoreCase('Customer Approved')) {
                        changeOrder.addError('You cannot delete this Change Order because it has already been '+changeOrder.buildertek__Status__c);
                    }
             }
@@ -525,8 +551,6 @@ public with sharing class ChangeOrderTriggerHandler {
             //newContractGroup.buildertek__Contract__c = contractToUpdateList[0].Id;
             //newContractGroupList.add(newContractGroup); 
             insert newBudgetGroup;    
-            
-            
         }
             /*for(buildertek__Contract_Line_Group__c grp : newContractGroupList){
             groupNameMap.put(grp.buildertek__Contract__c, grp.Id);        
@@ -598,11 +622,8 @@ public with sharing class ChangeOrderTriggerHandler {
                                       FROM buildertek__Change_Order_Item__c
                                       WHERE buildertek__Change_Order__c IN: budgetChangeOrderSet AND  buildertek__Change_Order__r.buildertek__Budget__c !=null LIMIT 1];
                 
-                system.debug('asasasasasasasasasasasasasasasasas'+COItemListForBudget);
-                
-                system.debug('fffffffffffffffffffffffffff'+COItemListForBudget.size());
-                
-                if(COItemListForBudget.size() > 0){
+                //! this logic is creating new budget line from CO line which is inCorrect
+                /*if(COItemListForBudget.size() > 0){
                     
                     for(buildertek__Change_Order_Item__c coItem : COItemListForBudget){
                         
@@ -624,7 +645,7 @@ public with sharing class ChangeOrderTriggerHandler {
                         
                         insert budgetItemsToInsert;    
                     }
-                }
+                } */
                 
             }
         }
@@ -851,14 +872,14 @@ public with sharing class ChangeOrderTriggerHandler {
         List<buildertek__Change_Order_Item__c> coLineList = [SELECT Id, Name, buildertek__Budget_Item__c FROM buildertek__Change_Order_Item__c WHERE buildertek__Change_Order__c =: COIds];
         List<CO_Item_To_Budget_Item_Link__c> COItemToBudgetItemLinks = new List<CO_Item_To_Budget_Item_Link__c>();
         System.debug('coLineList===>>>'+coLineList);
-        if(COIds.size()>0){
+        if(coLineList.size()>0){
             map<id,buildertek__Change_Order__c> coMap=new map<id,buildertek__Change_Order__c>([select id,Name,(select id,Name from buildertek__Change_Order_Items__r) from buildertek__Change_Order__c where id in:COIds]);
             List<buildertek__CO_Item_To_Budget_Item_Link__c> BudgetCoLinkList = new List<buildertek__CO_Item_To_Budget_Item_Link__c>();
 
             for(buildertek__Change_Order__c coRecord: newList){
                 buildertek__Change_Order__c coOld=oldmap.get(coRecord.id);
 
-                if(coRecord.buildertek__Budget_Line__c != coOld.buildertek__Budget_Line__c){
+                if(coRecord.buildertek__Budget_Line__c != coOld.buildertek__Budget_Line__c && coRecord.buildertek__Budget_Line__c != null){
                     System.debug('===In If===');
                     if(coMap.containskey(coRecord.id)){
                         buildertek__Change_Order__c ac1=coMap.get(coRecord.id);
@@ -866,10 +887,10 @@ public with sharing class ChangeOrderTriggerHandler {
                         System.debug('lstCo===>>>'+lstCo);
 
                         for (buildertek__Change_Order_Item__c coLine : lstCo) {
-                                buildertek__CO_Item_To_Budget_Item_Link__c COItemToBudgetItemLink = new buildertek__CO_Item_To_Budget_Item_Link__c();
-                                COItemToBudgetItemLink.CO_Item__c = coLine.Id;
-                                COItemToBudgetItemLink.Budget_Item__c = coRecord.buildertek__Budget_Line__c;
-                                COItemToBudgetItemLinks.add(COItemToBudgetItemLink);
+                            buildertek__CO_Item_To_Budget_Item_Link__c COItemToBudgetItemLink = new buildertek__CO_Item_To_Budget_Item_Link__c();
+                            COItemToBudgetItemLink.CO_Item__c = coLine.Id;
+                            COItemToBudgetItemLink.Budget_Item__c = coRecord.buildertek__Budget_Line__c;
+                            COItemToBudgetItemLinks.add(COItemToBudgetItemLink);
                         }
                     }
                 }

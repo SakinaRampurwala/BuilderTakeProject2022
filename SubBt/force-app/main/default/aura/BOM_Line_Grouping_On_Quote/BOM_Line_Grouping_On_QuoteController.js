@@ -1,5 +1,5 @@
 ({
     doInit: function(component, event, helper){
-        helper.getQuoteDataHelper();
+        helper.getQuoteDataHelper(component, event, helper);
     }
 })

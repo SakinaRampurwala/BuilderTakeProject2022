@@ -2547,16 +2547,42 @@ return other.Id == current.Id
         var valueofField3 = component.get("v.valueofField3")
         var valueofField4 = component.get("v.valueofField4")
 
-        if(valueofField1 != "" && valueofField2 != "" && valueofField3 != "" && valueofField4 != ""){
-            component.set("v.isBOMmodalOpen", false);            
+        if(valueofField1 == "" && valueofField2 == "" && valueofField3 == "" && valueofField4 == ""){
+            var toastEvent = $A.get("e.force:showToast");
+            toastEvent.setParams({
+                "type": "Error",
+                "title": "Error!",
+                "message": 'Please Select At Least One Field'
+            });
+            toastEvent.fire();           
+        } else{
+            var selectedFieldList = [];
+            if (valueofField1 != "") {
+                selectedFieldList.push(valueofField1)
+            }
+            if (valueofField2 != "") {
+                selectedFieldList.push(valueofField2)
+            }
+            if (valueofField3 != "") {
+                selectedFieldList.push(valueofField3)
+            }
+            if (valueofField4 != "") {
+                selectedFieldList.push(valueofField4)
+            }
+            console.log('selectedFieldList ==> ',{selectedFieldList});
+            component.set("v.isBOMmodalOpen", false); 
+
+            var evt = $A.get("e.force:navigateToComponent");
+            evt.setParams({
+                componentDef: "c:BOM_Line_Grouping_On_Quote",
+                componentAttributes: {
+                    recordId: component.get("v.recordId"),
+                    groupFieldList: selectedFieldList
+                }
+            });
+            evt.fire();
         }
-        else{
-            alert('Please fill all the fields');
-        }
-        console.log('valueofField1-->',valueofField1);
-        console.log('valueofField2-->',valueofField2);
-        console.log('valueofField3-->',valueofField3);
-        console.log('valueofField4-->',valueofField4);
+
      },
 
 

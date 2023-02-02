@@ -1367,7 +1367,7 @@
                     </header>
                     <!--Modal/Popup Box Body Starts here-->
                     <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
-                        <lightning:select name="field1" label="Select Field 1" value="{!v.valueofField1}" required="true" >
+                        <lightning:select name="field1" label="Select Field 1" value="{!v.valueofField1}" >
                             <option text="--None--" value=""/>
                             <aura:iteration items="{!v.GroupingOptions}" var="item">
                                 <aura:if isTrue="{! (item.value == v.valueofField2 || item.value == v.valueofField3 || item.value==v.valueofField4)}">
@@ -1378,7 +1378,7 @@
                                 </aura:if>
                             </aura:iteration>
                         </lightning:select>
-                        <lightning:select name="field2" label="Select Field 2" value="{!v.valueofField2}" required="true" >
+                        <lightning:select name="field2" label="Select Field 2" value="{!v.valueofField2}" >
                             <option text="--None--" value=""/>
                             <aura:iteration items="{!v.GroupingOptions}" var="item">
                                 <aura:if isTrue="{! (item.value == v.valueofField1 || item.value == v.valueofField3 || item.value==v.valueofField4)}">
@@ -1389,7 +1389,7 @@
                                 </aura:if>
                             </aura:iteration>
                         </lightning:select>
-                        <lightning:select name="field3" label="Select Field 3" value="{!v.valueofField3}" required="true">
+                        <lightning:select name="field3" label="Select Field 3" value="{!v.valueofField3}">
                             <option text="--None--" value=""/>
                             <aura:iteration items="{!v.GroupingOptions}" var="item">
                                 <aura:if isTrue="{! (item.value == v.valueofField2 || item.value == v.valueofField1 || item.value==v.valueofField4)}">
@@ -1400,7 +1400,7 @@
                                 </aura:if>
                             </aura:iteration>
                         </lightning:select>
-                        <lightning:select name="field4" label="Select Field 4" value="{!v.valueofField4}" required="true">
+                        <lightning:select name="field4" label="Select Field 4" value="{!v.valueofField4}">
                             <option text="--None--" value=""/>
                             <aura:iteration items="{!v.GroupingOptions}" var="item">
                                 <aura:if isTrue="{! (item.value == v.valueofField2 || item.value == v.valueofField3 || item.value==v.valueofField1)}">
