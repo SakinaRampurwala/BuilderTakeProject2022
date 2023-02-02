@@ -19,8 +19,12 @@
     border-color: #e5e5e5;
 }
 
-.THIS .slds-modal__container {
-    max-width: 60rem !important;
+.THIS .uiOutputURL{
+    white-space: normal;
+    word-wrap: break-word;
+}
+
+/* .THIS .slds-modal__container {
     width: 70% !important;
     min-width: 80rem !important;
-}
+} */

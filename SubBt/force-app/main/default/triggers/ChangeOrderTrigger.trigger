@@ -18,6 +18,7 @@ trigger ChangeOrderTrigger on Change_Order__c (after delete, after insert, after
          
         else if(Trigger.isInsert && Trigger.isAfter){
             handler.OnAfterInsert(Trigger.new, Trigger.newMap);
+            //handler.ManageBudgetLineOnInsert(Trigger.new);
         }
         
         else if(Trigger.isUpdate && Trigger.isBefore){
@@ -27,12 +28,13 @@ trigger ChangeOrderTrigger on Change_Order__c (after delete, after insert, after
             handler.checkPOBeforeUpdate(Trigger.new);
             handler.checkParentPOBeforeUpdate(Trigger.new);
             handler.UpdateDateApproved(Trigger.new, trigger.oldMap);
-            handler.BudgetLineUpdate(Trigger.new, trigger.oldMap);            
+            //handler.BudgetLineUpdate(Trigger.new, trigger.oldMap);            
         }
         
         else if(Trigger.isUpdate && Trigger.isAfter){
             handler.OnAfterUpdate(Trigger.old, Trigger.new, Trigger.newMap, trigger.oldMap);
-            handler.UpdateProjectValueInChangeOrder(Trigger.new, trigger.oldMap);            
+            handler.UpdateProjectValueInChangeOrder(Trigger.new, trigger.oldMap); 
+            //handler.ManageBudgetLineOnInsert(Trigger.new);           
         }
         
         else if(Trigger.isDelete && Trigger.isBefore){

@@ -25,6 +25,7 @@ public with sharing class BOM_Line_Grouping_On_Quote {
         if (groupingList.size() > 3) {
             query += ', '+groupingList[3];
         }
+        query += ' NULLS LAST';
 
         List<buildertek__Quote_Item__c> quoteLineList = Database.query(query);
 

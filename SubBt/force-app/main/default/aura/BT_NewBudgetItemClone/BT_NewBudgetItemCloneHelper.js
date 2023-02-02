@@ -562,6 +562,8 @@
                                         totalObj['totalSalesPricekey'] = '';
                                         totalObj['TotalApprovals'] = 0;
                                         totalObj['TotalApprovalskey'] = '';
+                                        totalObj['TotalC0'] = 0;
+                                        totalObj['TotalCOkey'] = '';    
                                         totalObj['CommittedCost'] = 0;
                                         totalObj['CommittedCostkey'] = 0;
                                         totalObj['AdditionalCosts'] = 0;
@@ -1012,6 +1014,8 @@
                         totalObj['orignalbudgetkey'] = '';
                         totalObj['TotalApprovals'] = 0;
                         totalObj['TotalApprovalskey'] = '';
+                        totalObj['TotalC0'] = 0;
+                        totalObj['TotalCOkey'] = '';
                         totalObj['CommittedCost'] = 0;
                         totalObj['CommittedCostkey'] = 0;
                         totalObj['AdditionalCosts'] = 0;
@@ -1828,6 +1832,8 @@
                 totalObj['totalSalesPricekey'] = '';
                 totalObj['TotalApprovals'] = 0;
                 totalObj['TotalApprovalskey'] = '';
+                totalObj['TotalC0'] = 0;
+                totalObj['TotalCOkey'] = '';
                 totalObj['CommittedCost'] = 0;
                 totalObj['CommittedCostkey'] = 0;
                 totalObj['AdditionalCosts'] = 0;
@@ -1890,6 +1896,8 @@
         ele.forEach(e => {
 
             if (e.fieldName == 'buildertek__Unit_Price__c' && e.originalValue != '') {
+                debugger;
+                console.log('unit price',typeof(e.originalValue));
                 totalObj['unitPrice'] += e.originalValue;
                 totalObj['unitPricekey'] = "buildertek__Unit_Price__c";
             }
@@ -1907,6 +1915,14 @@
             if (e.fieldName == 'buildertek__Total_Approvals_CO__c') {
                 totalObj['TotalApprovals'] += e.originalValue;
                 totalObj['TotalApprovalskey'] = "buildertek__Total_Approvals_CO__c";
+            }
+
+            if (e.fieldName == 'buildertek__CO_Total__c') {
+                debugger;
+                console.log('total CO ',typeof(e.originalValue));
+                console.log('total CO value',(e.originalValue));
+                totalObj['TotalC0'] += e.originalValue;
+                totalObj['TotalCOkey'] = "buildertek__CO_Total__c";
             }
 
             if (e.fieldName == 'buildertek__Committed_Costs__c') {

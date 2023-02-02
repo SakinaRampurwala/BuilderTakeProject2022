@@ -1256,6 +1256,15 @@
                                                                         </aura:if>
                                                                     </aura:if>
 
+                                                                    <aura:if isTrue="{!col.fieldName == 'buildertek__CO_Total__c'}">
+                                                                        <aura:if isTrue="{!group.totals.TotalCOkey == 'buildertek__CO_Total__c'}">
+                                                                            <span style="font-weight: bold;font-size: 0.78rem !important;">
+                                                                                <lightning:formattedNumber value="{!group.totals.TotalC0}" style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
+                                                                            </span>
+                                                                        </aura:if>
+                                                                        
+                                                                    </aura:if>
+
                                                                     <aura:if isTrue="{!col.fieldName == 'buildertek__Labor1__c'}">
                                                                         <aura:if isTrue="{!group.totals.Labor1key == 'buildertek__Labor1__c'}">
                                                                             <span style="font-weight: bold;font-size: 0.78rem !important;">

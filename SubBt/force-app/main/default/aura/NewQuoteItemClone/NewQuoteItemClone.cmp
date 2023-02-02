@@ -175,6 +175,7 @@
     <aura:attribute name="sortedDirection" type="String" default="asc" />
     <aura:attribute name="isDisabled" type="Boolean" default="false" />
     <aura:attribute name="checkFunctionCall" type="Boolean" default="false" />
+    <aura:attribute name="selectedFieldList" type="List" default="[]" />
 
     <aura:method name="refreshComponent" action="{!c.doInit}" />
     <!-- Handler -->
@@ -1428,5 +1429,7 @@
             <div class="slds-backdrop slds-backdrop_open"></div>
         </aura:if>
     </div>
+
+    <c:BOM_Line_Grouping_On_Quote recordId="!v.recordId" groupFieldList="{!v.selectedFieldList}" />
 
 </aura:component>
