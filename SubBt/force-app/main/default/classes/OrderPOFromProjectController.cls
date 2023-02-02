@@ -558,7 +558,7 @@ public class OrderPOFromProjectController {
                     system.debug('after savepoint------->');
 
                     // List<Messaging.Emailfileattachment> signeefileAttachments = new List<Messaging.Emailfileattachment>();
-                    Organization org =[SELECT Id, Name, Street, City, State, PostalCode, Country,  Address, Phone  FROM Organization LIMIT 1];
+                    // Organization org =[SELECT Id, Name, Street, City, State, PostalCode, Country,  Address, Phone  FROM Organization LIMIT 1];
 
                     Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
                     email.setToAddresses(new list<string>{myContact.buildertek__Vendor__r.buildertek__Email_Address__c});
@@ -568,11 +568,11 @@ public class OrderPOFromProjectController {
                     body += '</br> Please &nbsp;';
                     body += '<a href='+ SiteUrl +'buildertek__ConfirmationPage?Id='+myContact.Id+'&templateId='+et.Id+'>Click here</a>';
                     body += '&nbsp;to confirm your Purchase Order details.</br></br>' ;
-                    body += '</br/></br>';
-                    body += '<br/></br>Sincerely,</br>' ;
-                    body += '<br/>'+org.Name+ '</br>';
-                    body += '<br/>'+org.Phone+ '</br>';
-                    body += '<br/>'+org.Street+org.City+ org.State+org.PostalCode+org.Country+'</br><br/>';
+                    // body += '</br/></br>';
+                    // body += '<br/></br>Sincerely,</br>' ;
+                    // body += '<br/>'+org.Name+ '</br>';
+                    // body += '<br/>'+org.Phone+ '</br>';
+                    // body += '<br/>'+org.Street+org.City+ org.State+org.PostalCode+org.Country+'</br><br/>';
 
 
 
