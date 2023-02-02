@@ -53,6 +53,8 @@ public with sharing class PreviewChangeOrderController {
              String body = '';
              //String subject =  Emailsubject;  
             // String subject = ' Change Order [ref:' + recordId + ']';
+            buildertek__Change_Order__c changeRec = [select id, Name , buildertek__Auto_Number__c , buildertek__Project__r.Name , buildertek__Project__r.buildertek__Auto_Number__c from buildertek__Change_Order__c where Id =: recordId Limit 1];
+
              String subject='';
              list<buildertek__Admin_Interface_Node_Configuration__c> adminInterfaceNodeConfigurations = [Select Id,
                                                                                                   buildertek__Quote_Configuration__c,buildertek__Email_Subject__c 
@@ -128,8 +130,10 @@ public with sharing class PreviewChangeOrderController {
              mail.setSaveAsActivity(true);
              List<Messaging.Emailfileattachment> fileAttachments = new List<Messaging.Emailfileattachment>();
              Messaging.Emailfileattachment efa = new Messaging.Emailfileattachment();
-             efa.setFileName('ChangeOrder.pdf');
-              system.debug('templateid-----'+templateId+'record---> '+recordId);
+
+
+             efa.setFileName(changeRec.buildertek__Project__r.Name +'-' + changeRec.buildertek__Project__r.buildertek__Auto_Number__c +'-' + changeRec.buildertek__Auto_Number__c+'.pdf');
+            system.debug('templateid-----'+templateId+'record---> '+recordId);
              system.debug('Blob ---> '+setAttachmentBody(recordId, templateId,fileid));
              efa.setBody(setAttachmentBody(recordId, templateId,fileid));
              fileAttachments.add(efa); 
@@ -227,6 +231,8 @@ public with sharing class PreviewChangeOrderController {
      public static String acceptandsendProposal(String htmlBody, String recordId, String templateId, List<String> to, List<String> cc,string Emailsubject, string fileid){
          try{
              String body = '';
+            buildertek__Change_Order__c changeRec = [select id, Name , buildertek__Auto_Number__c , buildertek__Project__r.Name , buildertek__Project__r.buildertek__Auto_Number__c from buildertek__Change_Order__c where Id =: recordId Limit 1];
+
            //  String subject =  Emailsubject;  
              String subject='';
              list<buildertek__Admin_Interface_Node_Configuration__c> adminInterfaceNodeConfigurations = [Select Id,
@@ -303,7 +309,7 @@ public with sharing class PreviewChangeOrderController {
              mail.setHTMLBody(body);
              List<Messaging.Emailfileattachment> fileAttachments = new List<Messaging.Emailfileattachment>();
              Messaging.Emailfileattachment efa = new Messaging.Emailfileattachment();
-             efa.setFileName('ChangeOrder.pdf');
+             efa.setFileName(changeRec.buildertek__Project__r.Name +'-' + changeRec.buildertek__Project__r.buildertek__Auto_Number__c +'-' + changeRec.buildertek__Auto_Number__c+'.pdf');
               system.debug('templateid-----'+templateId+'record---> '+recordId);
              system.debug('Blob ---> '+setAttachmentBody(recordId, templateId,fileid));
              efa.setBody(setAttachmentBody(recordId, templateId,fileid));             

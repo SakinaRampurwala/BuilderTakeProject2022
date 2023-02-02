@@ -1445,7 +1445,7 @@ public with sharing class BT_SendEmailController{
         string pdfName;
         if (objectAPIName == 'buildertek__Change_Order__c'){
             buildertek__Change_Order__c changeRec = [select id, Name , buildertek__Auto_Number__c , buildertek__Project__r.Name , buildertek__Project__r.buildertek__Auto_Number__c from buildertek__Change_Order__c where Id =: recordId Limit 1];
-            pdfName=changeRec.buildertek__Project__r.Name + ' - ' + changeRec.buildertek__Project__r.buildertek__Auto_Number__c +' - ' + changeRec.buildertek__Auto_Number__c;
+            pdfName=changeRec.buildertek__Project__r.Name + '-' + changeRec.buildertek__Project__r.buildertek__Auto_Number__c +'-' + changeRec.buildertek__Auto_Number__c;
         }else{
             pdfName='';
         }
