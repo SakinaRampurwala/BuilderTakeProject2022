@@ -1430,6 +1430,6 @@
         </aura:if>
     </div>
 
-    <c:BOM_Line_Grouping_On_Quote recordId="!v.recordId" groupFieldList="{!v.selectedFieldList}" />
+    <!-- <c:BOM_Line_Grouping_On_Quote recordId="!v.recordId" groupFieldList="{!v.selectedFieldList}" /> -->
 
 </aura:component>
