@@ -1,17 +1,17 @@
 ({
-    getQuoteDataHelper : function(component, event, helper) {
-        console.log('*** getQuoteDataHelper ***');
+    doInitHelper : function(component, event, helper) {
+        console.log('*** doInitHelper Method ***');
         component.set("v.Spinner", true);
         var page = component.get("v.page") || 1
         var groupFieldList = component.get("v.groupFieldList");
-        if (groupFieldList[1] != undefined) {
-            component.set("v.secondGrouping", true);
-        }
-        if (groupFieldList[2] != undefined) {
-            component.set("v.thirdGrouping", true);
-        }
         if (groupFieldList[3] != undefined) {
             component.set("v.forthGrouping", true);
+        } else if (groupFieldList[2] != undefined) {
+            component.set("v.thirdGrouping", true);
+        } else if (groupFieldList[1] != undefined) {
+            component.set("v.secondGrouping", true);
+        } else if(groupFieldList[0] != undefined){
+            component.set("v.firstGrouping", true);
         }
         var action = component.get("c.getQuoteData");
         action.setParams({

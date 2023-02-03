@@ -137,7 +137,7 @@ public with sharing class ChangeOrderTriggerHandler {
                 if(changeOrder.Id == changeOrder2.Id){
                     if(changeOrder.buildertek__Total_Amount_Tax__c != changeOrder2.buildertek__Total_Amount_Tax__c){
                         //check if the budget line is same as the old budget line
-                        if(changeOrder.buildertek__Budget_Line__c == changeOrder2.buildertek__Budget_Line__c){
+                        if(changeOrder.buildertek__Budget_Line__c == changeOrder2.buildertek__Budget_Line__c && changeOrder.buildertek__Budget_Line__c != null){
                             //check if the name if the budget line is same as the name of the change order + ' budget line'
                             string Name  = changeOrder.Name + ' budget line';
                             buildertek__Budget_Item__c  oldBudgetLine = [SELECT Id, buildertek__Item_Name__c, Name FROM buildertek__Budget_Item__c WHERE ID =: changeOrder.buildertek__Budget_Line__c];

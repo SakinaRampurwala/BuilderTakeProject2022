@@ -1,0 +1,138 @@
+<aura:component controller="NewPO_From_PO" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader" access="global">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:attribute name="Spinner" type="Boolean" default="false" />
+    <aura:attribute name="POLineWrapper" type="object[]" default="" />
+    <aura:attribute name="POLine" type="List" />
+    <aura:attribute name="noData" type="Boolean" default="false" />
+    <aura:attribute name="mydata" type="Object"/>
+    <aura:attribute name="mycolumns" type="List"/>
+    <aura:attribute name="selectedRows" type="List" default="" />
+    <aura:attribute name="listOfSelectedIds" type="List" default="[]" />
+    <aura:attribute name="StoreIdsOfDatatable" type="List" />
+    <aura:attribute name="openPOBox" type="Boolean" default="true" />
+    <aura:attribute name="openPOLineBox" type="Boolean" default="false" />
+    <aura:attribute name="data2" type="Object" />
+
+    <aura:if isTrue="{!v.Spinner}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+            <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>
+
+    <aura:html tag="style">
+        .container{ 
+            height: auto !important; 
+        } 
+        .slds-modal__content { 
+            overflow: hidden !important; 
+        } 
+        .slds-modal__close{ 
+            display:block !important; 
+        } 
+        .slds-docked-form-footer{ 
+            bottom: auto; 
+        } 
+        .slds-p-around--medium{ 
+            padding: 0; 
+        } 
+        .modalBodyDiv{ 
+            text-align: center;
+            font-weight: 600; 
+            line-height: 10rem; 
+            font-size: 18px; 
+        }
+        .slds-modal__container {
+            width: 95% !important;
+            <!-- max-width: 100rem !important; -->
+        }
+    </aura:html>
+    <aura:if isTrue="{!v.openPOBox}">
+        <div class="slds-modal__content">
+            <div class="slds">
+                <header class="slds-modal__header">
+                    <div class="" id="header" style="font-size:20px;">
+                        Create Purchase Order
+                    </div>
+                </header>
+                <div>
+                    <div style="margin: 15px 5px;">
+                        <div class="slds-modal__content slds-p-around_xx-small">
+                            <div class="slds slds-scope">
+                                <lightning:datatable data="{! v.mydata }" columns="{! v.mycolumns }" keyField="id" selectedRows="{! v.selectedRows }" onrowselection="{! c.updateSelectedText }"/>
+                            </div>
+                        </div>
+                        <aura:if isTrue="{!v.noData}">
+                            <div class="modalBodyDiv">
+                                No Data Found
+                            </div>
+                        </aura:if>
+                    </div>
+                </div>
+                <footer role="contentinfo" class="slds-docked-form-footer fixedFooter" style="display:block;text-align:right;padding-right:5px;">
+                    <button class="slds-button slds-button--neutral" onclick="{!c.closeModal}"> Cancel </button>
+                    <button class="slds-button slds-button--brand" onclick="{!c.openPOLineModel}" style="margin: 0 0.5rem;"> Next </button>
+                </footer>
+            </div>
+        </div>
+    </aura:if>
+
+    <aura:if isTrue="{!v.openPOLineBox}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open  slds-modal_large">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Edit Selected PO Line Items</h2>
+                </header>
+                <div class="slds-modal__content" id="modal-content-id-1">
+                    <table aria-multiselectable="true" class="slds-card slds-table slds-table_bordered slds-table_fixed-layout slds-table_resizable-cols" role="grid">
+                        <thead style="height: 40px; ">
+                            <tr>
+                                <th class="tableHeader" style="padding-left: 10px">
+                                    PO Line Name
+                                </th>
+                                <th class="tableHeader" style="padding-left: 10px">
+                                    Quantity
+                                </th>
+                                <th class="tableHeader" style="padding-left: 10px">
+                                    Unit Cost
+                                </th>
+                                <th class="tableHeader" style="padding-left: 12px">
+                                    Rate
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <aura:iteration items="{!v.data2}" var="item" indexVar="recIndex">
+                                testing
+                                <tr>
+                                    <td>
+                                        <lightning:input name="input1" label="" value="{!item.Name}" disabled="true" />
+                                    </td>
+                                    <td>
+                                        <lightning:input name="input3" label="" value="{!item.buildertek__Quantity__c}" />
+                                    </td>
+                                    <td>
+                                        <lightning:input name="input6" label="" value="{!item.buildertek__Unit_Price__c}" formatter="currency" type="number" maximumFractionDigits="5" step="0.01" />
+                                    </td>
+                                    <td>
+                                        <lightning:input name="input2" label="" value="{!item.buildertek__Tax__c}" formatter="currency" type="number" maximumFractionDigits="5" step="0.01" />
+                                    </td>
+                                </tr>
+                            </aura:iteration>
+                        </tbody>
+                    </table>
+                </div>
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" aria-label="Cancel and close" onclick="{!c.closeBox2}">Cancel</button>
+                    <button class="slds-button slds-button_neutral" aria-label="Cancel and close" onclick="{!c.cancelBox}">Back</button>
+
+                    <button class="slds-button slds-button_brand" onclick="{!c.addQuoteLine}" disabled="{!v.isDisabled}">Save</button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop--open" id="backdrop"></div>
+    </aura:if>
+</aura:component>

@@ -188,6 +188,7 @@
         action.setCallback(this, function(response){
             if (response.getState() == 'SUCCESS') {
                 debugger
+                console.log('@@response.getReturnValue()--'+response.getReturnValue());
                 var getBoolValue = response.getReturnValue();
                 if (getBoolValue) {
                     component.set('v.isopen',false);

@@ -2570,7 +2570,6 @@ return other.Id == current.Id
                 selectedFieldList.push(valueofField4)
             }
             console.log('selectedFieldList ==> ',{selectedFieldList});
-            component.set("v.selectedFieldList", selectedFieldList);
             component.set("v.isBOMmodalOpen", false); 
 
             var evt = $A.get("e.force:navigateToComponent");
