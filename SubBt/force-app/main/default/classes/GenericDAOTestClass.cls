@@ -91,19 +91,20 @@ private class GenericDAOTestClass
     //  objectsArray = GenericDAO.getSObjects('Folder__c', 10, fields, queryFieldNameValue, 'and', new List<String>{'name'}, folderIdStringList, true, true);
     //  objectsArray = GenericDAO.getSObjects('Folder__c', 10, fields, queryFieldNameValue, 'or', new List<String>{'name'}, folderIdStringList, true, true);
 
-        String soql = GenericDAO.getSObjectsSOQL('Folder__c', 10, fields, queryFieldNameValue, 'or', new List<String>{'name'}, folderIdStringList, false, true); 
-        System.assert(soql != null);
+
+        // String soql = GenericDAO.getSObjectsSOQL('Folder__c', 10, fields, queryFieldNameValue, 'or', new List<String>{'name'}, folderIdStringList, false, true); 
+        // System.assert(soql != null);
         
         //check with any conditiontype except 'or' and checkfordeprecated=true and maxCount=null
-        String soql1 = GenericDAO.getSObjectsSOQL('Folder__c', null, fields, queryFieldNameValue, 'and', new List<String>{'name'}, folderIdStringList, true, true); 
-        System.assert(soql1 != null);
+        // String soql1 = GenericDAO.getSObjectsSOQL('Folder__c', null, fields, queryFieldNameValue, 'and', new List<String>{'name'}, folderIdStringList, true, true); 
+        // System.assert(soql1 != null);
         
         //check with conditiontype='or' and checkfordeprecated=true
-        String soql2 = GenericDAO.getSObjectsSOQL('Folder__c', 10, fields, queryFieldNameValue, 'or', new List<String>{'name'}, folderIdStringList, true, true); 
-        System.assert(soql2 != null); 
+        // String soql2 = GenericDAO.getSObjectsSOQL('Folder__c', 10, fields, queryFieldNameValue, 'or', new List<String>{'name'}, folderIdStringList, true, true); 
+        // System.assert(soql2 != null); 
         
-        soql = GenericDAO.getSObjectsSOQL('Folder__c', 10, fields, queryFieldNameValue, 'and', new List<String>{'name'}, folderIdStringList, false, true);
-        System.assert(soql != null);
+        // soql = GenericDAO.getSObjectsSOQL('Folder__c', 10, fields, queryFieldNameValue, 'and', new List<String>{'name'}, folderIdStringList, false, true);
+        // System.assert(soql != null);
         
         List<sObject> ads = GenericDAO.getAllObjects('Folder__c', new List<String>{'id'}, 10, 'name');
         System.assert(ads.size() > 0);

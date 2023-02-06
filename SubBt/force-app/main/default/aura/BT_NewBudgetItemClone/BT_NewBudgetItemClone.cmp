@@ -347,7 +347,8 @@
                                         <!-- <lightning:button label="Add Product" onclick="{!c.addProduct}" class="sldsButtonGroup" />-->
                                         <!--  <lightning:button label="Create Scheduled Items" onclick="{!c.checkSchedules}" class="sldsButtonGroup"/>-->
                                         <!--createScheduleItem-->
-                                        <!-- <lightning:button label="New Invoice" onclick="{!c.newInvoice}" class="sldsButtonGroup" /> -->
+                                        <lightning:button label="New Invoice (AP)" onclick="{!c.newInvoice}" class="sldsButtonGroup" />
+                                        <lightning:button label="New Invoice (AR)" onclick="{!c.newInvoice}" class="sldsButtonGroup" />
                                         <!-- <lightning:button label="New RFQ" onclick="{!c.newRFQ}" class="sldsButtonGroup" /> -->
                                         <lightning:button label="New CO" onclick="{!c.newCO}" class="sldsButtonGroup" disabled="{!v.disableAddCO}"/>
                                         <lightning:button label="New PO" onclick="{!c.newPO}" class="sldsButtonGroup" />

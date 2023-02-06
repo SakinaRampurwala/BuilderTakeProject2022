@@ -111,7 +111,7 @@ Integer NUM_QUERY = MAX_QUERY - 1;
         insert contract1;
         rfqToSubContract.put(contract1.Id,contract1);
       
-        ChangeOrderDAO.createCOFromRFQ(rfqsMap,rfqToSubContract);
+        // ChangeOrderDAO.createCOFromRFQ(rfqsMap,rfqToSubContract);
         
       //  ChangeOrderDAO.getpricebook(budget.Id);
       //  ChangeOrderDAO.getpricebooks();

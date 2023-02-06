@@ -1,8 +1,7 @@
 ({
     doInitHelper: function(component, event, helper) {
-
         var recordId = component.get("v.recordId");
-        component.set('v.mycolumns', [
+        component.set('v.poColumns', [
             { label: 'PO Line Name', fieldName: 'Name', type: 'text' },
             { label: 'Quantity', fieldName: 'buildertek__Quantity__c', type: 'text' },
             { label: 'Unit Price', fieldName: 'buildertek__Unit_Price__c', type: 'text' },
@@ -17,7 +16,7 @@
         action.setCallback(this, $A.getCallback(function (response) {
             var state = response.getState();
             if (state === "SUCCESS") {
-                component.set('v.mydata', response.getReturnValue());
+                component.set('v.poData', response.getReturnValue());
                 var result = response.getReturnValue();
                 console.log("Result ---> ", { result });
             } else if (state === "ERROR") {
@@ -30,17 +29,13 @@
     },
 
     showToast: function(type, title, message, time) {
-        try {
-            var toastEvent = $A.get("e.force:showToast");
-            toastEvent.setParams({
-                "title": title,
-                "type": type,
-                "message": message,
-                "duration": time
-            });
-            toastEvent.fire();
-        } catch (error) {
-            console.log({ error });
-        }
+        var toastEvent = $A.get("e.force:showToast");
+        toastEvent.setParams({
+            "title": title,
+            "type": type,
+            "message": message,
+            "duration": time
+        });
+        toastEvent.fire();
     },
 })
