@@ -1296,89 +1296,225 @@
         component.set("v.budgetItemId", null);
     },
 
+    
+
     newInvoice: function(component, event, helper) {
+        $A.get("e.c:BT_SpinnerEvent").setParams({
+            "action": "SHOW"
+        }).fire();
         var selectedRecs = component.get('v.selectedRecs');
         helper.fetchInvoiceRecordType(component, event, helper);
-        if (selectedRecs.length > 0) {
-            var rowData;
-            var newInvoiceItems = [];
-            if (selectedRecs.length > 0) {
-                var budgetlineid = selectedRecs[0];
-                var action;
-                action = component.get("c.BudgetItemList");
-                action.setParams({
-                    BudgetIds: selectedRecs
-                });
-                action.setCallback(this, function(response) {
-                    if (component.isValid() && response.getState() === "SUCCESS") {
-                        for (var i = 0; i < response.getReturnValue().length; i++) {
-                            rowData = response.getReturnValue()[i];
-                            var newInvoiceItem = new Object();
-                            newInvoiceItem.Name = rowData.Name;
-                            newInvoiceItem.buildertek__Item_Title__c = rowData.Name;
-                            newInvoiceItem.buildertek__Product__c = rowData.buildertek__Product__c;
-                            newInvoiceItem.buildertek__Budget_Line__c = rowData.Id;
-                            newInvoiceItem.buildertek__Description__c = rowData.Name;
-                            newInvoiceItem.buildertek__Quantity__c = rowData.buildertek__Quantity__c;
-                            newInvoiceItem.buildertek__Unit_Price__c = rowData.buildertek__Unit_Price__c;
-                            newInvoiceItems.push(newInvoiceItem);
+        if (selectedRecs.length > 0 ) {
+            var action = component.get("c.checkforBidgetItem");
+            action.setParams({
+                "BudgetIds": selectedRecs
+            });
+            action.setCallback(this, function(response) {
+                if (response.getState() === "SUCCESS") {
+                    var result = response.getReturnValue();
+                    if (result.length > 0) {
+                        console.log("result__>",{result});
+                        var budgetline = '';
+                        //run a loop on the result and append the name from the result to the budgetline variable
+                        for (var i = 0; i < result.length; i++) {
+                            budgetline += result[i].Name + ', ';
                         }
-                        // component.set("v.selectedCol", []);
-                        var Invoice = component.get("v.newInvoice1");
-                        Invoice.buildertek__Budget__c = component.get("v.sampleNewRecord").Id;
-                        Invoice.buildertek__Project__c = component.get("v.sampleNewRecord").buildertek__Project__c;
-                        //Invoice.buildertek__Purchase_Order__c = "a1W1K000003mQzWUAU";
-                        //Invoice.RecordTypeId = component.get("v.InvoiceCustomerRecordType"); 
-                        var overlayLib;
-
-                        $A.createComponents([
-                                ["c:BT_New_Invoice", {
-                                    "aura:id": "btNewco",
-                                    "newCO": Invoice,
-                                    "newCOItems": newInvoiceItems,
-                                    //"budgetId" : component.get("v.recordId"),
-                                    "budgetlineid": budgetlineid,
-                                    "saveCallback": component.get("v.refreshGridAction"),
-                                    "cancelCallback": function() {
-                                        overlayLib.close();
-                                    }
-                                }],
-                            ],
-                            function(components, status, errorMessage) {
-                                if (status === "SUCCESS") {
-                                    component.find('overlayLib').showCustomModal({
-                                        header: "New Invoice",
-                                        body: components[0],
-                                        footer: components[0].find("footer").get("v.body"),
-                                        showCloseButton: true,
-                                        cssClass: 'slds-modal_medium',
-                                        closeCallback: function() {
-
-                                        }
-                                    }).then(function(overlay) {
-                                        overlayLib = overlay;
-                                    });
-                                }
-                            }
-                        );
+                        budgetline = budgetline.slice(0, -2);
+                        console.log(budgetline);
+                        $A.get("e.c:BT_SpinnerEvent").setParams({
+                            "action": "HIDE"
+                        }).fire();
+                        component.find('notifLib').showNotice({
+                            "variant": "error",
+                            "header": "Selected Budget Line already has Invoice",
+                            "message": "Budeget Line " + budgetline + " already has Invoice.",
+                            closeCallback: function() {}
+                        });
                     }
-                });
-                $A.enqueueAction(action);
-            } else {
-                component.find('notifLib').showNotice({
-                    "variant": "error",
-                    "header": " Select Budget Line",
-                    "message": "Please Select Budget Line to Create Change Order.",
-                    closeCallback: function() {}
-                });
-            }
+                    else {
+                        var rowData;
+                        var newInvoiceItems = [];
+                        var budgetlineid = selectedRecs[0];
+                        var action;
+                        action = component.get("c.BudgetItemList");
+                        action.setParams({
+                            BudgetIds: selectedRecs
+                        });
+                        action.setCallback(this, function(response) {
+                            if (component.isValid() && response.getState() === "SUCCESS") {
+                                for (var i = 0; i < response.getReturnValue().length; i++) {
+                                    rowData = response.getReturnValue()[i];
+                                    var newInvoiceItem = new Object();
+                                    newInvoiceItem.Name = rowData.Name;
+                                    newInvoiceItem.buildertek__Item_Title__c = rowData.Name;
+                                    newInvoiceItem.buildertek__Product__c = rowData.buildertek__Product__c;
+                                    newInvoiceItem.buildertek__Budget_Line__c = rowData.Id;
+                                    newInvoiceItem.buildertek__Description__c = rowData.Name;
+                                    newInvoiceItem.buildertek__Quantity__c = rowData.buildertek__Quantity__c;
+                                    newInvoiceItem.buildertek__Unit_Price__c = rowData.buildertek__Unit_Price__c;
+                                    newInvoiceItems.push(newInvoiceItem);
+                                }
+                                // component.set("v.selectedCol", []);
+                                var Invoice = component.get("v.newInvoice1");
+                                Invoice.buildertek__Budget__c = component.get("v.sampleNewRecord").Id;
+                                Invoice.buildertek__Project__c = component.get("v.sampleNewRecord").buildertek__Project__c;
+                                //Invoice.buildertek__Purchase_Order__c = "a1W1K000003mQzWUAU";
+                                //Invoice.RecordTypeId = component.get("v.InvoiceCustomerRecordType"); 
+                                var overlayLib;
+                                $A.get("e.c:BT_SpinnerEvent").setParams({
+                                    "action": "HIDE"
+                                }).fire();
+
+                                $A.createComponents([
+                                        ["c:BT_New_Invoice", {
+                                            "aura:id": "btNewco",
+                                            "newCO": Invoice,
+                                            "newCOItems": newInvoiceItems,
+                                            //"budgetId" : component.get("v.recordId"),
+                                            "budgetlineid": budgetlineid,
+                                            "saveCallback": component.get("v.refreshGridAction"),
+                                            "cancelCallback": function() {
+                                                overlayLib.close();
+                                            }
+                                        }],
+                                    ],
+                                    function(components, status, errorMessage) {
+                                        if (status === "SUCCESS") {
+                                            component.find('overlayLib').showCustomModal({
+                                                header: "New Invoice",
+                                                body: components[0],
+                                                footer: components[0].find("footer").get("v.body"),
+                                                showCloseButton: true,
+                                                cssClass: 'slds-modal_medium',
+                                                closeCallback: function() {
+
+                                                }
+                                            }).then(function(overlay) {
+                                                overlayLib = overlay;
+                                            });
+                                        }
+                                    }
+                                );
+                            }
+                        });
+                        $A.enqueueAction(action);
+                    }
+                }
+            });
+            $A.enqueueAction(action);
         } else {
+            $A.get("e.c:BT_SpinnerEvent").setParams({
+                "action": "HIDE"
+            }).fire();
             component.find('notifLib').showNotice({
                 "variant": "error",
                 "header": "Select Budget Line",
                 "message": "Please Select at least One Budget Line to Create Invoice.",
                 //"header": "No Budget Lines",
                 //"message": "No Budget Lines Records.",
+                closeCallback: function() {}
+            });
+        }
+    },
+
+    newInvoiceAR: function(component, event, helper) {
+        console.log('In AR');
+        var selectedRecs = component.get('v.selectedRecs');
+        // helper.fetchInvoiceRecordType(component, event, helper);
+        console.log('selectedRecs--->>>',{selectedRecs});
+        if (selectedRecs.length > 0 ) {
+            var action = component.get("c.checkforBidgetItem");
+            action.setParams({
+                "BudgetIds": selectedRecs
+            });
+            action.setCallback(this, function(response) {
+                if (response.getState() === "SUCCESS") {
+                    console.log('---Success---');
+                    var result = response.getReturnValue();
+                    for (var i = 0; i < result.length; i++) {
+                        console.log(result[i]);
+                    }
+                    if (result.length > 0) {
+                        console.log({result});
+                        component.find('notifLib').showNotice({
+                            "variant": "error",
+                            "header": "Selected Budget Line already has Invoice",
+                            "message": "Please Select at least Budget Line without Invoice.",
+                            closeCallback: function() {}
+                        });
+                    }
+                    else {
+                        console.log('In Else');
+                        var rowData;
+                        var newInvoiceItems = [];
+
+                        var budgetlineid = selectedRecs[0];
+                        var action;
+                        action = component.get("c.BudgetItemList");
+                        action.setParams({
+                            BudgetIds: selectedRecs
+                        });
+                        action.setCallback(this, function(response) {
+                            if (component.isValid() && response.getState() === "SUCCESS") {
+                                console.log('IF--->>>');
+                                for (var i = 0; i < response.getReturnValue().length; i++) {
+                                    rowData = response.getReturnValue()[i];
+                                    var newInvoiceItem = new Object();
+                                    newInvoiceItem.Name = rowData.Name;
+                                    newInvoiceItem.buildertek__Item_Title__c = rowData.Name;
+                                    newInvoiceItem.buildertek__Product__c = rowData.buildertek__Product__c;
+                                    newInvoiceItem.buildertek__Budget_Line__c = rowData.Id;
+                                    newInvoiceItem.buildertek__Description__c = rowData.Name;
+                                    newInvoiceItem.buildertek__Quantity__c = rowData.buildertek__Quantity__c;
+                                    newInvoiceItem.buildertek__Unit_Price__c = rowData.buildertek__Unit_Price__c;
+                                    newInvoiceItems.push(newInvoiceItem);
+                                }
+                                var Invoice = component.get("v.newInvoiceAR");
+                                Invoice.buildertek__Budget__c = component.get("v.sampleNewRecord").Id;
+                                Invoice.buildertek__Project__c = component.get("v.sampleNewRecord").buildertek__Project__c;
+                                var overlayLib;
+                                console.log('=====');
+                                $A.createComponents([
+                                        ["c:BT_New_InvoiceAR", {
+                                            "aura:id": "btNewco",
+                                            "newCO": Invoice,
+                                            "newCOItems": newInvoiceItems,
+                                            "budgetlineid": budgetlineid,
+                                            "saveCallback": component.get("v.refreshGridAction"),
+                                            "cancelCallback": function() {
+                                                overlayLib.close();
+                                            }
+                                        }],
+                                    ],
+                                    function(components, status, errorMessage) {
+                                        if (status === "SUCCESS") {
+                                            component.find('overlayLib').showCustomModal({
+                                                header: "New Invoice (AR)",
+                                                body: components[0],
+                                                footer: components[0].find("footer").get("v.body"),
+                                                showCloseButton: true,
+                                                cssClass: 'slds-modal_medium',
+                                                closeCallback: function() {
+
+                                                }
+                                            }).then(function(overlay) {
+                                                overlayLib = overlay;
+                                            });
+                                        }
+                                    }
+                                );
+                            }
+                        });
+                        $A.enqueueAction(action);
+                    }
+                }
+            });
+            $A.enqueueAction(action);
+        } else {
+            component.find('notifLib').showNotice({
+                "variant": "error",
+                "header": "Select Budget Line",
+                "message": "Please Select at least One Budget Line to Create Invoice (AR).",
                 closeCallback: function() {}
             });
         }

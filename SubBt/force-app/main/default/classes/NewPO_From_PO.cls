@@ -17,14 +17,24 @@ public with sharing class NewPO_From_PO {
         insert newPO;
 
         Map<ID, buildertek__Purchase_Order_Item__c> POLineMap = new Map<ID, buildertek__Purchase_Order_Item__c>([SELECT Id, buildertek__Quantity__c FROM buildertek__Purchase_Order_Item__c WHERE buildertek__Purchase_Order__c =: recordId]);
-        for(Id key: POLineMap.keySet()){
-            System.debug('PO Line--->: ' + POLineMap.get(key));
-        }
 
+        List<buildertek__Purchase_Order_Item__c> deletePolineList = new List<buildertek__Purchase_Order_Item__c>();
+        List<buildertek__Purchase_Order_Item__c> updatePolineList = new List<buildertek__Purchase_Order_Item__c>();
         List<buildertek__Purchase_Order_Item__c> newPolineList = new List<buildertek__Purchase_Order_Item__c>();
+
         for (buildertek__Purchase_Order_Item__c POLine : POLineList) {
+            if (POLineMap.get(POLine.Id).buildertek__Quantity__c == POLine.buildertek__Quantity__c) {
+                deletePolineList.add(POLine);
+            } else if (POLineMap.get(POLine.Id).buildertek__Quantity__c > POLine.buildertek__Quantity__c) {
+                buildertek__Purchase_Order_Item__c oldPoLine =POLineMap.get(POLine.Id);
+                oldPoLine.buildertek__Quantity__c = POLineMap.get(POLine.Id).buildertek__Quantity__c - POLine.buildertek__Quantity__c;
+                updatePolineList.add(oldPoLine);
+            } else if(POLineMap.get(POLine.Id).buildertek__Quantity__c < POLine.buildertek__Quantity__c){
+                buildertek__Purchase_Order_Item__c oldPoLine = POLineMap.get(POLine.Id);
+                oldPoLine.buildertek__Quantity__c = POLine.buildertek__Quantity__c;
+                updatePolineList.add(oldPoLine);
+            }
             buildertek__Purchase_Order_Item__c newPoLine = new buildertek__Purchase_Order_Item__c();
-            System.debug('POLine value--->>>'+POLine);
             newPoLine.Name = POLine.Name;
             newPoLine.buildertek__Quantity__c = POLine.buildertek__Quantity__c;
             newPoLine.buildertek__Unit_Price__c = POLine.buildertek__Unit_Price__c;
@@ -37,7 +47,14 @@ public with sharing class NewPO_From_PO {
             System.debug('newPolineList--->>>'+newPolineList);
         }
 
+        if (deletePolineList.size()>0) {
+            delete deletePolineList;
+            System.debug('Deleted Successfully');
+        }
+        if (updatePolineList.size()>0){
+            update updatePolineList;
+            System.debug('Updated sucessfully');
+        }
         return newPO.Id;
-        
     }
 }

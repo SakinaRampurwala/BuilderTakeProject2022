@@ -31,5 +31,9 @@
             collapeallIcon.style.display = 'none';
             expandallicon.style.display = 'block';
         }
+    },
+
+    expandCollapeGroup: function(component, event, helper){
+
     }
 })

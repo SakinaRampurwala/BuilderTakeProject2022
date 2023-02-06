@@ -47,6 +47,9 @@
                         if (group1Value == element[groupFieldList[0]]) {
                             quoteLines1.push(element);
                             if (quoteLineList.length == index+1) {
+                                var totalWrapper = [];
+                                var recordData = []
+                                helper.countTotal(component, helper, totalWrapper, recordData);
                                 if (groupFieldList[1] != undefined) {
                                     quoteLines1 = helper.addSecondGrouping(component, helper, quoteLines1, groupFieldList);
                                 }
@@ -163,5 +166,9 @@
             });
             return group4Wrapper;
         }
+    }, 
+
+    countTotal : function(component, helper, totalWrapper, recordData){
+        console.log('countTotal');
     }
 })
