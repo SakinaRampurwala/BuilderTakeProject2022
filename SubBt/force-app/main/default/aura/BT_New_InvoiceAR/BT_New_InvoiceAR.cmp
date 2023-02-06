@@ -11,7 +11,7 @@
 		default="{ 'sobjectType': 'Billable_Lines__c','buildertek__Product__c': null,
                                                                                          'buildertek__Description__c': '',
                                                                                          'buildertek__Quantity__c': null,
-                                                                                         'buildertek__Unit_Price__c': null}" />
+                                                                                         'buildertek__Sales_Price__c': null}" />
 	<aura:attribute name="coItemsToInsert" type="List" />
 	<aura:attribute name="cancelCallback" type="object" access="public" />
 	<aura:attribute name="saveCallback" type="Aura.Action" access="public" />
@@ -108,9 +108,9 @@
 								</div>
 							</td>
 							<td>
-								<div class="slds-truncate" title="{!item.changeOrderItem.buildertek__Unit_Price__c}" style = "padding-bottom: 27%;">
+								<div class="slds-truncate" title="{!item.changeOrderItem.buildertek__Sales_Price__c}" style = "padding-bottom: 27%;">
 									<lightning:input name="unitPrice" label=" "
-										value="{!item.changeOrderItem.buildertek__Unit_Price__c}" />
+										value="{!item.changeOrderItem.buildertek__Sales_Price__c}" />
 								</div>
 							</td>
 							

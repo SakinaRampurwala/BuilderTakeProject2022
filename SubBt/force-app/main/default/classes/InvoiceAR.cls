@@ -33,6 +33,18 @@ public with sharing class InvoiceAR {
     }
 
     @AuraEnabled
+    public static List<COLineItemsClass> addProductsToList(String COItems, buildertek__Billable_Lines__c COItem, Integer count){
+        system.debug('coItem -----------> ' + COItems);
+        system.debug('COItem -----------> ' + COItem);
+        system.debug('count ---------> ' + count);
+        List<COLineItemsClass> changeOrderList = (List<COLineItemsClass>)JSON.deserialize(coItems, List<COLineItemsClass>.class);
+        system.debug('changeOrderList -----------> ' + changeOrderList);
+
+        changeOrderList.add(new COLineItemsClass(COItem, false, count));
+        return changeOrderList;
+    }
+
+    @AuraEnabled
     public static ResponseBase createInvoiceAR(buildertek__Billings__c coJson, string coItemsJson, string budgetlineid,string descri){
         system.debug('coJson ----------> ' + coJson);
         system.debug('coItemsJson ----------> ' + coItemsJson);

@@ -10,7 +10,11 @@
             coItems: coItem
         });
         action.setCallback(this, function (response) {
+            debugger;
             var state = response.getState();
+            var error = response.getError();
+            console.log({error});
+            
            
             
             if (state === "SUCCESS") {
@@ -86,5 +90,23 @@
 
     doCancel: function (component, event, helper) {
         component.get("v.cancelCallback")();
-    }
+    },
+    addProduct: function (component, event, helper) {
+        var coItemsToInsert = component.get("v.coItemsToInsert");
+        var lstOfFilters = JSON.stringify(coItemsToInsert);
+        var action = component.get("c.addProductsToList");
+        action.setParams({
+            COItems: lstOfFilters,
+            COItem: component.get("v.newCOItem"),
+            count: coItemsToInsert.length
+        });
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                var result = response.getReturnValue();
+                component.set("v.coItemsToInsert", result);
+            }
+        });
+        $A.enqueueAction(action);
+    },
 })

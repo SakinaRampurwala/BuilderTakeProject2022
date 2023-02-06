@@ -2708,6 +2708,32 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
         }
         return budgetItems;
     }
+
+    @AuraEnabled
+    public static List<buildertek__Budget_Item__c> checkforBidgetItemAR(list<string> BudgetIds){
+        //convert string to id
+        List<Id> budgetitemId = new List<Id>();
+        for(String budgetId : BudgetIds){
+            budgetitemId.add(Id.valueOf(budgetId));
+        }
+        //check if nay record of buildertek__Account_Payable_Item_Clone__c has the same budget item id as in list budgetitemId
+        List<buildertek__Billable_Lines__c> accountPayableItemClones = [Select Id, buildertek__Budget_Line__r.Id, buildertek__Budget_Line__c, buildertek__Budget_Line__r.Name
+                                                                                   from buildertek__Billable_Lines__c
+                                                                                   where buildertek__Budget_Line__c IN :budgetitemId];
+        List<buildertek__Budget_Item__c> budgetItems = new List<buildertek__Budget_Item__c>();
+        if(!accountPayableItemClones.isEmpty()){
+            for(buildertek__Billable_Lines__c accountPayableItemClone : accountPayableItemClones){
+                buildertek__Budget_Item__c budgetItem = new buildertek__Budget_Item__c();
+                budgetItem.Id = accountPayableItemClone.buildertek__Budget_Line__c;
+                budgetItem.Name = accountPayableItemClone.buildertek__Budget_Line__r.Name;
+                //check if the budget item is already in the list
+                if(!budgetItems.contains(budgetItem)){
+                    budgetItems.add(budgetItem);
+                }
+            }
+        }
+        return budgetItems;
+    }
     
     
     

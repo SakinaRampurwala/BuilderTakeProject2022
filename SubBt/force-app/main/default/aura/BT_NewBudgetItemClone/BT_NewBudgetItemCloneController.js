@@ -1423,23 +1423,29 @@
         // helper.fetchInvoiceRecordType(component, event, helper);
         console.log('selectedRecs--->>>',{selectedRecs});
         if (selectedRecs.length > 0 ) {
-            var action = component.get("c.checkforBidgetItem");
+            var action = component.get("c.checkforBidgetItemAR");
             action.setParams({
                 "BudgetIds": selectedRecs
             });
             action.setCallback(this, function(response) {
                 if (response.getState() === "SUCCESS") {
-                    console.log('---Success---');
                     var result = response.getReturnValue();
-                    for (var i = 0; i < result.length; i++) {
-                        console.log(result[i]);
-                    }
                     if (result.length > 0) {
-                        console.log({result});
+                        console.log("result__>",{result});
+                        var budgetline = '';
+                        //run a loop on the result and append the name from the result to the budgetline variable
+                        for (var i = 0; i < result.length; i++) {
+                            budgetline += result[i].Name + ', ';
+                        }
+                        budgetline = budgetline.slice(0, -2);
+                        console.log(budgetline);
+                        $A.get("e.c:BT_SpinnerEvent").setParams({
+                            "action": "HIDE"
+                        }).fire();
                         component.find('notifLib').showNotice({
                             "variant": "error",
-                            "header": "Selected Budget Line already has Invoice",
-                            "message": "Please Select at least Budget Line without Invoice.",
+                            "header": "Selected Budget Line already has Invoice (AR)",
+                            "message": "Budeget Line " + budgetline + " already has Invoice.",
                             closeCallback: function() {}
                         });
                     }
