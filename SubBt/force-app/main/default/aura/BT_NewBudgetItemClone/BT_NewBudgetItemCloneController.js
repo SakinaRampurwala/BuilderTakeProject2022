@@ -1344,6 +1344,9 @@
                             if (component.isValid() && response.getState() === "SUCCESS") {
                                 for (var i = 0; i < response.getReturnValue().length; i++) {
                                     rowData = response.getReturnValue()[i];
+                                    if (rowData.buildertek__Unit_Price__c == null) {
+                                        rowData.buildertek__Unit_Price__c = 0;
+                                    }
                                     var newInvoiceItem = new Object();
                                     newInvoiceItem.Name = rowData.Name;
                                     newInvoiceItem.buildertek__Item_Title__c = rowData.Name;
@@ -1465,6 +1468,9 @@
                                 console.log('IF--->>>');
                                 for (var i = 0; i < response.getReturnValue().length; i++) {
                                     rowData = response.getReturnValue()[i];
+                                    if (rowData.buildertek__Sales_Price__c == null) {
+                                        rowData.buildertek__Sales_Price__c = 0;
+                                    }
                                     var newInvoiceItem = new Object();
                                     newInvoiceItem.Name = rowData.Name;
                                     newInvoiceItem.buildertek__Item_Title__c = rowData.Name;
@@ -1472,7 +1478,7 @@
                                     newInvoiceItem.buildertek__Budget_Line__c = rowData.Id;
                                     newInvoiceItem.buildertek__Description__c = rowData.Name;
                                     newInvoiceItem.buildertek__Quantity__c = rowData.buildertek__Quantity__c;
-                                    newInvoiceItem.buildertek__Unit_Price__c = rowData.buildertek__Unit_Price__c;
+                                    newInvoiceItem.buildertek__Unit_Price__c = rowData.buildertek__Sales_Price__c;
                                     newInvoiceItems.push(newInvoiceItem);
                                 }
                                 var Invoice = component.get("v.newInvoiceAR");

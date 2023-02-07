@@ -5,6 +5,7 @@
         component.set("v.Spinner", true);
         var action = component.get("c.getItem");
         var coItem = JSON.stringify(component.get("v.newCOItems"));
+        console.log('coItem--->>>',{coItem});
        
         action.setParams({
             coItems: coItem
@@ -66,6 +67,7 @@
                     sObjectEvent.fire();
                 } else {
                     component.set("v.Spinner", false);
+                    console.log('result.strMessage ==> '+result.strMessage);
                     component.find('notifLib').showNotice({
                         "variant": "error",
                         "header": "Error",

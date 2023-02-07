@@ -1202,7 +1202,7 @@ Schema.sObjectType.pricebook2.fields.Name.isAccessible()){*/
     public static list<Budget_Item__c> BudgetItemList(list<string> BudgetIds){
         list<Budget_Item__c> BudgetItemList;
         //if (Schema.sObjectType.buildertek__Budget_Item__c.fields.Id.isAccessible() && Schema.sObjectType.buildertek__Budget_Item__c.fields.Name.isAccessible() && Schema.sObjectType.buildertek__Budget_Item__c.fields.buildertek__Product__c.isAccessible() && Schema.sObjectType.buildertek__Budget_Item__c.fields.buildertek__Quantity__c.isAccessible() && Schema.sObjectType.buildertek__Budget_Item__c.fields.buildertek__Amount_In__c.isAccessible() && Schema.sObjectType.buildertek__Budget_Item__c.fields.buildertek__Unit_Price__c.isAccessible() && Schema.sObjectType.buildertek__Budget_Item__c.fields.buildertek__Description__c.isAccessible() && Schema.sObjectType.buildertek__Budget_Item__c.fields.buildertek__Budget__c.isAccessible()){
-        BudgetItemList = [select Id, Name, buildertek__Product__c, buildertek__Description__c, buildertek__Quantity__c, buildertek__Unit_Price__c, buildertek__Gross_Profit_Percemtage__c,buildertek__Trade_Type__c
+        BudgetItemList = [select Id, Name, buildertek__Product__c, buildertek__Description__c, buildertek__Quantity__c, buildertek__Unit_Price__c, buildertek__Gross_Profit_Percemtage__c,buildertek__Trade_Type__c, buildertek__Sales_Price__c
                           from buildertek__Budget_Item__c
                           where id IN :BudgetIds];
         //}
