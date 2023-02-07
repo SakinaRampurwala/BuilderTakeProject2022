@@ -19,16 +19,24 @@
 				console.log('===SUCCESS===');
 				var result = response.getReturnValue();
                 console.log('Result => ',{result});
+				var appQuoteRFQIdList=[];
+				var addedQuoteRFQIdList=[];
+
 				if(result.buildertek__RFQs__r != null){
 					result.buildertek__RFQs__r.forEach(function(element , index){
-						component.set('v.quoteRFQ' , element.Id);
+						appQuoteRFQIdList.push(element.Id);
 					});
+					component.set('v.quoteRFQ' , appQuoteRFQIdList);
+
 				}
 
 				if(result.buildertek__RFQs1__r !=null){
 					result.buildertek__RFQs1__r.forEach(function(element , index){
-						component.set('v.addedQuoteRFQ' , element.Id);
+						addedQuoteRFQIdList.push(element.Id);
+
 					});
+					component.set('v.addedQuoteRFQ' , addedQuoteRFQIdList);
+
 					
 				}
 			}
