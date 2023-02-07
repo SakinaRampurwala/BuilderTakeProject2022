@@ -2,7 +2,10 @@ public with sharing class BT_CreateProjectFromQuote {
     @AuraEnabled
     public static buildertek__Quote__c getQuote(String recordId,String searchNameValue){
         buildertek__Quote__c opp;
-        opp = [SELECT Id, Name from buildertek__Quote__c where Id =: recordId]; 
+        // opp = [SELECT Id, Name from buildertek__Quote__c where Id =: recordId]; 
+        opp = [SELECT Id, Name ,(SELECT Id, Name , buildertek__Project__c ,buildertek__Quote__c FROM buildertek__RFQs__r),
+        (SELECT Id, Name , buildertek__Project__c , buildertek__Quote__c FROM buildertek__RFQs1__r) FROM buildertek__Quote__c where Id =: recordId]; 
+
         List<buildertek__Quote__c> productList = new List<buildertek__Quote__c>();
         String queryList = 'SELECT Id, Name FROM buildertek__Quote__c';
         if (searchNameValue != null && searchNameValue != '') {
@@ -21,7 +24,7 @@ public with sharing class BT_CreateProjectFromQuote {
     public static List<buildertek__Quote__c> getQuoteName1(String searchNameValue){
         List<buildertek__Quote__c> QuoteList = new List<buildertek__Quote__c>();
         List<buildertek__Quote__c> QtList = [SELECT Id, Name FROM buildertek__Quote__c ORDER BY name ASC];
-
+        
         if(!String.isBlank(searchNameValue)){
             for (buildertek__Quote__c quote : QtList) {
                 if (quote.Name.toLowerCase().contains(searchNameValue.toLowerCase())) {
@@ -33,11 +36,13 @@ public with sharing class BT_CreateProjectFromQuote {
                 QuoteList.add(quote);
             }
         }
+
         return QuoteList;
     }
     
     @AuraEnabled
-    public static String createProject(String recordId, String projectName, String account, String projectManager, Date contractDate){
+    public static String createProject(String recordId, String projectName, String account, String projectManager, Date contractDate , List<String> quoteRFQId, List<String> addedQuoteRFQId){
+
         buildertek__Project__c project = new buildertek__Project__c();
         project.Name = projectName;
         if(account != null){
@@ -46,8 +51,11 @@ public with sharing class BT_CreateProjectFromQuote {
         }
         project.buildertek__Project_Manager__c = projectManager;
         project.buildertek__Contract_Date__c = contractDate;
+        project.buildertek__Contract_Date__c = contractDate;
         insert project;
-        
+
+        List<buildertek__RFQ__c> rfqList = [SELECT Id,Name ,buildertek__Added_to_Quote__c,  buildertek__Project__c FROM buildertek__RFQ__c where Id=:addedQuoteRFQId AND buildertek__Added_to_Quote__c=:recordId];
+        List<buildertek__RFQ__c> updateRFQList = new List<buildertek__RFQ__c> ();
         List<buildertek__Quote__c> quoteList = new List<buildertek__Quote__c>();
         quoteList = [SELECT Id, Name, buildertek__Description__c, buildertek__Quote_Amount__c, buildertek__Status__c, buildertek__Project__c, 
                      buildertek__Auto_Number__c, buildertek__Primary__c, buildertek__Markup__c, buildertek__Shipping_and_Handling__c,
@@ -66,7 +74,38 @@ public with sharing class BT_CreateProjectFromQuote {
 
             quoteList[0].buildertek__Project__c = project.Id;
             update quoteList;
-            
+            System.debug(quoteList);
+
+        /*
+        ===============================================================================================
+        Description:If the user click on Create Project button that is not associated with a Project and 
+        has Related Applied Quote RFQ its need to assign those RFQS to the new Project that is being created!
+        ==============================================================================================
+        */          
+         if(rfqList.size()>0){
+                for(buildertek__RFQ__c rfq:rfqList){
+                    rfq.buildertek__Project__c=project.Id;
+                    updateRFQList.add(rfq);
+                }
+            }
+            if(updateRFQList.size()>0){
+                update updateRFQList;
+            }
+
+        List<buildertek__RFQ__c> QuoteRFQList = [SELECT Id, Name ,buildertek__Quote__c,buildertek__Project__c , buildertek__Quote__r.buildertek__Project__r.Id 
+        FROM buildertek__RFQ__c where Id=:quoteRFQId AND buildertek__Quote__c=:quoteList[0].Id];
+        List<buildertek__RFQ__c> updateQuoteRFQList = new List<buildertek__RFQ__c> ();
+
+        if(QuoteRFQList.size()>0){
+            for(buildertek__RFQ__c rfq:QuoteRFQList){
+                rfq.buildertek__Project__c=rfq.buildertek__Quote__r.buildertek__Project__r.Id;
+                updateQuoteRFQList.add(rfq);
+            }
+        }
+        if(updateQuoteRFQList.size()>0){
+            update updateQuoteRFQList;
+        }
+
             quoteItemList = [SELECT Id, 
                              Name, 
                              buildertek__Item_Name__c,
@@ -209,10 +248,8 @@ public with sharing class BT_CreateProjectFromQuote {
             }
             
         }
-        
         return project.Id;
-        
     }
-    
+
     
 }

@@ -19,9 +19,22 @@
 				console.log('===SUCCESS===');
 				var result = response.getReturnValue();
                 console.log('Result => ',{result});
+				if(result.buildertek__RFQs__r != null){
+					result.buildertek__RFQs__r.forEach(function(element , index){
+						component.set('v.quoteRFQ' , element.Id);
+					});
+				}
+
+				if(result.buildertek__RFQs1__r !=null){
+					result.buildertek__RFQs1__r.forEach(function(element , index){
+						component.set('v.addedQuoteRFQ' , element.Id);
+					});
+					
+				}
 			}
             component.set("v.displayNameList", false);
 		});
 	$A.enqueueAction(action); 
-	}
+	},
+
 })

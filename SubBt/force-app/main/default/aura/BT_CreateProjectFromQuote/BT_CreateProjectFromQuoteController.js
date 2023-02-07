@@ -20,6 +20,7 @@
         });
         action1.setCallback(this, function (response) {
             var result = response.getReturnValue();
+            console.log({result});
             var recordName = '';
             result.forEach(element => {
                 if (element.Id == recordId) {
@@ -76,6 +77,9 @@
             account : accountId,
             projectManager : projectManagerId,
             contractDate : contractDateId,
+            quoteRFQId:component.get('v.quoteRFQ'),
+            addedQuoteRFQId:component.get('v.addedQuoteRFQ'),
+
         });
         action.setCallback(this, function(response){
             var state = response.getState();
