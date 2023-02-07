@@ -48,6 +48,9 @@
                     <span class="slds-assistive-text">Loading</span>
                     <div class="slds-spinner__dot-a"></div>
                     <div class="slds-spinner__dot-b"></div>
+                    <div class="custom-loading-text">
+                        <b>Processing, Please Wait</b>
+                    </div>
                 </div>
             </div>
         </aura:if>
@@ -86,10 +89,10 @@
                                         <lightning:input type="Number" value="{!poline.buildertek__Quantity__c}"></lightning:input>
                                     </td>
                                     <td>
-                                        <lightning:input type="currency" value="{!poline.buildertek__Unit_Price__c}"></lightning:input>
+                                        <lightning:input type="number" value="{!poline.buildertek__Unit_Price__c}" disabled="true" currencyCode="USD" formatter="currency"></lightning:input>
                                     </td>
                                     <td>
-                                        <lightning:input type="number" value="{!poline.buildertek__Tax__c}"></lightning:input>
+                                        <lightning:input type="number" value="{!poline.buildertek__Tax__c}" disabled="true" formatter="percent-fixed" ></lightning:input>
                                     </td>
                                 </tr>
                             </aura:iteration>

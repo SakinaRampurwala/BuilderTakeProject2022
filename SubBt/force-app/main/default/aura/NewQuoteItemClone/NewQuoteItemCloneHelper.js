@@ -520,7 +520,7 @@
                                 var errors = response.getError();
                                 if (errors) {
                                     if (errors[0] && errors[0].message) {
-                                        //console.log("Error message: " + errors[0].message);
+                                        console.log("Error message: " + errors[0].message);
                                     }
                                 } else {
                                     //console.log("Unknown error");
@@ -977,8 +977,8 @@
 
                 component.set("v.pricebookName", response.getReturnValue());
                 /*Code Added */
-                var group = component.find('groupId');
-                group.set("v._text_value", '');
+                // var group = component.find('groupId');
+                // group.set("v._text_value", '');
                 var product = component.get('v.selectedLookUpRecord');
                 var compEvent = $A.get('e.c:BT_CLearLightningLookupEvent');
                 compEvent.setParams({

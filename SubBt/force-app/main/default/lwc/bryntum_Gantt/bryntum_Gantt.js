@@ -807,6 +807,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
         window.location.reload();
       })
       .catch((error) => {
+        console.log('error --> ',{error});
         this.isLoaded = false;
       });
   }

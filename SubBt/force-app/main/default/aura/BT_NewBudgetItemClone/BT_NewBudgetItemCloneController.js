@@ -1421,6 +1421,9 @@
     },
 
     newInvoiceAR: function(component, event, helper) {
+        $A.get("e.c:BT_SpinnerEvent").setParams({
+            "action": "SHOW"
+        }).fire();
         console.log('In AR');
         var selectedRecs = component.get('v.selectedRecs');
         // helper.fetchInvoiceRecordType(component, event, helper);
@@ -1486,6 +1489,9 @@
                                 Invoice.buildertek__Project__c = component.get("v.sampleNewRecord").buildertek__Project__c;
                                 var overlayLib;
                                 console.log('=====');
+                                $A.get("e.c:BT_SpinnerEvent").setParams({
+                                    "action": "HIDE"
+                                }).fire();
                                 $A.createComponents([
                                         ["c:BT_New_InvoiceAR", {
                                             "aura:id": "btNewco",
@@ -1847,7 +1853,6 @@ helper.getProductDetails(component,event,helper);
         } */
         console.log('=============================================================');
         console.log('Sub Group::', JSON.stringify(budgetLineObject));
-        debugger;
         var selectedContractor = component.get("v.selectedContractor");
         if (selectedContractor != undefined) {
             contractor = selectedContractor.Id;
@@ -2393,7 +2398,6 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
     },
 
     updateQuoteData: function(component, event, helper) {
-        debugger;
         if (!component.get("v.enableMassUpdate")) {
             var recordId = component.get("v.quoteItemId");
             var quoteList = component.get("v.datalist");
@@ -2721,7 +2725,6 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
 
     onClickMassUpdate: function(component, event, helper) {
         component.set("v.isExpandGrp", false);
-        debugger;
 
         component.set("v.enableMassUpdate", component.get("v.enableMassUpdate") == true ? false : true);
         // component.set("v.isExpandGrp",false);

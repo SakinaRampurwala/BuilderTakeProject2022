@@ -14,8 +14,10 @@
     },
 
     openEditModel: function(component, event, helper) {
+        component.set("v.Spinner", true);
         var selectedLine = component.get('v.selectedPOLines');
         if(selectedLine.length>0){
+            component.set("v.Spinner", false);
             component.set("v.DisplayPOLine", false);
         }else{
             helper.showToast("Error", "Error", "Please select at least one PO Line", "5000");
@@ -27,7 +29,7 @@
         console.log('selectedLine--->>>',{selectedLine});
 
         var recordId = component.get("v.recordId");
-
+        component.set("v.Spinner", true);
         var action = component.get('c.createNewPo');
         action.setParams({
             recordId: recordId,
@@ -38,6 +40,11 @@
             if (state === "SUCCESS") {
                 var result = response.getReturnValue();
                 console.log("Result ---> ", { result });
+                if(result==null){
+                    component.set("v.Spinner", false);
+                    helper.showToast("Error", "Error", 'You can\'t have a Quantity amount greater than Old Quantity Please put a Quantity of Old Quantity or less.', "5000");
+                }else{
+                component.set("v.Spinner", false);
                 helper.showToast("Success", "Success", "New PO is created successfully", "5000");
                 $A.get("e.force:closeQuickAction").fire();
                 var navEvt = $A.get("e.force:navigateToSObject");
@@ -46,10 +53,11 @@
                   "slideDevName": "Detail"
                 });
                 navEvt.fire();
+            }
             } else if (state === "ERROR") {
                 var errors = response.getError();
                 console.error(errors);
-                helper.showToast("Success", "Success", "Something Went Wrong", "5000");
+                helper.showToast("Error", "Error", "Something Went Wrong", "5000");
             }
         }));
         $A.enqueueAction(action);

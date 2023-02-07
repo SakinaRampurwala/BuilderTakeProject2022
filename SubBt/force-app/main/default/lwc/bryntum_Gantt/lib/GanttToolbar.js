@@ -614,7 +614,6 @@ export default base => class GanttToolbar extends base {
                  
                  console.log(this.gantt.taskStore);
                  console.log(this.gantt.dependencyStore);
-                 console.log('dfr',ganttRowData)
             }
         }
         // eval("$A.get('e.force:refreshView').fire();");

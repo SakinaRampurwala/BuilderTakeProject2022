@@ -67,7 +67,6 @@
             selectedBudgetId: component.get('v.expensebudget').toString()
         });
         action.setCallback(this, function (response) {
-            debugger;
             if (component.isValid() && response.getState() === "SUCCESS") {
 
                 var result = JSON.parse(response.getReturnValue());
@@ -1294,7 +1293,6 @@
         $A.enqueueAction(actions);
     },
     isExistingPo: function (component, event, helper) {
-        debugger;
         $A.get("e.c:BT_SpinnerEvent").setParams({
             "action": "SHOW"
         }).fire();
@@ -1556,7 +1554,6 @@
         $A.enqueueAction(action);
     },
       doSave: function (component, event, helper) {
-          debugger;
           $A.get("e.c:BT_SpinnerEvent").setParams({
               "action": "SHOW"
           }).fire();
@@ -1896,8 +1893,6 @@
         ele.forEach(e => {
 
             if (e.fieldName == 'buildertek__Unit_Price__c' && e.originalValue != '') {
-                debugger;
-                console.log('unit price',typeof(e.originalValue));
                 totalObj['unitPrice'] += e.originalValue;
                 totalObj['unitPricekey'] = "buildertek__Unit_Price__c";
             }
@@ -1918,9 +1913,6 @@
             }
 
             if (e.fieldName == 'buildertek__CO_Total__c') {
-                debugger;
-                console.log('total CO ',typeof(e.originalValue));
-                console.log('total CO value',(e.originalValue));
                 totalObj['TotalC0'] += e.originalValue;
                 totalObj['TotalCOkey'] = "buildertek__CO_Total__c";
             }
@@ -2140,7 +2132,9 @@
                 document.getElementById(parentIndex + '-0-' + i + '-' + tabId + '-' + budgetId).checked = true;
                 console.log('true or false::::::', totalRecords.groupHierarchy[parentIndex].subGroupRecords[0].records[i].isSelected);
                 totalRecords.groupHierarchy[parentIndex].subGroupRecords[0].records[i].isSelected = true;
-                selectedRecs.push(totalRecords.groupHierarchy[parentIndex].subGroupRecords[0].records[i].recordId);
+                if(!selectedRecs.includes(totalRecords.groupHierarchy[parentIndex].subGroupRecords[0].records[i].recordId)){
+                    selectedRecs.push(totalRecords.groupHierarchy[parentIndex].subGroupRecords[0].records[i].recordId);
+                }
             } else {
                 console.log('no selected');
                 totalRecords.groupHierarchy[parentIndex].subGroupRecords[0].records[i].isSelected = false;

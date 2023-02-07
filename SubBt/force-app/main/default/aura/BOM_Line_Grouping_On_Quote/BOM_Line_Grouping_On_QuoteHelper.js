@@ -24,16 +24,18 @@
             var state = response.getState();
             if (state === "SUCCESS") {
                 var quoteLineWrapper = response.getReturnValue();
-                console.log('*** Quote Wrapper Data ***');
-                console.log('Quote Wrapper Data => ',{ quoteLineWrapper });
                 var quoteLineList = quoteLineWrapper.quoteLineList;
                 component.set("v.totalColumn", quoteLineWrapper.columns.length);
                 if (quoteLineList.length > 0) {
+                    var columns = quoteLineWrapper.columns;
                     quoteLineList.forEach(element => {
                         var quoteLineFieldData = []
-                        quoteLineWrapper.columns.forEach(ele => {
-                            var FieldData = {fieldName: ele.fieldName, fieldType: ele.type, fieldValue: element[ele.fieldName]}
-                            quoteLineFieldData.push(FieldData);
+                        columns.forEach(ele => {
+                            if (ele.type == 'currency' && element[ele.fieldName] == undefined) {
+                                element[ele.fieldName] = 0;
+                            }
+                            var fieldData = {fieldName: ele.fieldName, fieldType: ele.type, fieldValue: element[ele.fieldName]};
+                            quoteLineFieldData.push(fieldData);
                         });
                         element.FieldDataList = quoteLineFieldData;
                         if (element.buildertek__Build_Phase__c != undefined) {
@@ -43,32 +45,44 @@
                     var group1Wrapper = [];
                     var group1Value = quoteLineList[0][groupFieldList[0]];
                     var quoteLines1 = [];
+                    let totalObj = {};
+                    columns.forEach(ele => {
+                        totalObj[ele.fieldName] = 0;
+                    });
                     quoteLineList.forEach((element, index) => {
                         if (group1Value == element[groupFieldList[0]]) {
+                            totalObj = helper.countTotal(component, helper, totalObj, element);
                             quoteLines1.push(element);
                             if (quoteLineList.length == index+1) {
-                                var totalWrapper = [];
-                                var recordData = []
-                                helper.countTotal(component, helper, totalWrapper, recordData);
                                 if (groupFieldList[1] != undefined) {
-                                    quoteLines1 = helper.addSecondGrouping(component, helper, quoteLines1, groupFieldList);
+                                    quoteLines1 = helper.addSecondGrouping(component, helper, quoteLines1, groupFieldList, columns);
                                 }
-                                var wrapperData = {groupName : group1Value, quoteLineList: quoteLines1}
+                                totalObj = helper.createTotalWrapper(component, helper, totalObj, columns);
+                                var wrapperData = {groupName : group1Value, quoteLineList: quoteLines1, totalData: totalObj};
                                 group1Wrapper.push(wrapperData);
                             }
                         } else{
                             if (groupFieldList[1] != undefined){
-                                quoteLines1 = helper.addSecondGrouping(component, helper, quoteLines1, groupFieldList);
+                                quoteLines1 = helper.addSecondGrouping(component, helper, quoteLines1, groupFieldList, columns);
                             }
-                            var wrapperData = {groupName : group1Value, quoteLineList: quoteLines1}
+                            totalObj = helper.createTotalWrapper(component, helper, totalObj, columns);
+                            var wrapperData = {groupName : group1Value, quoteLineList: quoteLines1, totalData: totalObj};
                             group1Wrapper.push(wrapperData);
 
+                            totalObj = {};
+                            columns.forEach(ele => {
+                                totalObj[ele.fieldName] = 0;
+                            });
+                            totalObj = helper.countTotal(component, helper, totalObj, element);
+
                             quoteLines1 = [];
-                            group1Value = element[groupFieldList[0]]
+                            group1Value = element[groupFieldList[0]];
                             quoteLines1.push(element);
                         }
                     });
                     quoteLineWrapper.groupWrapper = group1Wrapper;
+                    console.log('*** Quote Wrapper Data ***');
+                    console.log('Quote Wrapper Data => ',{ quoteLineWrapper });
                     component.set("v.QuoteLineWrapper", quoteLineWrapper);
                     component.set("v.Spinner", false);
                 }
@@ -81,30 +95,43 @@
         $A.enqueueAction(action);
     }, 
 
-    addSecondGrouping : function(component, helper, quoteLines1, groupFieldList){
+    addSecondGrouping : function(component, helper, quoteLines1, groupFieldList, columns){
         var group2Wrapper = [];
         if (quoteLines1.length > 0) {
             var group2Value = quoteLines1[0][groupFieldList[1]];
             var quoteLines2 = [];
+            let totalObj = {};
+            columns.forEach(ele => {
+                totalObj[ele.fieldName] = 0;
+            });
             quoteLines1.forEach((element, index) => {
                 if (group2Value == element[groupFieldList[1]]){
+                    totalObj = helper.countTotal(component, helper, totalObj, element);
                     quoteLines2.push(element);
                     if (quoteLines1.length == index+1){
                         if (groupFieldList[2] != undefined) {
-                            quoteLines2 = helper.addThirdGrouping(component, helper, quoteLines2, groupFieldList);
+                            quoteLines2 = helper.addThirdGrouping(component, helper, quoteLines2, groupFieldList, columns);
                         }
-                        var wrapperData = {groupName : group2Value, quoteLineList: quoteLines2}
+                        totalObj = helper.createTotalWrapper(component, helper, totalObj, columns);
+                        var wrapperData = {groupName : group2Value, quoteLineList: quoteLines2, totalData: totalObj};
                         group2Wrapper.push(wrapperData);
                     }
                 } else{
                     if (groupFieldList[2] != undefined) {
-                        quoteLines2 = helper.addThirdGrouping(component, helper, quoteLines2, groupFieldList);
+                        quoteLines2 = helper.addThirdGrouping(component, helper, quoteLines2, groupFieldList, columns);
                     }
-                    var wrapperData = {groupName : group2Value, quoteLineList: quoteLines2}
+                    totalObj = helper.createTotalWrapper(component, helper, totalObj, columns);
+                    var wrapperData = {groupName : group2Value, quoteLineList: quoteLines2, totalData: totalObj};
                     group2Wrapper.push(wrapperData);
 
+                    totalObj = {};
+                    columns.forEach(ele => {
+                        totalObj[ele.fieldName] = 0;
+                    });
+                    totalObj = helper.countTotal(component, helper, totalObj, element);
+
                     quoteLines2 = [];
-                    group2Value = element[groupFieldList[1]]
+                    group2Value = element[groupFieldList[1]];
                     quoteLines2.push(element);
                 }
             });
@@ -112,27 +139,40 @@
         }
     },
 
-    addThirdGrouping : function(component, helper, quoteLines2, groupFieldList){
+    addThirdGrouping : function(component, helper, quoteLines2, groupFieldList, columns){
         var group3Wrapper = [];
         if (quoteLines2.length > 0) {
             var group3Value = quoteLines2[0][groupFieldList[2]];
             var quoteLines3 = [];
+            let totalObj = {};
+            columns.forEach(ele => {
+                totalObj[ele.fieldName] = 0;
+            });
             quoteLines2.forEach((element, index) => {
                 if (group3Value == element[groupFieldList[2]]){
+                    totalObj = helper.countTotal(component, helper, totalObj, element);
                     quoteLines3.push(element);
                     if (quoteLines2.length == index+1){
                         if (groupFieldList[3] != undefined) {
-                            quoteLines3 = helper.addFourthGrouping(component, helper, quoteLines3, groupFieldList);
+                            quoteLines3 = helper.addFourthGrouping(component, helper, quoteLines3, groupFieldList, columns);
                         }
-                        var wrapperData = {groupName : group3Value, quoteLineList: quoteLines3}
+                        totalObj = helper.createTotalWrapper(component, helper, totalObj, columns);
+                        var wrapperData = {groupName : group3Value, quoteLineList: quoteLines3, totalData: totalObj};
                         group3Wrapper.push(wrapperData);
                     }
                 } else{
                     if (groupFieldList[3] != undefined) {
-                        quoteLines3 = helper.addFourthGrouping(component, helper, quoteLines3, groupFieldList);
+                        quoteLines3 = helper.addFourthGrouping(component, helper, quoteLines3, groupFieldList, columns);
                     }
-                    var wrapperData = {groupName : group3Value, quoteLineList: quoteLines3}
+                    totalObj = helper.createTotalWrapper(component, helper, totalObj, columns);
+                    var wrapperData = {groupName : group3Value, quoteLineList: quoteLines3, totalData: totalObj};
                     group3Wrapper.push(wrapperData);
+
+                    totalObj = {};
+                    columns.forEach(ele => {
+                        totalObj[ele.fieldName] = 0;
+                    });
+                    totalObj = helper.countTotal(component, helper, totalObj, element);
 
                     quoteLines3 = [];
                     group3Value = element[groupFieldList[2]]
@@ -143,24 +183,37 @@
         }
     }, 
 
-    addFourthGrouping : function(component, helper, quoteLines3, groupFieldList){
+    addFourthGrouping : function(component, helper, quoteLines3, groupFieldList, columns){
         var group4Wrapper = [];
         if (quoteLines3.length > 0) {
             var group4Value = quoteLines3[0][groupFieldList[3]];
             var quoteLines4 = [];
+            let totalObj = {};
+            columns.forEach(ele => {
+                totalObj[ele.fieldName] = 0;
+            });
             quoteLines3.forEach((element, index) => {
                 if (group4Value == element[groupFieldList[3]]){
+                    totalObj = helper.countTotal(component, helper, totalObj, element);
                     quoteLines4.push(element);
                     if (quoteLines3.length == index+1){
-                        var wrapperData = {groupName : group4Value, quoteLineList: quoteLines4}
+                        totalObj = helper.createTotalWrapper(component, helper, totalObj, columns);
+                        var wrapperData = {groupName : group4Value, quoteLineList: quoteLines4, fieldTotals: totalObj};
                         group4Wrapper.push(wrapperData);
                     }
                 } else{
-                    var wrapperData = {groupName : group4Value, quoteLineList: quoteLines4}
+                    totalObj = helper.createTotalWrapper(component, helper, totalObj, columns);
+                    var wrapperData = {groupName : group4Value, quoteLineList: quoteLines4, totalData: totalObj};
                     group4Wrapper.push(wrapperData);
 
+                    totalObj = {};
+                    columns.forEach(ele => {
+                        totalObj[ele.fieldName] = 0;
+                    });
+                    totalObj = helper.countTotal(component, helper, totalObj, element);
+
                     quoteLines4 = [];
-                    group4Value = element[groupFieldList[3]]
+                    group4Value = element[groupFieldList[3]];
                     quoteLines4.push(element);
                 }
             });
@@ -168,7 +221,27 @@
         }
     }, 
 
-    countTotal : function(component, helper, totalWrapper, recordData){
-        console.log('countTotal');
-    }
+    countTotal : function(component, helper, totalObj, element){
+        element.FieldDataList.forEach(ele => {
+            if (ele.fieldType == 'currency') {
+                totalObj[ele.fieldName] += Number(ele.fieldValue);
+            }
+        });
+        return totalObj;
+    }, 
+
+    createTotalWrapper : function(component, helper, totalObj, columns){
+        var quoteLineTotalData = [];
+        columns.forEach(ele => {
+            let fieldData;
+            if (ele.type == 'currency') {
+                fieldData = {fieldName: ele.fieldName, fieldType: ele.type, fieldValue: totalObj[ele.fieldName]};
+            } else{
+                fieldData = {fieldName: ele.fieldName, fieldType: ele.type, fieldValue: ''};
+            }
+            quoteLineTotalData.push(fieldData);
+        });
+        totalObj['fieldTotalDataList'] = quoteLineTotalData;
+        return totalObj;
+    }, 
 })

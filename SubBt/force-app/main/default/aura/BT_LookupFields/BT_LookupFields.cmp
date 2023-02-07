@@ -13,6 +13,7 @@
     <aura:attribute name="listOfQuoteItems" type="Quote__c[]" />
     <aura:attribute name="listOfSelectionSheetItems" type="Select_Sheet__c[]" />
     <aura:attribute name="record" type="sObject" description="record which is being displayed" />
+    <aura:attribute name="_text_value" type="String" default="" />
 
     <aura:registerEvent name="onSelectEvt" type="c:BT_LookupEvent" />
 

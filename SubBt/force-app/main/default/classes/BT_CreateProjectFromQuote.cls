@@ -92,8 +92,7 @@ public with sharing class BT_CreateProjectFromQuote {
                 update updateRFQList;
             }
 
-        List<buildertek__RFQ__c> QuoteRFQList = [SELECT Id, Name ,buildertek__Quote__c,buildertek__Project__c , buildertek__Quote__r.buildertek__Project__r.Id 
-        FROM buildertek__RFQ__c where Id=:quoteRFQId AND buildertek__Quote__c=:quoteList[0].Id];
+        List<buildertek__RFQ__c> QuoteRFQList = [SELECT Id, Name ,buildertek__Quote__c,buildertek__Project__c , buildertek__Quote__r.buildertek__Project__r.Id FROM buildertek__RFQ__c where Id=:quoteRFQId AND buildertek__Quote__c=:quoteList[0].Id];
         List<buildertek__RFQ__c> updateQuoteRFQList = new List<buildertek__RFQ__c> ();
 
         if(QuoteRFQList.size()>0){
