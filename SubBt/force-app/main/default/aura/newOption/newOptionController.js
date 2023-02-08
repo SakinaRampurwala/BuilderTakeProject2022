@@ -17,12 +17,16 @@
     createRecord: function(component, event, helper) {
         component.set("v.Spinner", true);
         var Option = component.get('v.Option');
+        
 
         console.log('Option ::', JSON.stringify(Option));
 
         var action = component.get("c.createoption");
         action.setParams({
-            "option": Option
+            "option": Option,
+            "salesPrice": component.get('v.unitSalesPrice'),
+            "budgetLineId":component.get('v.selectedBudgetLineId')
+
         });
         action.setCallback(this, function(a) {
             var state = a.getState();
@@ -195,6 +199,88 @@
         Option.buildertek__Upgrade__c = checkValue;
         component.set("v.Option", Option);
     },
+    onBudgetChanged:function(component, event, helper) {
+        var getValue = event.getSource().get("v.value");
+        console.log(getValue[0]);
+        var action = component.get("c.getBudgetLine");
+        action.setParams({
+            budgetId: getValue[0]
+        });
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+            console.log({state});
+            var result= response.getReturnValue();
+            if (state === "SUCCESS") {
+                console.log({result});
+                component.set('v.parentValue' , getValue[0]);
+                component.set('v.selectedLookupValue' ,result );
+            }
+        });
+        $A.enqueueAction(action);
+        
+    },
+    showDropDownCategory:function(component, event, helper) {
+        var auraId = event.getSource().getLocalId(); //returns the aura:id of the clicked button
+        var auraIdName = auraId.split('_')[0];
+        var index = auraId.split('_')[1];
+        var forOpen = component.find(auraIdName+'Res_'+index);
+        for(var i=1;i<=4;i++){
+            if(i != index){
+                var forClose = component.find(auraIdName+'Res_'+i);
+                if(forClose){
+                     forClose.getElement().style.display = 'none';
+                }
+               
+            }
+        }
+        forOpen.getElement().style.display = 'block'
+         var getInputkeyWord = '';
+         event.stopPropagation();
+        event.preventDefault();
+    },
+    hideDropDownCategory : function (component, event, helper) {
+        event.preventDefault();
+        var eve = event.getSource();
+        console.log(event.target)
+        if(eve.getLocalId() == 'searchCategory_1'){
+            window.setTimeout(
+                $A.getCallback(function() {
+                    var forOpen = component.find('searchCategoryRes_1');
+                     if(forOpen){
+                        forOpen.getElement().style.display = 'none';
+                    }
+                }), 1000
+            );
+        }
+        var getInputkeyWord = '';
+       
+    },
+    selectRecordOption : function (component, event, helper) {
+        event.preventDefault();
+        event.stopPropagation();
+        console.log('NAME=== '+ event.target.id);
+        component.set("v.searchCategoryFilter",event.target.innerText);
+        var forOpen = component.find("searchCategoryRes_1");
+        if(forOpen){
+            forOpen.getElement().style.display = 'none';
+        }
 
+        component.set('v.selectedBudgetLineId' ,event.target.id);
+        var action = component.get("c.getBudgetLineUnitSalesPrice");
+        action.setParams({
+            budgetLineId: component.get('v.selectedBudgetLineId')
+        });
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+            console.log({state});
+            var result= response.getReturnValue();
+            if (state === "SUCCESS") {
+                console.log({result});
+                component.set('v.unitSalesPrice' , result);
+
+            }
+        });
+        $A.enqueueAction(action);
+    },
 
 })
