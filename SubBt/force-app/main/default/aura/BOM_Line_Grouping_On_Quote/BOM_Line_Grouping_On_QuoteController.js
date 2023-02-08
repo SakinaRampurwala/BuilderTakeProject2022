@@ -34,6 +34,6 @@
     },
 
     expandCollapeGroup: function(component, event, helper){
-
+        console.log('expandCollapeGroup');
     }
 })

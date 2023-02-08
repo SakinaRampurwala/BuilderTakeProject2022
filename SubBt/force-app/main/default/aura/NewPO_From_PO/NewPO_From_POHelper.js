@@ -8,7 +8,6 @@
             { label: 'Rate', fieldName: 'buildertek__Tax__c', type: 'text' },
 
         ]);
-        // component.set("v.openPOBox", true);
         var action = component.get('c.getPOLines');
         action.setParams({
             recordId: recordId

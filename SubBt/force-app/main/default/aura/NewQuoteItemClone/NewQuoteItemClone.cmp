@@ -267,7 +267,7 @@
 
                                 <div>
                                     <lightning:button iconPosition="left" onclick="{!c.onclickBOMGrouping}"
-                                        label="BOM Grouping" class="sldsButtonGroup" />
+                                        label="Group" class="sldsButtonGroup" />
                                 </div>&nbsp;
 
                                 <div>

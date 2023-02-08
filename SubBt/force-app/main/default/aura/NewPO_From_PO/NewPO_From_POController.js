@@ -27,6 +27,7 @@
     createPO: function(component, event, helper) {
         var selectedLine = component.get('v.selectedPOLines');
         console.log('selectedLine--->>>',{selectedLine});
+        console.log('size00-->>>',selectedLine.length);
 
         var recordId = component.get("v.recordId");
         component.set("v.Spinner", true);
@@ -40,21 +41,22 @@
             if (state === "SUCCESS") {
                 var result = response.getReturnValue();
                 console.log("Result ---> ", { result });
-                if(result==null){
+                if(result.length>18){
                     component.set("v.Spinner", false);
-                    helper.showToast("Error", "Error", 'You can\'t have a Quantity amount greater than Old Quantity Please put a Quantity of Old Quantity or less.', "5000");
+                    helper.showToast("Error", "Error", result, "5000");
                 }else{
-                component.set("v.Spinner", false);
-                helper.showToast("Success", "Success", "New PO is created successfully", "5000");
-                $A.get("e.force:closeQuickAction").fire();
-                var navEvt = $A.get("e.force:navigateToSObject");
-                navEvt.setParams({
-                  "recordId": result,
-                  "slideDevName": "Detail"
-                });
-                navEvt.fire();
-            }
+                    component.set("v.Spinner", false);
+                    helper.showToast("Success", "Success", "New PO is created successfully", "5000");
+                    $A.get("e.force:closeQuickAction").fire();
+                    var navEvt = $A.get("e.force:navigateToSObject");
+                    navEvt.setParams({
+                      "recordId": result,
+                      "slideDevName": "Detail"
+                    });
+                    navEvt.fire();
+                }
             } else if (state === "ERROR") {
+                component.set("v.Spinner", false);
                 var errors = response.getError();
                 console.error(errors);
                 helper.showToast("Error", "Error", "Something Went Wrong", "5000");

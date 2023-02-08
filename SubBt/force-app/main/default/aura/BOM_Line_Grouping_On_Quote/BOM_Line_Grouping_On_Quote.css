@@ -31,7 +31,14 @@
     text-decoration: none;
     margin: 0;
     border: 0;
-    padding: 5px 15px 5px;
+    padding: 5px;
+    border-bottom-color: #dedbd7;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+}
+
+.THIS .groupHeaderIcon{
+    background-color: #f3f3f3;
     border-bottom-color: #dedbd7;
     border-bottom-style: solid;
     border-bottom-width: 1px;

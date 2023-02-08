@@ -58,7 +58,7 @@
                                     quoteLines1 = helper.addSecondGrouping(component, helper, quoteLines1, groupFieldList, columns);
                                 }
                                 totalObj = helper.createTotalWrapper(component, helper, totalObj, columns);
-                                var wrapperData = {groupName : group1Value, quoteLineList: quoteLines1, totalData: totalObj};
+                                var wrapperData = {groupName : group1Value, quoteLineList: quoteLines1, fieldTotals: totalObj};
                                 group1Wrapper.push(wrapperData);
                             }
                         } else{
@@ -66,7 +66,7 @@
                                 quoteLines1 = helper.addSecondGrouping(component, helper, quoteLines1, groupFieldList, columns);
                             }
                             totalObj = helper.createTotalWrapper(component, helper, totalObj, columns);
-                            var wrapperData = {groupName : group1Value, quoteLineList: quoteLines1, totalData: totalObj};
+                            var wrapperData = {groupName : group1Value, quoteLineList: quoteLines1, fieldTotals: totalObj};
                             group1Wrapper.push(wrapperData);
 
                             totalObj = {};
@@ -113,7 +113,7 @@
                             quoteLines2 = helper.addThirdGrouping(component, helper, quoteLines2, groupFieldList, columns);
                         }
                         totalObj = helper.createTotalWrapper(component, helper, totalObj, columns);
-                        var wrapperData = {groupName : group2Value, quoteLineList: quoteLines2, totalData: totalObj};
+                        var wrapperData = {groupName : group2Value, quoteLineList: quoteLines2, fieldTotals: totalObj};
                         group2Wrapper.push(wrapperData);
                     }
                 } else{
@@ -121,7 +121,7 @@
                         quoteLines2 = helper.addThirdGrouping(component, helper, quoteLines2, groupFieldList, columns);
                     }
                     totalObj = helper.createTotalWrapper(component, helper, totalObj, columns);
-                    var wrapperData = {groupName : group2Value, quoteLineList: quoteLines2, totalData: totalObj};
+                    var wrapperData = {groupName : group2Value, quoteLineList: quoteLines2, fieldTotals: totalObj};
                     group2Wrapper.push(wrapperData);
 
                     totalObj = {};
@@ -157,7 +157,7 @@
                             quoteLines3 = helper.addFourthGrouping(component, helper, quoteLines3, groupFieldList, columns);
                         }
                         totalObj = helper.createTotalWrapper(component, helper, totalObj, columns);
-                        var wrapperData = {groupName : group3Value, quoteLineList: quoteLines3, totalData: totalObj};
+                        var wrapperData = {groupName : group3Value, quoteLineList: quoteLines3, fieldTotals: totalObj};
                         group3Wrapper.push(wrapperData);
                     }
                 } else{
@@ -165,7 +165,7 @@
                         quoteLines3 = helper.addFourthGrouping(component, helper, quoteLines3, groupFieldList, columns);
                     }
                     totalObj = helper.createTotalWrapper(component, helper, totalObj, columns);
-                    var wrapperData = {groupName : group3Value, quoteLineList: quoteLines3, totalData: totalObj};
+                    var wrapperData = {groupName : group3Value, quoteLineList: quoteLines3, fieldTotals: totalObj};
                     group3Wrapper.push(wrapperData);
 
                     totalObj = {};
@@ -203,7 +203,7 @@
                     }
                 } else{
                     totalObj = helper.createTotalWrapper(component, helper, totalObj, columns);
-                    var wrapperData = {groupName : group4Value, quoteLineList: quoteLines4, totalData: totalObj};
+                    var wrapperData = {groupName : group4Value, quoteLineList: quoteLines4, fieldTotals: totalObj};
                     group4Wrapper.push(wrapperData);
 
                     totalObj = {};
@@ -236,12 +236,14 @@
             let fieldData;
             if (ele.type == 'currency') {
                 fieldData = {fieldName: ele.fieldName, fieldType: ele.type, fieldValue: totalObj[ele.fieldName]};
-            } else{
+            } else if(ele.fieldName == 'Name'){
+                fieldData = {fieldName: 'Total', fieldType: ele.type, fieldValue: totalObj[ele.fieldName]};
+            }else{
                 fieldData = {fieldName: ele.fieldName, fieldType: ele.type, fieldValue: ''};
             }
             quoteLineTotalData.push(fieldData);
         });
-        totalObj['fieldTotalDataList'] = quoteLineTotalData;
+        totalObj['fieldTotalList'] = quoteLineTotalData;
         return totalObj;
     }, 
 })

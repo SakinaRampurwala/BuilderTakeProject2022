@@ -1,4 +1,5 @@
 public with sharing class NewPO_From_PO {
+    //get the PO Lines
     @AuraEnabled
     public static List<buildertek__Purchase_Order_Item__c> getPOLines(String recordId) {
         List<buildertek__Purchase_Order_Item__c> POLines = [SELECT Id,Name,buildertek__Quantity__c,buildertek__Unit_Price__c,buildertek__Tax__c,buildertek__Purchase_Order__c FROM buildertek__Purchase_Order_Item__c WHERE buildertek__Purchase_Order__c =: recordId];
@@ -6,6 +7,7 @@ public with sharing class NewPO_From_PO {
         return POLines;
     }
 
+    //Create New PO from the selected PO Line
     @AuraEnabled
     public static String createNewPo(String recordId, List<buildertek__Purchase_Order_Item__c> POLineList) {
         Map<ID, buildertek__Purchase_Order_Item__c> POLineMap = new Map<ID, buildertek__Purchase_Order_Item__c>([SELECT Id, buildertek__Quantity__c FROM buildertek__Purchase_Order_Item__c WHERE buildertek__Purchase_Order__c =: recordId]);
@@ -15,9 +17,13 @@ public with sharing class NewPO_From_PO {
         for (buildertek__Purchase_Order_Item__c POLine : POLineList) {
             if(POLineMap.get(POLine.Id).buildertek__Quantity__c < POLine.buildertek__Quantity__c){
                 isChecked = false;
-                // msg = 'You can\'t have a Quantity amount greater than Old Quantity Please put a Quantity of Old Quantity or less.';
-                System.debug('IF False');
-                System.debug(msg);
+                System.debug('POLineList size--->>>'+POLineList.size());
+                if(POLineList.size() == 1){
+                    msg = 'You can\'t have a Quantity amount greater than '+POLineMap.get(POLine.Id).buildertek__Quantity__c+'. Please put a Quantity of '+POLineMap.get(POLine.Id).buildertek__Quantity__c+' or less.';
+                }else{
+                    msg = 'You can\'t have a Quantity amount greater than Old Quantity Please put a Quantity of Old Quantity or less.';
+                    System.debug('IF False');
+                    System.debug(msg);}
             }
         }
         if(isChecked){
@@ -63,6 +69,6 @@ public with sharing class NewPO_From_PO {
             }
             return newPO.Id;
         }
-        return null;
+        return msg;
     }
 }
