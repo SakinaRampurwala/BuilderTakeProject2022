@@ -581,7 +581,261 @@ public with sharing class BT_AdminConfigurationController{
         treeConfigurationNode.Page_URL__c = '/'+describeTreeConfigurationResult.getKeyPrefix();
         treeConfigurationNode.Description__c = System.Label.Tree_Configuration_Description;
         firstLevelNodes.add(treeConfigurationNode);
+
+        Admin_Interface_Node_Configuration__c RfiConfig = new Admin_Interface_Node_Configuration__c();
+        RfiConfig.Name = 'BT RFI Configuration';
+        RfiConfig.Disable__c = false;
+        RfiConfig.Index__c = 15;
+        RfiConfig.Icon_URL__c = '/resource/'+nameSpacePrefix+'SLDS/assets/icons/utility/settings_60.png';
+        RfiConfig.Open_New_Tab__c = false;
+        RfiConfig.Tab_Name__c = 'BT RFI Configuration';
+        RfiConfig.Page_URL__c = '/apex/buildertek__RFI_Settingsvf';
+        RfiConfig.Description__c = 'Configure RFI Process for your organization.';
+        firstLevelNodes.add(RfiConfig);
+
+        Admin_Interface_Node_Configuration__c BTPaymentApplicationConfiguration = new Admin_Interface_Node_Configuration__c();
+        BTPaymentApplicationConfiguration.Name = 'BT Payment Application Configuration';
+        BTPaymentApplicationConfiguration.Disable__c = false;
+        BTPaymentApplicationConfiguration.Index__c = 18;
+        BTPaymentApplicationConfiguration.Icon_URL__c = '/resource/'+nameSpacePrefix+'SLDS/assets/icons/utility/settings_60.png';
+        BTPaymentApplicationConfiguration.Open_New_Tab__c = false;
+        BTPaymentApplicationConfiguration.Tab_Name__c = 'BT Payment Application Configuration';
+        BTPaymentApplicationConfiguration.Page_URL__c = '';
+        BTPaymentApplicationConfiguration.Description__c = 'Configure payment Application  Process for your organization.';
+        firstLevelNodes.add(BTPaymentApplicationConfiguration);
+
+        Admin_Interface_Node_Configuration__c TrainingSettings = new Admin_Interface_Node_Configuration__c();
+        TrainingSettings.Name = 'Training Settings';
+        TrainingSettings.Disable__c = false;
+        TrainingSettings.Index__c = 16;
+        TrainingSettings.Icon_URL__c = '/resource/'+nameSpacePrefix+'SLDS/assets/icons/utility/settings_60.png';
+        TrainingSettings.Open_New_Tab__c = false;
+        TrainingSettings.Tab_Name__c = 'Training Settings';
+        TrainingSettings.Page_URL__c = '/apex/TrainingSettings';
+        TrainingSettings.Description__c = 'Configure Training Process for your organization.';
+        firstLevelNodes.add(TrainingSettings);
         
+        Admin_Interface_Node_Configuration__c MSAConfiguration = new Admin_Interface_Node_Configuration__c();
+        MSAConfiguration.Name = 'MSA Configuration';
+        MSAConfiguration.Disable__c = false;
+        MSAConfiguration.Index__c = 15;
+        MSAConfiguration.Icon_URL__c = '/resource/'+nameSpacePrefix+'SLDS/assets/icons/utility/settings_60.png';
+        MSAConfiguration.Open_New_Tab__c = false;
+        MSAConfiguration.Tab_Name__c = 'MSA Configuration';
+        MSAConfiguration.Page_URL__c = '';
+        MSAConfiguration.Description__c = 'Configure MSA Process for your organization.';
+        firstLevelNodes.add(MSAConfiguration);
+
+        Admin_Interface_Node_Configuration__c RFQConfiguration = new Admin_Interface_Node_Configuration__c();
+        RFQConfiguration.Name = 'BT RFQ Configuration';
+        RFQConfiguration.Disable__c = false;
+        RFQConfiguration.Index__c = 2;
+        RFQConfiguration.Icon_URL__c = '/resource/'+nameSpacePrefix+'SLDS/assets/icons/utility/settings_60.png';
+        RFQConfiguration.Open_New_Tab__c = false;
+        RFQConfiguration.Tab_Name__c = 'BT RFQ Configuration';
+        RFQConfiguration.Page_URL__c = '';
+        RFQConfiguration.Description__c = 'Configure RFQ Process for your organization.';
+        firstLevelNodes.add(RFQConfiguration);
+
+        Admin_Interface_Node_Configuration__c BOMLineSettings = new Admin_Interface_Node_Configuration__c();
+        BOMLineSettings.Name = 'BOM Line Settings';
+        BOMLineSettings.Disable__c = false;
+        BOMLineSettings.Index__c = 17;
+        BOMLineSettings.Icon_URL__c = '/resource/'+nameSpacePrefix+'SLDS/assets/icons/utility/settings_60.png';
+        BOMLineSettings.Open_New_Tab__c = false;
+        BOMLineSettings.Tab_Name__c = 'BOM Line Settings';
+        BOMLineSettings.Page_URL__c = '/apex/BOMLineSettings';
+        BOMLineSettings.Description__c = 'Configure BOM Line Process for your organization.';
+        firstLevelNodes.add(BOMLineSettings);
+
+        Admin_Interface_Node_Configuration__c BOMSettings = new Admin_Interface_Node_Configuration__c();
+        BOMSettings.Name = 'BOM Settings';
+        BOMSettings.Disable__c = false;
+        BOMSettings.Index__c = 16;
+        BOMSettings.Icon_URL__c = '/resource/'+nameSpacePrefix+'SLDS/assets/icons/utility/settings_60.png';
+        BOMSettings.Open_New_Tab__c = false;
+        BOMSettings.Tab_Name__c = 'BOM Settings';
+        BOMSettings.Page_URL__c = '/apex/BOMSettings';
+        BOMSettings.Description__c = 'Configure BOM Process for your organization.';
+        BOMSettings.buildertek__Update_Quantity__c = true;
+        BOMSettings.buildertek__Show_Fabrication_taxes__c = true;
+        firstLevelNodes.add(BOMSettings);
+
+        Admin_Interface_Node_Configuration__c BTQuickBooksConfiguration = new Admin_Interface_Node_Configuration__c();
+        BTQuickBooksConfiguration.Name = 'BT QuickBooks Configuration';
+        BTQuickBooksConfiguration.Disable__c = false;
+        BTQuickBooksConfiguration.Index__c = 20;
+        BTQuickBooksConfiguration.Icon_URL__c = '/resource/'+nameSpacePrefix+'SLDS/assets/icons/utility/settings_60.png';
+        BTQuickBooksConfiguration.Open_New_Tab__c = false;
+        BTQuickBooksConfiguration.Tab_Name__c = 'BT QuickBooks Configuration';
+        BTQuickBooksConfiguration.Page_URL__c = '/apex/BT_Quickbooks_Config';
+        BTQuickBooksConfiguration.Description__c = 'Configure Quickbooks Process for your organization.';
+        firstLevelNodes.add(BTQuickBooksConfiguration);
+
+        Admin_Interface_Node_Configuration__c BTPreQualificationConfiguration = new Admin_Interface_Node_Configuration__c();
+        BTPreQualificationConfiguration.Name = 'BT Pre Qualification Configuration';
+        BTPreQualificationConfiguration.Disable__c = false;
+        BTPreQualificationConfiguration.Index__c = 14;
+        BTPreQualificationConfiguration.Icon_URL__c = '/resource/'+nameSpacePrefix+'SLDS/assets/icons/utility/settings_60.png';
+        BTPreQualificationConfiguration.Open_New_Tab__c = false;
+        BTPreQualificationConfiguration.Tab_Name__c = 'BT Pre Qualification Configuration';
+        BTPreQualificationConfiguration.Page_URL__c = '';
+        BTPreQualificationConfiguration.Description__c = 'Configure Pre Qualification Process for your organization.';
+        firstLevelNodes.add(BTPreQualificationConfiguration);
+
+        Admin_Interface_Node_Configuration__c BTDocumentConfiguration = new Admin_Interface_Node_Configuration__c();
+        BTDocumentConfiguration.Name = 'BT Document Configuration';
+        BTDocumentConfiguration.Disable__c = false;
+        BTDocumentConfiguration.Index__c = 8;
+        BTDocumentConfiguration.Icon_URL__c = '/resource/'+nameSpacePrefix+'SLDS/assets/icons/utility/settings_60.png';
+        BTDocumentConfiguration.Open_New_Tab__c = false;
+        BTDocumentConfiguration.Tab_Name__c = 'BT Document Configuration';
+        BTDocumentConfiguration.Page_URL__c = '';
+        BTDocumentConfiguration.Description__c = 'Configure Document Interface for your organization.';
+        firstLevelNodes.add(BTDocumentConfiguration);
+
+        Admin_Interface_Node_Configuration__c BTProjectConfiguration = new Admin_Interface_Node_Configuration__c();
+        BTProjectConfiguration.Name = 'BT Project Configuration';
+        BTProjectConfiguration.Disable__c = false;
+        BTProjectConfiguration.Index__c = 1;
+        BTProjectConfiguration.Icon_URL__c = '/resource/'+nameSpacePrefix+'SLDS/assets/icons/utility/settings_60.png';
+        BTProjectConfiguration.Open_New_Tab__c = false;
+        BTProjectConfiguration.Tab_Name__c = 'BT Project Configuration';
+        BTProjectConfiguration.Page_URL__c = '';
+        BTProjectConfiguration.Description__c = 'Configure Project Process for your organization.';
+        firstLevelNodes.add(BTProjectConfiguration);
+
+        Admin_Interface_Node_Configuration__c BTAccountPayableConfiguration = new Admin_Interface_Node_Configuration__c();
+        BTAccountPayableConfiguration.Name = 'BT Account Payable Configuration';
+        BTAccountPayableConfiguration.Disable__c = false;
+        BTAccountPayableConfiguration.Index__c = 12;
+        BTAccountPayableConfiguration.Icon_URL__c = '/resource/'+nameSpacePrefix+'SLDS/assets/icons/utility/settings_60.png';
+        BTAccountPayableConfiguration.Open_New_Tab__c = false;
+        BTAccountPayableConfiguration.Tab_Name__c = 'BT Account Payable Configuration';
+        BTAccountPayableConfiguration.Page_URL__c = '';
+        BTAccountPayableConfiguration.Description__c = 'Configure Account Payable Process for your organization.';
+        firstLevelNodes.add(BTAccountPayableConfiguration);
+
+        Admin_Interface_Node_Configuration__c BTQuoteConfiguration = new Admin_Interface_Node_Configuration__c();
+        BTQuoteConfiguration.Name = 'BT Quote Configuration';
+        BTQuoteConfiguration.Disable__c = false;
+        BTQuoteConfiguration.Index__c = 3;
+        BTQuoteConfiguration.Icon_URL__c = '/resource/'+nameSpacePrefix+'SLDS/assets/icons/utility/settings_60.png';
+        BTQuoteConfiguration.Open_New_Tab__c = false;
+        BTQuoteConfiguration.Tab_Name__c = 'BT Quote Configuration';
+        BTQuoteConfiguration.Page_URL__c = '';
+        BTQuoteConfiguration.Description__c = 'Configure Quote Process for your organization.';
+        firstLevelNodes.add(BTQuoteConfiguration);
+
+        Admin_Interface_Node_Configuration__c BTContractConfiguration = new Admin_Interface_Node_Configuration__c();
+        BTContractConfiguration.Name = 'BT Contract Configuration';
+        BTContractConfiguration.Disable__c = false;
+        BTContractConfiguration.Index__c = 3;
+        BTContractConfiguration.Icon_URL__c = '/resource/'+nameSpacePrefix+'SLDS/assets/icons/utility/settings_60.png';
+        BTContractConfiguration.Open_New_Tab__c = false;
+        BTContractConfiguration.Tab_Name__c = 'BT Contract Configuration';
+        BTContractConfiguration.Page_URL__c = '';
+        BTContractConfiguration.Description__c = 'Configure Contract Process for your organization.';
+        firstLevelNodes.add(BTContractConfiguration);
+
+        Admin_Interface_Node_Configuration__c BTBudgetConfiguration = new Admin_Interface_Node_Configuration__c();
+        BTBudgetConfiguration.Name = 'BT Budget Configuration';
+        BTBudgetConfiguration.Disable__c = false;
+        BTBudgetConfiguration.Index__c = 4;
+        BTBudgetConfiguration.Icon_URL__c = '/resource/'+nameSpacePrefix+'SLDS/assets/icons/utility/settings_60.png';
+        BTBudgetConfiguration.Open_New_Tab__c = false;
+        BTBudgetConfiguration.Tab_Name__c = 'BT Budget Configuration';
+        BTBudgetConfiguration.Page_URL__c = '';
+        BTBudgetConfiguration.Description__c = 'Configure Budget Process for your organization.';
+        firstLevelNodes.add(BTBudgetConfiguration);
+
+        Admin_Interface_Node_Configuration__c BTChangeOrderConfiguration = new Admin_Interface_Node_Configuration__c();
+        BTChangeOrderConfiguration.Name = 'BT Change Order Configuration';
+        BTChangeOrderConfiguration.Disable__c = false;
+        BTChangeOrderConfiguration.Index__c = 6;
+        BTChangeOrderConfiguration.Icon_URL__c = '/resource/'+nameSpacePrefix+'SLDS/assets/icons/utility/settings_60.png';
+        BTChangeOrderConfiguration.Open_New_Tab__c = false;
+        BTChangeOrderConfiguration.Tab_Name__c = 'BT Change Order Configuration';
+        BTChangeOrderConfiguration.Page_URL__c = '';
+        BTChangeOrderConfiguration.Description__c = 'Configure Change Order Process for your organization.';
+        firstLevelNodes.add(BTChangeOrderConfiguration);
+
+        Admin_Interface_Node_Configuration__c BoxSettings = new Admin_Interface_Node_Configuration__c();
+        BoxSettings.Name = 'Box Settings';
+        BoxSettings.Disable__c = false;
+        BoxSettings.Icon_URL__c = '/resource/'+nameSpacePrefix+'SLDS/assets/icons/utility/settings_60.png';
+        BoxSettings.Open_New_Tab__c = false;
+        BoxSettings.Tab_Name__c = 'Box Settings';
+        BoxSettings.Page_URL__c = '';
+        BoxSettings.Description__c = 'Configure Box Process for your organization.';
+        firstLevelNodes.add(BoxSettings);
+
+        Admin_Interface_Node_Configuration__c EmailConfiguration = new Admin_Interface_Node_Configuration__c();
+        EmailConfiguration.Name = 'Email Configuration';
+        EmailConfiguration.Disable__c = false;
+        BTChangeOrderConfiguration.Index__c = 19;
+        EmailConfiguration.Icon_URL__c = '/resource/'+nameSpacePrefix+'SLDS/assets/icons/utility/settings_60.png';
+        EmailConfiguration.Open_New_Tab__c = false;
+        EmailConfiguration.Tab_Name__c = 'Email Configuration';
+        EmailConfiguration.Page_URL__c = '/apex/BT_EmailConfiguration';
+        EmailConfiguration.Description__c = 'Configure Email Address for your organization.';
+        firstLevelNodes.add(EmailConfiguration);
+
+        Admin_Interface_Node_Configuration__c BTSOVConfiguration = new Admin_Interface_Node_Configuration__c();
+        BTSOVConfiguration.Name = 'BT SOV Configuration';
+        BTSOVConfiguration.Disable__c = false;
+        BTSOVConfiguration.Index__c = 17;
+        BTSOVConfiguration.Icon_URL__c = '/resource/'+nameSpacePrefix+'SLDS/assets/icons/utility/settings_60.png';
+        BTSOVConfiguration.Open_New_Tab__c = false;
+        BTSOVConfiguration.Tab_Name__c = 'BT SOV Configuration';
+        BTSOVConfiguration.Page_URL__c = '';
+        BTSOVConfiguration.Description__c = 'Configure SOV Process for your organization.';
+        firstLevelNodes.add(BTSOVConfiguration);
+
+        Admin_Interface_Node_Configuration__c BTPurchaseOrderConfiguration = new Admin_Interface_Node_Configuration__c();
+        BTPurchaseOrderConfiguration.Name = 'BT Purchase Order Configuration';
+        BTPurchaseOrderConfiguration.Disable__c = false;
+        BTPurchaseOrderConfiguration.Index__c = 5;
+        BTPurchaseOrderConfiguration.Icon_URL__c = '/resource/'+nameSpacePrefix+'SLDS/assets/icons/utility/settings_60.png';
+        BTPurchaseOrderConfiguration.Open_New_Tab__c = false;
+        BTPurchaseOrderConfiguration.Tab_Name__c = 'BT Purchase Order Configuration';
+        BTPurchaseOrderConfiguration.Page_URL__c = '';
+        BTPurchaseOrderConfiguration.Description__c = 'Configure Purchase Order Process for your organization.';
+        firstLevelNodes.add(BTPurchaseOrderConfiguration);
+
+        Admin_Interface_Node_Configuration__c StripeSettings = new Admin_Interface_Node_Configuration__c();
+        StripeSettings.Name = 'Stripe Settings';
+        StripeSettings.Disable__c = false;
+        StripeSettings.Index__c = 15;
+        StripeSettings.Icon_URL__c = '/resource/'+nameSpacePrefix+'SLDS/assets/icons/utility/settings_60.png';
+        StripeSettings.Open_New_Tab__c = false;
+        StripeSettings.Tab_Name__c = 'Stripe Settings';
+        StripeSettings.Page_URL__c = '/apex/BTStripeSettings';
+        StripeSettings.Description__c = 'Configure Stripe Process for your organization.';
+        firstLevelNodes.add(StripeSettings);
+        
+        Admin_Interface_Node_Configuration__c BTTraining = new Admin_Interface_Node_Configuration__c();
+        BTTraining.Name = 'BT Training';
+        BTTraining.Disable__c = false;
+        BTTraining.Index__c = 13;
+        BTTraining.Icon_URL__c = '/resource/'+nameSpacePrefix+'SLDS/assets/icons/utility/settings_60.png';
+        BTTraining.Open_New_Tab__c = false;
+        BTTraining.Tab_Name__c = 'BT Training';
+        BTTraining.Page_URL__c = '/apex/BTStripeSettings';
+        BTTraining.Description__c = 'Configure Training.';
+        firstLevelNodes.add(BTTraining);
+
+        Admin_Interface_Node_Configuration__c BTOpportunityConfiguration = new Admin_Interface_Node_Configuration__c();
+        BTOpportunityConfiguration.Name = 'BT Opportunity Configuration';
+        BTOpportunityConfiguration.Disable__c = false;
+        BTOpportunityConfiguration.Index__c = 11;
+        BTOpportunityConfiguration.Icon_URL__c = '/resource/'+nameSpacePrefix+'SLDS/assets/icons/utility/settings_60.png';
+        BTOpportunityConfiguration.Open_New_Tab__c = false;
+        BTOpportunityConfiguration.Tab_Name__c = 'BT Opportunity Configuration';
+        BTOpportunityConfiguration.Page_URL__c = '/apex/BTStripeSettings';
+        BTOpportunityConfiguration.Description__c = 'Configure Opportunity Process for your organization.';
+        firstLevelNodes.add(BTOpportunityConfiguration);
+
         try {
             DMLManager.insertAsUser(firstLevelNodes);
         } catch(Exception ex){

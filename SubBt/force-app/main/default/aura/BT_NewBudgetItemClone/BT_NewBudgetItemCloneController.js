@@ -1326,8 +1326,8 @@
                         }).fire();
                         component.find('notifLib').showNotice({
                             "variant": "error",
-                            "header": "Selected Budget Line already has Invoice",
-                            "message": "Budeget Line " + budgetline + " already has Invoice.",
+                            "header": "The selected Budget Line(s) have already been invoiced. Please select another Budget Line(s).",
+                            "message": "Budget Line: " + budgetline ,
                             closeCallback: function() {}
                         });
                     }
@@ -1412,7 +1412,7 @@
             component.find('notifLib').showNotice({
                 "variant": "error",
                 "header": "Select Budget Line",
-                "message": "Please Select at least One Budget Line to Create Invoice.",
+                "message": "In order to create Invoice, you need to select at least one Budget Line.",
                 //"header": "No Budget Lines",
                 //"message": "No Budget Lines Records.",
                 closeCallback: function() {}
@@ -1450,8 +1450,8 @@
                         }).fire();
                         component.find('notifLib').showNotice({
                             "variant": "error",
-                            "header": "Selected Budget Line already has Invoice (AR)",
-                            "message": "Budeget Line " + budgetline + " already has Invoice.",
+                            "header": "The selected Budget Line(s) have already been invoiced. Please select another Budget Line(s).",
+                            "message": "Budeget Lines : " + budgetline ,
                             closeCallback: function() {}
                         });
                     }
@@ -1529,10 +1529,13 @@
             });
             $A.enqueueAction(action);
         } else {
+            $A.get("e.c:BT_SpinnerEvent").setParams({
+                "action": "HIDE"
+            }).fire();
             component.find('notifLib').showNotice({
                 "variant": "error",
                 "header": "Select Budget Line",
-                "message": "Please Select at least One Budget Line to Create Invoice (AR).",
+                "message": "In order to create Invoice, you need to select at least one Budget Line.",
                 closeCallback: function() {}
             });
         }

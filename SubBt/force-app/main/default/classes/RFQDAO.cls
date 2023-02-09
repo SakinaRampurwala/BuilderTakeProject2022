@@ -1855,6 +1855,20 @@ Throws [Exceptions]:
                      from buildertek__Quote__c
                      where Id = :quotId];
         }
+
+        List<buildertek__Quote_Item__c> QuoteItemList = [Select Id, buildertek__Quote__c, buildertek__RFQ__c
+                                                         from buildertek__Quote_Item__c
+                                                         where buildertek__Quote__c =:quotId];
+        
+        //get buildertek__RFQ__c Ids from QuoteItemList
+        Set<Id> rfqIds = new Set<Id>();
+        for(buildertek__Quote_Item__c quoteItem : QuoteItemList){
+            if(quoteItem.buildertek__RFQ__c != null){
+                rfqIds.add(quoteItem.buildertek__RFQ__c);
+            }
+        }
+        System.debug('rfqIds--->>>'+rfqIds);
+        
         // return [Select Id, Name,RFQ_Details__c,Status__c, Vendor__r.Name, Vendor_Quote__c from RFQ__c where project__c =:quote.Project__c and status__c = 'Awarded'];
         // return [Select Id, Name, RFQ_Details__c, Status__c, Vendor__r.Name, Vendor_Quote__c
         //   from RFQ__c
@@ -1868,17 +1882,18 @@ Throws [Exceptions]:
             if (quote.buildertek__Project__c != null) {
                 projectId = quote.buildertek__Project__c;
             }
-
-            string rfqItemrecords = 'Select Id, Name, buildertek__RFQ_Details__c, buildertek__Status__c, buildertek__Vendor__r.Name, buildertek__Vendor_Quote__c,CurrencyIsoCode, buildertek__Project__c, buildertek__Project__r.Name from buildertek__RFQ__c'+
-                ' where buildertek__project__c =\'' + projectId +'\' and buildertek__status__c =\'' +status+'\' ORDER BY Name';
+            //append that id of rfq should not be in rfqIds
+            String rfqItemrecords = 'Select Id, Name, buildertek__RFQ_Details__c, buildertek__Status__c, buildertek__Vendor__r.Name, buildertek__Vendor_Quote__c,CurrencyIsoCode, buildertek__Project__c, buildertek__Project__r.Name from buildertek__RFQ__c'+
+                ' where buildertek__project__c =\'' + projectId +'\' and buildertek__status__c =\'' +status+'\' and Id NOT IN :rfqIds ORDER BY Name';
             system.debug('rfqItemrecords'+rfqItemrecords);
             rfqlist = Database.query(rfqItemrecords);
             return rfqlist;
         }else{
-            // return [Select Id, Name,RFQ_Details__c,Status__c, Vendor__r.Name, Vendor_Quote__c from RFQ__c where project__c =:quote.Project__c and status__c = 'Awarded'];
-            return [Select Id, Name, buildertek__RFQ_Details__c, buildertek__Status__c, buildertek__Vendor__r.Name, buildertek__Vendor_Quote__c, buildertek__Project__c, buildertek__Project__r.Name
+            // return [Select Id, Name,RFQ_Details__c,Status__c, Vendor__r.Name, Vendor_Quote__c from RFQ__c where project__c =:quote.Project__c and status__c = 'Awarded'];           
+            List<buildertek__RFQ__c> rfqlist1 = [Select Id, Name, buildertek__RFQ_Details__c, buildertek__Status__c, buildertek__Vendor__r.Name, buildertek__Vendor_Quote__c, buildertek__Project__c, buildertek__Project__r.Name
                     from buildertek__RFQ__c
-                    where buildertek__project__c = :quote.buildertek__Project__c and buildertek__status__c = 'Accepted' ORDER BY Name];
+                    where buildertek__project__c = :quote.buildertek__Project__c and buildertek__status__c = 'Accepted' and ID NOT IN :rfqIds ORDER BY Name];
+            return rfqlist1;
         }
     }
     
@@ -1887,6 +1902,19 @@ Throws [Exceptions]:
     public static List<buildertek__RFQ__c> getRFQSearch (String quotId, String searchKeyword, String searchProject, String searchVendor){
         buildertek__Quote__c quote = [SELECT Id, buildertek__Project__c FROM buildertek__Quote__c WHERE Id = :quotId];
         
+
+        List<buildertek__Quote_Item__c> QuoteItemList = [Select Id, buildertek__Quote__c, buildertek__RFQ__c
+                                                         from buildertek__Quote_Item__c
+                                                         where buildertek__Quote__c =:quotId];
+        
+        //get buildertek__RFQ__c Ids from QuoteItemList
+        Set<Id> rfqIds = new Set<Id>();
+        for(buildertek__Quote_Item__c quoteItem : QuoteItemList){
+            if(quoteItem.buildertek__RFQ__c != null){
+                rfqIds.add(quoteItem.buildertek__RFQ__c);
+            }
+        }
+
         String projectId = '';
         if (quote.buildertek__Project__c != null) {
             projectId = quote.buildertek__Project__c;
@@ -1894,7 +1922,7 @@ Throws [Exceptions]:
 
         string status = 'Accepted';
         String query= 'SELECT Id, Name, buildertek__RFQ_Details__c, buildertek__Vendor__c, buildertek__Vendor__r.Name, buildertek__Vendor_Quote__c, buildertek__Project__c, buildertek__Project__r.Name,';
-        query += ' buildertek__Status__c FROM buildertek__RFQ__c WHERE buildertek__project__c = \''+ projectId +'\' AND buildertek__status__c =\''+status+'\'';
+        query += ' buildertek__Status__c FROM buildertek__RFQ__c WHERE buildertek__project__c = \''+ projectId +'\' AND buildertek__status__c =\''+status+'\' and Id NOT IN :rfqIds';
         if ( searchKeyword != '' && searchKeyword != null ) {
             query = query + ' AND Name LIKE \'' + searchKeyword + '%\'';
         }
@@ -2153,6 +2181,7 @@ return listviews;
                                      FROM buildertek__Quote_Item__c
                                      WHERE Id = :selectQuoteItemId];
             }
+            System.debug('selectedQuoteItem--->>>'+selectedQuoteItem);
             
             
             buildertek__RFQ__c newRFQ = new buildertek__RFQ__c();
@@ -2162,6 +2191,7 @@ return listviews;
             
             if (Schema.sObjectType.buildertek__RFQ__c.fields.Name.isCreateable() && Schema.sObjectType.buildertek__RFQ__c.fields.buildertek__Project__c.isCreateable() && Schema.sObjectType.buildertek__RFQ__c.fields.buildertek__Status__c.isCreateable()){
                 insert newRFQ;
+                System.debug('newRFQ--->>>'+newRFQ);
             }
             
             if (Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__RFQ__c.isUpdateable()){

@@ -17,14 +17,10 @@ public with sharing class NewPO_From_PO {
         for (buildertek__Purchase_Order_Item__c POLine : POLineList) {
             if(POLineMap.get(POLine.Id).buildertek__Quantity__c < POLine.buildertek__Quantity__c){
                 isChecked = false;
-                System.debug('POLineList size--->>>'+POLineList.size());
-                if(POLineList.size() == 1){
-                    msg = 'You can\'t have a Quantity amount greater than '+POLineMap.get(POLine.Id).buildertek__Quantity__c+'. Please put a Quantity of '+POLineMap.get(POLine.Id).buildertek__Quantity__c+' or less.';
-                }else{
-                    msg = 'You can\'t have a Quantity amount greater than Old Quantity Please put a Quantity of Old Quantity or less.';
+                    msg = 'You can not enter a Quantity greater than the old Quantity. Please enter a Quantity that is equal to or less than the original Quantity.';
                     System.debug('IF False');
-                    System.debug(msg);}
-            }
+                    System.debug(msg);
+                }
         }
         if(isChecked){
             System.debug('IF True');

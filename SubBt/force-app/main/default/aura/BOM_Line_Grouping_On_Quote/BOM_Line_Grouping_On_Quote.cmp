@@ -4,13 +4,15 @@
     <aura:attribute name="recordId" type="string" />
     <aura:attribute name="groupFieldList" type="List" />
     <aura:attribute name="QuoteLineWrapper" type="Object" />
-    <aura:attribute name="page" type="integer" description="Use for store page Number" />
-    <aura:attribute name="totalColumn" type="integer" />
+    <aura:attribute name="page" type="Integer" description="Use for store page Number" />
+    <aura:attribute name="totalColumn" type="Integer" />
     <aura:attribute name="firstGrouping" type="Boolean" default="false" />
     <aura:attribute name="secondGrouping" type="Boolean" default="false" />
     <aura:attribute name="thirdGrouping" type="Boolean" default="false" />
     <aura:attribute name="forthGrouping" type="Boolean" default="false" />
     <aura:attribute name="Spinner" type="boolean" default="false" />
+    <aura:attribute name="TotalRecordCount" type="Integer" default="0" />
+    <aura:attribute name="CollapeCount" type="Integer" default="0" />
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 
     <div class="mainDiv">
@@ -45,10 +47,10 @@
                         <tr>
                             <td class="groupHeaderIcon">
                                 <div id='collapseBtn' class="slds-float_left" style="margin-top: 5px;">
-                                    <span data-iconname="Expand Group" id="{!'expandGroupBtn_'+v.recordId}" onclick="{!c.expandCollapeGroup}" style="display:none">
+                                    <span data-iconname="Expand Group" id="{!'expandGroupBtn_'+group1.groupIndex}" onclick="{!c.expandCollapeGroup}" style="display:none">
                                         <lightning:buttonIcon iconName="utility:add" variant="border-filled" iconClass="dark" alternativeText="Expand Group" title="Expand Group" />
                                     </span>
-                                    <span data-iconname="Collapse Group" id="{!'collapeseGroupBtn_'+v.recordId}" onclick="{!c.expandCollapeGroup}" style="display:inline-block;">
+                                    <span data-iconname="Collapse Group" id="{!'collapeseGroupBtn_'+group1.groupIndex}" onclick="{!c.expandCollapeGroup}" style="display:inline-block;">
                                         <lightning:buttonIcon iconName="utility:dash" variant="border-filled" iconClass="dark" alternativeText="Collapse Group" title="Collapse Group" />
                                     </span>
                                 </div>
@@ -71,7 +73,7 @@
                             </aura:iteration>
                         </tr>
                         <aura:iteration items="{!group1.quoteLineList}" var="quoteItem">
-                            <tr>
+                            <tr class="{!'record_'+group1.groupIndex}">
                                 <td style="width: 30px;"> </td>
                                 <aura:iteration items="{!quoteItem.FieldDataList}" var="fildData">
                                     <td>
@@ -156,10 +158,10 @@
                             <tr>
                                 <td class="groupHeaderIcon">
                                     <div id='collapseBtn' class="slds-float_left" style="margin-top: 5px;">
-                                        <span data-iconname="Expand Group" id="{!'expandGroupBtn_'+v.recordId}" onclick="{!c.expandCollapeGroup}" style="display:none">
+                                        <span data-iconname="Expand Group" id="{!'expandGroupBtn_'+group1.groupIndex+group2.groupIndex}" onclick="{!c.expandCollapeGroup}" style="display:none">
                                             <lightning:buttonIcon iconName="utility:add" variant="border-filled" iconClass="dark" alternativeText="Expand Group" title="Expand Group" />
                                         </span>
-                                        <span data-iconname="Collapse Group" id="{!'collapeseGroupBtn_'+v.recordId}" onclick="{!c.expandCollapeGroup}" style="display:inline-block;">
+                                        <span data-iconname="Collapse Group" id="{!'collapeseGroupBtn_'+group1.groupIndex+group2.groupIndex}" onclick="{!c.expandCollapeGroup}" style="display:inline-block;">
                                             <lightning:buttonIcon iconName="utility:dash" variant="border-filled" iconClass="dark" alternativeText="Collapse Group" title="Collapse Group" />
                                         </span>
                                     </div>
@@ -183,7 +185,7 @@
                                 </aura:iteration>
                             </tr>
                             <aura:iteration items="{!group2.quoteLineList}" var="quoteItem">
-                                <tr>
+                                <tr class="{!'record_'+group1.groupIndex+group2.groupIndex}">
                                     <td style="width: 30px;"> </td>
                                     <td style="width: 30px;"> </td>
                                     <aura:iteration items="{!quoteItem.FieldDataList}" var="fildData">
@@ -285,10 +287,10 @@
                                     <td class="groupHeader" style="width: 30px;"> </td>
                                     <td class="groupHeaderIcon">
                                         <div id='collapseBtn' class="slds-float_left" style="margin-top: 5px;">
-                                            <span data-iconname="Expand Group" id="{!'expandGroupBtn_'+v.recordId}" onclick="{!c.expandCollapeGroup}" style="display:none">
+                                            <span data-iconname="Expand Group" id="{!'expandGroupBtn_'+group1.groupIndex+group2.groupIndex+group3.groupIndex}" onclick="{!c.expandCollapeGroup}" style="display:none">
                                                 <lightning:buttonIcon iconName="utility:add" variant="border-filled" iconClass="dark" alternativeText="Expand Group" title="Expand Group" />
                                             </span>
-                                            <span data-iconname="Collapse Group" id="{!'collapeseGroupBtn_'+v.recordId}" onclick="{!c.expandCollapeGroup}" style="display:inline-block;">
+                                            <span data-iconname="Collapse Group" id="{!'collapeseGroupBtn_'+group1.groupIndex+group2.groupIndex+group3.groupIndex}" onclick="{!c.expandCollapeGroup}" style="display:inline-block;">
                                                 <lightning:buttonIcon iconName="utility:dash" variant="border-filled" iconClass="dark" alternativeText="Collapse Group" title="Collapse Group" />
                                             </span>
                                         </div>
@@ -313,7 +315,7 @@
                                     </aura:iteration>
                                 </tr>
                                 <aura:iteration items="{!group3.quoteLineList}" var="quoteItem">
-                                    <tr>
+                                    <tr class="{!'record_'+group1.groupIndex+group2.groupIndex+group3.groupIndex}">
                                         <td style="width: 30px;"> </td>
                                         <td style="width: 30px;"> </td>
                                         <td style="width: 30px;"> </td>
@@ -431,10 +433,10 @@
                                         <td class="groupHeader" style="width: 30px;"> </td>
                                         <td class="groupHeaderIcon">
                                             <div id='collapseBtn' class="slds-float_left" style="margin-top: 5px;">
-                                                <span data-iconname="Expand Group" id="{!'expandGroupBtn_'+v.recordId}" onclick="{!c.expandCollapeGroup}" style="display:none">
+                                                <span data-iconname="Expand Group" id="{!'expandGroupBtn_'+group1.groupIndex+group2.groupIndex+group3.groupIndex+group4.groupIndex}" onclick="{!c.expandCollapeGroup}" style="display:none">
                                                     <lightning:buttonIcon iconName="utility:add" variant="border-filled" iconClass="dark" alternativeText="Expand Group" title="Expand Group" />
                                                 </span>
-                                                <span data-iconname="Collapse Group" id="{!'collapeseGroupBtn_'+v.recordId}" onclick="{!c.expandCollapeGroup}" style="display:inline-block;">
+                                                <span data-iconname="Collapse Group" id="{!'collapeseGroupBtn_'+group1.groupIndex+group2.groupIndex+group3.groupIndex+group4.groupIndex}" onclick="{!c.expandCollapeGroup}" style="display:inline-block;">
                                                     <lightning:buttonIcon iconName="utility:dash" variant="border-filled" iconClass="dark" alternativeText="Collapse Group" title="Collapse Group" />
                                                 </span>
                                             </div>
@@ -460,7 +462,7 @@
                                         </aura:iteration>
                                     </tr>
                                     <aura:iteration items="{!group4.quoteLineList}" var="quoteItem">
-                                        <tr>
+                                        <tr class="{!'record_'+group1.groupIndex+group2.groupIndex+group3.groupIndex+group4.groupIndex}">
                                             <td style="width: 30px;"> </td>
                                             <td style="width: 30px;"> </td>
                                             <td style="width: 30px;"> </td>
