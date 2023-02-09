@@ -15,7 +15,8 @@ trigger QuestionTrigger on buildertek__Question__c (before insert, after insert,
 			handler.OnBeforeUpdate(Trigger.old, Trigger.new, Trigger.newMap);
 		}
 		
-		else if(Trigger.isUpdate && Trigger.isAfter){
+		else if(Trigger.isUpdate && Trigger.isAfter && QuestionTriggerHandler.firstRun == true){
+			QuestionTriggerHandler.firstRun = false;
 			handler.OnAfterUpdate(Trigger.old, Trigger.new, Trigger.newMap, trigger.oldMap);
 		}
 		
