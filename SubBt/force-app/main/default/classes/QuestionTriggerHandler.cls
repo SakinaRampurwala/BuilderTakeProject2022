@@ -107,27 +107,57 @@ public with sharing class QuestionTriggerHandler {
 
             if (q.buildertek__Budget_Line__c != null) {
                 budgetLineIds.add(q.buildertek__Budget_Line__c);
-                // buildertek__Budget_Item__c budgetLine = new buildertek__Budget_Item__c();
-                // budgetLine.Id=q.buildertek__Budget_Line__c;
-                // budgetLine.buildertek__Option__c=q.Id;
-                // budgetLineList.add(budgetLine);
             }
         }
         insert results;
 
-        update budgetLineList;
+        List<Question__c> optionList=[Select Id , Name , buildertek__Budget_Line__c  From Question__c where buildertek__Budget_Line__c=:budgetLineIds AND Id IN:optionIds];
+        List<buildertek__Budget_Item__c> budgetLineList = [Select Id , Name , buildertek__Option__c From buildertek__Budget_Item__c where Id=:budgetLineIds];
+        List<buildertek__Budget_Item__c> newBudgetLineList = new List<buildertek__Budget_Item__c>();
+        List<Question__c> newOptionList = new List<Question__c>();
+        List<Question__c> filterOptionList= [SELECT Id , Name , buildertek__Budget_Line__c From Question__c WHERE buildertek__Budget_Line__c=:budgetLineIds AND Id Not IN:optionIds];
+        System.debug(filterOptionList.size());
 
-        // List<Question__c> optionList= [SELECT Id , Name , buildertek__Budget_Line__c From Question__c WHERE buildertek__Budget_Line__c=:budgetLineList AND Id Not IN:optionIds];
-        // List<Question__c> newOptionList = new List<Question__c>();
-        // if(optionList.size()>0){
-        //     for(Question__c option : optionList){
-        //         option.buildertek__Budget_Line__c= null;
-        //         newOptionList.add(option);
-        //     }
-        // }
-        // if(!newOptionList.isEmpty()){
-        //     update newOptionList;
-        // }
+        if(filterOptionList.size() == 0){
+
+            for(Question__c option:optionList){
+                for(buildertek__Budget_Item__c budgetLine :budgetLineList){
+                    if(option.buildertek__Budget_Line__c == budgetLine.Id){
+                        budgetLine.buildertek__Option__c=option.Id;
+                        newBudgetLineList.add(budgetLine);
+                    }    
+                }
+            }
+            if(newBudgetLineList.size()>0){
+                update newBudgetLineList;
+            }
+
+        }else{
+
+            for(Question__c option : filterOptionList){
+                option.buildertek__Budget_Line__c= null;
+                newOptionList.add(option);
+            }
+            if(newOptionList.size() > 0){
+                update newOptionList;
+            }
+
+            for(Question__c option:optionList){
+                for(buildertek__Budget_Item__c budgetLine :budgetLineList){
+                    if(option.buildertek__Budget_Line__c == budgetLine.Id){
+                        budgetLine.buildertek__Option__c=option.Id;
+                        newBudgetLineList.add(budgetLine);
+                    }    
+                }
+            }
+            if(newBudgetLineList.size()>0){
+                update newBudgetLineList;
+            }
+
+
+        }
+        
+        
         List<buildertek__Section__c> selection = new List<buildertek__Section__c>();
         if(Schema.sObjectType.buildertek__Section__c.fields.buildertek__Total_Options__c.isUpdateable()){
             for( buildertek__Section__c section :[Select Id,(Select Id from Questions__r), buildertek__Total_Options__c from buildertek__Section__c where Id IN:selectionIds]){
@@ -142,51 +172,72 @@ public with sharing class QuestionTriggerHandler {
     }
      
     public void OnAfterUpdate(Question__c[] oldQuestions, Question__c[] updatedQuestions, Map<ID, Question__c> QuestionsMap, Map<Id, Question__c> oldQuestionsMap){
+
         List<Question__c> newOptionList = new List<Question__c>();
-        Id newBudgetLineId;
+        Set<Id> budgetLineIds= new Set<Id>();
         Set<Id> optionIds = new Set<Id>();
-        Id optId;
 
         for(Question__c newOption:updatedQuestions){
             optionIds.add(newOption.Id);
-            optId=newOption.Id;
-
+            
             Question__c oldOption = oldQuestionsMap.get(newOption.Id);
 
             if(newOption.buildertek__Budget_Line__c != oldOption.buildertek__Budget_Line__c){
-                newBudgetLineId =newOption.buildertek__Budget_Line__c;
+                budgetLineIds.add(newOption.buildertek__Budget_Line__c);
             }
         }
-        System.debug('newBudgetLineId' + newBudgetLineId);
-        if(newBudgetLineId!= null){
-            List<Question__c> optionList= [SELECT Id , Name , buildertek__Budget_Line__c From Question__c WHERE buildertek__Budget_Line__c=:newBudgetLineId AND Id Not IN:optionIds];
-            System.debug(optionList.size());
-            if(optionList.size() == 0){
-                buildertek__Budget_Item__c budgetLine = new buildertek__Budget_Item__c();
-                budgetLine.Id= newBudgetLineId;
-                budgetLine.buildertek__Option__c=optId;
-                update budgetLine;
-                System.debug(budgetLine.Name);
+
+        if(budgetLineIds.size()>0){
+            List<Question__c> optionList=[Select Id , Name , buildertek__Budget_Line__c  From Question__c where buildertek__Budget_Line__c=:budgetLineIds AND Id IN:optionIds];
+            List<buildertek__Budget_Item__c> budgetLineList = [Select Id , Name , buildertek__Option__c From buildertek__Budget_Item__c where Id=:budgetLineIds];
+            List<buildertek__Budget_Item__c> newBudgetLineList = new List<buildertek__Budget_Item__c>();
+            List<Question__c> filterOptionList= [SELECT Id , Name , buildertek__Budget_Line__c From Question__c WHERE buildertek__Budget_Line__c=:budgetLineIds AND Id Not IN:optionIds];
+            if(filterOptionList.size() == 0){
+
+                for(Question__c option:optionList){
+                    for(buildertek__Budget_Item__c budgetLine :budgetLineList){
+                        if(option.buildertek__Budget_Line__c == budgetLine.Id){
+                            budgetLine.buildertek__Option__c=option.Id;
+                            newBudgetLineList.add(budgetLine);
+                        }    
+                    }
+                }
+                if(newBudgetLineList.size()>0){
+                    update newBudgetLineList;
+                }
+    
             }else{
-                for(Question__c option : optionList){
+    
+                for(Question__c option : filterOptionList){
                     option.buildertek__Budget_Line__c= null;
                     newOptionList.add(option);
                 }
-
-                buildertek__Budget_Item__c budgetLine = new buildertek__Budget_Item__c();
-                budgetLine.Id= newBudgetLineId;
-                budgetLine.buildertek__Option__c=optId;
-                update budgetLine;
-
                 if(newOptionList.size() > 0){
                     update newOptionList;
-                    System.debug(newOptionList);
-                    System.debug('Updated Successfully');
                 }
-
+    
+                for(Question__c option:optionList){
+                    for(buildertek__Budget_Item__c budgetLine :budgetLineList){
+                        if(option.buildertek__Budget_Line__c == budgetLine.Id){
+                            budgetLine.buildertek__Option__c=option.Id;
+                            newBudgetLineList.add(budgetLine);
+                        }    
+                    }
+                }
+                if(newBudgetLineList.size()>0){
+                    update newBudgetLineList;
+                }
+    
+    
             }
 
+
+
         }
+
+
+
+
 
     }
     
