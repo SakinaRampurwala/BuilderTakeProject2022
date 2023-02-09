@@ -19,6 +19,7 @@ public with sharing class QuestionTriggerHandler {
     
     public void OnBeforeInsert(Question__c[] newQuestions){
         Set<Id> OptionIds=new Set<Id>();
+
         for(Question__c q : newQuestions){
             if (q.buildertek__Product__c != null) {
                 Product2 prod = [SELECT Id, Name, (SELECT UnitPrice FROM PricebookEntries WHERE IsActive = True) FROM Product2 WHERE Id =: q.buildertek__Product__c];
@@ -29,7 +30,9 @@ public with sharing class QuestionTriggerHandler {
                 }
                 OptionIds.add(q.buildertek__Product__c);
             }
+
         }
+        // update optionList;
         
         // For Ticket BUIL-2789 (Comment this code because we create custom component - newOption for auto popupate name)
         // if(!OptionIds.isEmpty()){
@@ -88,18 +91,43 @@ public with sharing class QuestionTriggerHandler {
         
         // After insertion of quetion create question result
         List<Question_Result__c> results = new List<Question_Result__c>();
+        List<buildertek__Budget_Item__c> budgetLineList = new List<buildertek__Budget_Item__c>();
         Set<Id> selectionIds = new Set<Id>();
+        Set<Id> optionIds = new Set<Id>();
+
         for(Question__c q:newQuestions){
             if(Schema.sObjectType.Question_Result__c.fields.Selection_Category__c.isCreateable() && Schema.sObjectType.Question_Result__c.fields.Question__c.isCreateable()){
                 Question_Result__c qr = new Question_Result__c();
                 qr.Selection_Category__c = q.Section__c;
                 qr.Question__c = q.Id;
                 results.add(qr);
+                optionIds.add(q.Id);
                 
                 selectionIds.add(q.Section__c);
             }
+
+            if (q.buildertek__Budget_Line__c != null) {
+                buildertek__Budget_Item__c budgetLine = new buildertek__Budget_Item__c();
+                budgetLine.Id=q.buildertek__Budget_Line__c;
+                budgetLine.buildertek__Option__c=q.Id;
+                budgetLineList.add(budgetLine);
+
+            }
         }
         insert results;
+        update budgetLineList;
+
+        List<Question__c> optionList= [SELECT Id , Name , buildertek__Budget_Line__c From Question__c WHERE buildertek__Budget_Line__c=:budgetLineList AND Id Not IN:optionIds];
+        List<Question__c> newOptionList = new List<Question__c>();
+        if(optionList.size()>0){
+            for(Question__c option : optionList){
+                 option.buildertek__Budget_Line__c='';
+                 newOptionList.add(option);
+            }
+        }
+
+        update newOptionList;
+
         
         List<buildertek__Section__c> selection = new List<buildertek__Section__c>();
         if(Schema.sObjectType.buildertek__Section__c.fields.buildertek__Total_Options__c.isUpdateable()){

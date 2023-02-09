@@ -220,6 +220,8 @@
         
     },
     showDropDownCategory:function(component, event, helper) {
+        // var getValue=component.get('v.selectedLookupValue');
+        // console.log(getValue);
         var auraId = event.getSource().getLocalId(); //returns the aura:id of the clicked button
         var auraIdName = auraId.split('_')[0];
         var index = auraId.split('_')[1];

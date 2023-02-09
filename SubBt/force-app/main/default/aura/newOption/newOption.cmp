@@ -63,12 +63,9 @@
 								<lightning:input type="checkbox" aura:id="optionCheck" checked="{!v.Option.buildertek__Default_Option__c}" onchange="{!c.onOptionChanged}"/>
 
 								<lightning:inputField fieldName="buildertek__Budget__c" value="{!v.Option.buildertek__Budget__c}"  onchange="{!c.onBudgetChanged}"/>
+								
 
-
-			
 								<div style="position:relative;"  >
-
-									
 									<lightning:input
 													  style="padding: 0% 2% 0% 0%;"
 													  autocomplete="off"
@@ -81,7 +78,7 @@
 													  onblur ="{!c.hideDropDownCategory}"
 													  label="Budget line"
 													  />
-									 <ul aura:id="searchCategoryRes_1" style="min-height:40px;margin-top:0px !important;position: absolute;" class="Filterdropdown_1 slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid slds-lookup__menu slds" role="listbox">
+									 <ul aura:id="searchCategoryRes_1" style="min-height:40px;max-height:100px; overflow-y:scroll;margin-top:0px !important;position: absolute;" class="Filterdropdown_1 slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid slds-lookup__menu slds" role="listbox">
 										<lightning:spinner class="slds-hide" variant="brand" size="small" aura:id="mySpinner"/>
 										<aura:iteration items="{!v.selectedLookupValue}" var="singleRec">								
 											<li role="presentation" class="slds-listbox__item"  onclick="{!c.selectRecordOption}" aura:id="searchCategoryResOption">
