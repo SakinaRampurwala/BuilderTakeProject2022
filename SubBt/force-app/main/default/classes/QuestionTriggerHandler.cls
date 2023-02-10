@@ -174,43 +174,6 @@ public with sharing class QuestionTriggerHandler {
     
     public void OnBeforeUpdate(Question__c[] newQuestions, Map<ID, Question__c> newQuestionsMap){
         System.debug('OnBeforeUpdate');
-        // Set<Id> optionIds = new Set<Id>();
-        // Set<Id> budgetLineIds = new Set<Id>();
-        // Map<Id,Question__c> optionMap  = new Map<Id,Question__c>();
-        // List<buildertek__Budget_Item__c> newBudgetLineList = new List<buildertek__Budget_Item__c>();
-        // List<buildertek__Question__c> newOptionList = new List<buildertek__Question__c>();
-      
-        // for(Question__c newOption:updatedQuestions){
-        //     optionIds.add(newOption.Id);
-        //     Question__c oldOption = oldQuestionsMap.get(newOption.Id);
-        //     if(newOption.buildertek__Budget_Line__c != oldOption.buildertek__Budget_Line__c){
-        //         budgetLineIds.add(newOption.buildertek__Budget_Line__c);
-        //         optionMap.put(newOption.Id, newOption);
-        //     }
-        // }
-        // List<buildertek__Question__c> filterOptionList= [SELECT Id , Name , buildertek__Budget_Line__c From Question__c WHERE buildertek__Budget_Line__c IN :budgetLineIds AND Id NOT IN :optionIds];
-        // Map<Id, buildertek__Budget_Item__c> budgetLineMap = new Map<Id, buildertek__Budget_Item__c>([SELECT Id , Name , buildertek__Option__c FROM buildertek__Budget_Item__c WHERE Id = :budgetLineIds]);
-        
-        // for (Question__c option : optionMap.values()) {
-        //     buildertek__Budget_Item__c budgetLine = budgetLineMap.get(option.buildertek__Budget_Line__c);
-        //     if (budgetLine != null) {
-        //         budgetLine.buildertek__Option__c = option.Id;
-        //         newBudgetLineList.add(budgetLine);
-        //     }
-        // }
-        // if (newBudgetLineList.size() > 0) {
-        //     update newBudgetLineList;
-        // }
-
-        // for(buildertek__Question__c option : filterOptionList){
-        //     option.buildertek__Budget_Line__c= null;
-        //     newOptionList.add(option);
-        // }
-
-        // if(newOptionList.size() > 0){
-        //      update newOptionList;
-        // }
-     
     }
     
     public void OnAfterDelete(Question__c[] oldQuestions){
