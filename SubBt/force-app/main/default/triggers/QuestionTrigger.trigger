@@ -11,12 +11,12 @@ trigger QuestionTrigger on buildertek__Question__c (before insert, after insert,
 			handler.OnAfterInsert(Trigger.new, Trigger.newMap);
 		}
 		
-		else if(Trigger.isUpdate && Trigger.isBefore){
-			handler.OnBeforeUpdate(Trigger.old, Trigger.new, Trigger.newMap);
+		else if(Trigger.isUpdate && Trigger.isBefore && QuestionTriggerHandler.firstRun == true){
+			QuestionTriggerHandler.firstRun = false;
+			handler.OnBeforeUpdate(Trigger.old, Trigger.new, Trigger.newMap , Trigger.oldMap);
 		}
 		
-		else if(Trigger.isUpdate && Trigger.isAfter && QuestionTriggerHandler.firstRun == true){
-			QuestionTriggerHandler.firstRun = false;
+		else if(Trigger.isUpdate && Trigger.isAfter ){
 			handler.OnAfterUpdate(Trigger.old, Trigger.new, Trigger.newMap, trigger.oldMap);
 		}
 		

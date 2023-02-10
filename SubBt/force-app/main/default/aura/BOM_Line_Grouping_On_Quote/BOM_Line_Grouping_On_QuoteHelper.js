@@ -1,7 +1,9 @@
 ({
-    doInitHelper : function(component, event, helper) {
-        console.log('*** doInitHelper Method ***');
-        component.set("v.Spinner", true);
+    renderCmpHelper : function(component, event, helper) {
+        console.log('*** renderCmpHelper Method ***');
+        $A.get("e.c:BT_SpinnerEvent").setParams({
+            "action": "SHOW"
+        }).fire();
         var page = component.get("v.page") || 1
         var groupFieldList = component.get("v.groupFieldList");
         if (groupFieldList[3] != undefined) {
@@ -94,12 +96,16 @@
                     console.log('*** Quote Wrapper Data ***');
                     console.log('Quote Wrapper Data => ',{ quoteLineWrapper });
                     component.set("v.QuoteLineWrapper", quoteLineWrapper);
-                    component.set("v.Spinner", false);
+                    $A.get("e.c:BT_SpinnerEvent").setParams({
+                        "action": "HIDE"
+                    }).fire();
                 }
             } else{
                 var error = response.getError();
                 console.log('Error => ',{error});
-                component.set("v.Spinner", false);
+                $A.get("e.c:BT_SpinnerEvent").setParams({
+                    "action": "HIDE"
+                }).fire();
             }                
         });
         $A.enqueueAction(action);

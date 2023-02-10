@@ -2572,18 +2572,18 @@ return other.Id == current.Id
             console.log('selectedFieldList ==> ',{selectedFieldList});
             component.set("v.isBOMmodalOpen", false); 
 
-            var evt = $A.get("e.force:navigateToComponent");
-            evt.setParams({
-                componentDef: "c:BOM_Line_Grouping_On_Quote",
-                componentAttributes: {
-                    recordId: component.get("v.recordId"),
-                    groupFieldList: selectedFieldList
-                }
-            });
-            evt.fire();
+            let recordId = component.get("v.recordId");
+            component.set("v.displayGrouping", true);
+            var findcomp = component.find('groupCmp');
+            findcomp.renderCmp(true, recordId, selectedFieldList);
+
         }
 
      },
+
+     returnToNormalVIew: function(component, event, helper){
+        component.set("v.displayGrouping", false);
+     }
 
 
 })

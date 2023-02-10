@@ -36,8 +36,21 @@ public with sharing class QuestionTriggerHandler {
         }
     }
      
-    public void OnBeforeUpdate(Question__c[] oldQuestions, Question__c[] updatedQuestions, Map<ID, Question__c> QuestionsMap){
+    public void OnBeforeUpdate(Question__c[] oldQuestions, Question__c[] updatedQuestions, Map<ID, Question__c> QuestionsMap , Map<Id, Question__c> oldQuestionsMap){
+        System.debug('On Before Update');
         List<Question__c> questionList=new List<Question__c>();
+
+        Set<Id> optionIds = new Set<Id>();
+        Set<Id> budgetLineIds = new Set<Id>();
+        Map<Id,Question__c> optionMap  = new Map<Id,Question__c>();
+        // List<buildertek__Budget_Item__c> newBudgetLineList = new List<buildertek__Budget_Item__c>();
+        List<buildertek__Budget_Item__c> updateBudgetList = new List<buildertek__Budget_Item__c>();
+
+        List<buildertek__Question__c> newOptionList = new List<buildertek__Question__c>();
+
+
+        Set<Id> oldBudgetLineId = new Set<Id>();
+
         for(Question__c q : updatedQuestions){
             if (q.buildertek__Product__c != null) {
                 Product2 prod = [SELECT Id, Name, (SELECT UnitPrice FROM PricebookEntries WHERE IsActive = True) FROM Product2 WHERE Id =: q.buildertek__Product__c];
@@ -55,9 +68,52 @@ public with sharing class QuestionTriggerHandler {
                 }
                 questionList.add(q);
             }
+
+            Question__c oldOption = oldQuestionsMap.get(q.Id);
+            if(q.buildertek__Budget_Line__c != oldOption.buildertek__Budget_Line__c){
+                budgetLineIds.add(q.buildertek__Budget_Line__c);
+                optionMap.put(q.Id, q);
+
+                oldBudgetLineId.add(oldOption.buildertek__Budget_Line__c);
+
+                
+             }
         }
+        List<buildertek__Question__c> filterOptionList= [SELECT Id , Name , buildertek__Budget_Line__c From buildertek__Question__c WHERE buildertek__Budget_Line__c IN :budgetLineIds AND Id NOT IN :optionIds];
+        Map<Id, buildertek__Budget_Item__c> budgetLineMap = new Map<Id, buildertek__Budget_Item__c>([SELECT Id , Name , buildertek__Option__c FROM buildertek__Budget_Item__c WHERE Id = :budgetLineIds]);
+        List<buildertek__Budget_Item__c> oldBudgetLineList =[Select Id , buildertek__Option__c , Name From buildertek__Budget_Item__c where  Id=:oldBudgetLineId];
+        for (buildertek__Question__c option : optionMap.values()) {
+            buildertek__Budget_Item__c budgetLine = budgetLineMap.get(option.buildertek__Budget_Line__c);
+            if (budgetLine != null) {
+              budgetLine.buildertek__Option__c = option.Id;
+              updateBudgetList.add(budgetLine);
+            }
+        }
+        if (updateBudgetList.size() > 0) {
+            update updateBudgetList;
+        }
+
+        for(buildertek__Question__c option : filterOptionList){
+            option.buildertek__Budget_Line__c= null;
+            newOptionList.add(option);
+        }
+
+        if(newOptionList.size() > 0){
+             update newOptionList;
+        }
+
+
+        for(buildertek__Budget_Item__c budgetLine : oldBudgetLineList){
+            budgetLine.buildertek__Option__c= null;
+            updateBudgetList.add(budgetLine);
+        }
+
+        if(updateBudgetList.size() > 0){
+             update updateBudgetList;
+        }
+
     }
-     
+
     public void OnBeforeDelete(Question__c[] QuestionsToDelete, Map<ID, Question__c> QuestionsMap){
         
     }
@@ -130,51 +186,8 @@ public with sharing class QuestionTriggerHandler {
      
     public void OnAfterUpdate(Question__c[] oldQuestions, Question__c[] updatedQuestions, Map<ID, Question__c> QuestionsMap, Map<Id, Question__c> oldQuestionsMap){
         System.debug('OnAfterUpdate');
-        Set<Id> optionIds = new Set<Id>();
-        Set<Id> budgetLineIds = new Set<Id>();
-        Map<Id,Question__c> optionMap  = new Map<Id,Question__c>();
-        List<buildertek__Budget_Item__c> newBudgetLineList = new List<buildertek__Budget_Item__c>();
-        List<buildertek__Question__c> newOptionList = new List<buildertek__Question__c>();
-      
-        for(Question__c newOption:updatedQuestions){
-            optionIds.add(newOption.Id);
-            Question__c oldOption = oldQuestionsMap.get(newOption.Id);
-            if(newOption.buildertek__Budget_Line__c != oldOption.buildertek__Budget_Line__c){
-                budgetLineIds.add(newOption.buildertek__Budget_Line__c);
-                optionMap.put(newOption.Id, newOption);
-            }
-        }
-        List<buildertek__Question__c> filterOptionList= [SELECT Id , Name , buildertek__Budget_Line__c From Question__c WHERE buildertek__Budget_Line__c IN :budgetLineIds AND Id NOT IN :optionIds];
-        Map<Id, buildertek__Budget_Item__c> budgetLineMap = new Map<Id, buildertek__Budget_Item__c>([SELECT Id , Name , buildertek__Option__c FROM buildertek__Budget_Item__c WHERE Id = :budgetLineIds]);
-        for (Question__c option : optionMap.values()) {
-            buildertek__Budget_Item__c budgetLine = budgetLineMap.get(option.buildertek__Budget_Line__c);
-            if (budgetLine != null) {
-                budgetLine.buildertek__Option__c = option.Id;
-                newBudgetLineList.add(budgetLine);
-            }
-        }
-        if (newBudgetLineList.size() > 0) {
-            update newBudgetLineList;
-        }
-        System.debug(filterOptionList.size());
-        for(buildertek__Question__c option : filterOptionList){
-            option.buildertek__Budget_Line__c= null;
-            newOptionList.add(option);
-        }
-
-        if(newOptionList.size() > 0){
-            update newOptionList;
-
-        }
-     
-
-
-
     }
     
-    public void OnBeforeUpdate(Question__c[] newQuestions, Map<ID, Question__c> newQuestionsMap){
-        System.debug('OnBeforeUpdate');
-    }
     
     public void OnAfterDelete(Question__c[] oldQuestions){
         Set<Id> selectionIds = new Set<Id>();

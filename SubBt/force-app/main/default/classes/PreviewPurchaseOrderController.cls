@@ -58,7 +58,7 @@ public with sharing class PreviewPurchaseOrderController {
 
            System.debug('attacheDocs ==> '+attacheDocs);
            String body = '';
-           //String subject = 'PurchaseOrder';
+           //String subject = 'Purchase Order';
            String subject = ''; 
            list<buildertek__Admin_Interface_Node_Configuration__c> adminInterfaceNodeConfigurations = [Select Id,
                                                                                                 buildertek__Quote_Configuration__c,buildertek__Email_Subject__c 
@@ -67,7 +67,7 @@ public with sharing class PreviewPurchaseOrderController {
           if(adminInterfaceNodeConfigurations.size()>0){
               subject = adminInterfaceNodeConfigurations[0].buildertek__Email_Subject__c;
           }else{
-              subject = 'PurchaseOrder'; 
+              subject = 'Purchase Order'; 
           } 
           List<buildertek__ConfirmationPageSiteURL__c> confirmationurl = buildertek__ConfirmationPageSiteURL__c.getall().values();
            string SiteUrl;
@@ -209,7 +209,7 @@ public with sharing class PreviewPurchaseOrderController {
    public static String acceptandsendProposal(String htmlBody, String recordId, String templateId, List<String> to, List<String> cc,string Emailsubject, string fileid){
         try{
             String body = '';
-           // String subject = 'PurchaseOrder';
+           // String subject = 'Purchase Order';
             String subject='';
             list<buildertek__Admin_Interface_Node_Configuration__c> adminInterfaceNodeConfigurations = [Select Id,
                                                                                                  buildertek__Quote_Configuration__c,buildertek__Email_Subject__c 
@@ -218,7 +218,7 @@ public with sharing class PreviewPurchaseOrderController {
            if(adminInterfaceNodeConfigurations.size()>0){
                subject = adminInterfaceNodeConfigurations[0].buildertek__Email_Subject__c;
            }else{
-               subject = 'PurchaseOrder'; 
+               subject = 'Purchase Order'; 
            } 
              List<buildertek__ConfirmationPageSiteURL__c> confirmationurl = buildertek__ConfirmationPageSiteURL__c.getall().values();
             string SiteUrl;

@@ -2,6 +2,8 @@
     doInit: function(component, event, helper) {
         /*var recordId = component.get("v.recordId")
         console.log('getting recordId '+recordId);*/
+        component.set('v.disableIt' , false);
+        
         var pageRef = component.get("v.pageReference");
         var state = pageRef.state;
         var base64Context = state.inContextOfRef;
@@ -15,6 +17,7 @@
     },
 
     createRecord: function(component, event, helper) {
+        component.set('v.disableIt' , true);
         component.set("v.Spinner", true);
         var Option = component.get('v.Option');
         

@@ -1,6 +1,4 @@
-.THIS.mainDiv{
-    background: white;
-    padding: 10px;
+.THIS.mainBomDiv{
     overflow: auto;
 }
 
@@ -13,13 +11,13 @@
     font-size: 20px;
 }
 
-.THIS .tableHeader{
+.THIS .tableHeaderDiv{
     font-weight: 600;
     padding: 5px;
     background: #fafaf9;
 }
 
-.THIS .groupHeader {
+.THIS .groupHeaderDiv {
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
     background-color: #f3f3f3;
@@ -42,4 +40,8 @@
     border-bottom-color: #dedbd7;
     border-bottom-style: solid;
     border-bottom-width: 1px;
+}
+
+.THIS .blankDiv{
+    width: 30px;
 }
