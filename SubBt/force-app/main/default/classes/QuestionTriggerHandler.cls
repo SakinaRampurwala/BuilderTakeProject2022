@@ -9,6 +9,8 @@ public with sharing class QuestionTriggerHandler {
     //Boolean variable to allow skipping execution of trigger in certain scenarios
     public static Boolean blnSkipTrigger = false;
     public static boolean firstRun = true; 
+    public static boolean updateIt = true; 
+
 
      
     private boolean m_isExecuting = false;
@@ -39,16 +41,11 @@ public with sharing class QuestionTriggerHandler {
     public void OnBeforeUpdate(Question__c[] oldQuestions, Question__c[] updatedQuestions, Map<ID, Question__c> QuestionsMap , Map<Id, Question__c> oldQuestionsMap){
         System.debug('On Before Update');
         List<Question__c> questionList=new List<Question__c>();
-
         Set<Id> optionIds = new Set<Id>();
         Set<Id> budgetLineIds = new Set<Id>();
         Map<Id,Question__c> optionMap  = new Map<Id,Question__c>();
-        // List<buildertek__Budget_Item__c> newBudgetLineList = new List<buildertek__Budget_Item__c>();
         List<buildertek__Budget_Item__c> updateBudgetList = new List<buildertek__Budget_Item__c>();
-
         List<buildertek__Question__c> newOptionList = new List<buildertek__Question__c>();
-
-
         Set<Id> oldBudgetLineId = new Set<Id>();
 
         for(Question__c q : updatedQuestions){
@@ -69,37 +66,35 @@ public with sharing class QuestionTriggerHandler {
                 questionList.add(q);
             }
 
-            Question__c oldOption = oldQuestionsMap.get(q.Id);
+            buildertek__Question__c oldOption = oldQuestionsMap.get(q.Id);
             if(q.buildertek__Budget_Line__c != oldOption.buildertek__Budget_Line__c){
                 budgetLineIds.add(q.buildertek__Budget_Line__c);
                 optionMap.put(q.Id, q);
-
                 oldBudgetLineId.add(oldOption.buildertek__Budget_Line__c);
-
-                
              }
         }
+        System.debug(oldBudgetLineId);
+        System.debug(optionMap);
+        System.debug(budgetLineIds);
+        if(QuestionTriggerHandler.updateIt){
+
         List<buildertek__Question__c> filterOptionList= [SELECT Id , Name , buildertek__Budget_Line__c From buildertek__Question__c WHERE buildertek__Budget_Line__c IN :budgetLineIds AND Id NOT IN :optionIds];
         Map<Id, buildertek__Budget_Item__c> budgetLineMap = new Map<Id, buildertek__Budget_Item__c>([SELECT Id , Name , buildertek__Option__c FROM buildertek__Budget_Item__c WHERE Id = :budgetLineIds]);
         List<buildertek__Budget_Item__c> oldBudgetLineList =[Select Id , buildertek__Option__c , Name From buildertek__Budget_Item__c where  Id=:oldBudgetLineId];
         for (buildertek__Question__c option : optionMap.values()) {
             buildertek__Budget_Item__c budgetLine = budgetLineMap.get(option.buildertek__Budget_Line__c);
+            System.debug('budgetLine' + budgetLine);
             if (budgetLine != null) {
-              budgetLine.buildertek__Option__c = option.Id;
-              updateBudgetList.add(budgetLine);
+            budgetLine.buildertek__Option__c = option.Id;
+            System.debug(budgetLine.buildertek__Option__c );
+            updateBudgetList.add(budgetLine);
             }
         }
         if (updateBudgetList.size() > 0) {
+            System.debug('Update BudgetList');
             update updateBudgetList;
-        }
+            System.debug('Update successfully budget');
 
-        for(buildertek__Question__c option : filterOptionList){
-            option.buildertek__Budget_Line__c= null;
-            newOptionList.add(option);
-        }
-
-        if(newOptionList.size() > 0){
-             update newOptionList;
         }
 
 
@@ -109,8 +104,24 @@ public with sharing class QuestionTriggerHandler {
         }
 
         if(updateBudgetList.size() > 0){
-             update updateBudgetList;
+            update updateBudgetList;
         }
+
+            System.debug('INISIDE UPDATEIT BLOCK');
+            for(buildertek__Question__c option : filterOptionList){
+                System.debug(option.buildertek__Budget_Line__c + 'option.buildertek__Budget_Line__c');
+                option.buildertek__Budget_Line__c= null;
+                newOptionList.add(option);
+            }
+
+            if(newOptionList.size() > 0){
+                update newOptionList;
+            }
+            
+        }
+
+        
+
 
     }
 
@@ -119,7 +130,7 @@ public with sharing class QuestionTriggerHandler {
     }
      
     public void OnAfterInsert(Question__c[] newQuestions, Map<ID, Question__c> newQuestionsMap){ 
-        
+        System.debug('On After Insert');
         // After insertion of quetion create question result
         List<Question_Result__c> results = new List<Question_Result__c>();
         Set<Id> selectionIds = new Set<Id>();
@@ -163,8 +174,11 @@ public with sharing class QuestionTriggerHandler {
         
         for (Question__c option : optionMap.values()) {
             buildertek__Budget_Item__c budgetLine = budgetLineMap.get(option.buildertek__Budget_Line__c);
+            System.debug('budgetLine'+ budgetLine);
             if (budgetLine != null) {
               budgetLine.buildertek__Option__c = option.Id;
+            System.debug('budgetLine.buildertek__Option__c'+ budgetLine.buildertek__Option__c);
+
               newBudgetLineList.add(budgetLine);
             }
         }
@@ -173,12 +187,16 @@ public with sharing class QuestionTriggerHandler {
         }
 
         for(buildertek__Question__c option : filterOptionList){
+            System.debug(option.buildertek__Budget_Line__c);
+            System.debug('option.buildertek__Budget_Line__c');
+            QuestionTriggerHandler.updateIt=false;
             option.buildertek__Budget_Line__c= null;
             newOptionList.add(option);
         }
 
         if(newOptionList.size() > 0){
              update newOptionList;
+             System.debug('Update Successfully');
         }
           
         
@@ -186,6 +204,26 @@ public with sharing class QuestionTriggerHandler {
      
     public void OnAfterUpdate(Question__c[] oldQuestions, Question__c[] updatedQuestions, Map<ID, Question__c> QuestionsMap, Map<Id, Question__c> oldQuestionsMap){
         System.debug('OnAfterUpdate');
+        // Set<Id> optionIds = new Set<Id>();
+        // Set<Id> budgetLineIds = new Set<Id>();
+        // List<buildertek__Question__c> newOptionList = new List<buildertek__Question__c>();
+
+        // List<buildertek__Question__c> filterOptionList= [SELECT Id , Name , buildertek__Budget_Line__c From buildertek__Question__c WHERE buildertek__Budget_Line__c IN :budgetLineIds AND Id NOT IN :optionIds];
+        // Map<Id, buildertek__Budget_Item__c> budgetLineMap = new Map<Id, buildertek__Budget_Item__c>([SELECT Id , Name , buildertek__Option__c FROM buildertek__Budget_Item__c WHERE Id = :budgetLineIds]);
+        // for(Question__c q : updatedQuestions){
+        //     buildertek__Question__c oldOption = oldQuestionsMap.get(q.Id);
+        //     if(q.buildertek__Budget_Line__c != oldOption.buildertek__Budget_Line__c){
+        //         budgetLineIds.add(q.buildertek__Budget_Line__c);
+        //      }
+        // }
+        // for(buildertek__Question__c option : filterOptionList){
+        //     option.buildertek__Budget_Line__c= null;
+        //     newOptionList.add(option);
+        // }
+
+        // if(newOptionList.size() > 0){
+        //     update newOptionList;
+        // }
     }
     
     
