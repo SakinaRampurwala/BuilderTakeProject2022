@@ -95,11 +95,17 @@
 										<lightning:spinner class="slds-show" variant="brand" size="small" aura:id="mySpinner"/>
 										<aura:iteration items="{!v.searchBudget}" var="singleRec">								
 											<li role="presentation" class="slds-listbox__item"  onclick="{!c.selectBudgetOption}" aura:id="searchCategoryResOption">
-												<span  Id="{!singleRec.Id}" class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
+												<div id="option1" class="slds-media slds-listbox__option slds-listbox__option_entity slds-media_center" role="option">
+													<span class="slds-media__figure slds-listbox__option-icon">
+													  <span class="slds-icon_container slds-icon-standard-account">
+														<lightning:icon iconName="custom:custom5" size="small" alternativeText="Approved" title="Approved" />
+													  </span>
+													</span>
 													<span class=" slds-media__body">  
 														<span  Id="{!singleRec.Id}" class="slds-listbox__option-text slds-listbox__option-text_entity">{!singleRec.Name}</span>    
 													</span>
-												</span>
+												  </div>
+									
 											</li>
 										</aura:iteration>
 									 </ul> 
@@ -118,15 +124,21 @@
 													  onblur ="{!c.hideDropDownCategory}"
 													  label="Budget line"
 													  />
+									  
 									 <ul aura:id="searchCategoryRes_2" style="min-height:40px;max-height:100px; overflow-y:scroll;margin-top:0px !important;position: absolute;" class="Filterdropdown_1 slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid slds-lookup__menu slds" role="listbox">
 										<lightning:spinner class="slds-show" variant="brand" size="small" aura:id="mySpinner2"/>
 										<aura:iteration items="{!v.searchCategoryFilter}" var="singleRec">								
 											<li role="presentation" class="slds-listbox__item"  onclick="{!c.selectRecordOption}" aura:id="searchCategoryResOption">
-												<span  Id="{!singleRec.Id}" class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
+												<div id="option2" class="slds-media slds-listbox__option slds-listbox__option_entity slds-media_center" role="option">
+													<span class="slds-media__figure slds-listbox__option-icon">
+													  <span class="slds-icon_container slds-icon-standard-account">
+														<lightning:icon iconName="custom:custom5" size="small" alternativeText="Approved" title="Approved" />
+													  </span>
+													</span>
 													<span class=" slds-media__body">  
 														<span  Id="{!singleRec.Id}" class="slds-listbox__option-text slds-listbox__option-text_entity">{!singleRec.Name}</span>    
 													</span>
-												</span>
+												  </div>
 											</li>
 										</aura:iteration>
 									 </ul> 
@@ -141,11 +153,8 @@
 						<div class="headingDiv"> Upgrade Details </div>
 						<div class="slds-grid">
 							<div class="slds-col slds-size_1-of-2">
-								<!-- <h3 class="slds-section-titledivider">Upgrade Details</h3> -->
-								<!-- <lightning:inputField fieldName="buildertek__Upgrade__c" value="{!v.Option.buildertek__Upgrade__c}" /> -->
 								<h1 class="checkboxLabel">Upgrade</h1>
 								<lightning:input type="checkbox" aura:id="upgradeCheck" checked="{!v.Option.buildertek__Upgrade__c}" onchange="{!c.onUpgradeChanged}"/>
-
 								<lightning:inputField fieldName="buildertek__Date_Option_Upgraded__c" value="{!v.Option.buildertek__Date_Option_Upgraded__c}" />
 							</div>
 							<div class="slds-col slds-size_1-of-2">
@@ -153,25 +162,11 @@
 							</div>
 						</div>
 
-						<!-- <div class="headingDiv"> Related Items </div>
-						<div class="slds-grid">
-							<div class="slds-col slds-size_1-of-2">
-								<lightning:inputField fieldName="buildertek__Purchase_Order__c" value="{!v.Option.buildertek__Purchase_Order__c}" />
-								<lightning:inputField fieldName="buildertek__Purchase_Order_Line__c" value="{!v.Option.buildertek__Purchase_Order_Line__c}" />
-
-							</div>
-							<div class="slds-col slds-size_1-of-2">
-								<lightning:inputField fieldName="buildertek__Change_Order__c" value="{!v.Option.buildertek__Change_Order__c}" />
-								<lightning:inputField fieldName="buildertek__Change_Order_Line__c" value="{!v.Option.buildertek__Change_Order_Line__c}" />
-							</div>
-						</div> -->
 					</div>
 				</lightning:recordEditForm>
 			</div>
 
 			<footer class="slds-modal__footer">
-				<!-- <lightning:button variant="neutral" label="Cancel" onclick="{!c.closeModel}"/>
-				<lightning:button variant="brand" label="Upgrade" onclick="{!c.onUpgrade}"/> -->
 				<lightning:button label="Cancel" title="Cancel" onclick="{!c.closePopup}" class="myBtn"/>
 				<lightning:button name='SaveandNew' label='Save &amp; New' onclick='{!c.saveAndNew}' />
 				<lightning:button variant="brand" disabled="{!v.disableIt}" label="Save" title="Save" onclick="{!c.createRecord}"/>
@@ -179,7 +174,4 @@
 		</div>
 	</section>
 	<div class="slds-backdrop slds-backdrop_open"></div>
-
-		<!-- <lightning:button label="Cancel" title="Cancel" onclick="{!c.closePopup}" class="myBtn"/>
-		<lightning:button variant="brand" label="Save" title="Save" onclick="{!c.createRecord}"/> -->
 </aura:component>
