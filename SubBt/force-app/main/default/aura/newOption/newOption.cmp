@@ -3,8 +3,12 @@
 	<aura:attribute name="Option" type="Question__c" default="{ 'sobjectType': 'Question__c'}" />
 	<aura:attribute name="Product" type="Product2" default="{ 'sobjectType': 'Product2'}" />
 	<aura:attribute name="selectedLookupValue" type="List" />
-	<aura:attribute name="parentValue" type="String" default=""/>
 	<aura:attribute name="searchCategoryFilter" type="String" default=""/>
+	<aura:attribute name="searchBudget" type="String" default=""/>
+	<aura:attribute name="budgetId" type="String" default=""/>
+
+
+	
 	<aura:attribute name="unitSalesPrice" type="decimal" default=""/>
 	<aura:attribute name="selectedBudgetLineId" type="String" default=""/>
 	<aura:attribute name="disableIt" type="Boolean" default="false"/>
@@ -65,7 +69,7 @@
 							</div>
 
 							<div class="slds-col slds-size_1-of-2">
-								<lightning:inputField fieldName="buildertek__Question_Group__c" value="{!v.Option.buildertek__Question_Group__c}" />
+								<lightning:inputField fieldName="buildertek__Question_Group__c" value="{!v.Option.buildertek__Question_Group__c}" onchange="{!c.onSelectionChanged}" />
 								<lightning:inputField fieldName="buildertek__Manufacturer__c" value="{!v.Option.buildertek__Manufacturer__c}" />
 								<!-- <lightning:inputField aura:id="selectCheck" fieldName="buildertek__Selected__c" value="{!v.Option.buildertek__Selected__c}" />		 -->
 								<h1 class="checkboxLabel">Selected</h1>
@@ -74,14 +78,38 @@
 								<h1 class="checkboxLabel">Default Option</h1>
 								<lightning:input type="checkbox" aura:id="optionCheck" checked="{!v.Option.buildertek__Default_Option__c}" onchange="{!c.onOptionChanged}"/>
 
-								<lightning:inputField fieldName="buildertek__Budget__c" value="{!v.Option.buildertek__Budget__c}"  onchange="{!c.onBudgetChanged}"/>
-								
-
 								<div style="position:relative;"  >
 									<lightning:input
 													  style="padding: 0% 2% 0% 0%;"
 													  autocomplete="off"
 													  aura:id="searchCategory_1"
+													  name="enter-search"
+													  type="search"
+													  placeholder="Search Budget  ..."
+													  value="{!v.searchBudget}"
+													  onblur ="{!c.hideDropDownCategory}"
+													  onclick="{!c.onBudgetChanged}"
+													  label="Budget"
+													  />
+									 <ul aura:id="searchCategoryRes_1" style="min-height:40px;max-height:100px; overflow-y:scroll;margin-top:0px !important;position: absolute;" class="Filterdropdown_1 slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid slds-lookup__menu slds" role="listbox">
+										<lightning:spinner class="slds-show" variant="brand" size="small" aura:id="mySpinner"/>
+										<aura:iteration items="{!v.searchBudget}" var="singleRec">								
+											<li role="presentation" class="slds-listbox__item"  onclick="{!c.selectBudgetOption}" aura:id="searchCategoryResOption">
+												<span  Id="{!singleRec.Id}" class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
+													<span class=" slds-media__body">  
+														<span  Id="{!singleRec.Id}" class="slds-listbox__option-text slds-listbox__option-text_entity">{!singleRec.Name}</span>    
+													</span>
+												</span>
+											</li>
+										</aura:iteration>
+									 </ul> 
+								 </div>
+
+								<div style="position:relative;"  >
+									<lightning:input
+													  style="padding: 0% 2% 0% 0%;"
+													  autocomplete="off"
+													  aura:id="searchCategory_2"
 													  name="enter-search"
 													  type="search"
 													  placeholder="Search Budget Lines ..."
@@ -90,9 +118,9 @@
 													  onblur ="{!c.hideDropDownCategory}"
 													  label="Budget line"
 													  />
-									 <ul aura:id="searchCategoryRes_1" style="min-height:40px;max-height:100px; overflow-y:scroll;margin-top:0px !important;position: absolute;" class="Filterdropdown_1 slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid slds-lookup__menu slds" role="listbox">
-										<lightning:spinner class="slds-hide" variant="brand" size="small" aura:id="mySpinner"/>
-										<aura:iteration items="{!v.selectedLookupValue}" var="singleRec">								
+									 <ul aura:id="searchCategoryRes_2" style="min-height:40px;max-height:100px; overflow-y:scroll;margin-top:0px !important;position: absolute;" class="Filterdropdown_1 slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid slds-lookup__menu slds" role="listbox">
+										<lightning:spinner class="slds-show" variant="brand" size="small" aura:id="mySpinner2"/>
+										<aura:iteration items="{!v.searchCategoryFilter}" var="singleRec">								
 											<li role="presentation" class="slds-listbox__item"  onclick="{!c.selectRecordOption}" aura:id="searchCategoryResOption">
 												<span  Id="{!singleRec.Id}" class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
 													<span class=" slds-media__body">  

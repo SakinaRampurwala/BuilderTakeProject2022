@@ -45,5 +45,26 @@
 			}
 		});
 		$A.enqueueAction(action)
-	}
+	},
+	showDropDownCategory:function(component, event, helper) {
+        // var getValue=component.get('v.selectedLookupValue');
+        // console.log(getValue);
+        var auraId = event.getSource().getLocalId(); //returns the aura:id of the clicked button
+        var auraIdName = auraId.split('_')[0];
+        var index = auraId.split('_')[1];
+        var forOpen = component.find(auraIdName+'Res_'+index);
+        for(var i=1;i<=4;i++){
+            if(i != index){
+                var forClose = component.find(auraIdName+'Res_'+i);
+                if(forClose){
+                     forClose.getElement().style.display = 'none';
+                }
+               
+            }
+        }
+        forOpen.getElement().style.display = 'block'
+         var getInputkeyWord = '';
+         event.stopPropagation();
+        event.preventDefault();
+    },
 })

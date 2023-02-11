@@ -13,6 +13,7 @@
         var addressableContext = JSON.parse(window.atob(base64Context));
         component.set("v.recordId", addressableContext.attributes.recordId);
         component.set('v.Option.buildertek__Question_Group__c', addressableContext.attributes.recordId);
+        console.log(component.get('v.Option.buildertek__Question_Group__c'));
 
     },
 
@@ -28,6 +29,7 @@
         action.setParams({
             "option": Option,
             "salesPrice": component.get('v.unitSalesPrice'),
+            "BudgetId":component.get('v.budgetId'),
             "budgetLineId":component.get('v.selectedBudgetLineId')
 
         });
@@ -203,11 +205,11 @@
         component.set("v.Option", Option);
     },
     onBudgetChanged:function(component, event, helper) {
-        var getValue = event.getSource().get("v.value");
-        console.log(getValue[0]);
-        var action = component.get("c.getBudgetLine");
+        helper.showDropDownCategory(component, event, helper);
+
+        var action = component.get("c.getBudget");
         action.setParams({
-            budgetId: getValue[0]
+            selectionTypeId:component.get('v.Option.buildertek__Question_Group__c')
         });
         action.setCallback(this, function(response) {
             var state = response.getState();
@@ -215,33 +217,38 @@
             var result= response.getReturnValue();
             if (state === "SUCCESS") {
                 console.log({result});
-                component.set('v.parentValue' , getValue[0]);
-                component.set('v.selectedLookupValue' ,result );
+                component.set('v.searchBudget' ,result);
+                $A.util.addClass(component.find("mySpinner"), "slds-hide");
+                $A.util.removeClass(component.find("mySpinner"), "slds-show");
             }
         });
         $A.enqueueAction(action);
         
     },
-    showDropDownCategory:function(component, event, helper) {
-        // var getValue=component.get('v.selectedLookupValue');
-        // console.log(getValue);
-        var auraId = event.getSource().getLocalId(); //returns the aura:id of the clicked button
-        var auraIdName = auraId.split('_')[0];
-        var index = auraId.split('_')[1];
-        var forOpen = component.find(auraIdName+'Res_'+index);
-        for(var i=1;i<=4;i++){
-            if(i != index){
-                var forClose = component.find(auraIdName+'Res_'+i);
-                if(forClose){
-                     forClose.getElement().style.display = 'none';
-                }
-               
+
+
+    showDropDownCategory:function(component, event, helper) {   
+        helper.showDropDownCategory(component, event, helper);
+        console.log(component.get('v.searchBudget'));
+        var action = component.get("c.getBudgetLine");
+        action.setParams({
+            BudgetId:component.get('v.budgetId')
+        });
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+            console.log({state});
+            var result= response.getReturnValue();
+            if (state === "SUCCESS") {
+                console.log({result});
+                component.set('v.searchCategoryFilter' ,result);
+                $A.util.addClass(component.find("mySpinner2"), "slds-hide");
+                $A.util.removeClass(component.find("mySpinner2"), "slds-show");
+
+
+
             }
-        }
-        forOpen.getElement().style.display = 'block'
-         var getInputkeyWord = '';
-         event.stopPropagation();
-        event.preventDefault();
+        });
+        $A.enqueueAction(action);
     },
     hideDropDownCategory : function (component, event, helper) {
         event.preventDefault();
@@ -257,6 +264,16 @@
                 }), 1000
             );
         }
+        if(eve.getLocalId() == 'searchCategory_2'){
+            window.setTimeout(
+                $A.getCallback(function() {
+                    var forOpen = component.find('searchCategoryRes_2');
+                     if(forOpen){
+                        forOpen.getElement().style.display = 'none';
+                    }
+                }), 1000
+            );
+        }
         var getInputkeyWord = '';
        
     },
@@ -265,7 +282,7 @@
         event.stopPropagation();
         console.log('NAME=== '+ event.target.id);
         component.set("v.searchCategoryFilter",event.target.innerText);
-        var forOpen = component.find("searchCategoryRes_1");
+        var forOpen = component.find("searchCategoryRes_2");
         if(forOpen){
             forOpen.getElement().style.display = 'none';
         }
@@ -287,5 +304,23 @@
         });
         $A.enqueueAction(action);
     },
+    selectBudgetOption: function (component, event, helper) {
+        event.preventDefault();
+        event.stopPropagation();
+        console.log('NAME=== '+ event.target.id);
+        component.set('v.budgetId' , event.target.id);
+        component.set("v.searchBudget",event.target.innerText);
+        var forOpen = component.find("searchCategoryRes_1");
+        if(forOpen){
+            forOpen.getElement().style.display = 'none';
+        }
+    },
+    onSelectionChanged:function(component, event, helper) {
+        var getValue = event.getSource().get("v.value");
+        component.set('v.Option.buildertek__Question_Group__c' , getValue[0]);
+        console.log(component.get('v.Option.buildertek__Question_Group__c'));
+
+
+    }
 
 })
