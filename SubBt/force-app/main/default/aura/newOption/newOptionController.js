@@ -277,6 +277,7 @@
         var getInputkeyWord = '';
        
     },
+    
     selectRecordOption : function (component, event, helper) {
         event.preventDefault();
         event.stopPropagation();

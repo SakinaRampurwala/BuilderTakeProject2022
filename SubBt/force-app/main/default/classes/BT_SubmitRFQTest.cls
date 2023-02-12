@@ -26,7 +26,7 @@ public with sharing class BT_SubmitRFQTest {
         user.IsActive = true;
         user.ContactId = con.Id;
         user.timezonesidkey = 'America/Los_Angeles';
-        user.username = 'tester@noemail.com';
+        user.username = 'tester0@noemail.com';
         insert user;
         
         buildertek__RFQ__c rfq = new buildertek__RFQ__c();

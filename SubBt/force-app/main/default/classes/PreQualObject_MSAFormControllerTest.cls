@@ -16,7 +16,7 @@ public with sharing class PreQualObject_MSAFormControllerTest {
         user.country = 'United States';
         user.IsActive = true;
         user.timezonesidkey = 'America/Los_Angeles';
-        user.username = 'tester@noemail.com';
+        user.username = 'tester0@noemail.com';
         insert user;
 
         Account acc = new Account();

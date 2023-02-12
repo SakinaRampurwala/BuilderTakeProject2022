@@ -1857,8 +1857,7 @@ Throws [Exceptions]:
         }
 
         List<buildertek__Quote_Item__c> QuoteItemList = [Select Id, buildertek__Quote__c, buildertek__RFQ__c
-                                                         from buildertek__Quote_Item__c
-                                                         where buildertek__Quote__c =:quotId];
+                                                         from buildertek__Quote_Item__c];
         
         //get buildertek__RFQ__c Ids from QuoteItemList
         Set<Id> rfqIds = new Set<Id>();
@@ -1904,8 +1903,7 @@ Throws [Exceptions]:
         
 
         List<buildertek__Quote_Item__c> QuoteItemList = [Select Id, buildertek__Quote__c, buildertek__RFQ__c
-                                                         from buildertek__Quote_Item__c
-                                                         where buildertek__Quote__c =:quotId];
+                                                         from buildertek__Quote_Item__c];
         
         //get buildertek__RFQ__c Ids from QuoteItemList
         Set<Id> rfqIds = new Set<Id>();

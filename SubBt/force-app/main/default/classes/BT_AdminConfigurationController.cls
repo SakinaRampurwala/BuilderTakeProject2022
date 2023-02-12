@@ -763,7 +763,7 @@ public with sharing class BT_AdminConfigurationController{
         Admin_Interface_Node_Configuration__c BoxSettings = new Admin_Interface_Node_Configuration__c();
         BoxSettings.Name = 'Box Settings';
         BoxSettings.Disable__c = false;
-        BTChangeOrderConfiguration.Index__c = 25;
+        BoxSettings.Index__c = 25;
         BoxSettings.Icon_URL__c = '/resource/'+nameSpacePrefix+'SLDS/assets/icons/utility/settings_60.png';
         BoxSettings.Open_New_Tab__c = false;
         BoxSettings.Tab_Name__c = 'Box Settings';
@@ -774,7 +774,7 @@ public with sharing class BT_AdminConfigurationController{
         Admin_Interface_Node_Configuration__c EmailConfiguration = new Admin_Interface_Node_Configuration__c();
         EmailConfiguration.Name = 'Email Configuration';
         EmailConfiguration.Disable__c = false;
-        BTChangeOrderConfiguration.Index__c = 26;
+        EmailConfiguration.Index__c = 26;
         EmailConfiguration.Icon_URL__c = '/resource/'+nameSpacePrefix+'SLDS/assets/icons/utility/settings_60.png';
         EmailConfiguration.Open_New_Tab__c = false;
         EmailConfiguration.Tab_Name__c = 'Email Configuration';
@@ -841,7 +841,7 @@ public with sharing class BT_AdminConfigurationController{
         Admin_Interface_Node_Configuration__c BudgetConfiguration = new Admin_Interface_Node_Configuration__c();
         BudgetConfiguration.Name = 'Budget Configuration';
         BudgetConfiguration.Disable__c = false;
-        BTOpportunityConfiguration.Index__c = 32;
+        BudgetConfiguration.Index__c = 32;
         BudgetConfiguration.Icon_URL__c = '/resource/'+nameSpacePrefix+'SLDS/assets/icons/utility/settings_60.png';
         BudgetConfiguration.Open_New_Tab__c = false;
         BudgetConfiguration.Tab_Name__c = 'Budget Configuration';
@@ -854,7 +854,7 @@ public with sharing class BT_AdminConfigurationController{
         Admin_Interface_Node_Configuration__c CreateContractonQuoteAcceptance = new Admin_Interface_Node_Configuration__c();
         CreateContractonQuoteAcceptance.Name = 'Create Contract on Quote Acceptance';
         CreateContractonQuoteAcceptance.Disable__c = false;
-        BTOpportunityConfiguration.Index__c = 33;
+        CreateContractonQuoteAcceptance.Index__c = 33;
         CreateContractonQuoteAcceptance.Icon_URL__c = '/resource/'+nameSpacePrefix+'SLDS/assets/icons/utility/settings_60.png';
         CreateContractonQuoteAcceptance.Open_New_Tab__c = false;
         CreateContractonQuoteAcceptance.Tab_Name__c = 'Create Contract on Quote Acceptance';
@@ -875,7 +875,7 @@ public with sharing class BT_AdminConfigurationController{
         Admin_Interface_Node_Configuration__c MSAConfiguration1 = new Admin_Interface_Node_Configuration__c();
         MSAConfiguration1.Name = 'MSA Configuration';
         MSAConfiguration1.Disable__c = false;
-        BTOpportunityConfiguration.Index__c = 35;
+        MSAConfiguration1.Index__c = 35;
         MSAConfiguration1.Icon_URL__c = '/resource/'+nameSpacePrefix+'SLDS/assets/icons/utility/settings_60.png';
         MSAConfiguration1.Open_New_Tab__c = false;
         MSAConfiguration1.Tab_Name__c = 'MSA Configuration';
@@ -885,7 +885,7 @@ public with sharing class BT_AdminConfigurationController{
         Admin_Interface_Node_Configuration__c PaymentApplicationConfiguration = new Admin_Interface_Node_Configuration__c();
         PaymentApplicationConfiguration.Name = 'Payment Application Configuration';
         PaymentApplicationConfiguration.Disable__c = false;
-        BTOpportunityConfiguration.Index__c = 36;
+        PaymentApplicationConfiguration.Index__c = 36;
         PaymentApplicationConfiguration.Icon_URL__c = '/resource/'+nameSpacePrefix+'SLDS/assets/icons/utility/settings_60.png';
         PaymentApplicationConfiguration.Open_New_Tab__c = false;
         PaymentApplicationConfiguration.Tab_Name__c = 'Payment Application Configuration';
@@ -898,7 +898,7 @@ public with sharing class BT_AdminConfigurationController{
         Admin_Interface_Node_Configuration__c PreQualificationConfiguration = new Admin_Interface_Node_Configuration__c();
         PreQualificationConfiguration.Name = 'Pre Qualification Configuration';
         PreQualificationConfiguration.Disable__c = false;
-        BTOpportunityConfiguration.Index__c = 37;
+        PreQualificationConfiguration.Index__c = 37;
         PreQualificationConfiguration.Icon_URL__c = '/resource/'+nameSpacePrefix+'SLDS/assets/icons/utility/settings_60.png';
         PreQualificationConfiguration.Open_New_Tab__c = false;
         PreQualificationConfiguration.Tab_Name__c = 'Pre Qualification Configuration';
@@ -942,7 +942,7 @@ public with sharing class BT_AdminConfigurationController{
         Admin_Interface_Node_Configuration__c ProjectConfiguration = new Admin_Interface_Node_Configuration__c();
         ProjectConfiguration.Name = 'Project Configuration';
         ProjectConfiguration.Disable__c = false;
-        BTOpportunityConfiguration.Index__c = 38;
+        ProjectConfiguration.Index__c = 38;
         ProjectConfiguration.Icon_URL__c = '/resource/'+nameSpacePrefix+'SLDS/assets/icons/utility/settings_60.png';
         ProjectConfiguration.Open_New_Tab__c = false;
         ProjectConfiguration.Tab_Name__c = 'Project Configuration';
@@ -954,7 +954,7 @@ public with sharing class BT_AdminConfigurationController{
         Admin_Interface_Node_Configuration__c BoxSettings1 = new Admin_Interface_Node_Configuration__c();
         BoxSettings1.Name = 'Box Settings';
         BoxSettings1.Disable__c = false;
-        BTOpportunityConfiguration.Index__c = 39;
+        BoxSettings1.Index__c = 39;
         BoxSettings1.Icon_URL__c = '/resource/'+nameSpacePrefix+'SLDS/assets/icons/utility/settings_60.png';
         BoxSettings1.Open_New_Tab__c = false;
         BoxSettings1.Tab_Name__c = 'Box Settings';
@@ -964,7 +964,7 @@ public with sharing class BT_AdminConfigurationController{
         Admin_Interface_Node_Configuration__c SOVConfiguration = new Admin_Interface_Node_Configuration__c();
         SOVConfiguration.Name = 'SOV Configuration';
         SOVConfiguration.Disable__c = false;
-        BTOpportunityConfiguration.Index__c = 40;
+        SOVConfiguration.Index__c = 40;
         SOVConfiguration.Icon_URL__c = '/resource/'+nameSpacePrefix+'SLDS/assets/icons/utility/settings_60.png';
         SOVConfiguration.Open_New_Tab__c = false;
         SOVConfiguration.Tab_Name__c = 'SOV Configuration';
@@ -975,7 +975,7 @@ public with sharing class BT_AdminConfigurationController{
         Admin_Interface_Node_Configuration__c RFQConfiguration1 = new Admin_Interface_Node_Configuration__c();
         RFQConfiguration1.Name = 'RFQ Configuration';
         RFQConfiguration1.Disable__c = false;
-        BTOpportunityConfiguration.Index__c = 41;
+        RFQConfiguration1.Index__c = 41;
         RFQConfiguration1.Icon_URL__c = '/resource/'+nameSpacePrefix+'SLDS/assets/icons/utility/settings_60.png';
         RFQConfiguration1.Open_New_Tab__c = false;
         RFQConfiguration1.Tab_Name__c = 'RFQ Configuration';
@@ -989,7 +989,7 @@ public with sharing class BT_AdminConfigurationController{
         Admin_Interface_Node_Configuration__c PurchaseOrderConfiguration1 = new Admin_Interface_Node_Configuration__c();
         PurchaseOrderConfiguration1.Name = 'Purchase Order Configuration';
         PurchaseOrderConfiguration1.Disable__c = false;
-        BTOpportunityConfiguration.Index__c = 42;
+        PurchaseOrderConfiguration1.Index__c = 42;
         PurchaseOrderConfiguration1.Icon_URL__c = '/resource/'+nameSpacePrefix+'SLDS/assets/icons/utility/settings_60.png';
         PurchaseOrderConfiguration1.Open_New_Tab__c = false;
         PurchaseOrderConfiguration1.Tab_Name__c = 'Purchase Order Configuration';
@@ -1003,7 +1003,7 @@ public with sharing class BT_AdminConfigurationController{
         Admin_Interface_Node_Configuration__c ChangeOrderConfiguration = new Admin_Interface_Node_Configuration__c();
         ChangeOrderConfiguration.Name = 'Change Order Configuration';
         ChangeOrderConfiguration.Disable__c = false;
-        BTOpportunityConfiguration.Index__c = 43;
+        ChangeOrderConfiguration.Index__c = 43;
         ChangeOrderConfiguration.Icon_URL__c = '/resource/'+nameSpacePrefix+'SLDS/assets/icons/utility/settings_60.png';
         ChangeOrderConfiguration.Open_New_Tab__c = false;
         ChangeOrderConfiguration.Tab_Name__c = 'Change Order Configuration';
@@ -1014,7 +1014,7 @@ public with sharing class BT_AdminConfigurationController{
         Admin_Interface_Node_Configuration__c CreatinganewUser = new Admin_Interface_Node_Configuration__c();
         CreatinganewUser.Name = 'Creating a new User';
         CreatinganewUser.Disable__c = false;
-        BTOpportunityConfiguration.Index__c = 44;
+        CreatinganewUser.Index__c = 44;
         CreatinganewUser.Icon_URL__c = '/resource/'+nameSpacePrefix+'SLDS/assets/icons/utility/settings_60.png';
         CreatinganewUser.Open_New_Tab__c = false;
         CreatinganewUser.Tab_Name__c = 'Creating a new User';
@@ -1058,7 +1058,7 @@ public with sharing class BT_AdminConfigurationController{
         Admin_Interface_Node_Configuration__c OpportunityConfiguration = new Admin_Interface_Node_Configuration__c();
         OpportunityConfiguration.Name = 'Opportunity Configuration';
         OpportunityConfiguration.Disable__c = false;
-        BTOpportunityConfiguration.Index__c = 48;
+        OpportunityConfiguration.Index__c = 48;
         OpportunityConfiguration.Icon_URL__c = '/resource/'+nameSpacePrefix+'SLDS/assets/icons/utility/settings_60.png';
         OpportunityConfiguration.Open_New_Tab__c = false;
         OpportunityConfiguration.Tab_Name__c = 'Opportunity Configuration';
@@ -1069,7 +1069,7 @@ public with sharing class BT_AdminConfigurationController{
         Admin_Interface_Node_Configuration__c QuoteConfiguration = new Admin_Interface_Node_Configuration__c();
         QuoteConfiguration.Name = 'Quote Configuration';
         QuoteConfiguration.Disable__c = false;
-        BTOpportunityConfiguration.Index__c = 49;
+        QuoteConfiguration.Index__c = 49;
         QuoteConfiguration.Icon_URL__c = '/resource/'+nameSpacePrefix+'SLDS/assets/icons/utility/settings_60.png';
         QuoteConfiguration.Open_New_Tab__c = false;
         QuoteConfiguration.Tab_Name__c = 'Quote Configuration';
@@ -1083,48 +1083,46 @@ public with sharing class BT_AdminConfigurationController{
 
         try {
             DMLManager.insertAsUser(firstLevelNodes);
-            Map<String, Admin_Interface_Node_Configuration__c> nodeMap = new Map<String, Admin_Interface_Node_Configuration__c>();
+
+            //create a map which has the Index__c of the node as the key and the name of the node as the value by iterating through the firstLevelNodes
+            Map<Decimal, buildertek__Admin_Interface_Node_Configuration__c> indexMap = new Map<Decimal, buildertek__Admin_Interface_Node_Configuration__c>();
             for (Admin_Interface_Node_Configuration__c node : firstLevelNodes) {
-                nodeMap.put(node.Name, node);
+                indexMap.put(node.Index__c, node);
             }
 
-            Map<String, String> nameMap = new Map<String, String>();
-            nameMap.put('Budget Configuration', 'BT Budget Configuration');
-            nameMap.put('Create Contract on Quote Acceptance', 'BT Contract Configuration');
-            nameMap.put('Turn off Cost Option Allowance Check', 'BT Change Order Configuration');
-            nameMap.put('MSA Configuration', 'MSA Configuration');
-            nameMap.put('Payment Application Configuration', 'BT Payment Application Configuration');
-            nameMap.put('Pre Qualification Configuration', 'BT Pre Qualification Configuration');
-            nameMap.put('File Upload Page Configuration', 'Pre Qualification Configuration');
-            nameMap.put('System Configuration', 'BT Document Configuration');
-            nameMap.put('File Explorer Page Configuration', 'BT Document Configuration');
-            nameMap.put('Project Configuration', 'BT Project Configuration');
-            nameMap.put('Box Settings', 'Box Settings');
-            nameMap.put('SOV Configuration', 'BT SOV Configuration');
-            nameMap.put('RFQ Configuration', 'BT RFQ Configuration');
-            nameMap.put('Purchase Order Configuration', 'BT Purchase Order Configuration');
-            nameMap.put('Change Order Configuration', 'BT Change Order Configuration');
-            nameMap.put('Creating a new User', 'BT Training');
-            nameMap.put('Creating Accounts and Contacts', 'BT Training');
-            nameMap.put('Create Account', 'Creating Accounts and Contacts');
-            nameMap.put('Create Contact', 'Creating Accounts and Contacts');
-            nameMap.put('Opportunity Configuration', 'BT Opportunity Configuration');
-            nameMap.put('Quote Configuration', 'BT Quote Configuration');
+            Map<Decimal, Decimal> indexMap2 = new Map<Decimal, Decimal>();
+            indexMap2.put(32,23);
+            indexMap2.put(33,22);
+            indexMap2.put(34,24);
+            indexMap2.put(12,35);
+            indexMap2.put(36,10);
+            indexMap2.put(37,17);
+            indexMap2.put(3,18);
+            indexMap2.put(1,18);
+            indexMap2.put(2,18);
+            indexMap2.put(38,19);
+            indexMap2.put(25,39);
+            indexMap2.put(40,27);
+            indexMap2.put(41,13);
+            indexMap2.put(42,28);
+            indexMap2.put(43,24);
+            indexMap2.put(44,30);
+            indexMap2.put(45,30);
+            indexMap2.put(46,45);
+            indexMap2.put(47,45);
+            indexMap2.put(48,31);
+            indexMap2.put(49,21);
+
             List<Admin_Interface_Node_Configuration__c> newNodeList = new List<Admin_Interface_Node_Configuration__c>();
-            for(String key: nameMap.keySet()){
-                Admin_Interface_Node_Configuration__c node = nodeMap.get(key);
-                node.buildertek__Parent_Node__c = nodeMap.get(nameMap.get(key)).Id;
-                newNodeList.add(node);
+            for(Decimal key : indexMap2.keySet()) {
+                Admin_Interface_Node_Configuration__c newNode = new Admin_Interface_Node_Configuration__c();
+                newNode = indexMap.get(key);
+                newNode.Parent_Node__c = indexMap.get(indexMap2.get(key)).Id;
+                newNodeList.add(newNode);
             }
-            System.debug('newNodeList==>'+newNodeList);
-            for (Admin_Interface_Node_Configuration__c adminNode : newNodeList) {
-                System.debug('Before AdminNode ==> '+adminNode);
-            }
-            if (newNodeList.size() > 0) {
+
+            if (newNodeList.size()>0) {
                 DMLManager.updateAsUser(newNodeList);
-            }
-            for (Admin_Interface_Node_Configuration__c adminNode : newNodeList) {
-                System.debug('After AdminNode ==> '+adminNode);
             }
         } catch(Exception ex){
             ApexPages.Message errorMsg = new ApexPages.Message(ApexPages.Severity.FATAL, ex.getMessage());
