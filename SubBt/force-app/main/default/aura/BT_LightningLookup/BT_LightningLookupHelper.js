@@ -32,7 +32,7 @@
         console.log(component.get("v.parentId") + '----------------------------->>>>>>>>');
       // enqueue the Action  
         $A.enqueueAction(action);
-        console.log(component.get("v.parentId") + '----------------------------->>>>>>>>');
+        console.log(component.get("v.listOfSearchRecords"));
 
     
 	}

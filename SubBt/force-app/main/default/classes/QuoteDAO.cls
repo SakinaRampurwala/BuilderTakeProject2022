@@ -2153,14 +2153,15 @@ public with sharing class QuoteDAO{
         }
     }
     @AuraEnabled
-    public static Boolean getadminvalues(){
-        buildertek__Admin_Interface_Node_Configuration__c adminInterfaceNodeConfigurations = [Select Id, buildertek__Remove_Single_Quote_Line_Option__c
+    public static List<Boolean> getadminvalues(){
+        buildertek__Admin_Interface_Node_Configuration__c adminInterfaceNodeConfigurations = [Select Id, buildertek__Remove_Single_Quote_Line_Option__c, buildertek__Hide_Global_Margin__c, buildertek__Hide_Global_Markup__c
                                                                                               from buildertek__Admin_Interface_Node_Configuration__c
                                                                                               WHERE Name = :'Quote Configuration'];
-        Boolean islien = false;
-        if(adminInterfaceNodeConfigurations.buildertek__Remove_Single_Quote_Line_Option__c == true){
-            islien = true;
-        }
+
+        Boolean checkSingleQLine = adminInterfaceNodeConfigurations.buildertek__Remove_Single_Quote_Line_Option__c ;
+        Boolean checkButtonMargin = adminInterfaceNodeConfigurations.buildertek__Hide_Global_Margin__c;
+        Boolean checkButtonMarkup = adminInterfaceNodeConfigurations.buildertek__Hide_Global_Markup__c;
+        List<Boolean> islien = new List<Boolean>{checkSingleQLine, checkButtonMargin,checkButtonMarkup};
         return islien;
     }   
 

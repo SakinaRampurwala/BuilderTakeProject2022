@@ -67,5 +67,30 @@
          event.stopPropagation();
         event.preventDefault();
     },
+	changeSelectionType:function(component, event, helper) {
+		console.log('change selection type');
+		let getValue= event.getSource().get('v.value');
+		var temp = getValue;
+		console.log('check name --> ',temp[0]);
+		component.set('v.selectionTypeId', temp[0]);
+
+        var action = component.get("c.getBudget");
+        action.setParams({
+            selectionTypeId:temp[0]
+        });
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+			console.log(response.getError());
+            console.log({state});
+            var result= response.getReturnValue();
+            if (state === "SUCCESS") {
+
+                console.log({result});
+                component.set('v.selectedLookUpRecord' ,result);
+            }
+        });
+        $A.enqueueAction(action);
+		
+     },
 
 })

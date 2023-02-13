@@ -1,181 +1,134 @@
-<aura:component implements="force:hasRecordId,force:lightningQuickActionWithoutHeader,lightning:isUrlAddressable,lightning:actionOverride,force:hasSObjectName" access="global" controller="newOptionClass">
-	<aura:attribute name="Spinner" type="Boolean" default="false"/>
-	<aura:attribute name="Option" type="Question__c" default="{ 'sobjectType': 'Question__c'}" />
-	<aura:attribute name="Product" type="Product2" default="{ 'sobjectType': 'Product2'}" />
-	<aura:attribute name="selectedLookupValue" type="List" />
-	<aura:attribute name="searchCategoryFilter" type="String" default=""/>
-	<aura:attribute name="searchBudget" type="String" default=""/>
-	<aura:attribute name="budgetId" type="String" default=""/>
-    <aura:attribute name="selectedLookUpRecord" type="string" />
+<aura:component controller="newOptionClass" implements="force:hasRecordId,force:lightningQuickActionWithoutHeader,lightning:isUrlAddressable,lightning:actionOverride,force:hasSObjectName" access="global">
+    <aura:attribute name="parentRecordId" type="String"/>
+    <aura:attribute name="isOpen" type="boolean" default="false"/>
+    <aura:attribute name="Spinner" type="boolean" default="false"/>
+    <aura:attribute name="IsConsole" type="boolean" default="false" />
+    <aura:attribute name="AppName" type="String" default="" />
+    <aura:attribute name="selectedCostCode" type="sObject"/>
+    <aura:attribute name="selectedTradeType" type="sObject"/>
+    <aura:attribute name="selectedAccount" type="sObject"/> 
+    <aura:attribute name="selectedBudget" type="sObject"/>
+    <aura:attribute name="selectedGroup" type="sObject"/>
+    <aura:attribute name="selectedLookUpRecord" type="List"  default="[]"/>
+    <aura:attribute name="budgetID" type="sObject"/>
+    <aura:attribute name="isSaveNew" type="boolean" default="false"/>
+
+    
+    <aura:attribute name="productfamily" type="string"/>
+    <aura:attribute name="productfamilyoptions" type="List"/>
+    <aura:attribute name="listofproductfamily" type="List"/>
+    <aura:attribute name="pricebookoptions" type="List"/>
+    <aura:attribute name="pricebookName" type="string"/>
+    <aura:attribute name="productId" type="string"/>
+    <aura:attribute name="productName" type="string"/>
+    <aura:attribute name="clearLookupValue" type="Aura.Action" />
+    <aura:attribute name="newBudgetItem" type="Budget_Item__c" default="{ 'sobjectType': 'Budget_Item__c'}" access="global"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    
+    <ltng:require styles="{!$Resource.ModalPreview62moreMedia}"/>
+    <lightning:notificationsLibrary aura:id="notifLib"/>
+    <lightning:workspaceAPI aura:id="workspace"/>
+	<c:BT_Spinner/>
+
+    <aura:attribute name="listOfFields0" type="List" />
+    <aura:attribute name="SalesPrice" type="Decimal" />
+    <aura:attribute name="Quantity" type="Decimal" default="1" />
+    <aura:attribute name="BudgetLineName" type="string" />
+    <aura:attribute name="selectedPricebookEntry" type="Name" />
+
+
+	<aura:attribute name="selectionTypeId" type="Id" default="" />
+	<aura:attribute name="selectionType" type="String" default="" />
+	<aura:attribute name="listOfSearchRecords" type="List" default="" />
+
+	<aura:handler name="oSelectedRecordEvent" event="c:BT_LightningLookupEvent" action="{!c.handleComponentEvent}"/>
+	<aura:handler name="SelectedRecordEvent" event="c:BT_LightningLookupEvent" action="{!c.handleComponentEvents}"/>
+
 
 
 	
-	<aura:attribute name="unitSalesPrice" type="decimal" default=""/>
-	<aura:attribute name="selectedBudgetLineId" type="String" default=""/>
-	<aura:attribute name="disableIt" type="Boolean" default="false"/>
-
 	
+    
+    <aura:html tag="style">
+        @media 
+        {
+            .slds-modal__container{height:80% !important ;width:70% !important}
+        }
+    </aura:html>
+    <div class="slds-modal__content " style="width:60%;margin:20px auto;">
+        <div class="slds slds-scope">
+        <header class="slds-modal__header">
+            <lightning:buttonIcon iconName="utility:close" onclick="{! c.closeModel }" alternativeText="close" variant="bare-inverse" class="slds-modal__close" />
+            <p></p>
+            <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">New Option</h2>
+            <p></p>
+        </header>
 
 
 
-	
+        <lightning:recordEditForm aura:id="recordViewForm" objectApiName="buildertek__Question__c" onsubmit="{!c.handleSubmit}" density="Comfy" >
+            <div class="slds-modal__content " id="modal-content-id-1">
+                <div class="slds-scrollable" style="height:33.5rem;">
+                    <lightning:layout multipleRows="true">
+                        
 
+                        <aura:iteration items="{!v.listOfFields0}" var="field">
+							<aura:if isTrue="{!(field.name == 'buildertek__Question_Group__c' ||field.name == 'buildertek__Budget__c')}">
 
-	
+								<aura:if isTrue="{!field.name == 'buildertek__Question_Group__c'}">
+									<lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
+										<lightning:inputField aura:id='selection' fieldName="{!field.name}" onchange="{!c.changeSelectionType}" value="{!v.selectionTypeId}" />
+									</lightning:layoutItem>
+								</aura:if>
 
+								<aura:if isTrue="{!field.name == 'buildertek__Budget__c'}">
+									<lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
+										<label>Budget </label>
+										<c:BT_LightningLookup aura:id="productId" objectAPIName="buildertek__Budget__c" IconName="custom:custom5"  selectedRecord="{!v.selectedProjectRecord}" listOfSearchRecords="{!v.selectedLookUpRecord}" />
+									</lightning:layoutItem>
+								</aura:if>
 
-    <aura:attribute name="recordId" type="Id"/>
-
-	<lightning:workspaceAPI aura:id="workspace" />
-
-	<aura:html tag="style">
-		.slds-col{
-			padding: 0 10px;
-		}
-	</aura:html>
-
-	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
-
-	<section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
-
-        <div class="slds-modal__container">
-			<aura:if isTrue="{!v.Spinner}">
-				<div aura:id="spinnerId" class="slds-spinner_container">
-					<div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
-						<span class="slds-assistive-text">Loading</span>
-						<div class="slds-spinner__dot-a"></div>
-						<div class="slds-spinner__dot-b"></div>
-					</div>
-				</div>
-			</aura:if>
-			<header class="slds-modal__header">
-				<h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">New Option</h2>
-			</header>
-
-			<div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
-
-				<lightning:recordEditForm aura:id="recordViewForm" objectApiName="buildertek__Question__c">
-					<div style="background-color: white;">
-						<div class="headingDiv"> Information </div>
-						<div class="slds-grid">
-							<div class="slds-col slds-size_1-of-2">
-								<lightning:inputField fieldName="buildertek__Price_Book__c" value="{!v.Option.buildertek__Price_Book__c}" />
-								<lightning:inputField fieldName="buildertek__Product__c" value="{!v.Option.buildertek__Product__c}" onchange="{!c.changeProduct}" />
-								<lightning:inputField fieldName="Name" value="{!v.Option.Name}" />
-								<lightning:inputField fieldName="buildertek__Quantity__c" value="{!v.Option.buildertek__Quantity__c}" />
-								<lightning:inputField fieldName="buildertek__Cost__c" value="{!v.unitSalesPrice}" />
-								<lightning:inputField fieldName="buildertek__Markup__c" value="{!v.Option.buildertek__Markup__c}" />
-								<lightning:inputField fieldName="buildertek__Upgrade_Costs__c" value="{!v.Option.buildertek__Upgrade_Costs__c}" />
-								
-							</div>
-
-							<div class="slds-col slds-size_1-of-2">
-								<lightning:inputField fieldName="buildertek__Question_Group__c" value="{!v.Option.buildertek__Question_Group__c}" onchange="{!c.onSelectionChanged}" />
-								<lightning:inputField fieldName="buildertek__Manufacturer__c" value="{!v.Option.buildertek__Manufacturer__c}" />
-								<!-- <lightning:inputField aura:id="selectCheck" fieldName="buildertek__Selected__c" value="{!v.Option.buildertek__Selected__c}" />		 -->
-								<h1 class="checkboxLabel">Selected</h1>
-								<lightning:input type="checkbox" aura:id="selectCheck" checked="{!v.Option.buildertek__Selected__c}" onchange="{!c.onSelectedChanged}"/>
-								<!-- <lightning:inputField fieldName="buildertek__Default_Option__c" value="{!v.Option.buildertek__Default_Option__c}" />	 -->
-								<h1 class="checkboxLabel">Default Option</h1>
-								<lightning:input type="checkbox" aura:id="optionCheck" checked="{!v.Option.buildertek__Default_Option__c}" onchange="{!c.onOptionChanged}"/>
-
-								<c:BT_LightningLookup aura:id="productId" objectAPIName="buildertek__Budget__c" IconName="standard:custom5" selectedRecord="{!v.selectedLookUpRecord}" parentId="{!v.Option.buildertek__Question_Group__c}" />
-
-								<!-- <div style="position:relative;" >
-									<lightning:input
-													  style="padding: 0% 2% 0% 0%;"
-													  autocomplete="off"
-													  aura:id="searchCategory_1"
-													  name="enter-search"
-													  type="search"
-													  placeholder="Search Budget  ..."
-													  value="{!v.searchBudget}"
-													  onblur ="{!c.hideDropDownCategory}"
-													  onclick="{!c.onBudgetChanged}"
-													  label="Budget"
-													  class="slds-input-has-icon_left slds-combobox__input-value slds-combobox__input"
-													  />
-									 <ul aura:id="searchCategoryRes_1" style="min-height:40px;max-height:100px; overflow-y:scroll;margin-top:0px !important;position: absolute;" class="Filterdropdown_1 slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid slds-lookup__menu slds" role="listbox">
-										<lightning:spinner class="slds-show" variant="brand" size="small" aura:id="mySpinner"/>
-										<aura:iteration items="{!v.searchBudget}" var="singleRec">								
-											<li role="presentation" class="slds-listbox__item"  onclick="{!c.selectBudgetOption}" aura:id="searchCategoryResOption">
-												<div id="option1" class="slds-media slds-listbox__option slds-listbox__option_entity slds-media_center" role="option">
-													<span class="slds-media__figure slds-listbox__option-icon">
-													  <span class="slds-icon_container slds-icon-standard-account">
-														<lightning:icon iconName="custom:custom5" size="small" alternativeText="Approved" title="Approved" />
-													  </span>
-													</span>
-													<span class=" slds-media__body">  
-														<span  Id="{!singleRec.Id}" class="slds-listbox__option-text slds-listbox__option-text_entity">{!singleRec.Name}</span>    
-													</span>
-												  </div>
-									
-											</li>
-										</aura:iteration>
-									 </ul> 
-								 </div>
-
-								<div style="position:relative;"  >
-									<lightning:input
-													  style="padding: 0% 2% 0% 0%;"
-													  autocomplete="off"
-													  aura:id="searchCategory_2"
-													  name="enter-search"
-													  type="search"
-													  placeholder="Search Budget Lines ..."
-													  value="{!v.searchCategoryFilter}"
-													  onclick="{!c.showDropDownCategory}"
-													  onblur ="{!c.hideDropDownCategory}"
-													  label="Budget line"
-													  />
-									  
-									 <ul aura:id="searchCategoryRes_2" style="min-height:40px;max-height:100px; overflow-y:scroll;margin-top:0px !important;position: absolute;" class="Filterdropdown_1 slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid slds-lookup__menu slds" role="listbox">
-										<lightning:spinner class="slds-show" variant="brand" size="small" aura:id="mySpinner2"/>
-										<aura:iteration items="{!v.searchCategoryFilter}" var="singleRec">								
-											<li role="presentation" class="slds-listbox__item"  onclick="{!c.selectRecordOption}" aura:id="searchCategoryResOption">
-												<div id="option2" class="slds-media slds-listbox__option slds-listbox__option_entity slds-media_center" role="option">
-													<span class="slds-media__figure slds-listbox__option-icon">
-													  <span class="slds-icon_container slds-icon-standard-account">
-														<lightning:icon iconName="custom:custom5" size="small" alternativeText="Approved" title="Approved" />
-													  </span>
-													</span>
-													<span class=" slds-media__body">  
-														<span  Id="{!singleRec.Id}" class="slds-listbox__option-text slds-listbox__option-text_entity">{!singleRec.Name}</span>    
-													</span>
-												  </div>
-											</li>
-										</aura:iteration>
-									 </ul> 
-								 </div> -->
+								<aura:if isTrue="{!field.name == 'buildertek__Budget_Item__c'}">
+									<lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
+										<label>Budget Line</label>
+										<c:BT_LightningLookup  objectAPIName="buildertek__Budget_Item__c" IconName="custom:custom5"  />
+									</lightning:layoutItem>
+								</aura:if>
 
 
 
-							</div>
+								<aura:set attribute="else">
+									<lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">                                       
+										<lightning:inputField fieldName="{!field.name}" value="" />
+									</lightning:layoutItem>
+								</aura:set>
+							</aura:if>
 
-						</div>
+  
+                        </aura:iteration>
+                    </lightning:layout>
+                </div>
+            </div>
+            <footer aura:id="footer" class="slds-modal__footer">
+                <lightning:button variant="neutral" title="Cancel" label="Cancel" onclick="{! c.closeModel }" />
+                <lightning:button variant="neutral" type="submit" title="Save &amp; New" label="Save &amp; New" onclick="{!c.handlesaveNnew}" />
+                <lightning:button variant="brand" type="submit" name="save" label="Save" disabled="{!v.isDisabled}" />
+            </footer>
+        </lightning:recordEditForm>
+        <!-- </div> -->
+    </div>
+    </div>
+    <aura:if isTrue="{!v.isLoading}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+            <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+                <div class="custom-loading-text">
+                    <b>Processing, Please Wait</b>
+                </div>
+            </div>
+        </div>
+    </aura:if>
 
-						<div class="headingDiv"> Upgrade Details </div>
-						<div class="slds-grid">
-							<div class="slds-col slds-size_1-of-2">
-								<h1 class="checkboxLabel">Upgrade</h1>
-								<lightning:input type="checkbox" aura:id="upgradeCheck" checked="{!v.Option.buildertek__Upgrade__c}" onchange="{!c.onUpgradeChanged}"/>
-								<lightning:inputField fieldName="buildertek__Date_Option_Upgraded__c" value="{!v.Option.buildertek__Date_Option_Upgraded__c}" />
-							</div>
-							<div class="slds-col slds-size_1-of-2">
-								<lightning:inputField fieldName="buildertek__Original_Option__c" value="{!v.Option.buildertek__Original_Option__c}" />
-							</div>
-						</div>
-
-					</div>
-				</lightning:recordEditForm>
-			</div>
-
-			<footer class="slds-modal__footer">
-				<lightning:button label="Cancel" title="Cancel" onclick="{!c.closePopup}" class="myBtn"/>
-				<lightning:button name='SaveandNew' label='Save &amp; New' onclick='{!c.saveAndNew}' />
-				<lightning:button variant="brand" disabled="{!v.disableIt}" label="Save" title="Save" onclick="{!c.createRecord}"/>
-			</footer>
-		</div>
-	</section>
-	<div class="slds-backdrop slds-backdrop_open"></div>
 </aura:component>

@@ -99,11 +99,19 @@
 
             if (response.getState() === 'SUCCESS') {
                 var result = response.getReturnValue();
-                if (result == true) {
-                    // document.getElementById('collapseBtn').style.display='none';
-                    component.set('v.removeSingleQuoteLineOption' , true);
-                }else{
-                    component.set('v.removeSingleQuoteLineOption' , false);
+                if (response.getState() === 'SUCCESS') {
+                    var result = response.getReturnValue();
+                    // if (result[0] == true || result[1] == true) {
+                    //    // document.getElementById('collapseBtn').style.display='none';
+                    //     component.set('v.removeSingleQuoteLineOption', result[0]);
+                    //     component.set('v.hideButtons', result[0]);
+                    // }else{
+                    //     component.set('v.removeSingleQuoteLineOption', false);
+                    //     component.set('v.hideButtons', false);
+                    // }
+                    component.set('v.removeSingleQuoteLineOption', result[0]);
+                    component.set('v.hideGlobalMargin', result[1]);
+                    component.set('v.hideGlobalMarkup', result[2]);
                 }
             }
 
@@ -1334,6 +1342,34 @@
                 }
 
             }
+
+            var TotalRecords = component.get("v.TotalRecords");
+            console.log('TotalRecords--->>',{TotalRecords});
+            var ListOfEachRecord = TotalRecords.tarTable.ListOfEachRecord;
+            console.log('ListOfEachRecord--->>',{ListOfEachRecord});
+            var ListOfEachRecordLength = ListOfEachRecord.length;
+            console.log('ListOfEachRecordLength--->>',{ListOfEachRecordLength});
+
+            for (var i = 0; i < ListOfEachRecordLength; i++){
+                var newMassQuoteItem = {};
+                newMassQuoteItem.sobjectType = 'buildertek__Quote_Item__c';
+                for (var j = 0; j < ListOfEachRecord[i].recordList.length; j++){
+                    if (ListOfEachRecord[i].recordList[j].fieldName == 'buildertek__Margin__c') {
+                        if (ListOfEachRecord[i].recordList[j].originalValue == '') {
+                            ListOfEachRecord[i].recordList[j].originalValue = 0;
+                        }
+                    } else if (ListOfEachRecord[i].recordList[j].fieldName == 'buildertek__Markup__c') {
+                        if (ListOfEachRecord[i].recordList[j].originalValue == '') {
+                            ListOfEachRecord[i].recordList[j].originalValue = 0;
+                        }
+                    } else if (ListOfEachRecord[i].recordList[j].fieldName == 'buildertek__Additional_Discount__c') {
+                        if (ListOfEachRecord[i].recordList[j].originalValue == '') {
+                            ListOfEachRecord[i].recordList[j].originalValue = 0;
+                        }
+                    }
+                }
+            }
+            component.set("v.TotalRecords", TotalRecords);
         }
 
 
@@ -2601,7 +2637,7 @@ return other.Id == current.Id
         component.set("v.firstGrouping", false);
      }, 
 
-    expandCollapeAll: function(component, event, helper){
+    expandCollapeAllBom: function(component, event, helper){
         var QuoteLineWrapper = component.get("v.QuoteLineWrapper");
 
         var iconName = event.currentTarget.dataset.iconname;

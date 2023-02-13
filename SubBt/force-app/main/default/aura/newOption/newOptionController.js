@@ -1,5 +1,6 @@
 ({
     doInit: function(component, event, helper) {
+        
         /*var recordId = component.get("v.recordId")
         console.log('getting recordId '+recordId);*/
         component.set('v.disableIt' , false);
@@ -12,8 +13,25 @@
         }
         var addressableContext = JSON.parse(window.atob(base64Context));
         component.set("v.recordId", addressableContext.attributes.recordId);
-        component.set('v.Option.buildertek__Question_Group__c', addressableContext.attributes.recordId);
-        console.log(component.get('v.Option.buildertek__Question_Group__c'));
+        component.set('v.selectionTypeId', addressableContext.attributes.recordId);
+
+        var action2 = component.get("c.getFieldSet");
+        console.log(action2);
+        action2.setParams({
+            objectName: 'buildertek__Question__c',
+            fieldSetName: 'buildertek__NewOptionPageFields'
+        });
+        action2.setCallback(this, function (response) {
+            if (response.getState() == 'SUCCESS' && response.getReturnValue()) {
+                var listOfFields0 = JSON.parse(response.getReturnValue());
+                console.log({listOfFields0});
+                component.set("v.listOfFields0", listOfFields0);
+            }
+        });
+        $A.enqueueAction(action2);
+
+
+    
 
     },
 
@@ -322,6 +340,117 @@
         console.log(component.get('v.Option.buildertek__Question_Group__c'));
 
 
-    }
+    },
+    closeModel: function(component, event, helper) {
+        // for Hide/Close Model,set the "isOpen" attribute to "Fasle" 
+          var workspaceAPI = component.find("workspace");
+          workspaceAPI.getFocusedTabInfo().then(function(response) {
+              var focusedTabId = response.tabId;
+              workspaceAPI.closeTab({tabId: focusedTabId});
+          })
+          .catch(function(error) {
+              console.log(error);
+          });
+          $A.get("e.force:closeQuickAction").fire();
+          component.set("v.isOpen", false);
+          window.setTimeout(
+              $A.getCallback(function() {
+                  $A.get('e.force:refreshView').fire();
+              }), 1000
+          );
+     },
+
+     changeSelectionType:function(component, event, helper) {
+        helper.changeSelectionType(component, event, helper);
+     },
+     handleComponentEvent : function(component, event, helper) {
+
+        console.log('handle compoennt event');
+        let typeId= component.get('v.selectionTypeId')
+        component.set("v.productId", typeId);
+        console.log(typeId);
+
+
+    },
+    handleComponentEvents : function(component, event, helper) {
+        console.log('handle compoennt events');
+        let typeId= component.get('v.selectionTypeId')
+        component.set("v.productId", typeId);
+        console.log(typeId);
+
+
+    },
+    handleSubmit: function (component, event, helper) {
+        component.set("v.isDisabled", true);
+		$A.get("e.c:BT_SpinnerEvent").setParams({"action" : "SHOW" }).fire();
+        event.preventDefault(); // Prevent default submit
+        var fields = event.getParam("fields");
+        var allData = JSON.stringify(fields);
+        var action = component.get("c.saveData");
+        action.setParams({
+            allData : allData
+        });
+        action.setCallback(this, function(response){
+            if (response.getState() == 'SUCCESS') {
+                var result = response.getReturnValue();
+
+                $A.get("e.force:closeQuickAction").fire();
+                window.setTimeout(
+                    $A.getCallback(function() {
+                        $A.get('e.force:refreshView').fire();
+                    }), 1000
+                );
+
+                console.log({result});
+
+                var saveNnew = component.get("v.isSaveNew");
+
+                if(saveNnew){
+                    $A.get('e.force:refreshView').fire();
+                    component.set("v.isSaveNew", false);
+                }
+                else{
+                    var navEvt = $A.get("e.force:navigateToSObject");
+                    navEvt.setParams({
+                        "recordId": result,
+                        "slideDevName": "Detail"
+                    });
+                    navEvt.fire();
+                    debugger
+                    var workspaceAPI = component.find("workspace");
+                    workspaceAPI.getFocusedTabInfo().then(function(response) {
+                        var focusedTabId = response.tabId;
+                        workspaceAPI.closeTab({tabId: focusedTabId});
+                    })
+                }
+
+
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    title: 'Success',
+                    message: 'Option created successfully.',
+                    duration: ' 5000',
+                    type: 'success'
+                });
+                toastEvent.fire();
+                $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
+
+                }else{
+                    var toastEvent = $A.get("e.force:showToast");
+                    toastEvent.setParams({
+                        title: 'Error',
+                        message: 'Something went wrong',
+                        duration: ' 5000',
+                        type: 'error'
+                    });
+                    toastEvent.fire();
+                }
+            });
+            $A.enqueueAction(action);
+    },
+
+    handlesaveNnew : function(component, event, helper) {
+        component.set("v.isSaveNew", true);
+    },
 
 })

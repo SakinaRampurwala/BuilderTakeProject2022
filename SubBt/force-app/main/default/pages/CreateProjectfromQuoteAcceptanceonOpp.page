@@ -17,6 +17,10 @@
                 <apex:inputtext value="{!isBaseUrl}" label="Org URL"/>
                 <apex:inputcheckbox value="{!isRemovesingleQuoteLineOption}" label="Remove Single Quote Line Option">
                 </apex:inputcheckbox>
+                <apex:inputcheckbox value="{!hideGlobalMargin}" label="Hide Global Margin">
+                </apex:inputcheckbox>
+                <apex:inputcheckbox value="{!hideGlobalMarkup}" label="Hide Global Markup">
+                </apex:inputcheckbox>
                 <center>
                     <apex:commandButton value="Save" id="onCreateProjectfromQuoteAcceptanceonOpp" styleClass="slds-button slds-button_brand" action="{!onCreateProjectfromQuoteAcceptanceonOpp}"></apex:commandButton>
                 </center>

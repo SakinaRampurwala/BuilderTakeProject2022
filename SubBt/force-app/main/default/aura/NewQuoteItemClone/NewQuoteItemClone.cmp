@@ -150,6 +150,8 @@
     <aura:attribute name="currentTab" type="String" default="" />
     <aura:attribute name="runFirstTime" type="Boolean" default="false" />
     <aura:attribute name="removeSingleQuoteLineOption" type="Boolean" default="false" />
+    <aura:attribute name="hideGlobalMargin" type="Boolean" default="false" />
+    <aura:attribute name="hideGlobalMarkup" type="Boolean" default="false" />
 
 
     <lightning:workspaceAPI aura:id="workspace" />
@@ -256,10 +258,10 @@
                             <aura:if isTrue="{!v.forthGrouping}">
                                 <div style="padding-left: 70px;"></div>
                             </aura:if>
-                            <span data-iconname="Expand All" id="{!'expandAllBtn_'+v.recordId}" onclick="{!c.expandCollapeAll}" style="display:none">
+                            <span data-iconname="Expand All" id="{!'expandAllBtn_'+v.recordId}" onclick="{!c.expandCollapeAllBom}" style="display:none">
                                 <lightning:buttonIcon iconName="utility:add" variant="border-filled" iconClass="dark" alternativeText="Expand All" title="Expand All" />
                             </span>
-                            <span data-iconname="Collapse All" id="{!'collapeseAllBtn_'+v.recordId}" onclick="{!c.expandCollapeAll}" style="display:inline-block;">
+                            <span data-iconname="Collapse All" id="{!'collapeseAllBtn_'+v.recordId}" onclick="{!c.expandCollapeAllBom}" style="display:inline-block;">
                                 <lightning:buttonIcon iconName="utility:dash" variant="border-filled" iconClass="dark" alternativeText="Collapse All" title="Collapse All" />
                             </span>
                         </div>
@@ -270,18 +272,23 @@
                     <lightning:buttonGroup>
 
 
-                        <div class="slds-truncate" title="test1" style="padding: 10px 0px 0px 10px; width:110px;">
-                            Global Margin</div>
-                        <ui:inputNumber aura:id="testId" value="{!v.QuoteMargin}" class="uiInputCss">
-                        </ui:inputNumber>
-                        <lightning:buttonIcon iconName="utility:save" class="saveInputCss slds-m-left_xx-small"
-                            onclick="{!c.onMarginChange}" alternativeText="Save" />
-                        <div class="slds-truncate" title="test1" style="padding: 10px 0px 0px 10px; width:110px;">
-                            Global Markup</div>
-                        <ui:inputNumber aura:id="testId" value="{!v.QuoteRec.buildertek__Markup__c}" class="uiInputCss">
-                        </ui:inputNumber>
-                        <lightning:buttonIcon iconName="utility:save" class="saveInputCss slds-m-left_xx-small"
-                            onclick="{!c.onMarkupChange}" alternativeText="Save" />
+                        <aura:if isTrue="{!!v.hideGlobalMargin}">
+                            <div class="slds-truncate" title="test1" style="padding: 10px 0px 0px 10px; width:110px;">
+                                Global Margin</div>
+                                <ui:inputNumber aura:id="testId" value="{!v.QuoteMargin}" class="uiInputCss">
+                                </ui:inputNumber>
+                                <lightning:buttonIcon iconName="utility:save" class="saveInputCss slds-m-left_xx-small"
+                                onclick="{!c.onMarginChange}" alternativeText="Save" />
+                        </aura:if>
+                        <aura:if isTrue="{!!v.hideGlobalMarkup}">
+                            <div class="slds-truncate" title="test1" style="padding: 10px 0px 0px 10px; width:110px;">
+                                Global Markup</div>
+                                <ui:inputNumber aura:id="testId" value="{!v.QuoteRec.buildertek__Markup__c}" class="uiInputCss">
+                                </ui:inputNumber>
+                                <lightning:buttonIcon iconName="utility:save" class="saveInputCss slds-m-left_xx-small"
+                                onclick="{!c.onMarkupChange}" alternativeText="Save" />
+                        </aura:if>
+                        
                         <aura:if isTrue="{!v.enableMassUpdate}">
                             <div>
                                 <lightning:button iconName="utility:save" iconPosition="left"
