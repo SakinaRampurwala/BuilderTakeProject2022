@@ -453,4 +453,94 @@
         component.set("v.isSaveNew", true);
     },
 
+    searchBudgetData: function(component, event, helper) {
+        console.log('searchBudgetData');
+        component.set('v.displayBudget', true);
+
+        var selectionTypeId = component.get('v.selectionTypeId');
+        if (selectionTypeId == null || selectionTypeId =='' || selectionTypeId == undefined) {
+            try {
+                var action = component.get("c.getAllBudget");
+                action.setCallback(this, function(response) {
+                    var state = response.getState();
+                    console.log({state});
+                    var result= response.getReturnValue();
+                    console.log('Budgert ==>',result);
+                    if (state === "SUCCESS") {
+                        component.set('v.budgetList' , result);
+                    }
+                });
+            $A.enqueueAction(action);
+            } catch (error) {
+                console.log('Error => ',error);
+            }
+            
+        } else{
+            var selectedLookUpRecord = component.get('v.selectedLookUpRecord');
+            console.log('Budget ==> ',{selectedLookUpRecord});
+            component.set('v.budgetList', selectedLookUpRecord);
+        }
+ 
+    },
+    searchBudgetLineData:function(component, event, helper) {
+        console.log('searchBudgetLineData');
+        component.set('v.displayBudgetLine', true);
+
+        var selectedBudgetId = component.get('v.selectedBudgetId');
+        var action = component.get("c.getBudgetLine");
+        action.setParams({
+            BudgetId:selectedBudgetId
+        });
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+            console.log({state});
+            var result= response.getReturnValue();
+            if (state === "SUCCESS") {
+                console.log({result});
+                component.set('v.budgetLineList' ,result);
+            }
+        });
+        $A.enqueueAction(action);
+
+ 
+    },
+
+    clickHandlerBudget: function(component, event, helper){
+        component.set('v.displayBudget', true);
+        var recordId = event.currentTarget.dataset.value;
+        console.log('recordId ==> '+recordId);
+        component.set('v.selectedBudgetId', recordId);
+
+        var budgetList = component.get("v.budgetList");
+        budgetList.forEach(element => {
+            console.log('element => ',element);
+            if (recordId == element.Id) {
+                component.set('v.selectedBudgetName', element.Name);
+            }
+        });
+    },
+    clickHandlerBudgetLine: function(component, event, helper){
+        console.log('clickHandlerBudgetLine');
+        component.set('v.displayBudgetLine', true);
+        var recordId = event.currentTarget.dataset.value;
+        console.log('recordId ==> '+recordId);
+        component.set('v.selectedBudgetLineId', recordId);
+
+        var budgetLineList = component.get("v.budgetLineList");
+        budgetLineList.forEach(element => {
+            console.log('element => ',element);
+            if (recordId == element.Id) {
+                component.set('v.selectedBudgetLineName', element.Name);
+            }
+        });
+    },
+
+    
+    onBlur:function(component, event, helper){
+        component.set('v.displayBudget', false);
+    }
+
+
+
+
 })

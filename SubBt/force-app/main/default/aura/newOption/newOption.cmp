@@ -43,8 +43,18 @@
 
 	<aura:handler name="oSelectedRecordEvent" event="c:BT_LightningLookupEvent" action="{!c.handleComponentEvent}"/>
 	<aura:handler name="SelectedRecordEvent" event="c:BT_LightningLookupEvent" action="{!c.handleComponentEvents}"/>
+	<aura:attribute name="selectedtRecord" type="sObject" default="{}"/>
+    <aura:attribute name="displayBudget" type="boolean" default="false" />
+    <aura:attribute name="displayBudgetLine" type="boolean" default="false" />
 
+    <aura:attribute name="budgetList" type="List" />
+    <aura:attribute name="budgetLineList" type="List" />
 
+    <aura:attribute name="selectedBudgetId" type="String" default="" />
+    <aura:attribute name="selectedBudgetLineId" type="String" default="" />
+
+    <aura:attribute name="selectedBudgetName" type="String" default="" />
+    <aura:attribute name="selectedBudgetLineName" type="String" default="" />
 
 	
 	
@@ -68,12 +78,12 @@
 
         <lightning:recordEditForm aura:id="recordViewForm" objectApiName="buildertek__Question__c" onsubmit="{!c.handleSubmit}" density="Comfy" >
             <div class="slds-modal__content " id="modal-content-id-1">
-                <div class="slds-scrollable" style="height:33.5rem;">
+                <div class="slds-scrollable" style="height:33.5rem;" >
                     <lightning:layout multipleRows="true">
                         
 
                         <aura:iteration items="{!v.listOfFields0}" var="field">
-							<aura:if isTrue="{!(field.name == 'buildertek__Question_Group__c' ||field.name == 'buildertek__Budget__c')}">
+							<aura:if isTrue="{!(field.name == 'buildertek__Question_Group__c' || field.name == 'buildertek__Budget_Line__c' || field.name == 'buildertek__Budget__c')}">
 
 								<aura:if isTrue="{!field.name == 'buildertek__Question_Group__c'}">
 									<lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
@@ -83,19 +93,110 @@
 
 								<aura:if isTrue="{!field.name == 'buildertek__Budget__c'}">
 									<lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
-										<label>Budget </label>
-										<c:BT_LightningLookup aura:id="productId" objectAPIName="buildertek__Budget__c" IconName="custom:custom5"  selectedRecord="{!v.selectedProjectRecord}" listOfSearchRecords="{!v.selectedLookUpRecord}" />
+                                        <div style="position: relative">
+                                            
+                                            <label>Budget </label>
+                                            <!-- <c:BT_LightningLookup  objectAPIName="buildertek__Budget__c" IconName="custom:custom5"  listOfSearchRecords="{!v.selectedLookUpRecord}" /> -->
+                                            <div class="slds-input-has-icon slds-input-has-icon--right">
+                                                <aura:if isTrue="{!v.selectedBudgetName == ''}">
+                                                    <span class="slds-icon_container slds-combobox__input-entity-icon searchIcon" title="record">
+                                                        <lightning:icon class="slds-icon slds-icon slds-icon_small" iconName="utility:search" size="x-small" alternativeText="icon"/>
+                                                        <span class="slds-assistive-text"></span>
+                                                    </span>
+                                                    <aura:set attribute="else">
+                                                        <span class="slds-icon_container slds-combobox__input-entity-icon" title="record">
+                                                            <lightning:icon class="slds-icon slds-icon slds-icon_small" iconName="custom:custom5" size="x-small" alternativeText="icon"/>
+                                                            <span class="slds-assistive-text"></span>
+                                                        </span>
+                                                    </aura:set>
+                                                </aura:if>
+                                                <lightning:input onblur="{!c.onBlur}" class="budgetInput" autocomplete="off" type="search" placeholder="Search Budget" variant="label-hidden" value="{!v.selectedBudgetName}" onclick="{!c.searchBudgetData}" onkeyup="{!c.searchBudgetData}" />
+                                            </div>
+    
+                                            <aura:if isTrue="{!v.displayBudget}" >
+                                                <div id="listbox-id-11" class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid searchResult" role="listbox" style="position: absolute;">
+                                                    <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                                                        <aura:iteration items="{!v.budgetList}" var="result">
+                                                            <li role="presentation" class="slds-listbox__item" data-value="{!result.Id}" onclick="{!c.clickHandlerBudget}">
+                                                                <div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small slds-media slds-listbox__option slds-listbox__option_entity slds-media_center" role="option">
+                                                                    <span class="slds-media__figure slds-listbox__option-icon ">
+                                                                        <lightning:icon iconName="custom:custom5" size="small" alternativeText="Approved" title="Approved" />
+                                                                    </span>
+                                                                    <span class="slds-media__body">
+                                                                        <span class="slds-truncate" title="All Opportunities">
+                                                                            <span>{!result.Name}</span>
+                                                                        </span>
+                                                                    </span>
+                                                                </div>
+                                                            </li>
+                                                        </aura:iteration>
+                                                        <aura:if isTrue="{!empty(v.budgetList)}">
+                                                            <span>
+                                                                <p class="blank-lst">
+                                                                    There Are No Budget
+                                                                </p>
+                                                            </span>
+                                                        </aura:if>
+                                                    </ul>
+                                                </div>
+                                            </aura:if>
+                                        </div>
+										
 									</lightning:layoutItem>
 								</aura:if>
 
-								<aura:if isTrue="{!field.name == 'buildertek__Budget_Item__c'}">
+                                <!-- <aura:if isTrue="{!field.name == 'buildertek__Budget_Line__c'}">
 									<lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
-										<label>Budget Line</label>
-										<c:BT_LightningLookup  objectAPIName="buildertek__Budget_Item__c" IconName="custom:custom5"  />
+                                        <div style="position: relative">
+                                            
+                                            <label>Budget Line</label>
+                                            <div class="slds-input-has-icon slds-input-has-iconright">
+                                                <aura:if isTrue="{!v.selectedBudgetLineName == ''}">
+                                                    <span class="slds-icon_container slds-combobox__input-entity-icon searchIcon" title="record">
+                                                        <lightning:icon class="slds-icon slds-icon slds-icon_small" iconName="utility:search" size="x-small" alternativeText="icon"/>
+                                                        <span class="slds-assistive-text"></span>
+                                                    </span>
+                                                    <aura:set attribute="else">
+                                                        <span class="slds-icon_container slds-combobox__input-entity-icon" title="record">
+                                                            <lightning:icon class="slds-icon slds-icon slds-icon_small" iconName="custom:custom5" size="x-small" alternativeText="icon"/>
+                                                            <span class="slds-assistive-text"></span>
+                                                        </span>
+                                                    </aura:set>
+                                                </aura:if>
+                                                <lightning:input  class="budgetInput" autocomplete="off" type="search" placeholder="Search Budget" variant="label-hidden" value="{!v.selectedBudgetLineName}" onclick="{!c.searchBudgetLineData}" onkeyup="{!c.searchBudgetLineData}" />
+                                            </div>
+    
+                                            <aura:if isTrue="{!v.displayBudgetLine}" >
+                                                <div id="listbox-id-11" class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid searchResult" role="listbox" style="position: absolute;">
+                                                    <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                                                        <aura:iteration items="{!v.budgetLineList}" var="result">
+                                                            <li role="presentation" class="slds-listbox__item" data-value="{!result.Id}" onclick="{!c.clickHandlerBudgetLine}">
+                                                                <div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small slds-media slds-listbox__option slds-listbox__option_entity slds-media_center" role="option">
+                                                                    <span class="slds-media__figure slds-listbox__option-icon ">
+                                                                        <lightning:icon iconName="custom:custom5" size="small" alternativeText="Approved" title="Approved" />
+                                                                    </span>
+                                                                    <span class="slds-media__body">
+                                                                        <span class="slds-truncate" title="All Opportunities">
+                                                                            <span>{!result.Name}</span>
+                                                                        </span>
+                                                                    </span>
+                                                                </div>
+                                                            </li>
+                                                        </aura:iteration>
+                                                        <aura:if isTrue="{!empty(v.budgetLineList)}">
+                                                            <span>
+                                                                <p class="blank-lst">
+                                                                    There Are No Budget Line
+                                                                </p>
+                                                            </span>
+                                                        </aura:if>
+                                                    </ul>
+                                                </div>
+                                            </aura:if>
+                                        </div>
+										
 									</lightning:layoutItem>
-								</aura:if>
-
-
+								</aura:if> -->
 
 								<aura:set attribute="else">
 									<lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">                                       

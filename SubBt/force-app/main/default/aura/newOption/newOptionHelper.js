@@ -87,6 +87,9 @@
 
                 console.log({result});
                 component.set('v.selectedLookUpRecord' ,result);
+                component.set('v.selectedtRecord' ,result);
+
+				
             }
         });
         $A.enqueueAction(action);

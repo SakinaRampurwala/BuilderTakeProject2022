@@ -17,6 +17,7 @@
         window.setTimeout(
             $A.getCallback(function() {
                 component.set("v.listOfSearchRecords", null );
+                console.log('list of records' + component.get("v.listOfSearchRecords"));
                 var forclose = component.find("searchRes");
                 $A.util.addClass(forclose, 'slds-is-close');
                 $A.util.removeClass(forclose, 'slds-is-open');    
@@ -58,6 +59,8 @@
         }
         else{ 
              component.set("v.listOfSearchRecords", null ); 
+             console.log('list of records' + component.get("v.listOfSearchRecords"));
+
              var forclose = component.find("searchRes");
                $A.util.addClass(forclose, 'slds-is-close');
                $A.util.removeClass(forclose, 'slds-is-open');
@@ -78,6 +81,8 @@
          
          component.set("v.SearchKeyWord",'');
          component.set("v.listOfSearchRecords", null );
+         console.log('list of records' + component.get("v.listOfSearchRecords"));
+
          component.set("v.selectedRecord", {} );  
          var getInputkeyWord = component.get("v.SearchKeyWord");
         if(getInputkeyWord == undefined){
@@ -169,6 +174,8 @@
                 
                 component.set("v.SearchKeyWord",'');
                 component.set("v.listOfSearchRecords", null );
+                console.log('list of records' + component.get("v.listOfSearchRecords"));
+
                 component.set("v.selectedRecord", {} );  
                 var getInputkeyWord = component.get("v.SearchKeyWord");
                 if(getInputkeyWord == undefined){
