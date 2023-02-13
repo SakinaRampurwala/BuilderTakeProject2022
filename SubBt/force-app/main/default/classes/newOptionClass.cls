@@ -115,6 +115,34 @@ public class newOptionClass {
         return optionNewId;
     }
 
+    @AuraEnabled
+    public static List<SObject> searchRecords(String objectName , String searchKey){
+        String query = 'SELECT Id, Name FROM '+ objectName ;      
+        if (searchKey != Null ) {
+            String key = '%' + searchKey + '%';
+            query += ' WHERE Name LIKE :key';
+        }
+        system.debug(Database.query( query ));
+        return Database.query( query );
+
+
+
+    }
+    @AuraEnabled
+    public static List<buildertek__Budget__c> getAllBudget1(){
+        list<buildertek__Budget__c> budgetList =[Select Id , Name From buildertek__Budget__c];
+        return budgetList;
+
+
+
+    }
+    @AuraEnabled
+    public static string getOptionName(String recordId){
+            Product2 prod =[Select Id , Name From Product2 where Id=:recordId];
+            return prod.Name;    
+        
+    }
+
     
     
 }

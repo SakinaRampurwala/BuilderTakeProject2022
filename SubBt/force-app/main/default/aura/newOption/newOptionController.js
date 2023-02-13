@@ -236,8 +236,7 @@
             if (state === "SUCCESS") {
                 console.log({result});
                 component.set('v.searchBudget' ,result);
-                $A.util.addClass(component.find("mySpinner"), "slds-hide");
-                $A.util.removeClass(component.find("mySpinner"), "slds-show");
+                // $A.util.removeClass(component.find("mySpinner"), "slds-hide");
             }
         });
         $A.enqueueAction(action);
@@ -259,8 +258,8 @@
             if (state === "SUCCESS") {
                 console.log({result});
                 component.set('v.searchCategoryFilter' ,result);
-                $A.util.addClass(component.find("mySpinner2"), "slds-hide");
-                $A.util.removeClass(component.find("mySpinner2"), "slds-show");
+                // $A.util.addClass(component.find("mySpinner2"), "slds-hide");
+                // $A.util.removeClass(component.find("mySpinner2"), "slds-show");
 
 
 
@@ -317,7 +316,13 @@
             var result= response.getReturnValue();
             if (state === "SUCCESS") {
                 console.log({result});
-                component.set('v.unitSalesPrice' , result);
+                if(result != null){
+                    component.set('v.unitSalesPrice' , result);
+                }else{
+                    component.set('v.unitSalesPrice' , 0);
+
+                }
+                console.log(component.get('v.unitSalesPrice'));
 
             }
         });
@@ -381,16 +386,33 @@
 
     },
     handleSubmit: function (component, event, helper) {
+
+
+    
+
+
+
         component.set("v.isDisabled", true);
 		$A.get("e.c:BT_SpinnerEvent").setParams({"action" : "SHOW" }).fire();
         event.preventDefault(); // Prevent default submit
         var fields = event.getParam("fields");
+
+        fields["buildertek__Cost__c"] = component.get("v.SalesPrice");
+        fields["buildertek__Budget_Line__c"] = component.get("v.selectedBudgetLineId");
+        fields["buildertek__Budget__c"] = component.get("v.selectedBudgetId");
+        fields["Name"] = component.get("v.optName");
+        fields["buildertek__Options_Name__c"] = component.get("v.optLongName");
+
+        
+
+        
         var allData = JSON.stringify(fields);
         var action = component.get("c.saveData");
         action.setParams({
             allData : allData
         });
         action.setCallback(this, function(response){
+            console.log(response.getError());
             if (response.getState() == 'SUCCESS') {
                 var result = response.getReturnValue();
 
@@ -457,16 +479,22 @@
         console.log('searchBudgetData');
         component.set('v.displayBudget', true);
 
+        // $A.util.addClass(component.find("mySpinner"), "slds-hide");
+        // $A.util.removeClass(component.find("mySpinner"), "slds-show");
+
         var selectionTypeId = component.get('v.selectionTypeId');
+        console.log(selectionTypeId  , 'selectionTypeId');
         if (selectionTypeId == null || selectionTypeId =='' || selectionTypeId == undefined) {
             try {
-                var action = component.get("c.getAllBudget");
+                var action = component.get("c.getAllBudget1");
                 action.setCallback(this, function(response) {
                     var state = response.getState();
                     console.log({state});
                     var result= response.getReturnValue();
                     console.log('Budgert ==>',result);
                     if (state === "SUCCESS") {
+
+
                         component.set('v.budgetList' , result);
                     }
                 });
@@ -476,15 +504,46 @@
             }
             
         } else{
+
             var selectedLookUpRecord = component.get('v.selectedLookUpRecord');
             console.log('Budget ==> ',{selectedLookUpRecord});
+
             component.set('v.budgetList', selectedLookUpRecord);
+            
         }
+
+
+        event.stopPropagation();
  
+    },
+    keyupBudgetData:function(component, event, helper) {
+        console.log('on key up');
+        console.log(event.getSource().get('v.value'));
+        let valueIs=event.getSource().get('v.value');
+        var action = component.get("c.searchRecords");
+        action.setParams({
+            objectName:'buildertek__Budget__c',
+            searchKey:valueIs
+        });
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+            console.log({state});
+            var result= response.getReturnValue();
+            if (state === "SUCCESS") {
+                console.log({result});
+            }
+        });
+        $A.enqueueAction(action);
+
     },
     searchBudgetLineData:function(component, event, helper) {
         console.log('searchBudgetLineData');
         component.set('v.displayBudgetLine', true);
+        console.log('<<<<<<<<<<---------->>>>>' ,  component.get('v.selectedBudgetName'));
+
+        var BudgetValue=component.get('v.selectedBudgetName');
+        console.log(BudgetValue);
+
 
         var selectedBudgetId = component.get('v.selectedBudgetId');
         var action = component.get("c.getBudgetLine");
@@ -497,16 +556,30 @@
             var result= response.getReturnValue();
             if (state === "SUCCESS") {
                 console.log({result});
-                component.set('v.budgetLineList' ,result);
+
+                if(BudgetValue != ''){
+                    console.log('no null');
+                    component.set('v.budgetLineList' ,result);
+
+                }else{
+                    component.set('v.budgetLineList' , []);
+
+                }
             }
         });
         $A.enqueueAction(action);
+
+
+        event.stopPropagation();
+
 
  
     },
 
     clickHandlerBudget: function(component, event, helper){
-        component.set('v.displayBudget', true);
+        // event.preventDefault();
+        console.log('clickHandlerBudget');
+        component.set('v.displayBudget', false);
         var recordId = event.currentTarget.dataset.value;
         console.log('recordId ==> '+recordId);
         component.set('v.selectedBudgetId', recordId);
@@ -518,10 +591,14 @@
                 component.set('v.selectedBudgetName', element.Name);
             }
         });
+        // event.stopPropagation();
+
     },
     clickHandlerBudgetLine: function(component, event, helper){
+
         console.log('clickHandlerBudgetLine');
-        component.set('v.displayBudgetLine', true);
+        component.set('v.displayBudgetLine', false);
+        console.log('----------->>>>>' ,  component.get('v.selectedBudgetName'));
         var recordId = event.currentTarget.dataset.value;
         console.log('recordId ==> '+recordId);
         component.set('v.selectedBudgetLineId', recordId);
@@ -533,13 +610,63 @@
                 component.set('v.selectedBudgetLineName', element.Name);
             }
         });
+        var action = component.get("c.getBudgetLineUnitSalesPrice");
+        action.setParams({
+            budgetLineId: component.get('v.selectedBudgetLineId')
+        });
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+            console.log({state});
+            var result= response.getReturnValue();
+            console.log({result});
+
+            if (state === "SUCCESS") {
+                console.log({result});
+                // $A.util.removeClass(component.find("mySpinner"), "slds-hide");
+
+                if(result != null){
+                    component.set('v.SalesPrice' , result);
+                }else{
+                    component.set('v.SalesPrice' , 0);
+
+                }
+            }
+        });
+        $A.enqueueAction(action);
     },
 
     
-    onBlur:function(component, event, helper){
+    hideList:function(component, event, helper){
+        
         component.set('v.displayBudget', false);
-    }
+        component.set('v.displayBudgetLine', false);
+    },
 
+    changeProduct:function(component, event, helper){
+        console.log(event.getSource().get('v.value'));
+        let productValue=event.getSource().get('v.value');
+        var action = component.get("c.getOptionName");
+        action.setParams({
+            recordId: productValue
+        });
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+            console.log({state});
+            var result= response.getReturnValue();
+            console.log({result});
+
+            if (state === "SUCCESS") {
+                console.log({result});
+                component.set('v.optName' , result);
+                component.set('v.optLongName' , result);
+
+                
+
+
+            }
+        });
+        $A.enqueueAction(action);
+    }
 
 
 

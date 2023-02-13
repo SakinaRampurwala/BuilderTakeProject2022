@@ -55,6 +55,12 @@
 
     <aura:attribute name="selectedBudgetName" type="String" default="" />
     <aura:attribute name="selectedBudgetLineName" type="String" default="" />
+    <aura:attribute name="optName" type="String" default="" />
+    <aura:attribute name="optLongName" type="String" default="" />
+
+    
+
+    
 
 	
 	
@@ -65,7 +71,7 @@
             .slds-modal__container{height:80% !important ;width:70% !important}
         }
     </aura:html>
-    <div class="slds-modal__content " style="width:60%;margin:20px auto;">
+    <div class="slds-modal__content " style="width:60%;margin:20px auto;" onclick="{!c.hideList}" >
         <div class="slds slds-scope">
         <header class="slds-modal__header">
             <lightning:buttonIcon iconName="utility:close" onclick="{! c.closeModel }" alternativeText="close" variant="bare-inverse" class="slds-modal__close" />
@@ -83,7 +89,7 @@
                         
 
                         <aura:iteration items="{!v.listOfFields0}" var="field">
-							<aura:if isTrue="{!(field.name == 'buildertek__Question_Group__c' || field.name == 'buildertek__Budget_Line__c' || field.name == 'buildertek__Budget__c')}">
+							<aura:if isTrue="{!(field.name == 'buildertek__Question_Group__c' || field.name == 'buildertek__Budget_Line__c' || field.name == 'buildertek__Cost__c' || field.name == 'buildertek__Budget__c' ||  field.name == 'buildertek__Product__c' || field.name == 'Name' || field.name == 'buildertek__Options_Name__c' )}">
 
 								<aura:if isTrue="{!field.name == 'buildertek__Question_Group__c'}">
 									<lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
@@ -93,11 +99,11 @@
 
 								<aura:if isTrue="{!field.name == 'buildertek__Budget__c'}">
 									<lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
-                                        <div style="position: relative">
+                                        <div style="position: relative" >
                                             
                                             <label>Budget </label>
                                             <!-- <c:BT_LightningLookup  objectAPIName="buildertek__Budget__c" IconName="custom:custom5"  listOfSearchRecords="{!v.selectedLookUpRecord}" /> -->
-                                            <div class="slds-input-has-icon slds-input-has-icon--right">
+                                            <div class="slds-input-has-icon slds-input-has-icon--right"  >
                                                 <aura:if isTrue="{!v.selectedBudgetName == ''}">
                                                     <span class="slds-icon_container slds-combobox__input-entity-icon searchIcon" title="record">
                                                         <lightning:icon class="slds-icon slds-icon slds-icon_small" iconName="utility:search" size="x-small" alternativeText="icon"/>
@@ -110,12 +116,13 @@
                                                         </span>
                                                     </aura:set>
                                                 </aura:if>
-                                                <lightning:input onblur="{!c.onBlur}" class="budgetInput" autocomplete="off" type="search" placeholder="Search Budget" variant="label-hidden" value="{!v.selectedBudgetName}" onclick="{!c.searchBudgetData}" onkeyup="{!c.searchBudgetData}" />
+                                                <lightning:input  class="budgetInput" autocomplete="off" type="search" placeholder="Search Budget..." variant="label-hidden" value="{!v.selectedBudgetName}" onclick="{!c.searchBudgetData}"  />
                                             </div>
     
                                             <aura:if isTrue="{!v.displayBudget}" >
-                                                <div id="listbox-id-11" class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid searchResult" role="listbox" style="position: absolute;">
+                                                <div id="listbox-id-11" class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid searchResult" role="listbox" style="position: absolute;" >
                                                     <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                                                        <!-- <lightning:spinner class="slds-show" variant="brand" size="small" aura:id="mySpinner"/> -->
                                                         <aura:iteration items="{!v.budgetList}" var="result">
                                                             <li role="presentation" class="slds-listbox__item" data-value="{!result.Id}" onclick="{!c.clickHandlerBudget}">
                                                                 <div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small slds-media slds-listbox__option slds-listbox__option_entity slds-media_center" role="option">
@@ -145,7 +152,7 @@
 									</lightning:layoutItem>
 								</aura:if>
 
-                                <!-- <aura:if isTrue="{!field.name == 'buildertek__Budget_Line__c'}">
+                                <aura:if isTrue="{!field.name == 'buildertek__Budget_Line__c'}">
 									<lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
                                         <div style="position: relative">
                                             
@@ -163,12 +170,13 @@
                                                         </span>
                                                     </aura:set>
                                                 </aura:if>
-                                                <lightning:input  class="budgetInput" autocomplete="off" type="search" placeholder="Search Budget" variant="label-hidden" value="{!v.selectedBudgetLineName}" onclick="{!c.searchBudgetLineData}" onkeyup="{!c.searchBudgetLineData}" />
+                                                <lightning:input   class="budgetLineInput" autocomplete="off" type="search" placeholder="Search Budget Line ..." variant="label-hidden" value="{!v.selectedBudgetLineName}" onclick="{!c.searchBudgetLineData}" onkeyup="{!c.searchBudgetLineData}" />
                                             </div>
     
                                             <aura:if isTrue="{!v.displayBudgetLine}" >
                                                 <div id="listbox-id-11" class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid searchResult" role="listbox" style="position: absolute;">
                                                     <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                                                        <!-- <lightning:spinner class="slds-show" variant="brand" size="small" aura:id="mySpinner2"/> -->
                                                         <aura:iteration items="{!v.budgetLineList}" var="result">
                                                             <li role="presentation" class="slds-listbox__item" data-value="{!result.Id}" onclick="{!c.clickHandlerBudgetLine}">
                                                                 <div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small slds-media slds-listbox__option slds-listbox__option_entity slds-media_center" role="option">
@@ -196,7 +204,29 @@
                                         </div>
 										
 									</lightning:layoutItem>
-								</aura:if> -->
+								</aura:if>
+
+                                <aura:if isTrue="{!field.name == 'buildertek__Cost__c'}">
+                                    <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
+                                        <lightning:inputField fieldName="{!field.name}" value="{!v.SalesPrice}" />
+                                    </lightning:layoutItem>
+                                </aura:if>
+                                <aura:if isTrue="{!field.name == 'buildertek__Product__c'}">
+                                    <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
+                                        <lightning:inputField fieldName="{!field.name}" onchange="{!c.changeProduct}" />
+                                    </lightning:layoutItem>
+                                </aura:if>
+                                <aura:if isTrue="{!field.name == 'Name'}">
+                                    <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
+                                        <lightning:inputField fieldName="{!field.name}" value="{!v.optName}" />
+                                    </lightning:layoutItem>
+                                </aura:if>
+                                <aura:if isTrue="{!field.name == 'buildertek__Options_Name__c'}">
+                                    <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
+                                        <lightning:inputField fieldName="{!field.name}" value="{!v.optLongName}" />
+                                    </lightning:layoutItem>
+                                </aura:if>
+
 
 								<aura:set attribute="else">
 									<lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">                                       
