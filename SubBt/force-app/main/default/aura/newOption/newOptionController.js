@@ -166,36 +166,36 @@
 
     },
 
-    changeProduct: function(component, event, helper) {
-        var Option = component.get('v.Option');
-        var productId = Option.buildertek__Product__c;
-        console.log('product ==> ' + productId);
+    // changeProduct: function(component, event, helper) {
+    //     var Option = component.get('v.Option');
+    //     var productId = Option.buildertek__Product__c;
+    //     console.log('product ==> ' + productId);
 
-        productId = productId.toString();
-        console.log(typeof productId);
+    //     productId = productId.toString();
+    //     console.log(typeof productId);
 
-        if (productId != '') {
-            var action = component.get("c.getProduct");
+    //     if (productId != '') {
+    //         var action = component.get("c.getProduct");
 
-            action.setParams({
-                "productId": productId
-            });
-            action.setCallback(this, function(response) {
-                var state = response.getState();
-                console.log('Status => ' + state);
-                var result = response.getReturnValue();
-                console.log('result => ', { result });
+    //         action.setParams({
+    //             "productId": productId
+    //         });
+    //         action.setCallback(this, function(response) {
+    //             var state = response.getState();
+    //             console.log('Status => ' + state);
+    //             var result = response.getReturnValue();
+    //             console.log('result => ', { result });
 
-                Option.Name = result.Name;
-                Option.buildertek__Manufacturer__c = result.buildertek__Manufacturer__c;
+    //             Option.Name = result.Name;
+    //             Option.buildertek__Manufacturer__c = result.buildertek__Manufacturer__c;
 
-                console.log('Option ==> ', { Option });
-                component.set("v.Option", Option);
+    //             console.log('Option ==> ', { Option });
+    //             component.set("v.Option", Option);
 
-            });
-            $A.enqueueAction(action);
-        }
-    },
+    //         });
+    //         $A.enqueueAction(action);
+    //     }
+    // },
 
     saveAndNew: function(component, event, helper) {
         helper.saveAndNew(component, event);
@@ -396,16 +396,27 @@
 		$A.get("e.c:BT_SpinnerEvent").setParams({"action" : "SHOW" }).fire();
         event.preventDefault(); // Prevent default submit
         var fields = event.getParam("fields");
+        console.log(component.get('v.selectedBudgetName') , 'selectedBudgetName');
+        let budgetName=component.get('v.selectedBudgetName');
+        let budgetLineName=component.get('v.selectedBudgetLineName');
+
+        
 
         fields["buildertek__Cost__c"] = component.get("v.SalesPrice");
-        fields["buildertek__Budget_Line__c"] = component.get("v.selectedBudgetLineId");
-        fields["buildertek__Budget__c"] = component.get("v.selectedBudgetId");
+        if(budgetLineName == ''){
+            fields["buildertek__Budget_Line__c"] = '';
+        }else{
+            fields["buildertek__Budget_Line__c"] = component.get("v.selectedBudgetLineId");
+        }
+        
+        if(budgetName == ''){
+            fields["buildertek__Budget__c"] = '';
+        }else{
+            fields["buildertek__Budget__c"] = component.get("v.selectedBudgetId");
+        }
         fields["Name"] = component.get("v.optName");
         fields["buildertek__Options_Name__c"] = component.get("v.optLongName");
-
-        
-
-        
+        fields["buildertek__Markup__c"] = component.get("v.markupValue");    
         var allData = JSON.stringify(fields);
         var action = component.get("c.saveData");
         action.setParams({
@@ -496,6 +507,12 @@
 
 
                         component.set('v.budgetList' , result);
+                        result.forEach(function(value, index){
+                            console.log({value});
+
+                            component.set('v.projectValue' , value.buildertek__Project__c);
+                        })
+                        
                     }
                 });
             $A.enqueueAction(action);
@@ -505,10 +522,32 @@
             
         } else{
 
-            var selectedLookUpRecord = component.get('v.selectedLookUpRecord');
-            console.log('Budget ==> ',{selectedLookUpRecord});
+            var action = component.get("c.getBudget");
+            action.setParams({
+                seleTypeId:selectionTypeId
+            });
+            action.setCallback(this, function(response) {
+                var state = response.getState();
+                console.log(response.getError());
+                console.log({state});
+                var result= response.getReturnValue();
+                if (state === "SUCCESS") {
+    
+                    console.log({result});
+                    component.set('v.budgetList' ,result);
+                    result.forEach(function(value, index){
+                        console.log({value});
+                        component.set('v.projectValue' , value.buildertek__Project__c);
+                    })
+                    
+                }
+            });
+            $A.enqueueAction(action);
 
-            component.set('v.budgetList', selectedLookUpRecord);
+console.log(component.get('v.projectValue'));
+            // var selectedLookUpRecord = component.get('v.selectedLookUpRecord');
+            // console.log('Budget ==> ',{selectedLookUpRecord});
+            // component.set('v.budgetList', selectedLookUpRecord);
             
         }
 
@@ -518,19 +557,46 @@
     },
     keyupBudgetData:function(component, event, helper) {
         console.log('on key up');
-        console.log(event.getSource().get('v.value'));
+        console.log(component.get('v.projectValue'));
+
         let valueIs=event.getSource().get('v.value');
         var action = component.get("c.searchRecords");
         action.setParams({
-            objectName:'buildertek__Budget__c',
-            searchKey:valueIs
+            searchKey:valueIs,
+            projectId:component.get('v.projectValue')
         });
         action.setCallback(this, function(response) {
             var state = response.getState();
             console.log({state});
+            console.log(response.getError());
             var result= response.getReturnValue();
             if (state === "SUCCESS") {
                 console.log({result});
+                component.set('v.budgetList' ,result);
+
+            }
+        });
+        $A.enqueueAction(action);
+
+    },
+    keyupBudgetLineData:function(component, event, helper) {
+        console.log('on key up');
+
+        let valueIs=event.getSource().get('v.value');
+        var action = component.get("c.searchBudgetLineRecords");
+        action.setParams({
+            searchKey:valueIs,
+            budgetId:component.get('v.selectedBudgetId')
+        });
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+            console.log({state});
+            console.log(response.getError());
+            var result= response.getReturnValue();
+            if (state === "SUCCESS") {
+                console.log({result});
+                component.set('v.budgetLineList' ,result);
+
             }
         });
         $A.enqueueAction(action);
@@ -624,10 +690,19 @@
                 console.log({result});
                 // $A.util.removeClass(component.find("mySpinner"), "slds-hide");
 
-                if(result != null){
-                    component.set('v.SalesPrice' , result);
+                if(result.buildertek__Sales_Price__c != null){
+                    component.set('v.SalesPrice' , result.buildertek__Sales_Price__c);              
                 }else{
                     component.set('v.SalesPrice' , 0);
+
+                }
+                console.log(result.buildertek__Gross_Profit_Percemtage__c);
+
+
+                if(result.buildertek__Gross_Profit_Percemtage__c != null){
+                    component.set("v.markupValue" , result.buildertek__Gross_Profit_Percemtage__c); 
+                }else{
+                    component.set("v.markupValue" , 0); 
 
                 }
             }
@@ -645,9 +720,9 @@
     changeProduct:function(component, event, helper){
         console.log(event.getSource().get('v.value'));
         let productValue=event.getSource().get('v.value');
-        var action = component.get("c.getOptionName");
+        var action = component.get("c.getProduct");
         action.setParams({
-            recordId: productValue
+            productId: productValue
         });
         action.setCallback(this, function(response) {
             var state = response.getState();
@@ -657,8 +732,17 @@
 
             if (state === "SUCCESS") {
                 console.log({result});
-                component.set('v.optName' , result);
-                component.set('v.optLongName' , result);
+                component.set('v.optName' , result.Name);
+                component.set('v.optLongName' , result.Name);
+                console.log(result.PricebookEntries);
+                // console.log(result.PricebookEntries[0].UnitPrice);
+                if(result.PricebookEntries != undefined){
+                    component.set('v.SalesPrice' , result.PricebookEntries[0].UnitPrice);
+                }else{
+                    component.set('v.SalesPrice' , 0);
+
+                }
+
 
                 
 

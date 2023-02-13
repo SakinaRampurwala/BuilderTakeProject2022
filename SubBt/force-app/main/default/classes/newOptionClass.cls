@@ -10,13 +10,14 @@ public class newOptionClass {
 
     @AuraEnabled
     public static Product2 getProduct(String productId){
-        Product2 prod = [SELECT Id, Name, buildertek__Manufacturer__c FROM Product2 WHERE Id =: productId];
+        Product2 prod = [SELECT Id, Name, buildertek__Manufacturer__c, (select Id, Name, UnitPrice, Product2Id from PricebookEntries) FROM Product2 WHERE Id =: productId LIMIT 1];
+        // PricebookEntry pricebook = [select Id, Name, UnitPrice,  Pricebook2.Name,Product2Id from PricebookEntry where Product2Id =: productId];
         return prod;
     }
     @AuraEnabled
-    public static List<buildertek__Budget__c> getBudget(String selectionTypeId){
+    public static List<buildertek__Budget__c> getBudget(String seleTypeId){
         Set<Id> selectionCategoryIds= new Set<Id>();
-        List<buildertek__Question_Group__c> selectionTypeList = [SELECT Id, Name, buildertek__Section__c, buildertek__Section__r.Name   FROM buildertek__Question_Group__c where id=:selectionTypeId];
+        List<buildertek__Question_Group__c> selectionTypeList = [SELECT Id, Name, buildertek__Section__c, buildertek__Section__r.Name   FROM buildertek__Question_Group__c where id=:seleTypeId];
         for(buildertek__Question_Group__c selectionType:selectionTypeList){
             selectionCategoryIds.add(selectionType.buildertek__Section__c);
         }
@@ -30,12 +31,12 @@ public class newOptionClass {
         return budegtLineList;
     }
     @AuraEnabled
-    public static Decimal getBudgetLineUnitSalesPrice(String budgetLineId){
-        buildertek__Budget_Item__c budgetLine = [SELECT Id, Name , buildertek__Sales_Price__c, buildertek__Budget__c FROM buildertek__Budget_Item__c WHERE Id =: budgetLineId LIMIT 1];
-        System.debug(budgetLine.buildertek__Sales_Price__c);
-        System.debug(budgetLine);
+    public static buildertek__Budget_Item__c getBudgetLineUnitSalesPrice(String budgetLineId){
+        buildertek__Budget_Item__c budgetLine = [SELECT Id, Name , buildertek__Gross_Profit_Percemtage__c	, buildertek__Sales_Price__c, buildertek__Budget__c FROM buildertek__Budget_Item__c WHERE Id =: budgetLineId LIMIT 1];
+        // System.debug(budgetLine.buildertek__Sales_Price__c);
+        // System.debug(budgetLine);
 
-        return budgetLine.buildertek__Sales_Price__c;
+        return budgetLine;
     }
     @AuraEnabled(cacheable=true)
     public static List<BT_Lightning_Utils.FieldSetWrapper> getfield(string objectName, string fieldSetName){
@@ -104,29 +105,33 @@ public class newOptionClass {
     public static String saveData(String allData){
         String optionNewId;
         buildertek__Question__c option = (buildertek__Question__c) JSON.deserialize(allData, buildertek__Question__c.class);
+
+
         // Id recordId = Id.valueOf(productId);
-        // if (budgetItem.Name.length() > 80) {
-        //     string subStr = budgetItem.Name.subString(0,76);
-        //     budgetItem.Name = subStr.subString(0, subStr.lastIndexOf(' ')) + '...';
-        // }
-        // budgetItem.buildertek__Product__c = recordId;
+        if (option.Name.length() > 80) {
+            string subStr = option.Name.subString(0,76);
+            option.Name = subStr.subString(0, subStr.lastIndexOf(' ')) + '...';
+        }
+        // option.buildertek__Product__c = recordId;
+
+
         insert option;
         optionNewId = String.valueOf(option.Id);
         return optionNewId;
     }
 
     @AuraEnabled
-    public static List<SObject> searchRecords(String objectName , String searchKey){
-        String query = 'SELECT Id, Name FROM '+ objectName ;      
-        if (searchKey != Null ) {
-            String key = '%' + searchKey + '%';
-            query += ' WHERE Name LIKE :key';
-        }
-        system.debug(Database.query( query ));
-        return Database.query( query );
-
-
-
+    public static List<buildertek__Budget__c> searchRecords(String searchKey , String projectId){
+        String key = '%' + searchKey + '%';
+        List<buildertek__Budget__c> budgetList = [Select Id , Name  , buildertek__Project__c From buildertek__Budget__c where buildertek__Project__c=:projectId  AND  Name LIKE :key];
+        System.debug(budgetList);
+        return budgetList;
+    }
+    @AuraEnabled
+    public static List<buildertek__Budget_Item__c> searchBudgetLineRecords(String searchKey , String budgetId){
+        String key = '%' + searchKey + '%';
+        List<buildertek__Budget_Item__c> budgetLineList = [Select Id , Name  , buildertek__Budget__c From buildertek__Budget_Item__c where buildertek__Budget__c=:budgetId  AND  Name LIKE :key];
+        return budgetLineList;
     }
     @AuraEnabled
     public static List<buildertek__Budget__c> getAllBudget1(){
@@ -136,12 +141,12 @@ public class newOptionClass {
 
 
     }
-    @AuraEnabled
-    public static string getOptionName(String recordId){
-            Product2 prod =[Select Id , Name From Product2 where Id=:recordId];
-            return prod.Name;    
+    // @AuraEnabled
+    // public static string getOptionName(String recordId){
+    //         Product2 prod =[Select Id , Name From Product2 where Id=:recordId];
+    //         return prod.Name;    
         
-    }
+    // }
 
     
     

@@ -76,7 +76,7 @@
 
         var action = component.get("c.getBudget");
         action.setParams({
-            selectionTypeId:temp[0]
+            seleTypeId:temp[0]
         });
         action.setCallback(this, function(response) {
             var state = response.getState();
