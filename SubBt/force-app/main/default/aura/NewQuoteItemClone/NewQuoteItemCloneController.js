@@ -886,6 +886,10 @@
     closeModel: function(component, event, helper) {
         // for Hide/Close Model,set the "isOpen" attribute to "Fasle"
         component.set("v.isOpen", false);
+        component.set("v.isBOMmodalOpen", false);
+
+
+        
     },
 
     closeQuotelineModel: function(component, event, helper) {
@@ -898,6 +902,7 @@
 
 
     deleteQuoteItems: function(component, event, helper) {
+        component.set("v.isOpen", false);
         $A.get("e.c:BT_SpinnerEvent").setParams({
             "action": "SHOW"
         }).fire();
@@ -910,7 +915,6 @@
             var state = response.getState();
             if (state === "SUCCESS") {
                 var result = response.getReturnValue();
-                component.set("v.isOpen", false);
                 $A.get("e.force:refreshView").fire();
                 window.setTimeout(
                     $A.getCallback(function() {
@@ -2585,9 +2589,9 @@ return other.Id == current.Id
         component.set("v.GroupingOptions", opts);
     },
 
-    closeModel: function(component, event, helper) { 
-        component.set("v.isBOMmodalOpen", false);
-     },
+    // closeModel: function(component, event, helper) { 
+    //     component.set("v.isBOMmodalOpen", false);
+    //  },
     
      submitDetails: function(component, event, helper) {
         var valueofField1 = component.get("v.valueofField1")

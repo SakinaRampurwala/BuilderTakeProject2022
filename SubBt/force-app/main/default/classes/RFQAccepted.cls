@@ -46,7 +46,7 @@ public without sharing class RFQAccepted{
                 rfqMessage = 'You have already submitted a bid for this RFQ';
             }
             else if(rfqToVendorList.size()>0 && rfqToVendorList[0].buildertek__Status__c == 'Rejected'){
-                rfqMessage = 'This RFQ has been Rejected!';
+                rfqMessage = 'You have rejected bid \"' +rfqToVendorList[0].Name +'\".  If you feel you have rejected this bid in error please contact us.';
             }
             
             
@@ -112,7 +112,7 @@ public without sharing class RFQAccepted{
                        //futuremethod(rfqStatus, rfqToVendorId);
                      message.subject = 'Decline [ref:' + rfqToVendorId + ']';
                      message.plainTextBody = 'Rejected';
-                       rfqMessage = 'You have Rejected!';
+                       rfqMessage = 'You have rejected bid \"' +rfqrec.Name +'\".  If you feel you have rejected this bid in error please contact us.';
                    }
                    if ( owea.size() > 0 ) {
                        message.setOrgWideEmailAddressId(owea.get(0).Id);
@@ -188,7 +188,7 @@ public without sharing class RFQAccepted{
                }else if(rfqToVendorListDup.size()>0 && rfqToVendorListDup[0].buildertek__Status__c == 'Accepted'){
                    rfqMessage = 'You have already submitted a bid for this RFQ';
                } else if(rfqToVendorListDup.size()>0 && rfqToVendorListDup[0].buildertek__Status__c == 'Rejected'){
-                   rfqMessage = 'This RFQ has been Rejected!';
+                   rfqMessage = 'You have rejected bid \"' +rfqToVendorList[0].Name +'\".  If you feel you have rejected this bid in error please contact us.';
                }else if(rfqToVendorListDup.size()>0 && rfqToVendorListDup[0].buildertek__RFQ__c != null && 
                         (rfqToVendorListDup[0].buildertek__RFQ__r.buildertek__Status__c == 'Awarded' || rfqToVendorListDup[0].buildertek__RFQ__r.buildertek__Status__c == 'Accepted') && 
                         (rfqToVendorListDup[0].buildertek__Status__c != 'Awarded' || rfqToVendorListDup[0].buildertek__Status__c != 'Accepted')){
