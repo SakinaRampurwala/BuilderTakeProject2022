@@ -18,7 +18,7 @@ trigger ProjectTrigger on buildertek__Project__c (after insert,after update , be
             // handler.CreatePermits(Trigger.new);
              handler.CreatePermitsForNewProject(Trigger.new);
             if(adminInterfaceNodeConfigurationslist.size()>0 && adminInterfaceNodeConfigurationslist[0].buildertek__Retreive_Aerial_Photo_of_project__c == true){
-            handler.AfterUpdateProjects(Trigger.new,trigger.oldMap);
+            // handler.AfterUpdateProjects(Trigger.new,trigger.oldMap);
             handler.AfterInsertProject(Trigger.new);
             }
         }

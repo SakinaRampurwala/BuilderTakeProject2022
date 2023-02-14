@@ -204,7 +204,7 @@
                             <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
                                 <aura:if isTrue="{! (field.name == 'Name' || field.name == 'buildertek__Unit_Cost__c' || field.name=='buildertek__Quote__c')}">
                                     <aura:if isTrue="{!field.name == 'buildertek__Quote__c'}">
-                                        <lightning:inputField fieldName="{!field.name}" value="{!v.parentRecordId}"/>
+                                        <lightning:inputField fieldName="{!field.name}" value="{!v.newQuoteItem.buildertek__Item_Name__c}"/>
                                     </aura:if>
 
                                     <aura:if isTrue="{!field.name == 'Name'}">

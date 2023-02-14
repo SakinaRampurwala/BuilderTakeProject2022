@@ -247,6 +247,9 @@
                 fields.buildertek__Product__c='';
             }
             fields.buildertek__Product__c = selectedProductId.Id;
+            if(fields.Name.length > 80){
+                fields.Name = fields.Name.substring(0,80);
+            }
         }
         event.preventDefault(); // Prevent default submit
         component.find('recordViewForm').submit(fields); // Submit form

@@ -178,6 +178,9 @@
             }
             fields.buildertek__Product__c = selectedProductId.Id;
           //  fields.buildertek__Unit_Price__c = selectedProductId.buildertek__Unit_Price__c;
+            if(fields.Name.length > 80){
+                fields.Name = fields.Name.substring(0,80);
+            }
         }
         event.preventDefault(); // Prevent default submit
        // var isValid  = helper.validateRecordData(component, event, helper);

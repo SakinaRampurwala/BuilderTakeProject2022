@@ -85,7 +85,7 @@
                                             parentId="{! v.pricebookName }" prodctfamly="{!v.productfamily}" />
                                         <!-- <lightning:inputField fieldName="{!field.name}" value="{!v.selectedLookUpRecord}" /> -->
                                         <aura:set attribute="else">
-                                            <aura:if isTrue="{!field.name =='buildertek__Purchase_Order__c'}">
+                                            <aura:if isTrue="{!field.name =='Name'}">
                                                 <aura:if isTrue="{!v.parentRecordId}">
                                                     <lightning:inputField fieldName="{!field.name}"
                                                         value="{!if(parentRecordId !='',v.parentRecordId)}" />

@@ -89,6 +89,7 @@
     onRecordSuccess: function (component, event, helper) {
         var workspaceAPI = component.find("workspace");
         workspaceAPI.getFocusedTabInfo().then(function (response) {
+            $A.get('e.force:refreshView').fire();
             var focusedTabId = response.tabId;
             workspaceAPI.closeTab({
                 tabId: focusedTabId
@@ -121,6 +122,7 @@
                 "recordId": payload.id,
                 "slideDevName": "related"
             });
+            $A.get('e.force:refreshView').fire();
             navEvt.fire();
         }, 200);
     },

@@ -27,7 +27,7 @@
                             <br />
                             <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
                                 <div style="">
-                                    <aura:if isTrue="{!and(field.name=='buildertek__Project__c',v.parentRecordId)}">
+                                    <aura:if isTrue="{!and(field.name=='Name',v.parentRecordId)}">
                                         <lightning:inputField fieldName="{!field.name}" value="{!v.parentRecordId}" />
                                         <aura:set attribute="else">
                                             <lightning:inputField fieldName="{!field.name}" value="" />

@@ -110,6 +110,8 @@
                         "slideDevName": "Detail"
                     });
                     navEvt.fire();
+                
+                    component.set("v.parentRecordId", null);
 
                     var workspaceAPI = component.find("workspace");
                     workspaceAPI.getFocusedTabInfo().then(function(response) {
@@ -132,6 +134,7 @@
             }
         });
         $A.enqueueAction(action);
+        
 
 
     },
@@ -513,6 +516,5 @@
         $A.enqueueAction(action);
 
     },
-
 
 })
