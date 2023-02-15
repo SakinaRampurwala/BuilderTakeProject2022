@@ -692,6 +692,9 @@
             });
             action.setCallback(this, function(response) {
                 var state = response.getState();
+                console.log({state});
+                console.log(response.getError());
+
                 if (state === "SUCCESS") {
                     var result = response.getReturnValue();
                     console.log(response.groups);

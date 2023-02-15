@@ -99,6 +99,11 @@
 
             if (response.getState() === 'SUCCESS') {
                 var result = response.getReturnValue();
+                console.log({result});
+                console.log(response.getState());
+                console.log(response.getError());
+
+
                 if (response.getState() === 'SUCCESS') {
                     var result = response.getReturnValue();
                     // if (result[0] == true || result[1] == true) {
