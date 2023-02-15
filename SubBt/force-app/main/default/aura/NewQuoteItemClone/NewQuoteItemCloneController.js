@@ -2172,6 +2172,8 @@ console.log(document.getElementsByClassName(className)[0]);
 
     openQuoteLine: function(component, event, helper) {
         component.set("v.Spinner", true);
+        //clear searchbo1
+        component.set("v.searchKey2", "");
         var listid = component.get("v.listOfSelectedIds");
         console.log("List of selected Id when click next : ", listid)
             /*    console.log(listid);
@@ -2296,6 +2298,7 @@ component.set("v.StoreIdsOfDatatable2",'') */
         }
     },
     closeBox: function(component, event, helper) {
+        component.set("v.searchKey2", "");
         component.set("v.data1", []) //1
         component.set("v.selectedRows", "");
         //   component.set("v.listOfSelectedIds",null);

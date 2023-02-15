@@ -178,7 +178,7 @@ public with sharing class PurchaseOrderDAO{
 
 			for (buildertek__Purchase_Order_Item__c poItem : purchaseOrderItemList){
                 if(productNameMap.get(poItem.buildertek__Product__c) != null){
-                   poItem.Name = productNameMap.get(poItem.buildertek__Product__c); 
+                   poItem.Name = productNameMap.get(poItem.buildertek__Product__c).substring(0,79);
                 }else{
                     poItem.Name = poItem.buildertek__Description__c;
                 }

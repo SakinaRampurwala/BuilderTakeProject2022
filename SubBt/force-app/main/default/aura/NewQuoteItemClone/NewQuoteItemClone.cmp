@@ -987,8 +987,6 @@
                                                 </td>
                                                 <td>
                                                 </td>
-                                                <td data-aura-rendered-by="464:15076;a"></td>
-                                                <td></td>
                                                 <!-- <td></td>-->
                                             </tr>
                                             <tr class="slds-text-heading--label"
@@ -1037,9 +1035,6 @@
                                                         </aura:set>
                                                     </aura:if>
                                                 </aura:iteration>
-                                                <th>
-                                                </th>
-                                                <th></th>
                                             </tr>
                                             <aura:iteration items="{!v.TotalRecords.tarTable.ListOfEachRecord}"
                                                 var="tar" indexVar="quoteIndex">
@@ -1264,9 +1259,8 @@
                                                                 </aura:if>
                                                             </td>
                                                         </aura:iteration>
-                                                        <td>
-                                                        </td>
-                                                        <td></td>
+                                                        <!-- <td>
+                                                        </td> -->
                                                     </aura:if>
                                                 </tr>
                                             </aura:iteration>
@@ -1324,7 +1318,6 @@
                                                     <aura:if
                                                         isTrue="{!group.Name == rec.groupName &amp;&amp; rec.fieldType == 'false'}">
                                                         <td style="text-align:right">
-
                                                         </td>
                                                     </aura:if>
                                                     <!-- </aura:if> -->

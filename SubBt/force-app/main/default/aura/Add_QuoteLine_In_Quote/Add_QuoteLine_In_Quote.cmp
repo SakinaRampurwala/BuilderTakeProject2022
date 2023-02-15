@@ -1,0 +1,73 @@
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes" access="global" Controller="QuoteDAO">
+    <aura:attribute name="isModalOpen" type="boolean" default="true"/>
+    <aura:attribute name="productPage" type="boolean" default="true"/>
+    <aura:attribute name="quoteLineItem" type="boolean" default="false"/>
+    <aura:attribute name="pricebookoptions" type="List"/>
+    <aura:attribute name="selectedPricebook" type="Id"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+     
+    <div class="slds-m-around_xx-large">
+        <aura:if isTrue="{!v.isModalOpen}">
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <aura:if isTrue="{!v.productPage}">
+                        <header class="slds-modal__header">
+                            <lightning:buttonIcon iconName="utility:close"
+                                                onclick="{! c.closeModel }"
+                                                alternativeText="close"
+                                                variant="bare-inverse"
+                                                class="slds-modal__close"/>
+                            <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Products</h2>
+                        </header>
+                        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                            <lightning:select name="pricebooks" onchange="{!c.handlePriceBookchange}" value="{!v.selectedPricebook}">
+                                <aura:iteration items="{!v.pricebookoptions}" var="pricebook">
+                                    <option value="{!pricebook.value}" selected="{!v.selectedPricebook == v.pricebook.value}">{!pricebook.key}</option>
+                                </aura:iteration>
+                            </lightning:select>
+                        </div>
+                        <footer class="slds-modal__footer">
+                            <lightning:button variant="neutral"
+                                            label="Cancel"
+                                            title="Cancel"
+                                            onclick="{! c.closeModel }"/>
+                            <lightning:button variant="brand"
+                                            label="Next"
+                                            title="Next"
+                                            onclick="{!c.showNext}"/>
+                        </footer>
+                    </aura:if>
+                    <aura:if isTrue="{!v.quoteLineItem}">
+                        <header class="slds-modal__header">
+                            <lightning:buttonIcon iconName="utility:close"
+                                                onclick="{! c.closeModel }"
+                                                alternativeText="close"
+                                                variant="bare-inverse"
+                                                class="slds-modal__close"/>
+                            <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Edit Selected Quote Line Items</h2>
+                        </header>
+                        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                            Page 2
+                        </div>
+                        <footer class="slds-modal__footer">
+                            <lightning:button variant="neutral"
+                                            label="Cancel"
+                                            title="Cancel"
+                                            onclick="{! c.closeModel }"/>
+                            <lightning:button variant="neutral"
+                                            label="Back"
+                                            title="Back"
+                                            onclick="{!c.showPrevious}"/>
+                            <lightning:button variant="brand"
+                                            label="Save"
+                                            title="Save"
+                                            onclick="{!c.submitDetails}"/>
+                        </footer>
+                    </aura:if>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </aura:if>
+    </div>
+</aura:component>

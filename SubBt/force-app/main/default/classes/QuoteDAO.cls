@@ -2050,6 +2050,7 @@ public with sharing class QuoteDAO{
          if(pbookId != null && pbookId != 'None'){
              System.debug('If');
              pEntries = [SELECT Id, Product2Id, Product2.Name,Product2.ProductCode,Product2.Description,toLabel(Product2.Family), Product2.IsActive,buildertek__Unit_Cost__c,Pricebook2.Name,UnitPrice FROM PricebookEntry WHERE Pricebook2Id=:pbookId AND IsActive = True];
+             System.debug('pEntries--->>>'+pEntries);
              List<Product2> products = new List<Product2>();
              for (PriceBookEntry pEntry: pEntries) {
                      Product2 aProduct = new Product2();
