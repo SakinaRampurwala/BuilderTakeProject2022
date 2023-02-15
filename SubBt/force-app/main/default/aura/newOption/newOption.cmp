@@ -120,7 +120,7 @@
                                                         </span>
                                                     </aura:set>
                                                 </aura:if>
-                                                <lightning:input  class="budgetInput" autocomplete="off" type="search" placeholder="Search Budget..." variant="label-hidden" value="{!v.selectedBudgetName}" onclick="{!c.searchBudgetData}" onkeyup="{!c.keyupBudgetData}" />
+                                                <lightning:input id="budgetInput" class="budgetInput" autocomplete="off" type="search" placeholder="Search Budget..." variant="label-hidden" value="{!v.selectedBudgetName}" onclick="{!c.searchBudgetData}" onkeyup="{!c.keyupBudgetData}" />
                                             </div>
     
                                             <aura:if isTrue="{!v.displayBudget}" >

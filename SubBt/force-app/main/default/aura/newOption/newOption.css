@@ -7,6 +7,8 @@
 
 .THIS .budgetInput .slds-input{
     padding-left: 2rem;
+    border:1px solid var(--slds-g-color-border-base-4, var(--lwc-colorBorderInput,rgb(201, 201, 201))) !important;
+
 }
 
 .THIS .budgetInput .slds-input__icon_left{

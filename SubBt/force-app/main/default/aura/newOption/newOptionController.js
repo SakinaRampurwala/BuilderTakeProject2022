@@ -186,11 +186,15 @@
     keyupBudgetData:function(component, event, helper) {
 
         console.log('selectedBudgetId=====', component.get('v.selectedBudgetId'));
-        let getBugetId=component.get('v.selectedBudgetId');
-        if(getBugetId == ''){
-            e.preventDefault();
+        // let getBugetId=component.get('v.selectedBudgetId');
+        // console.log({getBugetId});
+        // if(getBugetId == ' '){
+        //     console.log('budgetid is null');
+        //  event.getSource().set("v.readonly" , true);
 
-        }else{
+            
+
+        // }else{
             var allRecords = component.get("v.budgetList");
             var searchFilter = event.getSource().get("v.value").toUpperCase();
             console.log({searchFilter});
@@ -206,8 +210,7 @@
                     component.set('v.selectedBudgetId' , ' ')
                 }
             }
-            // let getName=component.get('v.selectedBudgetId');
-            // console.log({getName});
+
 
             component.set("v.budgetList", tempArray);
 
@@ -225,7 +228,7 @@
                     helper.getOnlyBudget(component, event, helper , selectionTypeId);
                 }
             }
-        }
+        // }
     },
 
     keyupBudgetLineData:function(component, event, helper) {
