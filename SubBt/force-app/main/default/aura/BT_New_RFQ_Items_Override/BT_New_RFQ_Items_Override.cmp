@@ -127,10 +127,10 @@
                 </lightning:layoutItem>-->
                 
                <!-- <aura:if isTrue="{!v.showProductFileds}">-->
-                    <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
+                    <!-- <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
                         Unit Price
                         <lightning:inputField aura:id="unitPrice" fieldName="buildertek__Unit_Price__c" value="{!v.newRFQLine.buildertek__Unit_Price__c}" variant="label-hidden" />
-                    </lightning:layoutItem>
+                    </lightning:layoutItem> -->
                    <!-- <aura:set attribute="else">
                         <div style="display: none;">
                             <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">

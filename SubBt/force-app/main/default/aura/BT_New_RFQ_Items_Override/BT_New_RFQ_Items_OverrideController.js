@@ -1,8 +1,7 @@
 ({
     doInit : function(component, event, helper) {
         var recordId = component.get("v.mainObjectId");
-        debugger;
-        
+
       /*  var action = component.get("c.getRFQ"); 
         action.setParams({
     		"recId": recordId

@@ -49,14 +49,13 @@
                     <!--<lightning:inputField aura:id="povendor" fieldName="buildertek__Vendor__c" value="{!v.newPO.buildertek__Vendor__c}" required="true" />-->
                 </lightning:layoutItem>
                 <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
-                    Description
-                    <lightning:input aura:id="coDescription" value="{!v.newPO.buildertek__Description__c}" />
+                    
+                    <lightning:input aura:id="coDescription" label="Description" value="{!v.newPO.buildertek__Description__c}" />
                 </lightning:layoutItem>
                 <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
-                    Status
+                    
                     <!--<lightning:input aura:id="coStatus" value="{!v.newPO.buildertek__Status__c}" />-->
-                    <lightning:select  aura:id="coStatus" value="{! v.newPO.buildertek__Status__c }"
-                                      class="select-class" required="true">
+                    <lightning:select  aura:id="coStatus" value="{! v.newPO.buildertek__Status__c }" label="Status" class="select-class" required="true">
                         <aura:iteration var="option" items="{! v.options }">
                             <option value="{! option.value }">{! option.key }</option>
                         </aura:iteration>

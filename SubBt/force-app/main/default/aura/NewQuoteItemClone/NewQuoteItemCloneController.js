@@ -902,7 +902,6 @@
 
 
     deleteQuoteItems: function(component, event, helper) {
-        component.set("v.isOpen", false);
         $A.get("e.c:BT_SpinnerEvent").setParams({
             "action": "SHOW"
         }).fire();
@@ -915,6 +914,7 @@
             var state = response.getState();
             if (state === "SUCCESS") {
                 var result = response.getReturnValue();
+                component.set("v.isOpen", false);
                 $A.get("e.force:refreshView").fire();
                 window.setTimeout(
                     $A.getCallback(function() {

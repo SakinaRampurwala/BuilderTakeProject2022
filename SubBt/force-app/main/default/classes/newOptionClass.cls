@@ -10,8 +10,7 @@ public class newOptionClass {
 
     @AuraEnabled
     public static Product2 getProduct(String productId){
-        Product2 prod = [SELECT Id, Name, buildertek__Manufacturer__c, (select Id, Name, UnitPrice, Product2Id from PricebookEntries) FROM Product2 WHERE Id =: productId LIMIT 1];
-        // PricebookEntry pricebook = [select Id, Name, UnitPrice,  Pricebook2.Name,Product2Id from PricebookEntry where Product2Id =: productId];
+        Product2 prod = [SELECT Id, Name, buildertek__Manufacturer__c, (select Id, Name, UnitPrice, buildertek__Unit_Cost__c,Product2Id from PricebookEntries) FROM Product2 WHERE Id =: productId LIMIT 1];
         return prod;
     }
     @AuraEnabled

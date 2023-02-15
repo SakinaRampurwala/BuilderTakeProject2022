@@ -10,3 +10,7 @@
     white-space: nowrap;
     font-size: 20px;
 }
+
+.THIS .slds-form-element__label{
+    padding-bottom: 10px;;
+}

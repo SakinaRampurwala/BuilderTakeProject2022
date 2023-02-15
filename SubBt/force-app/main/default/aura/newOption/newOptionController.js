@@ -29,322 +29,12 @@
             }
         });
         $A.enqueueAction(action2);
-
-
-    
-
     },
 
-    createRecord: function(component, event, helper) {
-        component.set('v.disableIt' , true);
-        component.set("v.Spinner", true);
-        var Option = component.get('v.Option');
-        
-
-        console.log('Option ::', JSON.stringify(Option));
-
-        var action = component.get("c.createoption");
-        action.setParams({
-            "option": Option,
-            "salesPrice": component.get('v.unitSalesPrice'),
-            "BudgetId":component.get('v.budgetId'),
-            "budgetLineId":component.get('v.selectedBudgetLineId')
-
-        });
-        action.setCallback(this, function(a) {
-            var state = a.getState();
-            if (state === "SUCCESS") {
-
-                var workspaceAPI = component.find("workspace");
-                workspaceAPI.getFocusedTabInfo().then(function(response) {
-                        var focusedTabId = response.tabId;
-                        workspaceAPI.closeTab({
-                            tabId: focusedTabId
-                        });
-                    })
-                    .catch(function(error) {
-                        console.log(error);
-                    });
-
-                var name = a.getReturnValue();
-                console.log(name);
-                var toastEvent = $A.get("e.force:showToast");
-                toastEvent.setParams({
-                    "type": "Success",
-                    "title": "Success!",
-                    "message": "The record has been created successfully."
-                });
-                toastEvent.fire();
-                var navEvent = $A.get("e.force:navigateToSObject");
-                navEvent.setParams({
-                    "recordId": name,
-                });
-                navEvent.fire();
-            } else {
-                var error = a.getError();
-                console.log('error ==> ', { error });
-                alert("Failed");
-            }
-        });
-        $A.enqueueAction(action)
-    },
-
-    closePopup: function(component, event, helper) {
-
-
-        var workspaceAPI = component.find("workspace");
-        workspaceAPI.isConsoleNavigation().then(function(response) {
-            if (response == true) {
-                workspaceAPI.getFocusedTabInfo().then(function(response) {
-                        var focusedTabId = response.tabId;
-                        workspaceAPI.closeTab({
-                            tabId: focusedTabId
-                        });
-
-                        var recordId = component.get("v.recordId");
-                        if (recordId) {
-                            var navEvt = $A.get("e.force:navigateToSObject");
-                            navEvt.setParams({
-                                "recordId": recordId,
-                                "slideDevName": "detail"
-                            });
-                            navEvt.fire();
-                        } else {
-
-                            // $A.get('e.force:refreshView').fire();
-                            var urlEvent = $A.get("e.force:navigateToURL");
-                            urlEvent.setParams({
-                                "url": "/lightning/o/buildertek__Question__c/list?filterName=Recent"
-                            });
-                            urlEvent.fire();
-
-
-                            $A.get("e.force:closeQuickAction").fire();
-                            window.setTimeout(
-                                $A.getCallback(function() {
-                                    $A.get('e.force:refreshView').fire();
-                                }), 1000
-                            );
-                        }
-
-                    })
-                    .catch(function(error) {
-                        console.log(error);
-                    });
-            } else {
-                var recordId = component.get("v.recordId");
-                if (recordId) {
-                    var navEvt = $A.get("e.force:navigateToSObject");
-                    navEvt.setParams({
-                        "recordId": recordId,
-                        "slideDevName": "detail"
-                    });
-                    navEvt.fire();
-                } else {
-
-                    // $A.get('e.force:refreshView').fire();
-                    var urlEvent = $A.get("e.force:navigateToURL");
-                    urlEvent.setParams({
-                        "url": "/lightning/o/buildertek__Question__c/list?filterName=Recent"
-                    });
-                    urlEvent.fire();
-
-
-                    $A.get("e.force:closeQuickAction").fire();
-                    window.setTimeout(
-                        $A.getCallback(function() {
-                            $A.get('e.force:refreshView').fire();
-                        }), 1000
-                    );
-                }
-
-            }
-
-        });
-
-
-
-    },
-
-    // changeProduct: function(component, event, helper) {
-    //     var Option = component.get('v.Option');
-    //     var productId = Option.buildertek__Product__c;
-    //     console.log('product ==> ' + productId);
-
-    //     productId = productId.toString();
-    //     console.log(typeof productId);
-
-    //     if (productId != '') {
-    //         var action = component.get("c.getProduct");
-
-    //         action.setParams({
-    //             "productId": productId
-    //         });
-    //         action.setCallback(this, function(response) {
-    //             var state = response.getState();
-    //             console.log('Status => ' + state);
-    //             var result = response.getReturnValue();
-    //             console.log('result => ', { result });
-
-    //             Option.Name = result.Name;
-    //             Option.buildertek__Manufacturer__c = result.buildertek__Manufacturer__c;
-
-    //             console.log('Option ==> ', { Option });
-    //             component.set("v.Option", Option);
-
-    //         });
-    //         $A.enqueueAction(action);
-    //     }
-    // },
 
     saveAndNew: function(component, event, helper) {
         helper.saveAndNew(component, event);
         $A.get("e.force:refreshView").fire();
-    },
-
-    onSelectedChanged: function(component, event, helper) {
-        var checkValue = component.find('selectCheck').get("v.checked");
-        var Option = component.get('v.Option');
-        Option.buildertek__Selected__c = checkValue;
-        component.set("v.Option", Option);
-    },
-
-    onOptionChanged: function(component, event, helper) {
-        var checkValue = component.find('optionCheck').get("v.checked");
-        var Option = component.get('v.Option');
-        Option.buildertek__Default_Option__c = checkValue;
-        component.set("v.Option", Option);
-    },
-
-    onUpgradeChanged: function(component, event, helper) {
-        var checkValue = component.find('upgradeCheck').get("v.checked");
-        var Option = component.get('v.Option');
-        Option.buildertek__Upgrade__c = checkValue;
-        component.set("v.Option", Option);
-    },
-    onBudgetChanged:function(component, event, helper) {
-        helper.showDropDownCategory(component, event, helper);
-
-        var action = component.get("c.getBudget");
-        action.setParams({
-            selectionTypeId:component.get('v.Option.buildertek__Question_Group__c')
-        });
-        action.setCallback(this, function(response) {
-            var state = response.getState();
-            console.log({state});
-            var result= response.getReturnValue();
-            if (state === "SUCCESS") {
-                console.log({result});
-                component.set('v.searchBudget' ,result);
-                // $A.util.removeClass(component.find("mySpinner"), "slds-hide");
-            }
-        });
-        $A.enqueueAction(action);
-        
-    },
-
-
-    showDropDownCategory:function(component, event, helper) {   
-        helper.showDropDownCategory(component, event, helper);
-        console.log(component.get('v.searchBudget'));
-        var action = component.get("c.getBudgetLine");
-        action.setParams({
-            BudgetId:component.get('v.budgetId')
-        });
-        action.setCallback(this, function(response) {
-            var state = response.getState();
-            console.log({state});
-            var result= response.getReturnValue();
-            if (state === "SUCCESS") {
-                console.log({result});
-                component.set('v.searchCategoryFilter' ,result);
-                // $A.util.addClass(component.find("mySpinner2"), "slds-hide");
-                // $A.util.removeClass(component.find("mySpinner2"), "slds-show");
-
-
-
-            }
-        });
-        $A.enqueueAction(action);
-    },
-    hideDropDownCategory : function (component, event, helper) {
-        event.preventDefault();
-        var eve = event.getSource();
-        console.log(event.target)
-        if(eve.getLocalId() == 'searchCategory_1'){
-            window.setTimeout(
-                $A.getCallback(function() {
-                    var forOpen = component.find('searchCategoryRes_1');
-                     if(forOpen){
-                        forOpen.getElement().style.display = 'none';
-                    }
-                }), 1000
-            );
-        }
-        if(eve.getLocalId() == 'searchCategory_2'){
-            window.setTimeout(
-                $A.getCallback(function() {
-                    var forOpen = component.find('searchCategoryRes_2');
-                     if(forOpen){
-                        forOpen.getElement().style.display = 'none';
-                    }
-                }), 1000
-            );
-        }
-        var getInputkeyWord = '';
-       
-    },
-    
-    selectRecordOption : function (component, event, helper) {
-        event.preventDefault();
-        event.stopPropagation();
-        console.log('NAME=== '+ event.target.id);
-        component.set("v.searchCategoryFilter",event.target.innerText);
-        var forOpen = component.find("searchCategoryRes_2");
-        if(forOpen){
-            forOpen.getElement().style.display = 'none';
-        }
-
-        component.set('v.selectedBudgetLineId' ,event.target.id);
-        var action = component.get("c.getBudgetLineUnitSalesPrice");
-        action.setParams({
-            budgetLineId: component.get('v.selectedBudgetLineId')
-        });
-        action.setCallback(this, function(response) {
-            var state = response.getState();
-            console.log({state});
-            var result= response.getReturnValue();
-            if (state === "SUCCESS") {
-                console.log({result});
-                if(result != null){
-                    component.set('v.unitSalesPrice' , result);
-                }else{
-                    component.set('v.unitSalesPrice' , 0);
-
-                }
-                console.log(component.get('v.unitSalesPrice'));
-
-            }
-        });
-        $A.enqueueAction(action);
-    },
-    selectBudgetOption: function (component, event, helper) {
-        event.preventDefault();
-        event.stopPropagation();
-        console.log('NAME=== '+ event.target.id);
-        component.set('v.budgetId' , event.target.id);
-        component.set("v.searchBudget",event.target.innerText);
-        var forOpen = component.find("searchCategoryRes_1");
-        if(forOpen){
-            forOpen.getElement().style.display = 'none';
-        }
-    },
-    onSelectionChanged:function(component, event, helper) {
-        var getValue = event.getSource().get("v.value");
-        component.set('v.Option.buildertek__Question_Group__c' , getValue[0]);
-        console.log(component.get('v.Option.buildertek__Question_Group__c'));
-
-
     },
     closeModel: function(component, event, helper) {
         // for Hide/Close Model,set the "isOpen" attribute to "Fasle" 
@@ -368,28 +58,8 @@
      changeSelectionType:function(component, event, helper) {
         helper.changeSelectionType(component, event, helper);
      },
-     handleComponentEvent : function(component, event, helper) {
 
-        console.log('handle compoennt event');
-        let typeId= component.get('v.selectionTypeId')
-        component.set("v.productId", typeId);
-        console.log(typeId);
-
-
-    },
-    handleComponentEvents : function(component, event, helper) {
-        console.log('handle compoennt events');
-        let typeId= component.get('v.selectionTypeId')
-        component.set("v.productId", typeId);
-        console.log(typeId);
-
-
-    },
     handleSubmit: function (component, event, helper) {
-
-
-    
-
 
 
         component.set("v.isDisabled", true);
@@ -399,21 +69,26 @@
         console.log(component.get('v.selectedBudgetName') , 'selectedBudgetName');
         let budgetName=component.get('v.selectedBudgetName');
         let budgetLineName=component.get('v.selectedBudgetLineName');
+        let budgetLineId=component.get('v.selectedBudgetLineId');
+        let budgetId=component.get('v.selectedBudgetId');
 
+        
+        console.log({budgetLineId});
         
 
         fields["buildertek__Cost__c"] = component.get("v.SalesPrice");
-        if(budgetLineName == ''){
+        if(budgetLineId == ''){
             fields["buildertek__Budget_Line__c"] = '';
         }else{
             fields["buildertek__Budget_Line__c"] = component.get("v.selectedBudgetLineId");
         }
         
-        if(budgetName == ''){
+        if(budgetId == ''){
             fields["buildertek__Budget__c"] = '';
         }else{
             fields["buildertek__Budget__c"] = component.get("v.selectedBudgetId");
         }
+
         fields["Name"] = component.get("v.optName");
         fields["buildertek__Options_Name__c"] = component.get("v.optLongName");
         fields["buildertek__Markup__c"] = component.get("v.markupValue");    
@@ -489,163 +164,118 @@
     searchBudgetData: function(component, event, helper) {
         console.log('searchBudgetData');
         component.set('v.displayBudget', true);
+        component.set('v.displayBudgetLine', false);
 
-        // $A.util.addClass(component.find("mySpinner"), "slds-hide");
-        // $A.util.removeClass(component.find("mySpinner"), "slds-show");
 
         var selectionTypeId = component.get('v.selectionTypeId');
         console.log(selectionTypeId  , 'selectionTypeId');
         if (selectionTypeId == null || selectionTypeId =='' || selectionTypeId == undefined) {
             try {
-                var action = component.get("c.getAllBudget1");
-                action.setCallback(this, function(response) {
-                    var state = response.getState();
-                    console.log({state});
-                    var result= response.getReturnValue();
-                    console.log('Budgert ==>',result);
-                    if (state === "SUCCESS") {
-
-
-                        component.set('v.budgetList' , result);
-                        result.forEach(function(value, index){
-                            console.log({value});
-
-                            component.set('v.projectValue' , value.buildertek__Project__c);
-                        })
-                        
-                    }
-                });
-            $A.enqueueAction(action);
+                helper.getAlBudget(component, event, helper);
             } catch (error) {
                 console.log('Error => ',error);
             }
             
         } else{
-
-            var action = component.get("c.getBudget");
-            action.setParams({
-                seleTypeId:selectionTypeId
-            });
-            action.setCallback(this, function(response) {
-                var state = response.getState();
-                console.log(response.getError());
-                console.log({state});
-                var result= response.getReturnValue();
-                if (state === "SUCCESS") {
-    
-                    console.log({result});
-                    component.set('v.budgetList' ,result);
-                    result.forEach(function(value, index){
-                        console.log({value});
-                        component.set('v.projectValue' , value.buildertek__Project__c);
-                    })
-                    
-                }
-            });
-            $A.enqueueAction(action);
-
-console.log(component.get('v.projectValue'));
-            // var selectedLookUpRecord = component.get('v.selectedLookUpRecord');
-            // console.log('Budget ==> ',{selectedLookUpRecord});
-            // component.set('v.budgetList', selectedLookUpRecord);
-            
+            helper.getOnlyBudget(component, event, helper , selectionTypeId);
         }
-
 
         event.stopPropagation();
  
     },
     keyupBudgetData:function(component, event, helper) {
-        console.log('on key up');
-        console.log(component.get('v.projectValue'));
 
-        let valueIs=event.getSource().get('v.value');
-        var action = component.get("c.searchRecords");
-        action.setParams({
-            searchKey:valueIs,
-            projectId:component.get('v.projectValue')
-        });
-        action.setCallback(this, function(response) {
-            var state = response.getState();
-            console.log({state});
-            console.log(response.getError());
-            var result= response.getReturnValue();
-            if (state === "SUCCESS") {
-                console.log({result});
-                component.set('v.budgetList' ,result);
+        console.log('selectedBudgetId=====', component.get('v.selectedBudgetId'));
+        let getBugetId=component.get('v.selectedBudgetId');
+        if(getBugetId == ''){
+            e.preventDefault();
 
+        }else{
+            var allRecords = component.get("v.budgetList");
+            var searchFilter = event.getSource().get("v.value").toUpperCase();
+            console.log({searchFilter});
+            var tempArray = [];
+            var i;
+            console.log("ok")
+            for (i = 0; i < allRecords.length; i++) {
+                console.log(allRecords[i].Name);
+                console.log(allRecords[i].Name.toUpperCase().indexOf(searchFilter) != -1);
+                if ((allRecords[i].Name && allRecords[i].Name.toUpperCase().indexOf(searchFilter) != -1)) {
+                    tempArray.push(allRecords[i]);
+                }else{
+                    component.set('v.selectedBudgetId' , ' ')
+                }
             }
-        });
-        $A.enqueueAction(action);
+            // let getName=component.get('v.selectedBudgetId');
+            // console.log({getName});
 
+            component.set("v.budgetList", tempArray);
+
+            var selectionTypeId = component.get('v.selectionTypeId');
+
+            if(searchFilter == ''){
+                if (selectionTypeId == null || selectionTypeId =='' || selectionTypeId == undefined) {
+                    try {
+                        helper.getAlBudget(component, event, helper);
+                    } catch (error) {
+                        console.log('Error => ',error);
+                    }
+                    
+                } else{
+                    helper.getOnlyBudget(component, event, helper , selectionTypeId);
+                }
+            }
+        }
     },
+
     keyupBudgetLineData:function(component, event, helper) {
         console.log('on key up');
-
-        let valueIs=event.getSource().get('v.value');
-        var action = component.get("c.searchBudgetLineRecords");
-        action.setParams({
-            searchKey:valueIs,
-            budgetId:component.get('v.selectedBudgetId')
-        });
-        action.setCallback(this, function(response) {
-            var state = response.getState();
-            console.log({state});
-            console.log(response.getError());
-            var result= response.getReturnValue();
-            if (state === "SUCCESS") {
-                console.log({result});
-                component.set('v.budgetLineList' ,result);
-
+        var allRecords = component.get("v.budgetLineList");
+        var searchFilter = event.getSource().get("v.value").toUpperCase();
+        console.log({searchFilter});
+        var tempArray = [];
+        var i;
+        for (i = 0; i < allRecords.length; i++) {
+            console.log(allRecords[i].Name);
+            console.log(allRecords[i].Name.toUpperCase().indexOf(searchFilter) != -1);
+            if ((allRecords[i].Name && allRecords[i].Name.toUpperCase().indexOf(searchFilter) != -1)) {
+                tempArray.push(allRecords[i]);
+            }else{
+                component.set('v.selectedBudgetLineId' , '');
             }
-        });
-        $A.enqueueAction(action);
+        }
+        component.set("v.budgetLineList", tempArray);
+
+        var selectedBudgetId = component.get('v.selectedBudgetId');
+        var BudgetValue=component.get('v.selectedBudgetName');
+        var budgetLineValue=  component.get('v.selectedBudgetLineId');
+        console.log({budgetLineValue});
+
+
+        if(searchFilter == ''){
+                helper.getAllBudgetLine(component, event, helper , selectedBudgetId , BudgetValue);
+        }
 
     },
     searchBudgetLineData:function(component, event, helper) {
         console.log('searchBudgetLineData');
         component.set('v.displayBudgetLine', true);
+        component.set('v.displayBudget', false);
+
         console.log('<<<<<<<<<<---------->>>>>' ,  component.get('v.selectedBudgetName'));
 
         var BudgetValue=component.get('v.selectedBudgetName');
-        console.log(BudgetValue);
-
-
         var selectedBudgetId = component.get('v.selectedBudgetId');
-        var action = component.get("c.getBudgetLine");
-        action.setParams({
-            BudgetId:selectedBudgetId
-        });
-        action.setCallback(this, function(response) {
-            var state = response.getState();
-            console.log({state});
-            var result= response.getReturnValue();
-            if (state === "SUCCESS") {
-                console.log({result});
-
-                if(BudgetValue != ''){
-                    console.log('no null');
-                    component.set('v.budgetLineList' ,result);
-
-                }else{
-                    component.set('v.budgetLineList' , []);
-
-                }
-            }
-        });
-        $A.enqueueAction(action);
-
-
+        helper.getAllBudgetLine(component, event, helper , selectedBudgetId , BudgetValue);
         event.stopPropagation();
-
-
- 
     },
 
     clickHandlerBudget: function(component, event, helper){
         // event.preventDefault();
         console.log('clickHandlerBudget');
         component.set('v.displayBudget', false);
+
+        
         var recordId = event.currentTarget.dataset.value;
         console.log('recordId ==> '+recordId);
         component.set('v.selectedBudgetId', recordId);
@@ -674,6 +304,7 @@ console.log(component.get('v.projectValue'));
             console.log('element => ',element);
             if (recordId == element.Id) {
                 component.set('v.selectedBudgetLineName', element.Name);
+
             }
         });
         var action = component.get("c.getBudgetLineUnitSalesPrice");
@@ -737,6 +368,7 @@ console.log(component.get('v.projectValue'));
                 console.log(result.PricebookEntries);
                 // console.log(result.PricebookEntries[0].UnitPrice);
                 if(result.PricebookEntries != undefined){
+                    console.log(result.PricebookEntries[0].UnitPrice);
                     component.set('v.SalesPrice' , result.PricebookEntries[0].UnitPrice);
                 }else{
                     component.set('v.SalesPrice' , 0);

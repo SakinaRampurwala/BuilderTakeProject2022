@@ -194,13 +194,22 @@
                                                                  width:100%;">
                                         <div class="checkbox check-btn"
                                              style="display: inline-block; vertical-align: middle;margin: 0 auto;">
-                                            <label class="custom-radio-check">
-                                                <lightning:input aura:id="vendorselection" type="checkbox"
-                                                                 variant="lable-hidden"
-                                                                 checked="{!vlist.buildertek__IS_VENDOR_SELECTED__c}"
-                                                                 name="{!vlist.Id}" onchange="{!c.onVendorSelectionChange}"
-                                                                 style="padding-bottom: 30px;padding-right: 0px;" />
-                                            </label>
+                                            <aura:if isTrue="{!vlist.buildertek__Status__c!='Rejected'}">
+                                                <label class="custom-radio-check">
+                                                    <lightning:input aura:id="vendorselection" type="checkbox"
+                                                                     variant="lable-hidden"
+                                                                     checked="{!vlist.buildertek__IS_VENDOR_SELECTED__c}"
+                                                                     name="{!vlist.Id}" onchange="{!c.onVendorSelectionChange}"
+                                                                     style="padding-bottom: 30px;padding-right: 0px;" />
+                                                </label>
+                                                <aura:set attribute="else">
+                                                    <table>
+                                                        <tr>
+                                                            <td style="height: 1.3em; padding: 6px 16px;"></td>
+                                                        </tr>
+                                                    </table>
+                                                </aura:set>
+                                            </aura:if>
                                         </div>
                                         <h3
                                             style="display: inline-block;margin: 0;vertical-align: middle;  font-size: 15px;padding-left: 12px;width:95%;">

@@ -50,8 +50,7 @@ public class ImportProductsOnRfqLines {
 
     @AuraEnabled
     public static List<Pricebook2>  pricebookList (){
-        
-        List<Pricebook2> pbList= [Select Id,Name,Description From Pricebook2];
+        List<Pricebook2> pbList= [Select Id,Name,Description From Pricebook2 ORDER BY Name];
         return pbList;
     }
     @AuraEnabled
@@ -210,15 +209,19 @@ WHERE buildertek__Status__c ='Awarded' OR buildertek__Status__c ='Accepted'];
             }
             
             if(categoryNameList.size()>0){
+                categoryNameList.sort();
                  objDT.categoryList = categoryNameList;
             }
             if(producttypeNameList.size()>0){
+                producttypeNameList.sort();
                 objDT.producttypeList = producttypeNameList;
             }
             if(tradeTypeNameList.size()>0){
+                tradeTypeNameList.sort();
                 objDT.tradetypeList = tradeTypeNameList;
             }
             if(vendorNameList.size()>0){
+                vendorNameList.sort();
                 objDT.vendorList = vendorNameList;
             }
             

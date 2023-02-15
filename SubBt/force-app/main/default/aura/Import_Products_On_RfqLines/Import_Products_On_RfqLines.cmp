@@ -109,12 +109,22 @@
                     <ul aura:id="searchCategoryRes_1" style="min-height:40px;margin-top:0px !important;position: absolute;" class="Filterdropdown_1 slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid slds-lookup__menu slds" role="listbox">
                         <lightning:spinner class="slds-hide" variant="brand" size="small" aura:id="mySpinner"/>
                         <aura:iteration items="{!v.rfqCategoryList}" var="singleRec">
-                            <li role="presentation" class="slds-listbox__item" onclick="{!c.selectRecordOption}" aura:id="searchCategoryResOption">
-                                <span id="listbox-option-unique-id-01" class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
+                            <li role="presentation" class="slds-listbox__item" onclick="{!c.selectRecordOption}" aura:id="searchCategoryResOption" style="text-align: left;">
+                                <!-- <span id="listbox-option-unique-id-01" class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
                                     <span class="slds-media__body">  
                                         <span class="slds-listbox__option-text slds-listbox__option-text_entity">{!singleRec}</span>    
                                     </span>
-                                </span>
+                                </span> -->
+                                <div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small slds-media slds-listbox__option slds-listbox__option_entity slds-media_center" role="option">
+                                    <span class="slds-media__figure slds-listbox__option-icon ">
+                                        <lightning:icon iconName="custom:custom79" size="small" alternativeText="Approved" title="Approved" />
+                                    </span>
+                                    <span class="slds-media__body">
+                                        <span class="slds-truncate" title="All Opportunities">
+                                            <span>{!singleRec}</span>
+                                        </span>
+                                    </span>
+                                </div>
                             </li>
                         </aura:iteration>
                     </ul> 
@@ -137,12 +147,22 @@
                     <ul aura:id="searchCategoryRes_2" style="min-height:40px;margin-top:0px !important;position: absolute;" class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid slds-lookup__menu slds" role="listbox">
                         <lightning:spinner class="slds-hide" variant="brand" size="small" aura:id="mySpinner"/>
                         <aura:iteration items="{!v.rfqproducttypeList}" var="singleRec">
-                            <li role="presentation" class="slds-listbox__item" onclick="{!c.selectRecordOptionforproducttype}">
-                                <span id="listbox-option-unique-id-01" class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
+                            <li role="presentation" class="slds-listbox__item" onclick="{!c.selectRecordOptionforproducttype}" style="text-align: left;">
+                                <!-- <span id="listbox-option-unique-id-01" class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
                                     <span class="slds-media__body">  
                                         <span class="slds-listbox__option-text slds-listbox__option-text_entity">{!singleRec}</span>    
                                     </span>
-                                </span>
+                                </span> -->
+                                <div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small slds-media slds-listbox__option slds-listbox__option_entity slds-media_center" role="option">
+                                    <span class="slds-media__figure slds-listbox__option-icon ">
+                                        <lightning:icon iconName="custom:custom70" size="small" alternativeText="Approved" title="Approved" />
+                                    </span>
+                                    <span class="slds-media__body">
+                                        <span class="slds-truncate" title="All Opportunities">
+                                            <span>{!singleRec}</span>
+                                        </span>
+                                    </span>
+                                </div>
                             </li>
                         </aura:iteration>
                     </ul> 
@@ -164,12 +184,22 @@
                     <ul aura:id="searchCategoryRes_3" style="min-height:40px;margin-top:0px !important;position: absolute;" class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid slds-lookup__menu slds" role="listbox">
                         <lightning:spinner class="slds-hide" variant="brand" size="small" aura:id="mySpinner"/>
                         <aura:iteration items="{!v.rfqtradetypeList}" var="singleRec">
-                            <li role="presentation" class="slds-listbox__item" onclick="{!c.selectRecordOptionfortradetype}">
-                                <span id="listbox-option-unique-id-01" class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
+                            <li role="presentation" class="slds-listbox__item" onclick="{!c.selectRecordOptionfortradetype}" style="text-align: left;">
+                                <!-- <span id="listbox-option-unique-id-01" class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
                                     <span class="slds-media__body">  
                                         <span class="slds-listbox__option-text slds-listbox__option-text_entity">{!singleRec}</span>    
                                     </span>
-                                </span>
+                                </span> -->
+                                <div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small slds-media slds-listbox__option slds-listbox__option_entity slds-media_center" role="option">
+                                    <span class="slds-media__figure slds-listbox__option-icon ">
+                                        <lightning:icon iconName="custom:custom67" size="small" alternativeText="Approved" title="Approved" />
+                                    </span>
+                                    <span class="slds-media__body">
+                                        <span class="slds-truncate" title="All Opportunities">
+                                            <span>{!singleRec}</span>
+                                        </span>
+                                    </span>
+                                </div>
                             </li>
                         </aura:iteration>
                     </ul> 
@@ -191,12 +221,22 @@
                     <ul aura:id="searchCategoryRes_4" style="min-height:40px;margin-top:0px !important;position: absolute;" class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid slds-lookup__menu slds" role="listbox">
                         <lightning:spinner class="slds-hide" variant="brand" size="small" aura:id="mySpinner"/>
                         <aura:iteration items="{!v.rfqvendorList}" var="singleRec">
-                            <li role="presentation" class="slds-listbox__item" onclick="{!c.selectRecordOptionforvendor}">
-                                <span id="listbox-option-unique-id-01" class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
+                            <li role="presentation" class="slds-listbox__item" onclick="{!c.selectRecordOptionforvendor}" style="text-align: left;">
+                                <!-- <span id="listbox-option-unique-id-01" class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
                                     <span class="slds-media__body">  
                                         <span class="slds-listbox__option-text slds-listbox__option-text_entity">{!singleRec}</span>    
                                     </span>
-                                </span>
+                                </span> -->
+                                <div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small slds-media slds-listbox__option slds-listbox__option_entity slds-media_center" role="option">
+                                    <span class="slds-media__figure slds-listbox__option-icon ">
+                                        <lightning:icon iconName="custom:custom21" size="small" alternativeText="Approved" title="Approved" />
+                                    </span>
+                                    <span class="slds-media__body">
+                                        <span class="slds-truncate" title="All Opportunities">
+                                            <span>{!singleRec}</span>
+                                        </span>
+                                    </span>
+                                </div>
                             </li>
                         </aura:iteration>
                     </ul> 
@@ -428,7 +468,7 @@
                           onclick="{!c.closeModal}" />
         
         <lightning:button aura:id="nextPage" variant="brand"
-                          label="Add To RFQ Lines" onclick="{!c.addToRfqLines}" />
+                          label="Add RFQ Lines" onclick="{!c.addToRfqLines}" />
         
     </div> 
     <!-- </footer> -->

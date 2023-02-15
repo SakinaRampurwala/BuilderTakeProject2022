@@ -41,8 +41,7 @@
 	<aura:attribute name="selectionType" type="String" default="" />
 	<aura:attribute name="listOfSearchRecords" type="List" default="" />
 
-	<aura:handler name="oSelectedRecordEvent" event="c:BT_LightningLookupEvent" action="{!c.handleComponentEvent}"/>
-	<aura:handler name="SelectedRecordEvent" event="c:BT_LightningLookupEvent" action="{!c.handleComponentEvents}"/>
+
 	<aura:attribute name="selectedtRecord" type="sObject" default="{}"/>
     <aura:attribute name="displayBudget" type="boolean" default="false" />
     <aura:attribute name="displayBudgetLine" type="boolean" default="false" />
