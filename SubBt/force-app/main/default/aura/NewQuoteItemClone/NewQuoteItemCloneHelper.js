@@ -1450,4 +1450,5 @@
         console.log(component.get('v.selectedRows') + '>>>>>>>');
     },
 
+
 })

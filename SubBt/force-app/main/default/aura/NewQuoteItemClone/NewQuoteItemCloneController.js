@@ -198,6 +198,7 @@
         }
     },
     customCheckbox: function(component, cellValue, helper) {
+        console.log('customCheckbox');
         var isSelected = cellValue;
         var label = component.get('v.columns').find(function(column) {
             return column.fieldName === 'isSelected';
@@ -211,6 +212,8 @@
                 disabled: false
             }
         ];
+        console.log('end customCheckbox');
+
     },
 
     addProductFromGroup: function(component, event, helper) {
@@ -2210,35 +2213,31 @@ console.log(document.getElementsByClassName(className)[0]);
         //clear searchbo1
         component.set("v.searchKey2", "");
         var listid = component.get("v.listOfSelectedIds");
-        console.log("List of selected Id when click next : ", listid)
-            /*    console.log(listid);
-var unselectedData = component.get("v.StoreIdsOfDatatable2")
-console.log("unchecked : ",unselectedData);
-if(unselectedData != undefined){
-for(var i = 0; i< unselectedData.length;i++){
-if(listid.indexOf(unselectedData[i].Id) >= 0){
-//  listid.pop(unselectedData[i].Id);
-console.log(listid[listid.indexOf(unselectedData[i].Id)])
-delete listid[listid.indexOf(unselectedData[i].Id)];
-}
-}
-}
-component.set("v.StoreIdsOfDatatable2",'') */
-        if (listid.length > 0 && listid != undefined && listid != "") {
-            // debugger;
+        console.log("List of selected Id when click next : ", listid);
+        var openOpen=false;
+        var selectedRowIds=[];
+        var data = component.get('v.data1');
+        for (var i = 0; i < data.length; i++) {
+            console.log(data[i].isSelected);
+            console.log(data[i]);
+            if(data[i].isSelected){
+                openOpen=true;
+                selectedRowIds.push(data[i].Id);
+            }
+
+        }
+
+        if(openOpen){
             component.set("v.openProductBox", false);
             component.set("v.openQuoteLineBox", true);
             var BookId = component.get("v.storePriceBookId");
 
             var action6 = component.get("c.getProductRecordsByIds");
             action6.setParams({
-                "Ids": listid,
+                "Ids": selectedRowIds,
                 "PricebookId": component.get("v.storePriceBookId")
-                    //  "pBookId":BookId
-                    //  "Ids": component.get("v.listOfSelectedIds")
             });
-            // alert(listid)
-            //  alert(BookId)
+
             action6.setCallback(this, function(response) {
                 if (response.getState() == "SUCCESS") {
                     var listProduct = response.getReturnValue();
@@ -2246,19 +2245,6 @@ component.set("v.StoreIdsOfDatatable2",'') */
                     var xyz = [];
                     var Quotelist = component.get("v.QuoteLineList");
                     for (var i = 0; i < listProduct.length; i++) {
-
-                        /*   xyz.push({
-                            'Name':listProduct[i].Product2.Name,
-                            'buildertek__Unit_Price__c':listProduct[i].buildertek__Unit_Cost__c ? listProduct[i].buildertek__Unit_Cost__c : 0,
-                            'buildertek__Unit_Price__c':listProduct[i].buildertek__Unit_Cost__c ? listProduct[i].buildertek__Unit_Cost__c : 0,
-                            'buildertek__Grouping__c':'',
-                            'buildertek__Quantity__c':'1',
-                            'buildertek__Additional_Discount__c': listProduct[i].buildertek__Discount__c ? listProduct[i].buildertek__Discount__c : 0,
-                            'buildertek__Unit_Cost__c':'',
-                            'buildertek__Markup__c':listProduct[i].buildertek__Markup__c ? listProduct[i].buildertek__Markup__c : 0,
-                            'buildertek__Product__c':listProduct[i].Product2.Id,
-                            'buildertek__Size__c':listProduct[i].Pricebook2.Name
-                        }) */
                         var row1 = listProduct[i];
                         console.log("Row1 PricebookEntries : ", row1.PricebookEntries)
                         console.log("Row1 => ", { row1 });
@@ -2318,7 +2304,8 @@ component.set("v.StoreIdsOfDatatable2",'') */
                 }
             });
             $A.enqueueAction(action6);
-        } else {
+
+        }else{
             component.set("v.Spinner", false);
             var toastEvent = $A.get("e.force:showToast");
             toastEvent.setParams({
@@ -2330,7 +2317,116 @@ component.set("v.StoreIdsOfDatatable2",'') */
                 mode: 'pester'
             });
             toastEvent.fire();
+
         }
+
+        // if (listid.length > 0 && listid != undefined && listid != "") {
+        //     // debugger;
+        //     component.set("v.openProductBox", false);
+        //     component.set("v.openQuoteLineBox", true);
+        //     var BookId = component.get("v.storePriceBookId");
+
+        //     var action6 = component.get("c.getProductRecordsByIds");
+        //     action6.setParams({
+        //         "Ids": listid,
+        //         "PricebookId": component.get("v.storePriceBookId")
+        //             //  "pBookId":BookId
+        //             //  "Ids": component.get("v.listOfSelectedIds")
+        //     });
+        //     // alert(listid)
+        //     //  alert(BookId)
+        //     action6.setCallback(this, function(response) {
+        //         if (response.getState() == "SUCCESS") {
+        //             var listProduct = response.getReturnValue();
+        //             console.log("Products : ", listProduct)
+        //             var xyz = [];
+        //             var Quotelist = component.get("v.QuoteLineList");
+        //             for (var i = 0; i < listProduct.length; i++) {
+
+        //                 /*   xyz.push({
+        //                     'Name':listProduct[i].Product2.Name,
+        //                     'buildertek__Unit_Price__c':listProduct[i].buildertek__Unit_Cost__c ? listProduct[i].buildertek__Unit_Cost__c : 0,
+        //                     'buildertek__Unit_Price__c':listProduct[i].buildertek__Unit_Cost__c ? listProduct[i].buildertek__Unit_Cost__c : 0,
+        //                     'buildertek__Grouping__c':'',
+        //                     'buildertek__Quantity__c':'1',
+        //                     'buildertek__Additional_Discount__c': listProduct[i].buildertek__Discount__c ? listProduct[i].buildertek__Discount__c : 0,
+        //                     'buildertek__Unit_Cost__c':'',
+        //                     'buildertek__Markup__c':listProduct[i].buildertek__Markup__c ? listProduct[i].buildertek__Markup__c : 0,
+        //                     'buildertek__Product__c':listProduct[i].Product2.Id,
+        //                     'buildertek__Size__c':listProduct[i].Pricebook2.Name
+        //                 }) */
+        //                 var row1 = listProduct[i];
+        //                 console.log("Row1 PricebookEntries : ", row1.PricebookEntries)
+        //                 console.log("Row1 => ", { row1 });
+        //                 console.log(row1.buildertek__Quote_Group__c);
+        //                 if (row1.PricebookEntries != undefined) {
+        //                     if (row1.buildertek__Quote_Group__c != undefined) {
+        //                         xyz.push({
+        //                             'Name': row1.Name,
+        //                             'buildertek__Unit_Price__c': row1.PricebookEntries[0].UnitPrice,
+        //                             'buildertek__Unit_Price__c': row1.PricebookEntries[0].UnitPrice,
+        //                             'buildertek__Grouping__c': row1.buildertek__Quote_Group__c,
+        //                             'buildertek__Quantity__c': '1',
+        //                             'buildertek__Additional_Discount__c': row1.PricebookEntries[0].buildertek__Discount__c ? row1.PricebookEntries[0].buildertek__Discount__c : 0,
+        //                             'buildertek__Unit_Cost__c': row1.PricebookEntries[0].buildertek__Unit_Cost__c ? row1.PricebookEntries[0].buildertek__Unit_Cost__c : row1.PricebookEntries[0].UnitPrice,
+        //                             'buildertek__Markup__c': row1.PricebookEntries[0].buildertek__Markup__c ? row1.PricebookEntries[0].buildertek__Markup__c : 0,
+        //                             'buildertek__Product__c': row1.Id,
+        //                             'buildertek__Size__c': row1.PricebookEntries[0].Pricebook2.Name,
+        //                             'buildertek__Description__c': row1.Name
+
+        //                         })
+        //                     } else {
+        //                         xyz.push({
+        //                             'Name': row1.Name,
+        //                             'buildertek__Unit_Price__c': row1.PricebookEntries[0].UnitPrice,
+        //                             'buildertek__Unit_Price__c': row1.PricebookEntries[0].UnitPrice,
+        //                             'buildertek__Grouping__c': '',
+        //                             'buildertek__Quantity__c': '1',
+        //                             'buildertek__Additional_Discount__c': row1.PricebookEntries[0].buildertek__Discount__c ? row1.PricebookEntries[0].buildertek__Discount__c : 0,
+        //                             'buildertek__Unit_Cost__c': row1.PricebookEntries[0].buildertek__Unit_Cost__c ? row1.PricebookEntries[0].buildertek__Unit_Cost__c : row1.PricebookEntries[0].UnitPrice,
+        //                             'buildertek__Markup__c': row1.PricebookEntries[0].buildertek__Markup__c ? row1.PricebookEntries[0].buildertek__Markup__c : 0,
+        //                             'buildertek__Product__c': row1.Id,
+        //                             'buildertek__Size__c': row1.PricebookEntries[0].Pricebook2.Name,
+        //                             'buildertek__Description__c': row1.Name
+        //                         })
+        //                     }
+        //                 }
+        //             }
+
+        //             component.set("v.data2", xyz);
+        //             console.log("data 2 : ", xyz);
+        //             //  var action11 = component.get("c.getQuoteLineGroupRecords");
+        //             //    getQuoteGrouping
+        //             var action11 = component.get("c.getQuoteGrouping2");
+        //             action11.setParams({
+        //                 "quoteId": component.get("v.recordId")
+        //             });
+        //             action11.setCallback(this, function(response) {
+        //                 if (response.getState() == "SUCCESS") {
+        //                     component.set("v.quotelineRecords", response.getReturnValue());
+        //                 }
+        //             });
+        //             $A.enqueueAction(action11);
+        //             component.set("v.Spinner", false);
+        //         } else {
+        //             console.log(response.getError());
+        //             component.set("v.Spinner", false);
+        //         }
+        //     });
+        //     $A.enqueueAction(action6);
+        // } else {
+        //     component.set("v.Spinner", false);
+        //     var toastEvent = $A.get("e.force:showToast");
+        //     toastEvent.setParams({
+        //         title: 'Error',
+        //         message: 'Please select at least one Product.',
+        //         duration: ' 5000',
+        //         key: 'info_alt',
+        //         type: 'error',
+        //         mode: 'pester'
+        //     });
+        //     toastEvent.fire();
+        // }
     },
     closeBox: function(component, event, helper) {
         component.set("v.searchKey2", "");
@@ -2427,11 +2523,16 @@ component.set("v.StoreIdsOfDatatable2",'') */
             for (var j = 0; j < selectedRows.length; j++) {
                 if (data[i].Id === selectedRows[j].Id) {
                     data[i].isSelected = true;
+                    console.log(data[i].isSelected);
+
                 }
             }
         }
         component.set('v.data1', data);
-    }
+
+        console.log("searchTable List :------------------> " + component.get("v.selectedRows"));
+
+
 
     },
 
@@ -2499,8 +2600,20 @@ component.set("v.StoreIdsOfDatatable2",'') */
     },
 
     searchTable: function(component, event, helper) {
+        // helper.customCheckbox(component, cellValue, helper);
         console.log("searchTable List :------------------> " + component.get("v.listOfSelectedIds"));
-        
+        var data = component.get('v.data1');
+        for (var i = 0; i < data.length; i++) {
+            console.log(data[i].isSelected);
+            console.log(data[i]);
+            var label = component.get('v.columns').find(function(column) {
+                return column.fieldName === 'isSelected';
+            })
+
+        }
+
+
+
         var allRecords = component.get("v.filteredData");
         // var allRecords = cmp.get("v.data1");
         var searchFilter = event.getSource().get("v.value").toUpperCase()
