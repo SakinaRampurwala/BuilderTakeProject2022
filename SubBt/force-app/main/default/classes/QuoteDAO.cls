@@ -2049,6 +2049,7 @@ public with sharing class QuoteDAO{
         List<PriceBookEntry> pEntries;
          if(pbookId != null && pbookId != 'None'){
              System.debug('If');
+             //sort by Product2.Name
              pEntries = [SELECT Id, Product2Id, Product2.Name,Product2.ProductCode,Product2.Description,toLabel(Product2.Family), Product2.IsActive,buildertek__Unit_Cost__c,Pricebook2.Name,UnitPrice FROM PricebookEntry WHERE Pricebook2Id=:pbookId AND IsActive = True];
              System.debug('pEntries--->>>'+pEntries);
              List<Product2> products = new List<Product2>();
@@ -2127,9 +2128,7 @@ public with sharing class QuoteDAO{
             List<Product2> getProductsFamily = new List<Product2>();
             string filterKey = searchedWord+'%';
             // getProductsFamily = [select id,family from product2 where family LIKE :filterKey];
-
-            getProductsFamily =  [SELECT Id,Name,ProductCode,Description,toLabel(Family),(SELECT UnitPrice FROM PricebookEntries WHERE IsActive = True) FROM Product2 WHERE IsActive = True AND family LIKE :filterKey AND Id IN (SELECT Product2Id FROM PricebookEntry WHERE isActive = true)];
-
+            getProductsFamily = [SELECT Id,Name,ProductCode,Description,toLabel(Family),(SELECT UnitPrice FROM PricebookEntries WHERE IsActive = True) FROM Product2 WHERE  IsActive = True AND family LIKE :filterKey AND Id IN (SELECT Product2Id FROM PricebookEntry WHERE isActive = true) ORDER BY Name ASC NULLS LAST];
             System.debug('List of product family is here ==> '+getProductsFamily);
             return getProductsFamily;
         } catch (Exception e) {
