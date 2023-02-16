@@ -197,6 +197,22 @@
             component.set('v.isGroupDescriptionOpen', false);
         }
     },
+    customCheckbox: function(component, cellValue, helper) {
+        var isSelected = cellValue;
+        var label = component.get('v.columns').find(function(column) {
+            return column.fieldName === 'isSelected';
+        }).typeAttributes.label;
+        return [
+            {
+                label: label,
+                type: 'checkbox',
+                class: 'slds-checkbox--faux',
+                checked: isSelected,
+                disabled: false
+            }
+        ];
+    },
+
     addProductFromGroup: function(component, event, helper) {
         if (!component.get('v.isAddProductFromGroup')){
             console.log(component.get('v.runFirstTime'));
@@ -222,6 +238,7 @@
 
 
             component.set('v.columns1', [
+                { label: '', type: 'customCheckbox', fieldName: 'isSelected', typeAttributes: { isChecked: { fieldName: 'isSelected' }, label: '' } },
                 { label: 'Product Family', fieldName: 'Family', type: 'text' },
                 { label: 'Product Name', fieldName: 'Name', type: 'text' },
                 { label: 'Product Description', fieldName: 'Description', type: 'text' },
@@ -2352,73 +2369,70 @@ component.set("v.StoreIdsOfDatatable2",'') */
     },
 
     updateSelectedText: function(component, event, helper) {
+        // console.log(event.target.id);
+        // console.log(event.target);
+        // console.log(event.target.checked);
+
+        // var selectedRows = event.target.id;
+        // var selectedCheckBoxes =  component.get("v.listOfSelectedIds");
+        // if(selectedCheckBoxes.indexOf(selectedRows) > -1){            
+        //     selectedCheckBoxes.splice(selectedCheckBoxes.indexOf(selectedRows), 1);           
+        // }
+        // else{
+        //     selectedCheckBoxes.push(selectedRows);
+        // }
+        // component.set("v.listOfSelectedIds", selectedCheckBoxes);
+        // console.log('Selected--'+selectedCheckBoxes);
+        // var checkbox = event.getSource();
+        // var itemId = checkbox.get('v.name');
+        // var isChecked = checkbox.get('v.checked');
+        // // Get the checkbox state map from the component
+        // var checkboxState = component.get('v.checkboxState') || {};
+        // // Update the checkbox state for this item
+        // checkboxState[itemId] = isChecked;
+        // // Set the updated checkbox state map in the component
+        // component.set('v.checkboxState', checkboxState);
+
+        // console.log('checkboxState' , component.get('v.checkboxState'));
+
+         
+        
+        // var selectedRows = event.getParam('selectedRows');
+        // console.log(component.get("v.pricebookName1"))
+        // console.log("1 st -- " + component.get("v.listOfSelectedIds"));
+        // component.set("v.StoreIdsOfDatatable", component.get("v.listOfSelectedIds"));
+        // var y = [];
+        // var selectedRowList = component.get("v.listOfSelectedIds")
+        // var NewselectedRows = [];
+        // for (var i = 0; i < selectedRows.length; i++) {
+        //     if (selectedRowList.indexOf(selectedRows[i].Id) < 0) {
+        //         selectedRowList.push(selectedRows[i].Id)
+
+        //     } else {
+        //         console.log("yes")
+        //     }
+        //     NewselectedRows.push(selectedRows[i].Id);
+        // }
+        // console.log("Final List :------------------> " + NewselectedRows)
+        // component.set("v.listOfSelectedIds", NewselectedRows)
+        // component.set("v.selectedRows", NewselectedRows);
+
         var selectedRows = event.getParam('selectedRows');
-        console.log(component.get("v.pricebookName1"))
-            /*   if(!component.get("v.checkFunctionCall")){
-var oldData = component.get("v.oldData");
-
-if(oldData != undefined){
-if(oldData.length == 0){
-component.set("v.oldData", selectedRows);
-}else if(selectedRows.length < oldData.length){
-
-var onlyInOld = selectedRows.filter(comparer(oldData));
-var onlyInNew = oldData.filter(comparer(selectedRows));
-
-//List of all unselected objects from dataTable
-var unselectedData = onlyInOld.concat(onlyInNew);
-console.log("your unselected data", unselectedData);
-component.set("v.StoreIdsOfDatatable2",unselectedData)
-}else if(selectedRows.length > oldData.length){
-component.set("v.oldData", selectedRows);
-}
-}
-
-//helper comparer function
-function comparer(otherArray){
-return function(current){
-return otherArray.filter(function(other){
-return other.Id == current.Id
-}).length == 0;
-}
-}
-} */
-
-        console.log("1 st -- " + component.get("v.listOfSelectedIds"));
-        component.set("v.StoreIdsOfDatatable", component.get("v.listOfSelectedIds"));
-        var y = [];
-        var selectedRowList = component.get("v.listOfSelectedIds")
-        var NewselectedRows = [];
         for (var i = 0; i < selectedRows.length; i++) {
-            if (selectedRowList.indexOf(selectedRows[i].Id) < 0) {
-                selectedRowList.push(selectedRows[i].Id)
-
-            } else {
-                console.log("yes")
-                    /*   if(selectedRowList){
-                       for( var j = 0; j < selectedRowList.length; j++){
-
-                           if ( selectedRowList[j] === selectedRows[i].Id) {
-                               console.log("yes")
-                               selectedRowList.splice(j, 1);
-                           }
-
-                       }
-                       } */
-            }
-            NewselectedRows.push(selectedRows[i].Id);
+            selectedRows[i].isSelected = true;
         }
-        /*     if(unselectedData != undefined && !component.get("v.checkFunctionCall")){
-                                        for(var i = 0; i< unselectedData.length;i++){
-                                            if(selectedRowList.indexOf(unselectedData[i].Id) >= 0){
-                                              //  selectedRowList.pop(unselectedData[i].Id);
-                                            delete  selectedRowList[i];
-                                            }
-                                        }
-                                        } */
-        console.log("Final List :------------------> " + NewselectedRows)
-        component.set("v.listOfSelectedIds", NewselectedRows)
-        component.set("v.selectedRows", NewselectedRows);
+        var data = component.get('v.data1');
+        for (var i = 0; i < data.length; i++) {
+            data[i].isSelected = false;
+            for (var j = 0; j < selectedRows.length; j++) {
+                if (data[i].Id === selectedRows[j].Id) {
+                    data[i].isSelected = true;
+                }
+            }
+        }
+        component.set('v.data1', data);
+    }
+
     },
 
     cancelBox: function(component, event, helper) {
@@ -2485,6 +2499,8 @@ return other.Id == current.Id
     },
 
     searchTable: function(component, event, helper) {
+        console.log("searchTable List :------------------> " + component.get("v.listOfSelectedIds"));
+        
         var allRecords = component.get("v.filteredData");
         // var allRecords = cmp.get("v.data1");
         var searchFilter = event.getSource().get("v.value").toUpperCase()
@@ -2498,6 +2514,7 @@ return other.Id == current.Id
         }
         console.log("Temp array : ", tempArray);
         component.set("v.data1", tempArray);
+        console.log("Temp array : AFTER");
         helper.sortData(component, component.get("v.sortedBy"), component.get("v.sortedDirection"));
 
     },
@@ -2507,6 +2524,8 @@ return other.Id == current.Id
         component.set("v.Spinner2", true);
         console.log('inside change event 1');
         component.set("v.data1", []);
+        component.set("v.listOfSelectedIds", []);
+
         var x = component.find("getPriceBookId").get("v.value");
 
         if (x == '') {
@@ -2806,7 +2825,22 @@ return other.Id == current.Id
             expandallIcon.style.display = 'none';
         }
 
-    }
+    },
+    handleSelectAllProduct: function(component, event, helper) {
+        var getID = component.get("v.data1");
+        var checkvalue = component.find("selectAll").get("v.value");        
+        var checkProduct = component.find("checkProduct"); 
+        if(checkvalue == true){
+            for(var i=0; i<checkProduct.length; i++){
+                checkProduct[i].set("v.value",true);
+            }
+        }
+        else{ 
+            for(var i=0; i<checkProduct.length; i++){
+                checkProduct[i].set("v.value",false);
+            }
+        }
+    },
 
 
 })
