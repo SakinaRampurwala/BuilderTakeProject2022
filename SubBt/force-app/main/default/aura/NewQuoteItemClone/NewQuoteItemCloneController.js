@@ -19,15 +19,15 @@
         navEvt.fire();
     },
 
-    doInit: function(component, event, helper) {
-        component.set("v.Spinner2", true);
-        component.set('v.runFirstTime' , true);
+    setTabName: function(component, event, helper) {
+        var quoteName = component.get("v.quoteNameData");
+        console.log('name-->>',quoteName.Name);
         var workspaceAPI = component.find("workspace");
         workspaceAPI.getEnclosingTabId().then((response) => {
             let opendTab = response.tabId;
             workspaceAPI.setTabLabel({
                 tabId: opendTab,
-                label: "View Quote Lines"
+                label: quoteName.Name
             });
             workspaceAPI.setTabIcon({
                 tabId: opendTab,
@@ -35,6 +35,24 @@
                 iconAlt: 'View Quote Lines'
             });
         });
+    },
+
+    doInit: function(component, event, helper) {
+        component.set("v.Spinner2", true);
+        component.set('v.runFirstTime' , true);
+        var workspaceAPI = component.find("workspace");
+        // workspaceAPI.getEnclosingTabId().then((response) => {
+        //     let opendTab = response.tabId;
+        //     workspaceAPI.setTabLabel({
+        //         tabId: opendTab,
+        //         label: "View Quote Lines"
+        //     });
+        //     workspaceAPI.setTabIcon({
+        //         tabId: opendTab,
+        //         icon: 'custom:custom5',
+        //         iconAlt: 'View Quote Lines'
+        //     });
+        // });
 
         /*--------------------------------------------*/
         $A.get("e.c:BT_SpinnerEvent").setParams({
