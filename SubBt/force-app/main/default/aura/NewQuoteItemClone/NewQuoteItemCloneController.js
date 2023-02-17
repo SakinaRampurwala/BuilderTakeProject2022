@@ -2465,6 +2465,17 @@ console.log(document.getElementsByClassName(className)[0]);
     },
 
     updateSelectedText: function(component, event, helper) {
+        var checkboxes = component.find("checkbox");
+        var allChecked = true;
+        for (var i = 0; i < checkboxes.length; i++) {
+          if (!checkboxes[i].get("v.value")) {
+            allChecked = false;
+            break;
+          }
+        }
+        component.find("selectAll").set("v.value", allChecked);
+      }
+    
         // console.log(event.target.id);
         // console.log(event.target);
         // console.log(event.target.checked);
@@ -2513,36 +2524,33 @@ console.log(document.getElementsByClassName(className)[0]);
         // component.set("v.listOfSelectedIds", NewselectedRows)
         // component.set("v.selectedRows", NewselectedRows);
 
-        var selectedRows = event.getParam('selectedRows');
-        var selectedRowList = component.get("v.listOfSelectedIds")
-        for (var i = 0; i < selectedRows.length; i++) {
-            selectedRows[i].isSelected = true;
-        }
-        var data = component.get('v.data1');
-        for (var i = 0; i < data.length; i++) {
-            data[i].isSelected = false;
-            for (var j = 0; j < selectedRows.length; j++) {
-                if (data[i].Id === selectedRows[j].Id && selectedRowList.indexOf(selectedRows[j].Id) < 0) {
-                    data[i].isSelected = true;
-                    console.log(data[i].isSelected);
-                    selectedRowList.push(data[i].Id);
-                    // NewselectedRows.push(selectedRowList);
-                }
 
-                // if(data[i].Id !== selectedRows[j].Id){            
-                //     selectedRowList.splice(selectedRowList.indexOf(selectedRows[j].Id), 1);    
-                // }       
 
+        // var selectedRows = event.getParam('selectedRows');
+        // var selectedRowList = component.get("v.listOfSelectedIds")
+        // for (var i = 0; i < selectedRows.length; i++) {
+        //     selectedRows[i].isSelected = true;
+        // }
+        // var data = component.get('v.data1');
+        // for (var i = 0; i < data.length; i++) {
+        //     data[i].isSelected = false;
+        //     for (var j = 0; j < selectedRows.length; j++) {
+        //         if (data[i].Id === selectedRows[j].Id) {
+        //             data[i].isSelected = true;
+        //         }
                 
-            }
+        //     }
 
-        }
-        component.set('v.data1', data);
+        // }
+        // component.set('v.data1', data);
 
 
-        console.log("searchTable List :------------------> " , component.get("v.data1"));
-        console.log("Final List :------------------> " + selectedRowList)
-        component.set("v.listOfSelectedIds", selectedRowList)
+    
+
+
+        // console.log("searchTable List :------------------> " , component.get("v.data1"));
+        // console.log("Final List :------------------> " , component.get("v.columns1"))
+        // component.set("v.listOfSelectedIds", selectedRowList)
 
 
         
@@ -2617,18 +2625,17 @@ console.log(document.getElementsByClassName(className)[0]);
     searchTable: function(component, event, helper) {
         // helper.customCheckbox(component, cellValue, helper);
         console.log("searchTable List :------------------> " + component.get("v.listOfSelectedIds"));
-        var data = component.get('v.data1');
-        for (var i = 0; i < data.length; i++) {
-            console.log(data[i].isSelected);
-            console.log(data[i]);
+        // var data = component.get('v.data1');
+        // for (var i = 0; i < data.length; i++) {
+        //     console.log(data[i].isSelected);
+        //     console.log(data[i]);
      
 
-        }
-
+        // }
+    
 
 
         var allRecords = component.get("v.filteredData");
-        // var allRecords = cmp.get("v.data1");
         var searchFilter = event.getSource().get("v.value").toUpperCase()
         var tempArray = [];
         var i;

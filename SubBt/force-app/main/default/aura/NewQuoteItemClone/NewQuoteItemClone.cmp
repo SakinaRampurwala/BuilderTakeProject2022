@@ -2140,12 +2140,184 @@
 
                                     <br />
                                     <div style="height: auto; min-height:150px;">
-                                        <lightning:datatable
+
+                                        <table aria-multiselectable="true" class="slds-table slds-table_bordered slds-table_fixed-layout slds-table_resizable-cols" role="grid" aria-label="Example advanced table of Opportunities in actionable mode">
+                                            <thead>
+                                                <tr class="slds-line-height_reset">
+                                                    <!-- Checkbox -->
+                                                    <th class="slds-text-align_right slds-cell_action-mode" scope="col" style="width:3.25rem">
+                                                        <!-- <span id="column-group-header" class="slds-assistive-text">Choose a row</span>
+                                                        <div class="slds-th__action slds-th__action_form">
+                                                        <div class="slds-checkbox">
+                                                            <input type="checkbox" name="options" id="checkbox-unique-id-297" value="checkbox-unique-id-297" tabindex="0" aria-labelledby="check-select-all-label column-group-header" />
+                                                            <label class="slds-checkbox__label" for="checkbox-unique-id-297" id="check-select-all-label">
+                                                            <span class="slds-checkbox_faux"></span>
+                                                            <span class="slds-form-element__label slds-assistive-text">Select All</span>
+                                                            </label>
+                                                        </div>
+                                                        </div> -->
+                                                        <label class="slds-checkbox">
+                                                            <ui:inputCheckbox aura:id="selectAll" change="{!c.selectAll}" />
+                                                            <span class="slds-checkbox_faux"></span>
+                                                            <span class="slds-form-element__label slds-assistive-text">Select All</span>
+                                                          </label>
+                                                
+                                                    </th>
+                                                    <!-- Product Family -->
+                                                    <th aria-label="Name" aria-sort="none" class="slds-is-resizable slds-is-sortable slds-cell_action-mode" scope="col">
+                                                        <a class="slds-th__action slds-text-link_reset" href="#" role="button" tabindex="0">
+                                                        <span class="slds-assistive-text">Sort by: </span>
+                                                        <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+                                                            <span class="slds-truncate" title="Name">Product Family </span>
+                                                        </div>
+                                                        </a>
+                                                        <div class="slds-resizable">
+                                                        <input type="range" aria-label="Name column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-540" max="1000" min="20" tabindex="0" />
+                                                        <span class="slds-resizable__handle">
+                                                            <span class="slds-resizable__divider"></span>
+                                                        </span>
+                                                        </div>
+                                                    </th>
+                                                    <!-- Product Name -->
+                                                    <th aria-label="Name" aria-sort="none" class="slds-is-resizable slds-is-sortable slds-cell_action-mode" scope="col">
+                                                    <a class="slds-th__action slds-text-link_reset" href="#" role="button" tabindex="0">
+                                                        <span class="slds-assistive-text">Sort by: </span>
+                                                        <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+                                                        <span class="slds-truncate" title="Name">Product Name </span>
+                                                        </div>
+                                                    </a>
+                                                    <div class="slds-resizable">
+                                                        <input type="range" aria-label="Name column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-540" max="1000" min="20" tabindex="0" />
+                                                        <span class="slds-resizable__handle">
+                                                            <span class="slds-resizable__divider"></span>
+                                                        </span>
+                                                    </div>
+                                                    </th>
+                                                    <!-- Product Description -->
+                                                    <th aria-label="Name" aria-sort="none" class="slds-is-resizable slds-is-sortable slds-cell_action-mode" scope="col">
+                                                    <a class="slds-th__action slds-text-link_reset" href="#" role="button" tabindex="0">
+                                                        <span class="slds-assistive-text">Sort by: </span>
+                                                        <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+                                                        <span class="slds-truncate" title="Name">Product Description </span>
+                                                        </div>
+                                                    </a>
+                                                    <div class="slds-resizable">
+                                                        <input type="range" aria-label="Name column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-540" max="1000" min="20" tabindex="0" />
+                                                        <span class="slds-resizable__handle">
+                                                            <span class="slds-resizable__divider"></span>
+                                                        </span>
+                                                    </div>
+                                                    </th>
+                                                    <!-- Product Code -->
+                                                    <th aria-label="Name" aria-sort="none" class="slds-is-resizable slds-is-sortable slds-cell_action-mode" scope="col">
+                                                        <a class="slds-th__action slds-text-link_reset" href="#" role="button" tabindex="0">
+                                                            <span class="slds-assistive-text">Sort by: </span>
+                                                            <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+                                                            <span class="slds-truncate" title="Name">Product Code </span>
+                                                            </div>
+                                                        </a>
+                                                        <div class="slds-resizable">
+                                                            <input type="range" aria-label="Name column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-540" max="1000" min="20" tabindex="0" />
+                                                            <span class="slds-resizable__handle">
+                                                                <span class="slds-resizable__divider"></span>
+                                                            </span>
+                                                        </div>
+                                                    </th>
+                                                    <!-- List Price -->
+                                                    <th aria-label="Name" aria-sort="none" class="slds-is-resizable slds-is-sortable slds-cell_action-mode" scope="col">
+                                                        <a class="slds-th__action slds-text-link_reset" href="#" role="button" tabindex="0">
+                                                            <span class="slds-assistive-text">Sort by: </span>
+                                                            <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+                                                            <span class="slds-truncate" title="Name">List Price </span>
+                                                            </div>
+                                                        </a>
+                                                        <div class="slds-resizable">
+                                                            <input type="range" aria-label="Name column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-540" max="1000" min="20" tabindex="0" />
+                                                            <span class="slds-resizable__handle">
+                                                                <span class="slds-resizable__divider"></span>
+                                                            </span>
+                                                        </div>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                        
+                                            <tbody>
+                                                <aura:if isTrue="{!not(empty(v.data1))}" >
+                                                    <aura:iteration items="{!v.data1}" var="item" indexVar="indx">
+                                                        <tr aria-selected="false" class="slds-hint-parent">
+                                                            <!-- Check box -->
+                                                            <td class="slds-text-align_right slds-cell_action-mode" role="gridcell">
+                                                              <!-- <div class="slds-checkbox">
+                                                                <input type="checkbox" name="{!item.Id}" id="{!item.Id}" onchange="{!c.updateSelectedText }"  aura:id="checkProduct" checked="" tabindex="{!indx}"/>
+                                                                <label class="slds-checkbox__label" for="{!item.Id}" id="{!item.Id}">
+                                                                  <span class="slds-checkbox_faux"></span>
+                                                                  <span class="slds-form-element__label slds-assistive-text">Select item 1</span>
+                                                                </label>
+                                                                <lightning:input type="checkbox" Id="{!v.data1.Id}"  value="" onclick="{!c.updateSelectedText}"/>
+                                                                <lightning:input type="checkbox" 
+                                                                data-record="{!item.Id}" 
+                                                                id="{!item.Id}" 
+                                                                value="{!item.Name}" 
+                                                                onchange ="{!c.updateSelectedText}"/>
+                                                                <input type="checkbox" name="options" id="{!item.Id}"  onclick="{!c.updateSelectedText}"/>
+
+                                                                <ui:inputCheckbox aura:id="myCheckbox" value="{!item.checked}" change="{!c.updateSelectedText}" />
+
+                                              
+                                                              </div> -->
+                                                              <div class="slds-truncate">
+                                                                <label class="slds-checkbox">
+                                                                  <ui:inputCheckbox aura:id="checkbox" value="{!item.isChecked}" change="{!c.updateSelectedText}" />
+                                                                  <span class="slds-checkbox_faux"></span>
+                                                                  <span class="slds-form-element__label slds-assistive-text">Select Row</span>
+                                                                </label>
+                                                              </div>
+                                                    
+
+                            
+                                                            </td>
+                                                            <!-- data -->
+                                                            <!-- Product Family -->
+                                                            <td class="slds-cell_action-mode" role="gridcell">
+                                                              <div class="slds-truncate" title="Acme">{!item.Family}</div>
+                                                            </td>
+    
+                                                            <!-- Product Name -->
+                                                            <td class="slds-cell_action-mode" role="gridcell">
+                                                                <div class="slds-truncate" title="Acme">{!item.Name}</div>
+                                                            </td>
+    
+                                                            <!-- Product Description -->
+                                                            <td class="slds-cell_action-mode" role="gridcell">
+                                                                <div class="slds-truncate" title="Acme">{!item.Description}</div>
+                                                            </td>
+    
+                                                            <!-- Product Code -->
+                                                            <td class="slds-cell_action-mode" role="gridcell">
+                                                                <div class="slds-truncate" title="Acme">{!item.ProductCode}</div>
+                                                            </td>
+    
+                                                            <!-- List Price  -->
+                                                            <td class="slds-cell_action-mode" role="gridcell">
+                                                                <div class="slds-truncate" title="Acme">{!item.UnitPrice}</div>
+                                                            </td>
+                                                        </tr>      
+                                                    </aura:iteration>
+                                                    <aura:set attribute="else">
+                                                        <center class="elseMsg">Please Select PriceBook!!</center>
+                                                    </aura:set>
+
+                                                </aura:if>
+
+                                              </tbody>
+                                        </table>
+                                        
+                                        <!-- <lightning:datatable
                                         data="{! v.data1 }"
                                         columns="{! v.columns1 }"
                                         keyField="Id"
                                         onrowselection="{! c.updateSelectedText }"
-                                    />
+                                    /> -->
 
                                 
 
@@ -2154,7 +2326,7 @@
                                             data="{! v.data1 }" hideCheckboxColumn="false" columns="{! v.columns1 }"
                                             selectedRows="{! v.selectedRows }"
                                             onrowselection="{! c.updateSelectedText }" onsort="{!c.updateColumnSorting}"
-                                            sortedBy="{!v.sortedBy}" sortedDirection="{!v.sortedDirection}" />-->
+                                            sortedBy="{!v.sortedBy}" sortedDirection="{!v.sortedDirection}" /> -->
                                         <aura:if isTrue="{!v.data1 == ''}">
                                             <center class="elseMsg">Please Select PriceBook!!</center>
                                         </aura:if> 
