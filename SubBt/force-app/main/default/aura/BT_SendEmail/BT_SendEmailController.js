@@ -192,8 +192,6 @@
         }
         component.set("v.fileName", files);            
         component.set("v.selectedfilesFill",mapData);
-        //alert(typeof event.getSource().get("v.files"));        
-        //component.set("v.fileName", fileName);
     }, 
                 
                 

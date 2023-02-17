@@ -24,14 +24,13 @@
 
     },
     onblur: function(component, event, helper) {
+        helper.onblur(component, event, helper);
+    },
+    onmouseLeave: function(component, event, helper) {
         // on mouse leave clear the listOfSeachRecords & hide the search result component 
         window.setTimeout(
             $A.getCallback(function() {
-                component.set("v.listOfSearchRecords", null);
-                component.set("v.SearchKeyWord", '');
-                var forclose = component.find("searchRes");
-                $A.util.addClass(forclose, 'slds-is-close');
-                $A.util.removeClass(forclose, 'slds-is-open');
+                helper.onblur(component, event, helper);
             }), 3000
         );
     },

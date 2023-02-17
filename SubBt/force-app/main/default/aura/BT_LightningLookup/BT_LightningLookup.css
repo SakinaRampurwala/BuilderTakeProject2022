@@ -7,6 +7,12 @@
  padding-top: 1%;
  padding-bottom: 1%;
 }
+.THIS.mainDiv{
+    width:100%; padding-top:3%;
+}
+.THIS .subDiv{
+    margin-top: -21px;
+}
 /*.THIS .pillSize{
  width:88%;
    height:100%;

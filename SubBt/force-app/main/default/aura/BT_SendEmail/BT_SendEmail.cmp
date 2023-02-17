@@ -137,7 +137,7 @@
                 
                     <div style="border:1px solid lightgray;border-radius:5px;padding:10px;margin-top:10px">
                         <lightning:layout multipleRows = "true">                                        
-                            <div><lightning:input aura:id="fuploader" onchange="{!c.handleFilesChange}" type="file" variant="label-hidden" name="file" label="" multiple="true" accept="image/png,image/jpeg,image/jpg"/>
+                            <div><lightning:input aura:id="fuploader" onchange="{!c.handleFilesChange}" type="file" variant="label-hidden" name="file" label="" multiple="true" accept="image/png,image/jpeg,image/jpg,.zip, .doc, .docx, .rtf, .ppt, .pptx, .xls, .xlsx, .pdf, .txt"/>
                                 <!-- <div class="slds-text-body_small slds-text-color_error">{!v.fileName} </div> -->                                  
                                 
                                 <aura:iteration items="{!v.selectedfilesFill}" var="sr">
