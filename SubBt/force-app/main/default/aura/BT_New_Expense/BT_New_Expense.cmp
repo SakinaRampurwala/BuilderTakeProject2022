@@ -59,7 +59,6 @@
                                 <aura:if isTrue="{!field.name == 'buildertek__Budget__c'}">
                                     <label>Budget</label>
                                     <ui:inputSelect value="{!v.budgetName}" change="{!c.budgetchange}">
-                                        <option value="">--None--</option>
                                         <aura:iteration var="option" items="{!v.budgetList}">
                                             <option value="{!option.Id}" selected="{!option.Id == v.budgetName}">{!option.Name}</option>
                                         </aura:iteration>

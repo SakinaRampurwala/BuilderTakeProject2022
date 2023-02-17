@@ -487,7 +487,7 @@
             var rowData;
             var newPOItems = [];
 
-            if (selectedRecs.length > 0) {
+            if (selectedRecs.length > 0 && selectedRecs.length == 1 ) {
                 var budgetlineid = BudgetIds[0];
                 var action;
                 action = component.get("c.BudgetItemList");
@@ -495,6 +495,7 @@
                     BudgetIds: selectedRecs
                 });
                 action.setCallback(this, function(response) {
+                    console.log('response ==> ', response );
                     if (component.isValid() && response.getState() === "SUCCESS") {
                         $A.get("e.c:BT_SpinnerEvent").setParams({
                             "action": "HIDE"
@@ -509,9 +510,18 @@
                     }
                 });
                 $A.enqueueAction(action);
-
-
-            } else {
+            }else if(selectedRecs.length >1){
+                $A.get("e.c:BT_SpinnerEvent").setParams({
+                    "action": "HIDE"
+                }).fire();
+                component.find('notifLib').showNotice({
+                    "variant": "error",
+                    "header": "Too many Budget Lines selected.",
+                    "message": "Please Select only 1 Budget Line to Create Invoice.",
+                    closeCallback: function() {}
+                });
+            }
+             else {
                 $A.get("e.c:BT_SpinnerEvent").setParams({
                     "action": "HIDE"
                 }).fire();

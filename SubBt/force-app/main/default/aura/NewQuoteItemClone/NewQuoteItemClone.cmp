@@ -328,7 +328,7 @@
                                 <lightning:button iconPosition="left" onclick="{!c.onClickAddlines}" label="Mass Add Line" class="sldsButtonGroup" />
                             </div>&nbsp; -->
 
-                                <!-- <div>
+                                <div>
                                     <aura:if isTrue="{!!v.displayGrouping}">
                                         <lightning:button iconPosition="left" onclick="{!c.onclickBOMGrouping}"
                                             label="Group" class="sldsButtonGroup" />
@@ -337,7 +337,7 @@
                                                 label="Go Back" class="sldsButtonGroup" />
                                         </aura:set>
                                     </aura:if>
-                                </div>&nbsp; -->
+                                </div>&nbsp;
 
                                 <div>
                                     <lightning:button iconName="utility:edit" iconPosition="left"
@@ -2146,6 +2146,8 @@
                                         keyField="Id"
                                         onrowselection="{! c.updateSelectedText }"
                                     />
+
+                                
 
 
                                         <!-- <lightning:datatable aura:id="accountDataTable" keyField="Id"

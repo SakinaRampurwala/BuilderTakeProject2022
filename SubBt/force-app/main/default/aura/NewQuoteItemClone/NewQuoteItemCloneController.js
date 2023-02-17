@@ -209,7 +209,7 @@
                 type: 'checkbox',
                 class: 'slds-checkbox--faux',
                 checked: isSelected,
-                disabled: false
+                disabled: true
             }
         ];
         console.log('end customCheckbox');
@@ -2514,6 +2514,7 @@ console.log(document.getElementsByClassName(className)[0]);
         // component.set("v.selectedRows", NewselectedRows);
 
         var selectedRows = event.getParam('selectedRows');
+        var selectedRowList = component.get("v.listOfSelectedIds")
         for (var i = 0; i < selectedRows.length; i++) {
             selectedRows[i].isSelected = true;
         }
@@ -2521,16 +2522,30 @@ console.log(document.getElementsByClassName(className)[0]);
         for (var i = 0; i < data.length; i++) {
             data[i].isSelected = false;
             for (var j = 0; j < selectedRows.length; j++) {
-                if (data[i].Id === selectedRows[j].Id) {
+                if (data[i].Id === selectedRows[j].Id && selectedRowList.indexOf(selectedRows[j].Id) < 0) {
                     data[i].isSelected = true;
                     console.log(data[i].isSelected);
-
+                    selectedRowList.push(data[i].Id);
+                    // NewselectedRows.push(selectedRowList);
                 }
+
+                // if(data[i].Id !== selectedRows[j].Id){            
+                //     selectedRowList.splice(selectedRowList.indexOf(selectedRows[j].Id), 1);    
+                // }       
+
+                
             }
+
         }
         component.set('v.data1', data);
 
-        console.log("searchTable List :------------------> " + component.get("v.selectedRows"));
+
+        console.log("searchTable List :------------------> " , component.get("v.data1"));
+        console.log("Final List :------------------> " + selectedRowList)
+        component.set("v.listOfSelectedIds", selectedRowList)
+
+
+        
 
 
 
@@ -2606,9 +2621,7 @@ console.log(document.getElementsByClassName(className)[0]);
         for (var i = 0; i < data.length; i++) {
             console.log(data[i].isSelected);
             console.log(data[i]);
-            var label = component.get('v.columns').find(function(column) {
-                return column.fieldName === 'isSelected';
-            })
+     
 
         }
 

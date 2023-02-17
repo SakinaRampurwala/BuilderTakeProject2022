@@ -68,6 +68,11 @@
 		action.setCallback(this, function (response) {
             if(response.getState() == 'SUCCESS'){
                 var result = response.getReturnValue();
+                //add none option
+                result.unshift({
+                    Id: '',
+                    Name: '--None--'
+                });
                 console.log('Budget Data => ',{result});
                 component.set('v.budgetList' , result);
                 if (result.length > 0) {
