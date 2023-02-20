@@ -719,10 +719,12 @@
                                                 <aura:html tag="style">
                                                     .mainDiv{
                                                         padding-top:0% !important;
+
                                                     }
                                                     .pillSize{
-                                                        padding-top: 3% !important;
-                                                        padding-bottom: 3% !important;
+
+                                                        padding-top: 2% !important;
+                                                        padding-bottom: 2% !important;
                                                     }
                                                     .subDiv{
                                                         width:100% !important;

@@ -806,6 +806,8 @@
     },
 
     deleteSelectedQuoteItem: function(component, event, helper) {
+        console.log('---In Delete Method---');
+        debugger;
         if (component.find("checkQuoteItem") != undefined) {
             $A.get("e.c:BT_SpinnerEvent").setParams({
                 "action": "SHOW"
@@ -815,14 +817,18 @@
             var newRFQItems = [];
             var delId = [];
             var getAllId = component.find("checkQuoteItem");
+            console.log('getAllId--->>',{getAllId});
             if (!Array.isArray(getAllId)) {
                 if (getAllId.get("v.value") == true) {
                     QuoteIds.push(getAllId.get("v.text"));
                 }
             } else {
                 for (var i = 0; i < getAllId.length; i++) {
+                    console.log(getAllId[i].get("v.value")  , 'getAllId[i].get("v.value") ');
                     if (getAllId[i].get("v.value") == true) {
+                        console.log('inside if');
                         QuoteIds.push(getAllId[i].get("v.text"));
+                        console.log({QuoteIds});
                     }
                 }
             }
@@ -1020,6 +1026,7 @@
         }
     },
     deleteSelectedQuoteItemlines: function(component, event, helper) {
+        console.log('on delete quote');
         $A.get("e.c:BT_SpinnerEvent").setParams({
             "action": "SHOW"
         }).fire();
@@ -1047,6 +1054,8 @@
             });
             action.setCallback(this, function(response) {
                 var state = response.getState();
+                console.log({state});
+                console.log(response.getError());
                 if (state === "SUCCESS") {
                     component.set("v.isQuotelinedelete", false);
                     $A.get("e.force:refreshView").fire();
@@ -2236,17 +2245,17 @@ console.log(document.getElementsByClassName(className)[0]);
                     console.log("Products : ", listProduct)
                     var xyz = [];
                     var Quotelist = component.get("v.QuoteLineList");
-                    var action = component.get("c.getQuoteLineGroup");
-                    action.setParams({
-                        "productList": listProduct
-                    });
-                    action.setCallback(this, function(response) {
-                        if (response.getState() == "SUCCESS") {
-                            var result = response.getReturnValue();
-                            console.log("Quote Line Groups : ", result);
-                        }
-                    });
-                    $A.enqueueAction(action);                    
+                    // var action = component.get("c.getQuoteLineGroup");
+                    // action.setParams({
+                    //     "productList": listProduct
+                    // });
+                    // action.setCallback(this, function(response) {
+                    //     if (response.getState() == "SUCCESS") {
+                    //         var result = response.getReturnValue();
+                    //         console.log("Quote Line Groups : ", result);
+                    //     }
+                    // });
+                    // $A.enqueueAction(action);                    
                     for (var i = 0; i < listProduct.length; i++) {
 
                         /*   xyz.push({
@@ -2264,7 +2273,18 @@ console.log(document.getElementsByClassName(className)[0]);
                         var row1 = listProduct[i];
                         console.log("Row1 PricebookEntries : ", row1.PricebookEntries)
                         console.log("Row1 => ", { row1 });
-                        console.log(row1.buildertek__Quote_Group__c);
+                        var action = component.get("c.createQuoteLineGroup");
+                        action.setParams({
+                            "productFamilyName": row1.Family
+                        });
+                        action.setCallback(this, function(response) {
+                            if (response.getState() == "SUCCESS") {
+                                var result = response.getReturnValue();
+                                console.log("Quote Line Groups : ", result);
+                            }
+                        });
+                        $A.enqueueAction(action);
+                        console.log('group => '+row1.buildertek__Quote_Group__c);
                         if (row1.PricebookEntries != undefined) {
                             if (row1.buildertek__Quote_Group__c != undefined) {
                                 xyz.push({

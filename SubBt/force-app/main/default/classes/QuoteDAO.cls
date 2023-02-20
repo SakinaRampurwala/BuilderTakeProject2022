@@ -1969,6 +1969,56 @@ public with sharing class QuoteDAO{
         
         return productList;
     }
+
+    @AuraEnabled
+    public static Id createQuoteLineGroup(String productFamilyName){
+        Id groupId = null;
+        //check if the product family name exists in the quote line group
+        List<buildertek__Quote_Line_Group__c> groupList = [SELECT Id, Name FROM buildertek__Quote_Line_Group__c WHERE Name =: productFamilyName];
+        if(groupList.size() > 0){
+            groupId = groupList[0].Id;
+        }else{
+            //create a new group
+            buildertek__Quote_Line_Group__c newGroup = new buildertek__Quote_Line_Group__c();
+            newGroup.Name = productFamilyName;
+            insert newGroup;
+            groupId = newGroup.Id;
+        }
+        return groupId;
+    }
+
+    //create a method which takes in a list of product and finds the Quote Line Group Id whose name matches the product family
+    @AuraEnabled
+    public static List<buildertek__Quote_Line_Group__c> getQuoteLineGroup(List<Product2> productList){
+        //create a list of product family names
+        List<String> productFamilyNameList = new List<String>();
+        for(Product2 p : productList){
+            productFamilyNameList.add(p.Family);
+        }
+        //see if all the product family names exist in the quote line group and if not create them
+        List<buildertek__Quote_Line_Group__c> groupList = [SELECT Id, Name FROM buildertek__Quote_Line_Group__c WHERE Name IN :productFamilyNameList];
+        //create a map of product family name and quote line group id
+        Map<String, Id> productFamilyNameMap = new Map<String, Id>();
+        for(buildertek__Quote_Line_Group__c g : groupList){
+            productFamilyNameMap.put(g.Name, g.Id);
+        }
+        //create a list of quote line group to be inserted
+        List<buildertek__Quote_Line_Group__c> groupListToBeInserted = new List<buildertek__Quote_Line_Group__c>();
+        for(Product2 p : productList){
+            if(!productFamilyNameMap.containsKey(p.Family)){
+                buildertek__Quote_Line_Group__c newGroup = new buildertek__Quote_Line_Group__c();
+                newGroup.Name = p.Family;
+                groupListToBeInserted.add(newGroup);
+            }
+        }
+        //insert the new quote line groups
+        if(groupListToBeInserted.size() > 0){
+            insert groupListToBeInserted;
+        }
+        //get the list of quote line groups again
+        groupList = [SELECT Id, Name FROM buildertek__Quote_Line_Group__c WHERE Name IN :productFamilyNameList];
+        return groupList;
+    }
         
     @AuraEnabled
     public static List<buildertek__Quote_Item__c> QuoteLinesInsert(List<buildertek__Quote_Item__c> Quotelines,String QuoteId){

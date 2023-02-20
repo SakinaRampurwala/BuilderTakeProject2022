@@ -56,7 +56,7 @@
                     toastEvent.setParams({
                         "title": "Error!",
                         "type": "error",
-                        "message": "Purchase Order is already there",
+                        "message": "You already imported a Purchase Order for this Change Order.",
                     });
                     toastEvent.fire();
 

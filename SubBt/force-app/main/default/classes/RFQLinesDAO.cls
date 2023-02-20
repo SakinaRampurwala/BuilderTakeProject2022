@@ -8,7 +8,7 @@ public with sharing class RFQLinesDAO {
          && Schema.sObjectType.buildertek__RFQ__c.fields.Id.isAccessible()){*/
         rfqrec = [select id,name,buildertek__Status__c from buildertek__RFQ__c where Id=:rfqId limit 1];
       /*}*/
-        if(rfqrec[0].buildertek__Status__c != 'Accepted' ){
+        if(rfqrec[0].buildertek__Status__c == 'New' ){
         buildertek__RFQ_Item__c rfqLinesToInsert = (buildertek__RFQ_Item__c)JSON.deserialize(rfqLines, buildertek__RFQ_Item__c.class);
         /*if (Schema.sObjectType.buildertek__RFQ_Item__c.fields.buildertek__RFQ_Package__c.isCreateable()
             && Schema.sObjectType.buildertek__RFQ_Item__c.fields.buildertek__Cost_Code__c.isCreateable()) {*/
@@ -21,7 +21,7 @@ public with sharing class RFQLinesDAO {
         /*} */
         return rfqLinesToInsert.Id;
       }else{
-          return 'Failed';
+          return 'The RFQ has already been '+'"'+rfqrec[0].buildertek__Status__c+'"'+ ' You can not add more lines';
       }
     }
     

@@ -300,7 +300,7 @@
         // get the selected files using aura:id [return array of files]
         //var fileInput = component.find("fuploader").get("v.files");
         var fileInput = component.get("v.selectedfileslist");
-        console.log('fileInput ==> '+fileInput);
+        console.log('fileInput ==> ',fileInput);
         //alert('fileInput--->'+fileInput);
         this.fileInputLenght = fileInput.length; 
         //alert('uploadHelper--->'+recid);

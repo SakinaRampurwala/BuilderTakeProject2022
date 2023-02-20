@@ -1,5 +1,8 @@
 ({
     doInit : function(component, event, helper) {
+        $A.get("e.c:BT_SpinnerEvent").setParams({
+            "action": "HIDE"
+        }).fire();
         var recordId = component.get("v.mainObjectId");
 
       /*  var action = component.get("c.getRFQ"); 
@@ -117,7 +120,7 @@
     
     doSave : function(component, event, helper) {
         //  alert('%%%'+component.get("v.selectedTradeTypeId"));
-        // component.set("v.Spinner", true);
+        component.set("v.Spinner", true);
         var rfqLineToInsert = JSON.stringify(component.get("v.newRFQLine"));
         //alert(rfqLineToInsert);
         var Name = component.get("v.newRFQLine.Name");
@@ -157,7 +160,7 @@
                component.set("v.Spinner", false);*/
         }else{ 
             if( Name == undefined || Name == null || Name == "" || Name == " "){
-                // component.set("v.Spinner", false);
+                component.set("v.Spinner", false);
                 component.set("v.isName", true);
                 var toastEvent = $A.get("e.force:showToast");
                 toastEvent.setParams({
@@ -207,20 +210,20 @@
                 var state = response.getState();
                 //alert(JSON.stringify(state));
                 if(state === "SUCCESS"){
-                    // component.set("v.Spinner", false);
+                    component.set("v.Spinner", false);
 
                     var res = response.getReturnValue();
                     console.log('res',res);
-                    if(res == 'Failed'){
+                    if(res.length > 20){
                         var toastEvent = $A.get("e.force:showToast");
                         toastEvent.setParams({
-                            message: 'RFQ is already Accepted.',
+                            message: res,
                             duration:' 5000',
                             key: 'info_alt',
                             type: 'error',
                             mode: 'dismissible'
                         });
-                        component.get("v.onSuccess")(); 
+                        // component.get("v.onSuccess")(); 
                         toastEvent.fire();
                     }
                     else{
@@ -255,7 +258,7 @@
     },
     
     doSaveAndNew : function(component, event, helper) {
-        // component.set("v.Spinner", true);
+        component.set("v.Spinner", true);
         var Name = component.get("v.newRFQLine.Name");
         var rfqLineToInsert = JSON.stringify(component.get("v.newRFQLine"));
         var rfqId = component.get("v.mainObjectId");
@@ -325,12 +328,13 @@
                 
                 var state = response.getState();
                 if(state === "SUCCESS"){
+                    component.set("v.Spinner", false);
                     var res = response.getReturnValue();
                     console.log('res',res);
-                    if(res == 'Failed'){
+                    if(res.length > 20){
                         var toastEvent = $A.get("e.force:showToast");
                         toastEvent.setParams({
-                            message: 'RFQ is already Accepted.',
+                            message: res,
                             duration:' 5000',
                             key: 'info_alt',
                             type: 'error',
@@ -338,7 +342,7 @@
                         });
                         toastEvent.fire();
                         // component.set("v.Spinner", false);
-                        component.get("v.onSuccess")();
+                        // component.get("v.onSuccess")();
                     }
                     else{
                         var product = component.get('v.selectedLookUpRecord');
@@ -372,6 +376,9 @@
     
     doCancel : function(component, event, helper) {
         component.get("v.onCancel")();    
+        $A.get("e.c:BT_SpinnerEvent").setParams({
+            "action": "HIDE"
+        }).fire();
     },
     
     changeEvent: function (component, event, helper) {

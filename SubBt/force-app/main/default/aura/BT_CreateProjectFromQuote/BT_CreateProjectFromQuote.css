@@ -38,13 +38,17 @@
 .THIS .inputSearch{
     /* width: 50%; */
     display: flex;
-    justify-content: space-around;
+    /* justify-content: space-around; */
     width: 100%;
 }
 .THIS .inputSearch .slds-form-element__label{
     width: 33%;
 }
 .THIS .slds-dropdown_fluid{
-    width: 67%;
+    width: 25%;
     height : 50%
+}
+
+.THIS .setting{
+    left: 12% !important; 
 }

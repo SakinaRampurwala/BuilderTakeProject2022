@@ -41,37 +41,40 @@
                             <lightning:inputField aura:id="accountId" fieldName="buildertek__Account__c" />
                             <lightning:inputField aura:id="projectManagerId" fieldName="buildertek__Project_Manager__c" />
                             <lightning:inputField aura:id="contractDateId" fieldName="buildertek__Contract_Date__c" />
-                            
-                            <lightning:input label="Quotes" autocomplete="off" class="inputSearch" type="search" placeholder="Search Quotes..." value="{!v.searchNameFilter}" onclick="{!c.searchQuote}" onkeyup="{!c.searchQuote}" />
-                            <aura:if isTrue="{!v.displayNameList}" >
-                                <div id="listbox-id-11" class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid searchResult" role="listbox" style="margin-left: 150px;">
-                                    <ul class="slds-listbox slds-listbox_vertical" role="presentation">
-                                    <aura:iteration items="{!v.ProductNameList}" var="result">
-                                        <li role="presentation" class="slds-listbox__item" data-value="{!result.Id}" onclick="{!c.clickHandler3}">
-                                            <div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small" role="option">
-                                                <span class="slds-media__figure slds-listbox__option-icon">
-                                                    <span class="slds-icon_container slds-icon-standard-account">
-                                                        <lightning:icon iconName="custom:custom17" title="custom17" size="small"/>
-                                                    </span>
-                                                  </span>
-                                                <span class="slds-media__body" style="padding: 2px;">
-                                                    <span class="slds-truncate" title="All Opportunities">
-                                                        <span>{!result.Name}</span>
-                                                    </span>
+                            <!-- <div>
+                                <div>
+                                    <lightning:input label="Quotes" autocomplete="off" class="inputSearch" type="search" placeholder="Search Quotes..." value="{!v.searchNameFilter}" onclick="{!c.searchQuote}" onkeyup="{!c.searchQuote}" />
+                                    <aura:if isTrue="{!v.displayNameList}" >
+                                        <div id="listbox-id-11" class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid searchResult setting" role="listbox" >
+                                            <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                                            <aura:iteration items="{!v.ProductNameList}" var="result">
+                                                <li role="presentation" class="slds-listbox__item" data-value="{!result.Id}" onclick="{!c.clickHandler3}">
+                                                    <div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small" role="option">
+                                                        <span class="slds-media__figure slds-listbox__option-icon">
+                                                            <span class="slds-icon_container slds-icon-standard-account">
+                                                                <lightning:icon iconName="custom:custom17" title="custom17" size="small"/>
+                                                            </span>
+                                                        </span>
+                                                        <span class="slds-media__body" style="padding: 2px;">
+                                                            <span class="slds-truncate" title="All Opportunities">
+                                                                <span>{!result.Name}</span>
+                                                            </span>
+                                                        </span>
+                                                    </div>
+                                                </li>
+                                            </aura:iteration>
+                                            <aura:if isTrue="{!empty(v.ProductNameList)}">
+                                                <span>
+                                                    <p class="blank-lst">
+                                                        There Are No Product With This Name
+                                                    </p>
                                                 </span>
-                                            </div>
-                                        </li>
-                                    </aura:iteration>
-                                    <aura:if isTrue="{!empty(v.ProductNameList)}">
-                                        <span>
-                                            <p class="blank-lst">
-                                                There Are No Product With This Name
-                                            </p>
-                                        </span>
+                                            </aura:if>
+                                            </ul>
+                                        </div>
                                     </aura:if>
-                                    </ul>
                                 </div>
-                            </aura:if>
+                            </div> -->
                     </lightning:recordEditForm>        
                 </div>
                 <div class="slds-modal__footer">

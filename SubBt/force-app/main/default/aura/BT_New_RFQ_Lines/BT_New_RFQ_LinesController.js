@@ -3,12 +3,18 @@
 
     //},
     addNewRFQLine: function (component, event, helper) {
-        // action
+        // // action
+        // $A.get("e.c:BT_SpinnerEvent").setParams({
+        //     "action": "SHOW"
+        // }).fire();
         console.log('in first method');
         var action = component.get("c.getRFQLinesUsingProduct");
         action.setCallback(this, function (response) {
             var state = response.getState();
             if (state === "SUCCESS") {
+                $A.get("e.c:BT_SpinnerEvent").setParams({
+                    "action": "HIDE"
+                }).fire();
                 console.log('state --> ',{state});
                 var result = response.getReturnValue();
                 console.log('result --> ',{result});

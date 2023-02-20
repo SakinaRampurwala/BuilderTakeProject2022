@@ -18,6 +18,25 @@ public with sharing class RFQItemTriggerHandler {
     }
     
     public void OnBeforeInsert(RFQ_Item__c[] newRFQItems){
+
+        Set<Id> rfqId = new Set<Id>();
+
+        for(RFQ_Item__c rfqLine : newRFQItems){
+            System.debug('rfqLine.buildertek__RFQ_Package__c--->>>'+rfqLine.buildertek__RFQ_Package__c);
+            rfqId.add(rfqLine.buildertek__RFQ_Package__c);
+        }
+        List<buildertek__RFQ__c> rfqList = [select id,name,buildertek__Status__c from buildertek__RFQ__c where id IN : rfqId ];
+        System.debug('rfqList--->>>'+rfqList);
+        for(buildertek__RFQ__c rfq : rfqList){
+            System.debug('In If');
+            System.debug('rfq.buildertek__Status__c--->>>'+rfq.buildertek__Status__c);
+            if(rfq.buildertek__Status__c != 'New') {
+                System.debug('rfq.buildertek__Status__c--->>>'+rfq.buildertek__Status__c);
+                rfq.addError('The RFQ has already been ' +rfq.buildertek__Status__c+ ' You can not add more lines');
+            }
+        }
+
+        System.debug('rf--->>'+rfqList);
         
         RFQDAO.copyBudgetItemDetails(newRFQItems);     
             
