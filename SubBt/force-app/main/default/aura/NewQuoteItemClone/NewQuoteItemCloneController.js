@@ -807,11 +807,8 @@
 
     deleteSelectedQuoteItem: function(component, event, helper) {
         console.log('---In Delete Method---');
-        debugger;
+        component.set("v.Spinner22", true);
         if (component.find("checkQuoteItem") != undefined) {
-            $A.get("e.c:BT_SpinnerEvent").setParams({
-                "action": "SHOW"
-            }).fire();
             var QuoteIds = [];
             var rowData;
             var newRFQItems = [];
@@ -833,7 +830,7 @@
                 }
             }
             if (QuoteIds.length > 0) {
-
+                // component.set("v.Spinner22", false);
                 var modal = component.find("exampleModal");
                 $A.util.removeClass(modal, 'hideDiv');
                 component.set("v.QuotelinePopupHeader", "Delete Quote Lines");
@@ -860,10 +857,9 @@
                     mode: 'pester'
                 });
                 toastEvent.fire();
-                $A.get("e.c:BT_SpinnerEvent").setParams({
-                    "action": "HIDE"
-                }).fire();
+                component.set("v.Spinner22", false);
             }
+            component.set("v.Spinner22", false);
         }
     },
 

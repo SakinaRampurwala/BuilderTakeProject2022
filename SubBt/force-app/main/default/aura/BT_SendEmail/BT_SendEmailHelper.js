@@ -177,6 +177,7 @@
 		pdfFileName = component.get("v.pdfFileName");
 		var dbAction = component.get("c.SendEmail");
         console.log('pdfFileName' + component.get("v.pdfFileName"));
+        // debugger;
         dbAction.setParams({
             to:toIds,
             cc: ccIds,
@@ -320,6 +321,8 @@
             if(filenameexists){
                 var file = fileInput[i];
                 var self = this;
+
+                console.log(file.size , '=======file.size=========');
                 //alert(file);
                 // check the selected file size, if select file size greter then MAX_FILE_SIZE,
                 // then show a alert msg to user,hide the loading spinner and return from function 
@@ -421,8 +424,13 @@
                 // check if the start postion is still less then end postion 
                 // then call again 'uploadInChunk' method , 
                 // else, diaply alert msg and hide the loading spinner
+                console.log(startPosition < endPosition);
+                console.log({startPosition});
+                console.log({endPosition});
+
                 if (startPosition < endPosition) {
                     this.uploadInChunk(component, file, fileContents, startPosition, endPosition, attachId,recid,helper);
+                    // debugger;
                 } else {
                     //this.showMessage('File(s) uploaded successfully',true);
                    /* var navEvt = $A.get("e.force:navigateToSObject");
@@ -493,23 +501,8 @@
             }
         });
         $A.enqueueAction(action);
-    }
+    },
            
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
     
 })

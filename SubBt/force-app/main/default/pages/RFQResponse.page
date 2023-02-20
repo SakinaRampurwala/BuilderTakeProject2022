@@ -534,9 +534,8 @@
                 <apex:outputPanel rendered="{!rfqToVendor.Status__c != 'Quote Submitted'}">
                     <div>
                         <span>
-                            <img src="{!$Resource.buildertek__Company_Logo}" width="20%" height="15%" />
+                            <c:DisplayImageInTemplate /> 
                         </span>
-
                         <span>
                             <center>
                                 <b>
@@ -556,8 +555,10 @@
                 <apex:outputPanel rendered="{!rfqToVendor.Status__c == 'Quote Submitted'}">
                     <div>
                         <span>
-                            <img src="{!$Resource.buildertek__Company_Logo}" width="20%" height="15%" />
+                            <c:DisplayImageInTemplate /> 
                         </span>
+
+
                         <span>
                             <center>
                                 <b>

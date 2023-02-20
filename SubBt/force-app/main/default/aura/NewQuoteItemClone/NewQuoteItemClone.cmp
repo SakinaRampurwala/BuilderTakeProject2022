@@ -73,6 +73,7 @@
     <aura:attribute name="record" type="Object" />
     <aura:attribute name="Spinner" type="boolean" default="false" />
     <aura:attribute name="Spinner2" type="boolean" default="false" />
+    <aura:attribute name="Spinner22" type="boolean" default="false" />
     <aura:attribute name="InnerList" type="Object" />
     <aura:attribute name="isSelectAll" type="boolean" default="false" />
     <aura:attribute name="summaryColumns" type="List" />
@@ -864,6 +865,19 @@
                         <div class="slds-m-around_xx-large">
                             <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
                                 aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                                <aura:if isTrue="{!v.Spinner22}">
+                                    <div aura:id="spinnerId" class="slds-spinner_container">
+                                        <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative"
+                                            role="alert">
+                                            <span class="slds-assistive-text">Loading</span>
+                                            <div class="slds-spinner__dot-a"></div>
+                                            <div class="slds-spinner__dot-b"></div>
+                                            <div class="custom-loading-text">
+                                                <b>Processing, Please Wait</b>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </aura:if>
                                 <div class="slds-modal__container">
                                     <header class="slds-modal__header">
                                         <aura:if isTrue="{!v.isQuotelinedelete}">
@@ -1075,7 +1089,7 @@
                                                                 </div>
                                                             </div>
                                                         </td>
-                                                        <td style="text-align:right">
+                                                        <td style="text-align:right;display:flex; justify-content:center; align-items:center">
                                                             <div class="slds-truncate">
                                                                 <span data-id="{!tar.recordId}"
                                                                     onclick="{!c.onclickDuplicate}">
