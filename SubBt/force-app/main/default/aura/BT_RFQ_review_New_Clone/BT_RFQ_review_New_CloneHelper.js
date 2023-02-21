@@ -531,6 +531,7 @@
 			if (component.isValid() && response.getState() === "SUCCESS") {
 	
 				if (response.getReturnValue() == 'Email Sent Successfully') {
+					component.set('v.checkThis' , false);
 					component.find("checkAllRFQs").set("v.checked", false);
 					toastEvent.setParams({
 						"type": "success",

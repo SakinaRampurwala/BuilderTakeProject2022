@@ -752,12 +752,12 @@
                                             <td>
                                                 <aura:html tag="style">
                                                     .slds-lookup__menu{
-                                                    width: max-content !important;
+                                                    width: 100% !important;
                                                     height: 200px !important;
                                                     }
 
                                                     .slds-lookup__list{
-                                                    width: max-content !important;
+                                                    width: auto !important;
                                                     height: 190px !important;
                                                     }
                                                 </aura:html>
@@ -1011,9 +1011,13 @@
                                             </div> -->
 
                                                 </td>
-                                                <td colspan="{!v.TotalRecords.totalColumns}">
+                                                <td >
+                                                </td>
                                                 <td>
                                                 </td>
+                                                <td>
+                                                </td>
+                                                <td>
                                                 </td>
                                                 <td>
                                                 </td>

@@ -6,5 +6,5 @@
     position: relative;
 }
 .THIS .slds-lookup__menu{
-    width: max-content !important; 
+    width: max-content ; 
 }
