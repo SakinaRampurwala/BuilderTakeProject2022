@@ -7,8 +7,8 @@ public class CreateProjectfromQuoteAcceptanceonOpp {
  public Boolean isRemovesingleQuoteLineOption{get;set;}
  public Boolean hideGlobalMargin{get;set;}
  public Boolean hideGlobalMarkup{get;set;}
- public Boolean Margin{get;set;}
- public Boolean Markup{get;set;}
+//  public Boolean Margin{get;set;}
+//  public Boolean Markup{get;set;}
 
  public string  isBaseUrl {get;set;} 
  public buildertek__Admin_Interface_Node_Configuration__c admininterface {get;set;} 
@@ -16,7 +16,7 @@ public class CreateProjectfromQuoteAcceptanceonOpp {
     
     public CreateProjectfromQuoteAcceptanceonOpp(){
         admininterface = New buildertek__Admin_Interface_Node_Configuration__c();
-        buildertek__Admin_Interface_Node_Configuration__c adminInterfaceNodeConfigurations = [Select Id,buildertek__Quote_Configuration__c,buildertek__Margin__c, buildertek__Markup__c,
+        buildertek__Admin_Interface_Node_Configuration__c adminInterfaceNodeConfigurations = [Select Id,buildertek__Quote_Configuration__c,
                                                                                               buildertek__Email_Subject__c,buildertek__Send_customer_Quote_after_signature__c,
                                                                                               buildertek__Create_Project_from_Opportunity__c,buildertek__Update_the_Opp_Amount__c,buildertek__Remove_Single_Quote_Line_Option__c,
                                                                                               buildertek__Default_Project_Owner__c,buildertek__Org_Base_URL__c, buildertek__Hide_Global_Margin__c, buildertek__Hide_Global_Markup__c
@@ -29,10 +29,6 @@ public class CreateProjectfromQuoteAcceptanceonOpp {
         isRemovesingleQuoteLineOption = adminInterfaceNodeConfigurations.buildertek__Remove_Single_Quote_Line_Option__c;
         hideGlobalMargin = adminInterfaceNodeConfigurations.buildertek__Hide_Global_Margin__c;
         hideGlobalMarkup = adminInterfaceNodeConfigurations.buildertek__Hide_Global_Markup__c;
-
-        Margin = adminInterfaceNodeConfigurations.buildertek__Margin__c;
-        Markup = adminInterfaceNodeConfigurations.buildertek__Markup__c;
-
         admininterface.buildertek__Default_Project_Owner__c = adminInterfaceNodeConfigurations.buildertek__Default_Project_Owner__c;
         //if(adminInterfaceNodeConfigurations.buildertek__Org_Base_URL__c == null){
             isBaseUrl = System.URL.getSalesforceBaseUrl().toExternalForm();
@@ -55,8 +51,7 @@ public class CreateProjectfromQuoteAcceptanceonOpp {
         adminInterfaceNodeConfigurations.buildertek__Hide_Global_Margin__c = hideGlobalMargin;
         adminInterfaceNodeConfigurations.buildertek__Hide_Global_Markup__c = hideGlobalMarkup;
 
-        adminInterfaceNodeConfigurations.buildertek__Margin__c = Margin;
-        adminInterfaceNodeConfigurations.buildertek__Markup__c = Markup;
+
 
         system.debug('isBaseUrl'+isBaseUrl);
         System.debug(adminInterfaceNodeConfigurations.buildertek__Remove_Single_Quote_Line_Option__c);

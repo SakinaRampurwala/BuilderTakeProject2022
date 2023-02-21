@@ -135,8 +135,6 @@
                     component.set('v.removeSingleQuoteLineOption', result[0]);
                     component.set('v.hideGlobalMargin', result[1]);
                     component.set('v.hideGlobalMarkup', result[2]);
-                    component.set('v.hideMargin', result[3]);
-                    component.set('v.hideMarkup', result[4]);
 
 
                 }
