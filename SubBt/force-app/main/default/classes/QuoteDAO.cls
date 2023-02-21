@@ -680,11 +680,18 @@ public with sharing class QuoteDAO{
         QuoteLineToInsert.buildertek__Quantity__c = QuoteRec.buildertek__Quantity__c;
         QuoteLineToInsert.buildertek__Notes__c = QuoteRec.buildertek__Notes__c;
         QuoteLineToInsert.buildertek__Cost_Code__c = QuoteRec.buildertek__Cost_Code__c;
+        QuoteLineToInsert.buildertek__Margin__c = QuoteRec.buildertek__Margin__c;
         QuoteLineToInsert.buildertek__Markup__c = QuoteRec.buildertek__Markup__c;
         QuoteLineToInsert.buildertek__Additional_Discount__c = QuoteRec.buildertek__Additional_Discount__c;
         System.debug('---Budget Line Items recordId 321--> ' + QuoteLineToInsert);
 
         insert QuoteLineToInsert;
+
+        if(QuoteLineToInsert.buildertek__Markup__c !=0.0000){
+            QuoteLineToInsert.buildertek__Margin__c = QuoteRec.buildertek__Margin__c;
+        }
+        update QuoteLineToInsert;
+
         return QuoteLineToInsert;
     }
 
@@ -2204,14 +2211,19 @@ public with sharing class QuoteDAO{
     }
     @AuraEnabled
     public static List<Boolean> getadminvalues(){
-        buildertek__Admin_Interface_Node_Configuration__c adminInterfaceNodeConfigurations = [Select Id, buildertek__Remove_Single_Quote_Line_Option__c, buildertek__Hide_Global_Margin__c, buildertek__Hide_Global_Markup__c
+        buildertek__Admin_Interface_Node_Configuration__c adminInterfaceNodeConfigurations = [Select Id, buildertek__Remove_Single_Quote_Line_Option__c, buildertek__Hide_Global_Margin__c, buildertek__Hide_Global_Markup__c,buildertek__Margin__c,buildertek__Markup__c
                                                                                               from buildertek__Admin_Interface_Node_Configuration__c
                                                                                               WHERE Name = :'Quote Configuration'];
 
         Boolean checkSingleQLine = adminInterfaceNodeConfigurations.buildertek__Remove_Single_Quote_Line_Option__c ;
         Boolean checkButtonMargin = adminInterfaceNodeConfigurations.buildertek__Hide_Global_Margin__c;
         Boolean checkButtonMarkup = adminInterfaceNodeConfigurations.buildertek__Hide_Global_Markup__c;
-        List<Boolean> islien = new List<Boolean>{checkSingleQLine, checkButtonMargin,checkButtonMarkup};
+        Boolean marginBtn = adminInterfaceNodeConfigurations.buildertek__Margin__c;
+        Boolean markupBtn = adminInterfaceNodeConfigurations.buildertek__Markup__c;
+
+        List<Boolean> islien = new List<Boolean>{checkSingleQLine, checkButtonMargin,checkButtonMarkup , marginBtn , markupBtn};
+
+
         return islien;
     }   
 

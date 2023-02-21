@@ -135,6 +135,10 @@
                     component.set('v.removeSingleQuoteLineOption', result[0]);
                     component.set('v.hideGlobalMargin', result[1]);
                     component.set('v.hideGlobalMarkup', result[2]);
+                    component.set('v.hideMargin', result[3]);
+                    component.set('v.hideMarkup', result[4]);
+
+
                 }
             }
 
@@ -651,13 +655,17 @@
             "action": "SHOW"
         }).fire();
         var quoteObject = component.get("v.newQuote");
+        console.log({quoteObject});
         console.log(component.get("v.newQuote"));
         console.log(' Quote Data ==> ' + JSON.stringify(quoteObject));
 
         var recordId = component.get("v.recordId");
         component.set("v.newQuote.buildertek__Quote__c", recordId);
         var markup = quoteObject.buildertek__Markup__c;
+        var margin = quoteObject.buildertek__Margin__c;
+        console.log({margin} , '====margin=====');
         // markup = markup * 100;
+        component.set("v.newQuote.buildertek__Margin__c", margin);
         component.set("v.newQuote.buildertek__Markup__c", markup);
         var action = component.get("c.saveQuoteLineItem");
         action.setParams({
@@ -682,6 +690,7 @@
                 component.set('v.newQuote.buildertek__Unit_Cost__c', '');
                 component.set('v.newQuote.buildertek__Notes__c', '');
                 component.set('v.newQuote.buildertek__Quantity__c', 1);
+                component.set('v.newQuote.buildertek__Margin__c', '');
                 component.set('v.newQuote.buildertek__Markup__c', '');
                 component.set('v.newQuote.buildertek__Product__c', '');
                 component.set("v.listofproductfamily", '');
