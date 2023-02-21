@@ -722,6 +722,9 @@
                         // getBtn.set('v.disabled', true);
                     }
                     component.set("v.columns", result.columns);
+                    console.log('columns-->',component.get("v.columns"));
+                    console.log('total-->',component.get("v.TotalRecords"));
+
                     component.set("v.page", result.page);
                     component.set("v.total", result.total);
 

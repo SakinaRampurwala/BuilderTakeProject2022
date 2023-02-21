@@ -1070,7 +1070,7 @@
 
                                                     <aura:if isTrue="{!group.Id == tar.groupId}">
 
-                                                        <td>
+                                                        <td style="width: 40px;">
                                                             {!tar.recordCount +1}
                                                         </td>
                                                         <td>
@@ -1089,7 +1089,7 @@
                                                                 </div>
                                                             </div>
                                                         </td>
-                                                        <td style="text-align:right;display:flex; justify-content:center; align-items:center">
+                                                        <td style="text-align:left;">
                                                             <div class="slds-truncate">
                                                                 <span data-id="{!tar.recordId}"
                                                                     onclick="{!c.onclickDuplicate}">
@@ -1344,7 +1344,7 @@
                                                     <!-- <aura:if isTrue="{!v.wrapperListLength != totalRecordsIndex}">  -->
                                                     <aura:if
                                                         isTrue="{!group.Name == rec.groupName &amp;&amp; rec.fieldType == 'false'}">
-                                                        <td style="text-align:right">
+                                                        <td style="text-align:left">
                                                         </td>
                                                     </aura:if>
                                                     <!-- </aura:if> -->

@@ -69,40 +69,69 @@
         var contractDateId = component.find("contractDateId").get("v.value");
         var QuoteRec = component.get("v.recordData");        
         console.log('QuoteRec---->>>',{QuoteRec});
-        var action = component.get("c.createProject");
-        action.setParams({
-            recordId : QuoteRec,
-            projectName : project,
-            account : accountId,
-            projectManager : projectManagerId,
-            contractDate : contractDateId,
-        });
-        action.setCallback(this, function(response){
-            var state = response.getState();
-            if(state === "SUCCESS"){
-                var result = response.getReturnValue();
-                component.set("v.Spinner", false);
-                $A.get("e.force:closeQuickAction").fire();
-                var toastEvent = $A.get("e.force:showToast");
-                toastEvent.setParams({
-                    title : 'Success',
-                    message: 'Project Created successfully.',
-                    duration:' 5000',
-                    key: 'info_alt',
-                    type: 'success',
-                    mode: 'pester'
-                });
-                toastEvent.fire();
-                var navEvt = $A.get("e.force:navigateToSObject");
-                navEvt.setParams({
-                    "recordId": result,
-                    "slideDevName": "related"
-                });
-                navEvt.fire();
-                $A.get('e.force:refreshView').fire();
-            }
-        });
-        $A.enqueueAction(action);
+        if(project == null || project == ''){
+            component.set("v.Spinner", false);
+            var toastEvent = $A.get("e.force:showToast");
+            toastEvent.setParams({
+                title : 'Error',
+                message: 'Please enter Project Name.',
+                duration:' 5000',
+                key: 'info_alt',
+                type: 'error',
+                mode: 'pester'
+            });
+            toastEvent.fire();
+            return;
+        }
+        else if(accountId == null || accountId == ''){
+            component.set("v.Spinner", false);
+            var toastEvent = $A.get("e.force:showToast");
+            toastEvent.setParams({
+                title : 'Error',
+                message: 'Please select Account.',
+                duration:' 5000',
+                key: 'info_alt',
+                type: 'error',
+                mode: 'pester'
+            });
+            toastEvent.fire();
+            return;
+        }else{
+            var action = component.get("c.createProject");
+            action.setParams({
+                recordId : QuoteRec,
+                projectName : project,
+                account : accountId,
+                projectManager : projectManagerId,
+                contractDate : contractDateId,
+            });
+            action.setCallback(this, function(response){
+                var state = response.getState();
+                if(state === "SUCCESS"){
+                    var result = response.getReturnValue();
+                    component.set("v.Spinner", false);
+                    $A.get("e.force:closeQuickAction").fire();
+                    var toastEvent = $A.get("e.force:showToast");
+                    toastEvent.setParams({
+                        title : 'Success',
+                        message: 'Project Created successfully.',
+                        duration:' 5000',
+                        key: 'info_alt',
+                        type: 'success',
+                        mode: 'pester'
+                    });
+                    toastEvent.fire();
+                    var navEvt = $A.get("e.force:navigateToSObject");
+                    navEvt.setParams({
+                        "recordId": result,
+                        "slideDevName": "related"
+                    });
+                    navEvt.fire();
+                    $A.get('e.force:refreshView').fire();
+                }
+            });
+            $A.enqueueAction(action);
+        }
         
     },
     searchQuote: function (component, event, helper){

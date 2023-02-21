@@ -47,7 +47,7 @@
 
         <footer class="slds-modal__footer">
             <lightning:button label="Cancel" title="Cancel" onclick="{!c.cancel }" />
-            <lightning:button variant="brand" label="Create" title="Create" onclick="{!c.createCO }" />
+            <lightning:button variant="brand" label="Import" title="Create" onclick="{!c.createCO }" />
         </footer>
     </aura:if>
 </aura:component>

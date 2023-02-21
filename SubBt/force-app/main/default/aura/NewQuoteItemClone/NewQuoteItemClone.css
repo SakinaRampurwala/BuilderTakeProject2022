@@ -40,6 +40,7 @@
 .THIS .addBudgetLineStyle {
     font-size: 14px !important;
     height: 1.5rem !important;
+    width: max-content !important;
 }
 
 

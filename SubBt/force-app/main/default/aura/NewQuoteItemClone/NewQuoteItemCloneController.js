@@ -1023,9 +1023,7 @@
     },
     deleteSelectedQuoteItemlines: function(component, event, helper) {
         console.log('on delete quote');
-        $A.get("e.c:BT_SpinnerEvent").setParams({
-            "action": "SHOW"
-        }).fire();
+        component.set("v.Spinner22",true);
         var QuoteIds = [];
         var rowData;
         var newRFQItems = [];
@@ -1053,6 +1051,7 @@
                 console.log({state});
                 console.log(response.getError());
                 if (state === "SUCCESS") {
+                    component.set("v.Spinner22",false);
                     component.set("v.isQuotelinedelete", false);
                     $A.get("e.force:refreshView").fire();
                     window.setTimeout(

@@ -37,8 +37,8 @@
     </div>
                 <div class="slds-modal__content slds-p-around--large"  onclick="{!c.closeSearchOption}">
                     <lightning:recordEditForm aura:id="recordViewForm" objectApiName="buildertek__Project__c">
-                            <lightning:inputField aura:id="projectNameId" fieldName="Name"/>
-                            <lightning:inputField aura:id="accountId" fieldName="buildertek__Account__c" />
+                            <lightning:inputField aura:id="projectNameId" fieldName="Name" required="true"/> 
+                            <lightning:inputField aura:id="accountId" fieldName="buildertek__Account__c" required="true"/>
                             <lightning:inputField aura:id="projectManagerId" fieldName="buildertek__Project_Manager__c" />
                             <lightning:inputField aura:id="contractDateId" fieldName="buildertek__Contract_Date__c" />
                             <!-- <div>

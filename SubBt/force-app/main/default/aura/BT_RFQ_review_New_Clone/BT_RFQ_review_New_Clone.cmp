@@ -174,11 +174,11 @@
                             <lightning:button iconName="utility:close" iconPosition="left" variant="bare"
                                               onclick="{!c.cancelRFQ}" label="Cancel RFQ" class="iconWithoutBorder" />
                         </li>
-                        <li
+                        <!-- <li
                             style="display: inline-block;vertical-align: middle;border-right: 1px solid #ccc;">
                             <lightning:button iconName="utility:close" iconPosition="left" variant="bare"
                                               onclick="{!c.cancelvoidRFQ}" label="Void RFQ" class="iconWithoutBorder" />
-                        </li>
+                        </li> -->
                     </ul>
                 </div>
             </header>
