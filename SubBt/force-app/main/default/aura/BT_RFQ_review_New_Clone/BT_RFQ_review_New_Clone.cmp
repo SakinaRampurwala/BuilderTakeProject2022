@@ -96,6 +96,9 @@
     <aura:attribute name="PageSize" type="integer" default="30"/>
     <aura:attribute name="listOfSelectedSOVIds" type="List" default="[]"/>
     <aura:attribute name="contactvendor" type="List" default="[]"/>
+    <aura:attribute name="checkThis" type="Boolean" default="false"/>
+
+
 
 
 
@@ -108,7 +111,10 @@
             <header style="background: #1b5297;padding: 11px 5px 11px 15px;">
                 <div class="left-box" style="display: inline-block;vertical-align: middle;width: 20%;">
                     <div style="display:flex;">
-                        <ui:inputCheckbox aura:id="checkAllRFQs" change="{!c.selectAll}" class="checkAllStyle" />
+                        <!-- <ui:inputCheckbox aura:id="checkAllRFQs" change="{!c.selectAll}" class="checkAllStyle" /> -->
+                        <ui:inputCheckbox aura:id="checkAllRFQs"   change="{!c.selectAll}" value="{!v.checkThis}"  class="checkAllStyle" />
+
+
                         <td style="margin-top: 0px;margin-right: 5px;"
                             >
                             <!--  <span style="display:inline-block;" class="{!v.currentTab+' expandAllBtn_'+v.budgetId}" data-iconattr ="{!'expandAllBtn_'+v.budgetId}" data-iconname="Expand All" onclick="{!c.expandCollapeAll}"> -->
@@ -194,20 +200,24 @@
                                                                  width:100%;">
                                         <div class="checkbox check-btn"
                                              style="display: inline-block; vertical-align: middle;margin: 0 auto;">
-                                            <aura:if isTrue="{!vlist.buildertek__Status__c!='Rejected'}">
-                                                <label class="custom-radio-check">
-                                                    <lightning:input aura:id="vendorselection" type="checkbox"
-                                                                     variant="lable-hidden"
-                                                                     checked="{!vlist.buildertek__IS_VENDOR_SELECTED__c}"
-                                                                     name="{!vlist.Id}" onchange="{!c.onVendorSelectionChange}"
-                                                                     style="padding-bottom: 30px;padding-right: 0px;" />
-                                                </label>
+                                            <aura:if isTrue="{!vlist.buildertek__Status__c=='Rejected'}">
+                                                    <label class="custom-radio-check">
+                                                        <lightning:input aura:id="vendorselection" type="checkbox"
+                                                                    variant="lable-hidden"
+                                                                    checked="{!vlist.buildertek__IS_VENDOR_SELECTED__c}"
+                                                                    name="{!vlist.Id}" onchange="{!c.onVendorSelectionChange}"
+                                                                    style="padding-bottom: 30px;padding-right: 0px; display:none"  />
+                                                    </label>
+
                                                 <aura:set attribute="else">
-                                                    <table>
-                                                        <tr>
-                                                            <td style="height: 1.3em; padding: 6px 16px;"></td>
-                                                        </tr>
-                                                    </table>
+                                                    
+                                                    <label class="custom-radio-check">
+                                                        <lightning:input aura:id="vendorselection" type="checkbox"
+                                                                        variant="lable-hidden"
+                                                                        checked="{!vlist.buildertek__IS_VENDOR_SELECTED__c}"
+                                                                        name="{!vlist.Id}" onchange="{!c.onVendorSelectionChange}"
+                                                                        style="padding-bottom: 30px;padding-right: 0px;" />
+                                                    </label>
                                                 </aura:set>
                                             </aura:if>
                                         </div>

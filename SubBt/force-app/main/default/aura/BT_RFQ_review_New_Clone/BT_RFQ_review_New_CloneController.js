@@ -91,14 +91,13 @@
 
     selectAll: function(component, event, helper) {
         //alert("hai");
-        debugger;
+        // debugger;
         var checkAllSelected = event.getSource().get("v.value");
         var vendorList = component.get("v.selectedVendorList");
         var getAllId = component.find("vendorselection");
         // var getAllId = JSON.parse(JSON.stringify(component.find("vendorselection")));
         component.set('v.selectallid', checkAllSelected);
-        // alert(checkAllSelected);
-        debugger;
+
         if (getAllId != undefined) {
             console.log('Is not null');
             if (vendorList.length > 1) {
@@ -141,7 +140,19 @@
             }
         }
         component.set('v.selectedVendorList', vendorList);
-        //alert( JSON. stringify(vendorList));
+
+        // === BUIL-3031:- Changes if status = "REJECTED" then hide that checkbox and make value of checkbox = false;
+        vendorList.forEach(function(value){
+            if(value.buildertek__Status__c == 'Rejected'){
+                value.buildertek__IS_VENDOR_SELECTED__c =false;
+                vendorList.push(value);
+            }
+        });
+        var uniqueSet = new Set(vendorList);
+        var uniqueList = Array.from(uniqueSet);    
+        component.set("v.selectedVendorList" , uniqueList);
+        console.log(component.get("v.selectedVendorList" ));
+        // === End of BUIL-3031 ====
     },
 
     openRFQ: function(component, event, helper) {
@@ -508,7 +519,7 @@
                                 }
 
                             } else {
-                                debugger;
+                                // debugger;
 
                                 if (result.ConList) {
                                     component.set("v.nonPortalUserContactList", result.ConList);
@@ -1158,7 +1169,7 @@ component.set('v.selectedVendorList',selectedVendorList);
         }
     },
     cancelRFQ: function(component, event, helper) {
-        debugger;
+        // debugger;
         var isAwarded = component.get('v.isAwarded');
         var isAccepted = component.get('v.isAccepted');
         var toastEvent = $A.get("e.force:showToast");
@@ -1200,7 +1211,7 @@ toastEvent.fire();
         }
     },
     cancelvoidRFQ: function(component, event, helper) {
-        debugger;
+        // debugger;
         var isAwarded = component.get('v.isAwarded');
         var isAccepted = component.get('v.isAccepted');
         var toastEvent = $A.get("e.force:showToast");
