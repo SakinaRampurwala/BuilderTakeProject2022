@@ -777,6 +777,8 @@ public with sharing class QuoteDAO{
         wrap.wrapperList = wrapperList;
         wrap.columns = Detail.columns;
         wrap.totalColumns = Detail.columns.size() / 2;
+        wrap.Totalcols = Detail.columns.size()+3;
+
         wrap.groups = Detail.groups;
         wrap.pageSize = pageSize;
         wrap.page = (Integer)pageNumber;
@@ -1903,6 +1905,10 @@ public with sharing class QuoteDAO{
 
         @AuraEnabled
         public String status{get;set;}
+
+        @AuraEnabled
+        public Integer Totalcols{ get; set; }
+
     }
 
     public class productfamilyClass{
@@ -2034,13 +2040,7 @@ public with sharing class QuoteDAO{
         for(buildertek__Quote_Item__c qql : Quotelines){
             System.debug('Record => ' + qql);
             buildertek__Quote_Item__c newQline = new    buildertek__Quote_Item__c();
-
-            if (qql.Name.length() > 80) {
-                string subStr = qql.Name.subString(0,76);
-                newQline.Name = subStr.subString(0, subStr.lastIndexOf(' ')) + '...';
-            } else {
-                newQline.Name = qql.Name;
-            }
+            newQline.Name = qql.Name;
             newQline.buildertek__Product__c = qql.buildertek__Product__c;
             if(qql.buildertek__Unit_Price__c != null){
                 newQline.buildertek__Unit_Price__c = qql.buildertek__Unit_Price__c;               
@@ -2057,22 +2057,9 @@ public with sharing class QuoteDAO{
             newQline.buildertek__Notes__c = newQline.buildertek__Notes__c;
             newQline.buildertek__Status__c = 'Accept';
             newQline.buildertek__Quote__c = QuoteId;
-            newQline.buildertek__Description__c = qql.buildertek__Description__c;
-
             insertListofQuoteLines.add(newQline); 
         }
-        // for(buildertek__Quote_Item__c q2:insertListofQuoteLines){
-        //     System.debug(q2.buildertek__Description__c);
-        //     System.debug(q2.Name);
-
-        // }
         insert insertListofQuoteLines;
-        System.debug('====> After Insert Quote Line ===>');
-        for(buildertek__Quote_Item__c q:insertListofQuoteLines){
-            System.debug(q.buildertek__Description__c);
-            System.debug(q.Name);
-
-        }
         return insertListofQuoteLines;
     }
     
@@ -2283,6 +2270,93 @@ public with sharing class QuoteDAO{
     
         @AuraEnabled
         public Integer total{ get; set; }
+    }
+
+    @AuraEnabled
+    public static List<pricebook2> getPricebookList(){
+        List<pricebook2> PriceList = [SELECT Id, Name FROM pricebook2 ORDER BY Name ASC ];
+        return PriceList;
+    }
+
+    @AuraEnabled
+    public static List<productWrapper> getProductsthroughPriceBook2(string pbookId) {
+
+
+        List<PriceBookEntry> pEntries = [SELECT Id,Product2Id, Product2.buildertek__Quote_Group__c , Product2.Name, Product2.ProductCode, Product2.Description, toLabel(Product2.Family), 
+                                            Product2.IsActive,buildertek__Unit_Cost__c, buildertek__Markup__c, buildertek__Discount__c, Pricebook2.Name, UnitPrice
+                                            FROM PricebookEntry WHERE Pricebook2Id=:pbookId AND IsActive = True 
+                                            ORDER BY Product2.Family ASC NULLS LAST, Product2.Name ASC NULLS LAST];
+
+        List<productWrapper> products = new List<productWrapper>();
+        for (PriceBookEntry pEntry: pEntries) {
+            productWrapper aProduct = new productWrapper();
+            aProduct.Id = pEntry.Product2Id;
+            aProduct.Name = pEntry.Product2.Name;
+            aProduct.ProductCode = pEntry.Product2.ProductCode;
+            aProduct.Description = pEntry.Product2.Description;
+            aProduct.Family = pEntry.Product2.Family;
+            aProduct.IsActive = pEntry.Product2.IsActive;
+            aProduct.UnitPrice = pEntry.UnitPrice;            
+            aProduct.Size = pEntry.Pricebook2.Name;
+            aProduct.Selected = false;
+            aProduct.MarkUp = pEntry.buildertek__Markup__c;
+            aProduct.Discount = pEntry.buildertek__Discount__c;
+            aProduct.UnitCost = pEntry.buildertek__Unit_Cost__c;
+            aProduct.Phase = pEntry.Product2.buildertek__Quote_Group__c;
+            products.add(aProduct);
+        }
+
+        return products;
+    }
+
+    @AuraEnabled
+    public static List<buildertek__Quote_Line_Group__c> getQuoteLineGroups(){
+        List<buildertek__Quote_Line_Group__c> quoteLineGrouping = [SELECT Id, Name FROM buildertek__Quote_Line_Group__c ORDER BY Name ASC];
+        return quoteLineGrouping;
+        
+    }
+
+
+
+    public class productWrapper{
+        @AuraEnabled
+        public Id Id;
+
+        @AuraEnabled
+        public String Name;
+
+        @AuraEnabled
+        public String ProductCode;
+
+        @AuraEnabled
+        public String Description;
+
+        @AuraEnabled
+        public String Family;
+
+        @AuraEnabled
+        public Boolean IsActive;
+
+        @AuraEnabled
+        public Decimal UnitPrice;
+
+        @AuraEnabled
+        public String Size;
+
+        @AuraEnabled
+        public Boolean Selected;
+        
+        @AuraEnabled
+        public Decimal UnitCost;
+        
+        @AuraEnabled
+        public String Phase;
+        
+        @AuraEnabled
+        public Decimal MarkUp;
+
+        @AuraEnabled
+        public Decimal Discount;
     }
 
     

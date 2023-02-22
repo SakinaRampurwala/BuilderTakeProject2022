@@ -920,8 +920,8 @@
                     </aura:if>
 
                     <aura:if isTrue="{!!v.displayGrouping}">
-                        <div class="slds mainTablediv">
-                            <div class="slds-scrollable">
+                        <!-- <div class="slds mainTablediv"> -->
+                        <div class="slds-scrollable">
                             <div>
                                 <!--<div class="slds-scrollable" style="width:100%;height: 35rem;">-->
 
@@ -933,8 +933,7 @@
                                         <aura:iteration items="{!v.TotalRecords.groups}" var="group"
                                             indexVar="groupIndex">
                                             <tr class="groupHeader">
-
-                                                <td colspan="{!v.TotalRecords.totalColumns}" style="line-height:3vh;">
+                                                <td colspan="{!v.TotalRecords.Totalcols}" style="line-height:3vh;">
                                                     <div class="slds-grid slds-gutters  ">
                                                         <!-- <div style="float: right !important;">-->
                                                         <!-- <div style="float: right;" class="slds-p-right_small">-->
@@ -1011,27 +1010,9 @@
                                             </div> -->
 
                                                 </td>
-                                                <td >
-                                                </td>
-                                                <td>
-                                                </td>
-                                                <td>
-                                                </td>
-                                                <td>
-                                                </td>
-                                                <td>
-                                                </td>
-                                                <td>
-                                                </td>
-                                                <td>
-                                                </td>
-                                                <td>
-                                                </td>
-                                                <td></td>
-                                                <td></td>
+                                                
                                             </tr>
-                                            <tr class="slds-text-heading--label"
-                                                style="line-height: 2;font-size: 12px;">
+                                            <tr class="slds-text-heading--label" style="line-height: 2;font-size: 12px;">
                                                 <th></th>
                                                 <th class="slds-is-sortable tabletitle" scope="col" width="5px">
                                                     <div class="slds-form-element">
@@ -1076,8 +1057,6 @@
                                                         </aura:set>
                                                     </aura:if>
                                                 </aura:iteration>
-                                                <th></th>
-                                                <th></th>
                                             </tr>
                                             <aura:iteration items="{!v.TotalRecords.tarTable.ListOfEachRecord}"
                                                 var="tar" indexVar="quoteIndex">
@@ -1302,8 +1281,6 @@
                                                                 </aura:if>
                                                             </td>
                                                         </aura:iteration>
-                                                        <td></td>
-                                                        <td></td>
                                                     </aura:if>
                                                 </tr>
                                             </aura:iteration>
@@ -1314,42 +1291,19 @@
                                                 </td>
                                                 <td>
                                                 </td>
-                                                <td></td>
-                                                <aura:iteration items="{!v.TotalRecords.wrapperList}" var="rec"
-                                                    indexVar="totalRecordsIndex">
-                                                    <aura:if
-                                                        isTrue="{!group.Name == rec.groupName &amp;&amp; rec.fieldType != 'false'}">
+                                                <aura:iteration items="{!v.TotalRecords.wrapperList}" var="rec" indexVar="totalRecordsIndex">
+                                                    <aura:if isTrue="{!group.Name == rec.groupName &amp;&amp; rec.fieldType != 'false'}">
                                                         <aura:if isTrue="{!rec.fieldType == 'CURRENCY'}">
                                                             <td>
                                                                 <aura:if isTrue="{!rec.totalValue != null}">
                                                                     <span style="font-weight: bold;">
-                                                                        <!--<aura:if isTrue='{!v.multicurrency}'>
-                                                                    <lightning:formattedNumber value="{!rec.totalValue}"
-                                                                style="currency" currencyCode="{!rec.CurrencyIsoCode}" currencyDisplayAs="code"/>
-                                                                </aura:if>
-                                                                <aura:if isTrue='{!!v.multicurrency}'>-->
-                                                                        <lightning:formattedNumber
-                                                                            value="{!rec.totalValue}" style="currency"
-                                                                            currencyCode="{!v.currencycode}"
-                                                                            currencyDisplayAs="code" />
-                                                                        <!--</aura:if>-->
+                                                                        <lightning:formattedNumber value="{!rec.totalValue}" style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
                                                                         <aura:set attribute="else">
-                                                                            <!--<aura:if isTrue='{!v.multicurrency}'>
-                                                                    <lightning:formattedNumber value="0.00"
-                                                                                            style="currency" class="inputCss" currencyCode="{!rec.CurrencyIsoCode}" currencyDisplayAs="code"/>
-                                                                </aura:if>
-                                                                <aura:if isTrue='{!!v.multicurrency}'>-->
-                                                                            <lightning:formattedNumber value="0.00"
-                                                                                style="currency" class="inputCss"
-                                                                                currencyCode="{!v.currencycode}"
-                                                                                currencyDisplayAs="code" />
-                                                                            <!--</aura:if>-->
+                                                                            <lightning:formattedNumber value="0.00" style="currency" class="inputCss" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
                                                                         </aura:set>
                                                                     </span>
                                                                 </aura:if>
-                                                                <button
-                                                                    class="slds-button slds-button_icon slds-cell-edit__button slds-m-left_x-small"
-                                                                    tabindex="-1" title="">
+                                                                <button class="slds-button slds-button_icon slds-cell-edit__button slds-m-left_x-small" tabindex="-1" title="">
                                                                     <span style="display:none;">
                                                                     </span>
                                                                     <span class="slds-assistive-text">Edit</span>
@@ -1357,13 +1311,12 @@
                                                             </td>
                                                         </aura:if>
                                                     </aura:if>
-                                                    <!-- <aura:if isTrue="{!v.wrapperListLength != totalRecordsIndex}">  -->
-                                                    <aura:if
-                                                        isTrue="{!group.Name == rec.groupName &amp;&amp; rec.fieldType == 'false'}">
-                                                        <td style="text-align:left">
-                                                        </td>
+                                                    <aura:if isTrue="{!group.Name == rec.groupName &amp;&amp; rec.fieldType == 'false'}">
+                                                        <aura:if isTrue="{!rec.fieldType != 'CURRENCY'}">
+                                                            <td style="text-align:left">
+                                                            </td>
+                                                        </aura:if>
                                                     </aura:if>
-                                                    <!-- </aura:if> -->
                                                 </aura:iteration>
                                             </tr>
                                             <br />
@@ -1396,7 +1349,7 @@
                         </div>
 
                             <!-- <br />-->
-                        </div>
+                        <!-- </div> -->
 
                         <!-- *** BOM Grouping *** -->
                         <aura:set attribute="else">

@@ -363,6 +363,7 @@
                     if (totalRecords.groups[index].Id == component.get('v.budgetGroupId')) {
                         totalRecords.groups[index].buildertek__Description__c = component.get('v.groupDescription');
                         component.set('v.TotalRecords', totalRecords);
+                        console.log('totalRecords--->>>',{totalRecords});
                     }
                 } else if (response.getReturnValue() == 'Error') {
 
