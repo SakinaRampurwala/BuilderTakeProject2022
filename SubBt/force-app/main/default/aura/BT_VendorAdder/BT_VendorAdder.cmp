@@ -1,11 +1,11 @@
 <aura:component controller="BT_Lightning_Utils">
     
-    <aura:html tag="style">
+    <!-- <aura:html tag="style">
         .slds-modal__content {
-        overflow-y: hidden !important;
+        overflow-y: scroll !important;
         }
         
-    </aura:html> 
+    </aura:html>  -->
     <aura:attribute name="onSuccess" type="Object"/>
     <aura:attribute name="onCancel" type="Object"/>
     <aura:attribute name="_filter" type="Object"/>
@@ -38,10 +38,9 @@
     <ltng:require styles="{!$Resource.MOdalPreviewWidth72}" />
     
     <aura:handler name="init" value="{!this}" action="{!c.initialize}"/>
-    <div class="" style="height:28rem;overflow-y:scroll;"> 
-        <!--  <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" class="slds-modal slds-fade-in-open">
-  <div class="slds-modal__container"> -->
-        <div class="slds-modal__content slds-p-around-large">
+
+    <div class="modalContent" style="height:28rem;overflow-y:scroll;"> 
+        <div class="firstMdlContent slds-modal__content slds-p-around-large">
             
             
             <div class="slds-modal__content" id="modal-content-id-1">

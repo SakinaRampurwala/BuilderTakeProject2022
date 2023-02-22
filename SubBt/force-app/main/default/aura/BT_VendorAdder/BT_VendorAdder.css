@@ -1,7 +1,7 @@
 .THIS.slds-modal__content{  
-       overflow: hidden !important;
-     overflow-X: hidden !important;
-overflow-y: hidden !important;
+    overflow: hidden !important;
+    overflow-X: hidden !important;
+    overflow-y: scroll !important;
      
 }
 .THIS.cuf-content {
@@ -15,8 +15,16 @@ overflow-y: hidden !important;
     max-height: 38rem !important;
     box-shadow: none !important;
     width:120% !important;
-    overflow-y: hidden !important;
+    overflow-y: scroll !important;
 } 
+.THIS.modalContent.firstMdlContent.slds-modal__content {
+    overflow-y: scroll !important;
+}
+.THIS.modalContent.firstMdlContent.slds-modal__content::-webkit-scrollbar{
+    display: none;
+}
+
+
 .THIS.slds-modal__container{
     max-width: 80rem !important;
     width:80% !important;
