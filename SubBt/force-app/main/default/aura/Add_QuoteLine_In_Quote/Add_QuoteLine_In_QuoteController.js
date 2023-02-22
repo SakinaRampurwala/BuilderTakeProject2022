@@ -1,41 +1,90 @@
 ({
-    doInit : function(component, event, helper) {
-      component.set("v.isModalOpen", false);
+   doInit : function(component, event, helper) {
+       helper.doInitHelper(component, event, helper)
+   }, 
 
-        var action = component.get("c.getpricebooks");
-        action.setCallback(this, function(response) {
-            var state = response.getState();
-            if (state === "SUCCESS") {
-               var result = response.getReturnValue();
-               var opts = [];
-               opts.push({ key: "None", value: "" });
-               for (var key in result) {
-                  opts.push({ key: key, value: result[key] });
-               }
-               component.set("v.pricebookoptions", opts);
-            }
-        });
-        $A.enqueueAction(action);
-    },    
-     closeModel: function(component, event, helper) {
-        component.set("v.isModalOpen", false);
-     },
-    
-     submitDetails: function(component, event, helper) {
-        // Set isModalOpen attribute to false
-        //Add your code to call apex method or do some processing
-        component.set("v.isModalOpen", false);
-     },
-     showNext: function(component, event, helper) {
-        component.set("v.productPage", false);
-        component.set("v.quoteLineItem", true);
-     },
-     showPrevious: function(component, event, helper) {
-        component.set("v.productPage", true);
-        component.set("v.quoteLineItem", false);
-     },
-     handlePriceBookchange: function(component, event, helper) {
-         var selectedPriceBook = component.get("v.selectedPriceBook");
-         console.log('selectedPriceBook'+selectedPriceBook);
-     }
+   closeCmp : function(component, event, helper) {
+       component.set("v.openProductBox", false);
+   }, 
+
+   changePricebook: function(component, event, helper) {
+       helper.changePricebookHelper(component, event, helper);
+   },
+
+   searchInDatatable: function(component, event, helper){
+       helper.searchInDatatableHelper(component, event, helper);
+   }, 
+
+   goToEditModal: function(component, event, helper) {
+       helper.goToEditModalHelper(component, event, helper);
+   },
+   
+   goToProductModal: function(component, event, helper) {
+       var quoteLineList = component.get("v.quoteLineList");
+       var checkAll = true;
+       quoteLineList.forEach(element => {
+           if (!element.Selected) {
+               checkAll = false
+           }
+       });
+       
+       component.set("v.sProductFamily", '');
+       component.set("v.sProductName", '');
+
+       component.set("v.tableDataList", quoteLineList);
+       component.set("v.selecteProducts", true);
+       component.find("selectAll").set("v.checked", checkAll);
+   },
+
+
+   checkAllProduct: function(component, event, helper){
+       var value = event.getSource().get("v.checked"); 
+       var tableDataList = component.get("v.tableDataList");
+       tableDataList.forEach(element => {
+           element.Selected = value;
+       });
+       component.set("v.tableDataList", tableDataList);
+   }, 
+
+   checkboxChange : function(component, event, helper) {
+       var tableDataList = component.get("v.tableDataList");
+       var checkAll = true;
+       tableDataList.forEach(element => {
+           if (!element.Selected) {
+               checkAll = false
+           }
+       });
+       component.find("selectAll").set("v.checked", checkAll);
+   },
+
+   saveQuoteLine : function(component, event, helper){
+       component.set("v.Spinner", true);
+       console.log('saveQuoteLine');
+       var listQlines = component.get("v.selectedProducts");
+       var action10 = component.get("c.QuoteLinesInsert");
+       action10.setParams({
+           "Quotelines": listQlines,
+           "QuoteId": component.get("v.quoteId")
+       });
+
+       action10.setCallback(this, function(response) {
+           console.log(response.getReturnValue());
+           component.set("v.openQuoteLineBox", false);
+           $A.get("e.force:refreshView").fire();
+           component.set("v.Spinner", false);
+           component.set("v.openProductBox", false);        
+           var toastEvent = $A.get("e.force:showToast");
+           toastEvent.setParams({
+               title: 'Success',
+               message: 'Quote Lines are created successfully',
+               duration: ' 5000',
+               key: 'info_alt',
+               type: 'success',
+               mode: 'pester'
+           });
+           toastEvent.fire();
+       });
+       $A.enqueueAction(action10);
+   }
+
 })
