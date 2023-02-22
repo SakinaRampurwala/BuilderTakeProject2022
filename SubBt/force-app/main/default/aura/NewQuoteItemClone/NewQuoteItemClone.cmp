@@ -1028,6 +1028,7 @@
                                                 <td>
                                                 </td>
                                                 <td></td>
+                                                <td></td>
                                             </tr>
                                             <tr class="slds-text-heading--label"
                                                 style="line-height: 2;font-size: 12px;">
@@ -1301,8 +1302,7 @@
                                                                 </aura:if>
                                                             </td>
                                                         </aura:iteration>
-                                                        <td>
-                                                        </td>
+                                                        <td></td>
                                                         <td></td>
                                                     </aura:if>
                                                 </tr>
@@ -2129,86 +2129,9 @@
                         <div class="slds-backdrop slds-backdrop_open"></div>
                     </aura:if>
                     <aura:if isTrue="{!v.openProductBox}">
-                        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
-                            aria-describedby="modal-content-id-1"
-                            class="slds-modal slds-fade-in-open  slds-modal_large">
-                            <div class="slds-modal__container increaseheight">
-                                <header class="slds-modal__header">
-                                    <!--   <lightning:buttonIcon iconName="utility:close" onclick="{! c.closeAddProductFromGroup }"
-                        alternativeText="close" variant="bare-inverse" class="slds-modal__close" /> -->
-                                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Products
-                                    </h2>
-                                </header>
-                                <div class="slds-modal__content" id="modal-content-id-1">
-                                    <lightning:layout>
-                                        <lightning:layoutItem padding="around-small" size="4">
-                                            <!--  <label>Pricebook</label> -->
-                                            <div style="padding-top:18px">
-                                                <ui:inputSelect value="{! v.pricebookName1 }" change="{!c.changeEvent1}"
-                                                    class="pricebook-class" aura:id="getPriceBookId">
-                                                    <aura:iteration var="option" items="{! v.pricebookoptions }">
-                                                        <!-- <aura:if isTrue="{! option.key != 'None'}"> -->
-                                                        <option value="{! option.value }"
-                                                            selected="{!option.value == v.pricebookName1}">{! option.key
-                                                            }</option>
-                                                        <!-- </aura:if> -->
-                                                    </aura:iteration>
-                                                </ui:inputSelect>
-                                            </div>
-                                        </lightning:layoutItem>
-                                        <!--added new search filter for prodcut family -->
-                                        <div class="slds-p-around_medium slds-size_4-of-12" style="padding-top:32px">
-                                            <span>
-                                                <lightning:input onchange="{!c.searchKeyProductFamily}"
-                                                    value="{!v.searchKey2}" type="search" label="Searh"
-                                                    variant="label-hidden" placeholder="Search Product Family"
-                                                    aura:id="SearchBox1" />
-                                            </span>
-                                        </div>
-                                        <div class="slds-p-around_medium slds-size_4-of-12" style="padding-top:32px">
-                                            <span>
-                                                <lightning:input onchange="{!c.searchTable}" type="search" label="Searh"
-                                                    variant="label-hidden" placeholder="Search Product Name"
-                                                    aura:id="SearchBox" />
-                                            </span>
-                                        </div>
-                                    </lightning:layout>
-
-
-                                    <br />
-                                    <div style="height: auto; min-height:150px;">
-
-                                        <lightning:datatable aura:id="accountDataTable" keyField="Id"
-                                            data="{! v.data1 }" hideCheckboxColumn="false" columns="{! v.columns1 }"
-                                            selectedRows="{! v.selectedRows }"
-                                            onrowselection="{! c.updateSelectedText }" onsort="{!c.updateColumnSorting}"
-                                            sortedBy="{!v.sortedBy}" sortedDirection="{!v.sortedDirection}" />
-                                        <aura:if isTrue="{!v.data1 == ''}">
-                                            <center class="elseMsg">Please Select PriceBook!!</center>
-                                        </aura:if> 
-                                    </div>
-                                </div>
-                                <aura:if isTrue="{!v.Spinner2}">
-                                    <div aura:id="spinnerId" class="slds-spinner_container">
-                                        <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative"
-                                            role="alert">
-                                            <span class="slds-assistive-text">Loading</span>
-                                            <div class="slds-spinner__dot-a"></div>
-                                            <div class="slds-spinner__dot-b"></div>
-                                            <div class="custom-loading-text">
-                                                <b>Processing, Please Wait</b>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </aura:if>
-
-                                <footer class="slds-modal__footer">
-                                    <button class="slds-button slds-button_neutral" aria-label="Cancel and close"
-                                        onclick="{!c.closeBox}">Cancel</button>
-                                    <button class="slds-button slds-button_brand"
-                                        onclick="{!c.openQuoteLine}">Next</button>
-                                </footer>
-
+                        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open  slds-modal_large">
+                            <div class="slds-modal__container">
+                            <c:Add_QuoteLine_In_Quote quoteId="{!v.recordId}" openProductBox="{!v.openProductBox}" />
                             </div>
                         </section>
                         <div class="slds-backdrop slds-backdrop--open" id="backdrop"></div>
