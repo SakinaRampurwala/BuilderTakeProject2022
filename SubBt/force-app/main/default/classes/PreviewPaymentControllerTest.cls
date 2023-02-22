@@ -15,7 +15,7 @@ private class PreviewPaymentControllerTest {
         
         buildertek__Account_Payable__c  accp = new buildertek__Account_Payable__c();
         accp.buildertek__Purchase_Order__c = PO.id;
-        accp.buildertek__Status__c = 'In Process';
+        accp.buildertek__Status__c = 'Open';
         insert accp;
         
         buildertek__Payment__c payment = new buildertek__Payment__c();

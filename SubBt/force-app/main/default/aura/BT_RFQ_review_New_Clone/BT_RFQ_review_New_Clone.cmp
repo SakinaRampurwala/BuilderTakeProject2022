@@ -96,9 +96,6 @@
     <aura:attribute name="PageSize" type="integer" default="30"/>
     <aura:attribute name="listOfSelectedSOVIds" type="List" default="[]"/>
     <aura:attribute name="contactvendor" type="List" default="[]"/>
-    <aura:attribute name="checkThis" type="Boolean" default="false"/>
-
-
 
 
 
@@ -111,11 +108,7 @@
             <header style="background: #1b5297;padding: 11px 5px 11px 15px;">
                 <div class="left-box" style="display: inline-block;vertical-align: middle;width: 20%;">
                     <div style="display:flex;">
-                        <!-- <ui:inputCheckbox aura:id="checkAllRFQs" change="{!c.selectAll}" class="checkAllStyle" />
-                         -->
-                         <ui:inputCheckbox aura:id="checkAllRFQs"   change="{!c.selectAll}" value="{!v.checkThis}"  class="checkAllStyle" />
-
-
+                        <ui:inputCheckbox aura:id="checkAllRFQs" change="{!c.selectAll}" class="checkAllStyle" />
                         <td style="margin-top: 0px;margin-right: 5px;"
                             >
                             <!--  <span style="display:inline-block;" class="{!v.currentTab+' expandAllBtn_'+v.budgetId}" data-iconattr ="{!'expandAllBtn_'+v.budgetId}" data-iconname="Expand All" onclick="{!c.expandCollapeAll}"> -->

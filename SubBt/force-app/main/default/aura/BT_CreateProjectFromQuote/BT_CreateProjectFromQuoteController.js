@@ -63,13 +63,17 @@
 
     saveModel : function(component, event, helper) {
         component.set("v.Spinner", true);
+        console.log('In saveModel');
         var project = component.find("projectNameId").get("v.value");
+        console.log('Project-->>',{project});
         var accountId = component.find("accountId").get("v.value");
+        console.log('Project-->>',{accountId});
         var projectManagerId = component.find("projectManagerId").get("v.value");
         var contractDateId = component.find("contractDateId").get("v.value");
         var QuoteRec = component.get("v.recordData");        
         console.log('QuoteRec---->>>',{QuoteRec});
         if(project == null || project == ''){
+            console.log('Project Block');
             component.set("v.Spinner", false);
             var toastEvent = $A.get("e.force:showToast");
             toastEvent.setParams({
@@ -107,7 +111,10 @@
             });
             action.setCallback(this, function(response){
                 var state = response.getState();
+                var error = response.getError();
+                console.log('Error =>',{error});
                 if(state === "SUCCESS"){
+                    console.log('Success');
                     var result = response.getReturnValue();
                     component.set("v.Spinner", false);
                     $A.get("e.force:closeQuickAction").fire();

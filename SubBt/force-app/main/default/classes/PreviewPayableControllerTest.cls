@@ -14,7 +14,7 @@ private class PreviewPayableControllerTest {
         
         buildertek__Account_Payable__c  accp = new buildertek__Account_Payable__c();
         accp.buildertek__Purchase_Order__c = PO.id;
-        accp.buildertek__Status__c = 'In Process';
+        accp.buildertek__Status__c = 'Open';
         insert accp;
         string theTemplate = [SELECT Id FROM EmailTemplate WHERE Name = 'Payable'].Id; 
          List<String> ccId = new List<String>();

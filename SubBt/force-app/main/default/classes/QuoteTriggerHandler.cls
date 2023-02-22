@@ -115,8 +115,8 @@ public without sharing class QuoteTriggerHandler {
                                 Qts.buildertek__Bill_To_Name__c = Projs.buildertek__Customer__r.Name;
                             }
                             if(Qts.buildertek__Ship_To_State__c == null || Qts.buildertek__Ship_To_State__c == ''){
-                                // Qts.buildertek__Ship_To_State__c = Projs.buildertek__Customer__r.buildertek__State1__c;
-                                // Qts.buildertek__Bill_To_State__c = Projs.buildertek__Customer__r.buildertek__State1__c;
+                                Qts.buildertek__Ship_To_State__c = Projs.buildertek__Customer__r.buildertek__State__c;
+                                Qts.buildertek__Bill_To_State__c = Projs.buildertek__Customer__r.buildertek__State__c;
                             }
                             if(Qts.buildertek__Ship_To_Street__c == null || Qts.buildertek__Ship_To_Street__c == ''){
                                 Qts.buildertek__Ship_To_Street__c = Projs.buildertek__Customer__r.BillingStreet;

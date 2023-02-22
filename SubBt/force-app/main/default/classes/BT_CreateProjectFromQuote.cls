@@ -231,6 +231,9 @@ public with sharing class BT_CreateProjectFromQuote {
             
         }
         
+        //*for creating SOV after creating new project on BT quote
+        Create_SOV_From_Quote.createSOV(recordId);
+        
         return project.Id;
         
     }
