@@ -934,7 +934,7 @@
                                             indexVar="groupIndex">
                                             <tr class="groupHeader">
                                                 <td colspan="{!v.TotalRecords.Totalcols}" style="line-height:3vh;">
-                                                    <div class="slds-grid slds-gutters  ">
+                                                    <div class="setting slds-grid slds-gutters  ">
                                                         <!-- <div style="float: right !important;">-->
                                                         <!-- <div style="float: right;" class="slds-p-right_small">-->
 
@@ -982,7 +982,7 @@
 
                                                         </div>
                                                         <div class="slds-col slds-size_6-of-12 slds-float_right"
-                                                            style="font-size: 10px; height:1.5rem;">
+                                                            style="font-size: 10px; height:1.5rem; width:0px;">
                                                             <lightning:button variant="neutral" label="Add Quote Line"
                                                                 name="{!groupIndex}" title="Add Quote Line"
                                                                 class="addBudgetLineStyle"
@@ -1285,16 +1285,16 @@
                                                 </tr>
                                             </aura:iteration>
                                             <tr class="groupFooter">
-                                                <td>
-                                                </td>
-                                                <td>
-                                                </td>
-                                                <td>
-                                                </td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
                                                 <aura:iteration items="{!v.TotalRecords.wrapperList}" var="rec" indexVar="totalRecordsIndex">
                                                     <aura:if isTrue="{!group.Name == rec.groupName &amp;&amp; rec.fieldType != 'false'}">
+                                                        
                                                         <aura:if isTrue="{!rec.fieldType == 'CURRENCY'}">
                                                             <td>
+                                                                
                                                                 <aura:if isTrue="{!rec.totalValue != null}">
                                                                     <span style="font-weight: bold;">
                                                                         <lightning:formattedNumber value="{!rec.totalValue}" style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
@@ -1311,11 +1311,10 @@
                                                             </td>
                                                         </aura:if>
                                                     </aura:if>
-                                                    <aura:if isTrue="{!group.Name == rec.groupName &amp;&amp; rec.fieldType == 'false'}">
-                                                        <aura:if isTrue="{!rec.fieldType != 'CURRENCY'}">
+                                                    <aura:if isTrue="{!group.Name == rec.groupName &amp;&amp; rec.fieldType == 'false' &amp;&amp; rec.fieldLabel != 'Id' &amp;&amp; rec.fieldLabel != 'buildertek__Grouping__c'}">
+                                                        
                                                             <td style="text-align:left">
                                                             </td>
-                                                        </aura:if>
                                                     </aura:if>
                                                 </aura:iteration>
                                             </tr>

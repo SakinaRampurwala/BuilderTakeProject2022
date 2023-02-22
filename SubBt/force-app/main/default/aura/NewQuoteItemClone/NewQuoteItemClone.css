@@ -216,3 +216,7 @@
 .THIS .blankDiv{
     width: 30px;
 }
+
+.THIS .slds-gutters{
+    margin-right:0 !important;
+}

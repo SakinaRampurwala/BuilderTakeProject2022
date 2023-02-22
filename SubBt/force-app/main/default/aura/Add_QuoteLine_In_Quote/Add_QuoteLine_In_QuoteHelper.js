@@ -55,7 +55,7 @@
                     });
                     var productFamilyList = [];
                     productFamilyList.push({
-                        key: '--All Product Family--',
+                        key: '-- All Product Family --',
                         value: ''
                     });
                     productFamilySet.forEach(function(value) {
