@@ -10,7 +10,6 @@
                 pricebookoptions.push({ key: element.Name, value: element.Id });
             });
             component.set("v.pricebookoptions", pricebookoptions);
-            component.set("v.selectedPricebookId", '');
             component.set('v.Spinner', false);    
         });
         $A.enqueueAction(action);
@@ -30,6 +29,7 @@
     }, 
 
     changePricebookHelper : function(component, event, helper){
+        component.find("selectAll").set("v.checked", false);
         component.set('v.Spinner', true);
         component.set("v.sProductFamily", '');
         component.set("v.sProductName", '');

@@ -68,7 +68,7 @@
             </aura:renderIf>
 
             <div class="sfdc">
-                <ui:button aura:id="submitButton" label="{!v.submitButtonLabel}" press="{!c.handleSelfRegister}" class="sfdc_button"/>
+                <ui:button aura:id="submitButton" label="{!v.submitButtonLabel}" press="{!c.handleSelfRegister}" class="sfdc_button slds-button_brand" />
             </div>
     </div>
 </aura:component>

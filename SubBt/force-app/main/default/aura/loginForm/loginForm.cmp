@@ -48,7 +48,7 @@
             </div>
     
             <div class="sfdc">
-                <ui:button aura:id="submitButton" label="{!v.loginButtonLabel}" press="{!c.handleLogin}" class="sfdc_button"/>
+                <ui:button aura:id="submitButton" label="{!v.loginButtonLabel}" press="{!c.handleLogin}" class="sfdc_button slds-button__brand"/>
             </div>
             
             <div id="sfdc_forgot" class="sfdc">

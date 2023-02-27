@@ -1,4 +1,4 @@
-global class LightningSelfRegisterController {
+global with sharing class LightningSelfRegisterController {
 
     public LightningSelfRegisterController() {
 
@@ -53,7 +53,7 @@ global class LightningSelfRegisterController {
             
             String nickname = ((firstname != null && firstname.length() > 0) ? firstname.substring(0,1) : '' ) + lastname.substring(0,1);
             nickname += String.valueOf(Crypto.getRandomInteger()).substring(1,7);
-            u.put('CommunityNickname', nickname);
+            u.put('CommunityNickname',string.escapeSingleQuotes(nickname));
                      
             if (extraFields != null) {
                 List<Object> extraFieldsList = (List<Object>) JSON.deserializeUntyped(extraFields);        
@@ -88,7 +88,7 @@ global class LightningSelfRegisterController {
                     }
                 }
                 else {
-                    ApexPages.PageReference confirmRef = new PageReference(regConfirmUrl);
+                    ApexPages.PageReference confirmRef = new PageReference(string.escapeSingleQuotes(regConfirmUrl));
                     if(!Test.isRunningTest()) {
                     aura.redirect(confirmRef);
                    }

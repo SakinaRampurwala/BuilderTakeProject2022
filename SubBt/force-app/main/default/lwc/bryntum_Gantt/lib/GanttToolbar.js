@@ -561,7 +561,7 @@ export default base => class GanttToolbar extends base {
                     }
                     updateDataList.push(updateData)
                 }
-                
+                debugger;
                 console.log('updateDataList ==> ',{updateDataList});
                         
                 if(this.gantt.callGanttComponent){
@@ -604,7 +604,8 @@ export default base => class GanttToolbar extends base {
                 this.gantt.callGanttComponent.scheduleItemsDataList = updateDataList;
                 
                 if(this.gantt.callGanttComponent.template.querySelector('.container').children.length){
-                    this.gantt.callGanttComponent.template.querySelector('.container').innerHTML = '';
+                    // this.gantt.callGanttComponent.template.querySelector('.container').innerHTML = '';
+                    this.gantt.callGanttComponent.template.querySelector('.container').innerHTML = '<div  class="slds-spinner_container" style="position:fixed;opacity:1;">      <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert"><span class="slds-assistive-text">Loading</span><div class="slds-spinner__dot-a"></div><div class="slds-spinner__dot-b"></div><div class="custom-loading-text"><b>Processing, Please Wait</b></div></div></div><div class="slds-backdrop slds-backdrop_open" style="opacity: 0;"></div>';
                     this.gantt.callGanttComponent.template.querySelector('.container1').innerHTML = '';
                     this.gantt.callGanttComponent.createGantt();
                     // this.GanttVar.crudManager.taskStore.refreshData()

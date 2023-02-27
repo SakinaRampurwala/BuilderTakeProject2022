@@ -1,4 +1,4 @@
-global class LightningForgotPasswordController {
+global with sharing class LightningForgotPasswordController {
 
     public LightningForgotPasswordController() {
 
@@ -8,7 +8,7 @@ global class LightningForgotPasswordController {
     public static String forgotPassword(String username, String checkEmailUrl) {
         try {
             Site.forgotPassword(username);
-            ApexPages.PageReference checkEmailRef = new PageReference(checkEmailUrl);
+            ApexPages.PageReference checkEmailRef = new PageReference(string.escapeSingleQuotes(checkEmailUrl));
             if(!Site.isValidUsername(username)) {
                 return Label.Site.invalid_email;
             }
