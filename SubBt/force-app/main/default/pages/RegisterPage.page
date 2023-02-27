@@ -1,0 +1,37 @@
+<apex:page controller="CreateContact">
+ <apex:form >
+<apex:pageBlock >
+         Name :-<apex:inputText value="{!con.LastName}" label="Email"/>
+    <br/>
+    <br/>
+
+     Email :-<apex:inputText value="{!con.Email}" label="Email"/>
+    <br/>
+    <br/>
+
+    Password :- <apex:inputText value="{!con.Password__c}" label="Password"/>
+     <br/>
+     <br/>
+        Account:-
+    <select >
+        <apex:repeat value="{!acc}" var="a" >
+                    <option value='{!a.Name}' onChange='test()'>{!a.Name}</option>
+        </apex:repeat>
+    </select>
+    
+    <br/>
+    <br/>
+
+
+    
+    <apex:commandButton action="{!saveCon}" value="Save"/>
+    
+
+
+
+
+
+</apex:pageBlock>
+
+</apex:form>
+</apex:page>

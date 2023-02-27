@@ -39,17 +39,32 @@
         if ($A.util.isUndefinedOrNull(forgotPwdUrl)) {
             forgotPwdUrl = cmp.get("v.forgotPasswordUrl");
         }
+        var startUrl = cmp.get("v.startUrl");
+        if(startUrl){
+            if(forgotPwdUrl.indexOf("?") === -1) {
+                forgotPwdUrl = forgotPwdUrl + '?startURL=' + decodeURIComponent(startUrl);
+            } else {
+                forgotPwdUrl = forgotPwdUrl + '&startURL=' + decodeURIComponent(startUrl);
+            }
+        }
         var attributes = { url: forgotPwdUrl };
         $A.get("e.force:navigateToURL").setParams(attributes).fire();
     },
     
     navigateToSelfRegister: function(cmp, event, helper) {
-        var selrRegUrl = cmp.get("v.communitySelfRegisterUrl");
-        if (selrRegUrl == null) {
-            selrRegUrl = cmp.get("v.selfRegisterUrl");
+        var selfRegUrl = cmp.get("v.communitySelfRegisterUrl");
+        if (selfRegUrl == null) {
+            selfRegUrl = cmp.get("v.selfRegisterUrl");
         }
-    
-        var attributes = { url: selrRegUrl };
+        var startUrl = cmp.get("v.startUrl");
+        if(startUrl){
+            if(selfRegUrl.indexOf("?") === -1) {
+                selfRegUrl = selfRegUrl + '?startURL=' + decodeURIComponent(startUrl);
+            } else {
+                selfRegUrl = selfRegUrl + '&startURL=' + decodeURIComponent(startUrl);
+            }
+        }
+        var attributes = { url: selfRegUrl };
         $A.get("e.force:navigateToURL").setParams(attributes).fire();
     } 
 })

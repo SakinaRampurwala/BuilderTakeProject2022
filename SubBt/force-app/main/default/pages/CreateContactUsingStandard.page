@@ -1,0 +1,18 @@
+<apex:page standardController="Account" recordSetVar="accounts">
+    <apex:form >
+        <apex:pageBlock title="Dispaly Account List" >
+            <apex:pageBlockSection >
+               <apex:pageBlockTable value="{!accounts}" var="acc">
+                           <apex:column value="{!acc.name}"/>
+
+   
+
+           
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+            
+             
+        </apex:pageBlock>
+    </apex:form>
+    
+</apex:page>

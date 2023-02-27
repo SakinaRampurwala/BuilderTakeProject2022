@@ -1,0 +1,12 @@
+.THIS .cardPara {
+    height: 5rem !important;
+    overflow-y: auto;
+}
+
+.THIS .cardPara::-webkit-scrollbar {
+    display: none;
+}
+
+.THIS .slds-card {
+    height: 12rem;
+}

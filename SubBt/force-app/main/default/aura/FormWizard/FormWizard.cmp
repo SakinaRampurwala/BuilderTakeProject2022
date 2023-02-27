@@ -1,0 +1,39 @@
+<aura:component controller='fetchRecords' implements="flexipage:availableForAllPageTypes" access="global">
+    <aura:handler name='init' value='{!this}' action='{!c.doInit}' />
+    <aura:attribute name="recordList" type="List" />
+    <aura:attribute name="noData" type="Boolean" default='false' />
+
+
+    <div class="slds-grid slds-wrap">
+        <div class="slds-col slds-size_1-of-4">
+            <lightning:input aura:id="enter-search" value="" name="enter-search" placeholder="Search Account" type="search" onkeyup="{!c.handleKeyUp}" />
+        </div>
+    </div>
+    <br/>
+
+
+    <div class="slds-grid slds-wrap">
+        <aura:iteration items="{!v.recordList}" var="item">
+            <div class="slds-col slds-size_1-of-4">
+                <lightning:card title="{!item.Name}">
+                    <p class="slds-p-horizontal_small cardPara">
+                        <aura:iteration items="{!item.Contacts}" var="con" indexVar="indx">
+                            <div class="slds-text-color_default">{!indx+1} ) {!con.Name}</div>
+                        </aura:iteration>
+                    </p>
+                    <aura:set attribute="footer">
+                        <lightning:badge label="{!'Total Contact :-'+ (item.Contacts.length)}" />
+                    </aura:set>
+
+                </lightning:card>
+                <br/>
+
+            </div>
+        </aura:iteration>
+        <aura:if isTrue="{!v.noData}">
+            <h2 style="text-align:center;">No Data Found!!</h2>
+        </aura:if>
+    </div>
+
+
+</aura:component>
