@@ -275,6 +275,9 @@ public with sharing class BT_SoqlBuilder{
         if(limitx != null){
             soql += ' LIMIT ' + limitx;
         }
+        
+        soql = soql.replaceAll('\'true\'', 'true').replaceAll('\'false\'', 'false');
+
         return soql;
     }
     
