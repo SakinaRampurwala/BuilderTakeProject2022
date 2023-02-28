@@ -86,6 +86,8 @@ public with sharing class BT_ViewSelection_Project {
         @AuraEnabled
         public string selectionid;
         @AuraEnabled
+        public string Id;
+        @AuraEnabled
         public string Name;
         @AuraEnabled
         public string SelectionType;
@@ -97,6 +99,7 @@ public with sharing class BT_ViewSelection_Project {
         public MasterList(string sId, string cSel, string sType, string sStatus, List<Categories> cats)
         {
             this.selectionid = sId;
+            this.Id = sId;
             this.Name = cSel;
             this.SelectionType = sType;
             this.SelectionStatus = sStatus;

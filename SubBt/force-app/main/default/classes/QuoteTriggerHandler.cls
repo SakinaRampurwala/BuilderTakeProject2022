@@ -94,7 +94,7 @@ public without sharing class QuoteTriggerHandler {
         system.debug('&&'+ProjectsIds);
         list<buildertek__Project__c> projectList;
         
-        projectList=[select Name,buildertek__Address__c,buildertek__Customer__c,buildertek__City__c,buildertek__Customer__r.buildertek__City__c,buildertek__Customer__r.Name,buildertek__Customer__r.buildertek__State__c,buildertek__Customer__r.buildertek__ZipCode__c,buildertek__Customer__r.BillingStreet,buildertek__State__c,buildertek__Zip__c,buildertek__Country__c from buildertek__Project__c where id IN :ProjectsIds];
+        projectList=[select Name,buildertek__Address__c,buildertek__Customer__c,buildertek__City__c,buildertek__Customer__r.BillingCity,buildertek__Customer__r.Name,buildertek__Customer__r.BillingState,buildertek__Customer__r.BillingPostalCode,buildertek__Customer__r.BillingStreet,buildertek__State__c,buildertek__Zip__c,buildertek__Country__c from buildertek__Project__c where id IN :ProjectsIds];
         system.debug('&&'+projectList);
         for(Quote__c Qts : newQuotes){
             if(Qts.Project__c != null){
@@ -102,29 +102,32 @@ public without sharing class QuoteTriggerHandler {
                     if(Qts.Project__c == Projs.Id){
                         System.debug('Projs.Id-->>'+Projs.Id);
                         System.debug('Project Account--->>>'+Projs.buildertek__Customer__c);
-                        if(Projs.buildertek__Customer__c != null){
-                            System.debug('---IF---');
-                            if(Qts.buildertek__Ship_To_City__c == null || Qts.buildertek__Ship_To_City__c == ''){
-                                System.debug('---In Qty---');
-                                System.debug('Projs.buildertek__Customer__c---->>'+Projs.buildertek__Customer__c);      
-                                Qts.buildertek__Ship_To_City__c = Projs.buildertek__Customer__r.buildertek__City__c;  
-                                Qts.buildertek__Bill_To_City__c = Projs.buildertek__Customer__r.buildertek__City__c;
-                            }
-                            if(Qts.buildertek__Ship_To_Name__c == null || Qts.buildertek__Ship_To_Name__c == ''){
-                                Qts.buildertek__Ship_To_Name__c = Projs.buildertek__Customer__r.Name;
-                                Qts.buildertek__Bill_To_Name__c = Projs.buildertek__Customer__r.Name;
-                            }
-                            if(Qts.buildertek__Ship_To_State__c == null || Qts.buildertek__Ship_To_State__c == ''){
-                                Qts.buildertek__Ship_To_State__c = Projs.buildertek__Customer__r.buildertek__State__c;
-                                Qts.buildertek__Bill_To_State__c = Projs.buildertek__Customer__r.buildertek__State__c;
-                            }
-                            if(Qts.buildertek__Ship_To_Street__c == null || Qts.buildertek__Ship_To_Street__c == ''){
-                                Qts.buildertek__Ship_To_Street__c = Projs.buildertek__Customer__r.BillingStreet;
-                                Qts.buildertek__Bill_To_Street__c = Projs.buildertek__Customer__r.BillingStreet;
-                            }
-                            if(Qts.buildertek__Ship_To_Zip_Code__c == null || Qts.buildertek__Ship_To_Zip_Code__c == ''){
-                                Qts.buildertek__Ship_To_Zip_Code__c = Projs.buildertek__Customer__r.buildertek__ZipCode__c;
-                                Qts.buildertek__Bill_To_Zip_Code__c = Projs.buildertek__Customer__r.buildertek__ZipCode__c;
+                        if(Projs.buildertek__City__c == null || Projs.buildertek__State__c == null || Projs.buildertek__Address__c == null || Projs.buildertek__Zip__c== null){
+                            System.debug('---First If---');
+                            if(Projs.buildertek__Customer__c != null){
+                                System.debug('---Second IF---');
+                                if(Qts.buildertek__Ship_To_City__c == null || Qts.buildertek__Ship_To_City__c == ''){
+                                    System.debug('---In Qty---');
+                                    System.debug('Projs.buildertek__Customer__c---->>'+Projs.buildertek__Customer__c);      
+                                    Qts.buildertek__Ship_To_City__c = Projs.buildertek__Customer__r.BillingCity;  
+                                    Qts.buildertek__Bill_To_City__c = Projs.buildertek__Customer__r.BillingCity;
+                                }
+                                if(Qts.buildertek__Ship_To_Name__c == null || Qts.buildertek__Ship_To_Name__c == ''){
+                                    Qts.buildertek__Ship_To_Name__c = Projs.buildertek__Customer__r.Name;
+                                    Qts.buildertek__Bill_To_Name__c = Projs.buildertek__Customer__r.Name;
+                                }
+                                if(Qts.buildertek__Ship_To_State__c == null || Qts.buildertek__Ship_To_State__c == ''){
+                                    Qts.buildertek__Ship_To_State__c = Projs.buildertek__Customer__r.BillingState;
+                                    Qts.buildertek__Bill_To_State__c = Projs.buildertek__Customer__r.BillingState;
+                                }
+                                if(Qts.buildertek__Ship_To_Street__c == null || Qts.buildertek__Ship_To_Street__c == ''){
+                                    Qts.buildertek__Ship_To_Street__c = Projs.buildertek__Customer__r.BillingStreet;
+                                    Qts.buildertek__Bill_To_Street__c = Projs.buildertek__Customer__r.BillingStreet;
+                                }
+                                if(Qts.buildertek__Ship_To_Zip_Code__c == null || Qts.buildertek__Ship_To_Zip_Code__c == ''){
+                                    Qts.buildertek__Ship_To_Zip_Code__c = Projs.buildertek__Customer__r.BillingPostalCode;
+                                    Qts.buildertek__Bill_To_Zip_Code__c = Projs.buildertek__Customer__r.BillingPostalCode;
+                                }
                             }
                         }else{
                             System.debug('---Esle---');

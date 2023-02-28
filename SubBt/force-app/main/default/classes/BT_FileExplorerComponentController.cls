@@ -352,6 +352,7 @@ public with sharing class BT_FileExplorerComponentController{
         try{  
             getFilesAndFolders();
         } catch(EXception e){
+            System.debug(e.getMessage());
             
         }
         

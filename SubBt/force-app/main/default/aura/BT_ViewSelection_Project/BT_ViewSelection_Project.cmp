@@ -5,13 +5,13 @@
     <aura:attribute name="gridExpandedRows" type="List" access="PRIVATE" />
 
 
-    <div>
+    <!-- <div>
         <lightning:treeGrid
             columns="{! v.gridColumns }"
             data="{! v.gridData }"
-            keyField="Name"
+            keyField="Id"
             hideCheckboxColumn="true"
             onrowaction="{!c.handleURLClick}"
         />
-    </div>
+    </div> -->
 </aura:component>

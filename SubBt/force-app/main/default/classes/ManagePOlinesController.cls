@@ -1617,8 +1617,11 @@ public with sharing class ManagePOlinesController {
                         qtLine.buildertek__Quantity__c = bomLine.buildertek__Quantity__c;
                         if (bomLine.buildertek__Upgrade_Price__c != null) {
                             qtLine.buildertek__Unit_Cost__c = bomLine.buildertek__Upgrade_Price__c;
-                        } else{
+                        } else if(bomLine.buildertek__BL_LIST_PRICE__c != null && bomLine.buildertek__BL_LIST_PRICE__c != 0 ){
                             qtLine.buildertek__Unit_Cost__c = bomLine.buildertek__BL_LIST_PRICE__c;
+                        }
+                        else{
+                            qtLine.buildertek__Unit_Cost__c = 180902;
                         }
                         qtLine.buildertek__Quote__c = quote.Id;
                         qtLine.buildertek__Markup__c = markUp;

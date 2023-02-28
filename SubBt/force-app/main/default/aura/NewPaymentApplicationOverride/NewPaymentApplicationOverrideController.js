@@ -1,31 +1,7 @@
 ({
     doInit : function(component, event, helper) {
-        component.set("v.Spinner", true);
-        var getPatmentType = component.get("c.getPaymentTypeDetails");
-        getPatmentType.setCallback(this, function (result) {
-            var result = result.getReturnValue();
-            console.log('Payment Type ==> ',result);
-            if (result.buildertek__New_Payment_Application__c || result.buildertek__Import_Company_Accepted_Vendor_Payment_A__c || result.buildertek__Import_Approved_SOV_s_Payment_Apps__c) {
-                var optionList = [];
-                if (result.buildertek__New_Payment_Application__c) {
-                    optionList.push( { label: 'New Payment Application', value: 'option1' });
-                } 
-                if (result.buildertek__Import_Company_Accepted_Vendor_Payment_A__c) {
-                    optionList.push( { label: 'Import Company Accepted Vendor Payment Apps', value: 'option4' });
-                }
-                if (result.buildertek__Import_Approved_SOV_s_Payment_Apps__c) {
-                    optionList.push( { label: 'Import Company Approved / Import Customer Approved SOVs', value: 'option5' });
-                }
-                console.log('optionList ==> ',optionList);
-                component.set("v.options", optionList);
-            } else{
-                component.set("v.checkBoxValue",'option1');
-                var action = component.get("c.isNext");
-                $A.enqueueAction(action);
-            }
-        });  
-        $A.enqueueAction(getPatmentType);
-        
+
+        helper.getPaymentTypeHelper(component, event, helper);
         
          helper.getcurr(component, event, helper);
          helper.getrelatedrfqvendorlist(component, event, helper);
@@ -163,7 +139,7 @@
                     var options = [ {'label': 'New Payment Application', 'value': 'option1'}, {'label': 'Import Approved SOVs', 'value': 'option3'} ]
                     component.set("v.options",options)
                 }else{
-                    component.set("v.isnew", true);
+                    // component.set("v.isnew", true);
                     
                     // debugger;
                     var PATyle = component.get("c.getARSovType");
@@ -220,7 +196,6 @@
             }
         });
         $A.enqueueAction(action);
-        component.set("v.Spinner", false);
 
     },
     
@@ -293,10 +268,12 @@
             
             var ac1 = component.get("c.newpayment")
             $A.enqueueAction(ac1)
+            component.set("v.Spinner", false);
         }else if(optionSelected == 'option2'){
             
             var ac2 = component.get("c.ImportMasterSOVs")
             $A.enqueueAction(ac2) 
+            component.set("v.Spinner", false);
             
         }else if(optionSelected == 'option4'){
             
@@ -328,6 +305,7 @@
                         toastEvent.fire(); 
                     }
                 }
+                component.set("v.Spinner", false);
             });
             $A.enqueueAction(action);
             
@@ -362,6 +340,7 @@
                         toastEvent.fire();  
                     }
                 }
+                component.set("v.Spinner", false);
             });
             $A.enqueueAction(action);
             
@@ -389,12 +368,14 @@
                     
                     component.set("v.ImportCustomerApprovedSOVsList",result);
                 }
+                component.set("v.Spinner", false);
             });
             $A.enqueueAction(action);
             
         } 
             
             else if(optionSelected == ''){
+                component.set("v.Spinner", false);
             var toastEvent = $A.get("e.force:showToast");
             toastEvent.setParams({
                 title: 'ERROR',
@@ -879,6 +860,7 @@
         console.log('handle success');
         component.set("v.Spinner", false);
         component.set("v.message", false);
+        component.set("v.isnewpayment",false);
         var pageNumber = component.get("v.PageNumber");
         var pageSize = component.get("v.pageSize");
         var payload = event.getParams().response;
@@ -1550,5 +1532,14 @@
             
         }   
     },
+
+    redirectToPaymentModal :function(component, event, helper) {    
+        component.set("v.isnew", false);
+        component.set("v.IsActive", false);
+        component.set("v.isnewpayment", true);
+        component.set("v.isImportCompanyApproved", false);
+        component.set("v.isUseMasterSOV", false);
+        component.set("v.isImportVendor", false);
+    }, 
     
 })

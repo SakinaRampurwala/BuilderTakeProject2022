@@ -147,12 +147,18 @@ public with sharing class BT_FileUploadPageConfigurationController {
         Schema.sObjectType sobjectType = File__c.getSObjectType();
         Schema.DescribeSObjectResult sobjectDescribe = sobjectType.getDescribe();
         Map<String, Schema.SObjectField> fieldsMap = sobjectDescribe.fields.getMap();  
-        List<Schema.PicklistEntry> pickListValues = fieldsMap.get('Access_Type__c').getDescribe().getPickListValues();
-        List<selectOption> options = new List<selectOption>();
-        for (Schema.PicklistEntry a : pickListValues) {
-            options.add(new selectOption(a.getLabel(), a.getValue()));
+        List<Schema.PicklistEntry> pickListValues;
+        if(fieldsMap.containsKey('Access_Type__c')){
+            pickListValues = fieldsMap.get('Access_Type__c').getDescribe().getPickListValues();
+            List<selectOption> options = new List<selectOption>();
+            for (Schema.PicklistEntry a : pickListValues) {
+                options.add(new selectOption(a.getLabel(), a.getValue()));
+            }
+            return options;
+        }else{
+            return null;
         }
-        return options;
+
     }
     
     /**************************************************************************

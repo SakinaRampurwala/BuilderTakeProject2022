@@ -17,8 +17,8 @@ public class BT_PaymentApplicationConfiguration {
         getLinesFromCO = adminInterfaceNodeConfigurations.buildertek__Get_Lines_From_CO__c;
 
         newPaymeAppnt = adminInterfaceNodeConfigurations.buildertek__New_Payment_Application__c;
-        importCAV = adminInterfaceNodeConfigurations.buildertek__Import_Approved_SOV_s_Payment_Apps__c;
-        importCACASOV = adminInterfaceNodeConfigurations.buildertek__Import_Company_Accepted_Vendor_Payment_A__c;
+        importCACASOV = adminInterfaceNodeConfigurations.buildertek__Import_Approved_SOV_s_Payment_Apps__c;
+        importCAV = adminInterfaceNodeConfigurations.buildertek__Import_Company_Accepted_Vendor_Payment_A__c;
 
         newrfi.buildertek__Default_Account_for_PA__c = adminInterfaceNodeConfigurations.buildertek__Default_Account_for_PA__c;
 	}
@@ -35,8 +35,8 @@ public class BT_PaymentApplicationConfiguration {
         adminInterfaceNodeConfigurations.buildertek__Default_Account_for_PA__c = newrfi.buildertek__Default_Account_for_PA__c;
 
         adminInterfaceNodeConfigurations.buildertek__New_Payment_Application__c = newPaymeAppnt;
-        adminInterfaceNodeConfigurations.buildertek__Import_Approved_SOV_s_Payment_Apps__c = importCAV;
-        adminInterfaceNodeConfigurations.buildertek__Import_Company_Accepted_Vendor_Payment_A__c = importCACASOV ;		
+        adminInterfaceNodeConfigurations.buildertek__Import_Approved_SOV_s_Payment_Apps__c = importCACASOV;
+        adminInterfaceNodeConfigurations.buildertek__Import_Company_Accepted_Vendor_Payment_A__c = importCAV ;		
 		update adminInterfaceNodeConfigurations;
 		ApexPages.addmessage(new ApexPages.message(ApexPages.severity.CONFIRM, 'Updated Successfully'));
 	}

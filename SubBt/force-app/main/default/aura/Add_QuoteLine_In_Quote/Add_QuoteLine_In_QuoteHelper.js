@@ -128,6 +128,7 @@
 
     goToEditModalHelper: function(component, event, helper) {
         var quoteLineList = component.get("v.quoteLineList");
+        console.log('quoteLineList => ',{quoteLineList});
         var selectedProducts = [];
         //find No Grouping from quoteLineGroupOptions and store it's Id in noGroupingId
         var noGroupingId = '';
@@ -150,7 +151,8 @@
                     'buildertek__Markup__c': element.MarkUp ? element.MarkUp : 0,
                     'buildertek__Product__c': element.Id,
                     'buildertek__Size__c': element.Size,
-                    'buildertek__Description__c': element.Description ? element.Description : element.Name
+                    'buildertek__Description__c': element.Description ? element.Description : element.Name,
+                    'buildertek__Product_Family__c': element.Family ? element.Family : 'No Grouping'
                 })
             }
         });

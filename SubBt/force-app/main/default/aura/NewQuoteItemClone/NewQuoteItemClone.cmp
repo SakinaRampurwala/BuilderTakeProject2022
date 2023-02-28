@@ -339,7 +339,7 @@
                                             label="Group" class="sldsButtonGroup" />
                                         <aura:set attribute="else">
                                             <lightning:button iconPosition="left" onclick="{!c.returnToNormalVIew}"
-                                                label="Go Back" class="sldsButtonGroup" />
+                                                label="Return" class="sldsButtonGroup" />
                                         </aura:set>
                                     </aura:if>
                                 </div>&nbsp;

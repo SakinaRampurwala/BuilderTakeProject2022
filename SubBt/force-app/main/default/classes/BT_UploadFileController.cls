@@ -108,11 +108,16 @@ public without sharing class BT_UploadFileController {
             List<String> fields = new List<String>{'Id', 'Name', 'Bucket_Name__c', 'Amazon_File_Key__c', 'Parent_Object_API_Name__c'};
             SOQLManager.checkFieldAccess(Folder__c.sObjectType, fields);
             Folder__c folder  = Database.query('Select '+BT_Utils.buildSelectListFragment(null, null, fields) + ' From Folder__c Where Id =:selectedFolder LIMIT 1');
+            System.debug('folder' + folder);
             if(selectedBucket == null || selectedBucket == ''){
                 selectedBucket = folder.Bucket_Name__c != null ? folder.Bucket_Name__c : folder.Name;
+                System.debug('selectedBucket' + selectedBucket);
+
             }
             String folderForPath = folder.Amazon_File_Key__c;
             folderPath = (folderForPath != null ? folderForPath+'/' : '');
+            System.debug('folderPath' + folderPath);
+
         }
     }
     

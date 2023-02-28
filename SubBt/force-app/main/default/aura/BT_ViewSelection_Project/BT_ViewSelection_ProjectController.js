@@ -3,11 +3,13 @@
         
         cmp.set('v.gridColumns', [
             {
-                wrapText: true, type: 'button', label: 'Client Selections', fieldName: 'Name', typeAttributes: { label: { fieldName: 'Name' }, variant: 'base' }, cellAttributes: {
-                    iconName: { fieldName: 'iconToUse' },
-                    iconLabel: { fieldName: 'iconLabelToUse' },
-                    iconAlternativeText: 'Add Selection',
-                },
+                wrapText: true, type: 'button', label: 'Client Selections', fieldName: 'Name', typeAttributes: { label: { fieldName: 'Name' }, variant: 'base' }, 
+                // For Display Icon and Extra Text In 1st Column
+                // cellAttributes: {
+                    // iconName: { fieldName: 'iconToUse' },
+                    // iconLabel: { fieldName: 'iconLabelToUse' },
+                    // iconAlternativeText: 'Add Selection',
+                // },
             },
             { initialWidth: 220, label: 'Type', fieldName: 'SelectionType', type: 'text' },
             { initialWidth: 220, label: 'Selection Status', fieldName: 'SelectionStatus', type: 'text' },

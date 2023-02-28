@@ -363,6 +363,44 @@
         $A.enqueueAction(action);
         
     },
+
+    getPaymentTypeHelper : function(component, event, helper){
+        component.set("v.Spinner", true);
+        var getPatmentType = component.get("c.getPaymentTypeDetails");
+        getPatmentType.setCallback(this, function (result) {
+            var result = result.getReturnValue();
+            console.log('Payment Type ==> ',result);
+            if (result.buildertek__New_Payment_Application__c || result.buildertek__Import_Company_Accepted_Vendor_Payment_A__c || result.buildertek__Import_Approved_SOV_s_Payment_Apps__c) {
+                var optionList = [];
+                if (result.buildertek__New_Payment_Application__c) {
+                    optionList.push( { label: 'New Payment Application', value: 'option1' });
+                } 
+                if (result.buildertek__Import_Company_Accepted_Vendor_Payment_A__c) {
+                    optionList.push( { label: 'Import Company Accepted Vendor Payment Apps', value: 'option4' });
+                }
+                if (result.buildertek__Import_Approved_SOV_s_Payment_Apps__c) {
+                    optionList.push( { label: 'Import Company Approved / Import Customer Approved SOVs', value: 'option5' });
+                }
+                console.log('optionList ==> ',optionList);
+                component.set("v.options", optionList);
+                if (optionList.length == 1) {
+                    console.log('optionList[0].value ==> '+optionList[0].value);
+                    component.set("v.checkBoxValue",optionList[0].value);
+                    var action = component.get("c.isNext");
+                    $A.enqueueAction(action);
+                } else{
+                    component.set("v.isnew", true);
+                }
+                component.set("v.Spinner", false);
+            } else{
+                component.set("v.checkBoxValue",'option1');
+                var action = component.get("c.isNext");
+                $A.enqueueAction(action);
+                component.set("v.Spinner", false);
+            }
+        });  
+        $A.enqueueAction(getPatmentType);
+    }
     
     
 })
