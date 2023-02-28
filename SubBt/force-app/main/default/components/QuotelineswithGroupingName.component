@@ -9,7 +9,9 @@
             <tr>
                 <apex:repeat value="{!lableslst}" var="labelname">
 
-                    <th style="{!if(labelname == 'Name' ,'font-size: 15px;border-bottom: 1px solid #ccc; border-right: 1px solid #ccc;padding: 5px 15px;text-align:left','font-size: 15px;border-bottom: 1px solid #ccc; border-right: 1px solid #ccc;padding: 5px 15px;text-align:right')}">{!sortlablevalueMap[labelname]}</th>
+                    <th style="{!if(labelname == 'Name' ,'font-size: 15px;border-bottom: 1px solid #ccc; border-right: 1px solid #ccc;padding: 5px 15px;text-align:left','font-size: 15px;border-bottom: 1px solid #ccc; border-right: 1px solid #ccc;padding: 5px 15px;text-align:right')}{!if(labelname == 'buildertek__Notes__c','text-align:left;' , '')}">
+                          {!sortlablevalueMap[labelname]}
+                    </th>
                     <!--
                     <th style="font-size: 15px;border-bottom: 1px solid #ccc; border-right: 1px solid #ccc;padding: 5px 15px;">Product Description</th>
                     <th style="font-size: 15px;border-bottom: 1px solid #ccc; border-right: 1px solid #ccc;padding: 5px 15px;text-align: right">Total List Price</th>
@@ -34,12 +36,20 @@
 
                 </tr>
                 <apex:repeat value="{!quoteItem.quotelineitemlst}" var="quotelinesrecs">
-                    <tr style="{!if(quotelinesrecs.Status__c == 'Reject' ,'background-color: lightgrey;text-decoration: line-through;','')}{!if(quotelinesrecs.Not_Customer_Visible__c == TRUE,'display: none;','')}">
+                    <tr style="
+                    {!if
+                    (quotelinesrecs.Status__c == 'Reject' ,
+                    'background-color: lightgrey;text-decoration: line-through;','')}
+                    
+                    
+                    {!if(quotelinesrecs.Not_Customer_Visible__c == TRUE,'display: none;','')}">
                         <apex:repeat value="{!lableslst}" var="apiname">
-                            <td style="{!if(apiname == 'Name' ,'font-size: 14px;padding: 5px 15px;color:black;text-align: left;border-bottom:  1px solid  #ccc;border-right:  1px solid  #ccc;','font-size: 14px;padding: 5px 15px;color:black;text-align: right;border-bottom:  1px solid  #ccc;border-right:  1px solid  #ccc;')}">
-                                <apex:outputfield value="{!quotelinesrecs[apiname]}" />
+                            <td style="{!if(apiname == 'Name' ,'font-size: 14px;padding: 5px 15px;color:black;text-align: left;border-bottom:  1px solid  #ccc;border-right:  1px solid  #ccc;','font-size: 14px;padding: 5px 15px;color:black;text-align: right;border-bottom:  1px solid  #ccc;border-right:  1px solid  #ccc;')}{!if(apiname == 'buildertek__Notes__c','text-align:left;' , '')}">
+                                <apex:outputfield value="{!quotelinesrecs[apiname]}"/>
                             </td>
                         </apex:repeat>
+
+
                     </tr>
                 </apex:repeat>
             </apex:repeat>
