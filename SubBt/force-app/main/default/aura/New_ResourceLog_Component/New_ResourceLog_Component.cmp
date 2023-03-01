@@ -1,4 +1,4 @@
-<aura:component controller="New_WalkThrough_Component" implements="force:hasRecordId,force:lightningQuickActionWithoutHeader,lightning:isUrlAddressable,lightning:actionOverride,force:hasSObjectName" access="global">
+<aura:component controller="New_ResourceLog_Component" implements="force:hasRecordId,force:lightningQuickActionWithoutHeader,lightning:isUrlAddressable,lightning:actionOverride,force:hasSObjectName" access="global">
 
     <aura:attribute name="listOfFields0" type="List" />
     <aura:attribute name="isSaveNew" type="boolean" default="false"/>
@@ -21,13 +21,13 @@
         <header class="slds-modal__header">
             <lightning:buttonIcon iconName="utility:close" onclick="{! c.closeModel }" alternativeText="close" variant="bare-inverse" class="slds-modal__close" />
             <p></p>
-            <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">New Walk Through</h2>
+            <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">New Resource Log</h2>
             <p></p>
         </header>
 
 
 
-        <lightning:recordEditForm aura:id="recordViewForm" objectApiName="buildertek__Walk_Through_List__c" onsubmit="{!c.handleSubmit}" density="Comfy" >
+        <lightning:recordEditForm aura:id="recordViewForm" objectApiName="buildertek__Resource_Log__c" onsubmit="{!c.handleSubmit}" density="Comfy" >
             <div class="slds-modal__content " id="modal-content-id-1">
                 <div class="slds-scrollable" style="height:33.5rem;">
                     <lightning:layout multipleRows="true">

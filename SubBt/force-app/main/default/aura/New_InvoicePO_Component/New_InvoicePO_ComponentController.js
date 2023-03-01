@@ -8,8 +8,8 @@
         component.set("v.parentRecordId", parentRecordId)
         var getFields = component.get("c.getFieldSet");
         getFields.setParams({
-            objectName: 'buildertek__Walk_Through_List__c',
-            fieldSetName: 'buildertek__New_WalkThrough_ComponentFields'
+            objectName: 'buildertek__Account_Payable__c',
+            fieldSetName: 'buildertek__New_InvoicePO_ComponentFields'
         });
         getFields.setCallback(this, function (response) {
             if (response.getState() == 'SUCCESS' && response.getReturnValue()) {
@@ -45,7 +45,7 @@
                 component.set("v.Spinner", false);
                 if (response.getState() == 'SUCCESS' && response.getReturnValue()) {
                     var objName = response.getReturnValue();
-                    if(objName == 'buildertek__Project__c'){
+                    if(objName == 'buildertek__Purchase_Order__c'){
                         component.set("v.parentprojectRecordId", parentRecordId);
                     }
                 } 
@@ -74,24 +74,23 @@
                     $A.get('e.force:refreshView').fire();
                     component.set("v.isSaveNew", false);
                 }else{
+                    var workspaceAPI = component.find("workspace");
+                    var focusedTabId = response.tabId;
+                    //timeout
+                    window.setTimeout(
+                        $A.getCallback(function() {
+                            workspaceAPI.getFocusedTabInfo().then(function(response) {
+                                workspaceAPI.closeTab({tabId: focusedTabId});
+                                component.set("v.isLoading", false);
+                            })
+                        }), 1000
+                        );
                     var navEvt = $A.get("e.force:navigateToSObject");
                     navEvt.setParams({
                         "recordId": result,
                         "slideDevName": "Detail"
                     });
                     navEvt.fire();
-                    var workspaceAPI = component.find("workspace");
-                    workspaceAPI.getFocusedTabInfo().then(function(response) {
-                        var focusedTabId = response.tabId;
-                        workspaceAPI.closeTab({tabId: focusedTabId});
-                    }
-                    )
-                    .catch(function(error) {
-                        console.log(error);
-                    }
-                    );
-                    $A.get("e.force:closeQuickAction").fire();
-
                 }
                 var toastEvent = $A.get("e.force:showToast");
                 toastEvent.setParams({
@@ -101,7 +100,6 @@
                 });
                 toastEvent.fire();
                 component.set("v.isDisabled", false);
-                component.set("v.isLoading", false);
             }else{
                 var toastEvent = $A.get("e.force:showToast");
                 toastEvent.setParams({
@@ -138,5 +136,4 @@
             }), 1000
         );
    },
-
 })

@@ -1,4 +1,4 @@
-public with sharing class New_PO_ComponentController {
+public class New_InvoicePO_ComponentFields {
     @AuraEnabled
     public static String getFieldSet(String objectName, String fieldSetName){
         String result = '';
@@ -53,12 +53,10 @@ public with sharing class New_PO_ComponentController {
     }
 
     @AuraEnabled
-    public static string saveRecord(String data){
-        System.debug('In save method');
-        buildertek__Purchase_Order__c POInsert = (buildertek__Purchase_Order__c)JSON.deserialize(data, buildertek__Purchase_Order__c.class);
-        System.debug('POInsert ==? '+POInsert);
-        insert POInsert;
-        return POInsert.ID;
+    public static Id saveData(string allData){
+        buildertek__Account_Payable__c newRecord = (buildertek__Account_Payable__c) JSON.deserialize(allData, buildertek__Account_Payable__c.class);
+        insert newRecord;
+        return newRecord.Id; 
     }
 
     @AuraEnabled

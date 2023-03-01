@@ -8,8 +8,8 @@
         component.set("v.parentRecordId", parentRecordId);
         var action2 = component.get("c.getFieldSet");
         action2.setParams({
-            objectName: 'buildertek__Purchase_Order__c',
-            fieldSetName: 'buildertek__New_PO_ComponentFields'
+            objectName: 'buildertek__Pricing_Request__c',
+            fieldSetName: 'buildertek__New_PR_ComponentFields'
         });
         action2.setCallback(this, function (response) {
             if (response.getState() == 'SUCCESS' && response.getReturnValue()) {

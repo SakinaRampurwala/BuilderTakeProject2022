@@ -8,8 +8,8 @@
         component.set("v.parentRecordId", parentRecordId)
         var getFields = component.get("c.getFieldSet");
         getFields.setParams({
-            objectName: 'buildertek__Walk_Through_List__c',
-            fieldSetName: 'buildertek__New_WalkThrough_ComponentFields'
+            objectName: 'buildertek__Account_Payable__c',
+            fieldSetName: 'buildertek__New_InvoicePO_ComponentFields'
         });
         getFields.setCallback(this, function (response) {
             if (response.getState() == 'SUCCESS' && response.getReturnValue()) {
@@ -45,7 +45,7 @@
                 component.set("v.Spinner", false);
                 if (response.getState() == 'SUCCESS' && response.getReturnValue()) {
                     var objName = response.getReturnValue();
-                    if(objName == 'buildertek__Project__c'){
+                    if(objName == 'buildertek__Purchase_Order__c'){
                         component.set("v.parentprojectRecordId", parentRecordId);
                     }
                 } 
@@ -138,5 +138,4 @@
             }), 1000
         );
    },
-
 })

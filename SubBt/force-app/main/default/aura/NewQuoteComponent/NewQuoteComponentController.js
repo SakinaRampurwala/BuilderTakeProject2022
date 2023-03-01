@@ -42,7 +42,6 @@
                 recordId: parentRecordId,
             });
             action.setCallback(this, function (response) {
-                component.set("v.Spinner", false);
                 if (response.getState() == 'SUCCESS' && response.getReturnValue()) {
                     var objName = response.getReturnValue();
                     if(objName == 'buildertek__Project__c'){

@@ -8,8 +8,8 @@
         component.set("v.parentRecordId", parentRecordId)
         var getFields = component.get("c.getFieldSet");
         getFields.setParams({
-            objectName: 'buildertek__Walk_Through_List__c',
-            fieldSetName: 'buildertek__New_WalkThrough_ComponentFields'
+            objectName: 'buildertek__Resource_Log__c',
+            fieldSetName: 'buildertek__New_ResourceLog_ComponentFields'
         });
         getFields.setCallback(this, function (response) {
             if (response.getState() == 'SUCCESS' && response.getReturnValue()) {
@@ -138,5 +138,4 @@
             }), 1000
         );
    },
-
 })

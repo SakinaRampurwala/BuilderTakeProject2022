@@ -1,19 +1,5 @@
 public class New_WalkThrough_Component {
 
-    // @AuraEnabled(cacheable=true)
-    // public static List<BT_Lightning_Utils.FieldSetWrapper> getfield(string objectName, string fieldSetName){
-    //     List<Schema.FieldSetMember> fieldSet = BT_UTILS.getFieldSetMembers(fieldSetName, objectName);
-    //     //System.debug('fieldSet-->'+fieldSet);
-    //     List<BT_Lightning_Utils.FieldSetWrapper> fMaplist = new List<BT_Lightning_Utils.FieldSetWrapper>();
-    //     for (Schema.FieldSetMember fmem : fieldSet){
-    //         fMaplist.add(new BT_Lightning_Utils.FieldSetWrapper(fmem.getLabel(), fmem.getFieldPath(), fmem, Schema.getGlobalDescribe().get(objectName).newSObject()));
-    //     }
-    //     System.debug('fMaplist-->'+fMaplist);
-    //     return fMaplist;
-    // }
-
-
-
     @AuraEnabled
     public static String getFieldSet(String objectName, String fieldSetName){
         String result = '';
@@ -67,8 +53,16 @@ public class New_WalkThrough_Component {
         return pickListValuesList;
     }
 
+    @AuraEnabled
+    public static Id saveData(string allData){
+        buildertek__Walk_Through_List__c walkThroughList = (buildertek__Walk_Through_List__c) JSON.deserialize(allData, buildertek__Walk_Through_List__c.class);
+        insert walkThroughList;
+        return walkThroughList.Id;
+    }
 
-
-
-
+    @AuraEnabled
+    public static String getobjectName(Id recordId){
+        String sObjName = recordId.getSObjectType().getDescribe().getName();  
+        return sObjName;
+    }
 }

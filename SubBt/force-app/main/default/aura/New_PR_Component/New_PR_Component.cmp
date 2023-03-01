@@ -1,5 +1,4 @@
-<aura:component implements="force:hasRecordId,force:lightningQuickActionWithoutHeader,lightning:actionOverride" access="global" controller="New_PO_ComponentController">
-   
+<aura:component implements="force:hasRecordId,force:lightningQuickActionWithoutHeader,lightning:actionOverride" access="global" controller="New_PR_ComponentController" >
 <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 <ltng:require styles="{!$Resource.ModalPreview62moreMedia}"/>
 <lightning:notificationsLibrary aura:id="notifLib"/>
@@ -33,10 +32,10 @@
     </aura:html>
     <div class="slds-modal__container">
         <header class="slds-modal__header">
-            <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">New Purchase Order</h2>
+            <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">New Pricing Request</h2>
         </header>
         <div class="slds-modal__content" id="modal-content-id-1">
-            <lightning:recordEditForm aura:id="recordViewForm" objectApiName="buildertek__Purchase_Order__c" onsubmit="{!c.handleSubmit}" density="Comfy" >
+            <lightning:recordEditForm aura:id="recordViewForm" objectApiName="buildertek__Pricing_Request__c" onsubmit="{!c.handleSubmit}" density="Comfy" >
                 <div class="" style="height:43vh;width:100%;overflow: auto;">
                     <div class="slds-p-around_medium" style="background-color:white;">
                         <lightning:layout multipleRows="true">
