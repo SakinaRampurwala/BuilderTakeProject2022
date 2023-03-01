@@ -2,6 +2,21 @@
     controller="New_InvoiceAR_ComponentController" access="global">
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     <aura:attribute name="allFieldsLabel" type="List" />
+    <lightning:notificationsLibrary aura:id="notifLib"/>
+    <lightning:workspaceAPI aura:id="workspace"/>
+    <aura:attribute name="isSaveAndNew" type="Boolean" default="false" />
+    <aura:attribute name="Spinner" type="boolean" default="false"/>
+
+    <aura:if isTrue="{!v.Spinner}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+            <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>
+
 
     <aura:html tag="style">
         .slds-modal__container{
@@ -22,14 +37,14 @@
         </div>
         <!-- Body -->
         <div class="slds-modal__content" id="modal-content-id-1">
-            <lightning:recordEditForm aura:id="recordEditForm" objectApiName="buildertek__Billings__c"  onsubmit="{!c.handleSubmit}"  onsuccess="{!c.handleSuccess}">    
+            <lightning:recordEditForm aura:id="recordEditForm" objectApiName="buildertek__Billings__c"  onsubmit="{!c.handleSubmit}">    
                 <lightning:messages /> 
-                <div style="height:60vh;overflow-y:scroll">
+                <div style="height:50vh;overflow-y:scroll">
                     <lightning:layout multipleRows="true">
                         <!-- Display fields -->
                         <aura:iteration items="{!v.allFieldsLabel}" var="field">
                             <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small"> 
-                                    <lightning:inputField fieldName="{!field.name}" value="" />
+                                    <lightning:inputField fieldName="{!field.name}"/>
                             </lightning:layoutItem>
                         </aura:iteration>
                     </lightning:layout>

@@ -45,5 +45,11 @@ public with sharing class New_InvoiceAR_ComponentController {
         return pickListValuesList;
     }
 
+    @AuraEnabled
+    public static String saveRecord(String salesInvoiceData){
+        buildertek__Billings__c salesInvoice = (buildertek__Billings__c)JSON.deserialize(salesInvoiceData, buildertek__Billings__c.class);
+        insert salesInvoice;
+        return salesInvoice.Id;
+    }
 
 }
