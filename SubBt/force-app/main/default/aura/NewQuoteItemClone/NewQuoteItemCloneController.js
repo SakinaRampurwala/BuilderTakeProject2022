@@ -654,7 +654,17 @@
             "action": "SHOW"
         }).fire();
         var quoteObject = component.get("v.newQuote");
-        console.log({quoteObject});
+        quoteObject.buildertek__Product_Family__c = component.get("v.productfamily");
+
+
+        var jsonString =JSON.stringify(quoteObject);
+
+
+        console.log('*************************');
+
+        console.log(jsonString);
+        console.log(component.get("v.productfamily"));
+
         console.log(component.get("v.newQuote"));
         console.log(' Quote Data ==> ' + JSON.stringify(quoteObject));
 
@@ -666,6 +676,8 @@
         // markup = markup * 100;
         component.set("v.newQuote.buildertek__Margin__c", margin);
         component.set("v.newQuote.buildertek__Markup__c", markup);
+
+
         var action = component.get("c.saveQuoteLineItem");
         action.setParams({
             "quoteLineRecord": JSON.stringify(quoteObject)

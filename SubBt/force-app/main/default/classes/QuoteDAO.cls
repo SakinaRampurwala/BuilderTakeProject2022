@@ -683,6 +683,11 @@ public with sharing class QuoteDAO{
         QuoteLineToInsert.buildertek__Margin__c = QuoteRec.buildertek__Margin__c;
         QuoteLineToInsert.buildertek__Markup__c = QuoteRec.buildertek__Markup__c;
         QuoteLineToInsert.buildertek__Additional_Discount__c = QuoteRec.buildertek__Additional_Discount__c;
+
+        
+
+        QuoteLineToInsert.buildertek__Product_Family__c = QuoteRec.buildertek__Product_Family__c != 'None' ? QuoteRec.buildertek__Product_Family__c:'No Grouping';
+
         System.debug('---Budget Line Items recordId 321--> ' + QuoteLineToInsert);
 
         insert QuoteLineToInsert;

@@ -1,6 +1,11 @@
 ({
     doInit : function(component, event, helper) {
         component.set("v.Spinner", true);
+        var value = helper.getParameterByName(component, event, 'inContextOfRef');
+        console.log('value-->>',{value});
+        var context = '';
+        var parentRecordId = '';
+        component.set("v.parentRecordId", parentRecordId);
         var action2 = component.get("c.getFieldSet");
         action2.setParams({
             objectName: 'buildertek__Quote__c',
@@ -14,6 +19,39 @@
                 component.set("v.listOfFields0", listOfFields0);
             }
         });
+        if (value != null) {
+            context = JSON.parse(window.atob(value));
+            parentRecordId = context.attributes.recordId;
+            component.set("v.parentRecordId", parentRecordId);
+            console.log('parentRecordId---->>',{parentRecordId});
+            component.set("v.Spinner", false);
+        } else {
+            var relatedList = window.location.pathname;
+            var stringList = relatedList.split("/");
+            parentRecordId = stringList[4];
+            if (parentRecordId == 'related') {
+                var stringList = relatedList.split("/");
+                parentRecordId = stringList[3];
+            }
+            component.set("v.parentRecordId", parentRecordId);
+            console.log('parentRecordId-->>',{parentRecordId});
+        }
+        if(parentRecordId != null && parentRecordId != ''){
+            var action = component.get("c.getobjectName");
+            action.setParams({
+                recordId: parentRecordId,
+            });
+            action.setCallback(this, function (response) {
+                component.set("v.Spinner", false);
+                if (response.getState() == 'SUCCESS' && response.getReturnValue()) {
+                    var objName = response.getReturnValue();
+                    if(objName == 'buildertek__Project__c'){
+                        component.set("v.parentprojectRecordId", parentRecordId);
+                    }
+                } 
+            });
+            $A.enqueueAction(action);
+        }
         $A.enqueueAction(action2);
     },
 
@@ -54,6 +92,7 @@
                 console.log('success');
                 console.log(response.getReturnValue());
                 var recordId = response.getReturnValue();
+                console.log('recordId-->>',{recordId});
                 
                 var toastEvent = $A.get("e.force:showToast");
                 toastEvent.setParams({
@@ -70,6 +109,7 @@
                     $A.get('e.force:refreshView').fire();
                 }
                 else{
+                    console.log('---Else---');
                     console.log('saveAndClose');
                     var navEvt = $A.get("e.force:navigateToSObject");
                     navEvt.setParams({
@@ -78,11 +118,18 @@
                     });
                     navEvt.fire();
                     component.set("v.parentRecordId", null);
+
+                    var focusedTabId = '';
                     var workspaceAPI = component.find("workspace");
                     workspaceAPI.getFocusedTabInfo().then(function(response) {
-                        var focusedTabId = response.tabId;
-                        workspaceAPI.closeTab({tabId: focusedTabId});
+                        focusedTabId = response.tabId;
                     })
+
+                    window.setTimeout(
+                        $A.getCallback(function() {
+                            workspaceAPI.closeTab({tabId: focusedTabId});
+                        }), 1000
+                    );
                 }
             }
             else if (state === "ERROR") {

@@ -1176,6 +1176,9 @@
                         if (element.buildertek__Build_Phase__c != undefined) {
                             element.buildertek__Build_Phase__c = element.buildertek__Build_Phase__r.Name;
                         }
+                        if (element.buildertek__Sub_Group__c != undefined) {
+                            element.buildertek__Sub_Group__c = element.buildertek__Sub_Group__r.Name;
+                        }
                     });
                     var group1Wrapper = [];
                     var group1Value = quoteLineList[0][groupFieldList[0]];

@@ -94,7 +94,7 @@ public without sharing class QuoteTriggerHandler {
         system.debug('&&'+ProjectsIds);
         list<buildertek__Project__c> projectList;
         
-        projectList=[select Name,buildertek__Address__c,buildertek__Customer__c,buildertek__City__c,buildertek__Customer__r.BillingCity,buildertek__Customer__r.Name,buildertek__Customer__r.BillingState,buildertek__Customer__r.BillingPostalCode,buildertek__Customer__r.BillingStreet,buildertek__State__c,buildertek__Zip__c,buildertek__Country__c from buildertek__Project__c where id IN :ProjectsIds];
+        projectList=[SELECT Name,buildertek__Address__c,buildertek__Customer__c,buildertek__City__c,buildertek__Customer__r.BillingCity,buildertek__Customer__r.Name,buildertek__Customer__r.BillingState,buildertek__Customer__r.BillingPostalCode,buildertek__Customer__r.BillingStreet, buildertek__Customer__r.BillingCountry, buildertek__State__c,buildertek__Zip__c,buildertek__Country__c, buildertek__County__c FROM buildertek__Project__c WHERE Id IN :ProjectsIds];
         system.debug('&&'+projectList);
         for(Quote__c Qts : newQuotes){
             if(Qts.Project__c != null){
@@ -102,7 +102,7 @@ public without sharing class QuoteTriggerHandler {
                     if(Qts.Project__c == Projs.Id){
                         System.debug('Projs.Id-->>'+Projs.Id);
                         System.debug('Project Account--->>>'+Projs.buildertek__Customer__c);
-                        if(Projs.buildertek__City__c == null || Projs.buildertek__State__c == null || Projs.buildertek__Address__c == null || Projs.buildertek__Zip__c== null){
+                        if(Projs.buildertek__City__c == null || Projs.buildertek__State__c == null || Projs.buildertek__Address__c == null || Projs.buildertek__Zip__c == null || Projs.buildertek__County__c == null){
                             System.debug('---First If---');
                             if(Projs.buildertek__Customer__c != null){
                                 System.debug('---Second IF---');
@@ -128,6 +128,10 @@ public without sharing class QuoteTriggerHandler {
                                     Qts.buildertek__Ship_To_Zip_Code__c = Projs.buildertek__Customer__r.BillingPostalCode;
                                     Qts.buildertek__Bill_To_Zip_Code__c = Projs.buildertek__Customer__r.BillingPostalCode;
                                 }
+                                if(Qts.buildertek__Ship_To_Country__c == null || Qts.buildertek__Ship_To_Country__c == ''){
+                                    Qts.buildertek__Ship_To_Country__c = Projs.buildertek__Customer__r.BillingCountry;
+                                    Qts.buildertek__Bill_To_Country__c = Projs.buildertek__Customer__r.BillingCountry;
+                                }
                             }
                         }else{
                             System.debug('---Esle---');
@@ -151,10 +155,14 @@ public without sharing class QuoteTriggerHandler {
                                 Qts.buildertek__Ship_To_Zip_Code__c = Projs.buildertek__Zip__c;
                                 Qts.buildertek__Bill_To_Zip_Code__c = Projs.buildertek__Zip__c;
                             }
+                            if(Qts.buildertek__Ship_To_Country__c == null || Qts.buildertek__Ship_To_Country__c == ''){
+                                Qts.buildertek__Ship_To_Country__c = Projs.buildertek__Country__c;
+                                Qts.buildertek__Bill_To_Country__c = Projs.buildertek__Country__c;
+                            }
+                            if(Qts.buildertek__Bill_To_County__c == null || Qts.buildertek__Bill_To_County__c == ''){
+                                Qts.buildertek__Bill_To_County__c = Projs.buildertek__County__c;
+                            }
                         }
-                        //  if(Qts.buildertek__Address__c == null || Qts.buildertek__Address__c == ''){
-                        
-                        //  }
                     }    
                 }
             }
