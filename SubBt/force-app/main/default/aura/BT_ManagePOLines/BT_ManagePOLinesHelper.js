@@ -720,10 +720,8 @@
             "v.bomLineselectedFieldsLength",
             bomSelectedFieldsLength
           );
-          component.set(
-            "v.bomLineselectedFields",
-            result.bomLineselectedFields
-          );
+          component.set("v.bomLineselectedFields",result.bomLineselectedFields);
+          console.log('>>>>>>>>>>>>>>>>>>>>>>>>>' , component.get("v.bomLineselectedFields"));
           // }
         }
         var getBOMLineFieldMapAction = component.get(

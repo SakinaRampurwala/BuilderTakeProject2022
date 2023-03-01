@@ -793,6 +793,8 @@
   },
 
   onAdjustmentTableSave: function (component, event, helper) {
+    console.log('onAdjustmentTableSave');
+
     var updatedRecords = component
       .find("adjustmentTaxesTable")
       .get("v.draftValues");
@@ -849,7 +851,7 @@
         );
       }
     });
-    $A.get("e.force:refreshView").fire();
+    // $A.get("e.force:refreshView").fire();
     $A.enqueueAction(action);
     // }
   },

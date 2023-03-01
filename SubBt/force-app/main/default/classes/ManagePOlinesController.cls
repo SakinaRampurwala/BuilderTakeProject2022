@@ -1074,7 +1074,24 @@ public with sharing class ManagePOlinesController {
         try {  
           
             update updatedBomList;  
-            //return true;  
+            Set<Id> idSet= new Set<Id>();
+            for(buildertek__Project_Selection_Sheet_Takeoff__c bom:updatedBomList){
+                idSet.add(bom.Id);
+            }
+            System.debug(updatedBomList);
+            List<buildertek__Project_Selection_Sheet_Takeoff__c> bomList = [SELECT Id, Name, buildertek__Tax_Rate_1__c , 
+                                             (Select Id , Name ,buildertek__Tax__c , buildertek__Tax_Amount__c  From buildertek__Selection_Sheet_Takeoff_Lines__r) 
+                                             FROM buildertek__Project_Selection_Sheet_Takeoff__c 
+                                             WHERE Id = :idSet];
+            List<buildertek__Select_Sheet__c> bomLineList = new List<buildertek__Select_Sheet__c>();
+            for (buildertek__Project_Selection_Sheet_Takeoff__c bom : bomList) {
+                for (buildertek__Select_Sheet__c bomLine : bom.buildertek__Selection_Sheet_Takeoff_Lines__r) {
+                    bomLine.buildertek__Tax_Percent__c = bom.buildertek__Tax_Rate_1__c;
+                    bomLineList.add(bomLine);
+                }
+            }
+            update bomLineList;
+            
             return new AuraResponse(true, '', 'Success');
               
         } catch(Exception e) {  

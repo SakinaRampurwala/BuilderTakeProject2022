@@ -1060,7 +1060,7 @@
                         </div>
                         <footer class="slds-modal__footer">
                             <button class="slds-button slds-button_neutral" onclick="{!c.closeVendor}">Cancel</button>
-                            <button class="slds-button slds-button_brand" onclick="{!c.saveVendor}">Save button</button>
+                            <button class="slds-button slds-button_brand" onclick="{!c.saveVendor}">Save</button>
                         </footer>
                     </div>
                 </section>
