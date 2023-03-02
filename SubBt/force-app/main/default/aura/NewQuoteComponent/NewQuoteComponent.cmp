@@ -36,13 +36,13 @@
         </header>
         <div class="slds-modal__content" id="modal-content-id-1">
             <lightning:recordEditForm aura:id="recordViewForm" objectApiName="buildertek__Quote__c" onsubmit="{!c.handleSubmit}" density="Comfy" >
-                <div class="" style="height:43vh;width:100%;overflow: auto;">
+                <div class="" style="height:50vh;width:100%;overflow: auto;">
                     <div class="slds-p-around_medium" style="background-color:white;">
                         <lightning:layout multipleRows="true">
                             <aura:iteration items="{!v.listOfFields0}" var="field">
                                 <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small"> 
                                     <aura:if isTrue="{!and(field.name!='buildertek__Project__c',field.name!='Name')}">
-                                        <lightning:inputField fieldName="{!field.name}" value="" />
+                                        <lightning:inputField fieldName="{!field.name}"/>
                                         <aura:set attribute="else">
                                             <aura:if isTrue="{!field.name=='Name'}" > 
                                                 <lightning:inputField fieldName="Name"  required="true"/>

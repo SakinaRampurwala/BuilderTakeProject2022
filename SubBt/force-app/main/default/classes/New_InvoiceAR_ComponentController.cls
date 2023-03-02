@@ -51,5 +51,10 @@ public with sharing class New_InvoiceAR_ComponentController {
         insert salesInvoice;
         return salesInvoice.Id;
     }
+    @AuraEnabled
+    public static String getobjectNames(Id recordId){
+        String sObjName = recordId.getSObjectType().getDescribe().getName();  
+        return sObjName;
+    }
 
 }

@@ -1,6 +1,11 @@
 ({
     doInit : function(component, event, helper) {
         component.set('v.Spinner' , true);
+        var value = helper.getParameterByName(component, event, 'inContextOfRef');
+        var context = '';
+        var parentRecordId = '';
+        component.set("v.parentRecordId", parentRecordId);
+
         var action = component.get("c.getFieldSet");
         action.setParams({
             objectName: "buildertek__Billings__c",
@@ -11,7 +16,6 @@
             console.log(response.getState());
             console.log(response.getError());
             if (response.getState() == 'SUCCESS') {
-                component.set('v.Spinner' , false);
                 var allFieldsLabel = JSON.parse(response.getReturnValue());
                 console.log({allFieldsLabel});
 
@@ -20,6 +24,52 @@
 
             } 
         });
+
+        if (value != null) {
+            context = JSON.parse(window.atob(value));
+            parentRecordId = context.attributes.recordId;
+            component.set("v.parentRecordId", parentRecordId);
+            console.log('parentRecordId---->>',{parentRecordId});
+            // component.set("v.Spinner", false);
+        } else {
+            var relatedList = window.location.pathname;
+            var stringList = relatedList.split("/");
+            parentRecordId = stringList[4];
+            if (parentRecordId == 'related') {
+                var stringList = relatedList.split("/");
+                parentRecordId = stringList[3];
+            }
+            component.set("v.parentRecordId", parentRecordId);
+            console.log('parentRecordId-->>',{parentRecordId});
+        }
+        if(parentRecordId != null && parentRecordId != ''){
+            var action2 = component.get("c.getobjectNames");
+            console.log('getobjectNames-->>',{parentRecordId});
+
+            action2.setParams({
+                recordId: parentRecordId,
+            });
+            action2.setCallback(this, function (response) {
+                console.log(response.getState());
+                console.log(response.getError());
+
+                if (response.getState() == 'SUCCESS' && response.getReturnValue()) {
+                    component.set("v.Spinner", false);
+
+                    var objName = response.getReturnValue();
+                    if(objName == 'buildertek__Project__c'){
+                        component.set("v.parentprojectRecordId", parentRecordId);
+                    }
+                    if(objName == 'buildertek__Change_Order__c'){
+                        component.set("v.parentChangeOrderRecordId", parentRecordId);
+                    }
+                    if(objName == 'buildertek__Contract__c'){
+                        component.set("v.parentContractRecordId", parentRecordId);
+                    }
+                } 
+            });
+            $A.enqueueAction(action2);
+        }
         $A.enqueueAction(action);
 
     },
