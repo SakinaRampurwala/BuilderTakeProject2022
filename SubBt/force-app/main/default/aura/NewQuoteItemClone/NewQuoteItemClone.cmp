@@ -1028,7 +1028,7 @@
                                                         </div>
                                                     </div>
                                                 </th>
-                                                <th></th>
+                                                <th style="width: 80px !important;"></th>
                                                 <aura:iteration items="{!v.columns}" var="col">
                                                     <aura:if
                                                         isTrue="{!and(col.fieldName!='Name',and(col.fieldName!='buildertek__Notes__c',col.fieldType!='reference'))}">
@@ -1114,7 +1114,7 @@
                                                                     change="{!c.updateQuoteData}" blur="{!c.onblur}" />
                                                                 <aura:set attribute="else">
                                                                     <div class="slds-truncate"
-                                                                        title="{!tar.recordName}">
+                                                                        title="{!tar.recordName}" style="white-space: normal; word-wrap: break-word;">
                                                                         <a href="javascript:void(0);" role="menuitem"
                                                                             tabindex="-1" data-record="{!tar.recordId}"
                                                                             onclick="{!c.doView}">

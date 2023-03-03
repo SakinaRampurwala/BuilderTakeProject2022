@@ -3618,10 +3618,31 @@
           if (singleRecord[k].Key === "buildertek__SalesTax") {
             listOfLine.push(String(singleRecord[k].Value));
           }
+          if (singleRecord[k].Key === "buildertek__Total_Cost") {
+            listOfLine.push(String(singleRecord[k].Value));
+          }
           lineMap.set(id, listOfLine);
         }
       }
     }
+    //iterate over map and if value is empty then set it to 0
+    lineMap.forEach((value, key) => {
+      if (value[0] == null || value[0] == undefined || value[0] == "") {
+        value[0] = "0";
+      }
+      if (value[1] == null || value[1] == undefined || value[1] == "") {
+        value[1] = "0";
+      }
+      if (value[2] == null || value[2] == undefined || value[2] == "") {
+        value[2] = "0";
+      }
+      if (value[3] == null || value[3] == undefined || value[3] == "") {
+        value[3] = "0";
+      }
+      if(value[4] == null || value[4] == undefined || value[4] == ""){
+        value[4] = "0";
+      }
+    });
     return lineMap;
   },
   quote: function (component, event, helper) {
@@ -3632,6 +3653,7 @@
       element[0] = Math.abs(element[0]).toFixed(2);
     });
     console.log('myFieldMap ===> ',{myFieldMap});
+    debugger;
     var obj = Object.fromEntries(myFieldMap);
     var jsonString = JSON.stringify(obj);
     console.log("myFieldMap --> ", { myFieldMap });

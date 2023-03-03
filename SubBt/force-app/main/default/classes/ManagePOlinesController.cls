@@ -1554,9 +1554,9 @@ public with sharing class ManagePOlinesController {
         
         Map<String,List<String>> myMap = (Map<String,List<String>>)JSON.deserialize(mapFieldData, Map<String,List<String>>.class);
         
-        // for(Id key : myMap.keySet()){
-        //     system.debug('myMap --> '+myMap.get(key));
-        // }
+        for(Id key : myMap.keySet()){
+            system.debug('myMap --> '+myMap.get(key));
+        }
 
         try {
             bom = [SELECT ID, Name,buildertek__BT_Quote__c,buildertek__Tax_Rate_1__c, 
@@ -1594,10 +1594,12 @@ public with sharing class ManagePOlinesController {
                         Decimal markUp;
                         Decimal discount;
                         Decimal salesTax;
+                        Decimal TotalCost;
                         String str = myMap.get(bomLine.Id)[2];
                         String str1 = myMap.get(bomLine.Id)[0];
                         String str2 = myMap.get(bomLine.Id)[3];
                         String groupName = myMap.get(bomLine.Id)[1];
+                        String str3 = myMap.get(bomLine.Id)[4];
                         if (String.isNotBlank(str)) {
                             markUp = decimal.valueOf(str);
                         }else{
@@ -1613,6 +1615,7 @@ public with sharing class ManagePOlinesController {
                         }else{
                             salesTax = 0;
                         }
+                        
                         qtLine.Name = 'Qt '+bomLine.Name;
                         qtLine.buildertek__Quantity__c = bomLine.buildertek__Quantity__c;
                         if (bomLine.buildertek__Upgrade_Price__c != null) {
@@ -1621,8 +1624,7 @@ public with sharing class ManagePOlinesController {
                             qtLine.buildertek__Unit_Cost__c = bomLine.buildertek__BL_LIST_PRICE__c;
                         }
                         else{
-                            //add total cost
-                            qtLine.buildertek__Unit_Cost__c = decimal.valueOf(myMap.get(bomLine.Id)[3]);                            
+                            qtLine.buildertek__Unit_Cost__c = decimal.valueOf(str3);
                         }
                         qtLine.buildertek__Quote__c = quote.Id;
                         qtLine.buildertek__Markup__c = markUp;

@@ -116,17 +116,15 @@ public with sharing class ChangeOrderDAO{
         ResponseBase res = new ResponseBase();
         try{
             //coJson.buildertek__Vendor__r = null;
-            buildertek__Project__c project;
-
-            project = [SELECT Id, Name, buildertek__Customer__c
-                       FROM buildertek__Project__c
-                       WHERE Id = :coJson.buildertek__Project__c];
-
-            system.debug('project -------> ' + project);
-            if (project.buildertek__Customer__c != null){
-                coJson.buildertek__Customer_Account__c = project.buildertek__Customer__c;
+            if(coJson.buildertek__Project__c!= null){
+                buildertek__Project__c project = [SELECT Id, Name, buildertek__Customer__c FROM buildertek__Project__c WHERE Id = :coJson.buildertek__Project__c];
+                if (project.buildertek__Customer__c != null){
+                    coJson.buildertek__Customer_Account__c = project.buildertek__Customer__c;
+                }
+                
             }
-            
+
+
             Id CustomerRecordTypeId = Schema.SObjectType.buildertek__Change_Order__c.getRecordTypeInfosByName().get('Customer').getRecordTypeId();
             Id VendorRecordTypeId = Schema.SObjectType.buildertek__Change_Order__c.getRecordTypeInfosByName().get('Vendor').getRecordTypeId();
             
@@ -198,6 +196,8 @@ public with sharing class ChangeOrderDAO{
         } catch (Exception ex){
             //throw new AuraHandledException(ex.getMessage());
             system.debug('Message --------> ' + ex.getMessage());
+            system.debug('Message --------> ' + ex.getLineNumber());
+
             res.isSuccess = false;
             res.strMessage = ex.getMessage();
             res.strRecordId = '';

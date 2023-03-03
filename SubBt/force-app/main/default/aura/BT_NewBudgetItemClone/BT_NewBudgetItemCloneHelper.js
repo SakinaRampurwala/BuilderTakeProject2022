@@ -238,7 +238,7 @@
         $A.enqueueAction(action);
     },
 
-    getBudgetGroups: function (component, event, helper, page) {
+    getBudgetGroups: function (component, event, helper, page , showToast) {
         $A.get("e.c:BT_SpinnerEvent").setParams({
             action: "SHOW",
         }).fire();
@@ -1073,6 +1073,8 @@
                     $A.get("e.c:BT_SpinnerEvent").setParams({
                         action: "HIDE",
                     }).fire();
+
+                    showToast();
                     //var end = new Date().getTime();
                     //console.log(end - start);
                 } else {

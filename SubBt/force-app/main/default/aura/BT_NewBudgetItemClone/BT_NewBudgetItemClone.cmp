@@ -295,7 +295,6 @@
                                 <div style="width: fit-content;">
                                     <lightning:input aura:id="Cost Code" name="Group By Cost Code" label="Group By Category" type="toggle" checked="{!v.groupByVendortoggle2}" onclick="{!c.checkToogle2}" />
                                 </div>
-                                <!-- </aura:if>-->
                                 <aura:set attribute="else">
                                     <div style="width: fit-content;">
                                         <lightning:input aura:id="Cost Code1" name="Group By Cost Code1" label="Group By Category" type="toggle" checked="{!v.groupByVendortoggle1}" onclick="{!c.checkToogle1}" />
@@ -354,7 +353,7 @@
                                         <lightning:button label="New CO" onclick="{!c.newCO}" class="sldsButtonGroup" disabled="{!v.disableAddCO}"/>
                                         <lightning:button label="New PO" onclick="{!c.newPO}" class="sldsButtonGroup" />
                                         <!-- <lightning:button label="New Expense" onclick="{!c.newExpense}" class="sldsButtonGroup" /> -->
-                                        <lightning:button label="Contingency" onclick="{!c.onContingency}" class="sldsButtonGroup" />
+                                        <!-- <lightning:button label="Contingency" onclick="{!c.onContingency}" class="sldsButtonGroup" /> -->
                                         <!-- commented on 26thmay DFL <lightning:button label="New Sub-Contract" onclick="{!c.newSubContract}" class="sldsButtonGroup"/>-->
                                         <!-- <lightning:button label="Import CSV" onclick="{!c.importCSV}"/> -->
                                         <!--  <lightning:button label="Save" onclick="{!c.saveQuoteItems}"/> -->

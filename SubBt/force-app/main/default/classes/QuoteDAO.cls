@@ -2046,6 +2046,9 @@ public with sharing class QuoteDAO{
             System.debug('Record => ' + qql);
             buildertek__Quote_Item__c newQline = new    buildertek__Quote_Item__c();
             newQline.Name = qql.Name;
+            if (newQline.Name.length() > 80){
+                newQline.Name = newQline.Name.substring(0, 79);
+            }
             newQline.buildertek__Product__c = qql.buildertek__Product__c;
             if(qql.buildertek__Unit_Price__c != null){
                 newQline.buildertek__Unit_Price__c = qql.buildertek__Unit_Price__c;               

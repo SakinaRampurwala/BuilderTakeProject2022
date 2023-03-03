@@ -10,10 +10,15 @@
                 </apex:inputcheckbox>
                 <apex:inputcheckbox value="{!isCreateTimeCard}" label="Automatically add Time Card to Budget">
                 </apex:inputcheckbox> 
-                 <apex:inputcheckbox value="{!isCostCode}" label="Group by Cost Code for Budget">
+                 <!-- <apex:inputcheckbox value="{!isCostCode}" label="Group by Cost Code for Budget">
                 </apex:inputcheckbox> 
                 <apex:inputcheckbox value="{!isGroupByVendor}" label="Group by Vendor for Budget">
-                </apex:inputcheckbox> 
+                </apex:inputcheckbox>  -->
+                <apex:selectList label="Budget Group By" value="{!selectedGrouping}" multiselect="false" size="1">
+                    <apex:selectOption itemValue="Group By Category" itemLabel="Group By Category"/>
+                    <apex:selectOption itemValue="Group By Vendor" itemLabel="Group By Vendor"/>
+                    <apex:selectOption itemValue="Group By Cost Code" itemLabel="Group By Cost Code"/>
+                </apex:selectList>
                 <center>
                 <apex:commandButton value="Save" id="onCreateChangeOrderonOverage" styleClass="slds-button slds-button_brand" action="{!onQuoteAccepted}"></apex:commandButton>
                 </center>

@@ -353,9 +353,9 @@ public with sharing class ChangeOrderTriggerHandler {
             }*/
         } 
 
-
         List<buildertek__Change_Order__c> newCOList = new List<buildertek__Change_Order__c>();
-        for(buildertek__Change_Order__c changeOrder : newChangeOrder){
+        list<buildertek__Change_Order__c>  changeOrderList  = [select Id, name,buildertek__Budget_Line__c  from buildertek__Change_Order__c where Id IN: newChangeOrder];
+        for(buildertek__Change_Order__c changeOrder : changeOrderList){
             for (Id key : budgetLineMap.keySet()) {
                 if (changeOrder.Id == key) {
                     changeOrder.buildertek__Budget_Line__c = budgetLineMap.get(changeOrder.Id).Id;
