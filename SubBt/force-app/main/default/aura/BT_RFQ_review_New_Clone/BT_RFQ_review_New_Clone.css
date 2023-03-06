@@ -437,3 +437,7 @@
     white-space: nowrap;
     font-size: 20px;
 }
+.THIS .noSelectedVendor{
+    font-size: 1.2rem;
+    font-weight: bold;
+}

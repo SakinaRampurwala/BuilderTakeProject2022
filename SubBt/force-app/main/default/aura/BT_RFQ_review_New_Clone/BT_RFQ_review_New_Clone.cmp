@@ -192,354 +192,365 @@
             <div class="inner-wrapper-box">
                 <div class="side-detail-box">
                     <div class="tab-content">
-                        <aura:if isTrue="{!!empty(v.selectedVendorList)}">test test test</aura:if>
-                        <aura:iteration items="{!v.selectedVendorList}" var="vlist">
-                            <div class="inner-box">
-                                <div class="{!or(vlist.buildertek__Status__c=='Awarded',vlist.buildertek__Status__c=='Accepted')?'box Awardedbox':'box NonAwardedBox'}">
-                                    <div class="left-box" style="display: inline-block;vertical-align: middle;
-                                                                 width:100%;">
-                                        <div class="checkbox check-btn"
-                                             style="display: inline-block; vertical-align: middle;margin: 0 auto;">
-                                            <aura:if isTrue="{!vlist.buildertek__Status__c=='Rejected'}">
-                                                    <label class="custom-radio-check">
-                                                        <lightning:input aura:id="vendorselection" type="checkbox"
-                                                                    variant="lable-hidden"
-                                                                    checked="{!vlist.buildertek__IS_VENDOR_SELECTED__c}"
-                                                                    name="{!vlist.Id}" onchange="{!c.onVendorSelectionChange}"
-                                                                    style="padding-bottom: 30px;padding-right: 0px; display:none"  />
-                                                    </label>
-
-                                                <aura:set attribute="else">
-                                                    
-                                                    <label class="custom-radio-check">
-                                                        <lightning:input aura:id="vendorselection" type="checkbox"
+                        <aura:if isTrue="{!!empty(v.selectedVendorList)}">
+                            <aura:iteration items="{!v.selectedVendorList}" var="vlist">
+                                <div class="inner-box">
+                                    <div class="{!or(vlist.buildertek__Status__c=='Awarded',vlist.buildertek__Status__c=='Accepted')?'box Awardedbox':'box NonAwardedBox'}">
+                                        <div class="left-box" style="display: inline-block;vertical-align: middle;
+                                                                        width:100%;">
+                                            <div class="checkbox check-btn"
+                                                    style="display: inline-block; vertical-align: middle;margin: 0 auto;">
+                                                <aura:if isTrue="{!vlist.buildertek__Status__c=='Rejected'}">
+                                                        <label class="custom-radio-check">
+                                                            <lightning:input aura:id="vendorselection" type="checkbox"
                                                                         variant="lable-hidden"
                                                                         checked="{!vlist.buildertek__IS_VENDOR_SELECTED__c}"
                                                                         name="{!vlist.Id}" onchange="{!c.onVendorSelectionChange}"
-                                                                        style="padding-bottom: 30px;padding-right: 0px;" />
-                                                    </label>
-                                                </aura:set>
-                                            </aura:if>
-                                        </div>
-                                        <h3
-                                            style="display: inline-block;margin: 0;vertical-align: middle;  font-size: 15px;padding-left: 12px;width:95%;">
-                                            <div
-                                                 style="vertical-align: middle;display: inline-block;padding-left: 5px;">
-                                                <span
-                                                      style="{!or(vlist.buildertek__Status__c=='Awarded',vlist.buildertek__Status__c=='Accepted')?'vertical-align: middle;display: inline-block;font-weight: 500;padding-left: 5px;color:white;':'vertical-align: middle;display: inline-block;padding-left: 5px;font-weight: 500;'}">
-                                                    <ui:outputURL
-                                                                  class="{!or(vlist.buildertek__Status__c=='Awarded',vlist.buildertek__Status__c=='Accepted')?'slds-text-color_inverse':''}"
-                                                                  value="{!'/one/one.app?#/sObject/'+ vlist.buildertek__Vendor__c + '/view'}"
-                                                                  target="_blank" label="{!vlist.buildertek__Vendor__r.Name}" />
-                                                </span>
-                                                <span
-                                                      style="{!or(vlist.buildertek__Status__c=='Awarded',vlist.buildertek__Status__c=='Accepted')?'vertical-align: middle;display: inline-block;padding-left: 5px;color:white;':'vertical-align: middle;display: inline-block;padding-left: 5px;'}">
-                                                    -
-                                                    <ui:outputURL
-                                                                  class="{!or(vlist.buildertek__Status__c=='Awarded',vlist.buildertek__Status__c=='Accepted')?'slds-text-color_inverse':''}"
-                                                                  value="{!'/one/one.app?#/sObject/'+ vlist.buildertek__Contact__r.Id + '/view'}"
-                                                                  target="_blank" label="{!vlist.buildertek__Contact__r.Name}" />
-                                                </span>
+                                                                        style="padding-bottom: 30px;padding-right: 0px; display:none"  />
+                                                        </label>
 
-                                                <div style="float: right;">
-                                                    <aura:if isTrue="{!vlist.buildertek__Files__r.length > 0}">
-
-                                                        <a onclick="{! c.filelist}"
-                                                           id="{!vlist.buildertek__Vendor__c}" >
-                                                            <lightning:icon title="Files" size="x-small"
-                                                                            iconName="utility:attach"
-                                                                            class="{!or(vlist.buildertek__Status__c=='Awarded',vlist.buildertek__Status__c=='Accepted')?'iconWithoutBorder1':'iconWithoutBorder'}"
-                                                                            />
-                                                        </a>
-                                                    </aura:if>
-                                                </div>
-
-                                                <aura:if
-                                                         isTrue="{!vlist.isEmail}" >
-                                                    <span style="padding-left:5px">
-                                                        <lightning:icon title="No Primary Contact or Valid Email"
-                                                                        iconName="utility:error" variant="Error" size="xx-small" />
-                                                    </span>
-                                                    <!-- <aura:set attribute = 'else'>
-                                                        <aura:if
-                                                                 isTrue="{!!vlist.isValidEmail}" >
-                                                            <span style="padding-left:5px">
-                                                                <lightning:icon title="No Primary Contact or Valid Email"
-                                                                                iconName="utility:error" variant="Error" size="xx-small" />
-                                                            </span>
-
-                                                        </aura:if>
-                                                    </aura:set> -->
-
-                                                </aura:if>
-                                                <aura:if isTrue="{!or(vlist.buildertek__Status__c=='Awarded',vlist.buildertek__Status__c=='Accepted')}">
-                                                    <span style="margin-left:1rem;CURSOR: pointer;">
-                                                        <a onclick="{!c.AddContactsButtonClick}"
-                                                           id="{!vlist.buildertek__Vendor__c+'_'+vlist.Id}"
-
-                                                           >
-                                                            <lightning:icon class='redColor' iconName="utility:add" alternativeText="Add" title="Add" size="x-small"    />
-                                                        </a>
-                                                    </span>
                                                     <aura:set attribute="else">
-                                                        <span style="margin-left:1rem; CURSOR: pointer;">
-                                                            <a onclick="{!c.AddContactsButtonClick}"
-                                                               id="{!vlist.buildertek__Vendor__c+'_'+vlist.Id}"
-
-                                                               >
-                                                                <lightning:icon class='bluecolor' iconName="utility:add" alternativeText="Add" title="Add" size="x-small"   />
-
-
-                                                            </a>
-                                                        </span>
+                                                        
+                                                        <label class="custom-radio-check">
+                                                            <lightning:input aura:id="vendorselection" type="checkbox"
+                                                                            variant="lable-hidden"
+                                                                            checked="{!vlist.buildertek__IS_VENDOR_SELECTED__c}"
+                                                                            name="{!vlist.Id}" onchange="{!c.onVendorSelectionChange}"
+                                                                            style="padding-bottom: 30px;padding-right: 0px;" />
+                                                        </label>
                                                     </aura:set>
                                                 </aura:if>
-                                                <aura:if isTrue="{!vlist.buildertek__Vendor__r.buildertek__Pre_Qualified__c == true}">
-
-                                                    <!-- <span>
-                                                        <lightning:button variant="brand" label="Add" title="" onclick="{!c.AddContactsButtonClick }"/>
-                                                    </span> -->
-                                                    <span style="float: right; padding-left: 20px;">
-                                                        <a onclick="{!c.openVendoraccount}"
-                                                           id="{!vlist.buildertek__Vendor__c}">
-                                                            <lightning:icon title="Pre Qualified"
-                                                                            iconName="utility:linked" variant="bare"
-                                                                            class="{!or(vlist.buildertek__Status__c=='Awarded',vlist.buildertek__Status__c=='Accepted')?'awardedlinkIcon':'linkIcon'}" />
-                                                        </a>
-                                                    </span>
-                                                    <aura:set attribute="else">
-                                                        <span style="float: right; padding-left: 20px;">
-                                                            <a onclick="{!c.openVendoraccount}"
-                                                               id="{!vlist.buildertek__Vendor__c}">
-                                                                <lightning:icon title="Un Qualified"
-                                                                                iconName="utility:unlinked" variant="bare"
-                                                                                class="{!or(vlist.buildertek__Status__c=='Awarded',vlist.buildertek__Status__c=='Accepted')?'awardedunlinkedIcon':'unlinkedIcon'}" />
-                                                            </a>
-                                                        </span>
-                                                    </aura:set>
-                                                </aura:if>
-
                                             </div>
-                                            <span style="{!or(vlist.buildertek__Status__c=='Awarded',vlist.buildertek__Status__c=='Accepted')?'vertical-align: middle;display: inline-block;padding-left: 5px;color:white;padding-bottom: 15px;':'vertical-align: middle;display: inline-block;padding-left: 5px;padding-bottom: 15px;'}">
-                                                {!vlist.buildertek__Status__c}
-                                            </span>
-                                            <!-- Icon-->
-                                            <!-- <span>
-                                                    <lightning:button variant="brand" label="Add" title="" onclick="{!c.AddContactsButtonClick }"/>
-                                               </span> -->
-                                            <div
-                                                 style="vertical-align: middle;display: inline-block;font-weight: 500;padding-left: 5px;float:right;">
-                                                <span
-                                                      style="{!or(vlist.buildertek__Status__c=='Awarded',vlist.buildertek__Status__c=='Accepted')?'vertical-align: middle;display: inline-block;font-weight: 500;padding-left: 5px;color: white;float:left;':'vertical-align: middle;display: inline-block;font-weight: 500;padding-left: 5px;color: #1b5297;float:left;'}">
-                                                    <!--{!vlist.buildertek__Quote_Amount__c}-->
-                                                    <!--<lightning:formattedNumber value="{!vlist.buildertek__Quote_Amount__c}"
-                                                                                  style="currency" currencyCode="USD" currencyDisplayAs="code"/>-->
-                                                    <aura:if isTrue='{!v.multicurrency}'>
-                                                        <lightning:formattedNumber value="{!vlist.buildertek__Quote_Amount__c}"
-                                                                                   style="currency" currencyCode="{!vlist.CurrencyIsoCode}" currencyDisplayAs="code"/>
-                                                    </aura:if>
-                                                    <aura:if isTrue='{!!v.multicurrency}'>
-                                                        <lightning:formattedNumber value="{!vlist.buildertek__Quote_Amount__c}"
-                                                                                   style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code"/>
-                                                    </aura:if>
-                                                </span>
+                                            <h3
+                                                style="display: inline-block;margin: 0;vertical-align: middle;  font-size: 15px;padding-left: 12px;width:95%;">
+                                                <div
+                                                        style="vertical-align: middle;display: inline-block;padding-left: 5px;">
+                                                    <span
+                                                            style="{!or(vlist.buildertek__Status__c=='Awarded',vlist.buildertek__Status__c=='Accepted')?'vertical-align: middle;display: inline-block;font-weight: 500;padding-left: 5px;color:white;':'vertical-align: middle;display: inline-block;padding-left: 5px;font-weight: 500;'}">
+                                                        <ui:outputURL
+                                                                        class="{!or(vlist.buildertek__Status__c=='Awarded',vlist.buildertek__Status__c=='Accepted')?'slds-text-color_inverse':''}"
+                                                                        value="{!'/one/one.app?#/sObject/'+ vlist.buildertek__Vendor__c + '/view'}"
+                                                                        target="_blank" label="{!vlist.buildertek__Vendor__r.Name}" />
+                                                    </span>
+                                                    <span
+                                                            style="{!or(vlist.buildertek__Status__c=='Awarded',vlist.buildertek__Status__c=='Accepted')?'vertical-align: middle;display: inline-block;padding-left: 5px;color:white;':'vertical-align: middle;display: inline-block;padding-left: 5px;'}">
+                                                        -
+                                                        <ui:outputURL
+                                                                        class="{!or(vlist.buildertek__Status__c=='Awarded',vlist.buildertek__Status__c=='Accepted')?'slds-text-color_inverse':''}"
+                                                                        value="{!'/one/one.app?#/sObject/'+ vlist.buildertek__Contact__r.Id + '/view'}"
+                                                                        target="_blank" label="{!vlist.buildertek__Contact__r.Name}" />
+                                                    </span>
 
-                                                <aura:if isTrue="{!or(v.isAwarded,v.isAccepted)}">
+                                                    <div style="float: right;">
+                                                        <aura:if isTrue="{!vlist.buildertek__Files__r.length > 0}">
 
-                                                    <aura:if isTrue="{!vlist.buildertek__Status__c=='Awarded'}">
-                                                        <span style="float:right;" class="awardedIcon">
-                                                            Awarded
-                                                        </span>
-                                                        <aura:set attribute="else">
-                                                            <aura:if
-                                                                     isTrue="{!vlist.buildertek__Status__c=='Accepted'}">
-                                                                <span style="float:right;" class="awardedIcon">
-                                                                    Accepted
-                                                                </span>
-                                                                <aura:set attribute="else">
-                                                                    <span style="float:right;" class="awardedIcon">
-                                                                    </span>
-                                                                </aura:set>
-                                                            </aura:if>
-                                                        </aura:set>
-                                                    </aura:if>
-
-                                                    <aura:set attribute="else">
-                                                        <!--<span style="float:right;margin-right: -30%;"> -->
-                                                        <span style="float:right;">
-                                                            <lightning:buttonIcon aura:id="{!vlist.Id}"
-                                                                                  name="{!vlist.Id}" title="Delete"
-                                                                                  iconName="utility:delete"
-                                                                                  onclick="{!c.deleteselectedVendor}" variant="bare"
-                                                                                  alternativeText="{!vlist.Name}" class="deleteIcon" />
-                                                        </span>
-                                                        <!-- <span style="float:right;margin-right: 19%;"> -->
-                                                        <span style="float:right;">
-                                                            <lightning:buttonIcon aura:id="{!vlist.Id}"
-                                                                                  name="{!vlist.Id}" title="Award"
-                                                                                  iconName="utility:ribbon"
-                                                                                  onclick="{!c.awardSelectedVendor}" variant="bare"
-                                                                                  alternativeText="{!vlist.Name}" class="awardIcon" />
-                                                        </span>
-
-                                                    </aura:set>
-                                                </aura:if>
-
-
-                                                <!--<span style="float: left;margin-right: -10%;">-->
-                                                <span style="float:right;">
-                                                    <lightning:buttonIcon aura:id="{!vlist.Id}" name="{!vlist.Id}"
-                                                                          iconName="utility:preview" onclick="{!c.openVendor}"
-                                                                          variant="bare" alternativeText="View"
-                                                                          class="{!or(vlist.buildertek__Status__c=='Awarded',vlist.buildertek__Status__c=='Accepted')?'awardedViewIcon':'viewIcon'}" />
-                                                </span>
-
-
-
-
-                                                <div style="float: right;">
-                                                    <aura:if isTrue="{!vlist.buildertek__Files__r.length > 0}">
-
-                                                        <a  onclick="{! c.filelist1}"
-                                                           id="{!vlist.buildertek__Vendor__c+'_'+vlist.Id}">
-
-                                                            <lightning:icon title="Files" size="x-small"
-                                                                            iconName="utility:attach" style = " padding-left: 1rem;"
-                                                                            class="{!or(vlist.buildertek__Status__c=='Awarded',vlist.buildertek__Status__c=='Accepted')?'iconWithoutBorder1':'iconWithoutBorder'}"
-                                                                            />
-                                                        </a>
-                                                        <aura:set attribute="else">
-                                                            <a onclick="{! c.filelist1}"
-                                                               id="{!vlist.buildertek__Vendor__c+'_'+vlist.Id}">
-                                                                <lightning:icon title="No Files" size="x-small"
-                                                                                iconName="utility:attach"  style = "color:green; padding-left: 1rem;" class = "fileiconcolor"
-
+                                                            <a onclick="{! c.filelist}"
+                                                                id="{!vlist.buildertek__Vendor__c}" >
+                                                                <lightning:icon title="Files" size="x-small"
+                                                                                iconName="utility:attach"
+                                                                                class="{!or(vlist.buildertek__Status__c=='Awarded',vlist.buildertek__Status__c=='Accepted')?'iconWithoutBorder1':'iconWithoutBorder'}"
                                                                                 />
                                                             </a>
-                                                        </aura:set>
+                                                        </aura:if>
+                                                    </div>
+
+                                                    <aura:if
+                                                                isTrue="{!vlist.isEmail}" >
+                                                        <span style="padding-left:5px">
+                                                            <lightning:icon title="No Primary Contact or Valid Email"
+                                                                            iconName="utility:error" variant="Error" size="xx-small" />
+                                                        </span>
+                                                        <!-- <aura:set attribute = 'else'>
+                                                            <aura:if
+                                                                        isTrue="{!!vlist.isValidEmail}" >
+                                                                <span style="padding-left:5px">
+                                                                    <lightning:icon title="No Primary Contact or Valid Email"
+                                                                                    iconName="utility:error" variant="Error" size="xx-small" />
+                                                                </span>
+
+                                                            </aura:if>
+                                                        </aura:set> -->
 
                                                     </aura:if>
+                                                    <aura:if isTrue="{!or(vlist.buildertek__Status__c=='Awarded',vlist.buildertek__Status__c=='Accepted')}">
+                                                        <span style="margin-left:1rem;CURSOR: pointer;">
+                                                            <a onclick="{!c.AddContactsButtonClick}"
+                                                                id="{!vlist.buildertek__Vendor__c+'_'+vlist.Id}"
+
+                                                                >
+                                                                <lightning:icon class='redColor' iconName="utility:add" alternativeText="Add" title="Add" size="x-small"    />
+                                                            </a>
+                                                        </span>
+                                                        <aura:set attribute="else">
+                                                            <span style="margin-left:1rem; CURSOR: pointer;">
+                                                                <a onclick="{!c.AddContactsButtonClick}"
+                                                                    id="{!vlist.buildertek__Vendor__c+'_'+vlist.Id}"
+
+                                                                    >
+                                                                    <lightning:icon class='bluecolor' iconName="utility:add" alternativeText="Add" title="Add" size="x-small"   />
+
+
+                                                                </a>
+                                                            </span>
+                                                        </aura:set>
+                                                    </aura:if>
+                                                    <aura:if isTrue="{!vlist.buildertek__Vendor__r.buildertek__Pre_Qualified__c == true}">
+
+                                                        <!-- <span>
+                                                            <lightning:button variant="brand" label="Add" title="" onclick="{!c.AddContactsButtonClick }"/>
+                                                        </span> -->
+                                                        <span style="float: right; padding-left: 20px;">
+                                                            <a onclick="{!c.openVendoraccount}"
+                                                                id="{!vlist.buildertek__Vendor__c}">
+                                                                <lightning:icon title="Pre Qualified"
+                                                                                iconName="utility:linked" variant="bare"
+                                                                                class="{!or(vlist.buildertek__Status__c=='Awarded',vlist.buildertek__Status__c=='Accepted')?'awardedlinkIcon':'linkIcon'}" />
+                                                            </a>
+                                                        </span>
+                                                        <aura:set attribute="else">
+                                                            <span style="float: right; padding-left: 20px;">
+                                                                <a onclick="{!c.openVendoraccount}"
+                                                                    id="{!vlist.buildertek__Vendor__c}">
+                                                                    <lightning:icon title="Un Qualified"
+                                                                                    iconName="utility:unlinked" variant="bare"
+                                                                                    class="{!or(vlist.buildertek__Status__c=='Awarded',vlist.buildertek__Status__c=='Accepted')?'awardedunlinkedIcon':'unlinkedIcon'}" />
+                                                                </a>
+                                                            </span>
+                                                        </aura:set>
+                                                    </aura:if>
+
+                                                </div>
+                                                <span style="{!or(vlist.buildertek__Status__c=='Awarded',vlist.buildertek__Status__c=='Accepted')?'vertical-align: middle;display: inline-block;padding-left: 5px;color:white;padding-bottom: 15px;':'vertical-align: middle;display: inline-block;padding-left: 5px;padding-bottom: 15px;'}">
+                                                    {!vlist.buildertek__Status__c}
+                                                </span>
+                                                <!-- Icon-->
+                                                <!-- <span>
+                                                        <lightning:button variant="brand" label="Add" title="" onclick="{!c.AddContactsButtonClick }"/>
+                                                    </span> -->
+                                                <div
+                                                        style="vertical-align: middle;display: inline-block;font-weight: 500;padding-left: 5px;float:right;">
+                                                    <span
+                                                            style="{!or(vlist.buildertek__Status__c=='Awarded',vlist.buildertek__Status__c=='Accepted')?'vertical-align: middle;display: inline-block;font-weight: 500;padding-left: 5px;color: white;float:left;':'vertical-align: middle;display: inline-block;font-weight: 500;padding-left: 5px;color: #1b5297;float:left;'}">
+                                                        <!--{!vlist.buildertek__Quote_Amount__c}-->
+                                                        <!--<lightning:formattedNumber value="{!vlist.buildertek__Quote_Amount__c}"
+                                                                                        style="currency" currencyCode="USD" currencyDisplayAs="code"/>-->
+                                                        <aura:if isTrue='{!v.multicurrency}'>
+                                                            <lightning:formattedNumber value="{!vlist.buildertek__Quote_Amount__c}"
+                                                                                        style="currency" currencyCode="{!vlist.CurrencyIsoCode}" currencyDisplayAs="code"/>
+                                                        </aura:if>
+                                                        <aura:if isTrue='{!!v.multicurrency}'>
+                                                            <lightning:formattedNumber value="{!vlist.buildertek__Quote_Amount__c}"
+                                                                                        style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code"/>
+                                                        </aura:if>
+                                                    </span>
+
+                                                    <aura:if isTrue="{!or(v.isAwarded,v.isAccepted)}">
+
+                                                        <aura:if isTrue="{!vlist.buildertek__Status__c=='Awarded'}">
+                                                            <span style="float:right;" class="awardedIcon">
+                                                                Awarded
+                                                            </span>
+                                                            <aura:set attribute="else">
+                                                                <aura:if
+                                                                            isTrue="{!vlist.buildertek__Status__c=='Accepted'}">
+                                                                    <span style="float:right;" class="awardedIcon">
+                                                                        Accepted
+                                                                    </span>
+                                                                    <aura:set attribute="else">
+                                                                        <span style="float:right;" class="awardedIcon">
+                                                                        </span>
+                                                                    </aura:set>
+                                                                </aura:if>
+                                                            </aura:set>
+                                                        </aura:if>
+
+                                                        <aura:set attribute="else">
+                                                            <!--<span style="float:right;margin-right: -30%;"> -->
+                                                            <span style="float:right;">
+                                                                <lightning:buttonIcon aura:id="{!vlist.Id}"
+                                                                                        name="{!vlist.Id}" title="Delete"
+                                                                                        iconName="utility:delete"
+                                                                                        onclick="{!c.deleteselectedVendor}" variant="bare"
+                                                                                        alternativeText="{!vlist.Name}" class="deleteIcon" />
+                                                            </span>
+                                                            <!-- <span style="float:right;margin-right: 19%;"> -->
+                                                            <span style="float:right;">
+                                                                <lightning:buttonIcon aura:id="{!vlist.Id}"
+                                                                                        name="{!vlist.Id}" title="Award"
+                                                                                        iconName="utility:ribbon"
+                                                                                        onclick="{!c.awardSelectedVendor}" variant="bare"
+                                                                                        alternativeText="{!vlist.Name}" class="awardIcon" />
+                                                            </span>
+
+                                                        </aura:set>
+                                                    </aura:if>
+
+
+                                                    <!--<span style="float: left;margin-right: -10%;">-->
+                                                    <span style="float:right;">
+                                                        <lightning:buttonIcon aura:id="{!vlist.Id}" name="{!vlist.Id}"
+                                                                                iconName="utility:preview" onclick="{!c.openVendor}"
+                                                                                variant="bare" alternativeText="View"
+                                                                                class="{!or(vlist.buildertek__Status__c=='Awarded',vlist.buildertek__Status__c=='Accepted')?'awardedViewIcon':'viewIcon'}" />
+                                                    </span>
+
+
+
+
+                                                    <div style="float: right;">
+                                                        <aura:if isTrue="{!vlist.buildertek__Files__r.length > 0}">
+
+                                                            <a  onclick="{! c.filelist1}"
+                                                                id="{!vlist.buildertek__Vendor__c+'_'+vlist.Id}">
+
+                                                                <lightning:icon title="Files" size="x-small"
+                                                                                iconName="utility:attach" style = " padding-left: 1rem;"
+                                                                                class="{!or(vlist.buildertek__Status__c=='Awarded',vlist.buildertek__Status__c=='Accepted')?'iconWithoutBorder1':'iconWithoutBorder'}"
+                                                                                />
+                                                            </a>
+                                                            <aura:set attribute="else">
+                                                                <a onclick="{! c.filelist1}"
+                                                                    id="{!vlist.buildertek__Vendor__c+'_'+vlist.Id}">
+                                                                    <lightning:icon title="No Files" size="x-small"
+                                                                                    iconName="utility:attach"  style = "color:green; padding-left: 1rem;" class = "fileiconcolor"
+
+                                                                                    />
+                                                                </a>
+                                                            </aura:set>
+
+                                                        </aura:if>
+                                                    </div>
+
+
+
+
+
+
                                                 </div>
 
+                                            </h3>
+                                        </div>
+                                    </div>
+                                    <table class="table table-hover" id="demo-1"
+                                            style="border: 1px solid #ededed;margin-bottom: 0;margin-top: -1px;">
+                                        <tbody>
+                                            <!--<div class="slds-scrollable_x" style=" max-width:100%">-->
+                                            <tr data-id="1" data-parent="">
+                                                <td style="border-right: 1px solid #ededed;width:13%;font-weight: bold;padding-left: 50px;"
+                                                    class="tdPadding">
+                                                    <aura:if isTrue="{!vlist.buildertek__IS_VENDOR_EXPANDED__c}">
+                                                        <lightning:buttonIcon iconName="utility:dash" name="{!vlist.Id}"
+                                                                                onclick="{!c.collapseVendor}" variant="border-filled"
+                                                                                alternativeText="Collapse" class="collapseIcon" />
+                                                    </aura:if>
+                                                    <aura:if isTrue="{!!vlist.buildertek__IS_VENDOR_EXPANDED__c}">
+                                                        <lightning:buttonIcon iconName="utility:add" name="{!vlist.Id}"
+                                                                                onclick="{!c.expandVendor}" variant="border-filled"
+                                                                                alternativeText="Expand" class="expandIcon" />
+                                                    </aura:if>
+                                                    {!vlist.Name}
+                                                </td>
+                                                <td style="border-right: 1px solid #ededed;width:11%;font-weight: bold;"
+                                                    class="tdPadding">Item Name</td>
+                                                <td style="border-right: 1px solid #ededed;width:11%;font-weight: bold;"
+                                                    class="tdPadding">Description</td>
+                                                <td style="border-right: 1px solid #ededed;width:11%;font-weight: bold;"
+                                                    class="tdPadding">Vendor Notes</td>
+                                                <td style="border-right: 1px solid #ededed;width:11%;font-weight: bold;"
+                                                    class="tdPadding">Estimated Work (Days)</td>
+                                                <td style="border-right: 1px solid #ededed;width:11%;font-weight: bold;"
+                                                    class="tdPadding">Quantity</td>
+                                                <td style="border-right: 1px solid #ededed;width:11%;font-weight: bold;"
+                                                    class="tdPadding">Unit Price</td>
+                                                <td style="border-right: 1px solid #ededed;width:11%;font-weight: bold;"
+                                                    class="tdPadding">Total Price</td>
+                                            </tr>
 
+                                            <aura:if isTrue="{!vlist.buildertek__IS_VENDOR_EXPANDED__c}">
+                                                <aura:iteration items="{!vlist.buildertek__Vendor_Items__r}"
+                                                                var="recordList">
+                                                    <aura:if isTrue="{!!recordList.buildertek__isVendorRFQSubmited__c}">
+                                                        <tr data-id="{recordList.Id}" data-parent="1">
+                                                            <td style="border-right: 1px solid #ededed;width:13%;"
+                                                                class="tdPadding"></td>
+                                                            <td style="border-right: 1px solid #ededed;width:13%;"
+                                                                class="tdPadding">{!recordList.Name}</td>
+                                                            <td style="border-right: 1px solid #ededed;width:13%;"
+                                                                class="tdPadding">{!recordList.buildertek__Description__c}</td>
+                                                            <td style="border-right: 1px solid #ededed;width:13%;"
+                                                                class="tdPadding">{!recordList.buildertek__Vendor_Note__c}</td>
+                                                            <td style="border-right: 1px solid #ededed;width:13%;"
+                                                                class="tdPadding">{!recordList.buildertek__Estimated_Work_Days__c}</td>
+                                                            <td style="border-right: 1px solid #ededed;width:13%;"
+                                                                class="tdPadding">{!recordList.buildertek__Quantity__c}</td>
+                                                            <td style="border-right: 1px solid #ededed;width:13%;"
+                                                                class="tdPadding"><!--{!recordList.buildertek__Unit_Price__c}-->
+                                                                <!--<lightning:formattedNumber value="{!recordList.buildertek__Unit_Price__c}"
+                                                                                        style="currency" currencyCode="USD" currencyDisplayAs="code"/>-->
+                                                                <aura:if isTrue='{!v.multicurrency}'>
+                                                                    <lightning:formattedNumber value="{!recordList.buildertek__Unit_Price__c}"
+                                                                                                style="currency" currencyCode="{!recordList.CurrencyIsoCode}" currencyDisplayAs="code"/>
+                                                                </aura:if>
+                                                                <aura:if isTrue='{!!v.multicurrency}'>
+                                                                    <lightning:formattedNumber value="{!recordList.buildertek__Unit_Price__c}"
+                                                                                                style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code"/>
+                                                                </aura:if>
 
+                                                            </td>
+                                                            <td style="border-right: 1px solid #ededed;width:13%;"
+                                                                class="tdPadding"><!--{!recordList.buildertek__Total_Price__c}-->
+                                                                <!--<lightning:formattedNumber value="{!recordList.buildertek__Total_Price__c}"
+                                                                                        style="currency" currencyCode="USD" currencyDisplayAs="code"/>-->
+                                                                <aura:if isTrue='{!v.multicurrency}'>
+                                                                    <lightning:formattedNumber value="{!recordList.buildertek__Total_Price__c}"
+                                                                                                style="currency" currencyCode="{!recordList.CurrencyIsoCode}" currencyDisplayAs="code"/>
+                                                                </aura:if>
+                                                                <aura:if isTrue='{!!v.multicurrency}'>
+                                                                    <lightning:formattedNumber value="{!recordList.buildertek__Total_Price__c}"
+                                                                                                style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code"/>
+                                                                </aura:if>
 
+                                                            </td>
+                                                        </tr>
+                                                    </aura:if>
+                                                </aura:iteration>
+                                                <tr data-id="6" data-parent="1">
+                                                    <td colspan="7"
+                                                        style="border-right: 1px solid #ededed;text-align: right;padding-right:1.5rem;font-weight: 700;"
+                                                        class="tdPadding">Total:</td>
+                                                    <td colspan="3"
+                                                        style="border-right: 1px solid #ededed;padding-right: 8px; padding-left:0.5rem;">
+                                                        <!--{!vlist.buildertek__Quote_Amount__c}-->
+                                                        <!--<lightning:formattedNumber value="{!vlist.buildertek__Quote_Amount__c}"
+                                                                                        style="currency" currencyCode="USD" currencyDisplayAs="code"/>-->
+                                                        <aura:if isTrue='{!v.multicurrency}'>
+                                                            <lightning:formattedNumber value="{!vlist.buildertek__Quote_Amount__c}"
+                                                                                        style="currency" currencyCode="{!vlist.CurrencyIsoCode}" currencyDisplayAs="code"/>
+                                                        </aura:if>
+                                                        <aura:if isTrue='{!!v.multicurrency}'>
+                                                            <lightning:formattedNumber value="{!vlist.buildertek__Quote_Amount__c}"
+                                                                                        style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code"/>
+                                                        </aura:if>
 
-
-                                            </div>
-
-                                        </h3>
+                                                    </td>
+                                                </tr>
+                                            </aura:if>
+                                            <!--  </div>-->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </aura:iteration>
+                            <aura:set attribute="else">
+                                <div class="slds-grid slds-grid_vertical">
+                                    <div class="slds-col slds-m-bottom_medium slds-m-top_large">
+                                         <center class="noSelectedVendor">Please Choose Vendors from the Add Vendor Button.</center>
+                                    </div>
+                                    <div class="slds-col" style="margin:auto;margin-top:0.2rem;margin-bottom:1rem">
+                                        <lightning:button iconName="utility:add" iconPosition="left" onclick="{!c.addVendors}" label="Add Vendors" class="iconWithoutBorder" />
                                     </div>
                                 </div>
-                                <table class="table table-hover" id="demo-1"
-                                       style="border: 1px solid #ededed;margin-bottom: 0;margin-top: -1px;">
-                                    <tbody>
-                                        <!--<div class="slds-scrollable_x" style=" max-width:100%">-->
-                                        <tr data-id="1" data-parent="">
-                                            <td style="border-right: 1px solid #ededed;width:13%;font-weight: bold;padding-left: 50px;"
-                                                class="tdPadding">
-                                                <aura:if isTrue="{!vlist.buildertek__IS_VENDOR_EXPANDED__c}">
-                                                    <lightning:buttonIcon iconName="utility:dash" name="{!vlist.Id}"
-                                                                          onclick="{!c.collapseVendor}" variant="border-filled"
-                                                                          alternativeText="Collapse" class="collapseIcon" />
-                                                </aura:if>
-                                                <aura:if isTrue="{!!vlist.buildertek__IS_VENDOR_EXPANDED__c}">
-                                                    <lightning:buttonIcon iconName="utility:add" name="{!vlist.Id}"
-                                                                          onclick="{!c.expandVendor}" variant="border-filled"
-                                                                          alternativeText="Expand" class="expandIcon" />
-                                                </aura:if>
-                                                {!vlist.Name}
-                                            </td>
-                                            <td style="border-right: 1px solid #ededed;width:11%;font-weight: bold;"
-                                                class="tdPadding">Item Name</td>
-                                            <td style="border-right: 1px solid #ededed;width:11%;font-weight: bold;"
-                                                class="tdPadding">Description</td>
-                                            <td style="border-right: 1px solid #ededed;width:11%;font-weight: bold;"
-                                                class="tdPadding">Vendor Notes</td>
-                                            <td style="border-right: 1px solid #ededed;width:11%;font-weight: bold;"
-                                                class="tdPadding">Estimated Work (Days)</td>
-                                            <td style="border-right: 1px solid #ededed;width:11%;font-weight: bold;"
-                                                class="tdPadding">Quantity</td>
-                                            <td style="border-right: 1px solid #ededed;width:11%;font-weight: bold;"
-                                                class="tdPadding">Unit Price</td>
-                                            <td style="border-right: 1px solid #ededed;width:11%;font-weight: bold;"
-                                                class="tdPadding">Total Price</td>
-                                        </tr>
-
-                                        <aura:if isTrue="{!vlist.buildertek__IS_VENDOR_EXPANDED__c}">
-                                            <aura:iteration items="{!vlist.buildertek__Vendor_Items__r}"
-                                                            var="recordList">
-                                                <aura:if isTrue="{!!recordList.buildertek__isVendorRFQSubmited__c}">
-                                                    <tr data-id="{recordList.Id}" data-parent="1">
-                                                        <td style="border-right: 1px solid #ededed;width:13%;"
-                                                            class="tdPadding"></td>
-                                                        <td style="border-right: 1px solid #ededed;width:13%;"
-                                                            class="tdPadding">{!recordList.Name}</td>
-                                                        <td style="border-right: 1px solid #ededed;width:13%;"
-                                                            class="tdPadding">{!recordList.buildertek__Description__c}</td>
-                                                        <td style="border-right: 1px solid #ededed;width:13%;"
-                                                            class="tdPadding">{!recordList.buildertek__Vendor_Note__c}</td>
-                                                        <td style="border-right: 1px solid #ededed;width:13%;"
-                                                            class="tdPadding">{!recordList.buildertek__Estimated_Work_Days__c}</td>
-                                                        <td style="border-right: 1px solid #ededed;width:13%;"
-                                                            class="tdPadding">{!recordList.buildertek__Quantity__c}</td>
-                                                        <td style="border-right: 1px solid #ededed;width:13%;"
-                                                            class="tdPadding"><!--{!recordList.buildertek__Unit_Price__c}-->
-                                                            <!--<lightning:formattedNumber value="{!recordList.buildertek__Unit_Price__c}"
-                                                                                  style="currency" currencyCode="USD" currencyDisplayAs="code"/>-->
-                                                            <aura:if isTrue='{!v.multicurrency}'>
-                                                                <lightning:formattedNumber value="{!recordList.buildertek__Unit_Price__c}"
-                                                                                           style="currency" currencyCode="{!recordList.CurrencyIsoCode}" currencyDisplayAs="code"/>
-                                                            </aura:if>
-                                                            <aura:if isTrue='{!!v.multicurrency}'>
-                                                                <lightning:formattedNumber value="{!recordList.buildertek__Unit_Price__c}"
-                                                                                           style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code"/>
-                                                            </aura:if>
-
-                                                        </td>
-                                                        <td style="border-right: 1px solid #ededed;width:13%;"
-                                                            class="tdPadding"><!--{!recordList.buildertek__Total_Price__c}-->
-                                                            <!--<lightning:formattedNumber value="{!recordList.buildertek__Total_Price__c}"
-                                                                                  style="currency" currencyCode="USD" currencyDisplayAs="code"/>-->
-                                                            <aura:if isTrue='{!v.multicurrency}'>
-                                                                <lightning:formattedNumber value="{!recordList.buildertek__Total_Price__c}"
-                                                                                           style="currency" currencyCode="{!recordList.CurrencyIsoCode}" currencyDisplayAs="code"/>
-                                                            </aura:if>
-                                                            <aura:if isTrue='{!!v.multicurrency}'>
-                                                                <lightning:formattedNumber value="{!recordList.buildertek__Total_Price__c}"
-                                                                                           style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code"/>
-                                                            </aura:if>
-
-                                                        </td>
-                                                    </tr>
-                                                </aura:if>
-                                            </aura:iteration>
-                                            <tr data-id="6" data-parent="1">
-                                                <td colspan="7"
-                                                    style="border-right: 1px solid #ededed;text-align: right;padding-right:1.5rem;font-weight: 700;"
-                                                    class="tdPadding">Total:</td>
-                                                <td colspan="3"
-                                                    style="border-right: 1px solid #ededed;padding-right: 8px; padding-left:0.5rem;">
-                                                    <!--{!vlist.buildertek__Quote_Amount__c}-->
-                                                    <!--<lightning:formattedNumber value="{!vlist.buildertek__Quote_Amount__c}"
-                                                                                  style="currency" currencyCode="USD" currencyDisplayAs="code"/>-->
-                                                    <aura:if isTrue='{!v.multicurrency}'>
-                                                        <lightning:formattedNumber value="{!vlist.buildertek__Quote_Amount__c}"
-                                                                                   style="currency" currencyCode="{!vlist.CurrencyIsoCode}" currencyDisplayAs="code"/>
-                                                    </aura:if>
-                                                    <aura:if isTrue='{!!v.multicurrency}'>
-                                                        <lightning:formattedNumber value="{!vlist.buildertek__Quote_Amount__c}"
-                                                                                   style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code"/>
-                                                    </aura:if>
-
-                                                </td>
-                                            </tr>
-                                        </aura:if>
-                                      <!--  </div>-->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </aura:iteration>
+                            </aura:set>
+                        </aura:if>
                     </div>
                 </div>
             </div>
