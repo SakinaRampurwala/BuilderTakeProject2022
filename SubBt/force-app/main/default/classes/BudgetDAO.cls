@@ -2672,11 +2672,15 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
     }
     
     @AuraEnabled
-    public static buildertek__Admin_Interface_Node_Configuration__c getadminvalues(){
-        buildertek__Admin_Interface_Node_Configuration__c adminInterfaceNodeConfigurations = [Select Id, buildertek__Budget_Grouping_Data__c
+    public static Boolean getadminvalues(){
+        buildertek__Admin_Interface_Node_Configuration__c adminInterfaceNodeConfigurations = [Select Id, buildertek__Group_by_vendor__c
                                                                                               from buildertek__Admin_Interface_Node_Configuration__c
                                                                                               WHERE Name = :'Budget Configuration'];
-        return adminInterfaceNodeConfigurations;
+        Boolean islien = false;
+        if(adminInterfaceNodeConfigurations.buildertek__Group_by_vendor__c == true){
+            islien = true;
+        }
+        return islien;
     } 
     
     @AuraEnabled

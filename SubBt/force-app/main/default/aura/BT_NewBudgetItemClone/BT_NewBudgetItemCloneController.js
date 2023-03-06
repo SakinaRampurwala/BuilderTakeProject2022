@@ -217,53 +217,23 @@
         btadminaction.setCallback(this, function(response) {
             if (response.getState() === 'SUCCESS') {
                 var result = response.getReturnValue();
-                console.log('Admin Data ==> ',result);
-
-                var page = component.get("v.page") || 1;
                 component.set("v.Isbtvalue", true);
-                if (result.buildertek__Budget_Grouping_Data__c == 'Group By Category') {
-                    component.find("Cost Code").set("v.checked", true);
-                    component.set("v.groupBytoggle2", true);
-                    component.set("v.groupByVendortoggle", false);
-                    component.set("v.groupByCostCode", false);
-                    component.set("v.groupBytoggle", false);
-                    helper.getBudgetGroups(component, event, helper, page ,function(){});
-                } else if(result.buildertek__Budget_Grouping_Data__c == 'Group By Vendor') {
+                if (result == true) {
+                    var page = component.get("v.page") || 1;
+                    console.log('page --> ',page);
                     component.find("vendor").set("v.checked", true);
                     component.set("v.groupByVendortoggle1", false);
                     component.set("v.groupByVendortoggle2", false);
                     component.set("v.groupByCostCode", false);
-                    helper.getBudgetGroups(component, event, helper, page ,function(){});
-                } else if(result.buildertek__Budget_Grouping_Data__c == 'Group By Cost Code') {
-                    component.set("v.groupBytoggle", false);
-                    component.set("v.groupByVendortoggle", false);
-                    component.set("v.groupByVendortoggle1", false);
-                    component.set("v.groupByVendortoggle2", false);
-                    component.set("v.groupBytoggle2", false);
-                    helper.CostCodeFilterHelper(component, event, helper, page);
+                    
+                    helper.getBudgetGroups(component, event, helper, page , function(){});
+                    
                 } else {
                     component.set("v.groupByVendortoggle", false);
+                    var page = component.get("v.page") || 1;
+                    console.log('page --> ',page);
                     helper.getBudgetGroups(component, event, helper, page ,function(){});
                 }
-
-
-                // component.set("v.Isbtvalue", true);
-                // if (result == true) {
-                //     var page = component.get("v.page") || 1;
-                //     console.log('page --> ',page);
-                //     component.find("vendor").set("v.checked", true);
-                //     component.set("v.groupByVendortoggle1", false);
-                //     component.set("v.groupByVendortoggle2", false);
-                //     component.set("v.groupByCostCode", false);
-                    
-                //     helper.getBudgetGroups(component, event, helper, page , function(){});
-                    
-                // } else {
-                //     component.set("v.groupByVendortoggle", false);
-                //     var page = component.get("v.page") || 1;
-                //     console.log('page --> ',page);
-                //     helper.getBudgetGroups(component, event, helper, page ,function(){});
-                // }
             }
         });
         $A.enqueueAction(btadminaction);

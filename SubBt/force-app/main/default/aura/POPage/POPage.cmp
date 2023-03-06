@@ -219,7 +219,7 @@
 
                                 <aura:if isTrue="{!record.poRecord.Id != null}">
                                        <aura:if isTrue="{! (record.poRecord.buildertek__Status__c == 'Ordered' || record.poRecord.buildertek__Status__c == 'Canceled' || record.poRecord.buildertek__Status__c == 'Paid' || record.poRecord.buildertek__Status__c == 'Partially Paid') || record.poRecord.buildertek__Status__c == 'Vendor Accepted' }">
-                                        <tr class="slds-hint-parent" style="background: linear-gradient(to bottom, #e2e2e2 0%, #e2e2e2 100%);">
+                                        <tr class="slds-hint-parent" style="background: linear-gradient(to bottom, #ffffff 0%, #ffffff 100%);">
 
                                             <td class="firstCol" >
                                                 <lightning:icon class = "expand-icon" size="x-small" value="{!recordIndex}" onclick="{!c.toggle}" title = "{!index+'_'+groupIndex}" iconName="{!record.expanded?'utility:chevrondown':'utility:chevronright'}" />

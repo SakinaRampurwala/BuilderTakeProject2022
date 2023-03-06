@@ -192,10 +192,10 @@
             <div class="inner-wrapper-box">
                 <div class="side-detail-box">
                     <div class="tab-content">
+                        <aura:if isTrue="{!!empty(v.selectedVendorList)}">test test test</aura:if>
                         <aura:iteration items="{!v.selectedVendorList}" var="vlist">
                             <div class="inner-box">
-                                <div
-                                     class="{!or(vlist.buildertek__Status__c=='Awarded',vlist.buildertek__Status__c=='Accepted')?'box Awardedbox':'box NonAwardedBox'}">
+                                <div class="{!or(vlist.buildertek__Status__c=='Awarded',vlist.buildertek__Status__c=='Accepted')?'box Awardedbox':'box NonAwardedBox'}">
                                     <div class="left-box" style="display: inline-block;vertical-align: middle;
                                                                  width:100%;">
                                         <div class="checkbox check-btn"
