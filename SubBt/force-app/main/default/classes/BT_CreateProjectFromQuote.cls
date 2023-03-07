@@ -98,7 +98,8 @@ public with sharing class BT_CreateProjectFromQuote {
                              buildertek__Additional_Discount__c,
                              buildertek__Purchase_Order__c,
                              buildertek__Grouping__r.Name, 
-                             buildertek__RFQ__c
+                             buildertek__RFQ__c,
+                             buildertek__Tax__c
                              FROM buildertek__Quote_Item__c
                              WHERE buildertek__Quote__c = :quoteList[0].Id]; 
 
@@ -159,7 +160,7 @@ public with sharing class BT_CreateProjectFromQuote {
                     contractLine.buildertek__Notes__c = quoteLine.buildertek__Notes__c;
                     contractLine.buildertek__Contract__c = contract.Id;
                     contractLine.buildertek__Discount__c = quoteLine.buildertek__Discount__c;
-                    //contractLine.buildertek__Total_Cost__c = quoteLine.buildertek__Total_Cost__c;
+                    contractLine.buildertek__Tax__c = quoteLine.buildertek__Tax__c;
                     contractLine.buildertek__Unit_Cost__c = quoteLine.buildertek__Unit_Cost__c;
                     contractItemList.add(contractLine);
                 }

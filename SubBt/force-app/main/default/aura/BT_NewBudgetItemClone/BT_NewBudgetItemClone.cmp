@@ -1294,6 +1294,30 @@
                                                                             </span>
                                                                         </aura:if>
                                                                     </aura:if>
+
+                                                                    <aura:if isTrue="{!col.fieldName == 'buildertek__Sales_Price__c'}">
+                                                                        <aura:if isTrue="{!group.totals.unitSalesPricekey == 'buildertek__Sales_Price__c'}">
+                                                                            <span style="font-weight: bold;font-size: 0.78rem !important;">
+                                                                                <lightning:formattedNumber value="{!group.totals.unitSalesPrice}" style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
+                                                                            </span>
+                                                                        </aura:if>
+                                                                    </aura:if>
+
+                                                                    <aura:if isTrue="{!col.fieldName == 'buildertek__Gross_Profit__c'}">
+                                                                        <aura:if isTrue="{!group.totals.grossMarginKey == 'buildertek__Gross_Profit__c'}">
+                                                                            <span style="font-weight: bold;font-size: 0.78rem !important;">
+                                                                                <lightning:formattedNumber value="{!group.totals.grossMargin}" style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
+                                                                            </span>
+                                                                        </aura:if>
+                                                                    </aura:if>
+
+                                                                    <aura:if isTrue="{!col.fieldName == 'buildertek__Labor__c'}">
+                                                                        <aura:if isTrue="{!group.totals.laborKey == 'buildertek__Labor__c'}">
+                                                                            <span style="font-weight: bold;font-size: 0.78rem !important;">
+                                                                                <lightning:formattedNumber value="{!group.totals.labor}" style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
+                                                                            </span>
+                                                                        </aura:if>
+                                                                    </aura:if>
                                                                     
                                                                 </td>
                                                             </aura:if>

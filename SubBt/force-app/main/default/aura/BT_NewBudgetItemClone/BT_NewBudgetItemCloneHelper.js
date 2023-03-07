@@ -580,6 +580,17 @@
                                         totalObj['ProfitLoss'] = 0;
                                         totalObj['ProfitLosskey'] = '';
                                         totalObj['fieldType'] = '';
+
+                                        totalObj['unitSalesPrice'] = 0;
+                                        totalObj['unitSalesPricekey'] = '';
+                                        totalObj['grossMargin'] = 0;
+                                        totalObj['grossMarginKey'] = '';
+                                        totalObj['labor'] = 0;
+                                        totalObj['laborKey'] = '';
+
+                                    
+
+                                                                
                         
                         
                                         result.tarTable.records.forEach((ele, index) => {
@@ -1032,6 +1043,13 @@
                         totalObj['ProfitLoss'] = 0;
                         totalObj['ProfitLosskey'] = '';
                         totalObj['fieldType'] = '';
+                        totalObj['unitSalesPrice'] = 0;
+                        totalObj['unitSalesPricekey'] = '';
+                        totalObj['grossMargin'] = 0;
+                        totalObj['grossMarginKey'] = '';
+                        totalObj['labor'] = 0;
+                        totalObj['laborKey'] = '';
+                        
 
                         result.tarTable.ListOfEachRecord.forEach(element => {
                             totalObj = helper.setTotalHelper(element.recordList, totalObj);
@@ -1855,6 +1873,13 @@
                 totalObj['ProfitLoss'] = 0;
                 totalObj['ProfitLosskey'] = '';
                 totalObj['fieldType'] = '';
+                totalObj['unitSalesPrice'] = 0;
+                totalObj['unitSalesPricekey'] = '';
+                totalObj['grossMargin'] = 0;
+                totalObj['grossMarginKey'] = '';
+                totalObj['labor'] = 0;
+                totalObj['laborKey'] = '';
+                
 
 
                 result.tarTable.records.forEach((ele, index) => {
@@ -1964,6 +1989,21 @@
                 totalObj['ProfitLosskey'] = "buildertek__Profit_Loss__c";
             }
 
+             if (e.fieldName == "buildertek__Sales_Price__c") {
+                totalObj['unitSalesPrice'] += e.originalValue;
+                totalObj['unitSalesPricekey'] = 'buildertek__Sales_Price__c'
+            }
+
+            if (e.fieldName == "buildertek__Gross_Profit__c") {
+                totalObj['grossMargin'] += e.originalValue;
+                totalObj['grossMarginKey'] = 'buildertek__Gross_Profit__c'
+            }
+            if (e.fieldName == "buildertek__Labor__c") {
+                totalObj['labor'] += e.originalValue;
+                totalObj['laborKey'] = 'buildertek__Labor__c'
+            }
+
+
             totalObj['fieldType'] = "currency";
 
         });
@@ -1974,6 +2014,7 @@
 
 
     countFunction: function (component, listOfRecords){
+        console.log('::::::::countFunction:::::::::::::::::::');
         for (var i in listOfRecords) {
             var obj = {}
             obj['unitPrice'] = 0;
@@ -2001,10 +2042,21 @@
             obj['ProfitLoss'] = 0;
             obj['ProfitLosskey'] = '';
             obj['fieldType'] = '';
+            
+            obj['unitSalesPrice'] = 0;
+            obj['unitSalesPricekey'] = '';
+
+            obj['grossMargin'] = 0;
+            obj['grossMarginKey'] = '';
+
+            obj['labor'] = 0;
+            obj['laborKey'] = '';
+
             for (var j = 0; j < listOfRecords[i].subGroupRecords[0].records.length; j++) {
                 var recList = listOfRecords[i].subGroupRecords[0].records[j].recordList;
                 for (var k = 0; k < recList.length; k++) {
                     if (recList[k].fieldType == "currency") {
+                        // console.log('recList[k].fieldName ' , recList[k].fieldName);
                         if (recList[k].fieldName == "buildertek__Unit_Price__c") {
                             obj['unitPrice'] += Number(recList[k].originalValue);
                             obj['unitPricekey'] = "buildertek__Unit_Price__c"
@@ -2053,6 +2105,25 @@
                             obj['ProfitLoss'] += recList[k].originalValue;
                             obj['ProfitLosskey'] = 'buildertek__Profit_Loss__c'
                         }
+
+                        if (recList[k].fieldName == "buildertek__Sales_Price__c") {
+                            obj['unitSalesPrice'] += recList[k].originalValue;
+                            obj['unitSalesPricekey'] = 'buildertek__Sales_Price__c'
+                        }
+
+                        if (recList[k].fieldName == "buildertek__Gross_Profit__c") {
+                            obj['grossMargin'] += recList[k].originalValue;
+                            obj['grossMarginKey'] = 'buildertek__Gross_Profit__c'
+                        }
+
+                        if (recList[k].fieldName == "buildertek__Labor__c") {
+                            obj['labor'] += recList[k].originalValue;
+                            obj['laborKey'] = 'buildertek__Labor__c'
+                        }
+
+
+                        
+
                         obj['fieldType'] = recList[k].fieldType;
                     }
                 }
@@ -2061,6 +2132,7 @@
             }
         }
         component.set("v.listOfRecords", listOfRecords);
+        console.log({listOfRecords});
         return listOfRecords;
     },
 
