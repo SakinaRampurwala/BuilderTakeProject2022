@@ -543,7 +543,7 @@
                             <aura:set attribute="else">
                                 <div class="slds-grid slds-grid_vertical">
                                     <div class="slds-col slds-m-bottom_medium slds-m-top_large">
-                                         <center class="noSelectedVendor">Please Choose Vendors from the Add Vendor Button.</center>
+                                         <center class="noSelectedVendor">Please choose a Vendor using the Add Vendors Button.</center>
                                     </div>
                                     <div class="slds-col" style="margin:auto;margin-top:0.2rem;margin-bottom:1rem">
                                         <lightning:button iconName="utility:add" iconPosition="left" onclick="{!c.addVendors}" label="Add Vendors" class="iconWithoutBorder" />

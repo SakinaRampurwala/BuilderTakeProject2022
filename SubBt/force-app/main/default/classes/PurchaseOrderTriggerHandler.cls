@@ -31,10 +31,41 @@ public with sharing class PurchaseOrderTriggerHandler{
         system.debug('poListt----->' + poList);
         
         //made process builder inactive and added
+        set<string> POIds = new set<string>();
         for(Purchase_Order__c PO : newPurchaseOrders){
             PO.buildertek__Date_Created__c = System.today();
+            POIds.add(PO.Project__c);
         }
         BT_Utils.genrateAutoNumber(poList, newPurchaseOrders, 'Auto_Number1__c');
+        system.debug('POIds-->>'+POIds);
+        list<buildertek__Project__c> projectList;
+
+        projectList=[SELECT Name,buildertek__Address__c,buildertek__Customer__c,buildertek__City__c, buildertek__State__c,buildertek__Zip__c,buildertek__Country__c, buildertek__County__c FROM buildertek__Project__c WHERE Id IN :POIds];
+        System.debug('projectList-->>'+projectList);
+
+        for(Purchase_Order__c po : newPurchaseOrders){
+            if(po.buildertek__Project__c != null){
+                for(buildertek__Project__c prj : projectList){
+                    if(po.buildertek__Project__c == prj.Id){
+                        if(po.buildertek__ShipToAddress__c == null || po.buildertek__ShipToAddress__c == ''){
+                            po.buildertek__ShipToAddress__c = prj.buildertek__Address__c;
+                        }
+                        if(po.buildertek__Ship_To_City__c == null || po.buildertek__Ship_To_City__c ==''){
+                            po.buildertek__Ship_To_City__c = prj.buildertek__City__c;
+                        }
+                        if(po.buildertek__Ship_To_Country__c == null || po.buildertek__Ship_To_Country__c ==''){
+                            po.buildertek__Ship_To_Country__c = prj.buildertek__Country__c;
+                        }
+                        if(po.buildertek__Ship_To_State__c == null || po.buildertek__Ship_To_State__c ==''){
+                            po.buildertek__Ship_To_State__c = prj.buildertek__State__c;
+                        }
+                        if(po.buildertek__Ship_To_Zip__c == null || po.buildertek__Ship_To_Zip__c ==''){
+                            po.buildertek__Ship_To_Zip__c = prj.buildertek__Zip__c;
+                        }
+                    }
+                }
+            }
+        }
     }
     
     public void OnBeforeUpdate(Purchase_Order__c[] oldPurchaseOrders, Purchase_Order__c[] updatedPurchaseOrders, Map<ID, Purchase_Order__c> oldPurchaseOrderMap, Map<ID, Purchase_Order__c> PurchaseOrderMap){

@@ -222,6 +222,7 @@
     <c:BT_Spinner />
 
 
+
     <div style="background: white;border-radius: 5px;height: 100%;" class="slds">
 
 
@@ -920,6 +921,8 @@
                     </aura:if>
 
                     <aura:if isTrue="{!!v.displayGrouping}">
+
+
                         <!-- <div class="slds mainTablediv"> -->
                         <div class="slds-scrollable">
                             <div>

@@ -978,11 +978,8 @@
     var groupByServiceCat = component.get("v.groupByServiceCategorytoggle");
 
     var costAdjustmentColumnsPresent = false;
-    if (
-      bomLineFields != null &&
-      bomLineFields != undefined &&
-      bomLineFields.length > 0
-    ) {
+    console.log({bomLineFields} , ':::::::::::;bomLineFields::::::::::::::::');
+    if ( bomLineFields != null && bomLineFields != undefined && bomLineFields.length > 0) {
       for (var i = 0; i < bomLineFields.length; i++) {
         if (bomLineFields[i].value == "buildertek__Markup") {
           costAdjustmentColumnsPresent = true;
@@ -1024,6 +1021,8 @@
         component.set("v.fieldValues", bomLineFields);
         console.log(totalCostCol + "TOTAL COST____");
         console.log(bomLineFields);
+        console.log({bomLineFields} , '********************bomLineFields****************');
+
       }
 
       if (groupByServiceCat == true && costAdjustmentColumnsPresent == true) {

@@ -1047,7 +1047,12 @@
                         totalRecords['groupHierarchy'] = groupHierarchy;
                         totalRecords['columns'] = result.columns;
 
+                        component.set("v.columns", result.columns);
+
+
                         console.log('TotalRecords ==> ', { totalRecords });
+                        console.log('columns ==> ', { totalRecords });
+
                         component.set("v.TotalRecords", totalRecords);
                         component.set("v.TotalRecordsCopy", totalRecords);
 
@@ -2152,6 +2157,48 @@
         component.set('v.selectedRecs', selectedRecs);
 
     },
+    // getAdminRecords:function(component, event, helper, callback) {
+    //     var btadminaction = component.get("c.getadminvalues");
+    //     btadminaction.setCallback(this, function(response) {
+    //         console.log(response.getError() , '::::::ERROR MESSAGE::::::');
+    //         if (response.getState() === 'SUCCESS') {
+    //             var result = response.getReturnValue();
+    //             console.log('Admin Data ==> ',result);
 
+    //             var page = component.get("v.page") || 1;
+    //             component.set("v.Isbtvalue", true);
+    //             // result.buildertek__Budget_Grouping_Data__c = 'test'
+    //             if (result.buildertek__Budget_Grouping_Data__c == 'Group By Category') {
+    //                 // component.find("Cost Code").set("v.checked", true);
+    //                 component.set("v.groupBytoggle2", true);
+    //                 component.set("v.groupByVendortoggle", false);
+    //                 component.set("v.groupByCostCode", false);
+    //                 component.set("v.groupBytoggle", false);
+
+    //             } else if(result.buildertek__Budget_Grouping_Data__c == 'Group By Vendor') {
+    //                 component.set("v.groupBytoggle2", false);
+    //                 // component.find("vendor").set("v.checked", true);
+    //                 component.set("v.groupBytoggle", true);
+    //                 component.set("v.groupByVendortoggle2", false);
+    //                 component.set("v.groupByVendortoggle1", false);
+    //                 component.set("v.groupByCostCode", false);
+    //             } else if(result.buildertek__Budget_Grouping_Data__c == 'Group By Cost Code') {
+    //                 console.log('-----))))----');
+    //                 component.set("v.groupBytoggle", false);
+    //                 component.set("v.groupByVendortoggle", false);
+    //                 component.set("v.groupByVendortoggle1", false);
+    //                 component.set("v.groupByVendortoggle2", false);
+    //                 component.set("v.groupBytoggle2", false);
+    //                 helper.CostCodeFilterHelper(component, event, helper, page);
+
+
+    //             } else {
+    //                 component.set("v.groupByVendortoggle", false);
+    //             }
+    //         }
+    //     });
+    //     $A.enqueueAction(btadminaction);
+    //     callback();
+    // },
     
 })

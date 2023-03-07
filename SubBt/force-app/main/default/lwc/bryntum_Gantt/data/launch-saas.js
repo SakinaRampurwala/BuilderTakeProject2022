@@ -3,7 +3,7 @@ export default {
 
     "project" : {
         "calendar"  : "general",
-        "startDate" : "2019-01-14"
+        "startDate" : "2023-02-15"
     },
 
     "calendars" : {
@@ -16,6 +16,12 @@ export default {
                         "recurrentStartDate" : "on Sat at 0:00",
                         "recurrentEndDate"   : "on Mon at 0:00",
                         "isWorking"          : false
+                    },
+                    {
+                        "startDate": "2023-03-06",
+                        "endDate": "2023-03-07",
+                        "isWorking": false,
+                        "name": "Vacation",
                     }
                 ],
                 "expanded" : true,

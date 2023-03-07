@@ -795,11 +795,9 @@
   onAdjustmentTableSave: function (component, event, helper) {
     console.log('onAdjustmentTableSave');
 
-    var updatedRecords = component
-      .find("adjustmentTaxesTable")
-      .get("v.draftValues");
+    var updatedRecords = component.find("adjustmentTaxesTable") .get("v.draftValues");
 
-    // console.log(updateRecords + '_________________update Records are______________')
+    console.log(updatedRecords , '_________________update Records are______________')
     // var successfullValidation = helper.validateData( component, event, helper );
     // console.log('successfullValidation--',successfullValidation);
 
@@ -830,13 +828,10 @@
           $A.enqueueAction(action);
         } else {
           console.log("@@Return Value False");
-          helper.showToast(
-            component,
-            event,
-            helper,
-            "Error!",
-            result.message,
-            "error"
+          helper.showToast(component,event,helper,
+              "Error!",
+              result.message,
+              "error"
           );
         }
       } else {

@@ -286,8 +286,8 @@
                                              onkeyup="{!c.doSearch}" 
                                              />
                         </div> -->
-                    <div style="display:flex;justify-content:space-between;" class="slds-m-top_medium slds-m-bottom_medium slds-m-right_small">
-                        <div style="display:flex;">
+                    <div style="display:flex;justify-content:end;" class="slds-m-top_medium slds-m-bottom_medium slds-m-right_small">
+                        <!-- <div style="display:flex;">
                             <div style="width: fit-content;">
                                 <lightning:input aura:id="vendor" name="Group By Vendor" label="Group By Vendor" type="toggle" checked="{!v.groupByVendortoggle}" onclick="{!c.checkToogle}" />
                             </div>
@@ -306,17 +306,6 @@
                                 <lightning:input label="Group By Cost Code" type="toggle" checked="{!v.groupByCostCode}" onchange="{!c.toggleByCost}"/>
                             </div>
                             
-                        </div>
-                        <!-- <div style="float: left;width:11%;margin-top: -3%;" class="slds-p-left_small slds-p-top_large">
-                            <lightning:input
-                                             autocomplete="off"
-                                             aura:id="searchItem"
-                                             name="enter-search"
-                                             type="search"
-                                             placeholder="Search"
-                                             value="{!v.searchFilter}"
-                                             onkeyup="{!c.doSearch}" 
-                                             />
                         </div> -->
 
                         <div>
