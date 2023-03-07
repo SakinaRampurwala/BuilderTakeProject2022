@@ -142,6 +142,7 @@ public with sharing class BT_CreateProjectFromQuote {
             contract.buildertek__Notes__c = quoteList[0].buildertek__Notes__c;
             contract.buildertek__Status__c = 'Approved';
             contract.buildertek__Project__c = project.Id;
+            contract.buildertek__Markup__c=quoteList[0].buildertek__Markup__c;
             insert contract;
             
             List<buildertek__Contract_Item__c> contractItemList = new List<buildertek__Contract_Item__c>();
@@ -216,7 +217,9 @@ public with sharing class BT_CreateProjectFromQuote {
                     BudgetLineRecord.buildertek__Cost_Code__c = quoteLine.buildertek__Cost_Code__c;
                     BudgetLineRecord.buildertek__Quantity__c = quoteLine.buildertek__Quantity__c;
                     BudgetLineRecord.buildertek__Unit_Price__c = quoteLine.buildertek__Unit_Cost__c;
-                    BudgetLineRecord.buildertek__Sales_Price__c = quoteLine.buildertek__Net_Total_Price__c; 
+
+                    BudgetLineRecord.buildertek__Sales_Price__c = quoteLine.buildertek__Net_Unit__c; 
+                    
                     //BudgetLineRecord.buildertek__Budget_Line_Group__c = quoteLine.buildertek__Grouping__c;
                     BudgetLineRecord.buildertek__Group__c = groupMap.get(quoteLine.buildertek__Grouping__r.Name);
                     BudgetLineRecord.buildertek__Budget__c  =  Budget.Id;
