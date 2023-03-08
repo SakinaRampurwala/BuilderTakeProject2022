@@ -351,9 +351,9 @@
                                         </div> -->
 
                                         </td>
-                                        <td colspan="5">
+                                        <td colspan="6">
                                         </td>
-                                        <!-- <td></td>-->
+                                        <td></td>
                                     </tr>
                                     <tr class="slds-text-heading--label" style="line-height: 2;font-size: 12px;">
                                             <th></th>
@@ -370,6 +370,7 @@
                                                 </div>
                                             </div>
                                         </th>
+                                        <th></th>
                                         <aura:iteration items="{!v.columns}" var="col">
                                             <aura:if isTrue="{!and(col.fieldName!='Name',and(col.fieldName!='buildertek__Notes__c',col.fieldType!='reference'))}">
                                                 <th class="slds-is-sortable inputCss tabletitle" scope="col" style="padding-right:5px !important;padding-left:5px !important;">
@@ -396,8 +397,6 @@
                                         </aura:iteration>
                                         <th>
                                         </th>
-                                        <th>
-                                        </th>
                                     </tr>
                                     <aura:iteration items="{!v.TotalRecords.tarTable.ListOfEachRecord}" var="tar" indexVar="quoteIndex">
                                         <tr style="line-height: 2.5;display:table-row;" class="{!v.quoteId+' slds-hint-parent groupRows_'+groupIndex}">
@@ -420,6 +419,24 @@
                                                                 <span class="slds-form-element__label text"></span>
                                                             </label>
                                                         </div>
+                                                    </div>
+                                                </td>
+                                                <td style="text-align:right; width:0px;">
+                                                    <div class="slds-truncate">
+                                                        <span data-id="{!tar.recordId}" onclick="{!c.onclickDuplicate}">
+                                                            <lightning:icon iconName="utility:copy"
+                                                                size="xx-small" />
+                                                            &nbsp;
+                                                        </span>
+                                                        <span data-id="{!tar.recordId}" onclick="{!c.editQuote}">
+                                                            <lightning:icon iconName="utility:edit"
+                                                                size="xx-small" />
+                                                            &nbsp;
+                                                        </span>
+                                                        <span data-id="{!tar.recordId}" onclick="{!c.deleteQuote}">
+                                                            <lightning:icon iconName="utility:delete"
+                                                                size="xx-small" />
+                                                        </span>
                                                     </div>
                                                 </td>
                                                 <td scope="row" class="slds-cell-edit" data-label="Name">
@@ -538,24 +555,7 @@
                                                         </aura:if>
                                                     </td>
                                                 </aura:iteration>
-                                                <td style="text-align:right">
-                                                    <div class="slds-truncate">
-                                                        <span data-id="{!tar.recordId}" onclick="{!c.onclickDuplicate}">
-                                                            <lightning:icon iconName="utility:copy"
-                                                                size="xx-small" />
-                                                            &nbsp;
-                                                        </span>
-                                                        <span data-id="{!tar.recordId}" onclick="{!c.editQuote}">
-                                                            <lightning:icon iconName="utility:edit"
-                                                                size="xx-small" />
-                                                            &nbsp;
-                                                        </span>
-                                                        <span data-id="{!tar.recordId}" onclick="{!c.deleteQuote}">
-                                                            <lightning:icon iconName="utility:delete"
-                                                                size="xx-small" />
-                                                        </span>
-                                                    </div>
-                                                </td>
+                                               
                                                 <td>
                                                 </td>
                                             </aura:if>

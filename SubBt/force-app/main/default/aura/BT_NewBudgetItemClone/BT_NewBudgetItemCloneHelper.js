@@ -2015,6 +2015,7 @@
 
     countFunction: function (component, listOfRecords){
         console.log('::::::::countFunction:::::::::::::::::::');
+        console.log({listOfRecords});
         for (var i in listOfRecords) {
             var obj = {}
             obj['unitPrice'] = 0;
@@ -2051,6 +2052,23 @@
 
             obj['labor'] = 0;
             obj['laborKey'] = '';
+
+            // obj['amountIn'] = 0;
+            // obj['amountInKey'] = '';
+            // obj['amountOut'] = 0;
+            // obj['amountOutKey'] = '';            
+            // obj['foreCastToComplete'] = 0;
+            // obj['foreCastToCompleteKey'] = '';
+            // obj['coTotal'] = 0;
+            // obj['coTotalKey'] = '';
+            // obj['eligibleAmount'] = 0;
+            // obj['eligibleAmountKey'] = '';
+            // obj['invoiceTotal'] = 0;
+            // obj['invoiceTotalKey'] = '';
+            // obj['previousBilled'] = 0;
+            // obj['previousBilledKey'] = '';
+            // obj['upgrades'] = 0;
+            // obj['upgradesKey'] = '';
 
             for (var j = 0; j < listOfRecords[i].subGroupRecords[0].records.length; j++) {
                 var recList = listOfRecords[i].subGroupRecords[0].records[j].recordList;

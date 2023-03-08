@@ -29,10 +29,6 @@ public with sharing class QuoteItemTriggerHandler {
             if(qItem.Grouping__c == null) {
                 qItems.add(qItem);
             }
-            if (qItem.buildertek__Markup__c != null) {
-                qItem.buildertek__Margin__c = qItem.buildertek__Markup__c/(100+qItem.buildertek__Markup__c)*100;
-            }
-
         }
         
         if(!qItems.isEmpty()) QuoteDAO.setDefaultGrouping(qItems);
@@ -51,7 +47,7 @@ public with sharing class QuoteItemTriggerHandler {
         QuoteDAO.setProductNameToItemName(updatedQuoteItems);
     }
     
-    public void OnBeforeUpdateQuoteLine(List<Quote_Item__c> updatedQuoteItems, Map<ID, Quote_Item__c> oldQuoteItemsMap){
+    public void OnBeforeUpdateQuoteLine(List<Quote_Item__c> updatedQuoteItems){
        // List<Quote_Item__c> qItems = new List<Quote_Item__c>();
       list<buildertek__Quote_Line_Group__c> quoteGroupName=[SELECT 
                                                       Id, 
@@ -65,11 +61,6 @@ public with sharing class QuoteItemTriggerHandler {
                 qItem.Grouping__c=quoteGroupName[0].Id;
                 //qItems.add(qItem);
             }
-
-            if (qItem.buildertek__Markup__c != oldQuoteItemsMap.get(qItem.Id).buildertek__Markup__c && qItem.buildertek__Markup__c != null) {
-                qItem.buildertek__Margin__c = qItem.buildertek__Markup__c/(100+qItem.buildertek__Markup__c)*100;
-            }
-
         }
         }
     }
