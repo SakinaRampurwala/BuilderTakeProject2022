@@ -1144,17 +1144,54 @@
                                                         </td>
                                                         <aura:iteration items="{!tar.recordList}" var="value">
                                                             <td class="ShowIconClass" data-myvalue="{!value}">
-                                                                <aura:if isTrue="{!or(and(and(v.isEditMode, v.fieldName == value.fieldName),v.quoteItemId == tar.recordId),and(v.enableMassUpdate,
-                                                                or(or(or(or(or(or(or(value.fieldName=='buildertek__Quantity__c',
-                                                                or(or(value.fieldName == 'buildertek__Unit_Price__c',value.fieldName == 'buildertek__Priority__c'),value.fieldName == 'buildertek__Vendor__c')
-                                                                ),value.fieldName=='buildertek__Additional_Discount__c'
-                                                                ),value.fieldName=='buildertek__Unit_Cost__c'
-                                                                ),value.fieldName=='buildertek__Applied_Markup__c'
-                                                                ),value.fieldName == 'buildertek__UOM__c'
-                                                                ),value.fieldName == 'buildertek__Markup__c'
-                                                                ),value.fieldName == 'buildertek__Margin__c'
-                                                                ),value.fieldName=='buildertek__Notes__c'
-                                                                ))
+                                                                <aura:if isTrue="{!
+                                                                    or(
+                                                                        and(
+                                                                            and(
+                                                                                v.isEditMode, v.fieldName == value.fieldName
+                                                                            ),
+                                                                            v.quoteItemId == tar.recordId
+                                                                        ),
+                                                                        and(
+                                                                            v.enableMassUpdate,
+                                                                            or(
+                                                                                or(
+                                                                                    or(
+                                                                                        or(
+                                                                                            or(
+                                                                                                or(
+                                                                                                    or(
+                                                                                                        value.fieldName=='buildertek__Quantity__c',
+                                                                                                        or(
+                                                                                                            or(
+                                                                                                                value.fieldName == 'buildertek__Unit_Price__c',
+                                                                                                                
+                                                                                                                or(
+                                                                                                                    value.fieldName == 'buildertek__Priority__c' ,
+                                                                                                                    or(
+                                                                                                                        value.fieldName == 'buildertek__Tax__c', value.fieldName == 'buildertek__Additional_Costs__c'
+                                                                                                                    )
+
+                                                                                                                )
+                                                                                                            ),
+                                                                                                            value.fieldName == 'buildertek__Vendor__c'
+                                                                                                        )
+                                                                                                    ),
+                                                                                                    value.fieldName=='buildertek__Additional_Discount__c'
+                                                                                                ),
+                                                                                                value.fieldName=='buildertek__Unit_Cost__c'
+                                                                                            ),
+                                                                                            value.fieldName=='buildertek__Applied_Markup__c'
+                                                                                        ),
+                                                                                        value.fieldName == 'buildertek__UOM__c'
+                                                                                    ),
+                                                                                    value.fieldName == 'buildertek__Markup__c'
+                                                                                ),
+                                                                                value.fieldName == 'buildertek__Margin__c'
+                                                                            ),
+                                                                            value.fieldName=='buildertek__Notes__c' 
+                                                                        )
+                                                                    )
                                                                 }">
                                                                     <aura:if isTrue="{!value.fieldType != 'picklist'}">
                                                                         <aura:if
@@ -1191,8 +1228,7 @@
                                                                                 isTrue="{!value.fieldType == 'currency'}">
                                                                                 <aura:if
                                                                                     isTrue="{!value.originalValue != ''}">
-                                                                                    <aura:if
-                                                                                        isTrue="{!value.fieldName != 'buildertek__Net_Unit__c'}">
+                                                                                    <aura:if isTrue="{!value.fieldName != 'buildertek__Net_Unit__c'}">
                                                                                         <lightning:formattedNumber
                                                                                             value="{!value.originalValue}"
                                                                                             style="currency"

@@ -1322,7 +1322,12 @@
                     } else if (ListOfEachRecord[i].recordList[j].fieldName == 'buildertek__Unit_Cost__c') {
                         newMassQuoteItem.buildertek__Unit_Cost__c = ListOfEachRecord[i].recordList[j].originalValue;
                     } else if (ListOfEachRecord[i].recordList[j].fieldName == 'buildertek__Margin__c') {
-                        newMassQuoteItem.buildertek__Margin__c = ListOfEachRecord[i].recordList[j].originalValue;
+                        // console.log('---MARGIN---');
+                        // console.log(ListOfEachRecord[i].recordList[j].originalValue.toFixed(4));
+                        let num = ListOfEachRecord[i].recordList[j].originalValue
+                        let formattedNumber = Number(num).toFixed(4);
+                        console.log(formattedNumber); // Output: 3.1416
+                        newMassQuoteItem.buildertek__Margin__c = formattedNumber;
                     } else if (ListOfEachRecord[i].recordList[j].fieldName == 'buildertek__Markup__c') {
                         newMassQuoteItem.buildertek__Markup__c = ListOfEachRecord[i].recordList[j].originalValue;
                     } else if (ListOfEachRecord[i].recordList[j].fieldName == 'buildertek__Unit_Price__c') {
@@ -1338,6 +1343,14 @@
                     } else if (ListOfEachRecord[i].recordList[j].fieldName == 'buildertek__Priority__c') {
                         // debugger;
                         newMassQuoteItem.buildertek__Priority__c = ListOfEachRecord[i].recordList[j].originalValue;
+                    }
+                    else if (ListOfEachRecord[i].recordList[j].fieldName == 'buildertek__Additional_Costs__c') {
+                        // debugger;
+                        newMassQuoteItem.buildertek__Additional_Costs__c = ListOfEachRecord[i].recordList[j].originalValue;
+                    }
+                    else if (ListOfEachRecord[i].recordList[j].fieldName == 'buildertek__Tax__c') {
+                        console.log(ListOfEachRecord[i].recordList[j].originalValue , ':::::::::;');
+                        newMassQuoteItem.buildertek__Tax__c = ListOfEachRecord[i].recordList[j].originalValue;
                     }
                 }
                 newMassQuoteItem.Id = ListOfEachRecord[i].recordId;
@@ -1521,6 +1534,7 @@
 
     },
     updateQuoteRecords: function(component, event, helper) {
+        console.log('::::::updateQuoteRecords:::::::::');
         var checkvalue = component.find("selectAll");
         var checkQuoteItem = component.find("checkQuoteItem");
         var quoteObject = component.get("v.newMassQuote");
