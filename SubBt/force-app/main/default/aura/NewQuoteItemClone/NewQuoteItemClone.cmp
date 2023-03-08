@@ -1228,7 +1228,8 @@
                                                                                 isTrue="{!value.fieldType == 'currency'}">
                                                                                 <aura:if
                                                                                     isTrue="{!value.originalValue != ''}">
-                                                                                    <aura:if isTrue="{!value.fieldName != 'buildertek__Net_Unit__c'}">
+                                                                                    <aura:if
+                                                                                        isTrue="{!value.fieldName != 'buildertek__Net_Unit__c'}">
                                                                                         <lightning:formattedNumber
                                                                                             value="{!value.originalValue}"
                                                                                             style="currency"
@@ -2120,12 +2121,15 @@
                         <div class="slds-backdrop slds-backdrop_open"></div>
                     </aura:if>
                     <aura:if isTrue="{!v.openProductBox}">
-                        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open  slds-modal_large">
-                            <div class="slds-modal__container">
+                        <aura:html tag="style">
+                        
+                            .slds-modal__container{
+                            width: 80% !important;
+                            }
+                            
+                        </aura:html>                       
                             <c:Add_QuoteLine_In_Quote quoteId="{!v.recordId}" openProductBox="{!v.openProductBox}" />
-                            </div>
-                        </section>
-                        <div class="slds-backdrop slds-backdrop--open" id="backdrop"></div>
+
                     </aura:if>
 
                     <aura:if isTrue="{!v.openQuoteLineBox}">

@@ -7,6 +7,13 @@ public with sharing class NewPricingRequestController{
         pricingRec.buildertek__Status__c = 'Customer Approved';
         pricingRec.buildertek__Date_Pricing_Completed__c = system.today();
         Update pricingRec;
+
+        list<buildertek__Pricing_Request_Line__c> prlineRecs=[Select id , Name , buildertek__Description__c , buildertek__Status__c , buildertek__Pricing_Request__c  FROM buildertek__Pricing_Request_Line__c WHERE buildertek__Pricing_Request__c =: pricingRec.Id and buildertek__Status__c !='Rejected'];
+        for(buildertek__Pricing_Request_Line__c prline : prlineRecs){
+            prline.buildertek__Status__c='Pricing Complete';
+
+        }
+        update prlineRecs;
         return 'success';
     }
     @AuraEnabled

@@ -5,6 +5,8 @@
 
    closeCmp : function(component, event, helper) {
        component.set("v.openProductBox", false);
+    //    $A.get("e.force:closeQuickAction").fire() 
+
    }, 
 
    changePricebook: function(component, event, helper) {
