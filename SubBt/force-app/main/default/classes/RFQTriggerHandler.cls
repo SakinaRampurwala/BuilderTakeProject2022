@@ -82,6 +82,45 @@ public with sharing class RFQTriggerHandler {
     }
     
     public void OnAfterInsert(RFQ__c[] newRFQ, Map<ID, RFQ__c> newRFQMap){ 
+
+        List<buildertek__Quote_Item__c> quoteItemList = new List<buildertek__Quote_Item__c>();
+        Set<Id> rfqIdSet = new Set<Id>();
+        for (buildertek__RFQ__c rfq : newRFQMap.values()){
+
+            rfqIdSet.add(rfq.Id);
+            if(rfq.buildertek__Added_to_Quote__c != null){
+                System.debug('buildertek__Added_to_Quote__c' + rfq.buildertek__Added_to_Quote__c);
+                buildertek__Quote_Item__c quoteItem = new buildertek__Quote_Item__c();
+                quoteItem.Name=rfq.Name;
+                quoteItem.buildertek__Item_Name__c=rfq.Name;
+                quoteItem.buildertek__RFQ__c=rfq.Id;
+                quoteItem.buildertek__Quote__c=rfq.buildertek__Added_to_Quote__c;
+                quoteItemList.add(quoteItem);
+            }
+        }
+        if (!quoteItemList.isEmpty()) {
+            insert quoteItemList;
+            List<buildertek__RFQ_Item__c> rfqItemList = [Select Id , Name , buildertek__Quote_Item__c , buildertek__RFQ_Package__c FROM buildertek__RFQ_Item__c where buildertek__RFQ_Package__c=:rfqIdSet];
+
+            for(buildertek__RFQ_Item__c rfqItem : rfqItemList){
+                for(buildertek__Quote_Item__c quoteItem : quoteItemList){
+
+                    if (rfqItem.buildertek__RFQ_Package__c == quoteItem.buildertek__RFQ__c) {
+                        rfqItem.buildertek__Quote_Item__c = quoteItem.Id;
+                        break;
+                    }
+                }
+            }
+
+            update rfqItemList;
+        }
+        
+
+
+        
+
+
+
         
     }
     
@@ -95,15 +134,68 @@ public with sharing class RFQTriggerHandler {
         Set<Id> RfqstatusId = new Set<Id>();
         SET<Id> RfqvendrId = new SET<Id>();
         Set<Id> RfqitemId = new Set<Id>();
-        
         Set<Id> RfqvendoritemsId = new Set<Id>();
+        Set<Id> rfqIdSet = new Set<Id>();
+        Set<Id> oldQuoteLineIds = new Set<Id>();
+
         List<buildertek__RFQ_Item__c> rfqItemListToInsert = new List<buildertek__RFQ_Item__c>();
+        List<buildertek__Quote_Item__c> quoteLineList = new List<buildertek__Quote_Item__c>();
         for(buildertek__RFQ__c rf: updatedRFQ){
+            rfqIdSet.add(rf.Id);
+
             buildertek__RFQ__c oldRFqrec = oldRFQMap.get(rf.Id); 
             if(rf.buildertek__Status__c == 'Accepted'  && rf.buildertek__Status__c != oldRFqrec.buildertek__Status__c){
                 RfqstatusId.add(rf.Id);
             }
+
+            if(oldRFqrec.buildertek__Added_to_Quote__c != rf.buildertek__Added_to_Quote__c && rf.buildertek__Added_to_Quote__c!= null && oldRFqrec.buildertek__Added_to_Quote__c == null){
+                buildertek__Quote_Item__c quoteItem = new buildertek__Quote_Item__c();
+                quoteItem.Name=rf.Name;
+                quoteItem.buildertek__Item_Name__c=rf.Name;
+                quoteItem.buildertek__RFQ__c=rf.Id;
+                quoteItem.buildertek__Quote__c=rf.buildertek__Added_to_Quote__c;
+                quoteLineList.add(quoteItem);
+            }else if(oldRFqrec.buildertek__Added_to_Quote__c != rf.buildertek__Added_to_Quote__c && rf.buildertek__Added_to_Quote__c!= null && oldRFqrec.buildertek__Added_to_Quote__c != null){
+                oldQuoteLineIds.add(oldRFqrec.buildertek__Added_to_Quote__c);
+
+                buildertek__Quote_Item__c quoteItem = new buildertek__Quote_Item__c();
+                quoteItem.Name=rf.Name;
+                quoteItem.buildertek__Item_Name__c=rf.Name;
+                quoteItem.buildertek__RFQ__c=rf.Id;
+                quoteItem.buildertek__Quote__c=rf.buildertek__Added_to_Quote__c;
+                quoteLineList.add(quoteItem);
+            }else if(oldRFqrec.buildertek__Added_to_Quote__c != rf.buildertek__Added_to_Quote__c && rf.buildertek__Added_to_Quote__c== null && oldRFqrec.buildertek__Added_to_Quote__c != null){
+                oldQuoteLineIds.add(oldRFqrec.buildertek__Added_to_Quote__c);
+            }
         }
+        if(quoteLineList.size() > 0){
+            insert quoteLineList;
+            List<buildertek__RFQ_Item__c> rfqItemList = [Select Id , Name , buildertek__Quote_Item__c , buildertek__RFQ_Package__c FROM buildertek__RFQ_Item__c where buildertek__RFQ_Package__c=:rfqIdSet];
+          
+            List<buildertek__Quote_Item__c> oldQuoteItemList= [Select Id , Name , buildertek__Quote__c , (Select Id , Name , buildertek__Quote_Item__c , buildertek__RFQ_Package__c FROM buildertek__RFQ_Items__r where buildertek__RFQ_Package__c=:rfqIdSet) , buildertek__RFQ__c From buildertek__Quote_Item__c WHERE buildertek__Quote__c=:oldQuoteLineIds AND buildertek__RFQ__c=:rfqIdSet];
+            delete oldQuoteItemList;
+
+
+            for(buildertek__RFQ_Item__c rfqItem : rfqItemList){
+                for(buildertek__Quote_Item__c quoteItem : quoteLineList){
+                    if (rfqItem.buildertek__RFQ_Package__c == quoteItem.buildertek__RFQ__c) {
+                        rfqItem.buildertek__Quote_Item__c = quoteItem.Id;
+                        break;
+                    }
+                }
+            }
+
+            update rfqItemList;
+
+        }
+
+        if(oldQuoteLineIds.size() > 0 && quoteLineList.size() ==0){
+            List<buildertek__Quote_Item__c> oldQuoteItemList= [Select Id , Name , buildertek__Quote__c , (Select Id , Name , buildertek__Quote_Item__c , buildertek__RFQ_Package__c FROM buildertek__RFQ_Items__r where buildertek__RFQ_Package__c=:rfqIdSet) , buildertek__RFQ__c From buildertek__Quote_Item__c WHERE buildertek__Quote__c=:oldQuoteLineIds AND buildertek__RFQ__c=:rfqIdSet];
+            delete oldQuoteItemList;
+
+        }
+
+
 
         // List<buildertek__RFQ__c> rfqrec;
         /* if(Schema.sObjectType.buildertek__RFQ__c.fields.id.isAccessible()
@@ -795,4 +887,5 @@ update pricebooketyList;
         }
 
     }
+
 }

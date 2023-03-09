@@ -49,6 +49,7 @@
     },
 
     doSave: function (component, event, helper) {
+        console.log('doSave');
         component.set("v.Spinner", true);
         var action;
         action = component.get("c.createRFQ");
@@ -59,6 +60,9 @@
             rfqItemsJson: finalString
         });
         action.setCallback(this, function (response) {
+            console.log(response.getState());
+            console.log(response.getError());
+
             if (component.isValid() && response.getState() === "SUCCESS") {
                 var result = response.getReturnValue();
                 if (result.isSuccess === true) {

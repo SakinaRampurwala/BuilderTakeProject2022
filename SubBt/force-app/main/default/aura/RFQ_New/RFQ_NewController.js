@@ -96,17 +96,21 @@
 
 
     handleSubmit: function (component, event, helper) {
-        debugger;
+        try{
+        // debugger;
         component.set('v.isLoading', true);
         var fields = event.getParam("fields");
-        //if(fields.buildertek__Status__c == null || fields.buildertek__Status__c == '' || fields.buildertek__Status__c == undefined){
-           fields.buildertek__Status__c = component.get("v.status"); 
-        //}
+        fields.buildertek__Status__c = component.get("v.status"); 
+        console.log({fields});
         event.preventDefault(); // Prevent default submit
         component.find('recordViewForm').submit(fields); // Submit form
+        }catch(e){
+            console.log({e});
+        }
     },
 
     onRecordSuccess: function (component, event, helper) {
+        console.log('onRecordSuccess');
          component.set('v.isLoading', true);
         var workspaceAPI = component.find("workspace");
         workspaceAPI.getFocusedTabInfo().then(function (response) {
