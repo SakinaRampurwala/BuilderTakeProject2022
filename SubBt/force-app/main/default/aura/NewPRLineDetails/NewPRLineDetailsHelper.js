@@ -10,6 +10,9 @@
                     });
 
                     var recordId = component.get("v.recordId");
+                    //get record id of parent record from 
+
+
                     if (recordId) {
                         var navEvt = $A.get("e.force:navigateToSObject");
                         navEvt.setParams({

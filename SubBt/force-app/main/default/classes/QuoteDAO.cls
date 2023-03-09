@@ -225,6 +225,8 @@ public with sharing class QuoteDAO{
                     rfqIds.add(qutItem.buildertek__RFQ__c);
                 }
             }
+
+            
             List<buildertek__Purchase_Order__c> purchaseOrderRecs;
             if (Schema.sObjectType.buildertek__Purchase_Order__c.fields.Id.isAccessible() && Schema.sObjectType.buildertek__Purchase_Order__c.fields.Name.isAccessible() && Schema.sObjectType.buildertek__Purchase_Order__c.fields.buildertek__RFQ__c.isAccessible()){
                 purchaseOrderRecs = [select id, name, buildertek__RFQ__c
@@ -307,8 +309,16 @@ public with sharing class QuoteDAO{
                 }
             }
             System.debug('quoteItemsToInsert' + quoteItemsToInsert);
-
             insert quoteItemsToInsert;
+            List<buildertek__RFQ_Item__c> rfqLinesList =[Select Id ,buildertek__RFQ_Package__c	, buildertek__Quote_Item__c	,Name From buildertek__RFQ_Item__c where buildertek__RFQ_Package__c=:rfqIds];
+
+            for (buildertek__Quote_Item__c qItem : quoteItemsToInsert){
+                for(buildertek__RFQ_Item__c rfqline:rfqLinesList){
+                    rfqline.buildertek__Quote_Item__c=qItem.Id;
+                }
+            }
+            update rfqLinesList;
+
 
             return 'Success';
         } catch (Exception ex){

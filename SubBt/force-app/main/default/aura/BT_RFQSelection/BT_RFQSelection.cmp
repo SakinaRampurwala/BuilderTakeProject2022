@@ -88,6 +88,12 @@
 							<lightning:input type="text"  label="" value="{!quote.buildertek__Description__c}"/>
 						</td>
 						<td>
+							<aura:html tag="style">
+								.slds-lookup__menu{
+									<!-- position:absolute !important; -->
+									width:214px !important;
+								}
+							</aura:html>
 						    <c:BT_LookUp aura:id="groupId" _field="buildertek__Grouping__c" 
                                                      _sobject="buildertek__Quote_Item__c" 
                                                      _value="{!quote.buildertek__Grouping__c}"

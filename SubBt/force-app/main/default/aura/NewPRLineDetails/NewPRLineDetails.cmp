@@ -6,6 +6,9 @@
 	<aura:attribute name="displayProduct" type="Boolean" default="false" />
     <aura:attribute name="searchProductValue" type="String" default="" />
 
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+
     <aura:attribute name="recordId" type="Id"/>
 
 	<lightning:workspaceAPI aura:id="workspace" />
@@ -29,12 +32,12 @@
 
 			<div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
 
-				<lightning:recordEditForm aura:id="recordViewForm" objectApiName="buildertek__Pricing_Request_Line_Details__c">
+				<lightning:recordEditForm aura:id="recordViewForm" objectApiName="buildertek__Pricing_Request_Line_Details__c" density="comfy">
 					<div style="background-color: white;">
 						<div class="headingDiv"> Information </div>
 						<div class="slds-grid">
 							<div class="slds-col slds-size_1-of-2">
-								<lightning:inputField fieldName="buildertek__Price_Book__c" value="{!v.PRLineDetails.buildertek__Price_Book__c}"  />
+								<lightning:inputField class="pad" fieldName="buildertek__Price_Book__c" value="{!v.PRLineDetails.buildertek__Price_Book__c}"  />
 								<!-- <lightning:inputField fieldName="buildertek__Product__c" value="{!v.PRLineDetails.buildertek__Product__c}" /> -->
 								<label> Product </label>
 								<lightning:input autocomplete="off" type="search" placeholder="Search Products..." variant="label-hidden" value="{!v.searchProductValue}" onclick="{!c.searchProduct}" onkeyup="{!c.searchProduct}" />
@@ -63,29 +66,29 @@
 										</ul>
 									</div>
 								</aura:if>
-								<lightning:inputField fieldName="buildertek__Description__c" value="{!v.PRLineDetails.buildertek__Description__c}" />
-								<lightning:inputField fieldName="buildertek__Quantity__c" value="{!v.PRLineDetails.buildertek__Quantity__c}" />
-								<lightning:inputField fieldName="buildertek__Cost__c" value="{!v.PRLineDetails.buildertek__Cost__c}" />
-								<lightning:inputField fieldName="buildertek__Multiplier__c" value="{!v.PRLineDetails.buildertek__Multiplier__c}" />
-								<lightning:inputField fieldName="buildertek__Markup__c" value="{!v.PRLineDetails.buildertek__Markup__c}" />
+								<lightning:inputField class="pad" fieldName="buildertek__Description__c" value="{!v.PRLineDetails.buildertek__Description__c}" />
+								<lightning:inputField class="pad" fieldName="buildertek__Quantity__c" value="{!v.PRLineDetails.buildertek__Quantity__c}" />
+								<lightning:inputField class="pad" fieldName="buildertek__Cost__c" value="{!v.PRLineDetails.buildertek__Cost__c}" />
+								<lightning:inputField class="pad" fieldName="buildertek__Multiplier__c" value="{!v.PRLineDetails.buildertek__Multiplier__c}" />
+								<lightning:inputField class="pad" fieldName="buildertek__Markup__c" value="{!v.PRLineDetails.buildertek__Markup__c}" />
 							</div>
 
 							<div class="slds-col slds-size_1-of-2">
-								<lightning:inputField fieldName="buildertek__Pricing_Request_Line__c" value="{!v.PRLineDetails.buildertek__Pricing_Request_Line__c}" />
+								<lightning:inputField class="pad" fieldName="buildertek__Pricing_Request_Line__c" value="{!v.PRLineDetails.buildertek__Pricing_Request_Line__c}" />
 							</div>
 						</div>
 
 						<div class="headingDiv"> Related Items </div>
 						<div class="slds-grid">
 							<div class="slds-col slds-size_1-of-2">
-								<lightning:inputField fieldName="buildertek__RFQ__c" value="{!v.PRLineDetails.buildertek__RFQ__c}" />
-								<lightning:inputField fieldName="buildertek__RFQ_Lines__c" value="{!v.PRLineDetails.buildertek__RFQ_Lines__c}" />
-								<lightning:inputField fieldName="buildertek__Purchase_Order__c" value="{!v.PRLineDetails.buildertek__Purchase_Order__c}" />
-								<lightning:inputField fieldName="buildertek__Purchase_Order_Line__c" value="{!v.PRLineDetails.buildertek__Purchase_Order_Line__c}" />
+								<lightning:inputField class="pad" fieldName="buildertek__RFQ__c" value="{!v.PRLineDetails.buildertek__RFQ__c}" />
+								<lightning:inputField class="pad" fieldName="buildertek__RFQ_Lines__c" value="{!v.PRLineDetails.buildertek__RFQ_Lines__c}" />
+								<lightning:inputField class="pad" fieldName="buildertek__Purchase_Order__c" value="{!v.PRLineDetails.buildertek__Purchase_Order__c}" />
+								<lightning:inputField class="pad" fieldName="buildertek__Purchase_Order_Line__c" value="{!v.PRLineDetails.buildertek__Purchase_Order_Line__c}" />
 							</div>
 							<div class="slds-col slds-size_1-of-2">
-								<lightning:inputField fieldName="buildertek__Vendor__c" value="{!v.PRLineDetails.buildertek__Vendor__c}" />
-								<lightning:inputField fieldName="buildertek__Vendor_RFQ__c" value="{!v.PRLineDetails.buildertek__Vendor_RFQ__c}" />
+								<lightning:inputField class="pad" fieldName="buildertek__Vendor__c" value="{!v.PRLineDetails.buildertek__Vendor__c}" />
+								<lightning:inputField class="pad" fieldName="buildertek__Vendor_RFQ__c" value="{!v.PRLineDetails.buildertek__Vendor_RFQ__c}" />
 							</div>
 						</div>
 

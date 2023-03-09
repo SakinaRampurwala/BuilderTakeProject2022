@@ -480,6 +480,7 @@
         $A.enqueueAction(action);
     },
     createRFQPicker: function(component, event, helper) {
+        console.log('Add RFQ ::: createRFQPicker');
         var overlayLib;
         $A.createComponents([
                 ["c:BT_RFQSelection", {
