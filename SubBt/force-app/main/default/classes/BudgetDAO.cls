@@ -1401,6 +1401,12 @@ insert s;*/
     
     @AuraEnabled
     public static TargetTable getBudgetItemData(String recordId, List<String> fieldsList, String fieldString, Decimal recordToDisply, Integer offset){
+
+        if(!fieldsList.contains('buildertek__Contractor__r.Name')){
+            fieldsList.add('buildertek__Contractor__c');
+            fieldsList.add('buildertek__Contractor__r.Name');
+        }
+
         List<FieldClass> fieldClassList = (List<FieldClass>)System.JSON.deserialize(fieldString, List<FieldClass>.class);
         TargetTable TargetTable_inst = new TargetTable();
         List<EachRecord> allListOfRecords = new List<EachRecord>();
@@ -1408,7 +1414,7 @@ insert s;*/
         String objectName = 'buildertek__Budget_Item__c';
         String listType = 'List<' + objectName + '>';
         String EachRecordType = '' + objectName + '';
-        
+
         SObject IndividualMember = (SObject)Type.forName(EachRecordType).newInstance();
         for (string sumOfFields : fieldsList){
             if (sumOfFields != null){
@@ -2606,6 +2612,45 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
                     System.debug('Insert ExpenseBudget Successfully');
                 }            
         }
+    }
+
+    @AuraEnabled
+    public static void CreateLineAddExpense(string selectedExpense, string RecId){
+
+        buildertek__Budget__c budgetRec = [SELECT Id, Name, buildertek__Project__c FROM buildertek__Budget__c where Id = :RecId];
+        
+        buildertek__Expense__c Expense = [SELECT Id, Name, buildertek__Description__c, buildertek__Budget__c, buildertek__Budget_Line__c FROM buildertek__Expense__c WHERE Id =: selectedExpense];
+
+        List<buildertek__Budget_Line_Group__c> budgetLineGroup = [SELECT Id, Name FROM buildertek__Budget_Line_Group__c WHERE Name = 'Expense' limit 1];
+
+        String groupId = '';
+
+        if (budgetLineGroup.size() > 0) {
+            groupId = budgetLineGroup[0].Id;
+        } else {
+            buildertek__Budget_Line_Group__c budgetGroup = new buildertek__Budget_Line_Group__c();
+            budgetGroup.Name = 'Expense';
+            insert budgetGroup;
+            
+            groupId = budgetGroup.Id;
+        }
+
+        buildertek__Budget_Item__c budgetItem = new buildertek__Budget_Item__c();
+        budgetItem.Name = Expense.buildertek__Description__c;
+        budgetItem.buildertek__Budget__c = RecId;
+        budgetItem.buildertek__Group__c = groupId;
+        insert budgetItem;
+
+        Expense.buildertek__Budget_Line__c = budgetItem.Id;
+        Expense.buildertek__Budget__c = budgetItem.buildertek__Budget__c;
+        Expense.buildertek__Project__c = budgetRec.buildertek__Project__c;
+        update Expense;
+
+        buildertek__Expense_To_Budget_Item_Link__c ExpenseItemToBudgetItemLink = new buildertek__Expense_To_Budget_Item_Link__c();
+        ExpenseItemToBudgetItemLink.Expense__c = Expense.Id;
+        ExpenseItemToBudgetItemLink.Budget_Line__c = budgetItem.Id;
+        ExpenseItemToBudgetItemLink.Auto_Roll_Up__c = true;
+        insert ExpenseItemToBudgetItemLink;
     }
     
 

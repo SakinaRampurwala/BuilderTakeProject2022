@@ -4,6 +4,11 @@
     <label>QuotelineswithGroupingName</label>
     <packageVersions>
         <majorNumber>1</majorNumber>
+        <minorNumber>10</minorNumber>
+        <namespace>MVMU</namespace>
+    </packageVersions>
+    <packageVersions>
+        <majorNumber>1</majorNumber>
         <minorNumber>160</minorNumber>
         <namespace>agf</namespace>
     </packageVersions>

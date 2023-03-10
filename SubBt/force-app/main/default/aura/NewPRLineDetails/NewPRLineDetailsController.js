@@ -8,7 +8,7 @@
         }
         var addressableContext = JSON.parse(window.atob(base64Context));
         component.set("v.recordId", addressableContext.attributes.recordId);
-        component.set("v.PRLineDetails.buildertek__Pricing_Request_Line__c", addressableContext.attributes.recordId);
+        component.set("v.PRLineDetails.buildertek__Pricing_Request_Line__c", component.get("v.recordId"));
 
     },
 

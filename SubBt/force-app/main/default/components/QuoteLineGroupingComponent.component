@@ -27,7 +27,7 @@
 
 
 
-            <tr>
+            <!-- <tr>
                 <td colspan="1" style="font-size: 15px;padding: 5px 15px;font-weight: bold;text-align: right;color:black;border-bottom:  1px solid  #ccc;border-right:1px solid #ccc;">Subtotal: </td>
                 <td style="font-size: 14px;padding: 5px 15px;text-align: right;color:black;border-bottom:1px solid #ccc;border-right: 1px solid  #ccc;">
                     <apex:outputField value="{!quotesList[0].Total__c}" />
@@ -51,7 +51,7 @@
                 <td style="font-size: 14px;padding: 5px 15px;text-align: right;background: #7fb601;color: #fff;font-weight: bold;border-bottom:  1px solid  #ccc;border-right:  1px solid  #ccc;">
                     <apex:outputField value="{!quotesList[0].Grand_Total__c}" />
                 </td>
-            </tr>
+            </tr> -->
 
 
         </tbody>
