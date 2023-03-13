@@ -852,13 +852,13 @@
             component.set("v.newQuote", ProductDetails);
             if(ProductDetails.buildertek__Unit_Cost__c == undefined || ProductDetails.buildertek__Unit_Cost__c == null){
                 // component.set("v.unitCost",ProductDetails.buildertek__Unit_Price__c );
-                component.set("v.newQuote.buildertek__Unit_Price__c",ProductDetails.buildertek__Unit_Price__c );
+                component.set("v.newQuote.buildertek__Unit_Cost__c", ProductDetails.buildertek__Unit_Price__c );
                 console.log("Used unit price --->", ProductDetails.buildertek__Unit_Price__c)
             }
             else{
                 // component.set("v.unitCost", ProductDetails.buildertek__Unit_Cost__c);
-                component.set("v.newQuote.buildertek__Unit_Price__c",ProductDetails.buildertek__Unit_Price__c );
-                console.log("unitCost----->"+ProductDetails.buildertek__Unit_Cost__c);
+                component.set("v.newQuote.buildertek__Unit_Cost__c", ProductDetails.buildertek__Unit_Cost__c );
+                console.log("unitCost----->", JSON.parse(JSON.stringify(ProductDetails)));
             }
         });
         $A.enqueueAction(action);
@@ -872,7 +872,7 @@
         action.setCallback(this, function(respo) {
             var res = respo.getReturnValue();
 
-            console.log("Quote 22")
+            console.log("Quote 22",res);
             var ProductDetails = component.get("v.newQuote");
             if (res != null) {
                 var existuom = false;

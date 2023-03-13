@@ -207,7 +207,7 @@ public with sharing class CreateBudgetLineItemForExpenseAC {
         buildertek__Budget_Item__c budgetitem = new buildertek__Budget_Item__c();
         budgetitem.buildertek__Budget__c = expenseData.buildertek__Budget__c;
         budgetitem.Name = expenseData.buildertek__Description__c;
-        budgetitem.buildertek__Quantity__c = 0; 
+        budgetitem.buildertek__Quantity__c = 1; 
         budgetitem.buildertek__UOM__c = 'Each';
         budgetitem.buildertek__Group__c  = budgetlinegroup.id; 
         budgetitem.buildertek__Cost_Code__c = expenseData.buildertek__Cost_Code__c;

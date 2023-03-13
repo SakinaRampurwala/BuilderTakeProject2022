@@ -739,6 +739,8 @@
         component.set("v.productName", selectedAccountGetFromEvent.Name);
         helper.getProductDetails(component, event, helper);
         helper.getUOMValues(component, event, helper);
+        var temp = component.get("v.newQuote.buildertek__Unit_Price__c");
+        console.log('temp varr ', temp);
     },
 
     deleteRecord: function(component, event, helper) {
