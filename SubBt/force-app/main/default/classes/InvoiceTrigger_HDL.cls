@@ -68,13 +68,29 @@ public with sharing class InvoiceTrigger_HDL {
         Map<String, Decimal> budgetMap = new Map<String, Decimal>();
         List<buildertek__Budget__c> budgetListToUpdate = new List<buildertek__Budget__c>();
         Set<Id> invoiceIds = new Set<Id>();
+        Set<Id> removeInvoiceId = new Set<Id>();
+
         for(buildertek__Billings__c inv : updatedInvoiceList){ 
             changerOderIdSet.add(inv.buildertek__Change_Order__c); 
             
             if (inv.buildertek__Total_Amount_Tax__c != oldInvoiceMap.get(inv.Id).buildertek__Total_Amount_Tax__c) {
                 invoiceIds.add(inv.Id);
             }
+            if(oldInvoiceMap.get(inv.Id).buildertek__BT_Finance_Transaction__c != null && inv.buildertek__BT_Finance_Transaction__c == null){
+                removeInvoiceId.add(inv.Id);
+            }
         } 
+
+        if (removeInvoiceId.size() > 0) {
+            List<buildertek__Finance_Transaction__c> transactionList = [SELECT Id, Name, buildertek__Sales_Invoice_AR__c FROM buildertek__Finance_Transaction__c WHERE buildertek__Sales_Invoice_AR__c IN: removeInvoiceId];
+            for (buildertek__Finance_Transaction__c fTransaction : transactionList) {
+                fTransaction.buildertek__Sales_Invoice_AR__c = null;
+            }
+            if (transactionList.size() > 0) {
+                update transactionList;
+            }
+
+        }
         system.debug('changerOderIdSet --------> '+changerOderIdSet);
         List<buildertek__Change_Order__c> changeOrderList = new List<buildertek__Change_Order__c>();
         if(Schema.sObjectType.buildertek__Change_Order__c.fields.Id.isAccessible()&&

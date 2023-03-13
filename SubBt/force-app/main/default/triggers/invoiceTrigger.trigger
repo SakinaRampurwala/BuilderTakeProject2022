@@ -29,6 +29,13 @@ trigger invoiceTrigger on Billings__c (before insert, before update, before dele
                     Inv.adderror('You cannot delete a Paid or Partially Paid Invoice');    
                 }
             }
+
+            for(buildertek__Billings__c Inv : trigger.old){
+                if(Inv.buildertek__BT_Finance_Transaction__c != null){
+                    Inv.adderror('You cannot delete this Sales Invoice because it is related to a Finance Transaction record. Please delete the Finance Transaction record first then try again.');    
+                }
+            }
+
         }
     } else if (Trigger.isAfter) {
         if (Trigger.isInsert) {

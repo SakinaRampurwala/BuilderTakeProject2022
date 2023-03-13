@@ -212,7 +212,7 @@ public with sharing class CreateBudgetLineItemForExpenseAC {
         budgetitem.buildertek__Group__c  = budgetlinegroup.id; 
         budgetitem.buildertek__Cost_Code__c = expenseData.buildertek__Cost_Code__c;
         budgetitem.buildertek__Contractor__c = expenseData.buildertek__Vendor__c;
-        budgetitem.buildertek__Unit_Price__c = expenseData.buildertek__Amount__c;
+        // budgetitem.buildertek__Unit_Price__c = expenseData.buildertek__Amount__c;
         insert budgetitem;
 
         expenseData.buildertek__Budget_Line__c = budgetitem.id;
@@ -221,7 +221,7 @@ public with sharing class CreateBudgetLineItemForExpenseAC {
         buildertek__Expense_To_Budget_Item_Link__c ExpnseToBudgetItemLink = new buildertek__Expense_To_Budget_Item_Link__c();
         ExpnseToBudgetItemLink.buildertek__Expense__c = expenseData.Id;
         ExpnseToBudgetItemLink.buildertek__Budget_Line__c = budgetitem.id;
-        ExpnseToBudgetItemLink.Auto_Roll_Up__c = true;
+        ExpnseToBudgetItemLink.Auto_Roll_Up__c = false;
         insert ExpnseToBudgetItemLink;
         
     }

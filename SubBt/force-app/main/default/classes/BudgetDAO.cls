@@ -2603,7 +2603,7 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
                     Expense.buildertek__Project__c = budgetItemList[0].buildertek__Budget__r.buildertek__Project__c;
                     update Expense;
 
-                    insert ExpenseToBudgetItemLinks1;
+                    // insert ExpenseToBudgetItemLinks1;
                     System.debug('ExpenseToBudgetItemLinks1'+ExpenseToBudgetItemLinks1);
                     // if(!ExpenseToBudgetItemLinks.isEmpty()){
                     //     insert ExpenseToBudgetItemLinks;
@@ -2648,11 +2648,11 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
         Expense.buildertek__Project__c = budgetRec.buildertek__Project__c;
         update Expense;
 
-        buildertek__Expense_To_Budget_Item_Link__c ExpenseItemToBudgetItemLink = new buildertek__Expense_To_Budget_Item_Link__c();
-        ExpenseItemToBudgetItemLink.Expense__c = Expense.Id;
-        ExpenseItemToBudgetItemLink.Budget_Line__c = budgetItem.Id;
-        ExpenseItemToBudgetItemLink.Auto_Roll_Up__c = true;
-        insert ExpenseItemToBudgetItemLink;
+        // buildertek__Expense_To_Budget_Item_Link__c ExpenseItemToBudgetItemLink = new buildertek__Expense_To_Budget_Item_Link__c();
+        // ExpenseItemToBudgetItemLink.Expense__c = Expense.Id;
+        // ExpenseItemToBudgetItemLink.Budget_Line__c = budgetItem.Id;
+        // ExpenseItemToBudgetItemLink.Auto_Roll_Up__c = true;
+        // insert ExpenseItemToBudgetItemLink;
 
         BudgetDAO.isCreateExpense = false;
     }
