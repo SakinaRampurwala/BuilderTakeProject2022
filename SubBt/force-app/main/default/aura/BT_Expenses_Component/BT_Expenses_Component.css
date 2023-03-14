@@ -10,3 +10,8 @@
 .THIS .jaimin {
     height: 100%;
 }
+
+.THIS .btnSet {
+    text-align: right;
+    margin-right: 12px;
+}

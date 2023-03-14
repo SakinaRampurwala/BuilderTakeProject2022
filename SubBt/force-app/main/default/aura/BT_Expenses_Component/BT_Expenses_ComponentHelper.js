@@ -52,12 +52,28 @@
                 expenses.forEach(function(expense){
                     expense.selected = false;
                     expense.buildertek__Budget_Line__c = "";
+                    expense.buildertek__Budget__c = "";
                 });
                 component.set("v.expenses", expenses);
                 component.set("v.tableDataList", expenses);
+                component.set("v.Spinner", false);
             }
         });
         $A.enqueueAction(action);
+    },
+
+    handleSelectedExpenses : function(component) {
+        var expenses = component.get("v.expenses");
+        console.log('expenses => ',expenses);
+        var selectedExpenses = [];
+        expenses.forEach(function(expense){
+            if(expense.selected){
+                selectedExpenses.push(expense);
+            }
+        }
+        );
+        component.set("v.selectedExpenses", selectedExpenses);
+        console.log('selectedExpenses => ',selectedExpenses);
     },
 
     getBudegts : function(component) {
@@ -69,13 +85,63 @@
             var state = response.getState();
             if(state === "SUCCESS"){
                 var budgets = response.getReturnValue();
-                component.set("v.budgetsOptions", budgets);
                 console.log('budgetsOptions => ',budgets);
+                component.set("v.budgetsOptions", budgets);
             }
         });
         $A.enqueueAction(action);
+    },
+
+    getBudgetLines : function(component) {
+        var action = component.get("c.getBudgetLines");
+        action.setParams({
+            "budgetId": component.get("v.selectedBudgetId")
+        });
+        action.setCallback(this, function(response){
+            var state = response.getState();
+            if(state === "SUCCESS"){
+                var budgetLines = response.getReturnValue();
+                console.log('budgetLinesOptions => ',budgetLines);
+                component.set("v.budgetLinesOptions", budgetLines);
+                component.set("v.Spinner", false);
+            }
+        });
+        $A.enqueueAction(action);
+    },
+
+    saveExpenses : function(component) {
+        var expenses = component.get("v.selectedExpenses");
+        console.log('expenses => ',expenses);
+        var saveExp = component.get("c.saveExp");
+        saveExp.setParams({
+            "expenses": expenses
+        });
+        saveExp.setCallback(this, function(response){
+            var state = response.getState();
+            if(state === "SUCCESS"){
+                console.log('response => ',response.getReturnValue());
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    title: 'Success',
+                    message: 'Expenses are updated successfully',
+                    duration: ' 5000',
+                    key: 'info_alt',
+                    type: 'success',
+                    mode: 'pester'
+                });
+                toastEvent.fire();
+            }
+            component.set("v.Spinner", false);
+            component.set("v.selectedExpenses", []);
+            component.set("v.selectedProjectId", "");
+            component.set("v.selectedBudgetId", "");
+            component.set("v.SelectExp", true);
+            component.set("v.SelectBLines", false);
+            component.set("v.expenses", []);
+            component.set("v.tableDataList", []);
+        }
+        );
+        $A.enqueueAction(saveExp);
     }
-
-
 
 })

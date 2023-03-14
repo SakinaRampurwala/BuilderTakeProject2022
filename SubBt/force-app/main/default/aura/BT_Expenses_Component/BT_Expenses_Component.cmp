@@ -9,7 +9,10 @@
     <aura:attribute name="SelectBLines" type="Boolean" default="false" />
     <aura:attribute name="budgetsOptions" type="List" />
     <aura:attribute name="selectedBudgetId" type="Id" />
-    <aura:attribute name="SelectedExpenses" type="List" />
+    <aura:attribute name="selectedBudgetName" type="String" />
+    <aura:attribute name="selectedExpenses" type="List" />
+    <aura:attribute name="budgetLinesOptions" type="List" />
+
 
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 
@@ -65,6 +68,9 @@
                                 <div class="slds-truncate" title="Product Name">Description</div>
                             </th>
                             <th class="" scope="col">
+                                <div class="slds-truncate" title="Prodcut Code">Cost Code</div>
+                            </th>
+                            <th class="" scope="col">
                                 <div class="slds-truncate" title="Prodcut Description">Expense Total</div>
                             </th>
                             <th class="" scope="col">
@@ -88,6 +94,11 @@
                                 <td data-label="Expense Description">
                                     <div class="slds-truncate" title='{!exp.buildertek__Description__c}'>
                                         {!exp.buildertek__Description__c}
+                                    </div>
+                                </td>
+                                <td data-label="CostCode">
+                                    <div class="slds-truncate" title='{!exp.buildertek__Cost_Code__c}'>
+                                        {!exp.buildertek__Cost_Code__r.Name}
                                     </div>
                                 </td>
                                 <td data-label="Expense Total">
@@ -104,7 +115,7 @@
                         </aura:iteration>
                     </tbody>
                     <aura:if isTrue="{!empty(v.expenses)}">
-                        <td colspan="4" style="text-align: center; line-height: 10rem; font-size: 18px; ">
+                        <td colspan="6" style="text-align: center; line-height: 10rem; font-size: 18px; ">
                             No Data Found
                         </td>
                     </aura:if>
@@ -113,32 +124,38 @@
             </aura:if>
 
             <aura:if isTrue="{!v.SelectBLines}">
-                <lightning:layout>
+                <!-- <lightning:layout>
                     <lightning:layoutItem padding="around-small" size="4">
                         <lightning:button label="Back" variant="brand" onclick="{!c.backToExpenses}" />
                     </lightning:layoutItem>
-                </lightning:layout>
+                </lightning:layout> -->
 
                 <lightning:layout>
-                    <lightning:layoutItem padding="around-small" size="4">
-                        <label class="slds-form-element__label slds-size_4-of-12">Budget</label>
+                    <lightning:layoutItem padding="around-small" size="6">
+                        <label class="slds-form-element__label slds-size_6-of-12">Budget</label>
                         <div>
                             <ui:inputSelect aura:id="selectedBudget" value="{!v.selectedBudgetId}" change="{!c.changeBudget}">
+                                <option value="" selected="true">Select a Budget</option>
                                 <aura:iteration items="{!v.budgetsOptions}" var="option" >
-                                    <option value="{!option.Id}" selected="{!option.value == v.selectedBudgetId}">{!option.Name}</option>
+                                    <option value="{!option.Id}" selected="{!option.Id == v.selectedBudgetId}">{!option.Name}</option>
                                 </aura:iteration>
                             </ui:inputSelect>
                         </div>
                     </lightning:layoutItem>
-
+                    <lightning:layoutItem padding="around-small" size="6">
+                        <label class="slds-form-element__label slds-size_6-of-12"> </label>
+                        <div class="btnSet">
+                        <lightning:button label="Save" variant="brand" onclick="{!c.saveExpenses}" />
+                        <lightning:button label="Back" variant="brand" onclick="{!c.backToExpenses}" />
+                        </div>
+                        
+                    </lightning:layoutItem>
+                    
                 </lightning:layout>
                 
                 <table class="slds-table slds-table_cell-buffer slds-table_bordered" aria-label="Example default base table of Opportunities">
                     <thead>
                         <tr class="slds-line-height_reset">
-                            <th class="slds-text-align_right slds-cell_action-mode" scope="col" style="width:3.25rem;">
-                                <lightning:input aura:id="selectAll" type="checkbox" name="checkAll" onchange="{!c.checkAllExpenses}" />
-                            </th>
                             <th class="" scope="col">
                                 <div class="slds-truncate" title="Product Family">Expense Name</div>
                             </th>
@@ -146,24 +163,25 @@
                                 <div class="slds-truncate" title="Product Name">Description</div>
                             </th>
                             <th class="" scope="col">
+                                <div class="slds-truncate" title="Prodcut Code">Cost Code</div>
+                            </th>
+                            <th class="" scope="col">
                                 <div class="slds-truncate" title="Prodcut Description">Expense Total</div>
                             </th>
                             <th class="" scope="col">
                                 <div class="slds-truncate" title="Prodcut Code">Vendor</div>
                             </th>
+                            <!-- <th class="" scope="col">
+                                <div class="slds-truncate" title="Prodcut Code">Budget</div>
+                            </th> -->
                             <th class="" scope="col">
                                 <div class="slds-truncate" title="Prodcut Code">Budget Line</div>
                             </th>
                         </tr>
                     </thead>
                     <tbody>
-                        <aura:iteration items="{!v.tableDataList}" var="exp">
+                        <aura:iteration items="{!v.selectedExpenses}" var="exp">
                             <tr class="slds-hint-parent">
-                                <td class="slds-text-align_right slds-cell_action-mode" role="gridcell">
-                                    <div class="slds-checkbox">
-                                    <lightning:input type="checkbox" name="input1" checked="{!exp.selected}" id="{!exp.Id}" onchange="{!c.checkboxChange}" />
-                                    </div>
-                                </td>
                                 <td data-label="Name" scope="row">
                                     <div class="slds-truncate" title='{!exp.Name}'>
                                         {!exp.Name}
@@ -173,6 +191,11 @@
                                     <div class="slds-truncate" title='{!exp.buildertek__Description__c}'>
                                         {!exp.buildertek__Description__c}
                                     </div>
+                                </td>
+                                <td data-label="Budget">
+                                   <div class="slds-truncate" title='{!exp.buildertek__Cost_Code__c}'>
+                                       {!exp.buildertek__Cost_Code__r.Name}                            
+                                   </div>
                                 </td>
                                 <td data-label="Expense Total">
                                     <div class="slds-truncate" title='{!exp.buildertek__Total_Expense__c}'>
@@ -184,9 +207,19 @@
                                         {!exp.buildertek__Vendor__c}
                                     </div>
                                 </td>
+                                <!-- <td data-label="Budget">
+                                    <div class="slds-truncate" title='{!exp.buildertek__Budget__c}'>
+                                        {!v.selectedBudgetName}
+                                    </div>
+                                 </td> -->
                                 <td data-label="Budget Line">
                                     <div class="slds-truncate" title='{!exp.buildertek__Budget_Line__c}'>
-                                        {!exp.buildertek__Budget_Line__c}
+                                        <ui:inputSelect aura:id="selectedBudgetLine" value="{!exp.buildertek__Budget_Line__c}" change="{!c.changeBudgetLine}">
+                                            <option value="" selected="{!exp.buildertek__Budget_Line__c == ''}">Create a new Budget Line</option>
+                                            <aura:iteration items="{!v.budgetLinesOptions}" var="option" >
+                                                <option value="{!option.Id}" selected="{!option.value == exp.buildertek__Budget_Line__c}">{!option.Name}</option>
+                                            </aura:iteration>
+                                        </ui:inputSelect>
                                     </div>
                                 </td>
                             </tr>

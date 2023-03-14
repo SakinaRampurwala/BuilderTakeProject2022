@@ -151,7 +151,7 @@
     },
     
     handleSubmit: function (component, event, helper) {
-        debugger;
+        // debugger
           event.preventDefault(); 
         var loc = component.get("v.islocationaccess");
        // alert(loc);
@@ -206,6 +206,7 @@
         }
     },
     onRecordSuccess: function (component, event, helper) {
+        // debugger
         var loc = component.get("v.islocationaccess");
         //alert(loc);
         if(loc == true){
@@ -260,7 +261,7 @@
         }
     },
     saveAndNew: function (component, event, helper) {
-        debugger;
+        // debugger;
         var loc = component.get("v.islocationaccess");
        // alert(loc);
         if(loc == true){

@@ -133,10 +133,28 @@ timecard.adderror('You Need to close your last Time Card before you can create a
     
     public void afterUpdate(List<buildertek__Time_Cards__c> oldTimeCard, List<buildertek__Time_Cards__c> newTimeCard, Map<Id, buildertek__Time_Cards__c> oldTimeCardMap, Map<Id, buildertek__Time_Cards__c> newTimeCardMap){
         Set<ID> budgetLineId = new Set<ID>();
+        List<buildertek__Time_Cards__c> timecardList= new List<buildertek__Time_Cards__c>();
+        List<buildertek__Budget_Item__c> newBudgetLineList= new List<buildertek__Budget_Item__c>();
+
         List<buildertek__Budget_Item__c> budgetItemLines = new List<buildertek__Budget_Item__c>();
         for (buildertek__Time_Cards__c timecard : newTimeCard){
             budgetLineId.add(timeCard.buildertek__Budget_Line__c);
+
+            if(oldTimeCardMap.get(timecard.Id).buildertek__Budget__c != timecard.buildertek__Budget__c){
+                timecardList.add(timecard);
+            }
+
         }
+        if(timecardList.size() > 0){
+            for(buildertek__Time_Cards__c timeCard : timecardList){
+
+                CreateBudgetLineItemForTimeCard.updateBudgetItem(timeCard.Id); 
+            }
+
+        }
+
+
+
         if (budgetLineId.size() > 0){
             budgetItemLines = [Select Id, Name, buildertek__Labor__c, (Select Id, buildertek__Daily_Expense__c
                                                                        FROM buildertek__Time_Cards__r)

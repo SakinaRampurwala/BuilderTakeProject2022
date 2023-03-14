@@ -27,6 +27,19 @@
 	<aura:if isTrue="{!v.ismessage}">
       <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
         aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open" style = "height:60rem">
+        <aura:if isTrue="{!v.isLoading}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+            <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+                <div class="custom-loading-text">
+                           <b>Processing, Please Wait</b>
+                       </div>
+            </div>
+        </div>
+    </aura:if>
+    
         <div class="slds-modal__container" >
             <header class="slds-modal__header">
                 <lightning:buttonIcon iconName="utility:close" onclick="{! c.closeModel }" alternativeText="close"
@@ -76,12 +89,11 @@
                 <p></p>
             </header>
             
-            <div class="slds-modal__content " id="modal-content-id-1" style= "height:21rem !important;">
+            <div class="slds-modal__content " id="modal-content-id-1">
                 <lightning:recordEditForm aura:id="recordViewForm" objectApiName="buildertek__Time_Cards__c"
                     onsubmit="{!c.handleSubmit}" onsuccess="{!c.onRecordSuccess}" onerror = "{!c.handleError}">
                     
                    <lightning:layout class="slds-m-horizontal_x-large slds-m-top_x-large slds-m-bottom_xx-large" horizontalAlign="space" verticalAlign="center" multipleRows="true">
-                   <!-- <lightning:layout multipleRows="true"> -->
                         <aura:iteration items="{!v.listOfFields}" var="field">
                           <!--  <lightning:layoutItem size="12" mediumDeviceSize="12" padding="around-small"> -->
                                 <lightning:layoutItem flexibility="auto" size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="12">
@@ -124,30 +136,20 @@
                             </lightning:layoutItem>
                         </aura:iteration>
                     </lightning:layout>
+
+                    <footer aura:id="footer" class="slds-modal__footer" >
+                        <lightning:button variant="neutral" title="Cancel" label="Cancel" onclick="{! c.closeModel }" />
+                        <lightning:button variant="neutral" title="Save &amp; New" label="Save &amp; New"
+                            onclick="{!c.saveAndNew}" />
+                        <lightning:button variant="brand" type="submit" name="save" label="Save" />
+                    </footer>
+
                 </lightning:recordEditForm>
+            </div>
         </div>
-            <footer aura:id="footer" class="slds-modal__footer" >
-                <lightning:button variant="neutral" title="Cancel" label="Cancel" onclick="{! c.closeModel }" />
-                <lightning:button variant="neutral" title="Save &amp; New" label="Save &amp; New"
-                    onclick="{!c.saveAndNew}" />
-                <lightning:button variant="brand" type="submit" name="save" label="Save" />
-            </footer>
-        </div>
-      
     </section>
            
     </aura:if>
 
-    <aura:if isTrue="{!v.isLoading}">
-        <div aura:id="spinnerId" class="slds-spinner_container">
-            <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
-                <span class="slds-assistive-text">Loading</span>
-                <div class="slds-spinner__dot-a"></div>
-                <div class="slds-spinner__dot-b"></div>
-                <div class="custom-loading-text">
-                           <b>Processing, Please Wait</b>
-                       </div>
-            </div>
-        </div>
-    </aura:if>
+    
 </aura:component>
