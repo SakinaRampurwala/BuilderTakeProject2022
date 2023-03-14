@@ -134,23 +134,48 @@ timecard.adderror('You Need to close your last Time Card before you can create a
     public void afterUpdate(List<buildertek__Time_Cards__c> oldTimeCard, List<buildertek__Time_Cards__c> newTimeCard, Map<Id, buildertek__Time_Cards__c> oldTimeCardMap, Map<Id, buildertek__Time_Cards__c> newTimeCardMap){
         Set<ID> budgetLineId = new Set<ID>();
         List<buildertek__Time_Cards__c> timecardList= new List<buildertek__Time_Cards__c>();
+        List<buildertek__Time_Cards__c> timeCardWOBL= new List<buildertek__Time_Cards__c>();
+        List<buildertek__Time_Cards__c> timecardWithBudandBudL= new List<buildertek__Time_Cards__c>();
+
+
+
         List<buildertek__Budget_Item__c> newBudgetLineList= new List<buildertek__Budget_Item__c>();
 
         List<buildertek__Budget_Item__c> budgetItemLines = new List<buildertek__Budget_Item__c>();
         for (buildertek__Time_Cards__c timecard : newTimeCard){
             budgetLineId.add(timeCard.buildertek__Budget_Line__c);
 
-            if(oldTimeCardMap.get(timecard.Id).buildertek__Budget__c != timecard.buildertek__Budget__c){
+            if(oldTimeCardMap.get(timecard.Id).buildertek__Budget__c != timecard.buildertek__Budget__c && timecard.buildertek__Budget__c!= null && timecard.buildertek__Budget_Line__c == null ){
                 timecardList.add(timecard);
+            }
+            if(oldTimeCardMap.get(timecard.Id).buildertek__Budget_Line__c != null && timecard.buildertek__Budget_Line__c == null){
+                System.debug('yes ! Budget line is equal to nullllll!!!!!!');
+                timeCardWOBL.add(timecard);
+            }
+
+            if(timecard.buildertek__Budget__c != null && timecard.buildertek__Budget_Line__c != null){
+                timecardWithBudandBudL.add(timecard);
             }
 
         }
         if(timecardList.size() > 0){
             for(buildertek__Time_Cards__c timeCard : timecardList){
-
                 CreateBudgetLineItemForTimeCard.updateBudgetItem(timeCard.Id); 
             }
+        }
 
+        System.debug('timeCardWOBL' + timeCardWOBL.size());
+        if(timeCardWOBL.size() > 0){
+            for(buildertek__Time_Cards__c timeCard : timeCardWOBL){
+                CreateBudgetLineItemForTimeCard.deleteBudgetItem(timeCard.Id, oldTimeCardMap.get(timeCard.Id).buildertek__Budget_Line__c);
+                System.debug('after delte method!!!');
+            }
+        }
+
+        if(timecardWithBudandBudL.size() > 0){
+            for(buildertek__Time_Cards__c timeCard : timecardWithBudandBudL){
+                CreateBudgetLineItemForTimeCard.updateIt(timeCard.Id ,timeCard.buildertek__Budget__c , timecard.buildertek__Budget_Line__c);
+            }
         }
 
 
