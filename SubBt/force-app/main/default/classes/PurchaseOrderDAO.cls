@@ -389,6 +389,7 @@ public with sharing class PurchaseOrderDAO{
         insert apItems;*/
         /*}*/
         //system.debug('apItems--->' + apItems);
+        insert apItems;
     }
 
     @AuraEnabled

@@ -254,7 +254,6 @@
     <aura:attribute name="coRecordList" type="Change_Order__c[]" />
     <aura:attribute name="ExpenseRecordList" type="Expense__c[]" />
     <aura:attribute name="selectedExistingCO" type="String" default="" access="public" />
-    <aura:attribute name="selectedExistingExpense" type="String" default="" access="public" />
     <aura:attribute name="disableAddCO" type="Boolean" default="false" />
     <!--  End -->
 
@@ -1855,6 +1854,7 @@
                                     <thead>
                                         <tr class="slds-text-title_caps">
                                             <th scope="col" class="slds-truncate">
+                                                <lightning:input aura:id="selectAllExpense" type="checkbox" name="checkAll" onchange="{!c.checkAllExpense}" />
                                             </th>
                                             <th scope="col">
                                                 <div class="slds-truncate">Expense Name</div>
@@ -1874,7 +1874,7 @@
                                         <aura:iteration items="{!v.ExpenseRecordList}" var="item" indexVar="index">
                                             <tr>
                                                 <td style="padding-left: 0.5rem; width: 30px;">
-                                                    <ui:inputRadio aura:id="radio" name="coSelect" text="{!item.Id}" label="" change="{!c.saveSelectedExpense}" />
+                                                    <lightning:input type="checkbox" name="input1" checked="{!item.Selected}" id="{!item.Id}" onchange="{!c.checkExpensee}" />
                                                 </td>
                                                 <td class="slds-truncate coFildData">
                                                     {!item.Name}

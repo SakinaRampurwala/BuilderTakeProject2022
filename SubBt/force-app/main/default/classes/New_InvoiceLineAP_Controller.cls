@@ -60,8 +60,14 @@ public with sharing class New_InvoiceLineAP_Controller {
     }
 
     @AuraEnabled
-    public static String getobjectName(Id recordId){
+    public static String getobjectNames(Id recordId){
         String sObjName = recordId.getSObjectType().getDescribe().getName();  
         return sObjName;
+    }
+    @AuraEnabled
+    public static List<buildertek__Budget_Item__c> getBudgetList(Id budgetId){
+
+        List<buildertek__Budget_Item__c> budgetItemList =[Select Id ,buildertek__Budget__c,  Name From buildertek__Budget_Item__c WHERE buildertek__Budget__c=:budgetId];
+        return budgetItemList;
     }
 }

@@ -6,7 +6,9 @@ trigger InvoiceAPTrigger on buildertek__Account_Payable_Clone__c (after insert, 
         if (Trigger.isInsert) {
             handler.OnAfterInsert(Trigger.new, Trigger.newMap); 
         } else if (Trigger.isUpdate){
-            handler.OnAfterUpdate(Trigger.new, Trigger.newMap, Trigger.oldMap); 
+            if(InvoiceAPTriggerHandler.isFirstTime){
+                handler.OnAfterUpdate(Trigger.new, Trigger.newMap, Trigger.oldMap); 
+            }
         }   
     }
 }

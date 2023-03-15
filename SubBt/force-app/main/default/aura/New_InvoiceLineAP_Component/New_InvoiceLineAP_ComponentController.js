@@ -38,7 +38,7 @@
             console.log('parentRecordId-->>',{parentRecordId});
         }
         if(parentRecordId != null && parentRecordId != ''){
-            var action = component.get("c.getobjectName");
+            var action = component.get("c.getobjectNames");
             action.setParams({
                 recordId: parentRecordId,
             });
@@ -66,6 +66,18 @@
 		component.set("v.isLoading", true);
         event.preventDefault(); // Prevent default submit
         var fields = event.getParam("fields");
+        
+        let budgetLineId=component.get('v.selectedBudgetLineId');
+        console.log(budgetLineId);
+        let budgetLineName=component.get('v.selectedBudgetLineName');
+        console.log(component.get('v.selectedBudgetLineName'));
+
+         if(budgetLineId == '' || budgetLineName == ''){
+            fields["buildertek__Budget_Line__c"] = '';
+        }else{
+            fields["buildertek__Budget_Line__c"] = component.get("v.selectedBudgetLineId");
+        }
+
         var allData = JSON.stringify(fields);
 
         var action = component.get("c.saveData");
@@ -143,4 +155,60 @@
             }), 1000
         );
    },
+   onChangeBudget:function(component, event, helper) {
+    console.log(event.getSource().get('v.value')[0]);
+     component.set('v.parentBudgetRecordId' ,event.getSource().get('v.value')[0]);
+    console.log( component.get('v.parentBudgetRecordId'));
+
+
+   },
+   searchBudgetLineData:function(component, event, helper) {
+        console.log('searchBudgetLineData');
+        component.set('v.displayBudgetLine', true);
+        helper.getAllBudgetLine(component, event, helper);
+        event.stopPropagation();
+    },
+    clickHandlerBudgetLine: function(component, event, helper){
+
+        console.log('clickHandlerBudgetLine');
+        var recordId = event.currentTarget.dataset.value;
+        console.log('recordId ==> '+recordId);
+        component.set('v.selectedBudgetLineId', recordId);
+
+        var budgetLineList = component.get("v.budgetLinesOptions");
+        budgetLineList.forEach(element => {
+            if (recordId == element.Id) {
+                component.set('v.selectedBudgetLineName', element.Name);
+                component.set('v.displayBudgetLine', false);
+                console.log(component.get('v.selectedBudgetLineName'));
+
+
+            }
+        });
+       
+    },
+      
+    hideList:function(component, event, helper){
+                component.set('v.displayBudgetLine', false);
+    },
+    keyupBudgetLineData:function(component, event, helper){
+        var allRecords = component.get("v.budgetLinesOptions");
+        var searchFilter = event.getSource().get("v.value").toUpperCase();
+        var tempArray = [];
+        var i;
+        for (i = 0; i < allRecords.length; i++) {
+            if ((allRecords[i].Name && allRecords[i].Name.toUpperCase().indexOf(searchFilter) != -1)) {
+                tempArray.push(allRecords[i]);
+            }else{
+                component.set('v.selectedBudgetLineId' , '');
+            }
+        }
+        component.set("v.budgetLinesOptions", tempArray);
+
+        if(searchFilter == ''){
+            helper.getAllBudgetLine(component, event, helper);
+        }   
+     },
+
+
 })

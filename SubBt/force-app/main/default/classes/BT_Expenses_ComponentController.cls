@@ -37,4 +37,19 @@ public with sharing class BT_Expenses_ComponentController {
         update expenses;
     }
 
+    @AuraEnabled
+    public static List<buildertek__Time_Cards__c> getTimeCards(Id projectId){
+        List<buildertek__Time_Cards__c> TimeCardList = new List<buildertek__Time_Cards__c>();
+        TimeCardList = [SELECT Id, Name,buildertek__Resource__c, buildertek__Hours_Worked__c, buildertek__Daily_Expense__c, buildertek__Project__c, buildertek__Budget__c, buildertek__Resource__r.Name
+                                FROM buildertek__Time_Cards__c
+                                WHERE buildertek__Budget_Line__c = null AND buildertek__Budget__c = null AND  buildertek__Project__c=: projectId ORDER BY Name ASC];
+        return TimeCardList;
+    }
+
+    @AuraEnabled
+    public static void saveTC(List<buildertek__Time_Cards__c> TimeCard){
+        System.debug('TimeCard: ' + TimeCard);
+        update TimeCard;
+    }
+
 }

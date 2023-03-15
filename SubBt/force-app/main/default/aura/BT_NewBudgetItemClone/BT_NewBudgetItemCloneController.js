@@ -3607,15 +3607,19 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
         helper.getExpenseList(component, event, helper);
     }, 
 
-    saveSelectedExpense: function(component, event, helper) {
-        var selectedCO = event.getSource().get("v.text");
-        console.log('selectedExistingExpense --->'+selectedCO);
-        component.set("v.selectedExistingExpense", selectedCO);
-    },
 
     addNewExpense: function(component, event, helper){     
         var selectedRecords = component.get('v.selectedRecs');
-        var selectedExpense = component.get("v.selectedExistingExpense");  
+
+        var ExpenseRecordList = component.get("v.ExpenseRecordList");
+        let selectedExpenseList=[];
+        ExpenseRecordList.forEach(element => {
+            if (element.Selected) {
+                selectedExpenseList.push(element);
+            }
+        });
+
+        console.log('selectedExpenseList ==>',selectedExpenseList);
         
         $A.get("e.c:BT_SpinnerEvent").setParams({
             "action": "SHOW"
@@ -3627,7 +3631,7 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
             var action = component.get("c.addExpenseToBudget");
             action.setParams({
                 budgeLineIds: selectedRecords,
-                selectedExpense: selectedExpense
+                selectedExpenses: selectedExpenseList
             });
             action.setCallback(this, function (result) {
                 $A.get("e.c:BT_SpinnerEvent").setParams({
@@ -3665,7 +3669,7 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
             var recId = component.get("v.recordId");
             var action = component.get("c.CreateLineAddExpense");
             action.setParams({
-                selectedExpense: selectedExpense,
+                selectedExpenses: selectedExpenseList,
                 RecId: recId
             });
             action.setCallback(this, function (result) {
@@ -3701,6 +3705,32 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
             $A.enqueueAction(action);
         }
         
+    },
+
+    checkExpensee: function(component, event, helper){
+        var tableDataList = component.get("v.ExpenseRecordList");
+        console.log('tableDataList ==> ',tableDataList);
+        var checkedAll = true;
+        tableDataList.forEach(element => {
+            if (!element.Selected) {
+                checkedAll = false;
+            }
+        });
+        component.find("selectAllExpense").set("v.checked", checkedAll);
+    },
+
+    checkAllExpense: function(component, event, helper){
+        var value = event.getSource().get("v.checked"); 
+        var tableDataList = component.get("v.ExpenseRecordList");
+        let expenseIdList=[];
+        tableDataList.forEach(element => {
+            console.log({element});
+            element.Selected = value;
+            expenseIdList.push(element.Id);
+
+        });
+        component.set("v.ExpenseRecordList", tableDataList);
+
     },
 
 

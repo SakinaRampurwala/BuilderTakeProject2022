@@ -2558,70 +2558,27 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
     }
 
     @AuraEnabled
-    public static void addExpenseToBudget(String budgeLineIds, string selectedExpense){
+    public static void addExpenseToBudget(String budgeLineIds, List<buildertek__Expense__c> selectedExpenses){
         List<String> strList = budgeLineIds.split(',');
-        if (String.isNotBlank(selectedExpense)) {
-                buildertek__Expense__c Expense = [SELECT Id, Name,buildertek__Amount__c, buildertek__Total_Expense__c,buildertek__Budget__c, buildertek__Budget_Line__c FROM buildertek__Expense__c WHERE Id =: selectedExpense];
-                System.debug('selectedExpense====>>>'+selectedExpense);
-                System.debug('Expense====>>>'+Expense);
-                if (strList.size() > 0) {
-                    System.debug('<<<====strList====>>>'+strList);
-                    List<buildertek__Budget_Item__c> budgetItemList = [SELECT Id, Name, buildertek__Additional_Costs__c, buildertek__Budget__c, buildertek__Budget__r.buildertek__Project__c FROM buildertek__Budget_Item__c WHERE Id IN :strList];
-                    System.debug('budgetItemList--->>>'+budgetItemList);
-                    
-                    List<buildertek__Expense_To_Budget_Item_Link__c> ExpenseToBudgetItemLinks = new List<buildertek__Expense_To_Budget_Item_Link__c>();
-                    ExpenseToBudgetItemLinks = [SELECT Id,Name,buildertek__Budget_Line__c,buildertek__Expense__c,buildertek__Amount__c FROM buildertek__Expense_To_Budget_Item_Link__c WHERE buildertek__Budget_Line__c IN: strList AND buildertek__Expense__c =: Expense.Id];
-                    System.debug('ExpenseToBudgetItemLinks--->>>'+ExpenseToBudgetItemLinks);
 
-                    List<Expense_To_Budget_Item_Link__c> ExpenseToBudgetItemLinks1 = new List<Expense_To_Budget_Item_Link__c>();
-                    for (buildertek__Budget_Item__c budgetItem : budgetItemList) {
-                        System.debug('===For Loop1===');
-                            Boolean recordAvail = false;
-                            for(buildertek__Expense_To_Budget_Item_Link__c ExpenseLink : ExpenseToBudgetItemLinks){
-                                System.debug('===For Loop3===');
-                                if (ExpenseLink.buildertek__Budget_Line__c == budgetItem.Id && ExpenseLink.buildertek__Expense__c == Expense.Id) {
-                                    recordAvail = true;
-                                }
-                            }
-                            if (!recordAvail) {
-                                System.debug('===If Block===');
-                                buildertek__Expense_To_Budget_Item_Link__c ExpenseItemToBudgetItemLink = new buildertek__Expense_To_Budget_Item_Link__c();
-                                ExpenseItemToBudgetItemLink.Expense__c = Expense.Id;
-                                System.debug('ExpenseItemToBudgetItemLink.Expense__c-->>'+ExpenseItemToBudgetItemLink.Expense__c);
-                                ExpenseItemToBudgetItemLink.Budget_Line__c = budgetItem.Id;
-                                System.debug('ExpenseItemToBudgetItemLink.Budget_Line__c-->>'+ExpenseItemToBudgetItemLink.Budget_Line__c);
-                                ExpenseItemToBudgetItemLink.Auto_Roll_Up__c = true;
-                                // ExpenseItemToBudgetItemLink.buildertek__Amount__c = Expense.buildertek__Amount__c;
-                                // System.debug('ExpenseItemToBudgetItemLink.buildertek__Amount__c-->>'+ExpenseItemToBudgetItemLink.buildertek__Amount__c);
-                                ExpenseToBudgetItemLinks1.add(ExpenseItemToBudgetItemLink);
-                            }
-                        
-                    }
+        List<buildertek__Budget_Item__c> budgetItemList = [SELECT Id, Name, buildertek__Additional_Costs__c, buildertek__Budget__c, buildertek__Budget__r.buildertek__Project__c FROM buildertek__Budget_Item__c WHERE Id IN :strList];
 
-                    Expense.buildertek__Budget_Line__c = budgetItemList[0].Id;
-                    Expense.buildertek__Budget__c = budgetItemList[0].buildertek__Budget__c;
-                    Expense.buildertek__Project__c = budgetItemList[0].buildertek__Budget__r.buildertek__Project__c;
-                    update Expense;
-
-                    // insert ExpenseToBudgetItemLinks1;
-                    System.debug('ExpenseToBudgetItemLinks1'+ExpenseToBudgetItemLinks1);
-                    // if(!ExpenseToBudgetItemLinks.isEmpty()){
-                    //     insert ExpenseToBudgetItemLinks;
-                    //     system.debug('ExpenseToBudgetItemLinks-----'+ExpenseToBudgetItemLinks);
-                    // }
-                    System.debug('Insert ExpenseBudget Successfully');
-                }            
+        for (buildertek__Expense__c exp : selectedExpenses) {
+            exp.buildertek__Budget_Line__c = budgetItemList[0].Id;
+            exp.buildertek__Budget__c = budgetItemList[0].buildertek__Budget__c;
+            exp.buildertek__Project__c = budgetItemList[0].buildertek__Budget__r.buildertek__Project__c;
         }
+
+        update selectedExpenses;
+        
     }
 
     @AuraEnabled
-    public static void CreateLineAddExpense(string selectedExpense, string RecId){
+    public static void CreateLineAddExpense(List<buildertek__Expense__c> selectedExpenses, string RecId){
 
         BudgetDAO.isCreateExpense = true;
 
         buildertek__Budget__c budgetRec = [SELECT Id, Name, buildertek__Project__c FROM buildertek__Budget__c where Id = :RecId];
-        
-        buildertek__Expense__c Expense = [SELECT Id, Name, buildertek__Description__c, buildertek__Budget__c, buildertek__Budget_Line__c FROM buildertek__Expense__c WHERE Id =: selectedExpense];
 
         List<buildertek__Budget_Line_Group__c> budgetLineGroup = [SELECT Id, Name FROM buildertek__Budget_Line_Group__c WHERE Name = 'Expense' limit 1];
 
@@ -2637,22 +2594,23 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
             groupId = budgetGroup.Id;
         }
 
-        buildertek__Budget_Item__c budgetItem = new buildertek__Budget_Item__c();
-        budgetItem.Name = Expense.buildertek__Description__c;
-        budgetItem.buildertek__Budget__c = RecId;
-        budgetItem.buildertek__Group__c = groupId;
-        insert budgetItem;
+        Map<Id, buildertek__Budget_Item__c> budgetItemMap = new Map<Id, buildertek__Budget_Item__c>();
+        for (buildertek__Expense__c exp : selectedExpenses) {
+            buildertek__Budget_Item__c budgetItem = new buildertek__Budget_Item__c();
+            budgetItem.Name = exp.buildertek__Description__c;
+            budgetItem.buildertek__Budget__c = RecId;
+            budgetItem.buildertek__Group__c = groupId;
+            budgetItemMap.put(exp.Id, budgetItem);
+        }
+        insert budgetItemMap.values();
 
-        Expense.buildertek__Budget_Line__c = budgetItem.Id;
-        Expense.buildertek__Budget__c = budgetItem.buildertek__Budget__c;
-        Expense.buildertek__Project__c = budgetRec.buildertek__Project__c;
-        update Expense;
 
-        // buildertek__Expense_To_Budget_Item_Link__c ExpenseItemToBudgetItemLink = new buildertek__Expense_To_Budget_Item_Link__c();
-        // ExpenseItemToBudgetItemLink.Expense__c = Expense.Id;
-        // ExpenseItemToBudgetItemLink.Budget_Line__c = budgetItem.Id;
-        // ExpenseItemToBudgetItemLink.Auto_Roll_Up__c = true;
-        // insert ExpenseItemToBudgetItemLink;
+        for (buildertek__Expense__c exp : selectedExpenses) {
+            exp.buildertek__Budget_Line__c = budgetItemMap.get(exp.Id).Id;
+            exp.buildertek__Budget__c = RecId;
+            exp.buildertek__Project__c = budgetRec.buildertek__Project__c;
+        }
+        update selectedExpenses;
 
         BudgetDAO.isCreateExpense = false;
     }
