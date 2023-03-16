@@ -6,11 +6,6 @@
     <label>Standard_PreQual_VF</label>
     <packageVersions>
         <majorNumber>1</majorNumber>
-        <minorNumber>160</minorNumber>
-        <namespace>agf</namespace>
-    </packageVersions>
-    <packageVersions>
-        <majorNumber>1</majorNumber>
         <minorNumber>19</minorNumber>
         <namespace>ed_insights</namespace>
     </packageVersions>

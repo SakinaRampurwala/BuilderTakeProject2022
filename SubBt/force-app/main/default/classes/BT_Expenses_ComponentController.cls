@@ -52,4 +52,36 @@ public with sharing class BT_Expenses_ComponentController {
         update TimeCard;
     }
 
+    @AuraEnabled
+    public static List<buildertek__Account_Payable_Clone__c> getInvoices(Id projectId){
+        List<buildertek__Account_Payable_Clone__c> InvoiceList = new List<buildertek__Account_Payable_Clone__c>();
+        InvoiceList = [SELECT Id, buildertek__Auto_Number__c, buildertek__Project__c, buildertek__Description__c, buildertek__Cost_Code__c, buildertek__Net_Amount__c, buildertek__Budget__c, buildertek__Budget_Line__c
+                                FROM buildertek__Account_Payable_Clone__c
+                                WHERE buildertek__Budget_Line__c = null AND buildertek__Budget__c = null AND buildertek__Project__c=: projectId ORDER BY Name ASC];
+        return InvoiceList;
+    }
+
+    @AuraEnabled
+    public static List<buildertek__Account_Payable_Clone__c> saveInv(List<buildertek__Account_Payable_Clone__c> Invoices){
+        System.debug('invoices: ' + invoices);
+        update invoices;
+        return invoices;
+    }
+
+    @AuraEnabled
+    public static List<buildertek__Purchase_Order__c> getPurchaseOrders(Id projectId){
+        List<buildertek__Purchase_Order__c> PurchaseOrderList = new List<buildertek__Purchase_Order__c>();
+        PurchaseOrderList = [SELECT Id, Name, buildertek__Project__c, buildertek__Type__c, buildertek__Cost_Code__c,buildertek__Vendor__c,buildertek__Vendor__r.Name, buildertek__PO_Balance__c, buildertek__Budget__c, buildertek__Budget_Line__c
+                                FROM buildertek__Purchase_Order__c
+                                WHERE buildertek__Budget_Line__c = null AND buildertek__Budget__c = null AND buildertek__Project__c=: projectId ORDER BY Name ASC];
+        return PurchaseOrderList;
+    }
+
+    @AuraEnabled
+    public static void savePO(List<buildertek__Purchase_Order__c> PurchaseOrder){
+        System.debug('PurchaseOrder: ' + PurchaseOrder);
+        update PurchaseOrder;
+    }
+
+
 }

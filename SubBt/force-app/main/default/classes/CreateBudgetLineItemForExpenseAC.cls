@@ -194,7 +194,21 @@ public with sharing class CreateBudgetLineItemForExpenseAC {
         System.debug('ExpId==>'+ExpId);
 
         buildertek__Expense__c expenseData = [Select Id,buildertek__Budget__c, buildertek__Budget_Line__c, buildertek__Description__c, buildertek__Cost_Code__c,buildertek__Vendor__c, buildertek__Amount__c from buildertek__Expense__c where Id =:ExpId limit 1];
-        buildertek__Budget_Line_Group__c  budgetlinegroup =[select id,Name from buildertek__Budget_Line_Group__c  where Name = 'Expense' limit 1];
+        List<buildertek__Budget_Line_Group__c>  budgetlinegroup =[select id,Name from buildertek__Budget_Line_Group__c  where Name = 'Expense'];
+
+
+        String groupId = '';
+
+        if (budgetlinegroup.size() > 0) {
+            groupId = budgetlinegroup[0].Id;
+        } else {
+            buildertek__Budget_Line_Group__c budgetGroup = new buildertek__Budget_Line_Group__c();
+            budgetGroup.Name = 'Expense';
+            insert budgetGroup;
+            
+            groupId = budgetGroup.Id;
+        }
+
 
         if(expenseData.buildertek__Budget_Line__c != null) {
             return;
@@ -209,7 +223,7 @@ public with sharing class CreateBudgetLineItemForExpenseAC {
         budgetitem.Name = expenseData.buildertek__Description__c;
         budgetitem.buildertek__Quantity__c = 1; 
         budgetitem.buildertek__UOM__c = 'Each';
-        budgetitem.buildertek__Group__c  = budgetlinegroup.id; 
+        budgetitem.buildertek__Group__c  = groupId; 
         budgetitem.buildertek__Cost_Code__c = expenseData.buildertek__Cost_Code__c;
         budgetitem.buildertek__Contractor__c = expenseData.buildertek__Vendor__c;
         // budgetitem.buildertek__Unit_Price__c = expenseData.buildertek__Amount__c;

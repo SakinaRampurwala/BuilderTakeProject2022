@@ -35,21 +35,23 @@ public with sharing class AddBudgetLineItemOnPayableInvoice {
 
         buildertek__Account_Payable_Clone__c payableInvoice = [Select Id, buildertek__Description__c, buildertek__Budget__c,buildertek__Total_Amount__c , buildertek__Budget_Line__c from buildertek__Account_Payable_Clone__c where Id =:payInvoice limit 1];
         
-        buildertek__Budget_Item__c budgetitem = [Select Id, Name from buildertek__Budget_Item__c where Id =:BudgetLineId limit 1];
+        List<buildertek__Budget_Item__c> budgetitem = [Select Id, Name from buildertek__Budget_Item__c where Id =:BudgetLineId limit 1];
         
-        List<buildertek__Account_Payable_Clone__c> payableInvoiceList = [Select Id, buildertek__Budget_Line__c, buildertek__Description__c from buildertek__Account_Payable_Clone__c where buildertek__Budget_Line__c =:budgetitem.Id];
         
-        if(payableInvoice.buildertek__Description__c == budgetitem.Name){
-            if(payableInvoiceList.size() == 0){
+        if (budgetitem.size() > 0) {
+
+            List<buildertek__Account_Payable_Clone__c> payableInvoiceList = [Select Id, buildertek__Budget_Line__c, buildertek__Description__c from buildertek__Account_Payable_Clone__c where buildertek__Budget_Line__c =:budgetitem[0].Id];
+            
+            if(payableInvoice.buildertek__Description__c == budgetitem[0].Name && payableInvoiceList.size() == 0){
                 delete budgetitem;
-            }
+            } 
         }
     }
 
     public static void updateBudgetLine(Id payInvoice , Id budgetId, Id BudgetLineId){
         buildertek__Account_Payable_Clone__c payableInvoice = [Select Id, buildertek__Description__c, buildertek__Budget__c,buildertek__Total_Amount__c , buildertek__Budget_Line__c from buildertek__Account_Payable_Clone__c where Id =:payInvoice limit 1];
         buildertek__Budget_Item__c budgetitem = [Select Id, Name , buildertek__Invoice_total__c , buildertek__Budget__c  from buildertek__Budget_Item__c where Id =:BudgetLineId  AND buildertek__Budget__c=:budgetId limit 1];
-        System.debug('why this method is calling');
+
         if(budgetitem.buildertek__Invoice_total__c == null){
             budgetitem.buildertek__Invoice_total__c = payableInvoice.buildertek__Total_Amount__c;
         }else{
@@ -74,6 +76,7 @@ public with sharing class AddBudgetLineItemOnPayableInvoice {
                 budgetitem[0].buildertek__Invoice_total__c = 0;
             }
             update budgetitem;
+            System.debug('budgetitem.buildertek__Invoice_total__c '+budgetitem[0].buildertek__Invoice_total__c);
         }
     }
 }

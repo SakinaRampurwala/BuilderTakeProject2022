@@ -2,18 +2,19 @@
     
     doInit : function(component, event, helper) {
         helper.tabName(component);
-        helper.getProjects(component);
+        // helper.getProjects(component);
         component.set("v.transactionTypeOptions", [
-            {label: '--None--', value: 'None'},
+            {label: '--None--', value: ''},
             {label: 'Expense', value: 'Expense'},
             {label: 'Invoice(AP)', value: 'Invoice(AP)'},
-            {label: 'Purchase Order', value: 'Purchase Order'},
+            // {label: 'Purchase Order', value: 'Purchase Order'},
             {label: 'Time Card', value: 'Time Card'}
-        ]);
+        ]);   
+        component.set("v.selectedTransactionType", '');  
     },
 
     changeTransactionType : function(component, event, helper) {
-        component.set("v.selectedProjectId", '');
+        // component.set("v.selectedProjectId", '');
         component.set("v.tableDataList", []);
         var selectedTransactionType = component.find("selectedTransactionType").get("v.value");
         component.set("v.selectedTransactionType", selectedTransactionType);
@@ -36,29 +37,43 @@
             component.set("v.SelectNone", true);
         }
         component.set("v.checkedAll", false);
+
+        helper.getProjectData(component, event, helper);
     },
 
-    changeProject : function(component, event, helper) {
-        var selectedProject = component.find("selectedProject").get("v.value");
-        component.set("v.selectedProjectId", selectedProject);
-        console.log('selectedProject => '+selectedProject);
-        var selectedTransactionType = component.get("v.selectedTransactionType");
-        if(selectedProject != null && selectedProject != ''){
-            component.set("v.Spinner", true);
-            if(selectedTransactionType == 'Expense'){
-                helper.getExpenses(component);
-            }else if(selectedTransactionType == 'Time Card'){
-                helper.getTimeCards(component);
-            }else if(selectedTransactionType == 'Purchase Order'){
-                helper.getPurchaseOrders(component);
-            }else if(selectedTransactionType == 'Invoice(AP)'){
-                helper.getInvoices(component);
-            }
-        }else{
-            component.set("v.tableDataList", []);
-        }
-        component.set("v.checkedAll", false);
-    },
+    // changeProject : function(component, event, helper) {
+    //     // var selectedProject = component.find("selectedProject").get("v.value");
+    //     // component.set("v.selectedProjectId", selectedProject);
+    //     // console.log('selectedProject => '+selectedProject);
+    //     var selectedTransactionType = component.get("v.selectedTransactionType");
+    //     if(selectedProject != null && selectedProject != ''){
+    //         component.set("v.Spinner", true);
+    //         if(selectedTransactionType == 'Expense'){
+    //             helper.getExpenses(component);
+    //         }else if(selectedTransactionType == 'Time Card'){
+    //             helper.getTimeCards(component);
+    //         }else if(selectedTransactionType == 'Purchase Order'){
+    //             helper.getPurchaseOrders(component);
+    //         }else if(selectedTransactionType == 'Invoice(AP)'){
+    //             helper.getInvoices(component);
+    //         }else{
+    //             component.set("v.Spinner", false);
+    //             var toastEvent = $A.get("e.force:showToast");
+    //             toastEvent.setParams({
+    //                 title: 'Error',
+    //                 message: 'Please select Transaction Type.',
+    //                 duration: ' 2000',
+    //                 key: 'info_alt',
+    //                 type: 'error',
+    //                 mode: 'pester'
+    //             });
+    //             toastEvent.fire();
+    //         }
+    //     }else{
+    //         component.set("v.tableDataList", []);
+    //     }
+    //     component.set("v.checkedAll", false);
+    // },
 
     page2 : function(component, event, helper) {
         var selectedTransactionType = component.get("v.selectedTransactionType");

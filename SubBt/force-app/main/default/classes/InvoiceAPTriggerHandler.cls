@@ -31,35 +31,38 @@ public class InvoiceAPTriggerHandler {
             /* if (oldInvoiceData.buildertek__Budget_Line__c != null && invoice.buildertek__Budget_Line__c == null) {
                 budgetIdSet.add(oldInvoiceData.buildertek__Budget_Line__c);
             } */
+
+
+            //* Nishit suthar playground start
             
             if (invoice.buildertek__Budget__c != null) {
-                if(oldInvoiceData.buildertek__Budget_Line__c == null && invoice.buildertek__Budget_Line__c != null){
+
+                //* covering scenario 1 here
+                if (invoice.buildertek__Budget__c != null && invoice.buildertek__Budget_Line__c == null && invoice.buildertek__Budget__c != oldInvoiceData.buildertek__Budget__c) {
+                    AddBudgetLineItemOnPayableInvoice.createNewBudgetLineItem(invoice.Id);
+                }
+
+                //* covering scenario 1 a&b here
+                if (oldInvoiceData.buildertek__Budget_Line__c != invoice.buildertek__Budget_Line__c) {
+                    AddBudgetLineItemOnPayableInvoice.deleteBudgetItem(invoice.Id, oldInvoiceData.buildertek__Budget_Line__c);
+                    AddBudgetLineItemOnPayableInvoice.updateBudgetLineSub(invoice.Id, invoice.buildertek__Budget__c, oldInvoiceData.buildertek__Budget_Line__c);
+                }
+
+                if(oldInvoiceData.buildertek__Budget_Line__c != invoice.buildertek__Budget_Line__c && invoice.buildertek__Budget_Line__c != null){
                     System.debug('in 2nd condition');
                     //! calling my apex method here for updating the data in budgetitem
                     AddBudgetLineItemOnPayableInvoice.updateBudgetLine(invoice.Id, invoice.buildertek__Budget__c,invoice.buildertek__Budget_Line__c);
                 }
-                if(oldInvoiceData.buildertek__Budget_Line__c != null && invoice.buildertek__Budget_Line__c == null){
-                    System.debug('in 3rd condition');
-                    //! calling my apex method here for deleting budget line
-                    AddBudgetLineItemOnPayableInvoice.deleteBudgetItem(invoice.Id, oldInvoiceData.buildertek__Budget_Line__c);
-                    AddBudgetLineItemOnPayableInvoice.updateBudgetLineSub(invoice.Id, invoice.buildertek__Budget__c, oldInvoiceData.buildertek__Budget_Line__c);
-                }
-                if(oldInvoiceData.buildertek__Budget_Line__c != null && invoice.buildertek__Budget_Line__c != null && oldInvoiceData.buildertek__Budget_Line__c != invoice.buildertek__Budget_Line__c){
-                    AddBudgetLineItemOnPayableInvoice.updateBudgetLineSub(invoice.Id, invoice.buildertek__Budget__c, oldInvoiceData.buildertek__Budget_Line__c);
-                }
                 
-            } else if(oldInvoiceData.buildertek__Budget__c != invoice.buildertek__Budget__c && invoice.buildertek__Budget__c == null){
-                if(oldInvoiceData.buildertek__Budget_Line__c != null && invoice.buildertek__Budget_Line__c == null){
-                    System.debug('in 3rd condition');
-                    //! calling my apex method here for deleting budget line
-                    AddBudgetLineItemOnPayableInvoice.deleteBudgetItem(invoice.Id, oldInvoiceData.buildertek__Budget_Line__c);
-                }
+            } 
+            //* covering scenario 1 a&b here as well
+            else if(oldInvoiceData.buildertek__Budget__c != invoice.buildertek__Budget__c && oldInvoiceData.buildertek__Budget_Line__c != invoice.buildertek__Budget_Line__c){
+                AddBudgetLineItemOnPayableInvoice.deleteBudgetItem(invoice.Id, oldInvoiceData.buildertek__Budget_Line__c);
+                AddBudgetLineItemOnPayableInvoice.updateBudgetLineSub(invoice.Id, invoice.buildertek__Budget__c, oldInvoiceData.buildertek__Budget_Line__c);
             }
-            if(invoice.buildertek__Budget__c != null && invoice.buildertek__Budget_Line__c == null && invoice.buildertek__Budget__c != oldInvoiceData.buildertek__Budget__c){
-                //! add logic for creating a new budget line here
-                System.debug('creeating record');
-                AddBudgetLineItemOnPayableInvoice.createNewBudgetLineItem(invoice.Id);
-            }
+            
+            //* Nishit suthar playground end
+            
 
             if (invoice.buildertek__Total_Amount__c != oldInvoiceData.buildertek__Total_Amount__c) {
                 invoiceIds.add(invoice.Id);

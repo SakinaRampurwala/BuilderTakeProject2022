@@ -6,11 +6,6 @@
     <label>BT_Initial_Payment_App_PDF_Page</label>
     <packageVersions>
         <majorNumber>1</majorNumber>
-        <minorNumber>157</minorNumber>
-        <namespace>agf</namespace>
-    </packageVersions>
-    <packageVersions>
-        <majorNumber>1</majorNumber>
         <minorNumber>19</minorNumber>
         <namespace>ed_insights</namespace>
     </packageVersions>

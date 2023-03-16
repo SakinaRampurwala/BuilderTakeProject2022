@@ -6,11 +6,6 @@
     <label>BOMLineSettings</label>
     <packageVersions>
         <majorNumber>1</majorNumber>
-        <minorNumber>157</minorNumber>
-        <namespace>agf</namespace>
-    </packageVersions>
-    <packageVersions>
-        <majorNumber>1</majorNumber>
         <minorNumber>19</minorNumber>
         <namespace>ed_insights</namespace>
     </packageVersions>
