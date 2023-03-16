@@ -57,7 +57,7 @@
 
     <!-- check existing po -->
     <aura:attribute name="isExistingPo" type="Boolean" default="false" access="public" />
-    <aura:attribute name="selectedExistingPO" type="String" default="" access="public" />
+    <aura:attribute name="selectedExistingPO" type="List" default="" access="public" />
     
     <!-- end-->
 
@@ -1479,9 +1479,7 @@
                                     <thead>
                                         <tr class="slds-text-title_caps">
                                             <th scope="col" class="slds-truncate">
-                                                <!-- <lightning:input type="checkbox"
-                                                                         name="{!item.Id}"
-                                                                         onchange="{!c.selectedSchedule}" /> -->
+                                                <lightning:input aura:id="selectAllPO" type="checkbox" name="checkAll" onchange="{!c.checkAllPO}" />
                                             </th>
                                             <th scope="col">
                                                 <div class="slds-truncate" title="Duration">PO Name</div>
@@ -1500,16 +1498,9 @@
                                     <tbody>
                                         <aura:iteration items="{!v.recordList}" var="item" indexVar="index">
                                             <tr>
-                                                <!-- <td class="slds-truncate" style="width: 10px;">
-                                                    <lightning:input type="checkbox"
-                                                                         name="{!item.Id}"
-                                                                         onchange="{!c.selectedSchedule}" /> 
-                                                </td>-->
-                                                <td>
-                                                    <span id="{!item.Id}" onchange="{!c.saveSelectedPO}">
-                                                        <ui:inputRadio aura:id="radio" name="select" label=""
-                                                            value="{!item.selectedPurchaseOrder}" />
-                                                    </span>
+                                                <td style="padding-left: 0.5rem; width: 30px;">
+                                                    <lightning:input type="checkbox" name="input1" checked="{!item.Selected}" id="{!item.Id}" onchange="{!c.checkPO}" />
+                                                    <!-- <span id="{!item.Id}" onchange="{!c.saveSelectedPO}">  <ui:inputRadio aura:id="radio" name="select" label="" value="{!item.selectedPurchaseOrder}" /> </span> -->
                                                 </td>
                                                 <td class="slds-truncate" style="">
                                                     {!item.Name}
@@ -1518,14 +1509,7 @@
                                                     {!item.buildertek__Description__c}
                                                 </td>
                                                 <td>
-                                                    <!--<aura:if isTrue='{!v.multicurrency}'>
-                                                        <lightning:formattedNumber value="{!item.buildertek__PO_Total__c}" style="currency" currencyCode="{!item.CurrencyIsoCode}" currencyDisplayAs="code"/>
-                                                    </aura:if>
-                                                    <aura:if isTrue='{!!v.multicurrency}'>-->
                                                     <lightning:formattedNumber value="{!item.buildertek__PO_Total__c}" style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
-                                                    <!--</aura:if>-->
-                                                    <!--<lightning:formattedNumber value="{!item.buildertek__PO_Total__c}" style="currency" currencyCode="USD"/>-->
-
                                                 </td>
                                                 <td>
                                                     {!item.buildertek__Vendor__r.Name}

@@ -72,60 +72,15 @@
     },
     
     doSave:function(component, event, helper) {
-    debugger;
-    	/*var cmpPoContainer = component.find('poContainer');
-        $A.util.addClass(cmpPoContainer, 'slds-hide');
-        
-        
-        var btspinner = component.find('btspinner');
-        $A.util.removeClass(btspinner, 'slds-hide');
-        component.set('v.newPO.buildertek__Vendor__r',null);
-		var action;
-		action = component.get("c.createPO");
-        action.setParams({
-            poJson: JSON.stringify(component.get("v.newPO")),
-            poItemsJson: JSON.stringify(component.get("v.newPOItems"))
-        });
-        action.setCallback(this, function (response) {
-            if (component.isValid() && response.getState() === "SUCCESS") {
-            	component.find('notifLib').showNotice({
-		            "variant": "success",
-		            "header": "PO has been created!",
-		            "message": "PO created",
-		            closeCallback: function() {
-		            	//$A.enqueueAction(component.get("v.saveCallback"));
-		            	//component.get("v.cancelCallback")();
-		            	//
-		            	var sObjectEvent = $A.get("e.force:navigateToSObject");
-                        sObjectEvent.setParams({
-                            "recordId": response.getReturnValue().Id,
-                        })
-                        sObjectEvent.fire();
-		            }
-		        });
-			} else {
-				component.find('notifLib').showNotice({
-		            "variant": "error",
-		            "header": "Error!",
-		            "message": response.getError()[0].message,
-		            closeCallback: function() {
-		            }
-		        });
-			}
-        });*/
+    
         var poItem = JSON.stringify(component.get("v.newPOItems"));
-        //alert('poItem'+poItem);
-       // alert('component.get("v.selectedExistingPO")-->'+component.get("v.selectedExistingPO"));
-        //alert('component.get("v.budgetlineid")-->'+component.get("v.budgetlineid"));
-       // alert('hii1'+JSON.stringify(component.get("v.poItemsToInsert")));
+        
         component.set("v.Spinner", true);
-       // alert('budline--->'+component.get("v.budgetlineid"));
        var isExisted = component.get("v.showPODetails");
     	var action;
         console.log('New PO FIELD ::::',JSON.stringify(component.get("v.newPO")));
+        console.log({isExisted});
         if(!isExisted){
-            //component.set("v.Spinner", true);
-           // alert('component.get("v.budgetlineid")-->'+component.get("v.budgetlineid"));
             action = component.get("c.createPO");
             action.setParams({
                 poJson:  component.get("v.newPO"),
@@ -134,12 +89,10 @@
             });
         }else if(isExisted){
             
-           //component.set("v.Spinner", false);
             
             var poItem = JSON.stringify(component.get("v.poItemsToInser"));
             var selectedPO = component.get("v.selectedExistingPO");
             action = component.get("c.createLinesForExistedPO");
-            //alert('%%%'+component.get("v.selectedbudgetRecs"));
             action.setParams({
                 "poRecordID" : component.get("v.selectedExistingPO"),
                 "poItemsJson": JSON.stringify(component.get("v.poItemsToInsert")), //poItem,
@@ -149,12 +102,9 @@
         }
 		
         action.setCallback(this, function (response) {
-            debugger;
             if (component.isValid() && response.getState() === "SUCCESS") {
-            //	$A.enqueueAction(component.get("v.saveCallback"));
             	var result = response.getReturnValue();
             	if(result.isSuccess === true){
-            	   //  component.set("v.Spinner", false);
             	  
                     var sObjectEvent = $A.get("e.force:navigateToSObject");
                             sObjectEvent.setParams({
@@ -168,30 +118,14 @@
                         sObjectEvent.fire();
                     }else{
                          $A.enqueueAction(component.get("v.saveCallback"));
-                        //component.get("v.cancelCallback")();
-                      
-                       //  $A.get('e.force:refreshView').fire();
-                           // location.reload();
+                       
                      
                         
                     }
                         
                       component.set("v.Spinner", false);
                     
-                    // comment by laxman 20/07/2020
-                    // Description :- no need to display sucess message
-            	     /*component.find('notifLib').showNotice({
-                        "variant": "success",
-                        "header": "Success",
-                        "message": 'Purchase Order created successfully',
-                        closeCallback: function() {
-                            var sObjectEvent = $A.get("e.force:navigateToSObject");
-                            sObjectEvent.setParams({
-                                "recordId": result.strRecordId,
-                            })
-                            sObjectEvent.fire(); 
-                        }
-                    });   */
+                
             	}else{
             	    component.set("v.Spinner", false);
             	    component.find('notifLib').showNotice({

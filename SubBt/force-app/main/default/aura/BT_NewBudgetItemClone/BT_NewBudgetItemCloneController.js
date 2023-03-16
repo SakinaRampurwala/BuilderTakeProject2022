@@ -427,11 +427,7 @@
         component.set("v.budgetLineItemName", event.target.title);
     },
 
-    saveSelectedPO: function(component, event, helper) {
-        console.log(event);
-        component.set("v.selectedExistingPO", event.currentTarget.id);
-    },
-
+ 
     saveSelectedTC: function(component, event, helper) {
         console.log(event);
         component.set("v.selectedExistingTC", event.currentTarget.id);
@@ -613,8 +609,6 @@
                 "variant": "error",
                 "header": "Select Budget Line",
                 "message": "Please Select at least One Budget Line to Add PO.",
-                //"header": "No Budget Lines",
-                //"message": "Please select a Budget Line.",
                 closeCallback: function() {}
             });
         }
@@ -1131,145 +1125,138 @@
             var rowData;
             var newPOItems = [];
 
-            if (selectedRecs.length > 0) {
-                var budgetlineid = BudgetIds[0];
-                var action;
-                action = component.get("c.BudgetItemList");
-                action.setParams({
-                    BudgetIds: selectedRecs
-                });
-                action.setCallback(this, function(response) {
-                    if (component.isValid() && response.getState() === "SUCCESS") {
+            var budgetlineid = BudgetIds[0];
+            var action=component.get("c.BudgetItemList");
+            action.setParams({
+                BudgetIds: selectedRecs
+            });
+            action.setCallback(this, function(response) {
+                if (component.isValid() && response.getState() === "SUCCESS") {
 
-                        for (var i = 0; i < response.getReturnValue().length; i++) {
+                    for (var i = 0; i < response.getReturnValue().length; i++) {
 
-                            rowData = response.getReturnValue()[i];
-                            var newPOItem = new Object();
-                            newPOItem.Name = rowData.Name;
-                            newPOItem.buildertek__Product__c = rowData.buildertek__Product__c;
-                            newPOItem.buildertek__Budget_Item__c = rowData.Id;
-                            newPOItem.buildertek__Description__c = rowData.Name; //rowData.buildertek__Description__c;
-                            newPOItem.buildertek__Quantity__c = rowData.buildertek__Quantity__c;
-                            newPOItem.buildertek__Unit_Price__c = rowData.buildertek__Unit_Price__c;
-                            newPOItems.push(newPOItem);
-                        }
+                        rowData = response.getReturnValue()[i];
+                        console.log({rowData});
+                        var newPOItem = new Object();
+                        newPOItem.Name = rowData.Name;
+                        newPOItem.buildertek__Product__c = rowData.buildertek__Product__c;
+                        newPOItem.buildertek__Budget_Item__c = rowData.Id;
+                        newPOItem.buildertek__Description__c = rowData.Name; //rowData.buildertek__Description__c;
+                        newPOItem.buildertek__Quantity__c = rowData.buildertek__Quantity__c;
+                        newPOItem.buildertek__Unit_Price__c = rowData.buildertek__Unit_Price__c;
+                        newPOItems.push(newPOItem);
+                        console.log({newPOItems});
 
-                        var isExisting = component.get("v.isExistingPo");
-                        if (!isExisting) {
-                            var PO = component.get("v.newPO");
-                            PO.buildertek__Budget__c = component.get("v.sampleNewRecord").Id;
-                            PO.buildertek__Project__c = component.get("v.sampleNewRecord").buildertek__Project__c;
-                            PO.buildertek__Status__c = 'Pending';
-                        }
+                    }
+
+                    var isExisting = component.get("v.isExistingPo");
+                    console.log({isExisting});
+                    if (!isExisting) {
+                        var PO = component.get("v.newPO");
+                        PO.buildertek__Budget__c = component.get("v.sampleNewRecord").Id;
+                        PO.buildertek__Project__c = component.get("v.sampleNewRecord").buildertek__Project__c;
+                        PO.buildertek__Status__c = 'Pending';
+                    }
 
 
-                        var overlayLib;
-                        if (isExisting) {
+                    var overlayLib;
+                    if (isExisting) {
 
-                            if (component.get("v.selectedExistingPO") != null && component.get("v.selectedExistingPO") != "" && component.get("v.selectedExistingPO") != undefined) {
-                                component.set("v.isExistingPo", false);
-                                component.set("v.addposection", false);
-                                $A.createComponents([
-                                        ["c:BT_New_Purchase_Order", {
-                                            "aura:id": "btNewPo",
-                                            "newPOItems": newPOItems,
-                                            "selectedPO": component.get("v.selectedExistingPO"),
-                                            "isFromExistingPOs": isExisting,
-                                            "budgetlineid": budgetlineid,
-                                            "saveCallback": component.get("v.refreshGridAction"),
-                                            "selectedbudgetRecs": selectedRecs,
-                                            "cancelCallback": function() {
-                                                component.set("v.selectedExistingPO", "");
-                                            }
-                                        }],
-                                    ],
-                                    //overlayLib.close();   
-                                    function(components, status, errorMessage) {
-                                        if (status === "SUCCESS") {
-                                            //  alert(status);
-                                            $A.get('e.force:refreshView').fire();
-                                            /* var a = component.get('c.refreshList');
-                                       
-                                             $A.enqueueAction(a);*/
-
-                                            /*component.find('overlayLib').showCustomModal({
-                                               // header: "Add Budget Lines To Purchase Order",
-                                               // body: components[0],
-                                                //footer: components[0].find("footer").get("v.body"),
-                                                showCloseButton: false,
-                                                cssClass: "btmodal",
-                                                closeCallback: function () {}
-                                            }).then(function (overlay) {
-                                                overlayLib = overlay;
-                                            });*/
-                                        }
-
-                                    }
-                                );
-
-                            } else {
-                                component.set("v.addposection", true);
-                                component.find('notifLib').showNotice({
-                                    "variant": "error",
-                                    "header": "Select Purchase Order",
-                                    "message": "Please Select a Purchase Order.",
-                                    closeCallback: function() {}
-                                });
-                            }
-                        } else {
+                        if (component.get("v.selectedExistingPO") != null && component.get("v.selectedExistingPO") != "" && component.get("v.selectedExistingPO") != undefined) {
+                            component.set("v.isExistingPo", false);
+                            component.set("v.addposection", false);
                             $A.createComponents([
                                     ["c:BT_New_Purchase_Order", {
                                         "aura:id": "btNewPo",
-                                        "newPO": PO,
                                         "newPOItems": newPOItems,
                                         "selectedPO": component.get("v.selectedExistingPO"),
                                         "isFromExistingPOs": isExisting,
                                         "budgetlineid": budgetlineid,
                                         "saveCallback": component.get("v.refreshGridAction"),
+                                        "selectedbudgetRecs": selectedRecs,
                                         "cancelCallback": function() {
-                                            overlayLib.close();
+                                            component.set("v.selectedExistingPO", "");
                                         }
                                     }],
                                 ],
+                                //overlayLib.close();   
                                 function(components, status, errorMessage) {
                                     if (status === "SUCCESS") {
+                                        //  alert(status);
+                                        $A.get('e.force:refreshView').fire();
+                                        /* var a = component.get('c.refreshList');
+                                    
+                                            $A.enqueueAction(a);*/
 
-                                        $A.get('e.force:refreshView').fire();
-                                        component.find('overlayLib').showCustomModal({
-                                            header: "New Purchase Order",
-                                            body: components[0],
-                                            footer: components[0].find("footer").get("v.body"),
-                                            showCloseButton: true,
+                                        /*component.find('overlayLib').showCustomModal({
+                                            // header: "Add Budget Lines To Purchase Order",
+                                            // body: components[0],
+                                            //footer: components[0].find("footer").get("v.body"),
+                                            showCloseButton: false,
                                             cssClass: "btmodal",
-                                            closeCallback: function() {}
-                                        }).then(function(overlay) {
+                                            closeCallback: function () {}
+                                        }).then(function (overlay) {
                                             overlayLib = overlay;
-                                        });
-                                        $A.get('e.force:refreshView').fire();
+                                        });*/
                                     }
 
                                 }
                             );
-                        }
-                    }
-                });
-                $A.enqueueAction(action);
 
-            } else {
-                component.find('notifLib').showNotice({
-                    "variant": "error",
-                    "header": " Select Budget Line",
-                    "message": "Please Select Budget Line to Create PO.",
-                    closeCallback: function() {}
-                });
-            }
+                        } else {
+                            component.set("v.addposection", true);
+                            component.find('notifLib').showNotice({
+                                "variant": "error",
+                                "header": "Select Purchase Order",
+                                "message": "Please Select a Purchase Order.",
+                                closeCallback: function() {}
+                            });
+                        }
+                    } else {
+                        $A.createComponents([
+                                ["c:BT_New_Purchase_Order", {
+                                    "aura:id": "btNewPo",
+                                    "newPO": PO,
+                                    "newPOItems": newPOItems,
+                                    "selectedPO": component.get("v.selectedExistingPO"),
+                                    "isFromExistingPOs": isExisting,
+                                    "budgetlineid": budgetlineid,
+                                    "saveCallback": component.get("v.refreshGridAction"),
+                                    "cancelCallback": function() {
+                                        overlayLib.close();
+                                    }
+                                }],
+                            ],
+                            function(components, status, errorMessage) {
+                                if (status === "SUCCESS") {
+
+                                    $A.get('e.force:refreshView').fire();
+                                    component.find('overlayLib').showCustomModal({
+                                        header: "New Purchase Order",
+                                        body: components[0],
+                                        footer: components[0].find("footer").get("v.body"),
+                                        showCloseButton: true,
+                                        cssClass: "btmodal",
+                                        closeCallback: function() {}
+                                    }).then(function(overlay) {
+                                        overlayLib = overlay;
+                                    });
+                                    $A.get('e.force:refreshView').fire();
+                                }
+
+                            }
+                        );
+                    }
+                }
+            });
+            $A.enqueueAction(action);
+
+           
         } else {
             component.find('notifLib').showNotice({
                 "variant": "error",
                 "header": "Select Budget Line",
                 "message": "Please Select at least One Budget Line to Create PO.",
-                //"header": "No Budget Lines",
-                //"message": "No Budget Lines Records.",
                 closeCallback: function() {}
             });
             $A.get('e.force:refreshView').fire();
@@ -3732,6 +3719,36 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
         component.set("v.ExpenseRecordList", tableDataList);
 
     },
+    checkAllPO:function(component, event, helper){
+        var value = event.getSource().get("v.checked"); 
+        console.log({value});
+        var tableDataList = component.get("v.recordList");
+        let expenseIdList=[];
+        tableDataList.forEach(element => {
+            console.log({element});
+            element.Selected = value;
+            expenseIdList.push(element.Id);
 
+        });
+        component.set("v.recordList", tableDataList);
+        // component.get('v.selectedRecs');
+
+    },
+    checkPO:function(component, event, helper){
+        var tableDataList = component.get("v.recordList");
+        var existingPoId=[];
+        var checkedAll = true;
+        tableDataList.forEach(element => {
+            if (!element.Selected) {
+                checkedAll = false;
+            }else{
+                existingPoId.push(element.Id);
+            }
+        });
+        component.find("selectAllPO").set("v.checked", checkedAll); 
+        component.set("v.selectedExistingPO", existingPoId);
+        console.log( component.set("v.selectedExistingPO"));
+
+    },
 
 })
