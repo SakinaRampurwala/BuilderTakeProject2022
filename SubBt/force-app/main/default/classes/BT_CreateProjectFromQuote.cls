@@ -2,12 +2,13 @@ public with sharing class BT_CreateProjectFromQuote {
     @AuraEnabled
     public static buildertek__Quote__c getQuote(String recordId,String searchNameValue){
         buildertek__Quote__c opp;
-        opp = [SELECT Id, Name from buildertek__Quote__c where Id =: recordId]; 
+        opp = [SELECT Id, Name, buildertek__Customer_Account__c from buildertek__Quote__c where Id =: recordId]; 
         List<buildertek__Quote__c> productList = new List<buildertek__Quote__c>();
-        String queryList = 'SELECT Id, Name FROM buildertek__Quote__c';
+        String queryList = 'SELECT Id, Name, buildertek__Customer_Account__c FROM buildertek__Quote__c';
         if (searchNameValue != null && searchNameValue != '') {
             queryList = queryList + ' WHERE Name LIKE \'' + searchNameValue + '%\'';
         }
+        System.debug('queryList: ' + queryList);
         productList = Database.query(queryList);
 
         Set<ID> productsIds = new Set<ID>();
@@ -37,16 +38,17 @@ public with sharing class BT_CreateProjectFromQuote {
     }
     
     @AuraEnabled
-    public static String createProject(String recordId, String projectName, String account, String projectManager, Date contractDate){
+    public static String createProject(String recordId, String projectName, String account, String projectManager, Date contractDate , String customerAccount){
         buildertek__Project__c project = new buildertek__Project__c();
         project.Name = projectName;
         if(account != null){
             project.buildertek__Account__c = account;
-            // project.buildertek__Customer__c = customerAccount;
+            project.buildertek__Customer__c = customerAccount;
             
         }
         project.buildertek__Project_Manager__c = projectManager;
         project.buildertek__Contract_Date__c = contractDate;
+        insert project;
 
         
         List<buildertek__Quote__c> quoteList = new List<buildertek__Quote__c>();
@@ -67,8 +69,8 @@ public with sharing class BT_CreateProjectFromQuote {
             
 
 
-            project.buildertek__Customer__c=quoteList[0].buildertek__Customer_Account__c;
-            insert project;
+            // project.buildertek__Customer__c=quoteList[0].buildertek__Customer_Account__c;
+            // insert project;
 
             quoteList[0].buildertek__Project__c = project.Id;
             update quoteList;

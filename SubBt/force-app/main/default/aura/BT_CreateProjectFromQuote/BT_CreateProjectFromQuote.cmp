@@ -16,6 +16,12 @@
     <aura:attribute name="displayNameList" type="Boolean" default="false" />
     <aura:attribute name="ProductNameList" type="List" />
     <aura:attribute name="recordData" type = "String" default=""/>
+    <aura:attribute name="accountId" type="String" />
+
+    <aura:attribute name="recordError" type="Object" />
+    <aura:attribute name="quoteRecord" type="Object" />
+    <aura:attribute name="recordFields" type="Object" />
+
 
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" /> 
     
@@ -32,13 +38,22 @@
             overflow: hidden !important;
         }
     </aura:html>
+
+    <force:recordData aura:id="recordViewer"
+    layoutType="FULL"
+    recordId="{!v.recordId}"
+    targetError="{!v.recordError}"
+    targetRecord="{!v.quoteRecord}"
+    targetFields="{!v.recordFields}"
+    mode="VIEW" />
+
     <div class="slds-modal__header" style="font-size:17px;">
         Create Project
     </div>
                 <div class="slds-modal__content slds-p-around--large"  onclick="{!c.closeSearchOption}">
                     <lightning:recordEditForm aura:id="recordViewForm" objectApiName="buildertek__Project__c">
                             <lightning:inputField aura:id="projectNameId" fieldName="Name" required="true"/> 
-                            <lightning:inputField aura:id="accountId" fieldName="buildertek__Account__c" required="true"/>
+                            <lightning:inputField aura:id="accountId" value="{!v.accountId}"  fieldName="buildertek__Account__c" required="true"/>
                             <lightning:inputField aura:id="projectManagerId" fieldName="buildertek__Project_Manager__c" />
                             <lightning:inputField aura:id="contractDateId" fieldName="buildertek__Contract_Date__c" />
                             <!-- <div>

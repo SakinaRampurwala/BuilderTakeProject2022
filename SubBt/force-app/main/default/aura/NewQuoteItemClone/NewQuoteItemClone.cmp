@@ -788,13 +788,13 @@
                                             </td>
 
                                             <aura:if isTrue="{!!v.hideGlobalMargin}">
-                                            <td style="padding-bottom:22px; width: 6% !important;">
+                                            <td style="padding-bottom:22px; width: 7% !important;">
                                                 <lightning:input type="number" name="input7" label="" value="{!v.newQuote.buildertek__Margin__c}" formatter="percent-fixed" aura:id="marginId" />
                                             </td>
                                             </aura:if>
                                             <aura:if isTrue="{!!v.hideGlobalMarkup}">
-                                            <td style="padding-bottom:22px; width: 6% !important;">
-                                                <lightning:input type="number" name="input6" label="" value="{!v.newQuote.buildertek__Markup__c}" formatter="percent-fixed" aura:id="markUpId" />
+                                            <td style="padding-bottom:22px; width: 7% !important;">
+                                                <lightning:input type="number" name="input6" label="" value="{!v.newQuote.buildertek__Markup__c}"  aura:id="markUpId"  formatter="percent-fixed" step="0.01" />
                                             </td>
                                             </aura:if>
                                             
@@ -1331,7 +1331,6 @@
                                                 <td></td>
                                                 <aura:iteration items="{!v.TotalRecords.wrapperList}" var="rec" indexVar="totalRecordsIndex">
                                                     <aura:if isTrue="{!group.Name == rec.groupName &amp;&amp; rec.fieldType != 'false'}">
-                                                        
                                                         <aura:if isTrue="{!rec.fieldType == 'CURRENCY'}">
                                                             <td>
                                                                 
@@ -1350,6 +1349,24 @@
                                                                 </button>
                                                             </td>
                                                         </aura:if>
+
+                                                        <aura:if isTrue="{! and(rec.fieldType == 'DOUBLE', rec.fieldLabel == 'buildertek__Quantity__c')}">
+                                                            <td>
+                                                                
+                                                                <aura:if isTrue="{!rec.totalValue != null}">
+                                                                    <span style="font-weight: bold;">
+                                                                        <lightning:formattedNumber value="{!rec.totalValue}" />
+                                                                        <aura:set attribute="else">
+                                                                            <lightning:formattedNumber value="0.00" />
+                                                                        </aura:set>
+                                                                    </span>
+                                                                </aura:if>
+                                                                
+                                                            </td>
+                                                        </aura:if>
+
+
+                                                       
                                                     </aura:if>
                                                     <aura:if isTrue="{!group.Name == rec.groupName &amp;&amp; rec.fieldType == 'false' &amp;&amp; rec.fieldLabel != 'Id' &amp;&amp; rec.fieldLabel != 'buildertek__Grouping__c'}">
                                                         

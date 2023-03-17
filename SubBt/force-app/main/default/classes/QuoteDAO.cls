@@ -771,6 +771,8 @@ public with sharing class QuoteDAO{
             }
             if (dtFields.type == 'currency'){
                 fieldsList.add(dtFields.fieldName);
+            } else if(dtFields.fieldName == 'buildertek__Quantity__c'){
+                fieldsList.add(dtFields.fieldName);
             }
             if (dtFields.type == 'reference'){
                 allFields.add(dtFields.fieldName.replace('__c', '__r.Name'));
@@ -1549,6 +1551,7 @@ public with sharing class QuoteDAO{
 
     //@AuraEnabled
     public static List<wrapperClass> groupValues(String recordId, list<String> currencyFields, List<String> allFields, List<String> groupIds, Decimal recordToDisply, Integer offset){
+       System.debug(':::::::groupValues:::::::');
         Map<string, string> mapForLabel = new Map<string, string>();
         Map<string, string> mapForFieldType = new Map<string, string>();
         Map<String, Schema.SObjectType> gd = Schema.getGlobalDescribe();
@@ -1566,6 +1569,7 @@ public with sharing class QuoteDAO{
         String aggregateFields = '';
         String queryFields = '';
         integer i = 1;
+
         for (string sumOfFields : currencyFields){
             queryFields += ', ' + sumOfFields.trim();
         }
