@@ -42,11 +42,12 @@ public with sharing class BT_CreateProjectFromQuote {
         project.Name = projectName;
         if(account != null){
             project.buildertek__Account__c = account;
-            project.buildertek__Customer__c = account;
+            // project.buildertek__Customer__c = customerAccount;
+            
         }
         project.buildertek__Project_Manager__c = projectManager;
         project.buildertek__Contract_Date__c = contractDate;
-        insert project;
+
         
         List<buildertek__Quote__c> quoteList = new List<buildertek__Quote__c>();
         quoteList = [SELECT Id, Name, buildertek__Description__c, buildertek__Quote_Amount__c, buildertek__Status__c, buildertek__Project__c, 
@@ -58,11 +59,16 @@ public with sharing class BT_CreateProjectFromQuote {
                      buildertek__Ship_To_State__c, buildertek__Group_Line_Items__c,buildertek__OppToQuoteId__c, buildertek__Ship_To_Zip_Code__c, 
                      buildertek__Email_Body__c, buildertek__Email_Subject__c, buildertek__Ship_To_Country__c, buildertek__Bill_To_Zip_Code__c,buildertek__Opportunity__c, 
                      buildertek__SignatureBase64__c,buildertek__Bill_To_Cell_Phone__c,buildertek__Bill_To_Email_Address__c,buildertek__Customer_Accepted_Date__c,
-                     buildertek__Date_Accepted_by_Customer__c,buildertek__Date_Sent_To_Customer__c,buildertek__Type__c 
+                     buildertek__Date_Accepted_by_Customer__c,buildertek__Customer_Account__c,buildertek__Date_Sent_To_Customer__c,buildertek__Type__c 
                      from buildertek__Quote__c 
                      where Id =: recordId];
         list<buildertek__Quote_Item__c> quoteItemList = new  list<buildertek__Quote_Item__c>();
         if(!quoteList.isEmpty()){
+            
+
+
+            project.buildertek__Customer__c=quoteList[0].buildertek__Customer_Account__c;
+            insert project;
 
             quoteList[0].buildertek__Project__c = project.Id;
             update quoteList;

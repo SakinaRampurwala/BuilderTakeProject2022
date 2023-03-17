@@ -2138,26 +2138,64 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
     @AuraEnabled
     public static string updateLaborPrice(String recordId, String budgeLineIds){
         List<String> strList = budgeLineIds.split(',');
+        List<String> strRecordId = recordId.split(',');
+        System.debug(strRecordId);
+        System.debug('strRecordId');
+
+
         String response;
-        if (String.isNotBlank(recordId)) {
+        if (strRecordId.size() > 0) {
             try {
-                buildertek__Time_Cards__c timeCard = new buildertek__Time_Cards__c();
-                timeCard = [SELECT Id, Name, buildertek__Daily_Expense__c, buildertek__Budget__c, buildertek__Budget_Line__c FROM buildertek__Time_Cards__c WHERE Id =:recordId];
-                List<buildertek__Budget_Item__c> budgetItemList = new List<buildertek__Budget_Item__c>();
-                List<buildertek__Budget_Item__c> updateBudgetList = new List<buildertek__Budget_Item__c>();
-                budgetItemList = [SELECT Id, Name, buildertek__Labor__c, buildertek__Budget__c FROM buildertek__Budget_Item__c WHERE Id IN :strList];
+                List<buildertek__Time_Cards__c> timeCardList =[SELECT Id, Name, buildertek__Daily_Expense__c, buildertek__Budget__c, buildertek__Budget_Line__c FROM buildertek__Time_Cards__c WHERE Id IN:strRecordId];
+                List<buildertek__Budget_Item__c> budgetItemList =[SELECT Id, Name, buildertek__Labor__c, buildertek__Budget__c FROM buildertek__Budget_Item__c WHERE Id IN :strList];
+
+                List<buildertek__Time_Cards__c> updateTimeCard = new List<buildertek__Time_Cards__c>();
+                Decimal timeCardValue=0;
+
+               
                 if (budgetItemList.size() > 0) {
-                    timeCard.buildertek__Budget__c = budgetItemList[0].buildertek__Budget__c;
-                    timeCard.buildertek__Budget_Line__c = budgetItemList[0].Id;
-                    update timeCard;
-                    for (buildertek__Budget_Item__c bItem : budgetItemList) {
-                        bItem.buildertek__Labor__c = timeCard.buildertek__Daily_Expense__c;
-                        updateBudgetList.add(bItem);
+
+                    for(buildertek__Time_Cards__c timeCard : timeCardList){
+                        timeCard.buildertek__Budget__c = budgetItemList[0].buildertek__Budget__c;
+                        timeCard.buildertek__Budget_Line__c = budgetItemList[0].Id;
+                        timeCardValue+=timeCard.buildertek__Daily_Expense__c;
+                        updateTimeCard.add(timeCard);
+
                     }
-                    update updateBudgetList;
+                    System.debug(timeCardValue);
+                    update updateTimeCard;
+                    if(budgetItemList[0].buildertek__Labor__c != null){
+                        budgetItemList[0].buildertek__Labor__c += timeCardValue;
+
+
+                    }else{
+                        budgetItemList[0].buildertek__Labor__c = timeCardValue;
+
+                    }
+
+                    update budgetItemList[0];
+
+
+
+                    
                 }
+
+               
+               
+                // if (budgetItemList.size() > 0) {
+                //     timeCard.buildertek__Budget__c = budgetItemList[0].buildertek__Budget__c;
+                //     timeCard.buildertek__Budget_Line__c = budgetItemList[0].Id;
+                //     update timeCard;
+                //     for (buildertek__Budget_Item__c bItem : budgetItemList) {
+                //         bItem.buildertek__Labor__c = timeCard.buildertek__Daily_Expense__c;
+                //         updateBudgetList.add(bItem);
+                //     }
+                //     update updateBudgetList;
+                // }
                 response = 'Success';
             } catch (Exception e) {
+                System.debug(e.getMessage()+ e.getLineNumber());
+
                 throw new AuraHandledException(e.getMessage());
                 response = 'Error';
             }
@@ -2170,21 +2208,42 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
     @AuraEnabled
     public static string updateInvoicePrice(String recordId, String budgeLineIds){
         List<String> strList = budgeLineIds.split(',');
+        List<String> strRecordId = recordId.split(',');
+
         String response;
-        if (String.isNotBlank(recordId)) {
+        if (strRecordId.size() > 0) {
             try {
-                buildertek__Account_Payable_Clone__c invoiceAP = new buildertek__Account_Payable_Clone__c();
-                invoiceAP = [SELECT Id, Name, buildertek__Total_Amount__c, buildertek__Budget__c, buildertek__Budget_Line__c FROM buildertek__Account_Payable_Clone__c WHERE Id =:recordId];
+                List<buildertek__Account_Payable_Clone__c> invoiceAPList =  [SELECT Id, Name, buildertek__Total_Amount__c, buildertek__Budget__c, buildertek__Budget_Line__c FROM buildertek__Account_Payable_Clone__c WHERE Id =:strRecordId];
                 buildertek__Budget_Item__c budgetItem = new buildertek__Budget_Item__c();
+                List<buildertek__Account_Payable_Clone__c> updateInvoiceAPList = new  List<buildertek__Account_Payable_Clone__c>();
+                Decimal Value=0;
 
                 if (strList.size() > 0) {
+                    for(buildertek__Account_Payable_Clone__c invoiceAp: invoiceAPList){
+                        invoiceAP.buildertek__Budget__c = budgetItem.buildertek__Budget__c;
+                        invoiceAP.buildertek__Budget_Line__c = budgetItem.Id;
+                        Value+=invoiceAP.buildertek__Total_Amount__c;
+
+                        updateInvoiceAPList.add(invoiceAP);
+
+                        
+                    }
+                    update updateInvoiceAPList;
                     budgetItem = [SELECT Id, Name, buildertek__Invoice_total__c, buildertek__Budget__c FROM buildertek__Budget_Item__c WHERE Id IN :strList LIMIT 1];
 
-                    invoiceAP.buildertek__Budget__c = budgetItem.buildertek__Budget__c;
-                    invoiceAP.buildertek__Budget_Line__c = budgetItem.Id;
-                    update invoiceAP;
+                    // invoiceAP.buildertek__Budget__c = budgetItem.buildertek__Budget__c;
+                    // invoiceAP.buildertek__Budget_Line__c = budgetItem.Id;
+                    // update invoiceAP;
 
-                    budgetItem.buildertek__Invoice_total__c = invoiceAP.buildertek__Total_Amount__c;
+                    if(budgetItem.buildertek__Invoice_total__c != null){
+                        budgetItem.buildertek__Invoice_total__c += Value;
+
+                    }else{
+
+                        budgetItem.buildertek__Invoice_total__c = Value;
+                    }
+
+
                     update budgetItem;
                 }
 

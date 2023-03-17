@@ -58,17 +58,19 @@
     <!-- check existing po -->
     <aura:attribute name="isExistingPo" type="Boolean" default="false" access="public" />
     <aura:attribute name="selectedExistingPO" type="List" default="" access="public" />
+    <!-- <aura:attribute name="selectedRecords" type="List" default="" access="public" /> -->
+
     
     <!-- end-->
 
     <!-- check existing tc -->
     <aura:attribute name="isExistingTc" type="Boolean" default="false" access="public" />
-    <aura:attribute name="selectedExistingTC" type="String" default="" access="public" />
+    <aura:attribute name="selectedExistingTC" type="List" default="" access="public" />
     <!-- end-->
 
     <!-- check existing tc -->
     <aura:attribute name="isExistingInvo" type="Boolean" default="false" access="public" />
-    <aura:attribute name="selectedExistingINVO" type="String" default="" access="public" />
+    <aura:attribute name="selectedExistingINVO" type="List" default="" access="public" />
     <!-- end-->
 
     <aura:attribute name="newCO" type="Change_Order__c" default="{ 'sobjectType': 'Change_Order__c' }" access="public" />
@@ -1464,9 +1466,14 @@
                 <div class="slds-backdrop slds-backdrop_open"></div>
             </aura:if>
             <aura:if isTrue="{!v.addposection}">
+                <aura:html tag="style">
+                    .slds-modal__container{
+                        max-width:60rem !important;
+                    }
+                </aura:html>
                 <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
-                    <div class="slds-modal__container" style="width: 50%;">
-                        <div aura:id="poContainer" class="c-container">
+                    <div class="slds-modal__container" style="width: 70%;">
+                        <div aura:id="poContainer" class="c-container" style="position: relative; height:90vh" >
                             <header class="slds-modal__header">
                                 <lightning:buttonIcon iconName="utility:close" onclick="{!c.doCancel}" alternativeText="close" variant="bare-inverse" class="slds-modal__close" />
                                 <p></p>
@@ -1545,6 +1552,8 @@
                                     <thead>
                                         <tr class="slds-text-title_caps">
                                             <th scope="col" class="slds-truncate">
+                                                <lightning:input aura:id="selectAllTimeCards" type="checkbox" name="checkAll" onchange="{!c.checkAllTimeCards}" />
+
                                                 <!-- <lightning:input type="checkbox"
                                                                          name="{!item.Id}"
                                                                          onchange="{!c.selectedSchedule}" /> -->
@@ -1572,11 +1581,12 @@
                                                                          name="{!item.Id}"
                                                                          onchange="{!c.selectedSchedule}" /> 
                                                 </td>-->
-                                                <td>
-                                                    <span id="{!item.Id}" onchange="{!c.saveSelectedTC}">
+                                                <td style="padding-left: 0.5rem; width: 30px;">
+                                                    <lightning:input  type="checkbox" checked="{!item.Selected}" id="{!item.Id}" onchange="{!c.checkTimeCard}" />
+                                                    <!-- <span id="{!item.Id}" onchange="{!c.saveSelectedTC}">
                                                         <ui:inputRadio aura:id="radio" name="select" label=""
                                                             value="{!item.selectedTimeCards}" />
-                                                    </span>
+                                                    </span> -->
                                                 </td>
                                                 <td class="slds-truncate" style="">
                                                     {!item.Name}
@@ -1628,6 +1638,8 @@
                                     <thead>
                                         <tr class="slds-text-title_caps">
                                             <th scope="col" class="slds-truncate">
+                                                <lightning:input aura:id="selectAllInvoices" type="checkbox" name="checkAll" onchange="{!c.checkAllInvoices}" />
+
                                                 <!-- <lightning:input type="checkbox"
                                                                          name="{!item.Id}"
                                                                          onchange="{!c.selectedSchedule}" /> -->
@@ -1655,11 +1667,13 @@
                                                                          name="{!item.Id}"
                                                                          onchange="{!c.selectedSchedule}" /> 
                                                 </td>-->
-                                                <td>
-                                                    <span id="{!item.Id}" onchange="{!c.saveSelectedINVO}">
+                                                <td style="padding-left: 0.5rem; width: 30px;">
+                                                    <lightning:input aura:id="selectInvoice" type="checkbox" checked="{!item.Selected}" id="{!item.Id}" onchange="{!c.checkInvoice}" />
+
+                                                    <!-- <span id="{!item.Id}" onchange="{!c.saveSelectedINVO}">
                                                         <ui:inputRadio aura:id="radio" name="select" label=""
                                                             value="{!item.selectedTimeCards}" />
-                                                    </span>
+                                                    </span> -->
                                                 </td>
                                                 <td class="slds-truncate" style="">
                                                     {!item.Name}

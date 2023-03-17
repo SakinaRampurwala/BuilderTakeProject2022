@@ -140,15 +140,7 @@
                     toastEvent.fire();
                 }
                 component.set("v.Spinner", false);
-                component.set("v.selectedExpenses", []);
-                // component.set("v.selectedProjectId", "");
-                component.set("v.selectedBudgetId", "");
-                component.set("v.Page1", true);
-                component.set("v.Page2", false);
-                component.set("v.SelectBLines", false);
-                component.set("v.expenses", []);
-                component.set("v.tableDataList", []);
-                component.set("v.selectedTransactionType", "");
+                $A.get("e.force:closeQuickAction").fire();
             }
             );
             $A.enqueueAction(saveExp);
@@ -347,15 +339,7 @@
                 }
                 console.log('TimeCard => '+JSON.stringify(TimeCard));
                 component.set("v.Spinner", false);
-                component.set("v.selectedTimeCards", []);
-                // component.set("v.selectedProjectId", "");
-                component.set("v.selectedBudgetId", "");
-                component.set("v.Page1", true);
-                component.set("v.Page2", false);
-                component.set("v.TimeCardP2", false);
-                component.set("v.timeCards", []);
-                component.set("v.tableDataList", []);
-                component.set("v.selectedTransactionType", "");
+                $A.get("e.force:closeQuickAction").fire();
             });
             $A.enqueueAction(action);
         }else{
@@ -495,15 +479,7 @@
                 }
                 console.log('Invoices => '+JSON.stringify(Invoices));
                 component.set("v.Spinner", false);
-                component.set("v.selectedInvoices", []);
-                // component.set("v.selectedProjectId", "");
-                component.set("v.selectedBudgetId", "");
-                component.set("v.Page1", true);
-                component.set("v.Page2", false);
-                component.set("v.InvoiceP2", false);
-                component.set("v.invoices", []);
-                component.set("v.tableDataList", []);
-                component.set("v.selectedTransactionType", "");
+                $A.get("e.force:closeQuickAction").fire();
             });
             $A.enqueueAction(action);
         }else{
@@ -656,15 +632,7 @@
                 }
                 console.log('purchaseOrders => '+JSON.stringify(purchaseOrders));
                 component.set("v.Spinner", false);
-                component.set("v.selectedPurchaseOrders", []);
-                // component.set("v.selectedProjectId", "");
-                component.set("v.selectedBudgetId", "");
-                component.set("v.Page1", true);
-                component.set("v.Page2", false);
-                component.set("v.PurchaseOrderP2", false);
-                component.set("v.purchaseOrders", []);
-                component.set("v.tableDataList", []);
-                component.set("v.selectedTransactionType", "");
+                $A.get("e.force:closeQuickAction").fire();
             });
             $A.enqueueAction(action);
         }else{

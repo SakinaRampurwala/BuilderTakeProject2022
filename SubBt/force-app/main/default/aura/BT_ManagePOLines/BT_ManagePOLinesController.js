@@ -712,6 +712,7 @@
 
       if (state === "SUCCESS") {
         var bomRecords = response.getReturnValue();
+        console.log('seee bomRecords ', bomRecords);
         //If the records present then we will show the table otherwise we will let the user to fill the field values
         if (
           bomRecords != null &&

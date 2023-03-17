@@ -433,29 +433,33 @@
         component.set("v.selectedExistingTC", event.currentTarget.id);
     },
 
-    saveSelectedINVO: function(component, event, helper) {
-        console.log(event);
-        component.set("v.selectedExistingINVO", event.currentTarget.id);
-    },
+    // saveSelectedINVO: function(component, event, helper) {
+    //     console.log(event);
+    //     component.set("v.selectedExistingINVO", event.currentTarget.id);
+    // },
     addTimeCard: function(component, event, helper) {
         $A.get("e.c:BT_SpinnerEvent").setParams({
             "action": "SHOW"
         }).fire();
         var selectedRecs = component.get('v.selectedRecs');
+
+        selectedRecs.filter((item,index) => selectedRecs.indexOf(item) === index);
+
         console.log('v.selectedRecs ==> ', { selectedRecs });
         if (selectedRecs.length > 0) {
-            var BudgetIds = [];
-            var rowData;
-            var newPOItems = [];
+            if(selectedRecs.length == 1){
 
-            if (selectedRecs.length > 0) {
+                var BudgetIds = [];
+                var rowData;
+                var newPOItems = [];
+            // if (selectedRecs.length > 0) {
                 var budgetlineid = BudgetIds[0];
-                var action;
-                action = component.get("c.BudgetItemList");
+                var action=component.get("c.BudgetItemList");
                 action.setParams({
                     BudgetIds: selectedRecs
                 });
                 action.setCallback(this, function(response) {
+                    console.log(response.getState() , '::::::::STATE;;;;;;;');
                     if (component.isValid() && response.getState() === "SUCCESS") {
                         $A.get("e.c:BT_SpinnerEvent").setParams({
                             "action": "HIDE"
@@ -472,17 +476,34 @@
                 $A.enqueueAction(action);
 
 
-            } else {
+            // } else {
+            //     $A.get("e.c:BT_SpinnerEvent").setParams({
+            //         "action": "HIDE"
+            //     }).fire();
+            //     component.find('notifLib').showNotice({
+            //         "variant": "error",
+            //         "header": "Please Select Budget Line!",
+            //         "message": "Please Select Budget Line to Create TimeCard.",
+            //         closeCallback: function() {}
+            //     });
+            // }
+
+
+            }else{
                 $A.get("e.c:BT_SpinnerEvent").setParams({
                     "action": "HIDE"
                 }).fire();
                 component.find('notifLib').showNotice({
                     "variant": "error",
-                    "header": "Please Select Budget Line!",
-                    "message": "Please Select Budget Line to Create TimeCard.",
+                    "header": "Select Budget Line",
+                    "message": "Please Select only 1 Budget Line to Create Time Card.",
+                    //"header": "No Budget Lines",
+                    //"message": "Please select a Budget Line.",
                     closeCallback: function() {}
                 });
+
             }
+            
         } else {
             $A.get("e.c:BT_SpinnerEvent").setParams({
                 "action": "HIDE"
@@ -1039,12 +1060,14 @@
         $A.get("e.c:BT_SpinnerEvent").setParams({
             "action": "SHOW"
         }).fire();
-        var timeCardId = component.get("v.selectedExistingINVO");
+        var selectedInvoiceId = component.get("v.selectedExistingINVO");
+        selectedInvoiceId = selectedInvoiceId.toString();
+
         var selectedRecords = component.get('v.selectedRecs');
         selectedRecords = selectedRecords.toString();
         var action = component.get("c.updateInvoicePrice");
         action.setParams({
-            recordId : timeCardId,
+            recordId : selectedInvoiceId,
             budgeLineIds : selectedRecords
         });
         action.setCallback(this, function (response) {
@@ -1083,6 +1106,12 @@
             "action": "SHOW"
         }).fire();
         var timeCardId = component.get("v.selectedExistingTC");
+        timeCardId = timeCardId.toString();
+        // console.log({timeCardId});
+        // let timeCardIdList=[];
+        // timeCardIdList=
+
+
         var selectedRecords = component.get('v.selectedRecs');
         selectedRecords = selectedRecords.toString();
         var action = component.get("c.updateLaborPrice");
@@ -1093,6 +1122,8 @@
         action.setCallback(this, function (response) {
             var state = response.getState();
             var result = response.getReturnValue();
+            console.log(state , ':::::::::::::::::STATE::::::::::::');
+            console.log(response.getReturnValue());
             if (result === 'Success') {
                 $A.get("e.c:BT_SpinnerEvent").setParams({
                     "action": "HIDE"
@@ -1126,6 +1157,7 @@
             var newPOItems = [];
 
             var budgetlineid = BudgetIds[0];
+            console.log({budgetlineid});
             var action=component.get("c.BudgetItemList");
             action.setParams({
                 BudgetIds: selectedRecs
@@ -1162,46 +1194,43 @@
                     var overlayLib;
                     if (isExisting) {
 
-                        if (component.get("v.selectedExistingPO") != null && component.get("v.selectedExistingPO") != "" && component.get("v.selectedExistingPO") != undefined) {
+                        let getExistPoList=component.get("v.selectedExistingPO");
+                        console.log({getExistPoList});
+                        if (getExistPoList.length > 0) {
                             component.set("v.isExistingPo", false);
                             component.set("v.addposection", false);
-                            $A.createComponents([
-                                    ["c:BT_New_Purchase_Order", {
-                                        "aura:id": "btNewPo",
-                                        "newPOItems": newPOItems,
-                                        "selectedPO": component.get("v.selectedExistingPO"),
-                                        "isFromExistingPOs": isExisting,
-                                        "budgetlineid": budgetlineid,
-                                        "saveCallback": component.get("v.refreshGridAction"),
-                                        "selectedbudgetRecs": selectedRecs,
-                                        "cancelCallback": function() {
-                                            component.set("v.selectedExistingPO", "");
+                            selectedRecs.forEach(function(value , i){
+                                console.log(i, '====selected Budget Lines');
+                                getExistPoList.forEach(function(element , Index){
+                                    console.log('Craete Component :::::' , Index);
+                                    $A.createComponents([
+                                        ["c:BT_New_Purchase_Order", {
+                                            "aura:id": "btNewPo",
+                                            "newPOItems": newPOItems,
+                                            "selectedPO":element,
+                                            "isFromExistingPOs": isExisting,
+                                            "budgetlineid": budgetlineid,
+                                            "saveCallback": component.get("v.refreshGridAction"),
+                                            "selectedbudgetRecs": value,
+                                            "cancelCallback": function() {
+                                                // component.set("v.selectedExistingPO", "");
+                                            }
+                                        }],
+                                    ],
+                                    function(components, status, errorMessage) {
+                                        if (status === "SUCCESS") {
+                                            $A.get('e.force:refreshView').fire();
+                                            
                                         }
-                                    }],
-                                ],
-                                //overlayLib.close();   
-                                function(components, status, errorMessage) {
-                                    if (status === "SUCCESS") {
-                                        //  alert(status);
-                                        $A.get('e.force:refreshView').fire();
-                                        /* var a = component.get('c.refreshList');
-                                    
-                                            $A.enqueueAction(a);*/
-
-                                        /*component.find('overlayLib').showCustomModal({
-                                            // header: "Add Budget Lines To Purchase Order",
-                                            // body: components[0],
-                                            //footer: components[0].find("footer").get("v.body"),
-                                            showCloseButton: false,
-                                            cssClass: "btmodal",
-                                            closeCallback: function () {}
-                                        }).then(function (overlay) {
-                                            overlayLib = overlay;
-                                        });*/
+    
                                     }
+                                );
+    
+                                })
 
-                                }
-                            );
+                            })
+                            
+                           
 
                         } else {
                             component.set("v.addposection", true);
@@ -3731,7 +3760,9 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
 
         });
         component.set("v.recordList", tableDataList);
-        // component.get('v.selectedRecs');
+        component.set("v.selectedExistingPO", expenseIdList);
+        console.log( component.get("v.selectedRecs") , 'selectedRecs::::::::');
+
 
     },
     checkPO:function(component, event, helper){
@@ -3747,8 +3778,75 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
         });
         component.find("selectAllPO").set("v.checked", checkedAll); 
         component.set("v.selectedExistingPO", existingPoId);
-        console.log( component.set("v.selectedExistingPO"));
+        console.log( component.get("v.selectedRecs") , 'selectedRecs::::::::');
 
     },
+    checkAllInvoices:function(component, event, helper){
+        var value= event.getSource().get('v.value');
+        let listOfRecords= component.get("v.recordList");
+        var existingId=[];
+
+        listOfRecords.forEach(function(element){
+            element.Selected=value;
+            existingId.push(element.Id);
+
+        });
+        component.set("v.recordList", listOfRecords);
+        component.set("v.selectedExistingINVO", existingId);
+
+    },
+    checkInvoice:function(component, event, helper){
+        let listOfRecords= component.get("v.recordList");
+        let checkedAll= true;
+        var existingId=[];
+
+        listOfRecords.forEach(function(element){
+            if(!element.Selected){
+                checkedAll=false;
+            }else{
+                existingId.push(element.Id);
+            }
+        });
+
+        component.find("selectAllInvoices").set("v.checked", checkedAll); 
+        component.set("v.selectedExistingINVO", existingId);
+
+
+
+    },
+    checkAllTimeCards:function(component, event, helper){
+        var value= event.getSource().get('v.value');
+        let listOfRecords= component.get("v.recordList");
+        var existingId=[];
+
+        listOfRecords.forEach(function(element){
+            element.Selected=value;
+            existingId.push(element.Id);
+
+        });
+        component.set("v.recordList", listOfRecords);
+        component.set("v.selectedExistingTC", existingId);
+
+    },
+    checkTimeCard:function(component, event, helper){
+        let listOfRecords= component.get("v.recordList");
+        let checkedAll= true;
+        var existingId=[];
+
+        listOfRecords.forEach(function(element){
+            if(!element.Selected){
+                checkedAll=false;
+            }else{
+                existingId.push(element.Id);
+            }
+        });
+
+        component.find("selectAllTimeCards").set("v.checked", checkedAll); 
+        component.set("v.selectedExistingTC", existingId);
+
+
+
+    }
+    
 
 })

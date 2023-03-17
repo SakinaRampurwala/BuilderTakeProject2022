@@ -1,7 +1,7 @@
 ({
     
     doInit : function(component, event, helper) {
-        helper.tabName(component);
+        // helper.tabName(component);
         // helper.getProjects(component);
         component.set("v.transactionTypeOptions", [
             {label: '--None--', value: ''},
@@ -165,7 +165,11 @@
 
     changeBudgetLine : function(component, event, helper) {
         console.log('changeBudgetLine');
-    }
+    },
+
+    closeModel: function(component, event, helper) {
+        $A.get("e.force:closeQuickAction").fire();
+    },
 
 
 

@@ -137,7 +137,16 @@ public without sharing class PreviewQuoteController{
             if(adminInterfaceNodeConfigurations.size()>0){
                 subject = adminInterfaceNodeConfigurations[0].buildertek__Email_Subject__c;
             }else{
-                subject = 'Quote';
+                // subject = 'Quote';
+                //BUIL 3119
+                list<buildertek__Quote__c> quoterecbody = new list<buildertek__Quote__c>();
+                quoterecbody = [select id, Name, buildertek__Status__c, buildertek__TemplateId__c,buildertek__Template_Name__c, buildertek__To_Emails__c,buildertek__Date_Sent_To_Customer__c,buildertek__Memo__c
+                                from buildertek__Quote__c
+                                where Id = :recordId
+                                limit 1];
+                if (quoterecbody.size() > 0){
+                    subject = 'Quote : ' + quoterecbody[0].Name;
+                }
             }
 
 

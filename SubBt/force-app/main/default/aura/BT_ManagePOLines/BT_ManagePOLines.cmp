@@ -1078,7 +1078,6 @@
                         </div>
                     </lightning:accordionSection>
                 </lightning:accordion>
-                
             </aura:if>
         </div>
         <aura:if isTrue="{!v.isModalOpen}">
