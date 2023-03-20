@@ -519,6 +519,7 @@
         }
     },
     addInvoice: function(component, event, helper) {
+        console.log('addInvoice');
         $A.get("e.c:BT_SpinnerEvent").setParams({
             "action": "SHOW"
         }).fire();

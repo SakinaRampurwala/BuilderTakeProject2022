@@ -53,18 +53,34 @@
 
     updateProductInfo: function (component, event, helper) {
         var indexOfElementChanged = event.getParam('value');
+        // let checkProductId = event.getSource().get('v.value')[0];
+        // if(checkProductId != undefined){
         helper.productselectedprice(component, event, helper, indexOfElementChanged);
+        // }
     },
 
     doSave: function (component, event, helper) {
         console.log(component.get("v.newCO").Name);
+        // Check:- Product inside the list of the co Item is empty or not
+        let jsonArray=JSON.stringify(component.get("v.coItemsToInsert"));
+        let parseJson = JSON.parse(jsonArray);
+        let listCOItem=[];
+        parseJson.forEach(function(value){
+            // If the product is empty then remove it from the Json 
+            if(typeof(value.changeOrderItem.buildertek__Product__c) != 'string'){
+                delete value.changeOrderItem.buildertek__Product__c;
+            }
+            listCOItem.push(value);
+
+        });
+        jsonArray=JSON.stringify(listCOItem);
         if (component.get("v.newCO").Name != null && component.get("v.newCO").Name != '') {
             component.set("v.Spinner", true);
             var action;
             action = component.get("c.createCO");
             action.setParams({
                 coJson: component.get("v.newCO"),
-                coItemsJson: JSON.stringify(component.get("v.coItemsToInsert")),
+                coItemsJson: jsonArray,
                 budgetlineid: component.get("v.budgetlineid")
             });
             action.setCallback(this, function (response) {
@@ -151,5 +167,6 @@
 
     doCancel: function (component, event, helper) {
         component.get("v.cancelCallback")();
-    }
+    },
+    
 })

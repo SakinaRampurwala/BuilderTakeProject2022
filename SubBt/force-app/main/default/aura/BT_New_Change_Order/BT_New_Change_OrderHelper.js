@@ -5,6 +5,7 @@
     // auto popuplate the product values of unitprice
     // Developer : laxman 24/07/2020.
     productselectedprice:function (component, event, helper, productid) {
+        console.log({productid});
     var action = component.get("c.getProductPricevalue");
         action.setParams({
             productId: JSON.stringify(productid)

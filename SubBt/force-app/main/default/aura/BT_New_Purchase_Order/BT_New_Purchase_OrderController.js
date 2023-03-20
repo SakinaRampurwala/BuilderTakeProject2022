@@ -76,6 +76,21 @@
         var poItem = JSON.stringify(component.get("v.newPOItems"));
         
         component.set("v.Spinner", true);
+        // Check:- Product inside the list of the PO Item is empty or not
+        let jsonArray=JSON.stringify(component.get("v.poItemsToInsert"));
+        let parseJson = JSON.parse(jsonArray);
+        console.log({parseJson});
+        let listCOItem=[];
+        parseJson.forEach(function(value){
+            // If the product is empty then remove it from the Json 
+            if(typeof(value.purchaseOrderItem.buildertek__Product__c) != 'string'){
+                delete value.purchaseOrderItem.buildertek__Product__c;
+            }
+            listCOItem.push(value);
+
+        });
+        jsonArray=JSON.stringify(listCOItem);
+
        var isExisted = component.get("v.showPODetails");
     	var action;
         console.log('New PO FIELD ::::',JSON.stringify(component.get("v.newPO")));
@@ -84,7 +99,7 @@
             action = component.get("c.createPO");
             action.setParams({
                 poJson:  component.get("v.newPO"),
-                poItemsJson: JSON.stringify(component.get("v.poItemsToInsert")),
+                poItemsJson: jsonArray,
                 budgetlineid : component.get("v.budgetlineid")
             });
         }else if(isExisted){
@@ -95,7 +110,7 @@
             action = component.get("c.createLinesForExistedPO");
             action.setParams({
                 "poRecordID" : component.get("v.selectedExistingPO"),
-                "poItemsJson": JSON.stringify(component.get("v.poItemsToInsert")), //poItem,
+                "poItemsJson": jsonArray, //poItem,
                 "budgetlineid" : component.get("v.budgetlineid"),
                 "addbudgetlineids" : component.get("v.selectedbudgetRecs"),
             });
