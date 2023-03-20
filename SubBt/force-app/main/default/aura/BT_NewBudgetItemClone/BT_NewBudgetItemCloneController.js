@@ -508,14 +508,12 @@
             $A.get("e.c:BT_SpinnerEvent").setParams({
                 "action": "HIDE"
             }).fire();
-            component.find('notifLib').showNotice({
-                "variant": "error",
-                "header": "Select Budget Line",
-                "message": "Please Select at least One Budget Line to Add TimeCard.",
-                //"header": "No Budget Lines",
-                //"message": "Please select a Budget Line.",
-                closeCallback: function() {}
-            });
+            component.set("v.addtcsection", true);
+            var pageNumber = component.get("v.PageNumber");
+            var pageSize = component.get("v.pageSize");
+            component.set("v.isExistingTc", true);
+            helper.gettcList(component, pageNumber, pageSize);
+          
         }
     },
     addInvoice: function(component, event, helper) {
@@ -579,14 +577,14 @@
             $A.get("e.c:BT_SpinnerEvent").setParams({
                 "action": "HIDE"
             }).fire();
-            component.find('notifLib').showNotice({
-                "variant": "error",
-                "header": "Select Budget Line",
-                "message": "Please Select at least One Budget Line to add the Invoice.",
-                //"header": "No Budget Lines",
-                //"message": "Please select a Budget Line.",
-                closeCallback: function() {}
-            });
+            component.set("v.addinvsection", true);
+            var pageNumber = component.get("v.PageNumber");
+            var pageSize = component.get("v.pageSize");
+            component.set("v.isExistingInvo", true);
+            helper.getInvoiceList(component, pageNumber, pageSize);
+
+
+
         }
     },
     addPO: function(component, event, helper) {
@@ -1061,93 +1059,196 @@
         $A.get("e.c:BT_SpinnerEvent").setParams({
             "action": "SHOW"
         }).fire();
-        var selectedInvoiceId = component.get("v.selectedExistingINVO");
+        var selectedInvoiceRecords = component.get("v.recordList");        
+        let selectedInvoiceList=[];
+        selectedInvoiceRecords.forEach(element => {
+            if (element.Selected) {
+                selectedInvoiceList.push(element);
+            }
+        });
+
+        console.log('selectedInvoiceList ==>',selectedInvoiceList);
+
+
+        var selectedInvoiceId = component.get('v.selectedExistingINVO');
         selectedInvoiceId = selectedInvoiceId.toString();
 
+
         var selectedRecords = component.get('v.selectedRecs');
-        selectedRecords = selectedRecords.toString();
-        var action = component.get("c.updateInvoicePrice");
-        action.setParams({
-            recordId : selectedInvoiceId,
-            budgeLineIds : selectedRecords
-        });
-        action.setCallback(this, function (response) {
-            var state = response.getState();
-            var result = response.getReturnValue();
-            if (result === 'Success') {
-                component.set('v.selectedRecs',[]);
-                $A.get("e.c:BT_SpinnerEvent").setParams({
-                    "action": "HIDE"
-                }).fire();
-                helper.showToast(component, event, helper, 'Success', 'Invoice Price updated successfully', 'success');
+        if (selectedRecords.length > 0){
 
-                var action1 = component.get("c.doInit");
-                $A.enqueueAction(action1);
-            }else if (result === 'null'){
-                $A.get("e.c:BT_SpinnerEvent").setParams({
-                    "action": "HIDE"
-                }).fire();
-                helper.showToast(component, event, helper, 'Error', 'Please Select Invoice', 'error');
-            }
-            else{
-                $A.get("e.c:BT_SpinnerEvent").setParams({
-                    "action": "HIDE"
-                }).fire();
-                helper.showToast(component, event, helper, 'Error', 'something goes wrong', 'error');
-            }
+            selectedRecords = selectedRecords.toString();
+            var action = component.get("c.updateInvoicePrice");
+            action.setParams({
+                recordId : selectedInvoiceId,
+                budgeLineIds : selectedRecords
+            });
+            action.setCallback(this, function (response) {
+                var state = response.getState();
+                var result = response.getReturnValue();
+                if (result === 'Success') {
+                    component.set('v.selectedRecs',[]);
+                    $A.get("e.c:BT_SpinnerEvent").setParams({
+                        "action": "HIDE"
+                    }).fire();
+                    helper.showToast(component, event, helper, 'Success', 'Invoice Price updated successfully', 'success');
 
-        });
-        $A.enqueueAction(action);
-        
-        var a = component.get('c.doCancel');
-        $A.enqueueAction(a);
+                    var action1 = component.get("c.doInit");
+                    $A.enqueueAction(action1);
+                }else if (result === 'null'){
+                    $A.get("e.c:BT_SpinnerEvent").setParams({
+                        "action": "HIDE"
+                    }).fire();
+                    helper.showToast(component, event, helper, 'Error', 'Please Select Invoice', 'error');
+                }
+                else{
+                    $A.get("e.c:BT_SpinnerEvent").setParams({
+                        "action": "HIDE"
+                    }).fire();
+                    helper.showToast(component, event, helper, 'Error', 'something goes wrong', 'error');
+                }
+
+            });
+            $A.enqueueAction(action);
+            
+            var a = component.get('c.doCancel');
+            $A.enqueueAction(a);
+        }else{
+            console.log('Create New Budget Line');
+            var recId = component.get("v.recordId");
+            var action = component.get("c.CreateLineAddInvoice");
+            action.setParams({
+                selectedInvoices: selectedInvoiceList,
+                RecId: recId
+            });
+            action.setCallback(this, function (result) {
+                $A.get("e.c:BT_SpinnerEvent").setParams({
+                    "action": "HIDE"
+                }).fire();
+                var state = result.getState();
+                if (state === "SUCCESS") {
+                    component.set('v.selectedRecs',[]);
+                    var toastEvent = $A.get("e.force:showToast");
+                    toastEvent.setParams({
+                        type: 'SUCCESS',
+                        message: 'Invoice added Successfully',
+                        duration: '5000',
+                    });
+                    toastEvent.fire();
+    
+                    var action1 = component.get("c.doInit");
+                    $A.enqueueAction(action1);
+                } else{
+                    var toastEvent = $A.get("e.force:showToast");
+                    toastEvent.setParams({
+                        type: 'ERROR',
+                        message: 'Something Went Wrong',
+                        duration: '5000',
+                    });
+                    toastEvent.fire();
+                }
+                component.set("v.addinvsection", false);
+                var a = component.get('c.doCancel');
+                $A.enqueueAction(a);
+            });
+            $A.enqueueAction(action);
+            
+        }
     },
     updateBudgetLine: function(component, event, helper) {
         $A.get("e.c:BT_SpinnerEvent").setParams({
             "action": "SHOW"
         }).fire();
+
+        var selectedTimeCardRecords = component.get("v.recordList");        
+        let selectedTimeCardList=[];
+        selectedTimeCardRecords.forEach(element => {
+            if (element.Selected) {
+                selectedTimeCardList.push(element);
+            }
+        });
+
         var timeCardId = component.get("v.selectedExistingTC");
         timeCardId = timeCardId.toString();
-        // console.log({timeCardId});
-        // let timeCardIdList=[];
-        // timeCardIdList=
-
-
         var selectedRecords = component.get('v.selectedRecs');
-        selectedRecords = selectedRecords.toString();
-        var action = component.get("c.updateLaborPrice");
-        action.setParams({
-            recordId : timeCardId,
-            budgeLineIds : selectedRecords
-        });
-        action.setCallback(this, function (response) {
-            var state = response.getState();
-            var result = response.getReturnValue();
-            console.log(state , ':::::::::::::::::STATE::::::::::::');
-            console.log(response.getReturnValue());
-            if (result === 'Success') {
+        if (selectedRecords.length > 0) {
+
+            selectedRecords = selectedRecords.toString();
+            var action = component.get("c.updateLaborPrice");
+            action.setParams({
+                recordId : timeCardId,
+                budgeLineIds : selectedRecords
+            });
+            action.setCallback(this, function (response) {
+                var state = response.getState();
+                var result = response.getReturnValue();
+                console.log(state , ':::::::::::::::::STATE::::::::::::');
+                console.log(response.getReturnValue());
+                if (result === 'Success') {
+                    $A.get("e.c:BT_SpinnerEvent").setParams({
+                        "action": "HIDE"
+                    }).fire();
+                    helper.showToast(component, event, helper, 'Success', 'Labor Price updated successfully', 'success');
+                }else if (result === 'null'){
+                    $A.get("e.c:BT_SpinnerEvent").setParams({
+                        "action": "HIDE"
+                    }).fire();
+                    helper.showToast(component, event, helper, 'Error', 'Please Select Time Card', 'error');
+                }
+                else{
+                    $A.get("e.c:BT_SpinnerEvent").setParams({
+                        "action": "HIDE"
+                    }).fire();
+                    helper.showToast(component, event, helper, 'Error', 'something goes wrong', 'error');
+                }
+                console.log('selectedRecords --> ',{selectedRecords});
+            });
+            $A.enqueueAction(action);
+            
+            var a = component.get('c.doCancel');
+            $A.enqueueAction(a);
+        }else{
+            console.log('Create New Budget Line');
+            var recId = component.get("v.recordId");
+            var action = component.get("c.CreateLineAddLabor");
+            action.setParams({
+                selectedTimeCard: selectedTimeCardList,
+                RecId: recId
+            });
+            action.setCallback(this, function (result) {
                 $A.get("e.c:BT_SpinnerEvent").setParams({
                     "action": "HIDE"
                 }).fire();
-                helper.showToast(component, event, helper, 'Success', 'Labor Price updated successfully', 'success');
-            }else if (result === 'null'){
-                $A.get("e.c:BT_SpinnerEvent").setParams({
-                    "action": "HIDE"
-                }).fire();
-                helper.showToast(component, event, helper, 'Error', 'Please Select Time Card', 'error');
-            }
-            else{
-                $A.get("e.c:BT_SpinnerEvent").setParams({
-                    "action": "HIDE"
-                }).fire();
-                helper.showToast(component, event, helper, 'Error', 'something goes wrong', 'error');
-            }
-            console.log('selectedRecords --> ',{selectedRecords});
-        });
-        $A.enqueueAction(action);
-        
-        var a = component.get('c.doCancel');
-        $A.enqueueAction(a);
+                var state = result.getState();
+                if (state === "SUCCESS") {
+                    component.set('v.selectedRecs',[]);
+                    var toastEvent = $A.get("e.force:showToast");
+                    toastEvent.setParams({
+                        type: 'SUCCESS',
+                        message: 'Labor added Successfully',
+                        duration: '5000',
+                    });
+                    toastEvent.fire();
+    
+                    var action1 = component.get("c.doInit");
+                    $A.enqueueAction(action1);
+                } else{
+                    var toastEvent = $A.get("e.force:showToast");
+                    toastEvent.setParams({
+                        type: 'ERROR',
+                        message: 'Something Went Wrong',
+                        duration: '5000',
+                    });
+                    toastEvent.fire();
+                }
+            component.set("v.addtcsection", false);
+                var a = component.get('c.doCancel');
+                $A.enqueueAction(a);
+            });
+            $A.enqueueAction(action);
+
+
+        }
     },
 
     newPO: function(component, event, helper) {

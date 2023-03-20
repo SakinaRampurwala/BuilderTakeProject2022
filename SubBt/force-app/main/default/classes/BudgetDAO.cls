@@ -2673,7 +2673,104 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
 
         BudgetDAO.isCreateExpense = false;
     }
-    
+
+    @AuraEnabled
+    public static void CreateLineAddInvoice(List<buildertek__Account_Payable_Clone__c> selectedInvoices, string RecId){
+
+        // BudgetDAO.isCreateExpense = true;
+        System.debug('CreateLineAddInvoice');
+        buildertek__Budget__c budgetRec = [SELECT Id, Name, buildertek__Project__c FROM buildertek__Budget__c where Id = :RecId];
+
+        List<buildertek__Budget_Line_Group__c> budgetLineGroup = [SELECT Id, Name FROM buildertek__Budget_Line_Group__c WHERE Name = 'Invoice (AP)' limit 1];
+
+        String groupId = '';
+        System.debug('budgetLineGroup' + budgetLineGroup);
+
+
+        if (budgetLineGroup.size() > 0) {
+            groupId = budgetLineGroup[0].Id;
+        } else {
+            buildertek__Budget_Line_Group__c budgetGroup = new buildertek__Budget_Line_Group__c();
+            budgetGroup.Name = 'Invoice (AP)';
+            insert budgetGroup;
+            
+            groupId = budgetGroup.Id;
+        }
+
+        Map<Id, buildertek__Budget_Item__c> budgetItemMap = new Map<Id, buildertek__Budget_Item__c>();
+        for (buildertek__Account_Payable_Clone__c invoiceAP : selectedInvoices) {
+            System.debug(invoiceAP);
+            buildertek__Budget_Item__c budgetItem = new buildertek__Budget_Item__c();
+            budgetItem.Name = invoiceAP.buildertek__Description__c;
+            budgetItem.buildertek__Budget__c = RecId;
+            budgetItem.buildertek__Group__c = groupId;
+            budgetItemMap.put(invoiceAP.Id, budgetItem);
+        System.debug('Before Map' + budgetItemMap);
+
+        }
+        insert budgetItemMap.values();
+        System.debug('budgetItemMap' + budgetItemMap);
+
+
+        for (buildertek__Account_Payable_Clone__c invoiceAP : selectedInvoices) {
+            invoiceAP.buildertek__Budget_Line__c = budgetItemMap.get(invoiceAP.Id).Id;
+            invoiceAP.buildertek__Budget__c = RecId;
+            invoiceAP.buildertek__Project__c = budgetRec.buildertek__Project__c;
+        }
+        update selectedInvoices;
+        System.debug('selectedInvoices' + selectedInvoices);
+
+
+        // BudgetDAO.isCreateExpense = false;
+    }
+    @AuraEnabled
+    public static void CreateLineAddLabor(List<buildertek__Time_Cards__c> selectedTimeCard, string RecId){
+
+        // BudgetDAO.isCreateExpense = true;
+        System.debug('CreateLineAddLabor');
+        buildertek__Budget__c budgetRec = [SELECT Id, Name, buildertek__Project__c FROM buildertek__Budget__c where Id = :RecId];
+
+        List<buildertek__Budget_Line_Group__c> budgetLineGroup = [SELECT Id, Name FROM buildertek__Budget_Line_Group__c WHERE Name = 'Labor' limit 1];
+
+        String groupId = '';
+        System.debug('budgetLineGroup' + budgetLineGroup);
+
+
+        if (budgetLineGroup.size() > 0) {
+            groupId = budgetLineGroup[0].Id;
+        } else {
+            buildertek__Budget_Line_Group__c budgetGroup = new buildertek__Budget_Line_Group__c();
+            budgetGroup.Name = 'Labor';
+            insert budgetGroup;
+            
+            groupId = budgetGroup.Id;
+        }
+
+        Map<Id, buildertek__Budget_Item__c> budgetItemMap = new Map<Id, buildertek__Budget_Item__c>();
+        for (buildertek__Time_Cards__c timeCard : selectedTimeCard) {
+            buildertek__Budget_Item__c budgetItem = new buildertek__Budget_Item__c();
+            budgetItem.Name = timeCard.buildertek__Description__c;
+            budgetItem.buildertek__Budget__c = RecId;
+            budgetItem.buildertek__Group__c = groupId;
+            budgetItemMap.put(timeCard.Id, budgetItem);
+        System.debug('Before Map' + budgetItemMap);
+
+        }
+        insert budgetItemMap.values();
+        System.debug('budgetItemMap' + budgetItemMap);
+
+
+        for (buildertek__Time_Cards__c timeCard : selectedTimeCard) {
+            timeCard.buildertek__Budget_Line__c = budgetItemMap.get(timeCard.Id).Id;
+            timeCard.buildertek__Budget__c = RecId;
+            timeCard.buildertek__Project__c = budgetRec.buildertek__Project__c;
+        }
+        update selectedTimeCard;
+        System.debug('selectedInvoices' + selectedTimeCard);
+
+
+        // BudgetDAO.isCreateExpense = false;
+    }
 
     
     public class multipleBudgetLinesClass{
