@@ -385,8 +385,15 @@ public with sharing class QuoteDAO{
         }
         // update quoteItemListRec;
         //* old code
-
+        for(buildertek__Quote_Item__c qutoeitem : quoteItemListRec ){
+            System.debug(qutoeitem.Name+ ' :::::::::::---> '+ qutoeitem.buildertek__Markup__c);
+        }
         update quoteItemListRec;
+        System.debug('=======AFTER UPDATE MARKUP VALUE IS=======');
+        for(buildertek__Quote_Item__c qutoeitem : quoteItemListRec ){
+            System.debug(qutoeitem.Name+ ' :::::::::::---> '+ qutoeitem.buildertek__Markup__c);
+        }
+
         if (Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Markup__c.isupdateable() && Schema.sObjectType.buildertek__Quote_Item__c.fields.buildertek__Margin__c.isupdateable()){
             System.debug('<<<<----In If Block---->>>>');
             // update quoteItemListRec;
