@@ -789,7 +789,7 @@
 
                                             <aura:if isTrue="{!!v.hideGlobalMargin}">
                                             <td style="padding-bottom:22px; width: 7% !important;">
-                                                <lightning:input type="number" name="input7" label="" value="{!v.newQuote.buildertek__Margin__c}" formatter="percent-fixed" aura:id="marginId" />
+                                                <lightning:input type="number" name="input7" label="" value="{!v.newQuote.buildertek__Margin__c}" formatter="percent-fixed" aura:id="marginId"  step="0.01"/>
                                             </td>
                                             </aura:if>
                                             <aura:if isTrue="{!!v.hideGlobalMarkup}">
@@ -1368,6 +1368,13 @@
 
                                                        
                                                     </aura:if>
+
+                                                    <!-- <aura:if isTrue="{rec.fieldLabel == 'buildertek__Tax__c'}">
+                                                        
+                                                        <td style="text-align:left">
+                                                        </td>
+                                                     </aura:if> -->
+
                                                     <aura:if isTrue="{!group.Name == rec.groupName &amp;&amp; rec.fieldType == 'false' &amp;&amp; rec.fieldLabel != 'Id' &amp;&amp; rec.fieldLabel != 'buildertek__Grouping__c'}">
                                                         
                                                             <td style="text-align:left">

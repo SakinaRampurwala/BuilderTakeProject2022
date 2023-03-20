@@ -711,6 +711,9 @@
 
                     component.set("v.TotalRecords", result); //This Line has slow performance past 200 objects being loaded.
                     if (result != undefined && result.wrapperList != undefined) {
+                        console.log(':::: WRAPPER LIST::::' , result.wrapperList );
+
+
                         component.set('v.wrapperListLength', result.wrapperList.length - 1);
 
 

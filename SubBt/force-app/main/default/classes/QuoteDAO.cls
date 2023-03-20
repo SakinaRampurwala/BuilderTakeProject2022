@@ -769,7 +769,7 @@ public with sharing class QuoteDAO{
             if (dtFields.type != 'reference'){
                 allFields.add(dtFields.fieldName);
             }
-            if (dtFields.type == 'currency'){
+            if (dtFields.type == 'currency' && dtFields.fieldName != 'buildertek__Tax__c'){
                 fieldsList.add(dtFields.fieldName);
             } else if(dtFields.fieldName == 'buildertek__Quantity__c'){
                 fieldsList.add(dtFields.fieldName);
