@@ -863,6 +863,12 @@
                 component.set("v.newQuote.buildertek__Unit_Cost__c", ProductDetails.buildertek__Unit_Cost__c );
                 console.log("unitCost----->", JSON.parse(JSON.stringify(ProductDetails)));
             }
+            console.log("Grouping-->", res[0].Product2.buildertek__Quote_Group__c )
+            if(res[0].Product2.buildertek__Quote_Group__c != undefined && res[0].Product2.buildertek__Quote_Group__c != null){
+                console.log("Inside Grouping-->", res[0].Product2.buildertek__Quote_Group__c )
+                component.set("v.newQuote.buildertek__Grouping__c", res[0].Product2.buildertek__Quote_Group__c);
+                component.set("v.newQuote.buildertek__Grouping__r.Name", res[0].Product2.buildertek__Quote_Group__r.Name);
+            }
         });
         $A.enqueueAction(action);
     },

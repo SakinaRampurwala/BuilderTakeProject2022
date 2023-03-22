@@ -14,18 +14,18 @@
             iconAlt: 'Mass Add Line'
         });
     });
-        component.set('v.isLoading', true);
-        var pageNumber = component.get("v.PageNumber");
-        var pageSize = component.get("v.pageSize");
-        helper.getTableFieldSet(component, event, helper);
-        window.setTimeout(
-            $A.getCallback(function () {
-                helper.getQuoteName(component, event, helper);
-                helper.getTotalRecord(component, event, helper);
-                helper.getTableRows(component, event, helper, pageNumber, pageSize);
-                component.set('v.isLoading', false);
-            }), 1000
-        );
+        // component.set('v.isLoading', true);
+        // var pageNumber = component.get("v.PageNumber");
+        // var pageSize = component.get("v.pageSize");
+        // helper.getTableFieldSet(component, event, helper);
+        // window.setTimeout(
+        //     $A.getCallback(function () {
+        //         helper.getQuoteName(component, event, helper);
+        //         helper.getTotalRecord(component, event, helper);
+        //         helper.getTableRows(component, event, helper, pageNumber, pageSize);
+        //         component.set('v.isLoading', false);
+        //     }), 1000
+        // );
 
     },
 

@@ -320,7 +320,7 @@
                             <aura:set attribute="else">
                                 <div>
                                     <lightning:button iconPosition="left" onclick="{!c.addProductFromGroup}"
-                                        label="Add Lines" class="sldsButtonGroup" />
+                                        label="Add Products" class="sldsButtonGroup" />
                                 </div>&nbsp;
 
                                 <div>
@@ -330,9 +330,9 @@
                                 </div>&nbsp;
 
 
-                                <!-- <div>
+                                <div>
                                 <lightning:button iconPosition="left" onclick="{!c.onClickAddlines}" label="Mass Add Line" class="sldsButtonGroup" />
-                            </div>&nbsp; -->
+                            </div>&nbsp;
 
                                 <div>
                                     <aura:if isTrue="{!!v.displayGrouping}">
@@ -764,7 +764,8 @@
                                                 </aura:html>
                                                 <c:BT_LookUp aura:id="groupId" _field="buildertek__Grouping__c"
                                                     _sobject="buildertek__Quote_Item__c"
-                                                    _value="{!v.newQuote.buildertek__Grouping__c}" _label=""
+                                                    _value="{!v.newQuote.buildertek__Grouping__c}"
+                                                    _text_value="{!v.newQuote.buildertek__Grouping__r.Name}"  _label=""
                                                     _filter="" />
                                             </td>
 
@@ -1281,11 +1282,12 @@
                                                                                     minimumFractionDigits="4"
                                                                                     class="inputCss" />
                                                                             </aura:if>
-                                                                            <aura:if
-                                                                                isTrue="{!value.fieldType == 'textarea'}">
-                                                                                <lightning:formattedRichText
-                                                                                    value="{!value.originalValue}"
-                                                                                    class="textAreaCss" />
+                                                                            <aura:if isTrue="{!value.fieldType == 'textarea'}">
+                                                                                <div class="textAreaDiv">
+                                                                                    <lightning:formattedRichText
+                                                                                        value="{!value.originalValue}"
+                                                                                        class="textAreaCss" />
+                                                                                </div>
                                                                             </aura:if>
                                                                             <aura:if
                                                                                 isTrue="{!value.fieldType == 'picklist'}">

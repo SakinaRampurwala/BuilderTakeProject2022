@@ -220,3 +220,11 @@
 .THIS .slds-gutters{
     margin-right:0 !important;
 }
+.THIS .textAreaCss{
+    white-space: normal; 
+    word-wrap: break-word;
+}
+.THIS .textAreaDiv{
+    width: 200px;
+
+}

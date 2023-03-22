@@ -46,74 +46,119 @@
     <aura:handler name="datafromChild" event="c:senDatafromChild"
         action="{!c.handleComponentEvent}"/> 
     
-    <lightning:card aura:id="lightCard" class="slds-card_boundary slds-page-header slds-scrollable" title="Quote Lines">
-        <aura:set attribute="actions">
-            <lightning:button iconName="utility:save" iconPosition="left" onclick="{!c.onMassUpdate}"
-                              label="{!v.massUpdateEnable==true?'Save':'Mass Update'}" class="" />
-            <aura:if isTrue="{!v.massUpdateEnable}">
-                <lightning:button iconName="utility:add" iconPosition="left" onclick="{!c.onAddClick}" label="Add" />
-                <lightning:button iconName="utility:close" iconPosition="left" onclick="{!c.onMassUpdateCancel}"
-                                  label="Cancel" />
-            </aura:if>
-            <lightning:button iconName="utility:back" iconPosition="left" disabled="{!v.PageNumber == 1}"
-                              aura:id="prevPage" label="Previous" onclick="{!c.handlePrev}" />
-            <lightning:button iconName="utility:forward" iconPosition="right"  disabled="{!v.isNextDisabled}"
-                              aura:id="nextPage" label="Next" onclick="{!c.handleNext}" />
-        </aura:set>
-        
-        <div class="slds slds-m-top_medium slds-p-horizontal_medium slds-m-bottom_medium">
-            {!v.numberOfItems} items •
-            <ui:outputURL value="{!'/one/one.app?#/sObject/'+ v.recordId + '/view'}" target="_blank"
-                          label="Quote Lines" />
-            >
-            <ui:outputURL value="{!'/one/one.app?#/sObject/'+ v.recordId + '/view'}" target="_blank"
-                          label="{!v.recordName}" />
-        </div>
-        
-        <div class="slds-modal__content slds-scrollable">
-            <div class="slds slds-m-top_medium slds-p-horizontal_medium">
-                <table class="{!v.massUpdateEnable ? 'slds-table slds-table--bordered':'slds-table--bordered'}">
-                    <thead>
-                        <tr style="{!v.massUpdateEnable ? '':'height:35px; !important'}">
-                            <aura:iteration items="{!v.fieldSetValues}" var="field" indexVar="index">
-                                <th> {!field.label}</th>
+    <div class="slds-modal__content slds-scrollable" style="height:100% !important">
+        <lightning:card aura:id="lightCard" class="slds-card_boundary slds-page-header slds-scrollable" title="Quote Lines">
+            <aura:set attribute="actions">
+                <lightning:button iconName="utility:save" iconPosition="left" onclick="{!c.onMassUpdate}"
+                                label="{!v.massUpdateEnable==true?'Save':'Mass Update'}" class="" />
+                <aura:if isTrue="{!v.massUpdateEnable}">
+                    <lightning:button iconName="utility:add" iconPosition="left" onclick="{!c.onAddClick}" label="Add" />
+                    <lightning:button iconName="utility:close" iconPosition="left" onclick="{!c.onMassUpdateCancel}"
+                                    label="Cancel" />
+                </aura:if>
+                <lightning:button iconName="utility:back" iconPosition="left" disabled="{!v.PageNumber == 1}"
+                                aura:id="prevPage" label="Previous" onclick="{!c.handlePrev}" />
+                <lightning:button iconName="utility:forward" iconPosition="right"  disabled="{!v.isNextDisabled}"
+                                aura:id="nextPage" label="Next" onclick="{!c.handleNext}" />
+            </aura:set>
+            
+            <!-- <div class="slds slds-m-top_medium slds-p-horizontal_medium slds-m-bottom_medium">
+                {!v.numberOfItems} items •
+                <ui:outputURL value="{!'/one/one.app?#/sObject/'+ v.recordId + '/view'}" target="_blank"
+                            label="Quote Lines" />
+                >
+                <ui:outputURL value="{!'/one/one.app?#/sObject/'+ v.recordId + '/view'}" target="_blank"
+                            label="{!v.recordName}" />
+            </div>
+            
+            <div class="slds-modal__content slds-scrollable">
+                <div class="slds slds-m-top_medium slds-p-horizontal_medium">
+                    <table class="{!v.massUpdateEnable ? 'slds-table slds-tablebordered':'slds-tablebordered'}">
+                        <thead>
+                            <tr style="{!v.massUpdateEnable ? '':'height:35px; !important'}">
+                                <aura:iteration items="{!v.fieldSetValues}" var="field" indexVar="index">
+                                    <th> {!field.label}</th>
+                                </aura:iteration>
+                                <aura:if isTrue="{!v.massUpdateEnable}">
+                                    <th class="slds-is-sortable slds-text-title-caps" scope="col" style="width:4%;">
+                                        <span class="slds-truncate"></span>
+                                    </th>
+                                </aura:if>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <aura:iteration items="{!v.listOfRecords}" var="row" indexVar="index">
+                            
+                                <tr style="{!v.massUpdateEnable ? '':'height:35px; !important'}">
+                                    <aura:iteration items="{!v.fieldSetValues}" var="field">
+                                    <td>
+                                            <c:BT_QuoteItems parent="{!this}" record="{!row}" listRec="{!v.listOfRecords}" index="{!index}" field="{!field}"
+                                                            isMassUpdateEnable="{!v.massUpdateEnable}" /> 
+                                        </td> 
+                                    </aura:iteration>
+                                    <aura:if isTrue="{!v.massUpdateEnable}">
+                                        <td> 
+                                    
+                                            <span data-recordid="{!''+row.Id+'_'+index}" onclick="{!c.deletequotelineRecord}" data-index='{!index}'>
+                                                <lightning:icon iconName="action:close" alternativeText="Delete"
+                                                                class="some-indicator" size="x-small" title="Delete" /> 
+                                            </span>
+                                    </td>
+                                    </aura:if>
+                                </tr>
                             </aura:iteration>
-                            <aura:if isTrue="{!v.massUpdateEnable}">
-                                <th class="slds-is-sortable slds-text-title--caps" scope="col" style="width:4%;">
-                                    <span class="slds-truncate"></span>
-                                </th>
-                            </aura:if>
+                        </tbody> 
+                    </table>
+                </div>
+            </div> -->
+        </lightning:card>
+        <div class="slds-border_top slds-box slds-box_xx-small" >
+            <div class="slds slds-m-top_medium slds-p-horizontal_medium" >
+                <table class="slds-table slds-table--bordered':'slds-table--bordered'">
+                    <thead>
+                        <tr style="height:35px; !important" class="slds-text-title_caps">
+                            <th scope="col"
+                                style="background-color:rgba(27, 82, 151, 1.0); color:white; border-top-left-radius:5px;">
+                                <div class="slds-truncate" title="Pricebook">Pricebook</div>
+                            </th>
+                            <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white; ">
+                                <div class="slds-truncate" title="Product Family">Product Family</div>
+                            </th>
+                            <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white; ">
+                                <div class="slds-truncate" title="Product">Product</div>
+                            </th>
+                            <th style="background-color:rgba(27, 82, 151, 1.0); color:white;">
+                                <div class="slds-truncate" title="Quote Line Description"> Description
+                                </div>
+                            </th>
+                            <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white;">
+                                <div class="slds-truncate" title="Grouping">Group</div>
+                            </th> 
+                            <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white;">
+                                <div class="slds-truncate" title="UOM">UOM</div>
+                            </th>
+                            <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white;">
+                                <div class="slds-truncate" title="Contractor">Vendor</div>
+                            </th>
+                            <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white;">
+                                <div class="slds-truncate" title="Quantity">Quantity</div>
+                            </th>
+                            <th style="background-color:rgba(27, 82, 151, 1.0); color:white;">
+                                <div class="slds-truncate" title="Unit Cost">Unit Cost</div>
+                            </th>
+                            <th style="background-color:rgba(27, 82, 151, 1.0); color:white;border-top-right-radius:5px;">
+                                <span>
+                                </span>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
-                        <aura:iteration items="{!v.listOfRecords}" var="row" indexVar="index">
-                         
-                            <tr style="{!v.massUpdateEnable ? '':'height:35px; !important'}">
-                                <aura:iteration items="{!v.fieldSetValues}" var="field">
-                                   <td>
-                                        <c:BT_QuoteItems parent="{!this}" record="{!row}" listRec="{!v.listOfRecords}" index="{!index}" field="{!field}"
-                                                         isMassUpdateEnable="{!v.massUpdateEnable}" /> 
-                                    </td> 
-                                </aura:iteration>
-                                <aura:if isTrue="{!v.massUpdateEnable}">
-                                    <td> 
-                                       <!-- <span onclick="{!c.deleteRecord}" data-index='{!index}'>
-                                            <lightning:icon iconName="action:close" alternativeText="Delete"
-                                                            class="some-indicator" size="x-small" title="Delete" />
-                                        </span>-->
-                                        <span data-recordid="{!''+row.Id+'_'+index}" onclick="{!c.deletequotelineRecord}" data-index='{!index}'>
-                                            <lightning:icon iconName="action:close" alternativeText="Delete"
-                                                            class="some-indicator" size="x-small" title="Delete" /> 
-                                        </span>
-                                  </td>
-                                </aura:if>
-                            </tr>
-                        </aura:iteration>
-                    </tbody> 
+                        
+                    </tbody>
                 </table>
             </div>
-        </div>
-    </lightning:card>
+            </div>
+    </div>
     <aura:if isTrue="{!v.isModalOpen}">
         <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
                  aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
