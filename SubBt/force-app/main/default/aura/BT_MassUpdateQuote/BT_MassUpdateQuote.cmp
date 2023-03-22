@@ -135,10 +135,7 @@
                                 <div class="slds-truncate" title="Grouping">Group</div>
                             </th> 
                             <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white;">
-                                <div class="slds-truncate" title="UOM">UOM</div>
-                            </th>
-                            <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white;">
-                                <div class="slds-truncate" title="Contractor">Vendor</div>
+                                <div class="slds-truncate" title="Notes">Notes</div>
                             </th>
                             <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white;">
                                 <div class="slds-truncate" title="Quantity">Quantity</div>
@@ -146,6 +143,10 @@
                             <th style="background-color:rgba(27, 82, 151, 1.0); color:white;">
                                 <div class="slds-truncate" title="Unit Cost">Unit Cost</div>
                             </th>
+                            <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white;">
+                                <div class="slds-truncate" title="Quantity">Markup</div>
+                            </th>
+                            
                             <th style="background-color:rgba(27, 82, 151, 1.0); color:white;border-top-right-radius:5px;">
                                 <span>
                                 </span>
@@ -153,6 +154,10 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <aura:iteration items="{!v.listOfRecords}" var="row" indexVar="index">
+                        <c:BT_QuoteItems recordItem="{!row}"  index="{!index}"  />
+                    
+                    </aura:iteration>
                         
                     </tbody>
                 </table>

@@ -30,7 +30,7 @@
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 
     <!--Editable Fields-->
-    <aura:if isTrue="{!v.isMassUpdateEnable}">
+    <!-- <aura:if isTrue="{!v.isMassUpdateEnable}">
         <aura:if isTrue="{!v.isTextField}">
             <lightning:input value="{!v.cellValue}" name="{!v.index+'-'+v.fieldName}" onchange="{!c.onInputChange}" />
         </aura:if>
@@ -77,7 +77,7 @@
             <c:BT_LookupFields selectedRecordId="{!v.cellValue}" childObjectName="buildertek__Quote__c"
                 fieldName="{!v.fieldName}" record="{!v.record}" />
         </aura:if>
-    </aura:if> 
+    </aura:if>  -->
 
     <!--Text Fields-->
     <aura:if isTrue="{!!v.isMassUpdateEnable}">
