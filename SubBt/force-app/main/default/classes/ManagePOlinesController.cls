@@ -1071,6 +1071,7 @@ public with sharing class ManagePOlinesController {
     public static AuraResponse updateBomRecords( List < buildertek__Project_Selection_Sheet_Takeoff__c > updatedBomList ) {    
             
         System.debug('#@#@# updatedBomList--'+updatedBomList);
+        System.debug('#@#@# updatedBomList--'+updatedBomList[0].id);
         try {  
           
             update updatedBomList;  

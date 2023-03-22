@@ -2,6 +2,17 @@
     getParameterByName: function (component, event, name) {
         name = name.replace(/[\[\]]/g, "\\$&");
         var url = window.location.href;
+        console.log('url', url);
+        if(url != null){
+            //if condition to check if the url has the string 'buildertek__Project__c' in it
+            if(url.indexOf('%2Fbuildertek__Project__c%2F') != -1){
+                var newurl2 = url.substring(url.indexOf('%2Fbuildertek__Project__c%2F') + 28, url.indexOf('%2Fview'));
+                if(newurl2 != null){
+                    console.log('newurl2', newurl2);
+                    component.set("v.parentRecordId", newurl2);
+                }
+            }
+        }
         var regex = new RegExp("[?&]" + name + "(=1\.([^&#]*)|&|#|$)");
         var results = regex.exec(url);
         if (!results) return null;

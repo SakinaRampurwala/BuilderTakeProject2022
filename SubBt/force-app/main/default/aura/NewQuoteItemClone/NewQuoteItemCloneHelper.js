@@ -699,7 +699,7 @@
 
                 if (state === "SUCCESS") {
                     var result = response.getReturnValue();
-                    // console.log(response.groups);
+                    console.log(result.group);
                     console.log('TotalRecords ==> ',{ result });
                     // console.log(result.status);
                     // console.log(result.tarTable.ListOfEachRecord);
@@ -728,7 +728,7 @@
                     }
                     component.set("v.columns", result.columns);
                     console.log('columns-->',component.get("v.columns"));
-                    console.log('total-->',component.get("v.TotalRecords"));
+                    console.log('total--> as',component.get("v.TotalRecords"));
 
                     component.set("v.page", result.page);
                     component.set("v.total", result.total);

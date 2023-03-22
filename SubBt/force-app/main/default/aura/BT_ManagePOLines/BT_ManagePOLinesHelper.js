@@ -1588,6 +1588,7 @@
                   serviceCategory == "Edge")
               ) {
                 salestax = finalExtendedCost * (taxRate2 / 100);
+                console.log('salestax :- ', salestax);
               }
               //These 3 service cats won't have SalesTax
               /* Comment added by Harika, regarding CAES-54 ticket, Date: 26-07-2022*/

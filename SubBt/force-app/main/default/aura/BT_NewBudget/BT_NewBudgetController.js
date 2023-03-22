@@ -2,9 +2,10 @@
     doInit: function (component, event, helper) {
     
         var value = helper.getParameterByName(component, event, 'inContextOfRef');
+        console.log('value', value);
         var context = '';
         var parentRecordId = '';
-        component.set("v.parentRecordId", parentRecordId);
+        // component.set("v.parentRecordId", parentRecordId);
         if (value != null) {
             context = JSON.parse(window.atob(value));
             parentRecordId = context.attributes.recordId;

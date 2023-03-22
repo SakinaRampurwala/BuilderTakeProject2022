@@ -41,7 +41,10 @@
                     "UOMvalues" : '',
                     "Vendor" : {},
                 };
-                list.unshift(obj);
+                // list.unshift(obj);
+                for(var i=0;i<5;i++){
+                    list.push(obj);
+                }
                 component.set('v.listOfRecords', list);
                 
             }), 1000
@@ -68,7 +71,10 @@
        /* for (var i in fields) {
             obj[fields[i].name] = '';
         }*/
-        list.push(obj);
+        // list.push(obj);
+        for (var i = 0; i < 5; i++) {
+            list.push(obj);
+        }
         component.set('v.listOfRecords', list);
        // helper.fetchpricebooks(component, event, helper);
     },

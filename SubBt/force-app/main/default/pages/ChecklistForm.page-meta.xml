@@ -6,11 +6,6 @@
     <label>ChecklistForm</label>
     <packageVersions>
         <majorNumber>1</majorNumber>
-        <minorNumber>19</minorNumber>
-        <namespace>ed_insights</namespace>
-    </packageVersions>
-    <packageVersions>
-        <majorNumber>1</majorNumber>
         <minorNumber>20</minorNumber>
         <namespace>sf_chttr_apps</namespace>
     </packageVersions>

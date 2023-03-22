@@ -354,11 +354,11 @@
 
                                 <!-- <lightning:button iconName="utility:groups" iconPosition="left"
                             onclick="{!c.onClickCreateNewGroup}" label="Add Group" class="sldsButtonGroup" />-->
-                                <div>
+                                <!-- <div>
                                     <lightning:button iconName="utility:copy" iconPosition="left"
                                         onclick="{!c.onClickMassDuplicate}" label="Duplicate Lines"
                                         class="sldsButtonGroup" />
-                                </div>&nbsp;
+                                </div>&nbsp; -->
 
                                 <!-- <lightning:button label="Add Product" onclick="{!c.addProduct}" class="sldsButtonGroup" />-->
                                 <div>
