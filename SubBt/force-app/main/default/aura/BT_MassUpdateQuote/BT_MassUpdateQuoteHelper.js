@@ -252,4 +252,105 @@
         });
         $A.enqueueAction(action);
     },
+    fetchpricebooks: function (component, event, helper) {
+        var action = component.get("c.getpricebook");
+        action.setParams({
+            quoteId: component.get("v.recordId"),
+        });
+        var opts = [];
+        action.setCallback(this, function (response) {
+            if (response.getState() == "SUCCESS") {
+                component.set("v.pricebookName", response.getReturnValue());
+            }
+        });
+        $A.enqueueAction(action);
+        var actions = component.get("c.getpricebooks");
+        var opts = [];
+        actions.setCallback(this, function (response) {
+            if (response.getState() == "SUCCESS") {
+                var result = response.getReturnValue();
+                var opts = [];
+                opts.push({
+                    key: "None",
+                    value: "",
+                });
+                for (var key in result) {
+                    opts.push({
+                        key: key,
+                        value: result[key],
+                    });
+                }
+                component.set("v.pricebookoptions", opts);
+            }
+        });
+        $A.enqueueAction(actions);
+    },
+    getTableRows: function (component, event, helper ,pageNumber, pageSize) {
+        var action = component.get("c.getRecords");
+        var fieldSetValues = component.get("v.fieldSetValues");
+        var setfieldNames = new Set();
+        if(fieldSetValues){
+            for (var c = 0, clang = fieldSetValues.length; c < clang; c++) {
+                if (!setfieldNames.has(fieldSetValues[c].name)) {
+                    setfieldNames.add(fieldSetValues[c].name);
+                    if (fieldSetValues[c].type == 'REFERENCE') {
+                        if (fieldSetValues[c].name.indexOf('__c') == -1) {
+                            setfieldNames.add(fieldSetValues[c].name.substring(0, fieldSetValues[c].name.indexOf('Id')) + '.Name');
+                        } else {
+                            setfieldNames.add(fieldSetValues[c].name.substring(0, fieldSetValues[c].name.indexOf('__c')) + '__r.Name');
+                        }
+                    }
+                }
+            }
+        }
+       
+        
+        var arrfieldNames = [];
+        setfieldNames.forEach(v => arrfieldNames.push(v));
+        component.set('v.arrfieldNames', arrfieldNames);
+        console.log('Record Id::', component.get('v.recordId'));
+        console.log('Arr Field Name::', JSON.stringify(arrfieldNames));
+        action.setParams({
+            parentRecordId: component.get("v.recordId"),
+            fieldNameJson: JSON.stringify(arrfieldNames),
+            pageNumber: pageNumber,
+            pageSize: pageSize
+        });
+        action.setCallback(this, function (response) {
+            if (response.getState() == 'SUCCESS' && response.getReturnValue()) {
+                var list = JSON.parse(response.getReturnValue());
+                if (list.length > 0) {
+                    console.log('Records::', response.getReturnValue());
+                    component.set("v.listOfRecords", list);
+                    component.set("v.cloneListOfRecords", list);
+                    component.set('v.numberOfItems', list.length);
+                    component.set("v.PageNumber", pageNumber);
+                    component.set("v.RecordStart", (pageNumber - 1) * pageSize + 1);
+                    component.set("v.RecordEnd", (list.length + 3) * pageNumber);
+                    component.set("v.TotalPages", Math.ceil(list.length / component.get('v.TotalRecords')));
+                    if (component.get('v.TotalRecords') < pageNumber * pageSize) {
+                        component.set("v.isNextDisabled", true);
+                    } else {
+                        component.set("v.isNextDisabled", false);
+                    }
+                }else {
+                    component.set("v.listOfRecords", []);
+                    component.set("v.cloneListOfRecords", []);
+                    component.set('v.numberOfItems', 0);
+                    component.set("v.PageNumber", 1);
+                    component.set("v.RecordStart", 0);
+                    component.set("v.RecordEnd", 0);
+                    component.set("v.TotalPages", 0);
+                    component.set("v.isNextVisible", true);
+                    component.set('v.isLoading', false);
+                }
+            }
+            else {
+                component.set("v.cloneListOfRecords", []);
+            }
+            
+            component.set('v.isLoading', false);
+        })
+        $A.enqueueAction(action);
+    },
 })

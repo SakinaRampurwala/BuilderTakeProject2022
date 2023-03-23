@@ -7,7 +7,6 @@
     <aura:attribute name="cellLabel" type="String" />
     <aura:attribute name="recordId" type="String" />
     <aura:attribute name="dropDownValue" type="String" />
-    <aura:attribute name="index" type="Integer" />
     <aura:attribute name="fieldName" type="String" />
     <aura:attribute name="isEditable" type="boolean" default="true" />
     <aura:attribute name="isTextField" type="boolean" default="false" />
@@ -26,9 +25,122 @@
     <aura:attribute name="parent" type="Aura.Component"/>
     
 	<aura:registerEvent name="datafromChild" type="c:senDatafromChild"/>
-    
-    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 
+    <!-- New attributes -->
+    <aura:attribute name="pricebookName" type="string" />
+    <aura:attribute name="productfamily" type="string" />
+    <aura:attribute name="isLoading" type="Boolean" default="false" />
+    <aura:attribute name="recordItem" type="Object" description="" /> 
+    <aura:attribute name="pricebookoptions" type="List" />
+    <aura:attribute name="listofproductfamily" type="List" />
+    <aura:handler name="change" value="{!v.productfamily}" action="{!c.handleValueChange}"/>
+    <aura:attribute name="selectedLookUpRecord" type="sObject" default="{}" />
+    <aura:attribute name="index" type="Integer" />
+    <aura:attribute name="newQuoteLine" type="Quote_Item__c" default="{ 'sobjectType':'Quote_Item__c',
+    'buildertek__Quantity__c':1}" access="global" />
+    <aura:attribute name="clearLookupValue" type="Aura.Action" />
+    <aura:registerEvent name="ChildBudgetLineEvent" type="c:BT_BudgetAddLineEvent"/>
+    <aura:registerEvent name="ChildBudgetLineLookupEvent" type="c:BT_BudgetItemLookupEvent"/>
+    <aura:attribute name="Message" type="String" default="" />
+
+
+
+
+
+
+
+
+
+
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <lightning:overlayLibrary aura:id="overlayLib" />
+    <lightning:workspaceAPI aura:id="workspace" />
+    <ltng:require styles="{!$Resource.MOdalPreviewWidth72}" />
+
+
+    <tr>
+        <td>
+            <ui:inputSelect value="{!v.pricebookName }" change="{!c.changeEvent}"
+                            class="pricebook-class pointer1" >
+                <aura:iteration var="option" items="{! v.pricebookoptions }" >
+                    <option value="{! option.value }"
+                            selected="{!option.value == v.pricebookName}">{! option.key }
+                    </option>
+                </aura:iteration>
+            </ui:inputSelect>
+        </td>
+        <td>
+            <ui:inputSelect value="{!v.productfamily}" change="{!c.changefamily}"
+                            class="pricebook-class pointer1">
+                <aura:iteration var="option" items="{!v.listofproductfamily}">
+                    <option value="{!option.productfamilyvalues}"
+                            selected="{!option.productfamilyvalues == v.productfamily}">
+                        {!option.productfamilyvalues}</option>
+                </aura:iteration>
+            </ui:inputSelect>
+        </td>
+       <td>
+            <div>
+            	<c:BT_LightningLookup aura:id="productId" objectAPIName="Product2"
+                                  IconName="standard:product" selectedRecord="{!v.selectedLookUpRecord}"
+                                  parentId="{!v.pricebookName }" prodctfamly="{!v.productfamily}" massBudgetLineIndex="{!v.index}"/>
+            </div>
+            
+        </td>
+       <td>
+            <ui:inputText value="{!v.newQuoteLine.Name}" aura:id="budgetLineID" />
+        </td>
+        
+        <td>
+            <c:BT_LookUp aura:id="groupId" _field="buildertek__Grouping__c"
+                                                    _sobject="buildertek__Quote_Item__c"
+                                                    _value="{!v.newQuoteLine.buildertek__Grouping__c}"
+                                                    _text_value="{!v.newQuoteLine.buildertek__Grouping__r.Name}"  _label=""
+                                                    _filter="" />
+        </td>
+        <td>
+            <ui:inputTextArea value="{!v.newBudgetLine.buildertek__Notes__c}" />
+        </td>
+        <td>
+            <ui:inputNumber value="{!v.newBudgetLine.buildertek__Quantity__c}" />
+        </td>
+        <td>
+            <ui:inputCurrency value="{!v.newQuote.buildertek__Unit_Cost__c}"
+            aura:id="unitCostId" />
+         </td>
+         <td style="padding-bottom:22px; width: 7% !important;">
+            <lightning:input type="number" name="input7" label="" value="{!v.newQuote.buildertek__Margin__c}" formatter="percent-fixed" aura:id="marginId"  step="0.01"/>
+         </td>
+       <!-- <td>
+            <ui:inputSelect value="{! v.UOMvalues }"
+                            class="select-class pointer1" change ="{!c.onInputChange}">
+                <aura:iteration var="option" items="{! v.options }">
+                    <option value="{! option.value }" selected="{!option.value == v.UOMvalues}" >{! option.key }</option>
+                </aura:iteration>
+            </ui:inputSelect>
+        </td>
+        <td>
+            <c:customLookup aura:id="accountId" objectAPIName="Account"
+                            IconName="standard:account" selectedRecord="{!v.selectedContractor}" />
+        </td>
+        <td>
+            <ui:inputNumber value="{!v.newBudgetLine.buildertek__Quantity__c}" />
+        </td>
+        <td>
+            <ui:inputCurrency value="{!v.newBudgetLine.buildertek__Unit_Price__c}"
+                              aura:id="unitPriceId" />
+        </td>
+        <td>
+        	 <span  onclick="{!c.deletebudgetlineRecord}" data-index='{!v.index}' class="pointer1">
+                                            <lightning:icon iconName="action:close" alternativeText="Delete"
+                                                            class="some-indicator" size="x-small" title="Delete" />
+                                        </span>
+        </td> -->
+     
+    </tr>
+
+    <!-- Initial Code -->
     <!--Editable Fields-->
     <!-- <aura:if isTrue="{!v.isMassUpdateEnable}">
         <aura:if isTrue="{!v.isTextField}">
@@ -80,7 +192,7 @@
     </aura:if>  -->
 
     <!--Text Fields-->
-    <aura:if isTrue="{!!v.isMassUpdateEnable}">
+    <!-- <aura:if isTrue="{!!v.isMassUpdateEnable}">
         <aura:if isTrue="{!v.isTextField}">
             <ui:outputText value="{!v.cellValue}" />
         </aura:if>
@@ -115,5 +227,5 @@
             <ui:outputURL value="{!'/one/one.app?#/sObject/'+ v.cellValue + '/view'}" target="_blank"
                 label="{!v.cellLabel}" />
         </aura:if>
-    </aura:if>
+    </aura:if> -->
 </aura:component>

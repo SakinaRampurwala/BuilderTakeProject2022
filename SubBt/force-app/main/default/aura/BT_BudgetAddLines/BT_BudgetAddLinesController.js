@@ -204,6 +204,7 @@
 	},
 
     handleChildBudgetLineEvent : function (component, event, helper) {
+        console.log('handleChildBudgetLineEvent');
         var isdelete = JSON.parse(JSON.stringify(event.getParam("isdelete")));
         if(!isdelete){
             var valueFromChild = JSON.parse(JSON.stringify(event.getParam("message")));
@@ -221,13 +222,16 @@
         }else if(isdelete){
             var valueFromChild = JSON.parse(JSON.stringify(event.getParam("message")));
             var listRecord = component.get("v.listOfRecords");
+            console.log('valueFromChild',valueFromChild);
             listRecord.splice(valueFromChild.index, 1);
+            console.log('listRecord',listRecord);
             component.set("v.listOfRecords",listRecord);
+            console.log('listRecord 2',component.get("v.listOfRecords"));
         }
         
         
-       	//component.set("v.listOfRecords",listRecord);
         console.log(JSON.parse(JSON.stringify(listRecord)))
+        component.set("v.DuplistOfRecords",listRecord);
         //component.set("v.enteredValue", valueFromChild);
     },
     deletequotelineRecord: function (component, event, helper) {

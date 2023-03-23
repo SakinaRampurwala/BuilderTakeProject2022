@@ -181,3 +181,8 @@
 .THIS .costInputField{
     max-width: 110px;
 }
+
+/* *added color in table row* */
+.THIS .tableRow {
+    background-color: #F3F3F3;
+}

@@ -869,16 +869,16 @@
                            }).fire();
                        }
                    }); */
-                var toastEvent = $A.get("e.force:showToast");
-                toastEvent.setParams({
-                    title: 'Error',
-                    message: 'Please select the Quote Line you would like to Delete.',
-                    duration: ' 5000',
-                    key: 'info_alt',
-                    type: 'error',
-                    mode: 'pester'
-                });
-                toastEvent.fire();
+                   var toastEvent = $A.get("e.force:showToast");
+                   toastEvent.setParams({
+                       title: 'Error',
+                       message: 'Please insert atleast one Budget Line ',
+                       duration: ' 5000',
+                       key: 'info_alt',
+                       type: 'error',
+                       mode: 'pester'
+                   });
+                   toastEvent.fire();
                 component.set("v.Spinner22", false);
             }
             component.set("v.Spinner22", false);

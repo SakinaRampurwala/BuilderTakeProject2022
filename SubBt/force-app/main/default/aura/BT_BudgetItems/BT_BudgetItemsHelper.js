@@ -26,11 +26,13 @@
         $A.enqueueAction(actions);
     },
      getProductDetails: function (component, event, helper) {
+        var pricebookId = component.get("v.recordItem").pricebookName;
         var action = component.get("c.getProductPrice");
         var productId = component.get("v.productId");
         var productName = component.get("v.productName");
         action.setParams({
             productId: productId,
+            pricebookId: pricebookId
         });
         action.setCallback(this, function (respo) {
             var res = respo.getReturnValue();

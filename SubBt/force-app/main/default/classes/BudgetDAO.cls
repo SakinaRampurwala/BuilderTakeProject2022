@@ -673,7 +673,7 @@ Throws [Exceptions]:
 **********************************************************************************************************************/
     @AuraEnabled
     public static list<PricebookEntry> getProductPrice(string productId, String pricebookId){
-    //   System.debug('########pricebook' + productId);
+
         list<PricebookEntry> pList;
         
         pList = [select id, UnitPrice, buildertek__Unit_Cost__c, buildertek__Markup__c, buildertek__Discount__c

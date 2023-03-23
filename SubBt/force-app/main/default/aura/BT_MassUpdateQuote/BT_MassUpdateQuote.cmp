@@ -3,8 +3,6 @@
                 access="global" controller="MassUpdateQuote">
     <aura:attribute name="sObjectName" type="String" />
     <aura:attribute name="fieldSetName" type="String" />
-    <aura:attribute name="fieldSetValues" type="List" />
-    <aura:attribute name="arrfieldNames" type="List" />
     <aura:attribute name="tableRecords" type="List" />
     <aura:attribute name="parentFieldName" type="String" />
     <aura:attribute name="quoteLineName" type="String" />
@@ -14,17 +12,27 @@
     <aura:attribute name="parentRecordId" type="String" />
     <aura:attribute name="fields" type="List" default="[]" />
     <aura:attribute name="listOfRecords" type="Quote__c[]" />
-    <aura:attribute name="cloneListOfRecords" type="Quote__c[]" />
      <aura:attribute name="dupListOfRecords" type="Quote__c[]" />
     <aura:attribute name="recordId" type="String" />
     <aura:attribute name="recordName" type="String" />
-    <aura:attribute name="numberOfItems" type="Integer" />
     <aura:attribute name="statusList" type="List" />
     <aura:attribute name="priorityList" type="List" />
     <aura:attribute name="massUpdateEnable" type="Boolean" default="true" />
     <aura:attribute name="onSaveEnabled" type="Boolean" default="false" />
     <aura:attribute name="isLoading" type="Boolean" default="false" />
     
+
+     <aura:method name="reloadMethod" action="{!c.reloadMethod}" access="public">
+
+    </aura:method>
+    
+    <!-- New Attribute -->
+    <aura:attribute name="pricebookoptions" type="List" />
+    <aura:attribute name="pricebookName" type="string" />
+    <aura:attribute name="fieldSetValues" type="List" />
+    <aura:attribute name="arrfieldNames" type="List" />
+    <aura:attribute name="cloneListOfRecords" type="Quote__c[]" />
+    <aura:attribute name="numberOfItems" type="Integer" />
     <aura:attribute name="PageNumber" type="integer" default="1" />
     <aura:attribute name="pageSize" type="integer" default="25" />
     <aura:attribute name="TotalPages" type="integer" default="0" />
@@ -33,11 +41,15 @@
     <aura:attribute name="RecordEnd" type="integer" default="0" />
     <aura:attribute name="isNextDisabled" type="Boolean" default="true" />
      <aura:attribute name="deleteQuoteLines" type="List" />
+     <aura:handler name="ChildBudgetLineEvent" event="c:BT_BudgetAddLineEvent"
+     action="{!c.handleChildBudgetLineEvent}"/>
 
-     <aura:method name="reloadMethod" action="{!c.reloadMethod}" access="public">
 
-    </aura:method>
-    
+
+
+
+
+
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     <lightning:overlayLibrary aura:id="overlayLib" />
     <lightning:workspaceAPI aura:id="workspace" />
@@ -156,6 +168,8 @@
                     <tbody>
                         <aura:iteration items="{!v.listOfRecords}" var="row" indexVar="index">
                         <c:BT_QuoteItems recordItem="{!row}"  index="{!index}"  />
+                        
+                         
                     
                     </aura:iteration>
                         

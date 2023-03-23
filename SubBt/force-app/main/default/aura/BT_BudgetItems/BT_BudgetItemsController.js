@@ -253,6 +253,8 @@
         compEvent.fire();
     },
     deletebudgetlineRecord: function (component, event, helper) {
+        var index = component.get("v.index");
+        console.log('index '+index);
         var compEvent = component.getEvent("ChildBudgetLineEvent");
         compEvent.setParams({
             "isdelete" : true,

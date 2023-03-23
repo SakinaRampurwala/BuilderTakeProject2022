@@ -36,33 +36,33 @@ public with sharing class MassUpdateQuote{
         return null;
     }
     
-    @AuraEnabled
-    public static String getRecords(String parentRecordId, String fieldNameJson,Integer pageNumber, Integer pageSize){
+    // @AuraEnabled
+    // public static String getRecords(String parentRecordId, String fieldNameJson,Integer pageNumber, Integer pageSize){
         
-        List<sObject> lstResult = new List<sObject>();
-        String result = '[]';
-        try{
-            if(String.isNotBlank(parentRecordId)){
-                Integer offset = (pageNumber - 1) * pageSize;
-                List<String> fieldNames = (List<String>)JSON.deserialize(fieldNameJson, List<String>.class);
-                Set<String> setFieldNames = new Set<String>();
-                String query = 'SELECT ' + String.join(fieldNames, ',')+' FROM buildertek__Quote_Item__c';
-                query += ' WHERE buildertek__Quote__c= : parentRecordId ORDER BY Name ASC NULLS LAST';
-                query += ' LIMIT : pageSize OFFSET : offset';
-                for (sObject s : Database.query(query)){
-                    lstResult.add(s);
-                    system.debug('result'+lstResult);
-                }
-                if (lstResult.size() > 0){
-                    result = JSON.serialize(lstResult);
-                    return result;
-                }
-            }
-        } catch (Exception e){
-            System.debug('Error' + e.getMessage());
-        }
-        return null;
-    }
+    //     List<sObject> lstResult = new List<sObject>();
+    //     String result = '[]';
+    //     try{
+    //         if(String.isNotBlank(parentRecordId)){
+    //             Integer offset = (pageNumber - 1) * pageSize;
+    //             List<String> fieldNames = (List<String>)JSON.deserialize(fieldNameJson, List<String>.class);
+    //             Set<String> setFieldNames = new Set<String>();
+    //             String query = 'SELECT ' + String.join(fieldNames, ',')+' FROM buildertek__Quote_Item__c';
+    //             query += ' WHERE buildertek__Quote__c= : parentRecordId ORDER BY Name ASC NULLS LAST';
+    //             query += ' LIMIT : pageSize OFFSET : offset';
+    //             for (sObject s : Database.query(query)){
+    //                 lstResult.add(s);
+    //                 system.debug('result'+lstResult);
+    //             }
+    //             if (lstResult.size() > 0){
+    //                 result = JSON.serialize(lstResult);
+    //                 return result;
+    //             }
+    //         }
+    //     } catch (Exception e){
+    //         System.debug('Error' + e.getMessage());
+    //     }
+    //     return null;
+    // }
     
     @AuraEnabled
     public static String getFieldSet(){
@@ -157,5 +157,98 @@ public with sharing class MassUpdateQuote{
         }
         return null;
         
-    }    
+    }  
+    @AuraEnabled
+    public static string getpricebook(string quoteId){
+        list<buildertek__Quote__c> quotesList;
+        If (Schema.sObjectType.buildertek__Quote__c.fields.Id.isAccessible() && Schema.sObjectType.buildertek__Quote__c.fields.Name.isAccessible() && Schema.sObjectType.buildertek__Quote__c.fields.buildertek__Project__c.isAccessible() && Schema.sObjectType.buildertek__Project__c.fields.buildertek__Price_Book__c.isAccessible()){
+            quotesList = [select id, buildertek__Project__r.buildertek__Price_Book__c
+                          from buildertek__Quote__c
+                          where id = :quoteId];
+        }
+        if (quotesList.size() > 0){
+            return quotesList[0].buildertek__Project__r.buildertek__Price_Book__c;
+        }
+        return null;
+    }
+    @AuraEnabled
+    public static Map<String, String> getpricebooks(){
+        Map<String, String> options = new Map<String, String>();
+        list<pricebook2> PriceList;
+        PriceList = [select Id, Name
+                     from pricebook2 
+                     Where buildertek__BT_Visible__c = true AND isActive = true ORDER BY Name ASC];
+        for (pricebook2 p : PriceList){
+            options.put(p.name, p.Id);
+        }
+        return options;
+    }  
+    @AuraEnabled
+    public static String getRecords(String parentRecordId, String fieldNameJson,Integer pageNumber, Integer pageSize){
+        
+        List<sObject> lstResult = new List<sObject>();
+        String result = '[]';
+        try{
+            if(String.isNotBlank(parentRecordId)){
+                Integer offset = (pageNumber - 1) * pageSize;
+                List<String> fieldNames = (List<String>)JSON.deserialize(fieldNameJson, List<String>.class);
+                Set<String> setFieldNames = new Set<String>();
+                String query = 'SELECT ' + String.join(fieldNames, ',')+' FROM buildertek__Quote_Item__c';
+                query += ' WHERE buildertek__Quote__c = : parentRecordId ORDER BY Name ASC NULLS LAST';
+                query += ' LIMIT : pageSize OFFSET : offset';
+                for (sObject s : Database.query(query)){
+                    lstResult.add(s);
+                }
+                if (lstResult.size() > 0){
+                    result = JSON.serialize(lstResult);
+                    return result;
+                }
+            }
+        } catch (Exception e){
+            System.debug('Error' + e.getMessage());
+        }
+        return null;
+    }
+    public class productfamilyClass{
+        @AuraEnabled
+        public string productfamilyvalues{ get; set; }
+    }
+    
+
+    @AuraEnabled
+    public static list<productfamilyClass> getProductfamilyRecords(String ObjectName, string parentId){
+       // system.debug('ObjectName-->' + ObjectName);
+        Map<String, String> options = new Map<String, String>();
+        List<sObject> returnList = new List<sObject>();
+        
+        list<string> ProdIds = new list<string>();
+        if (ObjectName == 'Product2' && parentId != null){
+            
+            list<pricebookEntry> PElist;
+            
+            PElist = [select id, Product2Id
+                      from pricebookEntry
+                      where pricebook2Id = :parentId];
+            
+            for (pricebookEntry PE : PElist){
+                ProdIds.add(PE.Product2Id);
+            }
+        }
+        //list<Product2> productfamlylst = [select id, Name,family from Product2 where Id IN :ProdIds AND family != null order by family];
+        List<AggregateResult> productfamlylst = [SELECT family
+                                                 FROM Product2
+                                                 where (Id IN :ProdIds AND family != null)
+                                                 group by family];
+        list<productfamilyClass> pfwrapperlst = new list<productfamilyClass>();
+        if (productfamlylst.size() > 0){
+            for (AggregateResult agg : productfamlylst){
+                productfamilyClass pf = new productfamilyClass();
+                pf.productfamilyvalues = string.valueof(agg.get('family'));
+                pfwrapperlst.add(pf);
+            }
+           // system.debug('pfwrapperlst---->' + pfwrapperlst);
+        }
+        return pfwrapperlst;
+    }
+    
 }

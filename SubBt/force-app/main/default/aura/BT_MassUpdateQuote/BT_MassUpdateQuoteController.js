@@ -7,13 +7,42 @@
             workspaceAPI.setTabLabel({
             tabId: opendTab,
             label: "Mass Add Line"
-        });
+            });
         workspaceAPI.setTabIcon({
             tabId: opendTab,
             icon: 'custom:custom5',
             iconAlt: 'Mass Add Line'
+            });
         });
-    });
+        component.set('v.isLoading', true);
+       var pageNumber = component.get("v.PageNumber");
+        var pageSize = component.get("v.pageSize");
+        helper.fetchpricebooks(component, event, helper);
+        window.setTimeout(
+            $A.getCallback(function () {
+                helper.getTableRows(component, event, helper, pageNumber, pageSize);
+                component.set('v.isLoading', false);
+                component.set("v.listofproductfamily", '');
+                var list = component.get('v.listOfRecords');
+                var obj = {
+                    "productfamily": '',
+                    "pricebookName" : '',
+                    "product": {
+                        "Id":'',
+                        "Name":''
+                    },
+                    "newBudgetLine" : {},
+                    "UOMvalues" : '',
+                    "Vendor" : {},
+                };
+                // list.unshift(obj);
+                for(var i=0;i<5;i++){
+                    list.push(obj);
+                }
+                component.set('v.listOfRecords', list);
+                
+            }), 1000
+        );
         // component.set('v.isLoading', true);
         // var pageNumber = component.get("v.PageNumber");
         // var pageSize = component.get("v.pageSize");
@@ -231,5 +260,32 @@
             component.set("v.fieldSetValues", fieldSetObj);
         })
         $A.enqueueAction(action);
-    }
+    },
+    handleChildBudgetLineEvent : function (component, event, helper) {
+        var isdelete = JSON.parse(JSON.stringify(event.getParam("isdelete")));
+        if(!isdelete){
+            var valueFromChild = JSON.parse(JSON.stringify(event.getParam("message")));
+            
+            var listRecord = component.get("v.DuplistOfRecords");
+            if(listRecord.length){
+                if(listRecord[valueFromChild.index]){
+                    listRecord[valueFromChild.index] = valueFromChild;
+                }else{
+                    listRecord.push(valueFromChild);
+                }
+            }else{
+                listRecord.push(valueFromChild)
+            }
+        }else if(isdelete){
+            var valueFromChild = JSON.parse(JSON.stringify(event.getParam("message")));
+            var listRecord = component.get("v.listOfRecords");
+            listRecord.splice(valueFromChild.index, 1);
+            component.set("v.listOfRecords",listRecord);
+        }
+        
+        
+       	//component.set("v.listOfRecords",listRecord);
+        console.log(JSON.parse(JSON.stringify(listRecord)))
+        //component.set("v.enteredValue", valueFromChild);
+    },
 })
