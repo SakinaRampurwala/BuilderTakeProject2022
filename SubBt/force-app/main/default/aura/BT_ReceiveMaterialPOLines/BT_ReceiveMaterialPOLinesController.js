@@ -50,18 +50,21 @@
         var  purchaseId = component.get("v.recordId");
       
         var rfqlist= component.get("v.rfqRecordList");
-     //  alert( JSON.stringify(rfqlist));
-  //  alert(rfqlist[i].buildertek__Product__c );
         var action =component.get("c.addProducts");
+        let productIdList=[];
         
         
         var productList = [];
         for(var i=0;i<rfqlist.length;i++){
             if(rfqlist[i].buildertek__Product__c != null){
+                productIdList.push(rfqlist[i].buildertek__Product__c);
                 var obj = {};
+                console.log(rfqlist[i].quantity_recieved);
+                console.log('{{{{{{{{{{{{{{}}}}}}}}}}}}}}}}}}}}}}}}');
                 if(rfqlist[i].quantity_recieved != null){
                     obj['prodId'] = rfqlist[i].buildertek__Product__c
                     obj['quantity_recieved'] = rfqlist[i].quantity_recieved
+                    obj['polineId'] = rfqlist[i].Id
                     
                     productList.push(obj);
                 }
@@ -70,38 +73,60 @@
         }
         
         console.log(productList);
+        debugger;
         component.set("v.Spinner", true);
         component.set("v.showMessage", true);
         action.setParams({
+            productId:productIdList,
             "ProductsList" : JSON.stringify(productList),
             
         })
         
         action.setCallback(this,function(response){
-            
+            console.log(response.getState() , 'State=====');
+            console.log(response.getError());
             if(response.getState() == "SUCCESS"){
                // console.log(response);
                 //alert(response.getState());
-                
-                var recId = response.getReturnValue();
-                // alert(recId);
-                var recordId = component.get("v.recordId");
-                
-                $A.get("e.force:closeQuickAction").fire();
-                setTimeout(function(){ location.reload(); }, 1800);
-                component.set("v.Spinner", false);
-                component.set("v.showMessage", false);
-               // alert(recordId);
-             /*   $A.get("e.force:navigateToSObject").setParams({
-                    "recordId": recordId,
-                    "slideDevName": "detail"
-                }).fire();*/
-                
-                var urlEvent = $A.get("e.force:navigateToURL");
-                urlEvent.setParams({
-                    "url": '/lightning/r/buildertek__Purchase_Order__c/'+recordId+'/view'
-                });
-                urlEvent.fire();
+                var result = response.getReturnValue();
+                console.log(result);
+                debugger;
+
+                if(result){
+                    var recId = response.getReturnValue();
+                    // alert(recId);
+                    var recordId = component.get("v.recordId");
+                    
+                    $A.get("e.force:closeQuickAction").fire();
+                    setTimeout(function(){ location.reload(); }, 1800);
+                    component.set("v.Spinner", false);
+                    component.set("v.showMessage", false);
+                // alert(recordId);
+                /*   $A.get("e.force:navigateToSObject").setParams({
+                        "recordId": recordId,
+                        "slideDevName": "detail"
+                    }).fire();*/
+                    
+                    var urlEvent = $A.get("e.force:navigateToURL");
+                    urlEvent.setParams({
+                        "url": '/lightning/r/buildertek__Purchase_Order__c/'+recordId+'/view'
+                    });
+                    urlEvent.fire();
+                }else{
+                    component.set("v.Spinner", false);
+                    var toastEvent = $A.get("e.force:showToast");
+                    toastEvent.setParams({
+                        title: 'Error',
+                        message: 'Quantity received and quantity delivered must be less than or equal to quantity ordered. ',
+                        duration: ' 5000',
+                        key: 'info_alt',
+                        type: 'error',
+                        mode: 'pester'
+                    });
+                    toastEvent.fire();
+                }
+                    
+                 
                 
                 
             }

@@ -904,7 +904,7 @@
                                                                 <aura:if isTrue="{!value.fieldName != 'buildertek__Contractor__c' &amp;&amp; value.fieldName != 'buildertek__CostCodeDivision__c'}" >
                                                                     <td class="ShowIconClass" data-myvalue="{!groIndex}" style="font-size: 0.78rem !important;">
                                                                         <aura:if isTrue="{!or(and(and(v.isEditMode, v.fieldName == value.fieldName), v.quoteItemId == recs.recordId),and(v.enableMassUpdate,
-                                                                                        or(or(or(or(or(or(or(or(or(or(or(or(or(or(or(or(or(or(or(or(or(or(or(or(or(or(
+                                                                                        or(or(or(or(or(or(or(or(or(or(or(or(or(or(or(or(or(or(or(or(or(or(or(or(or(or(or(or(
                                                                                         value.fieldName=='Name',
                                                                                         value.fieldName=='buildertek__Sales_Price__c'),
                                                                                         value.fieldName=='buildertek__Unit_Price__c'),value.fieldName == 'buildertek__Cost_Code_Name__c'),
@@ -918,7 +918,7 @@
                                                                                         value.fieldName=='buildertek__Group__c'),value.fieldName=='buildertek__Complete__c'),
                                                                                         value.fieldName=='buildertek__Previously_Billed__c'),value.fieldName=='buildertek__Product__c'),
                                                                                         value.fieldName=='buildertek__Regional_Factor__c'),value.fieldName=='buildertek__Trade_Type__c'),
-                                                                                        value.fieldName=='buildertek__Upgrades__c'),value.fieldName=='buildertek__Contractor__c')
+                                                                                        value.fieldName=='buildertek__Upgrades__c'),value.fieldName=='buildertek__Contractor__c'), value.fieldName=='buildertek__Markup__c'), value.fieldName=='buildertek__Tax__c')  
                                                                                         )))}">
 
                                                                             <aura:if isTrue="{!value.fieldType != 'picklist'}">

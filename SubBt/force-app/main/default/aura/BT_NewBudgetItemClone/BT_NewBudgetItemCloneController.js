@@ -2971,6 +2971,10 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
                                     newMassQuoteItem.buildertek__Contractor__c = recordList[l].originalValue;
                                     // alert('&&'+newMassQuoteItem.buildertek__Cost_Code__c );
                                     // alert('&&'+recordList[l].originalValue);
+                                }else if (recordList[l].fieldName == 'buildertek__Tax__c') {
+                                    newMassQuoteItem.buildertek__Tax__c = recordList[l].originalValue;
+                                }else if (recordList[l].fieldName == 'buildertek__Markup__c') {
+                                    newMassQuoteItem.buildertek__Markup__c = recordList[l].originalValue;
                                 }
                             }
                         }

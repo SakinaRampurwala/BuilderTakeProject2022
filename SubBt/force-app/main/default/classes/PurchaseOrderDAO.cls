@@ -651,4 +651,17 @@ public with sharing class PurchaseOrderDAO{
         }
         return options;
     }
+    @AuraEnabled
+    public static Id saveData(string allData){
+        buildertek__Purchase_Order_Item__c newRecord = (buildertek__Purchase_Order_Item__c) JSON.deserialize(allData, buildertek__Purchase_Order_Item__c.class);
+        System.debug(allData);
+        insert newRecord;
+        return newRecord.Id; 
+    }
+    // @AuraEnabled
+    // public static List<Product2> getProductDetails(Id PriceBookId  , string prodFamily){
+    //     List<Product2> product = [Select Id , Name , Family , (Select Id , Name , Pricebook2Id , Product2Id From PricebookEntries Where Pricebook2Id=: PriceBookId)  From Product2 where Family=: prodFamily AND Id IN (SELECT Product2Id FROM PricebookEntry)];
+    //     System.debug('List<Product2>' + product);
+    //     return product;
+    // }
 }
