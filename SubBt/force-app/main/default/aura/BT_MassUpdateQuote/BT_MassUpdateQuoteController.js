@@ -43,68 +43,61 @@
                 
             }), 1000
         );
-        // component.set('v.isLoading', true);
-        // var pageNumber = component.get("v.PageNumber");
-        // var pageSize = component.get("v.pageSize");
-        // helper.getTableFieldSet(component, event, helper);
-        // window.setTimeout(
-        //     $A.getCallback(function () {
-        //         helper.getQuoteName(component, event, helper);
-        //         helper.getTotalRecord(component, event, helper);
-        //         helper.getTableRows(component, event, helper, pageNumber, pageSize);
-        //         component.set('v.isLoading', false);
-        //     }), 1000
-        // );
+        var btadminaction = component.get("c.getadminvalues");
+        btadminaction.setCallback(this, function(response) {
+            console.log(response.getState());
+            console.log(response.getReturnValue());
+            console.log('admnvalues');
+
+            if (response.getState() === 'SUCCESS') {
+                var result = response.getReturnValue();
+                console.log({result});
+                console.log(response.getState());
+                console.log(response.getError());
+
+
+                if (response.getState() === 'SUCCESS') {
+                    var result = response.getReturnValue();
+                   
+                    component.set('v.removeSingleQuoteLineOption', result[0]);
+                    component.set('v.hideGlobalMargin', result[1]);
+                    component.set('v.hideGlobalMarkup', result[2]);
+
+
+                }
+            }
+
+        });
+        $A.enqueueAction(btadminaction);
 
     },
 
     onAddClick: function (component, event, helper) {
         var fields = component.get('v.fieldSetValues');
-      // alert( JSON.stringify(fields));
         var list = component.get('v.listOfRecords');
-        
-        
-       // alert(JSON.stringify(obj));
-       
-       /* for (var i in fields) {
-            obj[fields[i].name] = '';
-           // alert('haiii'+obj[fields[i].name]);
-        }*/
-        for(var i=0 ;i<5;i++){
-            var obj = {};
-            for (var k in fields) {
-				obj['Id'] = 'custom'+i                
-                obj[fields[k].name] = '';
-                // alert('haiii'+obj[fields[i].name]);
-            }
-            
-            list.unshift(obj);
-            
-            //list.unshift(obj);
+        var obj = {};
+        var obj = {
+           "productfamily": '',
+           "pricebookName" : '',
+           "product": {
+               "Id":'',
+               "Name":''
+           },
+           "newQuoteLine" : {},
+           
+        };
+      
+        for (var i = 0; i < 5; i++) {
+            list.push(obj);
         }
-        //list.unshift(obj);
         component.set('v.listOfRecords', list);
-        
-       // alert( JSON.stringify(list));
         
     },
 
     onMassUpdate: function (component, event, helper) {
-      //  alert("1");
-       // var listOfRecords = component.get('v.listOfRecords');
-       // alert( JSON.stringify(listOfRecords));
         component.set('v.isLoading', true);
-        if (!component.get('v.massUpdateEnable')) {
-           // alert("2");
-            component.set('v.massUpdateEnable', true);
-           // alert("3");
-            component.set('v.isLoading', false);
-        } else if (component.get('v.massUpdateEnable')) {
-            component.set('v.isLoading', true);
-            component.set('v.massUpdateEnable', false);
-          //  alert("4")
-            helper.updateMassRecords(component, event, helper);
-        }
+        helper.updateMassRecords(component, event, helper);
+
     },
 
     onMassUpdateCancel: function (component, event, helper) {
@@ -195,17 +188,7 @@
         }
     },
     deletequotelineRecord: function (component, event, helper) {
-       /* var target = event.target;
-        var index = target.getAttribute("data-index");
-        var records = component.get('v.listOfRecords');
-        if (records[index].Id != undefined) {
-            component.set('v.selectedRecordIndex', index);
-            component.set('v.quoteLineName', records[index].Name);
-            component.set('v.isModalOpen', true);
-        } else if (records[index].Id == undefined) {
-            records.splice(index, 1);
-            component.set('v.listOfRecords', records);
-        }*/
+     
         var dataAttr = event.currentTarget.dataset.recordid.split("_");
         var recordid = dataAttr[0]; 
         var recordList;
@@ -262,30 +245,41 @@
         $A.enqueueAction(action);
     },
     handleChildBudgetLineEvent : function (component, event, helper) {
-        var isdelete = JSON.parse(JSON.stringify(event.getParam("isdelete")));
-        if(!isdelete){
-            var valueFromChild = JSON.parse(JSON.stringify(event.getParam("message")));
+        console.log('=======handleChildBudgetLineEvent======');
+        // var isdelete = JSON.parse(JSON.stringify(event.getParam("isdelete")));
+        // console.log({isdelete});
+        // if(!isdelete){
+        //     var valueFromChild = JSON.parse(JSON.stringify(event.getParam("message")));
             
-            var listRecord = component.get("v.DuplistOfRecords");
-            if(listRecord.length){
-                if(listRecord[valueFromChild.index]){
-                    listRecord[valueFromChild.index] = valueFromChild;
-                }else{
-                    listRecord.push(valueFromChild);
-                }
-            }else{
-                listRecord.push(valueFromChild)
-            }
-        }else if(isdelete){
-            var valueFromChild = JSON.parse(JSON.stringify(event.getParam("message")));
-            var listRecord = component.get("v.listOfRecords");
-            listRecord.splice(valueFromChild.index, 1);
-            component.set("v.listOfRecords",listRecord);
-        }
+        //     var listRecord = component.get("v.DuplistOfRecords");
+        //     if(listRecord.length){
+        //         if(listRecord[valueFromChild.index]){
+        //             listRecord[valueFromChild.index] = valueFromChild;
+        //         }else{
+        //             listRecord.push(valueFromChild);
+        //         }
+        //     }else{
+        //         listRecord.push(valueFromChild)
+        //     }
+        // }else if(isdelete){
+        //     var valueFromChild = JSON.parse(JSON.stringify(event.getParam("message")));
+        //     var listRecord = component.get("v.listOfRecords");
+        //     listRecord.splice(valueFromChild.index, 1);
+        //     component.set("v.listOfRecords",listRecord);
+        // }
         
         
        	//component.set("v.listOfRecords",listRecord);
-        console.log(JSON.parse(JSON.stringify(listRecord)))
+        // console.log(JSON.parse(JSON.stringify(listRecord)));
+        // component.set("v.DuplistOfRecords",listRecord);
+        // console.log(component.get("v.DuplistOfRecords"));
+
+        
+
         //component.set("v.enteredValue", valueFromChild);
+
+
+        var data = event.getParam("message");
+        console.log("data ==> ",{data});
     },
 })

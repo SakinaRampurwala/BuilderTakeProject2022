@@ -40,7 +40,7 @@
            delete getProductDetails.buildertek__Group__r;
             ////console.log("@Budgetline@",component.get("v.recordId"));
             getProductDetails.buildertek__Budget__c = component.get("v.recordId");
-            ////console.log("getprodct----",JSON.stringify(getProductDetails));
+            console.log("getprodct----",JSON.stringify(getProductDetails));
             if (res.length >= 1) {
                 if (res[0].UnitPrice != null) {
                     getProductDetails.buildertek__Sales_Price__c = res[0].UnitPrice;

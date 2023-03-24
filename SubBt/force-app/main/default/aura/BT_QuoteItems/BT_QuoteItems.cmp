@@ -33,7 +33,6 @@
     <aura:attribute name="recordItem" type="Object" description="" /> 
     <aura:attribute name="pricebookoptions" type="List" />
     <aura:attribute name="listofproductfamily" type="List" />
-    <aura:handler name="change" value="{!v.productfamily}" action="{!c.handleValueChange}"/>
     <aura:attribute name="selectedLookUpRecord" type="sObject" default="{}" />
     <aura:attribute name="index" type="Integer" />
     <aura:attribute name="newQuoteLine" type="Quote_Item__c" default="{ 'sobjectType':'Quote_Item__c',
@@ -42,8 +41,20 @@
     <aura:registerEvent name="ChildBudgetLineEvent" type="c:BT_BudgetAddLineEvent"/>
     <aura:registerEvent name="ChildBudgetLineLookupEvent" type="c:BT_BudgetItemLookupEvent"/>
     <aura:attribute name="Message" type="String" default="" />
+    <aura:attribute name="productId" type="string" />
+
+    <aura:handler name="change" value="{!v.productfamily}" action="{!c.handleValueChange}"/>
+    <aura:handler name="change" value="{!v.pricebookName}" action="{!c.handleValueChange}"/>
+    <aura:handler name="change" value="{!v.productId}" action="{!c.handleValueChange}"/>
+    <!-- <aura:handler name="change" value="{!v.UOMvalues}" action="{!c.handleValueChange}"/>
+    <aura:handler name="change" value="{!v.selectedContractor}" action="{!c.handleValueChange}"/>
+    <aura:handler name="change" value="{!v.newBudgetLine}" action="{!c.handleValueChange}"/> -->
+    <aura:attribute name="hideGlobalMargin" type="Boolean" default="false" />
+    <aura:attribute name="hideGlobalMarkup" type="Boolean" default="false" />
 
 
+
+    <aura:handler name="oSelectedRecordEvent" event="c:BT_LightningLookupEvent" action="{!c.handleComponentEvent}" />
 
 
 
@@ -73,6 +84,7 @@
         <td>
             <ui:inputSelect value="{!v.productfamily}" change="{!c.changefamily}"
                             class="pricebook-class pointer1">
+                <option value="--None--" id="noneValue">--None--</option>
                 <aura:iteration var="option" items="{!v.listofproductfamily}">
                     <option value="{!option.productfamilyvalues}"
                             selected="{!option.productfamilyvalues == v.productfamily}">
@@ -81,15 +93,27 @@
             </ui:inputSelect>
         </td>
        <td>
-            <div>
-            	<c:BT_LightningLookup aura:id="productId" objectAPIName="Product2"
-                                  IconName="standard:product" selectedRecord="{!v.selectedLookUpRecord}"
-                                  parentId="{!v.pricebookName }" prodctfamly="{!v.productfamily}" massBudgetLineIndex="{!v.index}"/>
-            </div>
-            
+        <aura:html tag="style">
+            .mainDiv{
+                padding-top:0% !important;
+
+            }
+            .pillSize{
+
+                padding-top: 2% !important;
+                padding-bottom: 2% !important;
+            }
+            .subDiv{
+                width:100% !important;
+            }
+        </aura:html>
+        <c:BT_LightningLookup objectAPIName="Product2"
+                                                    IconName="standard:product"
+                                                    selectedRecord="{!v.selectedLookUpRecord}" aura:id="productId"
+                                                    parentId="{! v.pricebookName }" prodctfamly="{!v.productfamily}" massBudgetLineIndex="{!v.index}"/>
         </td>
        <td>
-            <ui:inputText value="{!v.newQuoteLine.Name}" aura:id="budgetLineID" />
+            <ui:inputText value="{!v.newQuoteLine.Name}" aura:id="quoteLineID1"/>
         </td>
         
         <td>
@@ -100,44 +124,35 @@
                                                     _filter="" />
         </td>
         <td>
-            <ui:inputTextArea value="{!v.newBudgetLine.buildertek__Notes__c}" />
+            <ui:inputTextArea value="{!v.newQuoteLine.buildertek__Notes__c}" />
         </td>
         <td>
-            <ui:inputNumber value="{!v.newBudgetLine.buildertek__Quantity__c}" />
+            <ui:inputNumber value="{!v.newQuoteLine.buildertek__Quantity__c}" />
         </td>
         <td>
-            <ui:inputCurrency value="{!v.newQuote.buildertek__Unit_Cost__c}"
+            <ui:inputCurrency value="{!v.newQuoteLine.buildertek__Unit_Cost__c}"
             aura:id="unitCostId" />
-         </td>
-         <td style="padding-bottom:22px; width: 7% !important;">
-            <lightning:input type="number" name="input7" label="" value="{!v.newQuote.buildertek__Margin__c}" formatter="percent-fixed" aura:id="marginId"  step="0.01"/>
-         </td>
-       <!-- <td>
-            <ui:inputSelect value="{! v.UOMvalues }"
-                            class="select-class pointer1" change ="{!c.onInputChange}">
-                <aura:iteration var="option" items="{! v.options }">
-                    <option value="{! option.value }" selected="{!option.value == v.UOMvalues}" >{! option.key }</option>
-                </aura:iteration>
-            </ui:inputSelect>
         </td>
-        <td>
-            <c:customLookup aura:id="accountId" objectAPIName="Account"
-                            IconName="standard:account" selectedRecord="{!v.selectedContractor}" />
-        </td>
-        <td>
-            <ui:inputNumber value="{!v.newBudgetLine.buildertek__Quantity__c}" />
-        </td>
-        <td>
-            <ui:inputCurrency value="{!v.newBudgetLine.buildertek__Unit_Price__c}"
-                              aura:id="unitPriceId" />
-        </td>
-        <td>
-        	 <span  onclick="{!c.deletebudgetlineRecord}" data-index='{!v.index}' class="pointer1">
-                                            <lightning:icon iconName="action:close" alternativeText="Delete"
-                                                            class="some-indicator" size="x-small" title="Delete" />
-                                        </span>
+        <!-- <td style="padding-bottom:22px; width: 7% !important;">
+            <lightning:input type="number" name="input7" label="" value="{!v.newQuoteLine.buildertek__Markup__c}" formatter="percent-fixed" aura:id="marginId"  step="0.01"/>
         </td> -->
-     
+        <aura:if isTrue="{!!v.hideGlobalMargin}">
+            <td style="padding-bottom:22px; width: 7% !important;">
+                <lightning:input type="number" name="input7" label="" value="{!v.newQuoteLine.buildertek__Margin__c}" formatter="percent-fixed" aura:id="marginId"  step="0.01"/>
+            </td>
+        </aura:if>
+        <aura:if isTrue="{!!v.hideGlobalMarkup}">
+            <td style="padding-bottom:22px; width: 7% !important;">
+                <lightning:input type="number" name="input6" label="" value="{!v.newQuoteLine.buildertek__Markup__c}"  aura:id="markUpId"  formatter="percent-fixed" step="0.01" />
+            </td>
+        </aura:if>
+         <td>
+            <span  onclick="{!c.deleteQuotelineRecord}" data-index='{!v.index}' class="pointer1">
+                                           <lightning:icon iconName="action:close" alternativeText="Delete"
+                                                           class="some-indicator" size="x-small" title="Delete" />
+            </span>
+       </td>
+       
     </tr>
 
     <!-- Initial Code -->

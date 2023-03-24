@@ -11,8 +11,7 @@
     <aura:attribute name="isCancelModalOpen" type="Boolean" />
     <aura:attribute name="parentRecordId" type="String" />
     <aura:attribute name="fields" type="List" default="[]" />
-    <aura:attribute name="listOfRecords" type="Quote__c[]" />
-     <aura:attribute name="dupListOfRecords" type="Quote__c[]" />
+    <aura:attribute name="listOfRecords" type="Object[]" />
     <aura:attribute name="recordId" type="String" />
     <aura:attribute name="recordName" type="String" />
     <aura:attribute name="statusList" type="List" />
@@ -43,6 +42,15 @@
      <aura:attribute name="deleteQuoteLines" type="List" />
      <aura:handler name="ChildBudgetLineEvent" event="c:BT_BudgetAddLineEvent"
      action="{!c.handleChildBudgetLineEvent}"/>
+     <aura:attribute name="DuplistOfRecords" type="List" />
+
+     <aura:attribute name="hideGlobalMargin" type="Boolean" default="false" />
+     <aura:attribute name="hideGlobalMarkup" type="Boolean" default="false" />
+ 
+
+    
+
+
 
 
 
@@ -61,17 +69,21 @@
     <div class="slds-modal__content slds-scrollable" style="height:100% !important">
         <lightning:card aura:id="lightCard" class="slds-card_boundary slds-page-header slds-scrollable" title="Quote Lines">
             <aura:set attribute="actions">
-                <lightning:button iconName="utility:save" iconPosition="left" onclick="{!c.onMassUpdate}"
-                                label="{!v.massUpdateEnable==true?'Save':'Mass Update'}" class="" />
-                <aura:if isTrue="{!v.massUpdateEnable}">
-                    <lightning:button iconName="utility:add" iconPosition="left" onclick="{!c.onAddClick}" label="Add" />
+                <!-- <lightning:button iconName="utility:save" iconPosition="left" onclick="{!c.onMassUpdate}"
+                                label="{!v.massUpdateEnable==true?'Save':'Mass Update'}" class="" /> -->
+                <lightning:button iconName="utility:save" iconPosition="left" onclick="{!c.onMassUpdate}" label="Save" />
+                <lightning:button iconName="utility:add" iconPosition="left" onclick="{!c.onAddClick}" label="Add" />
+                <lightning:button iconName="utility:close" iconPosition="left" onclick="{!c.onMassUpdateCancel}" label="Cancel" />
+
+                <!-- <aura:if isTrue="{!v.massUpdateEnable}"> -->
+                    <!-- <lightning:button iconName="utility:add" iconPosition="left" onclick="{!c.onAddClick}" label="Add" />
                     <lightning:button iconName="utility:close" iconPosition="left" onclick="{!c.onMassUpdateCancel}"
-                                    label="Cancel" />
-                </aura:if>
-                <lightning:button iconName="utility:back" iconPosition="left" disabled="{!v.PageNumber == 1}"
+                                    label="Cancel" /> -->
+                <!-- </aura:if> -->
+                <!-- <lightning:button iconName="utility:back" iconPosition="left" disabled="{!v.PageNumber == 1}"
                                 aura:id="prevPage" label="Previous" onclick="{!c.handlePrev}" />
-                <lightning:button iconName="utility:forward" iconPosition="right"  disabled="{!v.isNextDisabled}"
-                                aura:id="nextPage" label="Next" onclick="{!c.handleNext}" />
+                <lightning:button iconName="utility:forward" iconPosition="right"  disabled="{!v.isNextDisabled}" -->
+                               <!-- aura:id="nextPage" label="Next" onclick="{!c.handleNext}" />-->
             </aura:set>
             
             <!-- <div class="slds slds-m-top_medium slds-p-horizontal_medium slds-m-bottom_medium">
@@ -155,9 +167,16 @@
                             <th style="background-color:rgba(27, 82, 151, 1.0); color:white;">
                                 <div class="slds-truncate" title="Unit Cost">Unit Cost</div>
                             </th>
-                            <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white;">
-                                <div class="slds-truncate" title="Quantity">Markup</div>
-                            </th>
+                            <aura:if isTrue="{!!v.hideGlobalMargin}">
+                                <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white;">
+                                    <div class="slds-truncate" title="Margin">Margin</div>
+                                </th>
+                            </aura:if>
+                            <aura:if isTrue="{!!v.hideGlobalMarkup}">
+                                <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white;">
+                                    <div class="slds-truncate" title="Markup">Markup</div>
+                                </th>
+                            </aura:if>
                             
                             <th style="background-color:rgba(27, 82, 151, 1.0); color:white;border-top-right-radius:5px;">
                                 <span>

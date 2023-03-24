@@ -167,60 +167,174 @@
     // },
     
     
-    updateMassRecords: function (component, event, helper) {
+    // updateMassRecords: function (component, event, helper) {
         
-        // debugger;
+    //     // debugger;
+    //     component.set('v.isLoading', true);
+    //     var listOfRecords = component.get('v.DuplistOfRecords');
+    //    // alert( JSON.stringify(listOfRecords));
+    //     var pageNumber = component.get("v.PageNumber");
+    //     var pageSize = component.get("v.pageSize");
+    //     var deleteLines = component.get("v.deleteQuoteLines");
+    //     var action = component.get("c.updateRecords");
+    //     for (var i in listOfRecords) {
+    //         var obj = listOfRecords[i];
+    //        /* if (obj.Id == undefined) {
+    //             obj.buildertek__Quote__c = component.get('v.recordId');
+    //         }*/
+    //         if (obj.Id.includes('custom')) {
+    //             var key = "Id";
+    //             delete obj[key]; 
+               
+    //             obj.buildertek__Quote__c = component.get('v.recordId');
+    //         }
+    //     }
+    //     action.setParams({
+    //         recordId: component.get('v.recordId'),
+    //         updatedRecords: JSON.stringify(listOfRecords),
+    //         fieldSetName: JSON.stringify(component.get('v.arrfieldNames')),
+    //         pageNumber: pageNumber,
+    //         pageSize: pageSize,
+    //         deleteLineitems : JSON.parse(JSON.stringify(deleteLines))
+    //     });
+        
+    //     action.setCallback(this, function (response) {
+    //         // debugger;
+    //         var state = response.getState();
+    //         if (state === "SUCCESS") {
+    //             var list = JSON.parse(response.getReturnValue());
+    //             console.log('Save List :::',list);
+    //             console.log('Save list.length :::',list.length);
+    //             component.set('v.listOfRecords', list);
+    //             component.set('v.numberOfItems', list.length);
+    //             component.set('v.cloneListOfRecords', list);
+    //             component.set("v.PageNumber", pageNumber);
+    //             component.set("v.RecordStart", (pageNumber - 1) * pageSize + 1);
+    //             component.set("v.RecordEnd", (list.length + 3) * pageNumber);
+    //             component.set("v.TotalPages", Math.ceil(list.length / component.get('v.TotalRecords')));
+    //             component.set('v.isLoading', false);
+    //         } else if (state === "ERROR") {
+    //             component.set('v.isLoading', false);
+    //             console.log('A Problem Occurred: ' + JSON.stringify(response.error));
+    //         }
+    //     });
+    //     $A.enqueueAction(action);
+    // },
+
+    updateMassRecords: function (component, event, helper) {
+
+        console.log('listOfRecords ==> ', component.get("v.listOfRecords"));
+        
+
         component.set('v.isLoading', true);
-        var listOfRecords = component.get('v.listOfRecords');
-       // alert( JSON.stringify(listOfRecords));
+        var listOfRecords = component.get('v.DuplistOfRecords');
         var pageNumber = component.get("v.PageNumber");
         var pageSize = component.get("v.pageSize");
         var deleteLines = component.get("v.deleteQuoteLines");
-        var action = component.get("c.updateRecords");
+        var action = component.get("c.updateMultipleQuoteLine");
+        console.log('listOfRecords 1 ', JSON.parse(JSON.stringify(listOfRecords)));
+        
         for (var i in listOfRecords) {
+            var uom = component.get("v.UOMvalues");
             var obj = listOfRecords[i];
-           /* if (obj.Id == undefined) {
+            if (obj.Id == undefined) {
                 obj.buildertek__Quote__c = component.get('v.recordId');
-            }*/
-            if (obj.Id.includes('custom')) {
-                var key = "Id";
-                delete obj[key]; 
-               
-                obj.buildertek__Quote__c = component.get('v.recordId');
+                obj.buildertek__UOM__c = uom;
+            }
+            if (obj.newQuoteLine.Name == null || obj.newQuoteLine.Name == '') {
+                delete listOfRecords[i];
+            }
+            
+        }
+        //if any of the indes of the array is null then remove it
+        for (var i = listOfRecords.length - 1; i >= 0; i--) {
+            if (listOfRecords[i] == null) {
+                listOfRecords.splice(i, 1);
             }
         }
-        action.setParams({
-            recordId: component.get('v.recordId'),
-            updatedRecords: JSON.stringify(listOfRecords),
-            fieldSetName: JSON.stringify(component.get('v.arrfieldNames')),
-            pageNumber: pageNumber,
-            pageSize: pageSize,
-            deleteLineitems : JSON.parse(JSON.stringify(deleteLines))
-        });
-        
-        action.setCallback(this, function (response) {
-            // debugger;
-            var state = response.getState();
-            if (state === "SUCCESS") {
-                var list = JSON.parse(response.getReturnValue());
-                console.log('Save List :::',list);
-                console.log('Save list.length :::',list.length);
-                component.set('v.listOfRecords', list);
-                component.set('v.numberOfItems', list.length);
-                component.set('v.cloneListOfRecords', list);
-                component.set("v.PageNumber", pageNumber);
-                component.set("v.RecordStart", (pageNumber - 1) * pageSize + 1);
-                component.set("v.RecordEnd", (list.length + 3) * pageNumber);
-                component.set("v.TotalPages", Math.ceil(list.length / component.get('v.TotalRecords')));
-                component.set('v.isLoading', false);
-            } else if (state === "ERROR") {
-                component.set('v.isLoading', false);
-                console.log('A Problem Occurred: ' + JSON.stringify(response.error));
-            }
-        });
-        $A.enqueueAction(action);
-    },
+        console.log('listOfRecords 2 ', JSON.parse(JSON.stringify(listOfRecords)));
 
+        if(listOfRecords.length == 0){
+            component.set('v.isLoading', false);
+            var toastEvent = $A.get("e.force:showToast");
+            toastEvent.setParams({
+                title: 'Error',
+                message: 'Please insert atleast one Quote Line ',
+                duration: ' 5000',
+                key: 'info_alt',
+                type: 'error',
+                mode: 'pester'
+            });
+            toastEvent.fire();
+            return;
+        }else{
+            
+            action.setParams({
+                recordId: component.get('v.recordId'),
+                updatedRecords: JSON.stringify(listOfRecords),
+                pageNumber: pageNumber,
+                pageSize: pageSize,
+                deleteLineitems : JSON.parse(JSON.stringify(deleteLines))
+            });
+            
+            action.setCallback(this, function (response) {
+                // debugger;
+                var state = response.getState();
+                if (state === "SUCCESS") {
+                    // alert(state);
+                    component.set('v.isLoading', false);
+                    // $A.get('e.force:refreshView').fire()
+                    var workspaceAPI = component.find("workspace");
+                    // alert('jjjjjj'+workspaceAPI);
+                    workspaceAPI.getFocusedTabInfo().then(function(response) {
+                        // alert('mmmmmmmm'+workspaceAPI.getFocusedTabInfo());
+                        var focusedTabId = response.tabId;
+                        // alert(focusedTabId);
+                        console.log(response.tabId)
+                        workspaceAPI.closeTab({tabId: focusedTabId}).then(function(response) {
+                            // alert('kkkkn');
+                            // workspaceAPI.getFocusedTabInfo().then(function(response) {
+                                //console.log(response.tabId)
+                                //  alert('nnnnnn');
+                                var workspaceAPI = component.find("workspace");
+                                
+                                window.setTimeout(function(){
+                                    location.reload()
+                                },800)
+                                $A.get('e.force:refreshView').fire()
+                                // })
+                                
+                                $A.get('e.force:refreshView').fire()
+                            });
+                            
+                        })
+                        
+                        .catch(function(error) {
+                            // alert('ggggg');
+                            console.log(error);
+                            var navEvt = $A.get("e.force:navigateToSObject");
+                            navEvt.setParams({
+                                "recordId": component.get('v.recordId'),
+                                "slideDevName": "related"
+                            });
+                            // alert("h")
+                            location.reload()
+                            $A.get('e.force:refreshView').fire()
+                            navEvt.fire();
+                            location.reload()
+                            $A.get('e.force:refreshView').fire()
+                            window.setTimeout(function(){
+                                location.reload()
+                            },800)
+                        });
+                        
+                    }
+                    // $A.get('e.force:refreshView').fire()
+                    // location.reload()
+                });
+            $A.enqueueAction(action);
+            }
+    },
     delete: function (component, event, helper, recordId) {
         var pageNumber = component.get("v.PageNumber");
         var pageSize = component.get("v.pageSize");

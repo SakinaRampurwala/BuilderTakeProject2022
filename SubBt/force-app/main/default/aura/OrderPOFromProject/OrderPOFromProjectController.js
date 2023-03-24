@@ -367,6 +367,7 @@
 		var record = component.get("v.recordId");
 		var select = component.get("v.selectedobjInfo");
 		var budgetsList = component.get("v.masterBudgetsList");
+		console.log({budgetsList});
 		var budgetIds = [];
 		if (budgetsList != null) {
 

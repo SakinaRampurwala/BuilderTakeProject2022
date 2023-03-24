@@ -1279,7 +1279,7 @@
                                                                                 <lightning:formattedNumber
                                                                                     value="{!value.originalValue/100}"
                                                                                     style="percent"
-                                                                                    minimumFractionDigits="4"
+                                                                                    minimumFractionDigits="2"
                                                                                     class="inputCss" />
                                                                             </aura:if>
                                                                             <aura:if isTrue="{!value.fieldType == 'textarea'}">

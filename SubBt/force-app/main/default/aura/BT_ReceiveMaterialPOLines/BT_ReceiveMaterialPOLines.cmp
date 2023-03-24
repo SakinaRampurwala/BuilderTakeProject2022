@@ -22,7 +22,7 @@
     <ltng:require styles="{!$Resource.MOdalPreviewWidth72}"/> 
     
     <div class="slds-modal__header">
-        <h1 class="slds-text-heading_medium slds-hyphenate" style="font-weight: bold;">Receive Material</h1>
+        <h1 class="slds-text-heading_medium slds-hyphenate" style="font-weight: bold;">Receive Purchase Order Material</h1>
     </div>
     <!-- <div class="slds-scrollable" style="height:26rem;width:100%">-->
     <div class="slds-modal__content slds-p-around--large" >
@@ -40,17 +40,17 @@
                     </th>
                     <th scope="col" >
                         <div class="slds-truncate" title="Products">
-                            Products
+                            Product
                         </div>
                     </th>
                     <th scope="col">
                         <div class="slds-truncate" title="Quantity">
-                            Quantity
+                            Quantity Ordered
                         </div>
                     </th>
                     <th scope="col">
                         <div class="slds-truncate" title="Quantity">
-                            Items Delivered
+                            Quantity Delivered
                         </div>
                     </th>
                 </tr>

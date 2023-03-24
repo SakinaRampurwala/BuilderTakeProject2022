@@ -523,6 +523,8 @@
                 //     component.set("v.productfamily", 'None');
                 //     document.getElementById('noneValue').style.display='None';
                 // }else 
+                console.log(component.get("v.listofproductfamily").length , 'lengthlengthlength===');
+
                 if (component.get("v.listofproductfamily").length > 0) {
                     component.set("v.productfamily", '--None--');
                     // component.set("v.productfamily", component.get("v.listofproductfamily")[0].productfamilyvalues);
