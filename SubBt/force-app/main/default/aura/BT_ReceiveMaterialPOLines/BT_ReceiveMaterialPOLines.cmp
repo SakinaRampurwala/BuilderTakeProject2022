@@ -48,11 +48,11 @@
                             Quantity Ordered
                         </div>
                     </th>
-                    <!-- <th scope="col">
+                    <th scope="col">
                         <div class="slds-truncate" title="Quantity">
                             Quantity Remaining
                         </div>
-                    </th> -->
+                    </th>
                     <th scope="col">
                         <div class="slds-truncate" title="Quantity">
                             Quantity Delivered
@@ -93,7 +93,7 @@
                             
                         </td>
                         <!-- Quantity Remaining -->
-                        <!-- <td>
+                        <td>
                             <aura:if isTrue="{!item.buildertek__Quantity_Remaining__c != undefined}">
                                 <div class="slds-truncate" title="{!item.buildertek__Quantity_Remaining__c}" >
                                     {!item.buildertek__Quantity_Remaining__c}
@@ -106,7 +106,7 @@
                             </aura:if>
 
 
-                        </td> -->
+                        </td>
                         <td>
                             
                             

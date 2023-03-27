@@ -368,7 +368,7 @@
                                         <th class="subHeader subData"> Quantity </th> 
                                         <th class="subHeader subData"> Unit Cost   </th> 
                                         <th class="subHeader subData"> Tax Rate </th>
-                                        <th class="subHeader subData"> Total Cost </th> 
+                                        <th class="subHeader subData" colspan="2"> Total Cost </th> 
                                     </tr>
                                     
                                     <aura:iteration items="{!record.poLinesWrapper}" var="item1" indexVar="inx">
@@ -424,7 +424,7 @@
                                                         </aura:if>
                                                     </td>
                                                     
-                                                    <td role="gridcell" class="slds-truncate subData" title="{!item1.TotalCost}" >
+                                                    <td role="gridcell" class="slds-truncate subData" title="{!item1.TotalCost}" colspan="2" >
                                                         <lightning:formattedNumber value="{!item1.TotalCost}" style="currency" currencyCode="{!v.orgCurr}" currencyDisplayAs="code"/>
                                                     </td>
 

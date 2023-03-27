@@ -40,6 +40,13 @@
 
 
     <aura:if isTrue="{!v.isOpen}">
+        <aura:html tag="style">
+        .slds-modal__container{
+            width: 60% !important;
+            padding: 0 !important;
+            max-width: 80rem !important;
+        }
+    </aura:html>
         
         <div class="slds-modal__container">
             <header class="slds-modal__header">

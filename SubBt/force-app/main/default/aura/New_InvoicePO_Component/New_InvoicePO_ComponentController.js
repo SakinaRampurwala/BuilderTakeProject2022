@@ -54,7 +54,7 @@
         }
     },
 
-   handleSubmit : function (component, event, helper) {
+    handleSubmit: function (component, event, helper) {
         component.set("v.isDisabled", true);
 		component.set("v.isLoading", true);
         event.preventDefault(); // Prevent default submit

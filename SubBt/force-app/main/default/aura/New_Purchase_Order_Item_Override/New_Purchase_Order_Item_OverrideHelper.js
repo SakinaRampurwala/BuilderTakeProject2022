@@ -83,12 +83,15 @@
     },
 
     getFields: function (component, event, helper) {
+
         var action = component.get("c.getFieldSet");
         action.setCallback(this, function (response) {
             if (response.getState() == 'SUCCESS' && response.getReturnValue()) {
                 var listOfFields = JSON.parse(response.getReturnValue());
                 console.log('listOfFields::',listOfFields);
                 component.set("v.listOfFields", listOfFields);
+                component.set("v.isLoading", false);
+
             } else {
                 console.log('Error');
             }

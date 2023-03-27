@@ -1,7 +1,7 @@
 ({
     doInit: function (component, event, helper) {
         component.set("v.isOpen", true);
-        //component.set("v.Spinner", true);
+        component.set("v.isLoading", true);
         var value = helper.getParameterByName(component, event, 'inContextOfRef');
         var context = '';
         var parentRecordId = '';
@@ -315,7 +315,6 @@
         });
         action.setCallback(this, function(response){
             console.log(response.getState());
-            console.log(response.getError());
 
             if(response.getState() == 'SUCCESS') {            
                 var result = response.getReturnValue();
@@ -352,13 +351,25 @@
                 toastEvent.fire();
                 component.set("v.isDisabled", false);
             }else{
-                var toastEvent = $A.get("e.force:showToast");
-                toastEvent.setParams({
-                    "title": "Error!",
-                    "message": "Something went wrong. Please try again.",
-                    "type": "error"
-                });
-                toastEvent.fire();
+                var errors = response.getError();
+                if (errors[0].pageErrors != undefined && (errors[0].pageErrors[0].statusCode.includes('REQUIRED_FIELD_MISSING') && errors[0].pageErrors[0].message.includes('Vendor'))) {
+                    var toastEvent = $A.get("e.force:showToast");
+                    toastEvent.setParams({
+                        "title": "Error!",
+                        "message": "Vendor is Missing on Purchase Order",
+                        "type": "error"
+                    });
+                    toastEvent.fire();
+                } else{
+                    var toastEvent = $A.get("e.force:showToast");
+                    toastEvent.setParams({
+                        "title": "Error!",
+                        "message": "Something went wrong. Please try again.",
+                        "type": "error"
+                    });
+                    toastEvent.fire();
+                }
+                
                 component.set("v.isDisabled", false);
                 component.set("v.isLoading", false);
             }

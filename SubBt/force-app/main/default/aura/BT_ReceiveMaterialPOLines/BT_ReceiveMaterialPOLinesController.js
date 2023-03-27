@@ -71,9 +71,27 @@
             }
             
         }
-        
+        console.log(rfqlist);
         console.log(productList);
+        for(var i=0;i<rfqlist.length;i++){
+            if(rfqlist[i].quantity_recieved != null){
+                if(rfqlist[i].quantity_recieved >= rfqlist[i].buildertek__Quantity_Remaining__c){
+                    var toastEvent = $A.get("e.force:showToast");
+                    toastEvent.setParams({
+                        title: 'Error',
+                        message: 'Quantity delivered must be less than or equal to quantity remaining on PO line: '+rfqlist[i].Name ,
+                        duration: ' 5000',
+                        key: 'info_alt',
+                        type: 'error',
+                        mode: 'pester'
+                    });
+                    toastEvent.fire();
+                    return;
+                }
+            }
+        }
         debugger;
+
         component.set("v.Spinner", true);
         component.set("v.showMessage", true);
         action.setParams({
@@ -164,7 +182,7 @@
         
         if(quantityReceived > POQuantity) {
             
-            inputField.setCustomValidity("Items Delivered must be lessthan Quantity");
+            inputField.setCustomValidity("Items Delivered must be less than Quantity remaining");
        
             component.find("submit").set("v.disabled", true);
         }else{
