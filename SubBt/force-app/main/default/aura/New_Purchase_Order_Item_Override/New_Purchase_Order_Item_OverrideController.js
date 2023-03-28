@@ -306,9 +306,17 @@
             fields['buildertek__Product__c' ]=getProductId;
 
         }
-        if(fields['Name'].length() > 80){
-            alert('data greater then 80 yeah');
+        let poName=fields['Name'];
+        console.log(poName);
+        if(poName !=null || poName!= undefined){
+            if(poName.length > 80){
+                poName=poName.substring(0 , 80)
+                fields['Name']=poName;
+            }
+
         }
+
+
         var allData = JSON.stringify(fields);
 
 

@@ -1419,7 +1419,7 @@
                         <!-- *** BOM Grouping *** -->
                         <aura:set attribute="else">
                             <div class="mainBomDiv">
-                                <table class="slds-table">
+                                <table class="slds-table slds-table--bordered slds-max-medium-table--stacked-horizontal">
                                     <tbody>
                                         <aura:if isTrue="{!v.firstGrouping}">
                                             <aura:iteration items="{!v.QuoteLineWrapper.groupWrapper}" var="group1">
@@ -1454,7 +1454,7 @@
                                                         </aura:if>
                                                     </td>
                                                 </tr>
-                                                <tr>
+                                                <tr style='line-height: 2;font-size: 12px;' class="slds-text-heading--label">
                                                     <th class="tableHeaderDiv blankDiv"></th>
                                                     <aura:iteration items="{!v.QuoteLineWrapper.columns}" var="col">
                                                         <th class="tableHeaderDiv">
@@ -1463,7 +1463,7 @@
                                                     </aura:iteration>
                                                 </tr>
                                                 <aura:iteration items="{!group1.quoteLineList}" var="quoteItem">
-                                                    <tr class="{!'record_'+group1.groupIndex}">
+                                                    <tr style="line-height: 2.5;display:table-row;" class="{!'record_'+group1.groupIndex}" >
                                                         <td class="blankDiv"> </td>
                                                         <aura:iteration items="{!quoteItem.FieldDataList}"
                                                             var="fildData">
