@@ -28,3 +28,8 @@
 	width: 80% !important;      
 	max-width: 80% !important;
 }
+
+.THIS .table-Header{
+    background-color:rgba(27, 82, 151, 1.0); 
+    color:white;
+}

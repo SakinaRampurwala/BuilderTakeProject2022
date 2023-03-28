@@ -306,6 +306,9 @@
             fields['buildertek__Product__c' ]=getProductId;
 
         }
+        if(fields['Name'].length() > 80){
+            alert('data greater then 80 yeah');
+        }
         var allData = JSON.stringify(fields);
 
 

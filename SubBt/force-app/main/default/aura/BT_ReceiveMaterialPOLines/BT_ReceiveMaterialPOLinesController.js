@@ -75,7 +75,7 @@
         console.log(productList);
         for(var i=0;i<rfqlist.length;i++){
             if(rfqlist[i].quantity_recieved != null){
-                if(rfqlist[i].quantity_recieved >= rfqlist[i].buildertek__Quantity_Remaining__c){
+                if((rfqlist[i].quantity_recieved > (rfqlist[i].buildertek__Quantity_Remaining__c )) && (rfqlist[i].quantity_recieved != 0) ){
                     var toastEvent = $A.get("e.force:showToast");
                     toastEvent.setParams({
                         title: 'Error',

@@ -145,7 +145,11 @@
 		var retnMsg = childCmp.clearLookup();
 	},
     changeEvent: function (component, event, helper) {
+        debugger
 		var product = component.get('v.selectedLookUpRecord');
+        var pribook = component.get("v.pricebookName");
+        console.log('pb ', pribook);
+
         console.log(product , 'selectedLookUpRecord:::::');
 		if(Object.values(product)[0]){
             var compEvent = $A.get('e.c:BT_BudgetItemLookupEvent');

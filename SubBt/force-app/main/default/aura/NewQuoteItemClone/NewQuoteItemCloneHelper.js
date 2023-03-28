@@ -1167,6 +1167,7 @@
         action.setCallback(this, function(response) {
             var state = response.getState();
             if (state === "SUCCESS") {
+                console.log('getting result ', response.getReturnValue());
                 var quoteLineWrapper = response.getReturnValue();
                 var quoteLineList = quoteLineWrapper.quoteLineList;
                 component.set("v.totalColumn", quoteLineWrapper.columns.length);
@@ -1188,6 +1189,9 @@
                         }
                         if (element.buildertek__Sub_Group__c != undefined) {
                             element.buildertek__Sub_Group__c = element.buildertek__Sub_Group__r.Name;
+                        }
+                        if (element.buildertek__Grouping__c != undefined) {
+                            element.buildertek__Grouping__c = element.buildertek__Grouping__r.Name;
                         }
                     });
                     var group1Wrapper = [];

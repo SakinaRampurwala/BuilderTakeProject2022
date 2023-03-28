@@ -1,108 +1,53 @@
 ({
     doInit: function (component, event, helper) {
-        
-          var workspaceAPI = component.find("workspace");
-        workspaceAPI.getEnclosingTabId().then((response) => {
-            let opendTab = response.tabId;
-            workspaceAPI.setTabLabel({
-            tabId: opendTab,
-            label: "Mass Add Line"
-            });
-        workspaceAPI.setTabIcon({
-            tabId: opendTab,
-            icon: 'custom:custom5',
-            iconAlt: 'Mass Add Line'
-            });
-        });
         component.set('v.isLoading', true);
-       var pageNumber = component.get("v.PageNumber");
+        helper.getTableFieldSet(component, event, helper);
+        helper.getAdminValues(component, event, helper);
+        helper.nameTheTab(component, event, helper);
+        var pageNumber = component.get("v.PageNumber");
         var pageSize = component.get("v.pageSize");
-        helper.fetchpricebooks(component, event, helper);
-        window.setTimeout(
-            $A.getCallback(function () {
-                helper.getTableRows(component, event, helper, pageNumber, pageSize);
-                component.set('v.isLoading', false);
-                component.set("v.listofproductfamily", '');
-                var list = component.get('v.listOfRecords');
-                var obj = {
-                    "productfamily": '',
-                    "pricebookName" : '',
-                    "product": {
-                        "Id":'',
-                        "Name":''
-                    },
-                    "newBudgetLine" : {},
-                    "UOMvalues" : '',
-                    "Vendor" : {},
-                };
-                // list.unshift(obj);
-                for(var i=0;i<5;i++){
-                    list.push(obj);
-                }
-                component.set('v.listOfRecords', list);
-                
-            }), 1000
-        );
-        var btadminaction = component.get("c.getadminvalues");
-        btadminaction.setCallback(this, function(response) {
-            console.log(response.getState());
-            console.log(response.getReturnValue());
-            console.log('admnvalues');
-
-            if (response.getState() === 'SUCCESS') {
-                var result = response.getReturnValue();
-                console.log({result});
-                console.log(response.getState());
-                console.log(response.getError());
-
-
-                if (response.getState() === 'SUCCESS') {
-                    var result = response.getReturnValue();
-                   
-                    component.set('v.removeSingleQuoteLineOption', result[0]);
-                    component.set('v.hideGlobalMargin', result[1]);
-                    component.set('v.hideGlobalMarkup', result[2]);
-
-
-                }
-            }
-
-        });
-        $A.enqueueAction(btadminaction);
+        // helper.getTableFieldSet(component, event, helper);
+        // window.setTimeout(
+        //     $A.getCallback(function () {
+        //         helper.getTotalRecord(component, event, helper);
+        //         helper.getTableRows(component, event, helper, pageNumber, pageSize);
+        //     }), 1000
+        // );
+        component.set('v.isLoading', false);
+        helper.createQuoteLineWrapperList(component, event, helper);
+        
+        
 
     },
 
     onAddClick: function (component, event, helper) {
         var fields = component.get('v.fieldSetValues');
         var list = component.get('v.listOfRecords');
-        var obj = {};
-        var obj = {
-           "productfamily": '',
-           "pricebookName" : '',
-           "product": {
-               "Id":'',
-               "Name":''
-           },
-           "newQuoteLine" : {},
-           
-        };
-      
-        for (var i = 0; i < 5; i++) {
-            list.push(obj);
+        for(var i=0 ;i<5;i++){
+            var obj = {};
+            for (var k in fields) {
+				obj['Id'] = 'custom'+i                
+                obj[fields[k].name] = '';
+            }
+            list.unshift(obj);
         }
         component.set('v.listOfRecords', list);
-        
     },
 
     onMassUpdate: function (component, event, helper) {
         component.set('v.isLoading', true);
-        helper.updateMassRecords(component, event, helper);
-
+        if (!component.get('v.massUpdateEnable')) {
+            component.set('v.massUpdateEnable', true);
+            component.set('v.isLoading', false);
+        } else if (component.get('v.massUpdateEnable')) {
+            component.set('v.isLoading', true);
+            component.set('v.massUpdateEnable', false);
+            helper.updateMassRecords(component, event, helper);
+        }
     },
 
     onMassUpdateCancel: function (component, event, helper) {
         if (component.get('v.massUpdateEnable')) {
-           // component.set('v.isCancelModalOpen', true);
             var workspaceAPI = component.find("workspace");
             workspaceAPI.getFocusedTabInfo().then(function (response) {
                 var focusedTabId = response.tabId;
@@ -112,7 +57,6 @@
             }) 
          
             .catch(function (error) {
-               // console.log(error);
                 var navEvt = $A.get("e.force:navigateToSObject");
                 navEvt.setParams({
                     "recordId": component.get('v.recordId'),
@@ -147,27 +91,6 @@
                 $A.get('e.force:refreshView').fire();
             }), 1000
         );
-
-        // var workspaceAPI = component.find("workspace");
-        // workspaceAPI.openTab({
-        //     pageReference: {
-        //         "type": "standard__recordPage",
-        //         "attributes": {
-        //             "recordId":component.get('v.recordId'),
-        //             "actionName":"view"
-        //         },
-        //         "state": {}
-        //     },
-        //     focus: true
-        // }).then(function(response) {
-        //     workspaceAPI.getTabInfo({
-        //         tabId: response
-        // }).then(function(tabInfo) {
-        //     console.log("The recordId for this tab is: " + tabInfo.recordId);
-        // });
-        // }).catch(function(error) {
-        //     console.log(error);
-        // });
     },
 
     closeCancelModal: function (component, event, helper) {
@@ -188,7 +111,6 @@
         }
     },
     deletequotelineRecord: function (component, event, helper) {
-     
         var dataAttr = event.currentTarget.dataset.recordid.split("_");
         var recordid = dataAttr[0]; 
         var recordList;
@@ -243,43 +165,5 @@
             component.set("v.fieldSetValues", fieldSetObj);
         })
         $A.enqueueAction(action);
-    },
-    handleChildBudgetLineEvent : function (component, event, helper) {
-        console.log('=======handleChildBudgetLineEvent======');
-        // var isdelete = JSON.parse(JSON.stringify(event.getParam("isdelete")));
-        // console.log({isdelete});
-        // if(!isdelete){
-        //     var valueFromChild = JSON.parse(JSON.stringify(event.getParam("message")));
-            
-        //     var listRecord = component.get("v.DuplistOfRecords");
-        //     if(listRecord.length){
-        //         if(listRecord[valueFromChild.index]){
-        //             listRecord[valueFromChild.index] = valueFromChild;
-        //         }else{
-        //             listRecord.push(valueFromChild);
-        //         }
-        //     }else{
-        //         listRecord.push(valueFromChild)
-        //     }
-        // }else if(isdelete){
-        //     var valueFromChild = JSON.parse(JSON.stringify(event.getParam("message")));
-        //     var listRecord = component.get("v.listOfRecords");
-        //     listRecord.splice(valueFromChild.index, 1);
-        //     component.set("v.listOfRecords",listRecord);
-        // }
-        
-        
-       	//component.set("v.listOfRecords",listRecord);
-        // console.log(JSON.parse(JSON.stringify(listRecord)));
-        // component.set("v.DuplistOfRecords",listRecord);
-        // console.log(component.get("v.DuplistOfRecords"));
-
-        
-
-        //component.set("v.enteredValue", valueFromChild);
-
-
-        var data = event.getParam("message");
-        console.log("data ==> ",{data});
-    },
+    }
 })
