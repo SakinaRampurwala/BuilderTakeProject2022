@@ -1595,6 +1595,7 @@
                                                 </tr>
                                                 <aura:iteration items="{!group1.quoteLineList}" var="group2">
                                                     <tr>
+                                                        <td colspan="4" class="groupHeaderIcon"></td>
                                                         <td class="groupHeaderIcon">
                                                             <div id='collapseBtn' class="slds-float_left">
                                                                 <span data-iconname="Expand Group"
@@ -1629,6 +1630,9 @@
                                                     <tr>
                                                         <th class="tableHeaderDiv blankDiv"></th>
                                                         <th class="tableHeaderDiv blankDiv"></th>
+                                                        <th class="tableHeaderDiv blankDiv"></th>
+                                                        <th class="tableHeaderDiv blankDiv"></th>
+                                                        <th class="tableHeaderDiv blankDiv"></th>
                                                         <aura:iteration items="{!v.QuoteLineWrapper.columns}" var="col">
                                                             <th class="tableHeaderDiv">
                                                                 {!col.label}
@@ -1639,6 +1643,10 @@
                                                         <tr style="line-height: 2.5;display:table-row;" class="{!'record_'+group1.groupIndex+group2.groupIndex+ '   record_'+group1.groupName}">
                                                             <td class="blankDiv"> </td>
                                                             <td class="blankDiv"> </td>
+                                                            <td class="blankDiv"> </td>
+                                                            <td class="blankDiv"> </td>
+                                                            <td class="blankDiv"> </td>
+
                                                             <aura:iteration items="{!quoteItem.FieldDataList}"
                                                                 var="fildData">
                                                                 <td>
@@ -1713,8 +1721,11 @@
                                                     <tr style="font-weight: bold;">
                                                         <td class="blankDiv"> </td>
                                                         <td class="blankDiv"> </td>
-                                                        <aura:iteration items="{!group2.fieldTotals.fieldTotalList}"
-                                                            var="total">
+                                                        <td class="blankDiv"> </td>
+                                                        <td class="blankDiv"> </td>
+                                                        <td class="blankDiv"> </td>
+
+                                                        <aura:iteration items="{!group2.fieldTotals.fieldTotalList}" var="total">
                                                             <td>
                                                                 <aura:if isTrue="{!total.fieldName == 'Total'}">
                                                                     <span>Total</span>
@@ -1733,9 +1744,12 @@
                                                                 </aura:if>
                                                             </td>
                                                         </aura:iteration>
+
+                                                        
                                                     </tr>
                                                     <br/>
                                                 </aura:iteration>
+
                                             </aura:iteration>
                                         </aura:if>
 
