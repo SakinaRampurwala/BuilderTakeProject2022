@@ -1566,7 +1566,7 @@
                                                     <td class="groupHeaderIcon">
                                                         <div id='collapseBtn' class="slds-float_left">
                                                             <span data-iconname="Expand Group"
-                                                                id="{!'expandGroupBtn_'+group1.groupIndex}"
+                                                                id="{!'expandGroupBtn_'+group1.groupName}"
                                                                 onclick="{!c.expandCollapeGroup}" style="display:none">
                                                                 <lightning:buttonIcon iconName="utility:add"
                                                                     variant="border-filled" iconClass="dark"
@@ -1574,7 +1574,7 @@
                                                                     title="Expand Group" />
                                                             </span>
                                                             <span data-iconname="Collapse Group"
-                                                                id="{!'collapeseGroupBtn_'+group1.groupIndex}"
+                                                                id="{!'collapeseGroupBtn_'+group1.groupName}"
                                                                 onclick="{!c.expandCollapeGroup}"
                                                                 style="display:inline-block;">
                                                                 <lightning:buttonIcon iconName="utility:dash"
@@ -1636,7 +1636,7 @@
                                                         </aura:iteration>
                                                     </tr>
                                                     <aura:iteration items="{!group2.quoteLineList}" var="quoteItem">
-                                                        <tr style="line-height: 2.5;display:table-row;" class="{!'record_'+group1.groupIndex+group2.groupIndex +' collapseAllGroup'}">
+                                                        <tr style="line-height: 2.5;display:table-row;" class="{!'record_'+group1.groupIndex+group2.groupIndex+ '   record_'+group1.groupName}">
                                                             <td class="blankDiv"> </td>
                                                             <td class="blankDiv"> </td>
                                                             <aura:iteration items="{!quoteItem.FieldDataList}"

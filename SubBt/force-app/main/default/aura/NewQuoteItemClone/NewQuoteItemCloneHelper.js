@@ -1444,35 +1444,26 @@
     }, 
 
     expandRecordsHelper : function(component, event, helper, spanGroupId){
-        let recordDivList = document.getElementsByClassName('record_'+spanGroupId);
         let collapeallIcon = document.getElementById("collapeseGroupBtn_" + spanGroupId);
         let expandallIcon = document.getElementById("expandGroupBtn_" + spanGroupId);
 
         collapeallIcon.style.display = 'block';
         expandallIcon.style.display = 'none';
+        let recordDivList = document.getElementsByClassName('record_'+spanGroupId);
         for(let index = 0; index < recordDivList.length; index++) {
             recordDivList[index].style.display = 'table-row';
         }
     }, 
 
     collapeRecordsHelper : function(component, event, helper, spanGroupId){
-        if(spanGroupId !=''){
-            let recordDivList = document.getElementsByClassName('record_'+spanGroupId);
-            let collapeallIcon = document.getElementById("collapeseGroupBtn_" + spanGroupId);
-            let expandallIcon = document.getElementById("expandGroupBtn_" + spanGroupId);
-            
-            collapeallIcon.style.display = 'none';
-            expandallIcon.style.display = 'block';
-            for(let index = 0; index < recordDivList.length; index++) {
-                recordDivList[index].style.display = 'none';
-            }
-
-        }else{
-
-            let recordDivList = document.getElementsByClassName('collapseAllGroup');
-            for(let index = 0; index < recordDivList.length; index++) {
-                recordDivList[index].style.display = 'none';
-            }
+        let collapeallIcon = document.getElementById("collapeseGroupBtn_" + spanGroupId);
+        let expandallIcon = document.getElementById("expandGroupBtn_" + spanGroupId);
+        
+        collapeallIcon.style.display = 'none';
+        expandallIcon.style.display = 'block';
+        let recordDivList=document.getElementsByClassName('record_'+spanGroupId);
+        for(let index = 0; index < recordDivList.length; index++) {
+            recordDivList[index].style.display = 'none';
         }
     },
     updateSelectedRecords: function(component, event, helper) {
