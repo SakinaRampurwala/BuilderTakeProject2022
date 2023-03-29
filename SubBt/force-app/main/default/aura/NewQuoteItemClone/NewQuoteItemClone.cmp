@@ -1556,17 +1556,39 @@
                                                         </td>
                                                     </aura:iteration>
                                                 </tr>
+                                                <br/>
                                             </aura:iteration>
                                         </aura:if>
 
                                         <aura:if isTrue="{!v.secondGrouping}">
                                             <aura:iteration items="{!v.QuoteLineWrapper.groupWrapper}" var="group1">
                                                 <tr>
+                                                    <td class="groupHeaderIcon">
+                                                        <div id='collapseBtn' class="slds-float_left">
+                                                            <span data-iconname="Expand Group"
+                                                                id="{!'expandGroupBtn_'+group1.groupIndex}"
+                                                                onclick="{!c.expandCollapeGroup}" style="display:none">
+                                                                <lightning:buttonIcon iconName="utility:add"
+                                                                    variant="border-filled" iconClass="dark"
+                                                                    alternativeText="Expand Group"
+                                                                    title="Expand Group" />
+                                                            </span>
+                                                            <span data-iconname="Collapse Group"
+                                                                id="{!'collapeseGroupBtn_'+group1.groupIndex}"
+                                                                onclick="{!c.expandCollapeGroup}"
+                                                                style="display:inline-block;">
+                                                                <lightning:buttonIcon iconName="utility:dash"
+                                                                    variant="border-filled" iconClass="dark"
+                                                                    alternativeText="Collapse Group"
+                                                                    title="Collapse Group" />
+                                                            </span>
+                                                        </div>
+                                                    </td>
                                                     <td class="groupHeaderDiv" colspan="{!v.totalColumn+4}">
                                                         <aura:if isTrue="{!group1.groupName != undefined}">
-                                                            {!group1.groupName}
+                                                            {!group1.groupName} 
                                                             <aura:set attribute="else">
-                                                                No Grouping
+                                                                No Grouping 
                                                             </aura:set>
                                                         </aura:if>
                                                     </td>
@@ -1614,7 +1636,7 @@
                                                         </aura:iteration>
                                                     </tr>
                                                     <aura:iteration items="{!group2.quoteLineList}" var="quoteItem">
-                                                        <tr class="{!'record_'+group1.groupIndex+group2.groupIndex}">
+                                                        <tr style="line-height: 2.5;display:table-row;" class="{!'record_'+group1.groupIndex+group2.groupIndex +' collapseAllGroup'}">
                                                             <td class="blankDiv"> </td>
                                                             <td class="blankDiv"> </td>
                                                             <aura:iteration items="{!quoteItem.FieldDataList}"
@@ -1712,6 +1734,7 @@
                                                             </td>
                                                         </aura:iteration>
                                                     </tr>
+                                                    <br/>
                                                 </aura:iteration>
                                             </aura:iteration>
                                         </aura:if>
@@ -1787,7 +1810,7 @@
                                                             </aura:iteration>
                                                         </tr>
                                                         <aura:iteration items="{!group3.quoteLineList}" var="quoteItem">
-                                                            <tr
+                                                            <tr style="line-height: 2.5;display:table-row;"
                                                                 class="{!'record_'+group1.groupIndex+group2.groupIndex+group3.groupIndex}">
                                                                 <td class="blankDiv"> </td>
                                                                 <td class="blankDiv"> </td>
@@ -1890,6 +1913,7 @@
                                                                 </td>
                                                             </aura:iteration>
                                                         </tr>
+                                                        <br/>
                                                     </aura:iteration>
                                                 </aura:iteration>
                                             </aura:iteration>
@@ -1982,7 +2006,7 @@
                                                             </tr>
                                                             <aura:iteration items="{!group4.quoteLineList}"
                                                                 var="quoteItem">
-                                                                <tr
+                                                                <tr style="line-height: 2.5;display:table-row;"
                                                                     class="{!'record_'+group1.groupIndex+group2.groupIndex+group3.groupIndex+group4.groupIndex}">
                                                                     <td class="blankDiv"> </td>
                                                                     <td class="blankDiv"> </td>
@@ -2092,6 +2116,7 @@
                                                                     </td>
                                                                 </aura:iteration>
                                                             </tr>
+                                                            <br/>
                                                         </aura:iteration>
                                                     </aura:iteration>
                                                 </aura:iteration>

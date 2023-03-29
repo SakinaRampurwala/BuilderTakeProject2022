@@ -2824,21 +2824,39 @@ console.log(document.getElementsByClassName(className)[0]);
     
         if (iconName == 'Expand Group') {
             let spanGroupId = spanId.replace('expandGroupBtn_','');
-            helper.expandRecordsHelper(component, event, helper, spanGroupId);
+            if(spanGroupId == '1'){
+                helper.expandRecordsHelper(component, event, helper, spanGroupId);
+                let recordDivList = document.getElementsByClassName('collapseAllGroup');
+                let selectedRecord = recordDivList.length;
+                collapeCount -= selectedRecord;
+            }else{
+                helper.expandRecordsHelper(component, event, helper, spanGroupId);
+                let recordDivList = document.getElementsByClassName('record_'+spanGroupId);
+                let selectedRecord = recordDivList.length;
+                collapeCount -= selectedRecord;
+            }
 
-            let recordDivList = document.getElementsByClassName('record_'+spanGroupId);
-            let selectedRecord = recordDivList.length;
-            collapeCount -= selectedRecord;
         } else if (iconName == 'Collapse Group') {
             let spanGroupId = spanId.replace('collapeseGroupBtn_','');
-            helper.collapeRecordsHelper(component, event, helper, spanGroupId);
-
-            let recordDivList = document.getElementsByClassName('record_'+spanGroupId);
-            let selectedRecord = recordDivList.length;
-            collapeCount += selectedRecord;
+            if(spanGroupId == '1'){
+                helper.collapeRecordsHelper(component, event, helper, '');
+                console.log('inside First');
+                let recordDivList = document.getElementsByClassName('collapseAllGroup');
+                console.log({recordDivList});
+                let selectedRecord = recordDivList.length;
+                console.log({selectedRecord});
+                collapeCount += selectedRecord;
+            }else{
+                helper.collapeRecordsHelper(component, event, helper, spanGroupId);
+                let recordDivList = document.getElementsByClassName('record_'+spanGroupId);
+                console.log({recordDivList});
+                let selectedRecord = recordDivList.length;
+                collapeCount += selectedRecord;
+            }
         }
         component.set("v.CollapeCount", collapeCount);
 
+        console.log(collapeCount == totalRecordCount);
         if(collapeCount == totalRecordCount){
             collapeallIcon.style.display = 'none';
             expandallIcon.style.display = 'block';

@@ -1208,6 +1208,7 @@
                             if (quoteLineList.length == index+1) {
                                 if (groupFieldList[1] != undefined) {
                                     quoteLines1 = helper.addSecondGrouping(component, helper, quoteLines1, groupFieldList, columns);
+                                    console.log({quoteLines1});
                                 }
                                 totalObj = helper.createTotalWrapper(component, helper, totalObj, columns);
                                 var wrapperData = {groupIndex: group1Wrapper.length+1, groupName : group1Value, quoteLineList: quoteLines1, fieldTotals: totalObj};
@@ -1216,6 +1217,8 @@
                         } else{
                             if (groupFieldList[1] != undefined){
                                 quoteLines1 = helper.addSecondGrouping(component, helper, quoteLines1, groupFieldList, columns);
+                                console.log({quoteLines1});
+
                             }
                             totalObj = helper.createTotalWrapper(component, helper, totalObj, columns);
                             var wrapperData = {groupIndex: group1Wrapper.length+1, groupName : group1Value, quoteLineList: quoteLines1, fieldTotals: totalObj};
@@ -1234,7 +1237,10 @@
                             if (quoteLineList.length == index+1) {
                                 if (groupFieldList[1] != undefined) {
                                     quoteLines1 = helper.addSecondGrouping(component, helper, quoteLines1, groupFieldList, columns);
+                                    console.log({quoteLines1});
+
                                 }
+
                                 totalObj = helper.createTotalWrapper(component, helper, totalObj, columns);
                                 var wrapperData = {groupIndex: group1Wrapper.length+1, groupName : group1Value, quoteLineList: quoteLines1, fieldTotals: totalObj};
                                 group1Wrapper.push(wrapperData);
@@ -1450,14 +1456,23 @@
     }, 
 
     collapeRecordsHelper : function(component, event, helper, spanGroupId){
-        let recordDivList = document.getElementsByClassName('record_'+spanGroupId);
-        let collapeallIcon = document.getElementById("collapeseGroupBtn_" + spanGroupId);
-        let expandallIcon = document.getElementById("expandGroupBtn_" + spanGroupId);
-        
-        collapeallIcon.style.display = 'none';
-        expandallIcon.style.display = 'block';
-        for(let index = 0; index < recordDivList.length; index++) {
-            recordDivList[index].style.display = 'none';
+        if(spanGroupId !=''){
+            let recordDivList = document.getElementsByClassName('record_'+spanGroupId);
+            let collapeallIcon = document.getElementById("collapeseGroupBtn_" + spanGroupId);
+            let expandallIcon = document.getElementById("expandGroupBtn_" + spanGroupId);
+            
+            collapeallIcon.style.display = 'none';
+            expandallIcon.style.display = 'block';
+            for(let index = 0; index < recordDivList.length; index++) {
+                recordDivList[index].style.display = 'none';
+            }
+
+        }else{
+
+            let recordDivList = document.getElementsByClassName('collapseAllGroup');
+            for(let index = 0; index < recordDivList.length; index++) {
+                recordDivList[index].style.display = 'none';
+            }
         }
     },
     updateSelectedRecords: function(component, event, helper) {

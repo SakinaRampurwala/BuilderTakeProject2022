@@ -185,7 +185,8 @@
 .THIS .tableHeaderDiv{
     /* font-weight: 600; */
     padding: 5px;
-    background: #fafaf9;
+    /* background: #fafaf9; */
+    text-transform: uppercase;
 }
 
 .THIS .groupHeaderDiv {
@@ -194,7 +195,9 @@
     background-color: #f3f3f3;
     font-family: 'Salesforce Sans', 'Open Sans', Arial, sans-serif;
     font-size: 18px;
-    color: #000000;
+    /* color: #000000; */
+    color: #6b6d70;
+
     font-weight: 500;
     font-style: normal;
     text-decoration: none;
