@@ -11,6 +11,13 @@
                 var result = response.getReturnValue();
                 if(result == 'Associated Record'){
                   // component.set("v.isAssociated", true);
+                  var toastEvent = $A.get("e.force:showToast");
+                    toastEvent.setParams({
+                        "title": "Error!",
+                        "message": "Expense already linked with a Budget or Budget Line.",
+                        "type" : "error"
+                    });
+                    toastEvent.fire();
                     component.set("v.isBudgetRec", false);
                     $A.get("e.force:closeQuickAction").fire();  
                 }else{
@@ -127,9 +134,9 @@
 	    $A.get("e.force:closeQuickAction").fire();    
 	},
     createBudgetline : function(component, event, helper){
-         component.set("v.Spinner", true);
+        component.set("v.Spinner", true);
 	    var budgetsList = component.get("v.BudgetsList");
-	    console.log('quotesList ---------> '+JSON.stringify(budgetsList));
+	    console.log('budgetList ---------> '+(JSON.stringify(budgetsList)));
 	    var budgetIds = [];
 	    for(var i=0 ; i < budgetsList.length;i++){
 	        //alert('quoteCheck -------> '+quotesList[i].quoteCheck);
@@ -140,37 +147,46 @@
 	            }
 	        }
 	    }
+        if(budgetIds.length >1){
+            var toastEvent = $A.get("e.force:showToast");
+            toastEvent.setParams({
+                "title": "Error!",
+                "message": "Please select only one budget.",
+                "type": 'Error'
+            });
+            toastEvent.fire();
+            component.set("v.Spinner", false);
+            return;
+        }
 	    if(budgetIds.length > 0){
 	        var action = component.get("c.createBudgetLineFromExpense");  
 	        action.setParams({
-	            ExpenseId: component.get("v.recordId")
+	            ExpenseId: component.get("v.recordId"),
+                BudgetId : budgetIds[0]
 	        });
 	        action.setCallback(this, function(response){
 	            var state = response.getState();
-	            if(state === "SUCCESS"){
-	                var result = response.getReturnValue();  
-	                if(result.Status === 'Success'){
-	                    var toastEvent = $A.get("e.force:showToast");
-                        toastEvent.setParams({
-                            "title": "Success!",
-                            "message": result.Message,
-                            "type": 'Success'
-                        });
-                        toastEvent.fire(); 
-                        component.set("v.Spinner", false);
-                        $A.get("e.force:closeQuickAction").fire();  
-                        
-	                }else{
-	                    component.set("v.Spinner", false);
-	                    var toastEvent = $A.get("e.force:showToast");
-                        toastEvent.setParams({
-                            "title": "Error!",
-                            "message": result.Message,
-                            "type": 'Error'
-                        });
-                        toastEvent.fire();    
-	                }
-	            }
+	            console.log('state ---------> '+state);
+                if(state == 'SUCCESS'){
+                    var toastEvent = $A.get("e.force:showToast");
+                    toastEvent.setParams({
+                        "title": "Success!",
+                        "message": "Budget Line created successfully.",
+                        "type": 'Success'
+                    });
+                    toastEvent.fire();
+                    $A.get("e.force:closeQuickAction").fire();
+                    $A.get('e.force:refreshView').fire();
+                }
+                else{
+                    var toastEvent = $A.get("e.force:showToast");
+                    toastEvent.setParams({
+                        "title": "Error!",
+                        "message": "Error while creating Budget Line.",
+                        "type": 'Error'
+                    });
+                    toastEvent.fire();
+                }
 	        });
 	        $A.enqueueAction(action);
 	    }else{

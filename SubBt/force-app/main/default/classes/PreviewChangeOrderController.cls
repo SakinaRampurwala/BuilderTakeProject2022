@@ -27,6 +27,9 @@ public with sharing class PreviewChangeOrderController {
         Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
         
         string theTemplate = [SELECT Id FROM EmailTemplate WHERE Id =: templateId].Id; 
+        System.debug('templateId' + templateId);
+        System.debug('theTemplate' + theTemplate);
+
         email.setTemplateId(theTemplate);
         email.setWhatId(recordId);                        
         email.setTargetObjectId(con.Id);       

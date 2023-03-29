@@ -238,17 +238,7 @@ Schema.sObjectType.buildertek__File__c.fields.Name.isAccessible() ){*/
     @AuraEnabled
     public Static String SendEmail(List<String> to, List<String> cc, List<String> files, String subject, String body, List<String> recordId, String templateId, String pdfFileName,List<String> emailIds,List<String> Ids){
         try{
-            system.debug('To : '+to);
-             system.debug('cc : '+cc);
-             system.debug('files : '+files);
-             system.debug('subject : '+subject);
-             system.debug('body : '+body);
-             system.debug('recordId : '+recordId);
-             system.debug('templateId : '+templateId);
-             system.debug('pdfFileName : '+pdfFileName);
-             system.debug('emailIds : '+emailIds);
-             system.debug('Ids : '+Ids);
-            system.debug('Ids : '+Ids[0]);
+            system.debug('recordId : '+recordId);
             List<string> strTO = new List<string>();
             List<string> strCC = new List<string>();
             SET<Id> contactIdSet = new SET<Id>();
@@ -293,12 +283,12 @@ Schema.sObjectType.buildertek__File__c.fields.Name.isAccessible() ){*/
             string fromAddress = eServices.LocalPart + '@' + eServices.EmailDomainName;
             mail.setReplyTo(fromAddress);
             /*if(owe != null && owe.size() > 0){
-mail.setOrgWideEmailAddressId(owe[0].Id);
-mail.setReplyTo(owe[0].Address);
-}else {
-mail.setSenderDisplayName(UserInfo.getName());
-mail.setReplyTo(UserInfo.getUserEmail());
-}*/
+            mail.setOrgWideEmailAddressId(owe[0].Id);
+            mail.setReplyTo(owe[0].Address);
+            }else {
+            mail.setSenderDisplayName(UserInfo.getName());
+            mail.setReplyTo(UserInfo.getUserEmail());
+            }*/
             
             // add record id as a refrence id in subject
             //subject = subject +'[ref:'+recordId+']';
@@ -329,9 +319,9 @@ mail.setReplyTo(UserInfo.getUserEmail());
                 SiteUrl = confirmationurl[0].buildertek__SiteURL__c;
             }
             /*  body += 'Hi, <br/><br/> ';
-body += '</br> Please &nbsp;';
-body += '<a href=' + SiteUrl + 'buildertek__ConfirmationPage?Id=' + recordId + '&templateId=' + templateId + '>Click here</a>';
-body += '&nbsp;to confirm your Change Order details. <br/> <br/> <br/>'; */
+            body += '</br> Please &nbsp;';
+            body += '<a href=' + SiteUrl + 'buildertek__ConfirmationPage?Id=' + recordId + '&templateId=' + templateId + '>Click here</a>';
+            body += '&nbsp;to confirm your Change Order details. <br/> <br/> <br/>'; */
             //subject = subject+'';
             //body = body + '<br/><center><a href="mailto:' + fromAddress + '?subject= Re:' + subject + '&body=Approved"><button type="button" style="cursor: pointer;background-color: #005fb2;color: white;padding-left: 16px;padding-right: 16px;text-align: center;vertical-align: middle;border: 1px solid #0070d2;line-height: 30px;min-height: 32px;cursor: pointer;">Approve</button></a> &nbsp;&nbsp;&nbsp;<a href="mailto:' + fromAddress + '?subject= Re:' + subject + '&body=Rejected"><button type="button" style="cursor: pointer;background-color: #a61a14;color: white;padding-left: 16px;padding-right: 16px;text-align: center;vertical-align: middle;border: 1px solid #0070d2;line-height: 30px;min-height: 32px;cursor: pointer;">Reject</a></button></center><br/>';
             body = body;
@@ -341,21 +331,14 @@ body += '&nbsp;to confirm your Change Order details. <br/> <br/> <br/>'; */
             
             
             //   system.debug('ObjectApiName--->'+Id.valueOf(recordId).getSObjectType().getDescribe().getName());
-            system.debug('recordId-->'+recordId);
-            system.debug('templateId-->'+templateId);
-            system.debug('body-->'+body);
             //added by sai end
             
             List<File__c> flList;
-            system.debug([Select Id, Name, Bucket_Name__c, Amazon_File_Key__c, File_Presigned_URL__c from File__c]);
-            system.debug([Select Id, Name, Bucket_Name__c, Amazon_File_Key__c, File_Presigned_URL__c from File__c where Id IN :files]);
 
             flList = [Select Id, Name, Bucket_Name__c, Amazon_File_Key__c, File_Presigned_URL__c
                       from File__c
                       where Id IN :files];
-            System.debug(flList+ 'FLIST');
             String fileDetails = getFileDetails(flList);
-            system.debug('fileDetails --------> ' + fileDetails);
             if (fileDetails != null){
                 body = body + '<br/><br/><br/>' + fileDetails;
             }
@@ -364,7 +347,6 @@ body += '&nbsp;to confirm your Change Order details. <br/> <br/> <br/>'; */
             if (body != null && String.isNotBlank(body) && body != ''){
                 mail.setHtmlBody(body);
             }else{
-                
                 mail.setHtmlBody('<p></p>');
             }
             
@@ -384,17 +366,15 @@ body += '&nbsp;to confirm your Change Order details. <br/> <br/> <br/>'; */
             List<Messaging.Emailfileattachment> fileAttachments = new List<Messaging.Emailfileattachment>();
           //  for(Id recId : recordId){
           //  if (Id.valueOf(recId).getSObjectType().getDescribe().getName() != 'buildertek__RFQ__c' && Id.valueOf(recId).getSObjectType().getDescribe().getName() != 'buildertek__RFI__c'){
-                if (String.isNotBlank(templateId)){
-                    Messaging.Emailfileattachment efa = new Messaging.Emailfileattachment();
-                    efa.setFileName(pdfFileName + '.pdf');
-                  //  for(Id recId : recordId){
-                  System.debug('Processs Begin');
-                    efa.setBody(setAttachmentBody(recordId, templateId));
-                      // efa.setBody(setAttachmentBody(recId, templateId));   
-                //    }
-                   fileAttachments.add(efa);
-                }
-            System.debug('File attachement by Id : '+fileAttachments);
+            if (String.isNotBlank(templateId)){
+                Messaging.Emailfileattachment efa = new Messaging.Emailfileattachment();
+                efa.setFileName(pdfFileName + '.pdf');
+                //  for(Id recId : recordId){
+                efa.setBody(setAttachmentBody(recordId, templateId));
+                    // efa.setBody(setAttachmentBody(recId, templateId));   
+            //    }
+                fileAttachments.add(efa);
+            }
          //   }
          //   }
             List<ContentVersion> docList;
@@ -404,9 +384,6 @@ body += '&nbsp;to confirm your Change Order details. <br/> <br/> <br/>'; */
                        from ContentVersion
                        where Id IN :files]; //where ContentDocumentId IN :files];
             
-            
-            system.debug('docList -----------> ' + docList);
-            system.debug('docList size -------> ' + docList.size());
             if (docList.size() > 0){
                 for (ContentVersion docs : docList){
                     Messaging.Emailfileattachment efa1 = new Messaging.Emailfileattachment();
@@ -419,15 +396,9 @@ body += '&nbsp;to confirm your Change Order details. <br/> <br/> <br/>'; */
             } 
             List<Attachment> attList;
             
-            
             attList = [Select Id, Name, Body
                        from Attachment
                        where Id IN :files];
-            
-            system.debug([Select Id, Name, Body  from Attachment  where Id IN :files]);
-            system.debug('attList -----------> ' + attList);
-            system.debug('attList size -------> ' + attList.size());
-            system.debug(docList.size() > 0);
 
             if (docList.size() > 0){
                 for (Attachment att : attList){
@@ -441,16 +412,23 @@ body += '&nbsp;to confirm your Change Order details. <br/> <br/> <br/>'; */
                 }
             }
             
-            system.debug('fileAttachments ----->' + fileAttachments);
-            system.debug('contentVersionIds ----->' + contentVersionIds);
             mail.setEntityAttachments(contentVersionIds);
-          //  if(Id.valueOf(recordId).getSObjectType().getDescribe().getName() == 'buildertek__Change_Order__c'){
-                mail.setFileAttachments(fileAttachments);
-            System.debug('Mail attachements : '+   mail);
-         //   } 
+            mail.setFileAttachments(fileAttachments);
+            // if(Id.valueOf(recordId).getSObjectType().getDescribe().getName() == 'buildertek__Change_Order__c'){
+            //  } 
             mails.add(mail);
+            
+            //* Date: 28/03/2023 logic added for Date Emailed for Signature 
+            List<buildertek__Change_Order__c> coList = new List<buildertek__Change_Order__c>();
+            coList = [SELECT Id, Name, buildertek__CO_Submit_Date__c FROM buildertek__Change_Order__c WHERE Id IN :recordId LIMIT 1];
+            System.debug('coList '+coList);
+            if (coList.size() > 0 && coList[0].buildertek__CO_Submit_Date__c == null) {
+                System.debug('coList[0].buildertek__CO_Submit_Date__c '+coList[0].buildertek__CO_Submit_Date__c);
+                coList[0].buildertek__CO_Submit_Date__c = System.today();
+                update coList;
+            }
+
             Messaging.SendEmailResult[] results = Messaging.sendEmail(mails);
-            system.debug('results ----------> ' + results);
             if (results.size() > 0){
                 if (results[0].isSuccess()){
                     string Toaddresses = '';
@@ -471,54 +449,37 @@ body += '&nbsp;to confirm your Change Order details. <br/> <br/> <br/>'; */
                         i++;
                         
                     }
-                    system.debug('CCaddresses ----------> ' + CCaddresses);
-                /*    if (Id.valueOf(recordId).getSObjectType().getDescribe().getName() == 'buildertek__Change_Order__c'){
+                    /*if (Id.valueOf(recordId).getSObjectType().getDescribe().getName() == 'buildertek__Change_Order__c'){
                         buildertek__Change_Order__c changeRec = new buildertek__Change_Order__c();
                         changeRec.Id = recordId;
                         changeRec.buildertek__Sender_Email_Response__c = UserInfo.getUserEmail();
                         update changeRec;
                     } */
                     
-                    
                     EmailMessage caseEmailMessage = new EmailMessage();
                     caseEmailMessage.fromAddress = UserInfo.getUserEmail();
-                    system.debug('caseEmailMessage.fromAddress'+caseEmailMessage.fromAddress);
                     caseEmailMessage.ToAddress = Toaddresses;
-                    system.debug('caseEmailMessage.ToAddress'+caseEmailMessage.ToAddress);
                     caseEmailMessage.FromName = UserInfo.getUserName();
-                    system.debug('caseEmailMessage.ToAddress'+caseEmailMessage.FromName);
                     caseEmailMessage.CcAddress = CCaddresses;
-                    system.debug('CCaddresses'+caseEmailMessage.CcAddress);
                     caseEmailMessage.Subject = subject;
-                    system.debug('CCaddresses'+caseEmailMessage.Subject);
                     caseEmailMessage.HtmlBody = body;
-                    system.debug('CCaddresses'+caseEmailMessage.HtmlBody);
                     caseEmailMessage.Incoming = False;
-                    system.debug('CCaddresses'+caseEmailMessage.Incoming);
                     caseEmailMessage.buildertek__Is_Incoming_Email__c = false;
-                    system.debug('CCaddresses'+caseEmailMessage.buildertek__Is_Incoming_Email__c);
                     caseEmailMessage.MessageDate = system.now();
-                    system.debug('CCaddresses'+caseEmailMessage.MessageDate);
 
                     //caseEmailMessage.TextBody = body.replaceAll('<br/>', '\n');
                     //caseEmailMessage.TextBody = body;
                     
-                    system.debug('caseEmailMessage.TextBody ---------> ' + caseEmailMessage.TextBody);
-                    system.debug('Content length ---------> ' + body.length());
                     /*if(body.length() >= 131000 ){
-system.debug('Too large Content');
-caseEmailMessage.buildertek__Email_Body__c = body.substring(0, 131000);
-}else{
-caseEmailMessage.buildertek__Email_Body__c = body;
-}*/
+                    system.debug('Too large Content');
+                    caseEmailMessage.buildertek__Email_Body__c = body.substring(0, 131000);
+                    }else{
+                    caseEmailMessage.buildertek__Email_Body__c = body;
+                    }*/
                     caseEmailMessage.status = '5';
-                    system.debug('status'+caseEmailMessage.status);
                     caseEmailMessage.buildertek__Subject__c = 'Re: ' + subject;
-                    system.debug('status'+caseEmailMessage.buildertek__Subject__c);
                     
                     insert caseEmailMessage;
-                    
-                    System.debug('===========INSERT===============');
                     
                     EmailMessageRelation emr = new EmailMessageRelation();
                     emr.emailMessageId = caseEmailMessage.id;
@@ -526,18 +487,11 @@ caseEmailMessage.buildertek__Email_Body__c = body;
                     emr.relationType = 'FromAddress';
                     emr.relationAddress = caseEmailMessage.fromAddress;
                     
-                    
                     insert emr;
                     
                     system.debug('*****************6^^^^^^**********************');
-                    system.debug(caseEmailMessage.Id);
-                    system.debug(files);
                     List<ContentVersion> attachmentList = [Select id,VersionData from ContentVersion where id IN:files];
                     
-                    
-                    
-                    
-                    system.debug(attachmentList);
                     List<Attachment> newAttList = new List<Attachment>();
                     for (ContentVersion att : attachmentList){
                         Attachment attch = new Attachment();
@@ -546,42 +500,31 @@ caseEmailMessage.buildertek__Email_Body__c = body;
                         attch.ParentId = caseEmailMessage.Id; 
                         newAttList.add(attch);
                     }
-                    system.debug(newAttList);
                     insert(newAttList);
-                    system.debug(newAttList);
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
+
+
                     
                     /*List<Contact> toAddressList = [SELECT Id, Email FROM Contact WHERE Id IN: contactIdSet];
-List<EmailMessageRelation> emrs = new List<EmailMessageRelation>();
-for(Contact con : toAddressList){
+                    List<EmailMessageRelation> emrs = new List<EmailMessageRelation>();
+                    for(Contact con : toAddressList){
 
-EmailMessageRelation emr = new EmailMessageRelation();
-emr.emailMessageId = caseEmailMessage.id;
-emr.relationId = UserInfo.getUserId(); // user id / contact Id of the sender
-emr.relationType = 'FromAddress';
-emr.relationAddress = caseEmailMessage.fromAddress;
-emrs.add(emr);
+                    EmailMessageRelation emr = new EmailMessageRelation();
+                    emr.emailMessageId = caseEmailMessage.id;
+                    emr.relationId = UserInfo.getUserId(); // user id / contact Id of the sender
+                    emr.relationType = 'FromAddress';
+                    emr.relationAddress = caseEmailMessage.fromAddress;
+                    emrs.add(emr);
 
-emr = new EmailMessageRelation();
-emr.emailMessageId = caseEmailMessage.id;
-emr.relationId = con.Id; // user id / contact Id of the sender
-emr.relationType = 'ToAddress';
-emr.relationAddress = con.Email;
-emrs.add(emr);
+                    emr = new EmailMessageRelation();
+                    emr.emailMessageId = caseEmailMessage.id;
+                    emr.relationId = con.Id; // user id / contact Id of the sender
+                    emr.relationType = 'ToAddress';
+                    emr.relationAddress = con.Email;
+                    emrs.add(emr);
 
-}
-insert emrs;*/
+                    }
+                    insert emrs;*/
                 }
-                system.debug(body);
             }
             
             String message = 'Success';

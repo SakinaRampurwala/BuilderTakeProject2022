@@ -52,34 +52,42 @@
         var rfqlist= component.get("v.rfqRecordList");
         var action =component.get("c.addProducts");
         let productIdList=[];
-        
-        
-        var productList = [];
-        for(var i=0;i<rfqlist.length;i++){
-            if(rfqlist[i].buildertek__Product__c != null){
-                productIdList.push(rfqlist[i].buildertek__Product__c);
-                var obj = {};
-                console.log(rfqlist[i].quantity_recieved);
-                console.log('{{{{{{{{{{{{{{}}}}}}}}}}}}}}}}}}}}}}}}');
-                if(rfqlist[i].quantity_recieved != null){
-                    obj['prodId'] = rfqlist[i].buildertek__Product__c
-                    obj['quantity_recieved'] = rfqlist[i].quantity_recieved
-                    obj['polineId'] = rfqlist[i].Id
-                    
-                    productList.push(obj);
-                }
-            }
-            
-        }
         console.log(rfqlist);
-        console.log(productList);
+        
         for(var i=0;i<rfqlist.length;i++){
             if(rfqlist[i].quantity_recieved != null){
-                if((rfqlist[i].quantity_recieved > (rfqlist[i].buildertek__Quantity_Remaining__c )) && (rfqlist[i].quantity_recieved != 0) ){
+                console.log(rfqlist[i].quantity_recieved);
+                if(rfqlist[i].quantity_recieved < 0 ){
                     var toastEvent = $A.get("e.force:showToast");
                     toastEvent.setParams({
                         title: 'Error',
-                        message: 'Quantity delivered must be less than or equal to quantity remaining on PO line: '+rfqlist[i].Name ,
+                        message: 'Quantity received should not be in negative.',
+                        duration: ' 5000',
+                        key: 'info_alt',
+                        type: 'error',
+                        mode: 'pester'
+                    });
+                    toastEvent.fire();
+                    return;
+                }
+                if(rfqlist[i].quantity_recieved % 1 != 0){
+                    var toastEvent = $A.get("e.force:showToast");
+                    toastEvent.setParams({
+                        title: 'Error',
+                        message: 'Quantity received should not be in decimal.',
+                        duration: ' 5000',
+                        key: 'info_alt',
+                        type: 'error',
+                        mode: 'pester'
+                    });
+                    toastEvent.fire();
+                    return;
+                }
+                if(isNaN(rfqlist[i].quantity_recieved)){
+                    var toastEvent = $A.get("e.force:showToast");
+                    toastEvent.setParams({
+                        title: 'Error',
+                        message: 'Quantity received should be a number.',
                         duration: ' 5000',
                         key: 'info_alt',
                         type: 'error',
@@ -90,7 +98,36 @@
                 }
             }
         }
-        debugger;
+        
+        var productList = [];
+        for(var i=0;i<rfqlist.length;i++){
+            if(rfqlist[i].buildertek__Product__c != null){
+                productIdList.push(rfqlist[i].buildertek__Product__c);
+                var obj = {};
+                console.log(rfqlist[i].quantity_recieved);
+                if(rfqlist[i].quantity_recieved != null && rfqlist[i].quantity_recieved != 0){
+                    obj['prodId'] = rfqlist[i].buildertek__Product__c
+                    obj['quantity_recieved'] = rfqlist[i].quantity_recieved
+                    obj['polineId'] = rfqlist[i].Id
+                    
+                    productList.push(obj);
+                }
+            }
+            else{
+                var obj = {};
+                console.log(rfqlist[i].quantity_recieved);
+                if(rfqlist[i].quantity_recieved != null && rfqlist[i].quantity_recieved != 0){
+                    obj['quantity_recieved'] = rfqlist[i].quantity_recieved
+                    obj['polineId'] = rfqlist[i].Id
+                    
+                    productList.push(obj);
+                }
+            }
+            
+        }
+        console.log(rfqlist);
+        console.log(productList);
+
 
         component.set("v.Spinner", true);
         component.set("v.showMessage", true);
@@ -169,18 +206,16 @@
     },
     
     handleBlur : function(component, event, helper) {
-       // var QuantityReceived = component.get('QuantityReceived');
-        
+
         var inputField = event.getSource();
-        
-        var quantityReceived = event.getSource().get("v.value");
-        
-        var POQuantity = event.getSource().get("v.name");
-        
-       // alert('quantityReceived'+quantityReceived);
-      //  alert('POQuantity'+POQuantity);
-        
-        if(quantityReceived > POQuantity) {
+
+        var paginationList = component.get("v.paginationList");
+        console.log('paginationList ==> ',paginationList);
+
+        var Index = event.getSource().get("v.name");
+        console.log('Index ==> '+Index);
+
+        if((paginationList[Index].quantity_recieved > paginationList[Index].buildertek__Quantity__c) || (paginationList[Index].quantity_recieved > paginationList[Index].buildertek__Quantity_Remaining__c)) {
             
             inputField.setCustomValidity("Items Delivered must be less than Quantity remaining");
        

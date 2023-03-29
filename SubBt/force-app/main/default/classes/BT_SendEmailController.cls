@@ -643,10 +643,16 @@ public with sharing class BT_SendEmailController{
                     }
                     system.debug('CCaddresses ----------> ' + CCaddresses);
                     if (Id.valueOf(recordId).getSObjectType().getDescribe().getName() == 'buildertek__Change_Order__c'){
-                          buildertek__Change_Order__c changeRec = new buildertek__Change_Order__c();
-                          changeRec.Id = recordId;
-                          changeRec.buildertek__Sender_Email_Response__c = UserInfo.getUserEmail();
-                          update changeRec;
+                        //* Date: 28/03/2023 logic added for Date Emailed for Signature 
+                        List<buildertek__Change_Order__c> coList = new List<buildertek__Change_Order__c>();
+                        coList = [SELECT Id, Name, buildertek__Sender_Email_Response__c, buildertek__CO_Submit_Date__c FROM buildertek__Change_Order__c WHERE Id =:recordId LIMIT 1];
+                        if (coList.size() > 0) {
+                            if (coList[0].buildertek__CO_Submit_Date__c == null) {
+                                coList[0].buildertek__CO_Submit_Date__c = System.today();
+                            }
+                            coList[0].buildertek__Sender_Email_Response__c = UserInfo.getUserEmail();
+                            update coList;
+                        }
                      }
                      if (Id.valueOf(recordId).getSObjectType().getDescribe().getName() == 'buildertek__Warranty__c'){
                           buildertek__Warranty__c warRec = new buildertek__Warranty__c();
