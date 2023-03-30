@@ -24,19 +24,18 @@
             fieldSetObj.push(productFamily);
             component.set("v.fieldSetValues", fieldSetObj);
             console.log('Field Set Values::', component.get("v.fieldSetValues"));
-            debugger;
         })
         $A.enqueueAction(action);
     },
     getTotalRecord: function (component, event, helper) {
-        // debugger;
+        // ;
         var action = component.get("c.getCount");
         action.setParams({
             recordId: component.get('v.recordId'),
         });
         action.setCallback(this, function (response) {
             if (response.getState() == 'SUCCESS' && response.getReturnValue()) {
-                // debugger;
+                // ;
                 component.set("v.TotalRecords", response.getReturnValue());
                 console.log('Total record',response.getReturnValue());
             }
@@ -45,7 +44,7 @@
     },
     
     getTableRows: function (component, event, helper ,pageNumber, pageSize) {
-        // debugger;
+        // ;
         var action = component.get("c.getRecords");
         var fieldSetValues = component.get("v.fieldSetValues");
         var setfieldNames = new Set();
@@ -169,7 +168,7 @@
         });
         
         action.setCallback(this, function (response) {
-            // debugger;
+            // ;
             var state = response.getState();
             if (state === "SUCCESS") {
                 var list = JSON.parse(response.getReturnValue());
@@ -281,19 +280,20 @@
                 buildertek__Unit_Cost__c : '',
                 buildertek__Margin__c : '',
                 buildertek__Markup__c : '',
-            }
+            },
+            productFamilyList : [],
         };
         return quoteLineWrapper;
     },
 
     createQuoteLineWrapperList : function(component, event, helper) {
         var quoteLineWrapperList = [];
-        var quoteLineWrapper = helper.createQuoteLineWrapper(component, event, helper);
+        // var quoteLineWrapper = helper.createQuoteLineWrapper(component, event, helper);
         for(var i = 0; i < 5; i++) {
+            let quoteLineWrapper = helper.createQuoteLineWrapper(component, event, helper);
             quoteLineWrapperList.push(quoteLineWrapper);
         }
         console.log('quoteLineWrapperList', quoteLineWrapperList);
-        debugger;
         component.set('v.quoteLineWrapperList', quoteLineWrapperList);
     }
 

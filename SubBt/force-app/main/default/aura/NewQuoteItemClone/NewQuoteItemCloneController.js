@@ -2810,63 +2810,6 @@ console.log(document.getElementsByClassName(className)[0]);
         }
     },
 
-    // expandCollapeGroup: function(component, event, helper){
-    //     var recordId = component.get("v.recordId");
-
-    //     var expandallIcon = document.getElementById("expandAllBtn_" + recordId);
-    //     var collapeallIcon = document.getElementById("collapeseAllBtn_" + recordId);
-
-    //     var iconName = event.currentTarget.dataset.iconname;
-    //     var spanId = event.target.id;
-
-    //     var totalRecordCount = component.get("v.TotalRecordCount");
-    //     var collapeCount = component.get("v.CollapeCount");
-    
-    //     if (iconName == 'Expand Group') {
-    //         let spanGroupId = spanId.replace('expandGroupBtn_','');
-    //         if(spanGroupId == '1'){
-    //             helper.expandRecordsHelper(component, event, helper, spanGroupId);
-    //             let recordDivList = document.getElementsByClassName('collapseAllGroup');
-    //             let selectedRecord = recordDivList.length;
-    //             collapeCount -= selectedRecord;
-    //         }else{
-    //             helper.expandRecordsHelper(component, event, helper, spanGroupId);
-    //             let recordDivList = document.getElementsByClassName('record_'+spanGroupId);
-    //             let selectedRecord = recordDivList.length;
-    //             collapeCount -= selectedRecord;
-    //         }
-
-    //     } else if (iconName == 'Collapse Group') {
-    //         let spanGroupId = spanId.replace('collapeseGroupBtn_','');
-    //         console.log({spanGroupId});
-    //         if(spanGroupId == '1'){
-    //             helper.collapeRecordsHelper(component, event, helper, spanGroupId);
-    //             console.log('inside First');
-    //             let recordDivList = document.getElementsByClassName('collapseAllGroup');
-    //             console.log({recordDivList});
-    //             let selectedRecord = recordDivList.length;
-    //             console.log({selectedRecord});
-    //             collapeCount += selectedRecord;
-    //         }else{
-    //             helper.collapeRecordsHelper(component, event, helper, spanGroupId);
-    //             let recordDivList = document.getElementsByClassName('record_'+spanGroupId);
-    //             console.log({recordDivList});
-    //             let selectedRecord = recordDivList.length;
-    //             collapeCount += selectedRecord;
-    //         }
-    //     }
-    //     component.set("v.CollapeCount", collapeCount);
-
-    //     console.log(collapeCount == totalRecordCount);
-    //     if(collapeCount == totalRecordCount){
-    //         collapeallIcon.style.display = 'none';
-    //         expandallIcon.style.display = 'block';
-    //     } else{
-    //         collapeallIcon.style.display = 'block';
-    //         expandallIcon.style.display = 'none';
-    //     }
-
-    // },
     expandCollapeGroup: function(component, event, helper){
         var recordId = component.get("v.recordId");
 
@@ -2875,30 +2818,27 @@ console.log(document.getElementsByClassName(className)[0]);
 
         var iconName = event.currentTarget.dataset.iconname;
         var spanId = event.target.id;
-        console.log(spanId);
 
         var totalRecordCount = component.get("v.TotalRecordCount");
         var collapeCount = component.get("v.CollapeCount");
     
         if (iconName == 'Expand Group') {
-                let spanGroupId = spanId.replace('expandGroupBtn_','');
-                helper.expandRecordsHelper(component, event, helper, spanGroupId);
-                let recordDivList = document.getElementsByClassName('record_'+spanGroupId);
-                let selectedRecord = recordDivList.length;
-                collapeCount -= selectedRecord;
+            let spanGroupId = spanId.replace('expandGroupBtn_','');
+            helper.expandRecordsHelper(component, event, helper, spanGroupId);
 
+            let recordDivList = document.getElementsByClassName('record_'+spanGroupId);
+            let selectedRecord = recordDivList.length;
+            collapeCount -= selectedRecord;
         } else if (iconName == 'Collapse Group') {
-                let spanGroupId = spanId.replace('collapeseGroupBtn_','');
-                console.log({spanGroupId});
-                helper.collapeRecordsHelper(component, event, helper, spanGroupId);
-                let recordDivList = document.getElementsByClassName('record_'+spanGroupId);
-                console.log({recordDivList});
-                let selectedRecord = recordDivList.length;
-                collapeCount += selectedRecord;
+            let spanGroupId = spanId.replace('collapeseGroupBtn_','');
+            helper.collapeRecordsHelper(component, event, helper, spanGroupId);
+
+            let recordDivList = document.getElementsByClassName('record_'+spanGroupId);
+            let selectedRecord = recordDivList.length;
+            collapeCount += selectedRecord;
         }
         component.set("v.CollapeCount", collapeCount);
 
-        console.log(collapeCount == totalRecordCount);
         if(collapeCount == totalRecordCount){
             collapeallIcon.style.display = 'none';
             expandallIcon.style.display = 'block';

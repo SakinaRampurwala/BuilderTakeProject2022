@@ -6,17 +6,39 @@
         helper.nameTheTab(component, event, helper);
         var pageNumber = component.get("v.PageNumber");
         var pageSize = component.get("v.pageSize");
-        // helper.getTableFieldSet(component, event, helper);
-        // window.setTimeout(
-        //     $A.getCallback(function () {
-        //         helper.getTotalRecord(component, event, helper);
-        //         helper.getTableRows(component, event, helper, pageNumber, pageSize);
-        //     }), 1000
-        // );
-        component.set('v.isLoading', false);
         helper.createQuoteLineWrapperList(component, event, helper);
-        
-        
+        var action = component.get("c.getpricebooks");
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                var pricebookList = response.getReturnValue();
+                var pricebookOptions = [];
+                pricebookOptions.push({
+                    label : 'None',
+                    value : '',
+                })
+                for(var key in pricebookList){
+                    pricebookOptions.push({
+                        label : key,
+                        value : pricebookList[key],
+                    })
+                }
+                console.log('pricebookOptions',pricebookOptions);
+                component.set("v.pricebookOptions",pricebookOptions);
+                component.set('v.isLoading', false);
+
+            }
+        });
+        $A.enqueueAction(action);
+    },
+
+    getFamily : function(component, event, helper) {
+        console.log('getFamily');
+        console.log('event',event.getSource());
+        console.log('event',event.getSource().get("v.value"));
+        console.log('Index => '+event.getSource().get("v.name"));
+        var quoteLineWrapperList = component.get("v.quoteLineWrapperList");
+        console.log('quoteLineWrapperList',quoteLineWrapperList);
 
     },
 

@@ -169,4 +169,17 @@ public with sharing class MassUpdateQuote{
         List<Boolean> islien = new List<Boolean>{checkSingleQLine, checkButtonMargin,checkButtonMarkup};
         return islien;
     }  
+
+    @AuraEnabled
+    public static Map<String, String> getpricebooks(){
+        Map<String, String> options = new Map<String, String>();
+        list<pricebook2> PriceList;
+        PriceList = [select Id, Name
+                     from pricebook2 
+                     Where buildertek__BT_Visible__c = true AND isActive = true ORDER BY Name ASC];
+        for (pricebook2 p : PriceList){
+            options.put(p.name, p.Id);
+        }
+        return options;
+    }
 }
