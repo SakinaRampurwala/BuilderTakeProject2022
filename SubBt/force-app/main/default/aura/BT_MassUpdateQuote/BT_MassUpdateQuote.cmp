@@ -17,7 +17,7 @@
     <aura:attribute name="isLoading" type="Boolean" default="false" />
     <aura:attribute name="quoteLineWrapperList" type="Object" />
     <aura:attribute name="pricebookOptions" type="List" />
-    
+    <aura:attribute name="GroupingOptions" type="List" />
     
     <aura:attribute name="PageNumber" type="integer" default="1" />
     <aura:attribute name="pageSize" type="integer" default="25" />
@@ -98,12 +98,6 @@
                         <aura:iteration items="{!v.quoteLineWrapperList}" var="quoteLineWrapper" indexVar="index">
                             <tr class="slds-hint-parent">
                                 <td>
-                                    <!-- <ui:inputSelectvalue="{!quoteLineWrapper.pricebookEntryId}" class="pricebook-class pointer1" change="{!c.getFamily}">
-                                        <aura:iteration items="{!v.pricebookOptions}" var="pricebookOption">
-                                            <option name="{!quoteLineWrapper}" value="{!pricebookOption.value}">{!pricebookOption.label}</option>
-                                        </aura:iteration>
-                                    </ui:inputSelect> -->
-
                                     <lightning:select name="{!index}" value="{!quoteLineWrapper.pricebookEntryId}" class="pricebook-class pointer1" onchange="{!c.getFamily}">
                                         <aura:iteration items="{!v.pricebookOptions}" var="pricebookOption">
                                             <option name="{!quoteLineWrapper}" value="{!pricebookOption.value}">{!pricebookOption.label}</option>
@@ -112,46 +106,46 @@
 
                                 </td>
                                 <td>
-                                    <ui:inputSelect value="{!quoteLineWrapper.productFamilyId}" class="productFamily-class pointer1" change="{!c.getProduct}">
-                                        <aura:iteration items="{!quoteLineWrapper.productFamilyOptions}" var="productFamilyOption">
+                                    <lightning:select name="{!index}" value="{!quoteLineWrapper.productFamily}" class="family-class pointer1" onchange="{!c.getProduct}">
+                                        <aura:iteration items="{!quoteLineWrapper.productFamilyList}" var="productFamilyOption">
                                             <option name="{!quoteLineWrapper}" value="{!productFamilyOption.value}">{!productFamilyOption.label}</option>
                                         </aura:iteration>
-                                    </ui:inputSelect>
+                                    </lightning:select>
                                 </td>
                                 <td>
-                                    <ui:inputSelect value="{!quoteLineWrapper.productId}" class="product-class pointer1" change="{!c.getUnitCost}">
-                                        <aura:iteration items="{!quoteLineWrapper.productOptions}" var="productOption">
+                                    <lightning:select name="{!index}" value="{!quoteLineWrapper.productId}" class="product-class pointer1" onchange="{!c.gotProduct}">
+                                        <aura:iteration items="{!quoteLineWrapper.productOptionList}" var="productOption">
                                             <option name="{!quoteLineWrapper}" value="{!productOption.value}">{!productOption.label}</option>
                                         </aura:iteration>
-                                    </ui:inputSelect>
+                                    </lightning:select>
                                 </td>
                                 <td>
-                                    <ui:inputText value="{!quoteLineWrapper.description}" class="description-class" />
+                                    <lightning:input name="{!index}" value="{!quoteLineWrapper.QuoteLine.Name}" class="description-class" />
                                 </td>
                                 <td>
-                                    <ui:inputSelect value="{!quoteLineWrapper.grouping}" class="grouping-class pointer1">
-                                        <aura:iteration items="{!v.groupingOptions}" var="groupingOption">
-                                            <option name="{!quoteLineWrapper}" value="{!groupingOption.value}">{!groupingOption.label}</option>
+                                    <lightning:select name="{!index}" value="{!quoteLineWrapper.QuoteLine.buildertek__Grouping__c}" class="grouping-class pointer1">
+                                        <aura:iteration items="{!quoteLineWrapper.GroupingOptions}" var="groupingOption">
+                                            <option name="{!quoteLineWrapper}" value="{!groupingOption.Id}">{!groupingOption.Name}</option>
                                         </aura:iteration>
-                                    </ui:inputSelect>
+                                    </lightning:select>
                                 </td>
                                 <td>
-                                    <ui:inputText value="{!quoteLineWrapper.notes}" class="notes-class" />
+                                    <lightning:input name="{!index}" value="{!quoteLineWrapper.QuoteLine.buildertek__Notes__c}" class="notes-class" />
                                 </td>
                                 <td>
-                                    <ui:inputNumber value="{!quoteLineWrapper.quantity}" class="quantity-class" />
+                                    <lightning:input name="{!index}" value="{!quoteLineWrapper.QuoteLine.buildertek__Quantity__c}" class="quantity-class" />
                                 </td>
                                 <td>
-                                    <ui:inputNumber value="{!quoteLineWrapper.unitCost}" class="unitCost-class" />
+                                    <lightning:input name="{!index}" value="{!quoteLineWrapper.QuoteLine.buildertek__Unit_Cost__c}" class="unit-cost-class" />
                                 </td>
                                 <aura:if isTrue="{!!v.hideGlobalMargin}">
                                     <td>
-                                        <ui:inputNumber value="{!quoteLineWrapper.margin}" class="margin-class" />
+                                        <lightning:input name="{!index}" value="{!quoteLineWrapper.QuoteLine.buildertek__Margin__c}" class="margin-class" />
                                     </td>
                                 </aura:if>
                                 <aura:if isTrue="{!!v.hideGlobalMarkup}">
                                     <td>
-                                        <ui:inputNumber value="{!quoteLineWrapper.markup}" class="markup-class" />
+                                        <lightning:input name="{!index}" value="{!quoteLineWrapper.QuoteLine.buildertek__Markup__c}" class="markup-class" />
                                     </td>
                                 </aura:if>
                                 <!-- <td>

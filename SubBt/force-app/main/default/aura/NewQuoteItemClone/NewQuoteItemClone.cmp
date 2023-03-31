@@ -336,11 +336,9 @@
 
                                 <div>
                                     <aura:if isTrue="{!!v.displayGrouping}">
-                                        <lightning:button iconPosition="left" onclick="{!c.onclickBOMGrouping}"
-                                            label="Group" class="sldsButtonGroup" />
+                                        <lightning:button iconPosition="left" onclick="{!c.onclickBOMGrouping}" label="Group" class="sldsButtonGroup" />
                                         <aura:set attribute="else">
-                                            <lightning:button iconPosition="left" onclick="{!c.returnToNormalVIew}"
-                                                label="Return" class="sldsButtonGroup" />
+                                            <lightning:button iconPosition="left" onclick="{!c.returnToNormalVIew}" label="Return" class="sldsButtonGroup" />
                                         </aura:set>
                                     </aura:if>
                                 </div>&nbsp;
@@ -1456,22 +1454,16 @@
                                                         <!-- <td class="blankDiv"> </td> -->
                                                         <td style="text-align:left;">
                                                             <div class="slds-truncate">
-                                                                <span 
-                                                                    onclick="{!c.onclickDuplicate}">
-                                                                    <lightning:icon iconName="utility:copy"
-                                                                        size="xx-small" />
+                                                                <span data-id="{!quoteItem.Id}"  onclick="{!c.onclickDuplicate}">
+                                                                    <lightning:icon iconName="utility:copy" size="xx-small" />
                                                                     &nbsp;
                                                                 </span>
-                                                                <span 
-                                                                    onclick="{!c.editQuote}">
-                                                                    <lightning:icon iconName="utility:edit"
-                                                                        size="xx-small" />
+                                                                <span data-id="{!quoteItem.Id}" onclick="{!c.editQuote}">
+                                                                    <lightning:icon iconName="utility:edit" size="xx-small" />
                                                                     &nbsp;
                                                                 </span>
-                                                                <span 
-                                                                    onclick="{!c.deleteQuote}">
-                                                                    <lightning:icon iconName="utility:delete"
-                                                                        size="xx-small" />
+                                                                <span data-id="{!quoteItem.Id}" onclick="{!c.deleteQuote}">
+                                                                    <lightning:icon iconName="utility:delete" size="xx-small" />
                                                                 </span>
                                                             </div>
                                                         </td>
@@ -1546,15 +1538,32 @@
                                         <aura:if isTrue="{!v.secondGrouping}">
                                             <aura:iteration items="{!v.QuoteLineWrapper.groupWrapper}" var="group1">
                                                 <tr>
-                                                    <td class="groupHeaderDiv" colspan="{!v.totalColumn+4}">
+                                                    <td class="groupHeaderDiv" colspan="2">
                                                         <aura:if isTrue="{!group1.groupName != undefined}">
                                                             {!group1.groupName}
                                                             <aura:set attribute="else">
                                                                 No Grouping
+                                                            
                                                             </aura:set>
                                                         </aura:if>
                                                     </td>
+                                                    <aura:iteration items="{!group1.fieldTotals.fieldTotalList}" var="total">
+                                                        <td class="groupHeaderTotal">
+                                                            <aura:if isTrue="{!total.fieldName == 'Total'}">
+                                                                    <span>Total</span>
+                                                            </aura:if>
+                                                            <aura:if isTrue="{!total.fieldType == 'currency'}">
+                                                                <aura:if isTrue="{!total.fieldValue != null}">
+                                                                    <lightning:formattedNumber value="{!total.fieldValue}" style="currency" currencyDisplayAs="code" />
+                                                                    <aura:set attribute="else">
+                                                                        <lightning:formattedNumber value="0" style="currency" currencyDisplayAs="code" />
+                                                                    </aura:set>
+                                                                </aura:if>
+                                                            </aura:if>
+                                                        </td>
+                                                    </aura:iteration>
                                                 </tr>
+                                                
                                                 <aura:iteration items="{!group1.quoteLineList}" var="group2">
                                                     <tr>
                                                         <td class="groupHeaderIcon">
@@ -1591,15 +1600,15 @@
                                                             <td class="blankDiv"> </td>
                                                             <td style="text-align:left;">
                                                                 <div class="slds-truncate">
-                                                                    <span onclick="{!c.onclickDuplicate}">
+                                                                    <span data-id="{!quoteItem.Id}" onclick="{!c.onclickDuplicate}">
                                                                         <lightning:icon iconName="utility:copy" size="xx-small" />
                                                                         &nbsp;
                                                                     </span>
-                                                                    <span  onclick="{!c.editQuote}">
+                                                                    <span  data-id="{!quoteItem.Id}" onclick="{!c.editQuote}">
                                                                         <lightning:icon iconName="utility:edit" size="xx-small" />
                                                                         &nbsp;
                                                                     </span>
-                                                                    <span onclick="{!c.deleteQuote}">
+                                                                    <span data-id="{!quoteItem.Id}" onclick="{!c.deleteQuote}">
                                                                         <lightning:icon iconName="utility:delete" size="xx-small" />
                                                                     </span>
                                                                 </div>
@@ -1672,15 +1681,28 @@
                                                             </td>
                                                         </aura:iteration>
                                                     </tr>
+                                                    <br/>
                                                 </aura:iteration>
-                                                <tr style="font-weight: bold;">
-                                                    <td class="blankDiv"> </td>
-                                                    <td class="blankDiv"> Total </td>
-                                                    <aura:iteration items="{!group1.fieldTotals.fieldTotalList}"
-                                                        var="total">
-                                                        <td>
+                                                
+                                            </aura:iteration>
+                                        </aura:if>
+
+
+                                        <aura:if isTrue="{!v.thirdGrouping}">
+                                            <aura:iteration items="{!v.QuoteLineWrapper.groupWrapper}" var="group1">
+                                                <tr>
+                                                    <td class="groupHeaderDiv" colspan="3">
+                                                        <aura:if isTrue="{!group1.groupName != undefined}">
+                                                            {!group1.groupName}
+                                                            <aura:set attribute="else">
+                                                                No Grouping
+                                                            </aura:set>
+                                                        </aura:if>
+                                                    </td>
+                                                    <aura:iteration items="{!group1.fieldTotals.fieldTotalList}" var="total">
+                                                        <td class="groupHeaderTotal">
                                                             <aura:if isTrue="{!total.fieldName == 'Total'}">
-                                                                <!-- <span>Total</span> -->
+                                                                <span>Total</span>
                                                             </aura:if>
                                                             <aura:if isTrue="{!total.fieldType == 'currency'}">
                                                                 <aura:if isTrue="{!total.fieldValue != null}">
@@ -1693,26 +1715,10 @@
                                                         </td>
                                                     </aura:iteration>
                                                 </tr>
-                                            </aura:iteration>
-                                        </aura:if>
-
-
-                                        <aura:if isTrue="{!v.thirdGrouping}">
-                                            <aura:iteration items="{!v.QuoteLineWrapper.groupWrapper}" var="group1">
-                                                <tr>
-                                                    <td class="groupHeaderDiv" colspan="{!v.totalColumn+4}">
-                                                        <aura:if isTrue="{!group1.groupName != undefined}">
-                                                            {!group1.groupName}
-                                                            <aura:set attribute="else">
-                                                                No Grouping
-                                                            </aura:set>
-                                                        </aura:if>
-                                                    </td>
-                                                </tr>
                                                 <aura:iteration items="{!group1.quoteLineList}" var="group2">
                                                     <tr>
                                                         <td class="groupHeaderDiv blankDiv"> </td>
-                                                        <td class="groupHeaderDiv" colspan="{!v.totalColumn+3}">
+                                                        <td class="groupHeaderDiv" colspan="2">
                                                             <aura:if isTrue="{!group2.groupName != undefined}">
                                                                 {!group2.groupName}
                                                                 <aura:set attribute="else">
@@ -1720,6 +1726,22 @@
                                                                 </aura:set>
                                                             </aura:if>
                                                         </td>
+
+                                                        <aura:iteration items="{!group2.fieldTotals.fieldTotalList}" var="total">
+                                                            <td class="groupHeaderTotal">
+                                                                <aura:if isTrue="{!total.fieldName == 'Total'}">
+                                                                    <span>Total</span>
+                                                                </aura:if>
+                                                                <aura:if isTrue="{!total.fieldType == 'currency'}">
+                                                                    <aura:if isTrue="{!total.fieldValue != null}">
+                                                                        <lightning:formattedNumber value="{!total.fieldValue}" style="currency" currencyDisplayAs="code" />
+                                                                        <aura:set attribute="else">
+                                                                            <lightning:formattedNumber value="0" style="currency" currencyDisplayAs="code" />
+                                                                        </aura:set>
+                                                                    </aura:if>
+                                                                </aura:if>
+                                                            </td>
+                                                        </aura:iteration>
                                                     </tr>
                                                     <aura:iteration items="{!group2.quoteLineList}" var="group3">
                                                         <tr>
@@ -1761,18 +1783,15 @@
                                                                 <td class="blankDiv"> </td>
                                                                 <td style="text-align:left;">
                                                                 <div class="slds-truncate">
-                                                                    <span 
-                                                                        onclick="{!c.onclickDuplicate}">
+                                                                    <span data-id="{!quoteItem.Id}"  onclick="{!c.onclickDuplicate}">
                                                                         <lightning:icon iconName="utility:copy" size="xx-small" />
                                                                         &nbsp;
                                                                     </span>
-                                                                    <span 
-                                                                        onclick="{!c.editQuote}">
+                                                                    <span  data-id="{!quoteItem.Id}" onclick="{!c.editQuote}">
                                                                         <lightning:icon iconName="utility:edit" size="xx-small" />
                                                                         &nbsp;
                                                                     </span>
-                                                                    <span 
-                                                                        onclick="{!c.deleteQuote}">
+                                                                    <span data-id="{!quoteItem.Id}" onclick="{!c.deleteQuote}">
                                                                         <lightning:icon iconName="utility:delete" size="xx-small" />
                                                                     </span>
                                                                 </div>
@@ -1843,36 +1862,29 @@
                                                                 </td>
                                                             </aura:iteration>
                                                         </tr>
+                                                        <br/>
                                                     </aura:iteration>
-                                                    <tr style="font-weight: bold;">
-                                                        <td class="blankDiv"> </td>
-                                                        <td class="blankDiv"> </td>
-                                                        <td class="blankDiv"> Total </td>
-                                                        <aura:iteration items="{!group2.fieldTotals.fieldTotalList}" var="total">
-                                                            <td>
-                                                                <aura:if isTrue="{!total.fieldName == 'Total'}">
-                                                                    <!-- <span>Total</span> -->
-                                                                </aura:if>
-                                                                <aura:if isTrue="{!total.fieldType == 'currency'}">
-                                                                    <aura:if isTrue="{!total.fieldValue != null}">
-                                                                        <lightning:formattedNumber value="{!total.fieldValue}" style="currency" currencyDisplayAs="code" />
-                                                                        <aura:set attribute="else">
-                                                                            <lightning:formattedNumber value="0" style="currency" currencyDisplayAs="code" />
-                                                                        </aura:set>
-                                                                    </aura:if>
-                                                                </aura:if>
-                                                            </td>
-                                                        </aura:iteration>
-                                                    </tr>
+                                                    
                                                 </aura:iteration>
-                                                <tr style="font-weight: bold;">
-                                                    <td class="blankDiv"> </td>
-                                                    <td class="blankDiv"> Total </td>
-                                                    <td class="blankDiv"> </td>
+                                               
+                                            </aura:iteration>
+                                        </aura:if>
+
+                                        <aura:if isTrue="{!v.forthGrouping}">
+                                            <aura:iteration items="{!v.QuoteLineWrapper.groupWrapper}" var="group1">
+                                                <tr>
+                                                    <td class="groupHeaderDiv" colspan="4">
+                                                        <aura:if isTrue="{!group1.groupName != undefined}">
+                                                            {!group1.groupName}
+                                                            <aura:set attribute="else">
+                                                                No Grouping
+                                                            </aura:set>
+                                                        </aura:if>
+                                                    </td>
                                                     <aura:iteration items="{!group1.fieldTotals.fieldTotalList}" var="total">
-                                                        <td>
+                                                        <td class="groupHeaderTotal">
                                                             <aura:if isTrue="{!total.fieldName == 'Total'}">
-                                                                <!-- <span>Total</span> -->
+                                                                <span>Total</span>
                                                             </aura:if>
                                                             <aura:if isTrue="{!total.fieldType == 'currency'}">
                                                                 <aura:if isTrue="{!total.fieldValue != null}">
@@ -1885,25 +1897,10 @@
                                                         </td>
                                                     </aura:iteration>
                                                 </tr>
-                                            </aura:iteration>
-                                        </aura:if>
-
-                                        <aura:if isTrue="{!v.forthGrouping}">
-                                            <aura:iteration items="{!v.QuoteLineWrapper.groupWrapper}" var="group1">
-                                                <tr>
-                                                    <td class="groupHeaderDiv" colspan="{!v.totalColumn+4}">
-                                                        <aura:if isTrue="{!group1.groupName != undefined}">
-                                                            {!group1.groupName}
-                                                            <aura:set attribute="else">
-                                                                No Grouping
-                                                            </aura:set>
-                                                        </aura:if>
-                                                    </td>
-                                                </tr>
                                                 <aura:iteration items="{!group1.quoteLineList}" var="group2">
                                                     <tr>
                                                         <td class="groupHeaderDiv blankDiv"> </td>
-                                                        <td class="groupHeaderDiv" colspan="{!v.totalColumn+3}">
+                                                        <td class="groupHeaderDiv" colspan="3">
                                                             <aura:if isTrue="{!group2.groupName != undefined}">
                                                                 {!group2.groupName}
                                                                 <aura:set attribute="else">
@@ -1911,12 +1908,28 @@
                                                                 </aura:set>
                                                             </aura:if>
                                                         </td>
+                                                        
+                                                        <aura:iteration items="{!group2.fieldTotals.fieldTotalList}" var="total">
+                                                            <td class="groupHeaderTotal">
+                                                                <aura:if isTrue="{!total.fieldName == 'Total'}">
+                                                                    <span>Total</span>
+                                                                </aura:if>
+                                                                <aura:if isTrue="{!total.fieldType == 'currency'}">
+                                                                    <aura:if isTrue="{!total.fieldValue != null}">
+                                                                        <lightning:formattedNumber value="{!total.fieldValue}" style="currency" currencyDisplayAs="code" />
+                                                                        <aura:set attribute="else">
+                                                                            <lightning:formattedNumber value="0" style="currency" currencyDisplayAs="code" />
+                                                                        </aura:set>
+                                                                    </aura:if>
+                                                                </aura:if>
+                                                            </td>
+                                                        </aura:iteration>
                                                     </tr>
                                                     <aura:iteration items="{!group2.quoteLineList}" var="group3">
                                                         <tr>
                                                             <td class="groupHeaderDiv blankDiv"> </td>
                                                             <td class="groupHeaderDiv blankDiv"> </td>
-                                                            <td class="groupHeaderDiv" colspan="{!v.totalColumn+2}">
+                                                            <td class="groupHeaderDiv" colspan="2">
                                                                 <aura:if isTrue="{!group3.groupName != undefined}">
                                                                     {!group3.groupName}
                                                                     <aura:set attribute="else">
@@ -1924,6 +1937,21 @@
                                                                     </aura:set>
                                                                 </aura:if>
                                                             </td>
+                                                            <aura:iteration items="{!group3.fieldTotals.fieldTotalList}" var="total">
+                                                                <td class="groupHeaderTotal">
+                                                                    <aura:if isTrue="{!total.fieldName == 'Total'}">
+                                                                        <span>Total</span>
+                                                                    </aura:if>
+                                                                    <aura:if isTrue="{!total.fieldType == 'currency'}">
+                                                                        <aura:if isTrue="{!total.fieldValue != null}">
+                                                                            <lightning:formattedNumber value="{!total.fieldValue}" style="currency" currencyDisplayAs="code" />
+                                                                            <aura:set attribute="else">
+                                                                                <lightning:formattedNumber value="0" style="currency" currencyDisplayAs="code" />
+                                                                            </aura:set>
+                                                                        </aura:if>
+                                                                    </aura:if>
+                                                                </td>
+                                                            </aura:iteration>
                                                         </tr>
                                                         <aura:iteration items="{!group3.quoteLineList}" var="group4">
                                                             <tr>
@@ -1966,22 +1994,16 @@
                                                                     <td class="blankDiv"> </td>
                                                                     <td style="text-align:left;">
                                                                         <div class="slds-truncate">
-                                                                            <span 
-                                                                                onclick="{!c.onclickDuplicate}">
-                                                                                <lightning:icon iconName="utility:copy"
-                                                                                    size="xx-small" />
+                                                                            <span data-id="{!quoteItem.Id}" onclick="{!c.onclickDuplicate}">
+                                                                                <lightning:icon iconName="utility:copy"  size="xx-small" />
                                                                                 &nbsp;
                                                                             </span>
-                                                                            <span 
-                                                                                onclick="{!c.editQuote}">
-                                                                                <lightning:icon iconName="utility:edit"
-                                                                                    size="xx-small" />
+                                                                            <span  data-id="{!quoteItem.Id}" onclick="{!c.editQuote}">
+                                                                                <lightning:icon iconName="utility:edit" size="xx-small" />
                                                                                 &nbsp;
                                                                             </span>
-                                                                            <span 
-                                                                                onclick="{!c.deleteQuote}">
-                                                                                <lightning:icon iconName="utility:delete"
-                                                                                    size="xx-small" />
+                                                                            <span data-id="{!quoteItem.Id}"  onclick="{!c.deleteQuote}">
+                                                                                <lightning:icon iconName="utility:delete" size="xx-small" />
                                                                             </span>
                                                                         </div>
                                                                     </td>                                                                    <aura:iteration items="{!quoteItem.FieldDataList}" var="fildData">
@@ -2052,72 +2074,13 @@
                                                                     </td>
                                                                 </aura:iteration>
                                                             </tr>
+                                                            <br/>
                                                         </aura:iteration>
-                                                        <tr style="font-weight: bold;">
-                                                            <td class="blankDiv"> </td>
-                                                            <td class="blankDiv"> </td>
-                                                            <td class="blankDiv"> </td>
-                                                            <td class="blankDiv"> Total </td>
-                                                            <aura:iteration items="{!group3.fieldTotals.fieldTotalList}" var="total">
-                                                                <td>
-                                                                    <aura:if isTrue="{!total.fieldName == 'Total'}">
-                                                                        <!-- <span>Total</span> -->
-                                                                    </aura:if>
-                                                                    <aura:if isTrue="{!total.fieldType == 'currency'}">
-                                                                        <aura:if isTrue="{!total.fieldValue != null}">
-                                                                            <lightning:formattedNumber value="{!total.fieldValue}" style="currency" currencyDisplayAs="code" />
-                                                                            <aura:set attribute="else">
-                                                                                <lightning:formattedNumber value="0" style="currency" currencyDisplayAs="code" />
-                                                                            </aura:set>
-                                                                        </aura:if>
-                                                                    </aura:if>
-                                                                </td>
-                                                            </aura:iteration>
-                                                        </tr>
+                                                        
                                                     </aura:iteration>
-                                                    <tr style="font-weight: bold;">
-                                                        <td class="blankDiv"> </td>
-                                                        <td class="blankDiv"> </td>
-                                                        <td class="blankDiv"> Total </td>
-                                                        <td class="blankDiv"> </td>
-                                                        <aura:iteration items="{!group2.fieldTotals.fieldTotalList}" var="total">
-                                                            <td>
-                                                                <aura:if isTrue="{!total.fieldName == 'Total'}">
-                                                                    <!-- <span>Total</span> -->
-                                                                </aura:if>
-                                                                <aura:if isTrue="{!total.fieldType == 'currency'}">
-                                                                    <aura:if isTrue="{!total.fieldValue != null}">
-                                                                        <lightning:formattedNumber value="{!total.fieldValue}" style="currency" currencyDisplayAs="code" />
-                                                                        <aura:set attribute="else">
-                                                                            <lightning:formattedNumber value="0" style="currency" currencyDisplayAs="code" />
-                                                                        </aura:set>
-                                                                    </aura:if>
-                                                                </aura:if>
-                                                            </td>
-                                                        </aura:iteration>
-                                                    </tr>
+                                                    
                                                 </aura:iteration>
-                                                <tr style="font-weight: bold;">
-                                                    <td class="blankDiv"> </td>
-                                                    <td class="blankDiv"> Total </td>
-                                                    <td class="blankDiv"> </td>
-                                                    <td class="blankDiv"> </td>
-                                                    <aura:iteration items="{!group1.fieldTotals.fieldTotalList}" var="total">
-                                                        <td>
-                                                            <aura:if isTrue="{!total.fieldName == 'Total'}">
-                                                                <!-- <span>Total</span> -->
-                                                            </aura:if>
-                                                            <aura:if isTrue="{!total.fieldType == 'currency'}">
-                                                                <aura:if isTrue="{!total.fieldValue != null}">
-                                                                    <lightning:formattedNumber value="{!total.fieldValue}" style="currency" currencyDisplayAs="code" />
-                                                                    <aura:set attribute="else">
-                                                                        <lightning:formattedNumber value="0" style="currency" currencyDisplayAs="code" />
-                                                                    </aura:set>
-                                                                </aura:if>
-                                                            </aura:if>
-                                                        </td>
-                                                    </aura:iteration>
-                                                </tr>
+                                               
                                             </aura:iteration>
                                         </aura:if>
 

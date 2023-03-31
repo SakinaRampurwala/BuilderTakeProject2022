@@ -2072,13 +2072,13 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
         System.debug('pageSize -> '+pageSize);
         System.debug('offset -> '+offset);
         if(UserInfo.isMultiCurrencyOrganization()){
-            string rfqrecords = 'SELECT Id, Name, buildertek__Project__c, buildertek__Project__r.Name,buildertek__Description__c, buildertek__Budget_Line__c, buildertek__Budget__c, '+
+            string rfqrecords = 'SELECT Id, Name,buildertek__Resource__c, buildertek__Resource__r.Name ,buildertek__Project__c, buildertek__Project__r.Name,buildertek__Description__c, buildertek__Budget_Line__c, buildertek__Budget__c, '+
                             'buildertek__Daily_Expense__c'+
                             ' FROM buildertek__Time_Cards__c'+
                             ' where buildertek__Project__c =\'' +RFQRec.buildertek__Project__c+'\' and buildertek__Budget_Line__c = null and buildertek__Budget__c = null ORDER BY Name LIMIT :pageSize OFFSET :offset';
                objDT.recordList = Database.query(rfqrecords);
             }else{
-                objDT.recordList = [SELECT Id, Name, buildertek__Project__c, buildertek__Budget__c, buildertek__Project__r.Name,buildertek__Description__c, buildertek__Budget_Line__c, buildertek__Daily_Expense__c FROM buildertek__Time_Cards__c where buildertek__Project__c = :RFQRec.buildertek__Project__c and buildertek__Budget_Line__c = null and buildertek__Budget__c = null
+                objDT.recordList = [SELECT Id, Name,buildertek__Resource__c,buildertek__Resource__r.Name, buildertek__Project__c, buildertek__Budget__c, buildertek__Project__r.Name,buildertek__Description__c, buildertek__Budget_Line__c, buildertek__Daily_Expense__c FROM buildertek__Time_Cards__c where buildertek__Project__c = :RFQRec.buildertek__Project__c and buildertek__Budget_Line__c = null and buildertek__Budget__c = null
                             ORDER BY Name
                             LIMIT :pageSize
                             OFFSET :offset];
@@ -2749,7 +2749,7 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
         Map<Id, buildertek__Budget_Item__c> budgetItemMap = new Map<Id, buildertek__Budget_Item__c>();
         for (buildertek__Time_Cards__c timeCard : selectedTimeCard) {
             buildertek__Budget_Item__c budgetItem = new buildertek__Budget_Item__c();
-            budgetItem.Name = timeCard.buildertek__Description__c;
+            budgetItem.Name = timeCard.buildertek__Resource__r.Name;
             budgetItem.buildertek__Budget__c = RecId;
             budgetItem.buildertek__Group__c = groupId;
             budgetItemMap.put(timeCard.Id, budgetItem);

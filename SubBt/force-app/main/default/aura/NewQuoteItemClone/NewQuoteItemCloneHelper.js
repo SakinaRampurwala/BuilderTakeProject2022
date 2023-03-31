@@ -1471,6 +1471,44 @@
 
         console.log(component.get('v.selectedRows') + '>>>>>>>');
     },
+    submitDetails: function(component, event, helper) {
+        var valueofField1 = component.get("v.valueofField1")
+        var valueofField2 = component.get("v.valueofField2")
+        var valueofField3 = component.get("v.valueofField3")
+        var valueofField4 = component.get("v.valueofField4")
+
+        if(valueofField1 == "" && valueofField2 == "" && valueofField3 == "" && valueofField4 == ""){
+            var toastEvent = $A.get("e.force:showToast");
+            toastEvent.setParams({
+                "type": "Error",
+                "title": "Error!",
+                "message": 'Please Select At Least One Field'
+            });
+            toastEvent.fire();           
+        } else{
+            var selectedFieldList = [];
+            if (valueofField1 != "") {
+                selectedFieldList.push(valueofField1)
+            }
+            if (valueofField2 != "") {
+                selectedFieldList.push(valueofField2)
+            }
+            if (valueofField3 != "") {
+                selectedFieldList.push(valueofField3)
+            }
+            if (valueofField4 != "") {
+                selectedFieldList.push(valueofField4)
+            }
+            console.log('selectedFieldList ==> ',{selectedFieldList});
+            component.set("v.isBOMmodalOpen", false); 
+            component.set("v.displayGrouping", true);
+
+            component.set("v.groupFieldList", selectedFieldList);
+            helper.getQuoteGrouping(component, event, helper);
+
+        }
+
+     },
 
 
 })

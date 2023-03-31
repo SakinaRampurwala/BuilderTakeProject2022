@@ -7,6 +7,7 @@
         var pageNumber = component.get("v.PageNumber");
         var pageSize = component.get("v.pageSize");
         helper.createQuoteLineWrapperList(component, event, helper);
+        helper.QuoteLineGroups(component, event, helper);
         var action = component.get("c.getpricebooks");
         action.setCallback(this, function (response) {
             var state = response.getState();
@@ -33,13 +34,56 @@
     },
 
     getFamily : function(component, event, helper) {
-        console.log('getFamily');
-        console.log('event',event.getSource());
-        console.log('event',event.getSource().get("v.value"));
-        console.log('Index => '+event.getSource().get("v.name"));
         var quoteLineWrapperList = component.get("v.quoteLineWrapperList");
-        console.log('quoteLineWrapperList',quoteLineWrapperList);
+        component.set('v.isLoading', true);       
+        var priceBookId = event.getSource().get("v.value");
+        var index = event.getSource().get("v.name");
+        if(priceBookId != ''){
+            helper.getFamily(component, event, helper, priceBookId, index);
+        }else{
+            var quoteLineWrapperList = component.get("v.quoteLineWrapperList");
+            quoteLineWrapperList[index].productFamilyList = [
+                {
+                    label : 'Plese Select Pricebook',
+                    value : '',
+                }];
+            component.set("v.quoteLineWrapperList", quoteLineWrapperList);
+            component.set('v.isLoading', false);
+        }
 
+    },
+
+    getProduct : function(component, event, helper) {
+        component.set('v.isLoading', true);
+        var quoteLineWrapperList = component.get("v.quoteLineWrapperList");
+        var index = event.getSource().get("v.name");
+        var family = event.getSource().get("v.value");
+        var productList = quoteLineWrapperList[index].productList;
+        var productOptionList = [
+            {
+                label : 'Please Select Product',
+                value : '',
+            }
+        ];
+        for(var i = 0; i < productList.length; i++){
+            if(productList[i].Family == family){
+                productOptionList.push({
+                    label : productList[i].Name,
+                    value : productList[i].Id,
+                })
+            }
+        }
+        quoteLineWrapperList[index].productOptionList = productOptionList;
+        component.set("v.quoteLineWrapperList", quoteLineWrapperList);
+        console.log('quoteLineWrapperList',quoteLineWrapperList);
+        component.set('v.isLoading', false);
+    },
+
+    gotProduct : function(component, event, helper) {
+        component.set('v.isLoading', true);
+        var index = event.getSource().get("v.name");
+        var productId = event.getSource().get("v.value");
+        helper.setProductDetails(component, event, helper, index, productId);
     },
 
     onAddClick: function (component, event, helper) {

@@ -1059,7 +1059,8 @@
         $A.get("e.c:BT_SpinnerEvent").setParams({
             "action": "SHOW"
         }).fire();
-        var selectedInvoiceRecords = component.get("v.recordList");        
+        var selectedInvoiceRecords = component.get("v.recordList");    
+        console.log({selectedInvoiceRecords});    
         let selectedInvoiceList=[];
         selectedInvoiceRecords.forEach(element => {
             if (element.Selected) {
@@ -1167,6 +1168,7 @@
                 selectedTimeCardList.push(element);
             }
         });
+        console.log({selectedTimeCardList});
 
         var timeCardId = component.get("v.selectedExistingTC");
         timeCardId = timeCardId.toString();
