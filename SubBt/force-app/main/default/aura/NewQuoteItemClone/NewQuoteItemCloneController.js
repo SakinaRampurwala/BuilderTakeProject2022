@@ -1006,12 +1006,12 @@
                 );
                 var page = component.get("v.page") || 1
                 
-                // let getValue=component.get('v.displayGrouping')
-                // if () {
-                //     helper.submitDetails(component, event, helper); 
-                // } else{
+                let getValue=component.get('v.displayGrouping')
+                if (getValue) {
+                    helper.submitDetails(component, event, helper); 
+                } else{
                     helper.getGroups(component, event, helper, page);
-                // }
+                }
 
                 
             }
@@ -1776,7 +1776,13 @@
                         }), 3000
                     );
                     var page = component.get("v.page") || 1
-                    helper.getGroups(component, event, helper, page);
+                    // helper.getGroups(component, event, helper, page);
+                    let getValue=component.get('v.displayGrouping')
+                    if (getValue) {
+                        helper.submitDetails(component, event, helper); 
+                    } else{
+                        helper.getGroups(component, event, helper, page);
+                    }
                 }
             });
             $A.enqueueAction(action);

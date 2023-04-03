@@ -262,4 +262,19 @@ public with sharing class MassUpdateQuote{
         
     }
 
+    @AuraEnabled
+    public static Boolean saveQuoteLine(List<object> quotelineList){
+        // System.debug('quotelineList==>'+quotelineList);
+        List<buildertek__Quote_Item__c> quoteLineItems = new List<buildertek__Quote_Item__c>();
+        for(object obj : quotelineList){
+            // buildertek__Quote_Item__c quoteLine = new buildertek__Quote_Item__c();
+            System.debug('obj==>'+obj);
+        }
+        
+        
+        return true;
+    }
+
+
+
 }

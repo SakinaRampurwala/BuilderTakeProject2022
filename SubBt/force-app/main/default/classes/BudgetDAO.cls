@@ -2749,7 +2749,7 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
         Map<Id, buildertek__Budget_Item__c> budgetItemMap = new Map<Id, buildertek__Budget_Item__c>();
         for (buildertek__Time_Cards__c timeCard : selectedTimeCard) {
             buildertek__Budget_Item__c budgetItem = new buildertek__Budget_Item__c();
-            budgetItem.Name = timeCard.buildertek__Resource__r.Name;
+            budgetItem.Name = timeCard.buildertek__Resource__c != null ? timeCard.buildertek__Resource__r.Name : timeCard.Name;
             budgetItem.buildertek__Budget__c = RecId;
             budgetItem.buildertek__Group__c = groupId;
             budgetItemMap.put(timeCard.Id, budgetItem);

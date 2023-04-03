@@ -89,9 +89,9 @@
                                     <div class="slds-truncate" title="Markup">Markup</div>
                                 </th>
                             </aura:if>
-                            <!-- <th style="border-top-right-radius:5px;">
+                            <th scope="col" class="table-Header">
                                 <span> </span>
-                            </th> -->
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -133,25 +133,27 @@
                                     <lightning:input name="{!index}" value="{!quoteLineWrapper.QuoteLine.buildertek__Notes__c}" class="notes-class" />
                                 </td>
                                 <td>
-                                    <lightning:input name="{!index}" value="{!quoteLineWrapper.QuoteLine.buildertek__Quantity__c}" class="quantity-class" />
+                                    <lightning:input name="{!index}" value="{!quoteLineWrapper.QuoteLine.buildertek__Quantity__c}" class="quantity-class" type="number" />
                                 </td>
                                 <td>
-                                    <lightning:input name="{!index}" value="{!quoteLineWrapper.QuoteLine.buildertek__Unit_Cost__c}" class="unit-cost-class" />
+                                    <lightning:input name="{!index}" value="{!quoteLineWrapper.QuoteLine.buildertek__Unit_Cost__c}" class="unit-cost-class" type="number"/>
                                 </td>
                                 <aura:if isTrue="{!!v.hideGlobalMargin}">
                                     <td>
-                                        <lightning:input name="{!index}" value="{!quoteLineWrapper.QuoteLine.buildertek__Margin__c}" class="margin-class" />
+                                        <lightning:input name="{!index}" value="{!quoteLineWrapper.QuoteLine.buildertek__Margin__c}" class="margin-class" type="number" step="0.01" />
                                     </td>
                                 </aura:if>
                                 <aura:if isTrue="{!!v.hideGlobalMarkup}">
                                     <td>
-                                        <lightning:input name="{!index}" value="{!quoteLineWrapper.QuoteLine.buildertek__Markup__c}" class="markup-class" />
+                                        <lightning:input name="{!index}" value="{!quoteLineWrapper.QuoteLine.buildertek__Markup__c}" class="markup-class" type="number" step="0.01" />
                                     </td>
                                 </aura:if>
-                                <!-- <td>
-                                    <lightning:buttonIcon iconName="utility:delete" onclick="{!c.deleteRow}" alternativeText="delete"
-                                                          size="medium" variant="bare-inverse" class="slds-modal__close" />
-                                </td> -->
+                                <td>
+                                    <span onclick="{!c.deleteRow}" data-index="{!index}" class="slds-icon_container slds-icon-utility-delete pointer1" title="Delete">
+                                        <lightning:icon iconName="action:close" alternativeText="Delete"
+                                                            class="some-indicator" size="x-small" title="Delete" />
+                                    </span>    
+                                </td>
                             </tr>
                         </aura:iteration>
                     </tbody>

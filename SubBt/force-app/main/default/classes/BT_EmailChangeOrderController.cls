@@ -308,9 +308,13 @@ Schema.sObjectType.buildertek__File__c.fields.Name.isAccessible() ){*/
             
             if (adminInterfaceNodeConfigurations.size() > 0){
                 emailsubject = adminInterfaceNodeConfigurations[0].buildertek__Email_Subject__c;
-                subject = subject + ' - '+ emailsubject + ' - [ref:' + 'recordId' + ']';
+                // subject = subject + ' - '+ emailsubject + ' - [ref:' + 'recordId' + ']';
+                subject = subject + ' - '+ emailsubject;
+
             } else{
-                subject = subject + ' Change Order - [ref:' + 'recordId' + ']';
+                // subject = subject + ' Change Order - [ref:' + 'recordId' + ']';
+                subject = subject + ' Change Order';
+
             }
             //subject = subject + ' Change Order - [ref:' + recordId + ']';
             List<buildertek__ConfirmationPageSiteURL__c> confirmationurl = buildertek__ConfirmationPageSiteURL__c.getall().values();

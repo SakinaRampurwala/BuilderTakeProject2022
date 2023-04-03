@@ -347,6 +347,17 @@
                     }
                 }
                 quoteLineWrapperList[index].productOptionList = productOptionList;
+                quoteLineWrapperList[index].QuoteLine = {
+                    buildertek__Quote__c : component.get('v.recordId'),
+                    buildertek__Product__c : '',
+                    Name : '',
+                    buildertek__Grouping__c : '',
+                    buildertek__Notes__c : '',
+                    buildertek__Quantity__c : '',
+                    buildertek__Unit_Cost__c : '',
+                    buildertek__Margin__c : '',
+                    buildertek__Markup__c : '',
+                }
                 component.set('v.quoteLineWrapperList', quoteLineWrapperList);
                 console.log('quoteLineWrapperList', quoteLineWrapperList);
                 component.set('v.isLoading', false);
@@ -418,6 +429,96 @@
                     type: "error"
                 });
                 toast.fire();
+            }
+        });
+        $A.enqueueAction(action);
+    },
+
+    getProduct : function(component, event, helper, family, index) {
+        var quoteLineWrapperList = component.get("v.quoteLineWrapperList");
+        var productList = quoteLineWrapperList[index].productList;
+        var productOptionList = [
+            {
+                label : 'Please Select Product',
+                value : '',
+            }
+        ];
+        for(var i = 0; i < productList.length; i++){
+            if(productList[i].Family == family){
+                productOptionList.push({
+                    label : productList[i].Name,
+                    value : productList[i].Id,
+                })
+            }
+        }
+        quoteLineWrapperList[index].productOptionList = productOptionList;
+        quoteLineWrapperList[index].QuoteLine = {
+            buildertek__Quote__c : component.get('v.recordId'),
+            buildertek__Product__c : '',
+            Name : '',
+            buildertek__Grouping__c : '',
+            buildertek__Notes__c : '',
+            buildertek__Quantity__c : '',
+            buildertek__Unit_Cost__c : '',
+            buildertek__Margin__c : '',
+            buildertek__Markup__c : '',
+        }
+        component.set("v.quoteLineWrapperList", quoteLineWrapperList);
+        console.log('quoteLineWrapperList',quoteLineWrapperList);
+        component.set('v.isLoading', false);
+    },
+
+    resetProductDetails : function(component, event, helper, index) {
+        var quoteLineWrapperList = component.get('v.quoteLineWrapperList');
+        quoteLineWrapperList[index].QuoteLine = {
+            buildertek__Quote__c : component.get('v.recordId'),
+            buildertek__Product__c : '',
+            Name : '',
+            buildertek__Grouping__c : '',
+            buildertek__Notes__c : '',
+            buildertek__Quantity__c : '',
+            buildertek__Unit_Cost__c : '',
+            buildertek__Margin__c : '',
+            buildertek__Markup__c : '',
+        }
+        component.set("v.quoteLineWrapperList", quoteLineWrapperList);
+        console.log('quoteLineWrapperList', quoteLineWrapperList);
+        component.set('v.isLoading', false);
+    },
+
+    saveQuoteLine : function(component, event, helper, quotelineList) {
+        console.log('quotelineList', quotelineList);
+        var action = component.get("c.saveQuoteLine");
+        action.setParams({
+            quotelineList : quotelineList,
+        });
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                var result = response.getReturnValue();
+                var toast = $A.get("e.force:showToast");
+                toast.setParams({
+                    title: "Success",
+                    message: "Quote Line Saved Successfully",
+                    type: "success"
+                });
+                toast.fire();
+                component.set('v.isLoading', false);
+            } else if (state === "ERROR") {
+
+                var error = response.getError();
+                console.log('Error =>',{error});
+
+                console.log(response.getError)
+                console.log('A Problem Occurred: ' + JSON.stringify(response.error));
+                var toast = $A.get("e.force:showToast");
+                toast.setParams({
+                    title: "Error",
+                    message: "A Problem Occurred: " + JSON.stringify(response.error),
+                    type: "error"
+                });
+                toast.fire();
+                component.set('v.isLoading', false);
             }
         });
         $A.enqueueAction(action);

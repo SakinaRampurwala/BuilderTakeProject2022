@@ -33,6 +33,14 @@
         $A.enqueueAction(action);
     },
 
+    deleteRow : function(component, event, helper) {
+        var index = event.target.getAttribute('data-index');
+        console.log('index',index);
+        var quoteLineWrapperList = component.get("v.quoteLineWrapperList");
+        quoteLineWrapperList.splice(index, 1);
+        component.set("v.quoteLineWrapperList", quoteLineWrapperList);
+    },
+
     getFamily : function(component, event, helper) {
         var quoteLineWrapperList = component.get("v.quoteLineWrapperList");
         component.set('v.isLoading', true);       
@@ -47,8 +55,26 @@
                     label : 'Plese Select Pricebook',
                     value : '',
                 }];
+            quoteLineWrapperList[index].productOptionList = [
+                {
+                    label : 'Plese Select Family',
+                    value : '',
+                }];
+            quoteLineWrapperList[index].productList = [];
+            quoteLineWrapperList[index].QuoteLine = {
+                buildertek__Quote__c : component.get('v.recordId'),
+                buildertek__Product__c : '',
+                Name : '',
+                buildertek__Grouping__c : '',
+                buildertek__Notes__c : '',
+                buildertek__Quantity__c : '',
+                buildertek__Unit_Cost__c : '',
+                buildertek__Margin__c : '',
+                buildertek__Markup__c : '',
+            }
             component.set("v.quoteLineWrapperList", quoteLineWrapperList);
             component.set('v.isLoading', false);
+
         }
 
     },
@@ -58,57 +84,90 @@
         var quoteLineWrapperList = component.get("v.quoteLineWrapperList");
         var index = event.getSource().get("v.name");
         var family = event.getSource().get("v.value");
-        var productList = quoteLineWrapperList[index].productList;
-        var productOptionList = [
-            {
-                label : 'Please Select Product',
-                value : '',
-            }
-        ];
-        for(var i = 0; i < productList.length; i++){
-            if(productList[i].Family == family){
+        if(family != ''){
+            helper.getProduct(component, event, helper, family, index);
+        }else{
+            var productList = quoteLineWrapperList[index].productList;
+            var productOptionList = [
+                {
+                    label : 'Please Select Product',
+                    value : '',
+                }
+            ];
+            for(var i=0;i<productList.length;i++){
                 productOptionList.push({
                     label : productList[i].Name,
                     value : productList[i].Id,
-                })
+                });
             }
+            quoteLineWrapperList[index].productOptionList = productOptionList;
+            quoteLineWrapperList[index].QuoteLine = {
+                buildertek__Quote__c : component.get('v.recordId'),
+                buildertek__Product__c : '',
+                Name : '',
+                buildertek__Grouping__c : '',
+                buildertek__Notes__c : '',
+                buildertek__Quantity__c : '',
+                buildertek__Unit_Cost__c : '',
+                buildertek__Margin__c : '',
+                buildertek__Markup__c : '',
+            }
+            component.set("v.quoteLineWrapperList", quoteLineWrapperList);
+            component.set('v.isLoading', false);
         }
-        quoteLineWrapperList[index].productOptionList = productOptionList;
-        component.set("v.quoteLineWrapperList", quoteLineWrapperList);
-        console.log('quoteLineWrapperList',quoteLineWrapperList);
-        component.set('v.isLoading', false);
+        
     },
 
     gotProduct : function(component, event, helper) {
         component.set('v.isLoading', true);
         var index = event.getSource().get("v.name");
         var productId = event.getSource().get("v.value");
-        helper.setProductDetails(component, event, helper, index, productId);
+        console.log('productId',productId);
+        if(productId != ''){
+            helper.setProductDetails(component, event, helper, index, productId);
+        }else{
+            helper.resetProductDetails(component, event, helper, index);
+        }
     },
 
     onAddClick: function (component, event, helper) {
-        var fields = component.get('v.fieldSetValues');
-        var list = component.get('v.listOfRecords');
-        for(var i=0 ;i<5;i++){
-            var obj = {};
-            for (var k in fields) {
-				obj['Id'] = 'custom'+i                
-                obj[fields[k].name] = '';
-            }
-            list.unshift(obj);
+        var quoteLineWrapperList = component.get("v.quoteLineWrapperList");
+        for(var i = 0; i < 5; i++) {
+            let quoteLineWrapper = helper.createQuoteLineWrapper(component, event, helper);
+            quoteLineWrapperList.push(quoteLineWrapper);
         }
-        component.set('v.listOfRecords', list);
+        component.set("v.quoteLineWrapperList", quoteLineWrapperList);
     },
 
     onMassUpdate: function (component, event, helper) {
-        component.set('v.isLoading', true);
-        if (!component.get('v.massUpdateEnable')) {
-            component.set('v.massUpdateEnable', true);
-            component.set('v.isLoading', false);
-        } else if (component.get('v.massUpdateEnable')) {
-            component.set('v.isLoading', true);
-            component.set('v.massUpdateEnable', false);
-            helper.updateMassRecords(component, event, helper);
+        component.set('v.loading', true);
+        var quoteLineWrapperList = component.get("v.quoteLineWrapperList");
+        let duplicate = component.get("v.quoteLineWrapperList");
+        var quotelineList = [];
+        console.log('on Save quotelinewrapperlist: ',quoteLineWrapperList);
+        for(var i=0;i<quoteLineWrapperList.length;i++){
+            if(quoteLineWrapperList[i].QuoteLine.Name == ''){
+                delete quoteLineWrapperList[i];
+                quoteLineWrapperList.splice(i,1);
+                i--;
+            }else{
+                quotelineList.push(quoteLineWrapperList[i].QuoteLine);                
+            }
+        }
+        // console.log('quotelinelist',quotelineList);
+        if(quotelineList.length > 0){
+            helper.saveQuoteLine(component, event, helper, quotelineList);
+        }else{
+            var toastEvent = $A.get("e.force:showToast");
+            toastEvent.setParams({
+                title : 'Error Message',
+                message:'Please enter atleast one quote line.',
+                type: 'error',
+                mode: 'sticky'
+            });
+            toastEvent.fire();
+            helper.createQuoteLineWrapperList(component, event, helper);
+            component.set('v.loading', false);
         }
     },
 
@@ -231,5 +290,5 @@
             component.set("v.fieldSetValues", fieldSetObj);
         })
         $A.enqueueAction(action);
-    }
+    },
 })

@@ -820,7 +820,8 @@
                     var diffVal = res[0].UnitPrice - res[0].buildertek__Unit_Cost__c;
                     console.log("Diff Value : " + diffVal)
                     var mark = (diffVal / res[0].buildertek__Unit_Cost__c);
-
+                    debugger
+                    console.log('what is mark ',mark);
                     //ProductDetails.buildertek__Markup__c = (diffVal/res[0].buildertek__Unit_Cost__c) * 100;
                     if (mark != 'Infinity') {
                         //  ProductDetails.buildertek__Markup__c = (diffVal/res[0].buildertek__Unit_Cost__c).toFixed(2); 
@@ -831,7 +832,7 @@
                     }
 
                 } else {
-                    ProductDetails.buildertek__Markup__c = 0;
+                    ProductDetails.buildertek__Markup__c = res[0].buildertek__Markup__c;
                 }
                 ProductDetails.buildertek__Unit_Cost__c = res[0].buildertek__Unit_Cost__c;
                 ProductDetails.buildertek__Unit_Price__c = res[0].UnitPrice;

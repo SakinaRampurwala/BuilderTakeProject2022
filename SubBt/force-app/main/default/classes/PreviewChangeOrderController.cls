@@ -51,7 +51,7 @@ public with sharing class PreviewChangeOrderController {
     
      @AuraEnabled
      public static String sendProposal(String htmlBody, String recordId, String templateId, List<String> to, List<String> cc,string Emailsubject){
-         try{
+        try{
              string fileid = '';
              String body = '';
              //String subject =  Emailsubject;  
@@ -213,16 +213,20 @@ public with sharing class PreviewChangeOrderController {
                                         Name,
                                         buildertek__Customer_Accepted_Date__c,
                                         buildertek__Status__c,
-                                        buildertek__Date_Approved__c
+                                        buildertek__Date_Approved__c,
+                                        buildertek__CO_Submit_Date__c
                                         from buildertek__Change_Order__c where Id=:recordId limit 1];
                 
                 if(corec.size()>0){
                     corec[0].buildertek__Date_Approved__c = system.now();
+                    if (corec[0].buildertek__CO_Submit_Date__c == null) {
+                      corec[0].buildertek__CO_Submit_Date__c = System.today();  
+                    } 
                     update corec;
                     
                 }
               return message;                   
-         }catch(Exception exp){
+        }catch(Exception exp){
              system.debug('Error Message --------> '+exp);
             String message = exp.getMessage();
             return message;    

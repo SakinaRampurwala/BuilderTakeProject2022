@@ -10,10 +10,17 @@
         dbAction.setCallback(this, function (response) {
             var state = response.getState();
             if (state === "SUCCESS") {
-				component.set("v.subject", response.getReturnValue());
+                if(objectName == 'buildertek__Change_Order__c'){
+                    component.set("v.subject", '');
+                }else{
+
+                    component.set("v.subject", response.getReturnValue());
+                }
             }
         });
         $A.enqueueAction(dbAction);
+        console.log({objectName});
+
         if(objectName == 'buildertek__RFI__c' || objectName == 'buildertek__Submittal__c'){
              component.set("v.showTemplate", false);
              helper.getFiles(component, event, helper);
@@ -23,9 +30,11 @@
                 component.set("v.showBodyTemplate",true);
                 helper.getbodyTemplate(component, event, helper);
             }
+            
             helper.getTemplate(component, event, helper);
         }
         helper.getProjectName(component, event, helper);    
+       
 
        
 	},

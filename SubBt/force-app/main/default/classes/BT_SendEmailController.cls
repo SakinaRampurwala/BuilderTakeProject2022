@@ -339,7 +339,9 @@ public with sharing class BT_SendEmailController{
                     subject = subject + ' - '+ emailsubject + ' - [ref:' + recordId + ']';
                     System.debug('subject '+subject);
                 } else{
-                    subject = subject + ' Change Order - [ref:' + recordId + ']';
+                    // subject = subject + ' Change Order - [ref:' + recordId + ']';
+                    subject = subject + ' Change Order';
+
                 }
                 //subject = subject + ' Change Order - [ref:' + recordId + ']';
                 List<buildertek__ConfirmationPageSiteURL__c> confirmationurl = buildertek__ConfirmationPageSiteURL__c.getall().values();
