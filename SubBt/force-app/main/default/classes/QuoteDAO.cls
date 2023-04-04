@@ -2272,7 +2272,7 @@ public with sharing class QuoteDAO{
         return islien;
     }   
 
-    @AuraEnabled(cacheable=true)
+    @AuraEnabled
     public static quoteLineWrapperClass getQuoteData(String quoteId, Integer pageNumber, Integer recordToDisply, List<String> groupingList){
         quoteLineWrapperClass mainWrapper = new quoteLineWrapperClass();
         Integer pageSize = recordToDisply;

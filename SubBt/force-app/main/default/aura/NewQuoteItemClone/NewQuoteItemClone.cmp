@@ -1,5 +1,4 @@
-<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes"
-    access="global" Controller="QuoteDAO">
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes" access="global" Controller="QuoteDAO">
     <!--<ltng:require styles="{!join(',',$Resource.BTDrag + '/BT-Drag.min.css')}"
                   scripts="{!join(',',$Resource.Jquery + '/jquery/lightning/js/jquery-3.2.1.min.js',$Resource.BTDrag+ '/BT-Drag.min.js')}"
                   afterScriptsLoaded="{!c.initialize}"/>-->
@@ -28,8 +27,7 @@
     <aura:attribute name="QuoteInfo" type="Quote__c" default="{ 'sobjectType':'Quote__c'}" access="global" />
     <aura:attribute name="refreshGridAction" type="Aura.Action" default="{!c.refreshQuoteItemList}" />
     <aura:attribute name="newQi" type="Quote_Item__c" default="{ 'sobjectType': 'Quote_Item__c' }" access="public" />
-    <aura:attribute name="newQuote" type="Quote_Item__c" default="{ 'sobjectType':'Quote_Item__c',
-                                                                  'buildertek__Quantity__c':1}" access="global" />
+    <aura:attribute name="newQuote" type="Quote_Item__c" default="{ 'sobjectType':'Quote_Item__c',  'buildertek__Quantity__c':1}" access="global" />
     <aura:attribute name="selectedLookUpRecord" type="sObject" default="{}" />
     <aura:attribute name="unitPrice" type="decimal" />
     <!-- <aura:handler event="force:refreshView" action="{!c.isRefreshed}" />-->
@@ -52,13 +50,10 @@
     <aura:attribute name="wrapperListLength" type="Integer" />
     <aura:method name="refreshData" action="{!c.doInit}" access="public" />
     <aura:attribute name="headerFields" type="List" default="" description="Quote header fields" />
-    <aura:attribute name="quoteByGroupId" type="Map" access="public" default="{}"
-        description="Section details by parent id map" />
+    <aura:attribute name="quoteByGroupId" type="Map" access="public" default="{}" description="Section details by parent id map" />
     <aura:attribute name="groups" type="List" description="section detail list" />
-    <aura:attribute name="initReference" type="Aura.Action" default="{!c.doInit}"
-        description="Init Reference action used to call from child components" />
-    <aura:attribute name="groupLoaded" type="Boolean" default="false"
-        description="This boolean will be true once all section list loaded through aura itration." />
+    <aura:attribute name="initReference" type="Aura.Action" default="{!c.doInit}"  description="Init Reference action used to call from child components" />
+    <aura:attribute name="groupLoaded" type="Boolean" default="false"  description="This boolean will be true once all section list loaded through aura itration." />
     <aura:attribute name="save" type="Aura.Action" description="Save action Reference action" />
     <aura:attribute name="columns" type="List" />
     <aura:attribute name="dummyData" type="List" />
@@ -124,8 +119,7 @@
     <!-- MassUpdate start -->
     <aura:attribute name="enableMassUpdate" type="boolean" default="false" />
     <aura:attribute name="selectedMassLookUpRecord" type="sObject" default="{}" />
-    <aura:attribute name="newMassQuote" type="Quote_Item__c" default="{ 'sobjectType':'Quote_Item__c'}"
-        access="global" />
+    <aura:attribute name="newMassQuote" type="Quote_Item__c" default="{ 'sobjectType':'Quote_Item__c'}"   access="global" />
     <aura:attribute name="newMassQi" type="Quote_Item__c" access="public" />
     <aura:attribute name="duplicateRecs" type="List" default="[]" />
     <aura:attribute name="isDuplicate" type="Boolean" default="false" />
@@ -133,8 +127,7 @@
     <aura:attribute name="isChangeData" type="Boolean" default="false" />
     <aura:attribute name="isMarkup" type="Boolean" default="false" />
     <aura:attribute name="isMargin" type="Boolean" default="false" />
-    <aura:attribute name="QuoteRec" type="Quote__c" default="{ 'sobjectType':'Quote__c','buildertek__Markup__c':'0'}"
-        access="global" />
+    <aura:attribute name="QuoteRec" type="Quote__c" default="{ 'sobjectType':'Quote__c','buildertek__Markup__c':'0'}"  access="global" />
     <aura:attribute name="QuoteMargin" type="Integer" default="" />
     <aura:attribute name="isQuoteRecChange" type="Boolean" default="false" />
     <aura:attribute name="currentId" type="String" default="" />
@@ -976,7 +969,7 @@
                                                 </span> -->
                                                         <!-- <div class="slds-col slds-size_6-of-12" data-index='{!groupIndex}'
                                                     onclick="{!c.onClickChangeGroupName}"> -->
-                                                        <div class="slds-col slds-size_6-of-12"
+                                                        <div class="slds-col slds-size_6-of-12 width"
                                                             style="font-size: 17px;">
                                                             <!-- <span style=" margin-right:-60px; margin-left: -60px; !important;" >-->
 
@@ -2006,8 +1999,9 @@
                                                                                 <lightning:icon iconName="utility:delete" size="xx-small" />
                                                                             </span>
                                                                         </div>
-                                                                    </td>                                                                    <aura:iteration items="{!quoteItem.FieldDataList}" var="fildData">
-                                                                    <td>
+                                                                    </td>                                                                    
+                                                                    <aura:iteration items="{!quoteItem.FieldDataList}" var="fildData">
+                                                                        <td>
                                                                             <aura:if isTrue="{! (fildData.fieldType == 'number' || fildData.fieldType == 'currency' || fildData.fieldName == 'Name' || fildData.fieldName == 'buildertek__Markup__c' 
                                                                                                 || fildData.fieldName == 'buildertek__Margin__c' || fildData.fieldName == 'buildertek__Additional_Discount__c' || fildData.fieldName == 'buildertek__Profit_Margin__c' )}">
 

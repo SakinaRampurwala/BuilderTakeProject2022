@@ -245,3 +245,6 @@
 .THIS .tableRow {
     background-color: #F3F3F3;
 }
+.THIS .width{
+    width: 45% !important;
+}

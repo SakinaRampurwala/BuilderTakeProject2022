@@ -986,7 +986,7 @@
             if (state === "SUCCESS") {
                 var result = response.getReturnValue();
                 component.set("v.isOpen", false);
-                $A.get("e.force:refreshView").fire();
+                // $A.get("e.force:refreshView").fire();
                 window.setTimeout(
                     $A.getCallback(function() {
                         var toastEvent = $A.get("e.force:showToast");
@@ -1003,12 +1003,30 @@
                         });
                         toastEvent.fire();
                     }), 3000
+
+
                 );
+
+                // let wrap= component.get('v.QuoteLineWrapper');
+                // let list=[]
+                // for(let i in wrap){
+                //    wrap.quoteLineList.forEach(function(elem){
+                //         if(elem.Id===recordId){
+                //             console.log({wrap});
+                //         }else{
+                //             list.push(elem);
+                //         }
+                //     });
+                //     wrap.quoteLineList=list;
+                //     console.log(wrap);
+                //     component.set('v.QuoteLineWrapper' , wrap);
+                // }
+               
                 var page = component.get("v.page") || 1
                 
                 let getValue=component.get('v.displayGrouping')
                 if (getValue) {
-                    helper.submitDetails(component, event, helper); 
+                    helper.getQuoteGrouping(component, event, helper); 
                 } else{
                     helper.getGroups(component, event, helper, page);
                 }
@@ -1779,7 +1797,7 @@
                     // helper.getGroups(component, event, helper, page);
                     let getValue=component.get('v.displayGrouping')
                     if (getValue) {
-                        helper.submitDetails(component, event, helper); 
+                        helper.getQuoteGrouping(component, event, helper); 
                     } else{
                         helper.getGroups(component, event, helper, page);
                     }

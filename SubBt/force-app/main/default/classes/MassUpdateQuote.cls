@@ -263,16 +263,52 @@ public with sharing class MassUpdateQuote{
     }
 
     @AuraEnabled
-    public static Boolean saveQuoteLine(List<object> quotelineList){
+    public static Boolean saveQuoteLine(List<buildertek__Quote_Item__c> quotelineList){
         // System.debug('quotelineList==>'+quotelineList);
         List<buildertek__Quote_Item__c> quoteLineItems = new List<buildertek__Quote_Item__c>();
-        for(object obj : quotelineList){
-            // buildertek__Quote_Item__c quoteLine = new buildertek__Quote_Item__c();
+        for(buildertek__Quote_Item__c obj : quotelineList){
+            buildertek__Quote_Item__c quoteLine = new buildertek__Quote_Item__c();
             System.debug('obj==>'+obj);
+            System.debug('obj Name ==>'+obj.Name);
+            if(obj.Name != null){
+                quoteLine.Name = obj.Name;
+            }
+            if(obj.buildertek__Grouping__c != null){
+                quoteLine.buildertek__Grouping__c = obj.buildertek__Grouping__c;
+            }
+            if(obj.buildertek__Margin__c != null){
+                quoteLine.buildertek__Margin__c = obj.buildertek__Margin__c;
+            }
+            if(obj.buildertek__Markup__c != null){
+                quoteLine.buildertek__Markup__c = obj.buildertek__Markup__c;
+            }
+            if(obj.buildertek__Notes__c != null){
+                quoteLine.buildertek__Notes__c = obj.buildertek__Notes__c;
+            }
+            if(obj.buildertek__Product__c != null){
+                quoteLine.buildertek__Product__c = obj.buildertek__Product__c;
+            }
+            if(obj.buildertek__Quantity__c != null){
+                quoteLine.buildertek__Quantity__c = obj.buildertek__Quantity__c;
+            }
+            if(obj.buildertek__Quote__c != null){
+                quoteLine.buildertek__Quote__c = obj.buildertek__Quote__c;
+            }
+            if(obj.buildertek__Unit_Cost__c != null){
+                quoteLine.buildertek__Unit_Cost__c = obj.buildertek__Unit_Cost__c;
+            }
+            // System.debug('quoteLine==>'+quoteLine);
+            quoteLineItems.add(quoteLine);
         }
+        System.debug('quoteLineItems==>'+quoteLineItems);
         
-        
-        return true;
+        try{
+            insert quoteLineItems;
+            return true;
+        }catch(Exception e){
+            System.debug('Exception==>'+e);
+            return false;
+        }
     }
 
 

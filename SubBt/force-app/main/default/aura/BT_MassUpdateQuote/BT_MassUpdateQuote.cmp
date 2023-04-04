@@ -18,7 +18,8 @@
     <aura:attribute name="quoteLineWrapperList" type="Object" />
     <aura:attribute name="pricebookOptions" type="List" />
     <aura:attribute name="GroupingOptions" type="List" />
-    
+    <aura:attribute name="dummy" type="List" />
+
     <aura:attribute name="PageNumber" type="integer" default="1" />
     <aura:attribute name="pageSize" type="integer" default="25" />
     <aura:attribute name="TotalPages" type="integer" default="0" />
@@ -123,11 +124,20 @@
                                     <lightning:input name="{!index}" value="{!quoteLineWrapper.QuoteLine.Name}" class="description-class" />
                                 </td>
                                 <td>
-                                    <lightning:select name="{!index}" value="{!quoteLineWrapper.QuoteLine.buildertek__Grouping__c}" class="grouping-class pointer1">
-                                        <aura:iteration items="{!quoteLineWrapper.GroupingOptions}" var="groupingOption">
-                                            <option name="{!quoteLineWrapper}" value="{!groupingOption.Id}">{!groupingOption.Name}</option>
-                                        </aura:iteration>
-                                    </lightning:select>
+                                    <aura:if isTrue="{!quoteLineWrapper.QuoteLine.buildertek__Product__c != ''}">
+                                        <lightning:select name="{!index}" value="{!quoteLineWrapper.QuoteLine.buildertek__Grouping__c}" class="grouping-class pointer1">
+                                            <aura:iteration items="{!quoteLineWrapper.GroupingOptions}" var="groupingOption">
+                                                <option name="{!quoteLineWrapper}" value="{!groupingOption.Id}">{!groupingOption.Name}</option>
+                                            </aura:iteration>
+                                        </lightning:select>
+                                    </aura:if>
+                                    <aura:if isTrue="{!quoteLineWrapper.QuoteLine.buildertek__Product__c == ''}">
+                                        <lightning:select name="{!index}" value="{!quoteLineWrapper.QuoteLine.buildertek__Grouping__c}" class="grouping-class pointer1">
+                                            <aura:iteration items="{!dummy}" var="groupingOption">
+                                                <option name="{!quoteLineWrapper}" value="{!groupingOption.Id}">{!groupingOption.Name}</option>
+                                            </aura:iteration>
+                                        </lightning:select>
+                                    </aura:if>
                                 </td>
                                 <td>
                                     <lightning:input name="{!index}" value="{!quoteLineWrapper.QuoteLine.buildertek__Notes__c}" class="notes-class" />

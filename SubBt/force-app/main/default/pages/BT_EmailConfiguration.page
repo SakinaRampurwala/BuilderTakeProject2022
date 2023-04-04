@@ -11,4 +11,5 @@
             </apex:pageblocksection>
         </apex:pageBlock>
     </apex:form>
+    <c:QuoteGroupFromBom relatedTo_id="a081K00000yiRqQQAU"/>
 </apex:page>

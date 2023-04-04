@@ -1,0 +1,19 @@
+<apex:component controller="QuoteGroupFromBom" access="global">
+
+    <apex:attribute type="id" name="relatedTo_id" assignTo="{!relatedToId}" description="RelatedTo" />
+
+    <div>
+        <h1>QuoteGroupFromBom Componnet</h1>
+
+        <br/>
+
+        <apex:repeat value="{!quoteLineWrapper.quoteLineList}" var="quoteItem" id="theRepeat">
+            <br/>
+
+            {!quoteItem.Id} - {!quoteItem.Name}
+   
+        </apex:repeat>
+
+    </div>
+
+</apex:component>

@@ -1412,7 +1412,6 @@
     }, 
 
     countTotal : function(component, helper, totalObj, element){
-        console.log('element', element)
         element.FieldDataList.forEach(ele => {
             if (ele.fieldType == 'currency') {
                 totalObj[ele.fieldName] += Number(ele.fieldValue);

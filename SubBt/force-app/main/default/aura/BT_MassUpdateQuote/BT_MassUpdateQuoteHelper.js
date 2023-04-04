@@ -496,6 +496,7 @@
             var state = response.getState();
             if (state === "SUCCESS") {
                 var result = response.getReturnValue();
+                console.log('result', result);
                 var toast = $A.get("e.force:showToast");
                 toast.setParams({
                     title: "Success",
@@ -504,6 +505,7 @@
                 });
                 toast.fire();
                 component.set('v.isLoading', false);
+                helper.closeNrefresh(component, event, helper);
             } else if (state === "ERROR") {
 
                 var error = response.getError();
@@ -524,5 +526,31 @@
         $A.enqueueAction(action);
     },
 
+    closeNrefresh : function(component, event, helper) {
+        if (component.get('v.massUpdateEnable')) {
+            var workspaceAPI = component.find("workspace");
+            workspaceAPI.getFocusedTabInfo().then(function (response) {
+                var focusedTabId = response.tabId;
+                workspaceAPI.closeTab({
+                    tabId: focusedTabId
+                });
+            }) 
+         
+            .catch(function (error) {
+                var navEvt = $A.get("e.force:navigateToSObject");
+                navEvt.setParams({
+                    "recordId": component.get('v.recordId'),
+                    "slideDevName": "related"
+                });
+                navEvt.fire();
+            });
+            $A.get("e.force:closeQuickAction").fire();
+            window.setTimeout(
+                $A.getCallback(function () {
+                    $A.get('e.force:refreshView').fire();
+                }), 1000
+            );
+        }
+    },
 
 })
