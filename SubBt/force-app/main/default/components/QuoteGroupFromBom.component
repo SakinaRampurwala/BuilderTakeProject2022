@@ -6,12 +6,31 @@
         <h1>QuoteGroupFromBom Componnet</h1>
 
         <br/>
-
-        <apex:repeat value="{!quoteLineWrapper.quoteLineList}" var="quoteItem" id="theRepeat">
+        <apex:repeat value="{!quoteLineWrapper.groupWrapperList}" var="group1">
             <br/>
-
-            {!quoteItem.Id} - {!quoteItem.Name}
-   
+            &nbsp;&nbsp; 
+            {!group1.groupName}
+            <apex:repeat value="{!group1.groupWrapperList}" var="group2">
+                <br/>
+                &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
+                {!group2.groupName}
+                <apex:repeat value="{!group2.groupWrapperList}" var="group3">
+                    <br/>
+                    &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
+                    {!group3.groupName}
+                    <apex:repeat value="{!group3.groupWrapperList}" var="group4">
+                        <br/>
+                        &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
+                        {!group4.groupName}
+                        <apex:repeat value="{!group4.quoteLineList}" var="quoteItem">
+                            <br/>
+                            &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; 
+                            {!quoteItem.Id} - {!quoteItem.Name}
+                        </apex:repeat>
+                    </apex:repeat>
+                </apex:repeat>
+            </apex:repeat>
+            <br/>
         </apex:repeat>
 
     </div>
