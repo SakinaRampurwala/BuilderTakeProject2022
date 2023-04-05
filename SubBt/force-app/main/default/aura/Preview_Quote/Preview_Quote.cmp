@@ -103,7 +103,7 @@
                                 <label class="slds-form-element__label" for="recipients-to">Additional<br/> Emails</label>
                                 <div class="slds-form-element__control slds-size--1-of-1">
                                     <div class="slds-combobox_container slds-has-inline-listbox" style="padding-left: 2rem;">
-                                        <lightning:input aura:id="emailForm" type="text" name="toEmail" value="{!v.toEmail}" onchange="{!c.onEmailChange}" class="slds-size--1-of-1" />
+                                        <lightning:input aura:id="emailForm" type="text" name="toEmail" value="{!v.toEmail}" onchange="{!c.onEmailChange}" onkeypress="{!c.onAddEmail}" class="slds-size--1-of-1" />
                                     </div>
                                 </div>
                                 <div class="slds-form-element__control slds-size--1-of-1">

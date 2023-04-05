@@ -295,7 +295,11 @@ public without sharing class PreviewQuoteController{
 
             List<Messaging.Emailfileattachment> fileAttachments = new List<Messaging.Emailfileattachment>();
             Messaging.Emailfileattachment efa = new Messaging.Emailfileattachment();
-            efa.setFileName('Quote.pdf');
+            // efa.setFileName('Quote.pdf');
+            efa.setFileName(quoterecbody[0].Name);
+
+
+            
             system.debug('Blob ---> ' + setAttachmentBody(recordId, templateId, fileid));
             efa.setBody(setAttachmentBody(recordId, templateId, fileid));
             fileAttachments.add(efa);
@@ -355,7 +359,7 @@ public without sharing class PreviewQuoteController{
             }
             list<buildertek__Quote__c> quoterec;
 
-            quoterec = [select id, Name, buildertek__Status__c, buildertek__Date_Sent_To_Customer__c,buildertek__Memo__c
+            quoterec = [select id, Name, buildertek__Status__c, buildertek__Date_Sent_To_Customer__c,buildertek__Memo__c, buildertek__Date_Accepted_by_Customer__c, buildertek__Date_Rejected_by_Customer__c
                         from buildertek__Quote__c
                         where Id = :recordId
                         limit 1];
@@ -366,7 +370,9 @@ public without sharing class PreviewQuoteController{
             //  if (quoterec[0].buildertek__Status__c != 'Customer Accepted'){
                     quoterec[0].buildertek__Status__c = 'Sent';
                 //}
-                quoterec[0].buildertek__Date_Sent_To_Customer__c = System.today();
+                if(quoterec[0].buildertek__Date_Rejected_by_Customer__c == null && quoterec[0].buildertek__Date_Accepted_by_Customer__c == null){
+                    quoterec[0].buildertek__Date_Sent_To_Customer__c = System.today();
+                } 
                 quoterec[0].buildertek__Memo__c = '';
                 update quoterec;
 
@@ -427,7 +433,7 @@ public without sharing class PreviewQuoteController{
                 subject = 'Quote';
             }
             String salesRepEmailId='';
-            List<buildertek__Quote__c> salesRepEmail=[SELECT Id, buildertek__Sales_Rep__r.Email FROM buildertek__Quote__c WHERE Id = : recordId LIMIT 1];
+            List<buildertek__Quote__c> salesRepEmail=[SELECT Id,Name, buildertek__Sales_Rep__r.Email FROM buildertek__Quote__c WHERE Id = : recordId LIMIT 1];
             if(salesRepEmail.size()>0){
                 if(salesRepEmail[0].buildertek__Sales_Rep__r.Email != null){
                     salesRepEmailId = salesRepEmail[0].buildertek__Sales_Rep__r.Email;
@@ -499,7 +505,10 @@ public without sharing class PreviewQuoteController{
             mail.setHTMLBody(body);
             List<Messaging.Emailfileattachment> fileAttachments = new List<Messaging.Emailfileattachment>();
             Messaging.Emailfileattachment efa = new Messaging.Emailfileattachment();
-            efa.setFileName('Quote.pdf');
+            if(salesRepEmail.size()>0){
+                efa.setFileName(salesRepEmail[0].Name);
+
+            }
             //system.debug('Blob ---> ' + setAttachmentBody(recordId, templateId, fileid));
             system.debug('templateId'+templateId);
             efa.setBody(setAttachmentBody(recordId, templateId, fileid));

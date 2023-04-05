@@ -834,12 +834,18 @@
     deleteSelectedQuoteItem: function(component, event, helper) {
         console.log('---In Delete Method---');
         component.set("v.Spinner22", true);
-        if (component.find("checkQuoteItem") != undefined) {
+        if (component.find("checkQuoteItem") != undefined || component.find("checkGroupQuoteItem1") != undefined) {
             var QuoteIds = [];
             var rowData;
             var newRFQItems = [];
             var delId = [];
-            var getAllId = component.find("checkQuoteItem");
+            var getAllId;
+            if(component.find("checkGroupQuoteItem1") != undefined){
+                getAllId = component.find("checkGroupQuoteItem1");
+            }else{
+                getAllId = component.find("checkQuoteItem");
+
+            }
             console.log('getAllId--->>',{getAllId});
             if (!Array.isArray(getAllId)) {
                 if (getAllId.get("v.value") == true) {
@@ -856,27 +862,17 @@
                 }
             }
             if (QuoteIds.length > 0) {
-                // component.set("v.Spinner22", false);
                 var modal = component.find("exampleModal");
                 $A.util.removeClass(modal, 'hideDiv');
                 component.set("v.QuotelinePopupHeader", "Delete Quote Lines");
                 component.set("v.QuotelinePopupDescription", "Are you sure you want to delete Quote Lines?");
                 component.set("v.isQuotelinedelete", true);
             } else {
-                /*   component.find('notifLib').showNotice({
-                       "variant": "error",
-                       "header": "Please Select Quote Line!",
-                       "message": "Please select the Quote Line you would like to Delete.",
-                       closeCallback: function () {
-                           $A.get("e.c:BT_SpinnerEvent").setParams({
-                               "action": "HIDE"
-                           }).fire();
-                       }
-                   }); */
+                
                    var toastEvent = $A.get("e.force:showToast");
                    toastEvent.setParams({
                        title: 'Error',
-                       message: 'Please insert atleast one Budget Line ',
+                       message: 'Please select atleast one Quote Line ',
                        duration: ' 5000',
                        key: 'info_alt',
                        type: 'error',
@@ -1080,7 +1076,13 @@
         var rowData;
         var newRFQItems = [];
         var delId = [];
-        var getAllId = component.find("checkQuoteItem");
+        var getAllId;
+        if(component.find("checkGroupQuoteItem1") != undefined){
+            getAllId = component.find("checkGroupQuoteItem1");
+        }else{
+            getAllId = component.find("checkQuoteItem");
+
+        }       
         if (!Array.isArray(getAllId)) {
             if (getAllId.get("v.value") == true) {
                 QuoteIds.push(getAllId.get("v.text"));
@@ -1121,7 +1123,12 @@
                     );
                     //var checkvalue = component.find("selectAll").set("v.value", false);
                     var page = component.get("v.page") || 1
-                    helper.getGroups(component, event, helper, page);
+                    let getValue=component.get('v.displayGrouping')
+                    if (getValue) {
+                        helper.getQuoteGrouping(component, event, helper); 
+                    } else{
+                        helper.getGroups(component, event, helper, page);
+                    }         
                 }
             });
             $A.enqueueAction(action);
@@ -1563,6 +1570,152 @@
         // } else {
         //     checkvalue.set("v.value", false);
         // }
+
+    },
+    handleSelectAllGroup:function(component, event, helper) {
+        let firstGroup=component.get('v.firstGrouping');
+        let secondGroup=component.get('v.secondGrouping');
+        let thirdGroup=component.get('v.thirdGrouping');
+        let forthGrouping=component.get('v.forthGrouping');
+        console.log(firstGroup);
+        console.log(secondGroup);
+        console.log(thirdGroup);
+        console.log(forthGrouping);
+
+
+
+
+        let QuoteLineWrapper = component.get('v.QuoteLineWrapper');
+        let selectedGroupName = event.getSource().get("v.name");
+        let groupWrapper= QuoteLineWrapper.groupWrapper;
+
+        groupWrapper.forEach(function(elem){
+            if(selectedGroupName === elem.groupName){
+                elem.isSelected=true;
+            }
+            
+            if(firstGroup== true){
+                elem.quoteLineList.forEach(function(value){
+                    console.log(value.buildertek__Grouping__c);
+                    console.log(value.buildertek__Grouping__c === selectedGroupName);
+                    if(value.buildertek__Grouping__c === selectedGroupName){
+                        value.isSelected=true;
+
+                    } 
+                });
+            }else if(secondGroup== true){
+                elem.quoteLineList.forEach(function(value){
+                    value.quoteLineList.forEach(function(value2){
+                        if(value2.buildertek__Grouping__c === selectedGroupName){
+                            value2.isSelected=true;
+                        } 
+
+                    });
+                    
+                });
+            }else if(thirdGroup== true){
+                elem.quoteLineList.forEach(function(value){
+                    value.quoteLineList.forEach(function(value2){
+                        value2.quoteLineList.forEach(function(value3){
+                            if(value3.buildertek__Grouping__c === selectedGroupName){
+                                value3.isSelected=true;
+                            } 
+                        });
+                    });
+                    
+                });
+            }else if(forthGrouping== true){
+                elem.quoteLineList.forEach(function(value){
+                    value.quoteLineList.forEach(function(value2){
+                        value2.quoteLineList.forEach(function(value3){
+                            value3.quoteLineList.forEach(function(value4){
+                                if(value4.buildertek__Grouping__c === selectedGroupName){
+                                    value4.isSelected=true;
+                                } 
+                            });
+
+                        });
+                    });
+                    
+                });
+
+            }
+
+            
+            
+        });
+        component.set('v.QuoteLineWrapper' , QuoteLineWrapper );
+        console.log({QuoteLineWrapper});
+
+    },
+    unCheckAllGroup:function(component, event, helper) {
+        let firstGroup=component.get('v.firstGrouping');
+        let secondGroup=component.get('v.secondGrouping');
+        let thirdGroup=component.get('v.thirdGrouping');
+        let forthGrouping=component.get('v.forthGrouping');
+
+        console.log(firstGroup);
+        console.log(secondGroup);
+        console.log(thirdGroup);
+        console.log(forthGrouping);
+
+
+
+        let selectedId = event.getSource().get("v.text");
+        let selectedGroupName = event.getSource().get("v.name");
+
+        let QuoteLineWrapper = component.get('v.QuoteLineWrapper');
+
+        let groupWrapper= QuoteLineWrapper.groupWrapper;
+        groupWrapper.forEach(function(elem){
+            if(firstGroup== true){
+                elem.quoteLineList.forEach(function(value){
+                    if(value.buildertek__Grouping__c === selectedGroupName){
+                        elem.isSelected=false;
+                    } 
+                });
+            }else if(secondGroup== true){
+                elem.quoteLineList.forEach(function(value){
+                    value.quoteLineList.forEach(function(value2){
+                        if(value2.buildertek__Grouping__c === selectedGroupName){
+                            elem.isSelected=false;
+                        } 
+                    });    
+                });
+            }else if(thirdGroup== true){
+                elem.quoteLineList.forEach(function(value){
+                    value.quoteLineList.forEach(function(value2){
+                        value2.quoteLineList.forEach(function(value3){
+                        if(value3.buildertek__Grouping__c === selectedGroupName){
+                            elem.isSelected=false;
+                        } 
+                         })
+                    });    
+                });
+            }else if(forthGrouping== true){
+                elem.quoteLineList.forEach(function(value){
+                    value.quoteLineList.forEach(function(value2){
+                        value2.quoteLineList.forEach(function(value3){
+                            value3.quoteLineList.forEach(function(value4){
+                                console.log({value4});
+                                if(value4.buildertek__Grouping__c === selectedGroupName){
+                                    elem.isSelected=false;
+                                } 
+                            });
+
+                        
+                         })
+                    });    
+                });
+
+            }
+
+            
+        });
+        
+        
+        component.set('v.QuoteLineWrapper' , QuoteLineWrapper);
+        console.log({QuoteLineWrapper});
 
     },
     updateQuoteRecords: function(component, event, helper) {

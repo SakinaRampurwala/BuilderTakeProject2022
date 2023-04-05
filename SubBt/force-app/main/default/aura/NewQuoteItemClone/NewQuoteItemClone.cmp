@@ -1436,7 +1436,21 @@
                                                 </tr>
                                                 <tr style='line-height: 2;font-size: 12px;' class="slds-text-heading--label">
                                                     <th class="tableHeaderDiv blankDiv"></th>
+                                                    <th class="tableHeaderDiv slds-is-sortable tabletitle" scope="col" width="5px">
+                                                            <div class="slds-form-element">
+                                                                <div class="slds-form-element__control">
+                                                                    <label class="slds-checkbox" width="10px">
+                                                                        <ui:inputCheckbox name="{!group1.groupName}" value="{!group1.isSelected}" change="{!c.handleSelectAllGroup}" aura:id="selectAllGroup" class="" />
+                                                                        <span class="slds-checkbox--faux" style="top:-2px;"></span>
+                                                                        <span class="slds-form-element__label text"></span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                    </th>
+                                                    <th class="tableHeaderDiv blankDiv"></th>
+
                                                     <aura:iteration items="{!v.QuoteLineWrapper.columns}" var="col">
+                                        
                                                         <th class="tableHeaderDiv">
                                                             {!col.label}
                                                         </th>
@@ -1444,7 +1458,18 @@
                                                 </tr>
                                                 <aura:iteration items="{!group1.quoteLineList}" var="quoteItem">
                                                     <tr style="line-height: 2.5;display:table-row;" class="{!'record_'+group1.groupIndex}" >
-                                                        <!-- <td class="blankDiv"> </td> -->
+                                                        <td class="blankDiv"></td>
+                                                        <td>
+                                                            <div class="slds-form-element">
+                                                                <div class="slds-form-element__control">
+                                                                    <label class="slds-checkbox" style="width:2px;">
+                                                                        <ui:inputCheckbox aura:id='checkGroupQuoteItem1' name="{!quoteItem.buildertek__Grouping__c}" text="{!quoteItem.Id}" value="{!quoteItem.isSelected}" change="{!c.unCheckAllGroup}" />
+                                                                        <span class="slds-checkbox--faux"  style="top:-2px;"></span>
+                                                                        <span  class="slds-form-element__label text"></span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </td>
                                                         <td style="text-align:left;">
                                                             <div class="slds-truncate">
                                                                 <span data-id="{!quoteItem.Id}"  onclick="{!c.onclickDuplicate}">
@@ -1507,7 +1532,7 @@
                                                     </tr>
                                                 </aura:iteration>
                                                 <tr style="font-weight: bold;">
-                                                    <td class="blankDiv"> </td>
+                                                    <td class="blankDiv" colspan="3"> </td>
                                                     <aura:iteration items="{!group1.fieldTotals.fieldTotalList}"
                                                         var="total">
                                                         <td>
@@ -1531,7 +1556,7 @@
                                         <aura:if isTrue="{!v.secondGrouping}">
                                             <aura:iteration items="{!v.QuoteLineWrapper.groupWrapper}" var="group1">
                                                 <tr>
-                                                    <td class="groupHeaderDiv" colspan="2">
+                                                    <td class="groupHeaderDiv" colspan="3">
                                                         <aura:if isTrue="{!group1.groupName != undefined}">
                                                             {!group1.groupName}
                                                             <aura:set attribute="else">
@@ -1580,6 +1605,18 @@
                                                     </tr>
                                                     <tr>
                                                         <th class="tableHeaderDiv blankDiv"></th>
+
+                                                        <th class="tableHeaderDiv slds-is-sortable tabletitle" scope="col" width="5px">
+                                                            <div class="slds-form-element">
+                                                                <div class="slds-form-element__control">
+                                                                    <label class="slds-checkbox" width="10px">
+                                                                        <ui:inputCheckbox name="{!group1.groupName}" value="{!group1.isSelected}" change="{!c.handleSelectAllGroup}" aura:id="selectAllGroup" class="" />
+                                                                        <span class="slds-checkbox--faux" style="top:-2px;"></span>
+                                                                        <span class="slds-form-element__label text"></span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </th>
                                                         <th class="tableHeaderDiv blankDiv"></th>
 
                                                          <aura:iteration items="{!v.QuoteLineWrapper.columns}" var="col">
@@ -1589,8 +1626,19 @@
                                                         </aura:iteration>
                                                     </tr>
                                                     <aura:iteration items="{!group2.quoteLineList}" var="quoteItem">
-                                                        <tr class="{!'record_'+group1.groupIndex+group2.groupIndex}">
+                                                        <tr style="line-height: 2.5;display:table-row;"  class="{!'record_'+group1.groupIndex+group2.groupIndex}">
                                                             <td class="blankDiv"> </td>
+                                                            <td>
+                                                                <div class="slds-form-element">
+                                                                    <div class="slds-form-element__control">
+                                                                        <label class="slds-checkbox" style="width:2px;">
+                                                                            <ui:inputCheckbox name="{!quoteItem.buildertek__Grouping__c}"   aura:id='checkGroupQuoteItem1' text="{!quoteItem.Id}" value="{!quoteItem.isSelected}" change="{!c.unCheckAllGroup}" />
+                                                                            <span class="slds-checkbox--faux"  style="top:-2px;"></span>
+                                                                            <span  class="slds-form-element__label text"></span>
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
                                                             <td style="text-align:left;">
                                                                 <div class="slds-truncate">
                                                                     <span data-id="{!quoteItem.Id}" onclick="{!c.onclickDuplicate}">
@@ -1655,10 +1703,8 @@
                                                         </tr>
                                                     </aura:iteration>
                                                     <tr style="font-weight: bold;">
-                                                        <td class="blankDiv"> </td>
-                                                        <td class="blankDiv"> </td>
-                                                        <aura:iteration items="{!group2.fieldTotals.fieldTotalList}"
-                                                            var="total">
+                                                        <td class="blankDiv" colspan="3"> </td>
+                                                        <aura:iteration items="{!group2.fieldTotals.fieldTotalList}" var="total">
                                                             <td>
                                                                 <aura:if isTrue="{!total.fieldName == 'Total'}">
                                                                     <span>Total</span>
@@ -1684,7 +1730,7 @@
                                         <aura:if isTrue="{!v.thirdGrouping}">
                                             <aura:iteration items="{!v.QuoteLineWrapper.groupWrapper}" var="group1">
                                                 <tr>
-                                                    <td class="groupHeaderDiv" colspan="3">
+                                                    <td class="groupHeaderDiv" colspan="4">
                                                         <aura:if isTrue="{!group1.groupName != undefined}">
                                                             {!group1.groupName}
                                                             <aura:set attribute="else">
@@ -1711,7 +1757,7 @@
                                                 <aura:iteration items="{!group1.quoteLineList}" var="group2">
                                                     <tr>
                                                         <td class="groupHeaderDiv blankDiv"> </td>
-                                                        <td class="groupHeaderDiv" colspan="2">
+                                                        <td class="groupHeaderDiv" colspan="3">
                                                             <aura:if isTrue="{!group2.groupName != undefined}">
                                                                 {!group2.groupName}
                                                                 <aura:set attribute="else">
@@ -1759,8 +1805,18 @@
                                                             </td>
                                                         </tr>
                                                         <tr>
-                                                            <th class="tableHeaderDiv blankDiv"></th>
-                                                            <th class="tableHeaderDiv blankDiv"></th>
+                                                            <th class="tableHeaderDiv blankDiv" colspan="2"></th>
+                                                            <th class="tableHeaderDiv slds-is-sortable tabletitle" scope="col" width="5px">
+                                                                <div class="slds-form-element">
+                                                                    <div class="slds-form-element__control">
+                                                                        <label class="slds-checkbox" width="10px">
+                                                                            <ui:inputCheckbox name="{!group1.groupName}" value="{!group1.isSelected}" change="{!c.handleSelectAllGroup}" aura:id="selectAllGroup" class="" />
+                                                                            <span class="slds-checkbox--faux" style="top:-2px;"></span>
+                                                                            <span class="slds-form-element__label text"></span>
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                            </th>                                                            
                                                             <th class="tableHeaderDiv blankDiv"></th>
                                                             <aura:iteration items="{!v.QuoteLineWrapper.columns}"
                                                                 var="col">
@@ -1770,11 +1826,20 @@
                                                             </aura:iteration>
                                                         </tr>
                                                         <aura:iteration items="{!group3.quoteLineList}" var="quoteItem">
-                                                            <tr
-                                                                class="{!'record_'+group1.groupIndex+group2.groupIndex+group3.groupIndex}">
-                                                                <td class="blankDiv"> </td>
-                                                                <td class="blankDiv"> </td>
-                                                                <td style="text-align:left;">
+                                                            <tr style="line-height: 2.5;display:table-row;"  class="{!'record_'+group1.groupIndex+group2.groupIndex+group3.groupIndex}">
+                                                                <td class="blankDiv" colspan="2"> </td>
+                                                                <td>
+                                                                    <div class="slds-form-element">
+                                                                        <div class="slds-form-element__control">
+                                                                            <label class="slds-checkbox" style="width:2px;">
+                                                                                <ui:inputCheckbox name="{!quoteItem.buildertek__Grouping__c}"   aura:id='checkGroupQuoteItem1' text="{!quoteItem.Id}" value="{!quoteItem.isSelected}" change="{!c.unCheckAllGroup}" />
+                                                                                <span class="slds-checkbox--faux"  style="top:-2px;"></span>
+                                                                                <span  class="slds-form-element__label text"></span>
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>                                                              
+                                                                 <td style="text-align:left;">
                                                                 <div class="slds-truncate">
                                                                     <span data-id="{!quoteItem.Id}"  onclick="{!c.onclickDuplicate}">
                                                                         <lightning:icon iconName="utility:copy" size="xx-small" />
@@ -1836,9 +1901,7 @@
                                                             </tr>
                                                         </aura:iteration>
                                                         <tr style="font-weight: bold;">
-                                                            <td class="blankDiv"> </td>
-                                                            <td class="blankDiv"> </td>
-                                                            <td class="blankDiv"> </td>
+                                                            <td class="blankDiv" colspan="4"> </td>
                                                             <aura:iteration items="{!group3.fieldTotals.fieldTotalList}" var="total">
                                                                 <td>
                                                                     <aura:if isTrue="{!total.fieldName == 'Total'}">
@@ -1866,7 +1929,7 @@
                                         <aura:if isTrue="{!v.forthGrouping}">
                                             <aura:iteration items="{!v.QuoteLineWrapper.groupWrapper}" var="group1">
                                                 <tr>
-                                                    <td class="groupHeaderDiv" colspan="4">
+                                                    <td class="groupHeaderDiv" colspan="6">
                                                         <aura:if isTrue="{!group1.groupName != undefined}">
                                                             {!group1.groupName}
                                                             <aura:set attribute="else">
@@ -1893,7 +1956,7 @@
                                                 <aura:iteration items="{!group1.quoteLineList}" var="group2">
                                                     <tr>
                                                         <td class="groupHeaderDiv blankDiv"> </td>
-                                                        <td class="groupHeaderDiv" colspan="3">
+                                                        <td class="groupHeaderDiv" colspan="5">
                                                             <aura:if isTrue="{!group2.groupName != undefined}">
                                                                 {!group2.groupName}
                                                                 <aura:set attribute="else">
@@ -1922,7 +1985,7 @@
                                                         <tr>
                                                             <td class="groupHeaderDiv blankDiv"> </td>
                                                             <td class="groupHeaderDiv blankDiv"> </td>
-                                                            <td class="groupHeaderDiv" colspan="2">
+                                                            <td class="groupHeaderDiv" colspan="4">
                                                                 <aura:if isTrue="{!group3.groupName != undefined}">
                                                                     {!group3.groupName}
                                                                     <aura:set attribute="else">
@@ -1950,6 +2013,8 @@
                                                             <tr>
                                                                 <td class="groupHeaderDiv blankDiv"> </td>
                                                                 <td class="groupHeaderDiv blankDiv"> </td>
+                                                                <td class="groupHeaderDiv blankDiv"> </td>
+
                                                                 <td class="groupHeaderIcon">
                                                                     <div id='collapseBtn' class="slds-float_left">
                                                                         <span data-iconname="Expand Group" id="{!'expandGroupBtn_'+group1.groupIndex+group2.groupIndex+group3.groupIndex+group4.groupIndex}" onclick="{!c.expandCollapeGroup}" style="display:none">
@@ -1960,7 +2025,7 @@
                                                                         </span>
                                                                     </div>
                                                                 </td>
-                                                                <td class="groupHeaderDiv" colspan="{!v.totalColumn+1}">
+                                                                <td class="groupHeaderDiv" colspan="{!v.totalColumn+2}">
                                                                     <aura:if isTrue="{!group4.groupName != undefined}">
                                                                         {!group4.groupName}
                                                                         <aura:set attribute="else">
@@ -1973,7 +2038,22 @@
                                                                 <th class="tableHeaderDiv blankDiv"></th>
                                                                 <th class="tableHeaderDiv blankDiv"></th>
                                                                 <th class="tableHeaderDiv blankDiv"></th>
+                                                                
+
+                                                                <th class="tableHeaderDiv slds-is-sortable tabletitle" scope="col" width="5px">
+                                                                    <div class="slds-form-element">
+                                                                        <div class="slds-form-element__control">
+                                                                            <label class="slds-checkbox" width="10px">
+                                                                                <ui:inputCheckbox name="{!group1.groupName}" value="{!group1.isSelected}" change="{!c.handleSelectAllGroup}" aura:id="selectAllGroup" class="" />
+                                                                                <span class="slds-checkbox--faux" style="top:-2px;"></span>
+                                                                                <span class="slds-form-element__label text"></span>
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </th>                                                              
                                                                 <th class="tableHeaderDiv blankDiv"></th>
+                                                                <th class="tableHeaderDiv blankDiv"></th>
+                                                                
                                                                 <aura:iteration items="{!v.QuoteLineWrapper.columns}" var="col">
                                                                     <th class="tableHeaderDiv">
                                                                         {!col.label}
@@ -1981,10 +2061,20 @@
                                                                 </aura:iteration>
                                                             </tr>
                                                             <aura:iteration items="{!group4.quoteLineList}" var="quoteItem">
-                                                                <tr class="{!'record_'+group1.groupIndex+group2.groupIndex+group3.groupIndex+group4.groupIndex}">
-                                                                    <td class="blankDiv"> </td>
-                                                                    <td class="blankDiv"> </td>
-                                                                    <td class="blankDiv"> </td>
+                                                                <tr style="line-height: 2.5;display:table-row;"  class="{!'record_'+group1.groupIndex+group2.groupIndex+group3.groupIndex+group4.groupIndex}">
+                                                                    <td class="blankDiv" colspan="3"> </td>
+                                                                    <td>
+                                                                        <div class="slds-form-element">
+                                                                            <div class="slds-form-element__control">
+                                                                                <label class="slds-checkbox" style="width:2px;">
+                                                                                    <ui:inputCheckbox name="{!quoteItem.buildertek__Grouping__c}"   aura:id='checkGroupQuoteItem1' text="{!quoteItem.Id}" value="{!quoteItem.isSelected}" change="{!c.unCheckAllGroup}" />
+                                                                                    <span class="slds-checkbox--faux"  style="top:-2px;"></span>
+                                                                                    <span  class="slds-form-element__label text"></span>
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>                                                                   
+                                                                     <td class="blankDiv" > </td>
                                                                     <td style="text-align:left;">
                                                                         <div class="slds-truncate">
                                                                             <span data-id="{!quoteItem.Id}" onclick="{!c.onclickDuplicate}">
@@ -2052,6 +2142,9 @@
                                                                 <td class="blankDiv"> </td>
                                                                 <td class="blankDiv"> </td>
                                                                 <td class="blankDiv"> </td>
+                                                                <td class="blankDiv"> </td>
+                                                                <td class="blankDiv"> </td>
+
                                                                 <aura:iteration items="{!group4.fieldTotals.fieldTotalList}" var="total">
                                                                     <td>
                                                                         <aura:if isTrue="{!total.fieldName == 'Total'}">
