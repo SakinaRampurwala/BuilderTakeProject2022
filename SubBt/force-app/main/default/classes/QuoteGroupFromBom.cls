@@ -4,22 +4,30 @@ global without sharing class QuoteGroupFromBom {
     public List<buildertek__Quote_Item__c> allQuoteLineList {get;set;}
     public List<BT_Lightning_Utils.dataTableFields> columns {get;set;}
     public quoteLineWrapperClass quoteLineWrapper {get;set;}
-    List<String> groupingList {get;set;}
-    Integer totalLayer {get;set;}
-    Integer currentLayer {get;set;}
+    public List<String> groupingList {get;set;}
+    public Integer totalLayer {get;set;}
+    public Integer currentLayer {get;set;}
+    public Boolean runCls {get;set;}
+
 
     public QuoteGroupFromBom() {
+        System.debug('QuoteGroupFromBom');
         allQuoteLineList = new List<buildertek__Quote_Item__c>();
         columns = new List<BT_Lightning_Utils.dataTableFields>();
         quoteLineWrapper = new quoteLineWrapperClass();
         groupingList = new List<String>();
-        totalLayer = 0;
-        currentLayer = 0;
+        totalLayer = 1;
+        currentLayer = 1;
+        runCls = true;
     }
 
     public void setrelatedToId(string Id){
+        System.debug('setrelatedToId');
         this.quoteId = Id;
-        getQuoteData();
+        if (runCls) {
+            runCls = false;
+            getQuoteData();
+        }
     }
     
     public string getrelatedToId( ){
@@ -32,7 +40,8 @@ global without sharing class QuoteGroupFromBom {
         System.debug('quoteId ==> '+quoteId);
 
         // Grouping field list for set 4 layer grouping on quote lines (Fix Value Used Only For Development)
-        groupingList = new List<String>{'buildertek__Grouping__c', 'buildertek__Build_Phase__c', 'buildertek__Location_Detailed_Area__c', 'buildertek__Product_Family__c'};
+        // groupingList = new List<String>{'buildertek__Grouping__c', 'buildertek__Build_Phase__c', 'buildertek__Location_Detailed_Area__c', 'buildertek__Product_Family__c'};
+        groupingList = new List<String>{'buildertek__Grouping__c', 'buildertek__Build_Phase__c'};
 
         // All fields in list that can be available in grouping fields.
         List<String> gorupingFieldList = new List<String>{'id','buildertek__Build_Phase__c', 'buildertek__Build_Reference_1__c','buildertek__Base_Location__c','buildertek__Location_Picklist__c','buildertek__Location_Detailed_Area__c','buildertek__Location_Detail_Reference_1__c','buildertek__BL_SERVICE_CATEGORY__c', 'buildertek__Product_Family__c', 'buildertek__Sub_Group__c', 'buildertek__Grouping__c'};
@@ -75,60 +84,65 @@ global without sharing class QuoteGroupFromBom {
         quoteLineWrapper.columns = columns;
 
         if (groupingList.size() > 0 & allQuoteLineList.size() > 0) {
+            System.debug('totalLayer ==> '+totalLayer);
             quoteLineWrapper.groupWrapperList = newLayerGrouping(allQuoteLineList);
         }
 
     }
 
-    // Use method for grouping layer
+    // Use method for grouping layers
     public List<groupWrapper> newLayerGrouping(List<buildertek__Quote_Item__c> quoteLineList){
-        System.debug('-- newLayerGrouping --');
+        // System.debug('-- newLayerGrouping --');
+
+        System.debug('currentLayer ==> '+currentLayer);
+
         List<groupWrapper> groupWrapperList = new List<groupWrapper>();
 
         // Total quote line record count
         Integer quoteLineListSize = quoteLineList.size();
+        System.debug('quoteLineListSize ==> '+quoteLineListSize);
 
         // Check field type of all grouping fields.
         Map<String, Schema.SObjectField> objectMap = Schema.SObjectType.buildertek__Quote_Item__c.fields.getMap();
-        Schema.SObjectField field = objectMap.get(groupingList[currentLayer]);
+        Schema.SObjectField field = objectMap.get(groupingList[currentLayer-1]);
         Schema.DisplayType fldType = field.getDescribe().getType();
 
         String selectedGroupName = '';
         if (String.valueOf(fldType) == 'REFERENCE') {
-            if (quoteLineList[0].get(groupingList[currentLayer]) != null) {
-                selectedGroupName = String.valueOf(quoteLineList[0].getSobject(groupingList[currentLayer].removeEnd('c')+'r').get('Name'));
+            if (quoteLineList[0].get(groupingList[currentLayer-1]) != null) {
+                selectedGroupName = String.valueOf(quoteLineList[0].getSobject(groupingList[currentLayer-1].removeEnd('c')+'r').get('Name'));
             } else {
                 selectedGroupName = 'No Grouping';
             }
         } else {
-            selectedGroupName = String.valueOf(quoteLineList[0].get(groupingList[currentLayer]));
+            selectedGroupName = String.valueOf(quoteLineList[0].get(groupingList[currentLayer-1]));
             if (selectedGroupName == '' || selectedGroupName == null) {
                 selectedGroupName = 'No Grouping';
             }
         }
 
+        System.debug('selectedGroupName ==> '+selectedGroupName);
+
         List<buildertek__Quote_Item__c> newQuoteLineList = new List<buildertek__Quote_Item__c>();
 
         for (Integer i = 0; i < quoteLineListSize; i++) {
 
-            System.debug('quoteLineList[i] ==> '+quoteLineList[i]);
-            System.debug('currentLayer ==> '+currentLayer);
-
             // Get current grouping name
             String currentGroupName = '';
             if (String.valueOf(fldType) == 'REFERENCE') {
-                if (quoteLineList[i].get(groupingList[currentLayer]) != null) {
-                    currentGroupName = String.valueOf(quoteLineList[i].getSobject(groupingList[currentLayer].removeEnd('c')+'r').get('Name'));
+                if (quoteLineList[i].get(groupingList[currentLayer-1]) != null) {
+                    currentGroupName = String.valueOf(quoteLineList[i].getSobject(groupingList[currentLayer-1].removeEnd('c')+'r').get('Name'));
                 } else {
                     currentGroupName = 'No Grouping';
                 }
-                currentGroupName = String.valueOf(quoteLineList[i].getSobject(groupingList[currentLayer].removeEnd('c')+'r').get('Name'));
             } else {
-                currentGroupName = String.valueOf(quoteLineList[i].get(groupingList[currentLayer]));
+                currentGroupName = String.valueOf(quoteLineList[i].get(groupingList[currentLayer-1]));
                 if (currentGroupName == '' || currentGroupName == null) {
                     currentGroupName = 'No Grouping';
                 }
             }
+
+            System.debug('currentGroupName ==> '+currentGroupName);
 
             // create grouping accouring to the currentGroupName value
             if (selectedGroupName == currentGroupName) {
@@ -140,7 +154,10 @@ global without sharing class QuoteGroupFromBom {
                     groupWrap.quoteLineList = newQuoteLineList;
                     if (totalLayer > currentLayer) {
                         currentLayer += 1;
+                        System.debug('newLayerGrouping');
                         groupWrap.groupWrapperList = newLayerGrouping(newQuoteLineList);
+                    } else {
+                        currentLayer -= 1;
                     }
                     groupWrapperList.add(groupWrap);
                 }
@@ -151,7 +168,10 @@ global without sharing class QuoteGroupFromBom {
                 groupWrap.quoteLineList = newQuoteLineList;
                 if (totalLayer > currentLayer) {
                     currentLayer += 1;
+                    System.debug('newLayerGrouping');
                     groupWrap.groupWrapperList = newLayerGrouping(newQuoteLineList);
+                    currentLayer -= 1;
+                } else {
                     currentLayer -= 1;
                 }
                 groupWrapperList.add(groupWrap);
@@ -167,7 +187,10 @@ global without sharing class QuoteGroupFromBom {
                     groupWrapDup.quoteLineList = newQuoteLineList;
                     if (totalLayer > currentLayer) {
                         currentLayer += 1;
+                        System.debug('newLayerGrouping');
                         groupWrapDup.groupWrapperList = newLayerGrouping(newQuoteLineList);
+                    } else {
+                        currentLayer -= 1;
                     }
                     groupWrapperList.add(groupWrapDup);
                 }

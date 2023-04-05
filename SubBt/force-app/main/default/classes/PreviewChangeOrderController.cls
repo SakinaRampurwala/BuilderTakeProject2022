@@ -126,8 +126,8 @@ public with sharing class PreviewChangeOrderController {
            // body += '<br/><center><a href="mailto:'+fromAddress+'?subject='+subject+'&body=Approved"><button type="button" style="cursor: pointer;background-color: #005fb2;color: white;padding-left: 16px;padding-right: 16px;text-align: center;vertical-align: middle;border: 1px solid #0070d2;line-height: 30px;min-height: 32px;cursor: pointer;">Approve</button></a> &nbsp;&nbsp;&nbsp;<a href="mailto:'+fromAddress+'?subject='+subject+'&body=Rejected"><button type="button" style="cursor: pointer;background-color: #a61a14;color: white;padding-left: 16px;padding-right: 16px;text-align: center;vertical-align: middle;border: 1px solid #0070d2;line-height: 30px;min-height: 32px;cursor: pointer;">Reject</a></button></center><br/>';
 
              mail.setReplyTo(fromAddress);
-             //subject = subject ; 
-             subject = subject +'[ref:'+recordId+']';
+             subject = subject ; 
+            //  subject = subject +'[ref:'+recordId+']';
              mail.setSubject(subject);
              mail.setHTMLBody(body);
              mail.setSaveAsActivity(true);

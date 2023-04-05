@@ -6,7 +6,7 @@ trigger OpportunityTrigger on Opportunity (before update, after update) {
 
     OpportunityTriggerHandler handler = new OpportunityTriggerHandler();
     if (Trigger.isUpdate && Trigger.isBefore){
-		//handler.OnBeforeUpdate(Trigger.new, trigger.oldMap);
+		// handler.OnBeforeUpdate(Trigger.new, trigger.oldMap);
         handler.onBeforeUpdateCloseWon(Trigger.new,Trigger.old,Trigger.newMap, Trigger.oldMap);
 	}
 

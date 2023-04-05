@@ -1446,18 +1446,6 @@
                                                     <tr style="line-height: 2.5;display:table-row;" class="{!'record_'+group1.groupIndex}" >
                                                         <!-- <td class="blankDiv"> </td> -->
                                                         <td style="text-align:left;">
-                                                            <div class="slds-form-element">
-                                                                <div class="slds-form-element__control">
-                                                                    <label class="slds-checkbox" style="width:2px;">
-                                                                        <ui:inputCheckbox text="dm" aura:id="groupquoteItem" value="" change="{!c.unCheckAll}" />
-                                                                        <span class="slds-checkbox--faux" style="top:-2px;"></span>
-                                                                        <span class="slds-form-element__label text"></span>
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td style="text-align:left;">
-                                                            
                                                             <div class="slds-truncate">
                                                                 <span data-id="{!quoteItem.Id}"  onclick="{!c.onclickDuplicate}">
                                                                     <lightning:icon iconName="utility:copy" size="xx-small" />

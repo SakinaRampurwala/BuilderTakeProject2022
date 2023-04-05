@@ -50,13 +50,17 @@ public without sharing class OpportunityTriggerHandler {
 
     public void OnBeforeUpdate(Opportunity[] newOpportunity, Map<Id, Opportunity> oldOpportunityMap){
         //Create Project from Opportunity Closed Won
+        System.debug('calling method');
         set<Id> oppoids = new set<Id>();
         set<Id> quoteIdsList = new set<Id>();
         for(Opportunity qutrec : newOpportunity){
+            System.debug('qutrec.StageName '+qutrec.StageName);
+            System.debug('oldOpportunityMap.get(qutrec.id).StageName '+oldOpportunityMap.get(qutrec.id).StageName);
             if(qutrec.StageName == 'Closed Won' && oldOpportunityMap.get(qutrec.id).StageName != qutrec.StageName){
                 oppoids.add(qutrec.id);
             }
         }
+        System.debug('oppoids.size() '+oppoids.size());
         if(oppoids.size()>0){
             list<buildertek__Admin_Interface_Node_Configuration__c> adminInterfaceNodeConfigurations = [Select Id,
                                                                                                         buildertek__Quote_Configuration__c,buildertek__Create_Project_from_Opportunity__c
@@ -69,6 +73,7 @@ public without sharing class OpportunityTriggerHandler {
                     list<buildertek__Project__c> projectlst = new list<buildertek__Project__c>();
                     decimal totalquoteamount = 0;
                     if(oppquotereclist.size() > 0){
+                        System.debug('in if condition');
                         for(buildertek__Quote__c qutrec : oppquotereclist){
                             totalquoteamount += qutrec.buildertek__Grand_Total__c;
                         }
@@ -114,6 +119,7 @@ public without sharing class OpportunityTriggerHandler {
                             project.buildertek__Notes__c = TextPreview1;
                         }
                         project.OwnerId = oppquotereclist[0].buildertek__Opportunity__r.OwnerId;
+                        System.debug('project details '+project);
                         insert project;
                      List<ContentNote> contentNoteslist = new List<ContentNote>();
                         for(ContentNote c : contentNotes){
