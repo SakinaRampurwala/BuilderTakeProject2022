@@ -77,10 +77,58 @@
     },
 
     sendEmail: function(component, event, helper) {
+        var addEmailBox = component.find('emailForm').get('v.value');
+        var emailIds = component.get("v.emailIds");
+        if (addEmailBox != undefined && addEmailBox != '') {
+            var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+            if (!emailReg.test(addEmailBox)) {
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    title: 'Error',
+                    message: 'Please enter valid email address in Additional Email',
+                    duration: ' 3000',
+                    key: 'info_alt',
+                    type: 'error',
+                    mode: 'pester'
+                });
+                toastEvent.fire();
+                return;
+            }
+            if (emailIds.indexOf(addEmailBox) == -1) {
+                emailIds.push(addEmailBox);
+                component.set("v.emailIds", emailIds);
+                component.set("v.toEmail", '');
+            } else {
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    title: 'Error',
+                    message: 'Additional Email already added',
+                    duration: ' 3000',
+                    key: 'info_alt',
+                    type: 'error',
+                    mode: 'pester'
+                });
+                toastEvent.fire();
+            }
+        }
         component.set("v.Spinner", true);
         var toIds = [];
         var ccIds = [];
         var to = component.get("v.selectedToContact");
+        if (to == null) {
+            component.set("v.Spinner", false);
+            var toastEvent = $A.get("e.force:showToast");
+            toastEvent.setParams({
+                title: 'Error',
+                message: 'Please select To Address to send Email',
+                duration: ' 3000',
+                key: 'info_alt',
+                type: 'error',
+                mode: 'pester'
+            });
+            toastEvent.fire();
+            return;
+        }
         var cc = component.get("v.selectedCcContact");
         var emailIds = component.get("v.emailIds");
         to.forEach(function(v) {
@@ -153,47 +201,35 @@
     },
 
     onEmailChange: function(component, event, helper) {
-        // var emailId = component.find('emailForm').get('v.value');
-        // var emailIds = component.get('v.emailIds');
-        // var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
-        // if (emailId.charAt(emailId.length - 1) == ';') {
-        //     emailId = emailId.replace(';', '');
-        //     if (reg.test(emailId)) {
-        //         component.set("v.toEmail", '');
-        //         if (!emailIds.includes(emailId)) {
-        //             emailIds.push(emailId);
-        //         }
-        //     }
-        // }
-        // if (emailIds != null && emailIds != '') {
-        //     component.set('v.emailIds', emailIds);
-        // } else {
-        //     component.set('v.emailIds', emailId);
-        // }
-
-        //component.set('v.emailIds', emailIds);
-    },
-
-    onAddEmail: function(component, event, helper) {
-        //console log the event.code
-        console.log('event.keyCode', event.code);
         var emailId = component.find('emailForm').get('v.value');
-        console.log('emailId', emailId);
         var emailIds = component.get('v.emailIds');
-        //do all this if we get space or enter or comma or semi-colon
-        if(event.keyCode == 32 || event.keyCode == 13 || event.keyCode == 188 || event.keyCode == 186)
-        {
-            //remove the space or enter or comma or semi-colon
-            emailId = emailId.replace(' ', '');
-            emailId = emailId.replace(',', '');
+        var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+        if (emailId.charAt(emailId.length - 1) == ';' || emailId.charAt(emailId.length - 1) == ',' || emailId.charAt(emailId.length - 1) == ' ') {
             emailId = emailId.replace(';', '');
-            //check if the email is valid    
-            var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+            emailId = emailId.replace(',', '');
+            emailId = emailId.replace(' ', '');
+            console.log('hurray', emailId);
             if (reg.test(emailId)) {
                 component.set("v.toEmail", '');
                 if (!emailIds.includes(emailId)) {
                     emailIds.push(emailId);
                 }
+            }
+            console.log('emailIds', emailIds);
+            component.set('v.emailIds', emailIds);
+        }
+
+    },
+
+    onAddEmail: function(component, event, helper) {
+        var emailId = component.find('emailForm').get('v.value');
+        console.log('emailId', emailId)
+        var emailIds = component.get('v.emailIds');
+        var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+        if (reg.test(emailId)) {
+            component.set("v.toEmail", '');
+            if (!emailIds.includes(emailId)) {
+                emailIds.push(emailId);
             }
         }
         component.set('v.emailIds', emailIds);

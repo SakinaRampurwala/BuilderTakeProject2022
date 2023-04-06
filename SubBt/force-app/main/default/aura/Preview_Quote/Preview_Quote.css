@@ -47,3 +47,7 @@
     bottom : 4.4rem !important;
   }
 }
+
+.THIS .addPadd{
+  padding-left: inherit !important;
+}

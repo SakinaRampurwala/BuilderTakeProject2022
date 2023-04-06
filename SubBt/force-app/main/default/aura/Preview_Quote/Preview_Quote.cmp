@@ -102,11 +102,11 @@
                             <div class="slds-form-element slds-email-composer__combobox" style="margin-top: 10px;padding-bottom: 10px;">
                                 <label class="slds-form-element__label" for="recipients-to">Additional<br/> Emails</label>
                                 <div class="slds-form-element__control slds-size--1-of-1">
-                                    <div class="slds-combobox_container slds-has-inline-listbox" style="padding-left: 2rem;">
-                                        <lightning:input aura:id="emailForm" type="text" name="toEmail" value="{!v.toEmail}" onchange="{!c.onEmailChange}" onkeypress="{!c.onAddEmail}" class="slds-size--1-of-1" />
+                                    <div class="slds-combobox_container slds-has-inline-listbox" style="margin-left: 2rem;">
+                                        <lightning:input aura:id="emailForm" type="text" name="toEmail" value="{!v.toEmail}" onchange="{!c.onEmailChange}" oncommit="{!c.onAddEmail}" class="slds-size--1-of-1" />
                                     </div>
                                 </div>
-                                <div class="slds-form-element__control slds-size--1-of-1">
+                                <div class="slds-form-element__control slds-size--1-of-1 addPadd">
                                     <aura:iteration items="{!v.emailIds}" var="email" indexVar="index">
                                         <lightning:pill label="{!email}" name="{!index}" onremove="{!c.handleEmailRemove}">
                                             <aura:set attribute="media">

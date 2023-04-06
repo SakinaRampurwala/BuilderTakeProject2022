@@ -726,9 +726,12 @@ public with sharing class BT_SendEmailController{
                     }
                     if (Id.valueOf(recordId).getSObjectType().getDescribe().getName() == 'buildertek__Quote__c'){
                         buildertek__Quote__c quote = new buildertek__Quote__c();
-                        quote.Id = recordId;
+                        quote = [select Id, buildertek__Status__c, buildertek__Sender_Email_Response__c, buildertek__Date_Sent_To_Customer__c, buildertek__Date_Accepted_by_Customer__c, buildertek__Date_Rejected_by_Customer__c from buildertek__Quote__c where Id = :recordId];
+                        // quote.Id = recordId;
                         quote.buildertek__Status__c = 'Sent';
-                        quote.buildertek__Date_Sent_To_Customer__c = system.today();
+                        if(quote.buildertek__Date_Accepted_by_Customer__c == null && quote.buildertek__Date_Rejected_by_Customer__c == null){
+                            quote.buildertek__Date_Sent_To_Customer__c = system.today();
+                        }
                         quote.buildertek__Sender_Email_Response__c = UserInfo.getUserEmail();
                        // if (Schema.sObjectType.buildertek__Quote__c.fields.Id.isUpdateable() 
                            // && Schema.sObjectType.buildertek__Quote__c.fields.buildertek__Status__c.isUpdateable() 

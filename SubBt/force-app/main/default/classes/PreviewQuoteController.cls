@@ -296,7 +296,7 @@ public without sharing class PreviewQuoteController{
             List<Messaging.Emailfileattachment> fileAttachments = new List<Messaging.Emailfileattachment>();
             Messaging.Emailfileattachment efa = new Messaging.Emailfileattachment();
             // efa.setFileName('Quote.pdf');
-            efa.setFileName(quoterecbody[0].Name);
+            efa.setFileName(quoterecbody[0].Name+'.pdf');
 
 
             

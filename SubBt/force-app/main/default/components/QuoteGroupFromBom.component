@@ -3,35 +3,71 @@
     <apex:attribute type="id" name="relatedTo_id" assignTo="{!relatedToId}" description="RelatedTo" />
 
     <div>
+        &nbsp;
         <h1>QuoteGroupFromBom Componnet</h1>
 
-        <br/>
-        <apex:repeat value="{!quoteLineWrapper.groupWrapperList}" var="group1">
-            <br/>
-            &nbsp;&nbsp; 
-            {!group1.groupName}
-            <apex:repeat value="{!group1.groupWrapperList}" var="group2">
-                <br/>
-                &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
-                {!group2.groupName}
-                <apex:repeat value="{!group2.groupWrapperList}" var="group3">
-                    <br/>
-                    &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
-                    {!group3.groupName}
-                    <apex:repeat value="{!group3.groupWrapperList}" var="group4">
-                        <br/>
-                        &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
-                        {!group4.groupName}
-                        <apex:repeat value="{!group4.quoteLineList}" var="quoteItem">
-                            <br/>
-                            &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; 
-                            {!quoteItem.Id} - {!quoteItem.Name}
+        <table>
+
+            <apex:repeat value="{!quoteLineWrapper.groupWrapperList}" var="group1">
+                <tr>
+                    <th>
+                        {!group1.groupName}
+                    </th>
+                </tr>
+                <apex:repeat value="{!group1.groupWrapperList}" var="group2">
+                    <tr>
+                        <th></th>
+                        <th>
+                            {!group2.groupName}
+                        </th>
+                    </tr>
+                    <apex:repeat value="{!group2.groupWrapperList}" var="group3">
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th>
+                                {!group3.groupName}
+                            </th>
+                        </tr>
+                        <apex:repeat value="{!group3.groupWrapperList}" var="group4">
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th>
+                                    {!group4.groupName}
+                                </th>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <apex:repeat value="{!group4.RecordsDataWrapperList[0].RecordDataList}" var="quoteItem">
+                                    <th>
+                                        {!quoteItem.fieldName}
+                                    </th>
+                                </apex:repeat>
+                            </tr>
+                            <apex:repeat value="{!group4.RecordsDataWrapperList}" var="quoteItemWrapper">
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <apex:repeat value="{!quoteItemWrapper.RecordDataList}" var="quoteItem">
+                                        <td>
+                                            {!quoteItem.fieldValue}
+                                        </td>
+                                    </apex:repeat>
+                                </tr>
+                            </apex:repeat>
                         </apex:repeat>
                     </apex:repeat>
                 </apex:repeat>
             </apex:repeat>
-            <br/>
-        </apex:repeat>
+
+        </table>
 
     </div>
 
