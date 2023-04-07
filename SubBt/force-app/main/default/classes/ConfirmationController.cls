@@ -551,12 +551,12 @@ Messaging.sendEmail(new Messaging.SingleEmailMessage[] { email });  */
                      FROM ContentVersion
                      WHERE Id = :conVer.Id].ContentDocumentId;
         //create ContentDocumentLink  record
-        // ContentDocumentLink conDocLink = New ContentDocumentLink();
-        // conDocLink.LinkedEntityId = recordID; // Specify RECORD ID here i.e Any Object ID (Standard Object/Custom Object)
-        // conDocLink.ContentDocumentId = conDoc;  //ContentDocumentId Id from ContentVersion
-        // conDocLink.shareType = 'I';
-        // conDocLink.Visibility = 'AllUsers';
-        // insert conDocLink;
+        ContentDocumentLink conDocLink = New ContentDocumentLink();
+        conDocLink.LinkedEntityId = recordID; // Specify RECORD ID here i.e Any Object ID (Standard Object/Custom Object)
+        conDocLink.ContentDocumentId = conDoc;  //ContentDocumentId Id from ContentVersion
+        conDocLink.shareType = 'I';
+        conDocLink.Visibility = 'AllUsers';
+        insert conDocLink;
 
         ContentDistribution cd = new ContentDistribution();
         cd.name = 'PO';

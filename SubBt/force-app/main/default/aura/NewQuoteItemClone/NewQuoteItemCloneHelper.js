@@ -1168,7 +1168,7 @@
         action.setCallback(this, function(response) {
             var state = response.getState();
             if (state === "SUCCESS") {
-                console.log('getting result ', response.getReturnValue());
+                console.log('getting result ', response.getReturnValue());                
                 var quoteLineWrapper = response.getReturnValue();
                 var quoteLineList = quoteLineWrapper.quoteLineList;
                 component.set("v.totalColumn", quoteLineWrapper.columns.length);
@@ -1246,6 +1246,10 @@
                     console.log('*** Quote Wrapper Data ***');
                     console.log('Quote Wrapper Data => ',{ quoteLineWrapper });
                     component.set("v.QuoteLineWrapper", quoteLineWrapper);
+                    $A.get("e.c:BT_SpinnerEvent").setParams({
+                        "action": "HIDE"
+                    }).fire();
+                }else{
                     $A.get("e.c:BT_SpinnerEvent").setParams({
                         "action": "HIDE"
                     }).fire();
@@ -1476,6 +1480,12 @@
         var valueofField2 = component.get("v.valueofField2")
         var valueofField3 = component.get("v.valueofField3")
         var valueofField4 = component.get("v.valueofField4")
+
+        console.log({valueofField1});
+        console.log({valueofField2});
+        console.log({valueofField3});
+        console.log({valueofField4});
+
 
         if(valueofField1 == "" && valueofField2 == "" && valueofField3 == "" && valueofField4 == ""){
             var toastEvent = $A.get("e.force:showToast");

@@ -2478,7 +2478,6 @@
     markup = parseFloat(markup).toFixed(2);
     // salestax = salestax / totalBomLinesCount;
     salestax = parseFloat(salestax).toFixed(2);
-
     component.set("v.totalExtendedCost", extendedcost);
     component.set("v.totalGrossCost", grosscost);
     //component.set('v.totalDiscountPercent',totalDiscount);

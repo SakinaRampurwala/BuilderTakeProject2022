@@ -39,6 +39,7 @@
         action.setCallback(this, function(response){
             var state = response.getState();
             if(state === "SUCCESS"){
+                let result=response.getReturnValue();
                 component.set("v.Spinner", false);
                 $A.get("e.force:closeQuickAction").fire();
                 var toastEvent = $A.get("e.force:showToast");
@@ -46,10 +47,28 @@
                     "message": "Project Created successfully.",
                     "mode": 'sticky',
                     "type": 'success',
-                    "duration": 8000
+                    "duration": 3000
                 });
                 toastEvent.fire();
+                var navEvt = $A.get("e.force:navigateToSObject");
+                    navEvt.setParams({
+                        "recordId": result,
+                        "slideDevName": "related"
+                    });
+                navEvt.fire();
                 $A.get('e.force:refreshView').fire();
+            }else{
+                component.set("v.Spinner", false);
+                $A.get("e.force:closeQuickAction").fire();
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({ 
+                    "message": "Something went wrong",
+                    "mode": 'sticky',
+                    "type": 'error',
+                    "duration": 3000
+                });
+                toastEvent.fire();
+
             }
         });
         $A.enqueueAction(action);

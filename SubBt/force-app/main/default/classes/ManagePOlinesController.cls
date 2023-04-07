@@ -1561,7 +1561,7 @@ public with sharing class ManagePOlinesController {
 
         try {
             bom = [SELECT ID, Name,buildertek__BT_Quote__c,buildertek__Tax_Rate_1__c, 
-                    (SELECT Id,Name,buildertek__Quantity__c, buildertek__BL_LIST_PRICE__c, buildertek__Upgrade_Price__c, buildertek__Build_Phase__c, 
+                    (SELECT Id,Name,buildertek__Quantity__c, buildertek__BL_LIST_PRICE__c, buildertek__Tax_Percent__c, buildertek__Upgrade_Price__c, buildertek__Build_Phase__c, 
                     buildertek__Build_Reference_1__c, buildertek__Base_Location__c, buildertek__Location_Picklist__c, buildertek__Location_Detailed_Area__c, 
                     buildertek__Location_Detail_Reference_1__c,buildertek__BL_UNIT_COST__c, buildertek__BL_SERVICE_CATEGORY__c FROM buildertek__Selection_Sheet_Takeoff_Lines__r) 
                     FROM buildertek__Project_Selection_Sheet_Takeoff__c WHERE Id =:recordId];
@@ -1631,7 +1631,7 @@ public with sharing class ManagePOlinesController {
                         qtLine.buildertek__Markup__c = markUp;
                         qtLine.buildertek__Additional_Discount__c = discount;
                         qtLine.buildertek__Sales_Tax_Amount_Manual__c = salesTax;
-                        qtLine.buildertek__Tax__c = bom[0].buildertek__Tax_Rate_1__c;
+                        qtLine.buildertek__Tax__c = bomLine.buildertek__Tax_Percent__c;
                         qtLine.buildertek__BOM_Line__c = bomLine.Id;
                         qtLine.buildertek__Build_Phase__c = bomLine.buildertek__Build_Phase__c;
                         qtLine.buildertek__Build_Reference_1__c = bomLine.buildertek__Build_Reference_1__c;

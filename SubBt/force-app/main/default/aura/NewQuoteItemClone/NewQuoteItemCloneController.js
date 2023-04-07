@@ -554,8 +554,12 @@
         if (event) {
             if (event.getParams().message && event.getParams().message.indexOf('was saved') != -1) {
                 var page = component.get("v.page") || 1
-                helper.getGroups(component, event, helper, page);
-                // $A.get("e.force:refreshView").fire();
+                let getValue=component.get('v.displayGrouping')
+                if (getValue) {
+                    helper.getQuoteGrouping(component, event, helper); 
+                } else{
+                    helper.getGroups(component, event, helper, page);
+                }           
             }
         }
     },
@@ -773,6 +777,8 @@
             "recordId": recordId
         });
         editRecordEvent.fire();
+
+        
     },
     editUnitPrice: function(component, event, helper) {
         var recordId = event.currentTarget.dataset.id;
@@ -1584,30 +1590,50 @@
 
 
 
-
+        let getCheckboxValue=event.getSource().get("v.value");
         let QuoteLineWrapper = component.get('v.QuoteLineWrapper');
         let selectedGroupName = event.getSource().get("v.name");
         let groupWrapper= QuoteLineWrapper.groupWrapper;
 
+        console.log({selectedGroupName});
         groupWrapper.forEach(function(elem){
+
             if(selectedGroupName === elem.groupName){
-                elem.isSelected=true;
+                if(getCheckboxValue===true){
+                    elem.isSelected=true;
+                }else{
+                    elem.isSelected=false;
+
+                }
             }
             
             if(firstGroup== true){
                 elem.quoteLineList.forEach(function(value){
-                    console.log(value.buildertek__Grouping__c);
-                    console.log(value.buildertek__Grouping__c === selectedGroupName);
                     if(value.buildertek__Grouping__c === selectedGroupName){
-                        value.isSelected=true;
-
+                        if(elem.isSelected=== true){
+                            value.isSelected=true;
+                        }else{
+                            value.isSelected=false;
+                        }
                     } 
                 });
             }else if(secondGroup== true){
                 elem.quoteLineList.forEach(function(value){
+                    let getGroupName;
+                    if(value.groupName!= undefined){
+                        getGroupName =elem.groupName+'_'+value.groupName;
+                    }else{
+                        getGroupName =elem.groupName+'_';
+                    }
+
                     value.quoteLineList.forEach(function(value2){
-                        if(value2.buildertek__Grouping__c === selectedGroupName){
-                            value2.isSelected=true;
+
+                        if(selectedGroupName === getGroupName){
+                            if(elem.isSelected=== true){
+                                value2.isSelected=true;
+                            }else{
+                                value2.isSelected=false;
+                            }
                         } 
 
                     });
@@ -1618,8 +1644,11 @@
                     value.quoteLineList.forEach(function(value2){
                         value2.quoteLineList.forEach(function(value3){
                             if(value3.buildertek__Grouping__c === selectedGroupName){
-                                value3.isSelected=true;
-                            } 
+                                if(elem.isSelected=== true){
+                                    value3.isSelected=true;
+                                }else{
+                                    value3.isSelected=false;
+                                }                            } 
                         });
                     });
                     
@@ -1630,8 +1659,11 @@
                         value2.quoteLineList.forEach(function(value3){
                             value3.quoteLineList.forEach(function(value4){
                                 if(value4.buildertek__Grouping__c === selectedGroupName){
-                                    value4.isSelected=true;
-                                } 
+                                    if(elem.isSelected=== true){
+                                        value4.isSelected=true;
+                                    }else{
+                                        value4.isSelected=false;
+                                    }                                   } 
                             });
 
                         });
@@ -1663,6 +1695,7 @@
 
         let selectedId = event.getSource().get("v.text");
         let selectedGroupName = event.getSource().get("v.name");
+
 
         let QuoteLineWrapper = component.get('v.QuoteLineWrapper');
 

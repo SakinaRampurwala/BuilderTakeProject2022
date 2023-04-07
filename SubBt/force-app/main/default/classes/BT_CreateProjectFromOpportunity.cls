@@ -12,7 +12,7 @@ public with sharing class BT_CreateProjectFromOpportunity {
     }
     
     @AuraEnabled
-    public static void createProject(String recordId, String projectName, String account, String projectManager, Date contractDate){
+    public static string createProject(String recordId, String projectName, String account, String projectManager, Date contractDate){
         List<Id> quoteIdsList = new List<Id>();
         list<buildertek__Admin_Interface_Node_Configuration__c> adminInterfaceNodeConfigurations = [Select Id,
                                                                                                     buildertek__Org_Base_URL__c
@@ -383,6 +383,8 @@ public with sharing class BT_CreateProjectFromOpportunity {
        // List<buildertek__Contract__c> newContracts = BudgetContractCreateHelper.createContractsFromQuote(quoteIdsList);
           List<buildertek__Contract__c> newContracts = BudgetContractCreateHelper.createContractsFromQuote(createdContractCustomerToAccess);
           List<buildertek__Budget__c> newBudgets = BudgetContractCreateHelper.createBudgetFromQuote(createdContractCustomerToAccess);
+        
+        return project.Id;
     }
     
     public class displayMessages{
