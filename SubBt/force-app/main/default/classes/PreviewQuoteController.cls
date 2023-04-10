@@ -152,6 +152,11 @@ public without sharing class PreviewQuoteController{
 
         List<EmailTemplate> et = [SELECT Id,Name,Subject FROM EmailTemplate WHERE Id =:templateId];
 
+        //* nishit's logic for wide org email starts from here 
+        buildertek__WideOrgEmailsettings__c getEmail = buildertek__WideOrgEmailsettings__c.getOrgDefaults();
+        String wideOrgEmailName = getEmail.buildertek__WideEmail__c;
+        List<OrgWideEmailAddress> wideOrgEmail =[select Id,Address from OrgWideEmailAddress WHERE Address =:wideOrgEmailName];
+        //* nishit's logic for wide org email ends from here 
 
         system.debug('recordId----' + recordId);
             system.debug('templateId----' + templateId);
@@ -286,6 +291,9 @@ public without sharing class PreviewQuoteController{
              body += '<a href='+ SiteUrl +'buildertek__ConfirmationPage?Id='+recordId+'&templateId='+templateId+'>Click here</a>';
              body += '&nbsp;to confirm your Quote Order details.' ; */
             mail.setReplyTo(fromAddress);
+            if (wideOrgEmail.size() > 0) {
+                mail.setOrgWideEmailAddressId(wideOrgEmail[0].Id);
+            }
             subject = subject + '[ref:' + recordId + ']';
             mail.setSubject(subject);
             mail.setHTMLBody(templateBody1);

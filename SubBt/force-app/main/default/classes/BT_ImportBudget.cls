@@ -27,7 +27,7 @@ public with sharing class BT_ImportBudget{
 
         Budget__c record = (Budget__c)controller.getRecord();
         projectId = record.Project__c;
-        system.debug('----------projectId---' + projectId);
+        System.debug('----------projectId---' + projectId);
 
         Project = new Project__c();
         if (projectId != null){
@@ -75,8 +75,8 @@ public with sharing class BT_ImportBudget{
     }
 
     public BT_ImportBudget(ApexPages.StandardSetController budget){
-        system.debug('----------26---');
-        system.debug('check project Id here ==> ' + Apexpages.currentPage().getParameters().get('Id'));
+        System.debug('----------26---');
+        System.debug('check project Id here ==> ' + Apexpages.currentPage().getParameters().get('Id'));
         projectId1 = Apexpages.currentPage().getParameters().get('Id');
         project = new Project__c();
 
@@ -129,7 +129,8 @@ public with sharing class BT_ImportBudget{
 
     public void save(){
         //String selectedIds = '';
-        system.debug('budgetList -------------> ' + masterBudgets);
+        System.debug('budgetList -------------> ' + masterBudgets);
+        System.debug('Project Id -------------> ' + Apexpages.currentPage().getParameters().get('Id'));
         List<String> selectedIds = new List<String>();
         List<buildertek__Budget__c> masterBudgetItemList = new List<buildertek__Budget__c>();
         List<buildertek__Master_Budget__c> masterBudgetLineItemList = new List<buildertek__Master_Budget__c>();
@@ -149,11 +150,13 @@ public with sharing class BT_ImportBudget{
                         budget.Name = mb.masterBudget.Name;
                     }
 
-                    budget.buildertek__Project__c = projectId;
+                    budget.buildertek__Project__c = Apexpages.currentPage().getParameters().get('Id');
                     masterBudgetItemList.add(budget);
                 }
             }
         }
+        System.debug('selectedIds -------------> ' + selectedIds);
+        System.debug('masterBudgetItemList -------------> ' + masterBudgetItemList);
         insert masterBudgetItemList;
         Map<String, String> budgetMap = new Map<String, String>();
         Map<String, String> budgetNameMap = new Map<String, String>();
@@ -180,6 +183,7 @@ public with sharing class BT_ImportBudget{
             if (Schema.sObjectType.buildertek__Quote_Line_Group__c.fields.Name.isCreateable()){
                 budGroup.Name = 'No Grouping';
             }
+            System.debug('budGroup -------------> ' + budGroup);
             insert budGroup;
             groupId = budGroup.Id;
         }
@@ -187,7 +191,7 @@ public with sharing class BT_ImportBudget{
         List<buildertek__Budget_Item__c> budgetItem;
         if (Schema.sObjectType.buildertek__Budget_Item__c.fields.Id.isAccessible() && Schema.sObjectType.buildertek__Budget_Item__c.fields.Name.isAccessible() && Schema.sObjectType.buildertek__Budget_Item__c.fields.buildertek__Budget__c.isAccessible() && Schema.sObjectType.buildertek__Budget__c.fields.Name.isAccessible() && Schema.sObjectType.buildertek__Budget_Item__c.fields.buildertek__Product__c.isAccessible() && Schema.sObjectType.buildertek__Budget_Item__c.fields.buildertek__Item_Name__c.isAccessible() && Schema.sObjectType.buildertek__Budget_Item__c.fields.buildertek__Cost_Code__c.isAccessible() && Schema.sObjectType.buildertek__Budget_Item__c.fields.buildertek__Quantity__c.isAccessible() && Schema.sObjectType.buildertek__Budget_Item__c.fields.buildertek__Budget_Line_Group__c.isAccessible() && Schema.sObjectType.buildertek__Budget_Item__c.fields.buildertek__Unit_Price__c.isAccessible()){
 
-            budgetItem = [select Id, Name, buildertek__Budget__c, buildertek__Budget__r.Name, buildertek__Product__c, buildertek__Item_Name__c, buildertek__Cost_Code__c, buildertek__Quantity__c, buildertek__Budget_Line_Group__c, buildertek__Unit_Price__c
+            budgetItem = [select Id, Name, buildertek__Budget__c, buildertek__Budget__r.Name, buildertek__Product__c, buildertek__Item_Name__c, buildertek__Cost_Code__c, buildertek__Quantity__c, buildertek__Budget_Line_Group__c, buildertek__Unit_Price__c, buildertek__Tax__c, buildertek__Markup__c
                           from buildertek__Budget_Item__c
                           where buildertek__Budget__c IN:selectedIds];
         }
@@ -204,8 +208,8 @@ public with sharing class BT_ImportBudget{
         List<buildertek__Budget_Item__c> budgetItemToInsert = new List<buildertek__Budget_Item__c>();
 
         for (buildertek__Budget_Item__c budgetItems : budgetItem){
-            system.debug('Budget Id ----------> ' + budgetMap.get(budgetItems.buildertek__Budget__r.Name));
-            //system.debug('Group Name ----------> '+budgetItems.buildertek__Group__r.Name);
+            System.debug('Budget Id ----------> ' + budgetMap.get(budgetItems.buildertek__Budget__r.Name));
+            //System.debug('Group Name ----------> '+budgetItems.buildertek__Group__r.Name);
             if (Schema.sObjectType.buildertek__Budget_Item__c.fields.Name.isCreateable() && Schema.sObjectType.buildertek__Budget_Item__c.fields.buildertek__Budget__c.isCreateable() && Schema.sObjectType.buildertek__Budget_Item__c.fields.buildertek__Product__c.isCreateable() && Schema.sObjectType.buildertek__Budget_Item__c.fields.buildertek__Item_Name__c.isCreateable() && Schema.sObjectType.buildertek__Budget_Item__c.fields.buildertek__Cost_Code__c.isCreateable() && Schema.sObjectType.buildertek__Budget_Item__c.fields.buildertek__Quantity__c.isCreateable() && Schema.sObjectType.buildertek__Budget_Item__c.fields.buildertek__Unit_Price__c.isCreateable() && Schema.sObjectType.buildertek__Budget_Item__c.fields.buildertek__Budget_Line_Group__c.isCreateable()){
                 buildertek__Budget_Item__c budgetLine = new buildertek__Budget_Item__c();
                 budgetLine.Name = budgetItems.Name;
@@ -215,6 +219,8 @@ public with sharing class BT_ImportBudget{
                 budgetLine.buildertek__Cost_Code__c = budgetItems.buildertek__Cost_Code__c;
                 budgetLine.buildertek__Quantity__c = budgetItems.buildertek__Quantity__c;
                 budgetLine.buildertek__Unit_Price__c = budgetItems.buildertek__Unit_Price__c;
+                budgetLine.buildertek__Tax__c = budgetItems.buildertek__Tax__c;
+                budgetLine.buildertek__Markup__c = budgetItems.buildertek__Markup__c;
                 if (budgetItems.buildertek__Budget_Line_Group__c != null){
                     budgetLine.buildertek__Budget_Line_Group__c = budgetItems.buildertek__Budget_Line_Group__c;
                 } else{
@@ -224,8 +230,8 @@ public with sharing class BT_ImportBudget{
             }
         }
         for (buildertek__Master_Budget_Line__c masterbudgetItems : masterItem){
-            system.debug('Budget Id ----------> ' + budgetMap.get(masterbudgetItems.buildertek__Master_Budget__r.Name));
-            //system.debug('Group Name ----------> '+masterbudgetItems.buildertek__Group__r.Name);
+            System.debug('Budget Id ----------> ' + budgetMap.get(masterbudgetItems.buildertek__Master_Budget__r.Name));
+            //System.debug('Group Name ----------> '+masterbudgetItems.buildertek__Group__r.Name);
             if (Schema.sObjectType.buildertek__Budget_Item__c.fields.Name.isCreateable() && Schema.sObjectType.buildertek__Budget_Item__c.fields.buildertek__Budget__c.isCreateable() && Schema.sObjectType.buildertek__Budget_Item__c.fields.buildertek__Product__c.isCreateable() && Schema.sObjectType.buildertek__Budget_Item__c.fields.buildertek__Item_Name__c.isCreateable() && Schema.sObjectType.buildertek__Budget_Item__c.fields.buildertek__Cost_Code__c.isCreateable() && Schema.sObjectType.buildertek__Budget_Item__c.fields.buildertek__Quantity__c.isCreateable() && Schema.sObjectType.buildertek__Budget_Item__c.fields.buildertek__Unit_Price__c.isCreateable() && Schema.sObjectType.buildertek__Budget_Item__c.fields.buildertek__Budget_Line_Group__c.isCreateable()){
                 buildertek__Budget_Item__c budgetLine = new buildertek__Budget_Item__c();
                 budgetLine.Name = masterbudgetItems.buildertek__Budget_Item_Name__c; //masterbudgetItems.Name;
@@ -243,7 +249,7 @@ public with sharing class BT_ImportBudget{
                 budgetItemToInsert.add(budgetLine);
             }
         }
-        system.debug('budgetItemToInsert -------> ' + budgetItemToInsert);
+        System.debug('budgetItemToInsert -------> ' + budgetItemToInsert);
         insert budgetItemToInsert;
         //}
     }

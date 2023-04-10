@@ -1561,22 +1561,6 @@
             }
         }
         component.set('v.TotalRecords', totalRecords);
-        // var checkQuoteItem = component.find("checkQuoteItem");
-        // var checkvalue = component.find("selectAll");
-        // var checkBool = 0;
-
-        // for (var i = 0; i < checkQuoteItem.length; i++) {
-        //     if (checkQuoteItem[i].get("v.value")) {
-        //         checkBool++;
-        //     }
-        // }
-
-        // if (checkBool == checkQuoteItem.length) {
-        //     checkvalue.set("v.value", true);
-        // } else {
-        //     checkvalue.set("v.value", false);
-        // }
-
     },
     handleSelectAllGroup:function(component, event, helper) {
         let firstGroup=component.get('v.firstGrouping');
@@ -1597,15 +1581,7 @@
 
         console.log({selectedGroupName});
         groupWrapper.forEach(function(elem){
-
-            if(selectedGroupName === elem.groupName){
-                if(getCheckboxValue===true){
-                    elem.isSelected=true;
-                }else{
-                    elem.isSelected=false;
-
-                }
-            }
+           
             
             if(firstGroup== true){
                 elem.quoteLineList.forEach(function(value){
@@ -1629,7 +1605,7 @@
                     value.quoteLineList.forEach(function(value2){
 
                         if(selectedGroupName === getGroupName){
-                            if(elem.isSelected=== true){
+                            if(value.isSelected=== true){
                                 value2.isSelected=true;
                             }else{
                                 value2.isSelected=false;
@@ -1640,11 +1616,26 @@
                     
                 });
             }else if(thirdGroup== true){
+                console.log({selectedGroupName});
                 elem.quoteLineList.forEach(function(value){
                     value.quoteLineList.forEach(function(value2){
+                        let getGroupName;
+                        if(value.groupName!= undefined && value2.groupName!= undefined){
+                            getGroupName =elem.groupName+'_'+value.groupName+'_'+value2.groupName;
+                        }else if (value.groupName!= undefined && value2.groupName== undefined){
+                            getGroupName =elem.groupName+'_'+value.groupName+'_';
+                        }else if (value.groupName== undefined && value2.groupName!= undefined){
+                            getGroupName =elem.groupName+'__'+value2.groupName;
+                        }else{
+
+                            getGroupName =elem.groupName+'__';
+                        }
+
+
+
                         value2.quoteLineList.forEach(function(value3){
-                            if(value3.buildertek__Grouping__c === selectedGroupName){
-                                if(elem.isSelected=== true){
+                            if(getGroupName === selectedGroupName){
+                                if(value2.isSelected=== true){
                                     value3.isSelected=true;
                                 }else{
                                     value3.isSelected=false;
@@ -1657,9 +1648,26 @@
                 elem.quoteLineList.forEach(function(value){
                     value.quoteLineList.forEach(function(value2){
                         value2.quoteLineList.forEach(function(value3){
+                            let getGroupName;
+                            if(value.groupName!= undefined && value2.groupName!= undefined && value3.groupName!= undefined){
+                                getGroupName =elem.groupName+'_'+value.groupName+'_'+value2.groupName+'_'+value3.groupName;
+                            }else if(value.groupName!= undefined && value2.groupName!= undefined && value3.groupName== undefined){
+                                getGroupName =elem.groupName+'_'+value.groupName+'_'+value2.groupName+'_';
+                            }else if(value.groupName!= undefined && value2.groupName== undefined && value3.groupName== undefined){
+                                getGroupName =elem.groupName+'_'+value.groupName+'__';
+                            }else if(value.groupName!= undefined && value2.groupName== undefined && value3.groupName!= undefined){
+                                getGroupName =elem.groupName+'_'+value.groupName+'__'+value3.groupName;
+                            }else if(value.groupName == undefined && value2.groupName!= undefined && value3.groupName!= undefined){
+                                getGroupName =elem.groupName+'__'+value2.groupName+'_'+value3.groupName;
+                            }else if(value.groupName == undefined && value2.groupName!= undefined && value3.groupName== undefined){
+                                getGroupName =elem.groupName+'__'+value2.groupName+'_';
+                            }else{
+                                getGroupName =elem.groupName+'___';
+                            }
+
                             value3.quoteLineList.forEach(function(value4){
-                                if(value4.buildertek__Grouping__c === selectedGroupName){
-                                    if(elem.isSelected=== true){
+                                if(getGroupName === selectedGroupName){
+                                    if(value3.isSelected=== true){
                                         value4.isSelected=true;
                                     }else{
                                         value4.isSelected=false;
@@ -1685,42 +1693,78 @@
         let secondGroup=component.get('v.secondGrouping');
         let thirdGroup=component.get('v.thirdGrouping');
         let forthGrouping=component.get('v.forthGrouping');
-
-        console.log(firstGroup);
-        console.log(secondGroup);
-        console.log(thirdGroup);
-        console.log(forthGrouping);
-
-
-
         let selectedId = event.getSource().get("v.text");
         let selectedGroupName = event.getSource().get("v.name");
-
-
         let QuoteLineWrapper = component.get('v.QuoteLineWrapper');
+        let getCurrentValue=event.getSource().get('v.value');
+
 
         let groupWrapper= QuoteLineWrapper.groupWrapper;
         groupWrapper.forEach(function(elem){
             if(firstGroup== true){
+                
                 elem.quoteLineList.forEach(function(value){
+                    const allActive = elem.quoteLineList.every(function(obj) {
+                        return obj.isSelected === true;
+                     });
                     if(value.buildertek__Grouping__c === selectedGroupName){
-                        elem.isSelected=false;
+                        if(getCurrentValue== true && allActive == true){
+                            elem.isSelected=true;
+                        }else{
+                            elem.isSelected=false;
+                        }
                     } 
                 });
             }else if(secondGroup== true){
                 elem.quoteLineList.forEach(function(value){
+                    let getGroupName;
+                    if(value.groupName!= undefined){
+                        getGroupName =elem.groupName+'_'+value.groupName;
+                    }else{
+                        getGroupName =elem.groupName+'_';
+                    }
+                    const allActive = value.quoteLineList.every(function(elem) {
+                        return elem.isSelected === true;
+                    });
                     value.quoteLineList.forEach(function(value2){
-                        if(value2.buildertek__Grouping__c === selectedGroupName){
-                            elem.isSelected=false;
+                        if(getGroupName === selectedGroupName){
+                            if(getCurrentValue== true && allActive == true){
+                                value.isSelected=true;
+                            }else{
+                                value.isSelected=false;
+
+                            }
                         } 
                     });    
                 });
             }else if(thirdGroup== true){
                 elem.quoteLineList.forEach(function(value){
+                    
                     value.quoteLineList.forEach(function(value2){
+                        let getGroupName;
+                        if(value.groupName!= undefined && value2.groupName!= undefined){
+                            getGroupName =elem.groupName+'_'+value.groupName+'_'+value2.groupName;
+                        }else if (value.groupName!= undefined && value2.groupName== undefined){
+                            getGroupName =elem.groupName+'_'+value.groupName+'_';
+                        }else if (value.groupName== undefined && value2.groupName!= undefined){
+                            getGroupName =elem.groupName+'__'+value2.groupName;
+                        }else{
+                            getGroupName =elem.groupName+'__';
+                        }
+
+                        const allActive = value2.quoteLineList.every(function(elem) {
+                            return elem.isSelected === true;
+                         });
+                            
                         value2.quoteLineList.forEach(function(value3){
-                        if(value3.buildertek__Grouping__c === selectedGroupName){
-                            elem.isSelected=false;
+                        if(getGroupName === selectedGroupName){
+
+                            if(getCurrentValue== true && allActive == true){
+                                value2.isSelected=true;
+                            }else{
+                                value2.isSelected=false;
+
+                            }
                         } 
                          })
                     });    
@@ -1729,10 +1773,36 @@
                 elem.quoteLineList.forEach(function(value){
                     value.quoteLineList.forEach(function(value2){
                         value2.quoteLineList.forEach(function(value3){
+                            let getGroupName;
+                            if(value.groupName!= undefined && value2.groupName!= undefined && value3.groupName!= undefined){
+                                getGroupName =elem.groupName+'_'+value.groupName+'_'+value2.groupName+'_'+value3.groupName;
+                            }else if(value.groupName!= undefined && value2.groupName!= undefined && value3.groupName== undefined){
+                                getGroupName =elem.groupName+'_'+value.groupName+'_'+value2.groupName+'_';
+                            }else if(value.groupName!= undefined && value2.groupName== undefined && value3.groupName== undefined){
+                                getGroupName =elem.groupName+'_'+value.groupName+'__';
+                            }else if(value.groupName!= undefined && value2.groupName== undefined && value3.groupName!= undefined){
+                                getGroupName =elem.groupName+'_'+value.groupName+'__'+value3.groupName;
+                            }else if(value.groupName == undefined && value2.groupName!= undefined && value3.groupName!= undefined){
+                                getGroupName =elem.groupName+'__'+value2.groupName+'_'+value3.groupName;
+                            }else if(value.groupName == undefined && value2.groupName!= undefined && value3.groupName== undefined){
+                                getGroupName =elem.groupName+'__'+value2.groupName+'_';
+                            }else{
+                                getGroupName =elem.groupName+'___';
+                            }
+                            const allActive = value3.quoteLineList.every(function(elem) {
+                                return elem.isSelected === true;
+                            });
                             value3.quoteLineList.forEach(function(value4){
-                                console.log({value4});
-                                if(value4.buildertek__Grouping__c === selectedGroupName){
-                                    elem.isSelected=false;
+                               
+                                if(getGroupName === selectedGroupName){
+                    
+                                    if(getCurrentValue== true && allActive == true){
+                                        value3.isSelected=true;
+                                    }else{
+                                        value3.isSelected=false;
+        
+                                    }
+
                                 } 
                             });
 
