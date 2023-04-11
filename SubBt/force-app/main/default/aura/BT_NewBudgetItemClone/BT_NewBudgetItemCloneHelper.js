@@ -1203,38 +1203,45 @@
     },
 
     fetchpricebooks: function (component, event, helper) {
-        // var action = component.get("c.getpricebook");
-        // action.setParams({
-        //     BudgetId: component.get("v.recordId"),
-        // });
-        // var opts = [];
-        // action.setCallback(this, function (response) {
-        //     if (response.getState() == "SUCCESS") {
-        //         component.set("v.pricebookName", response.getReturnValue());
-        //     }
-        // });
-        // $A.enqueueAction(action);
         var actions = component.get("c.getpricebooks");
         actions.setParams({
-            BudgetId: component.get("v.recordId"),
+            recordId: component.get("v.recordId"),
         });
         var opts = [];
         actions.setCallback(this, function (response) {
             if (response.getState() == "SUCCESS") {
                 var result = response.getReturnValue();
-                var opts = [];
-                opts.push({
-                    key: "None",
-                    value: "",
-                });
-                for (var key in result) {
-                    opts.push({
-                        key: key,
-                        value: result[key],
+                console.log({result});
+                let projectHavePricebook=result[0].defaultValue;
+                var pricebookOptions = [];
+                if(Object.keys(projectHavePricebook).length !=0){
+                    pricebookOptions.push({ key: projectHavePricebook.Name, value: projectHavePricebook.Id });
+                    result[0].priceWrapList.forEach(function(element){
+                        if(projectHavePricebook.Id !== element.Id){
+                            pricebookOptions.push({ key: element.Name, value: element.Id });
+                        }else{
+                            pricebookOptions.push({ key: "None", value: "" });
+
+                        }
                     });
+                    component.set('v.pricebookName' , projectHavePricebook.Id);
+
+                }else{
+                    pricebookOptions.push({ key: "None", value: "" });
+                    result[0].priceWrapList.forEach(function(element){
+                        pricebookOptions.push({ key: element.Name, value: element.Id });
+                    });
+                    component.set("v.pricebookName", pricebookOptions[0].value);                
+
                 }
-                component.set("v.pricebookoptions", opts);
-                component.set("v.pricebookName", opts[0].value);                
+
+                if(component.get('v.pricebookName')!= undefined || component.get('v.pricebookName')!=null){
+                    helper.changeEventHelper(component, event, helper);
+                }
+
+
+                
+                component.set("v.pricebookoptions", pricebookOptions);
             }
         });
         $A.enqueueAction(actions);
@@ -2247,48 +2254,65 @@
         component.set('v.selectedRecs', selectedRecs);
 
     },
-    // getAdminRecords:function(component, event, helper, callback) {
-    //     var btadminaction = component.get("c.getadminvalues");
-    //     btadminaction.setCallback(this, function(response) {
-    //         console.log(response.getError() , '::::::ERROR MESSAGE::::::');
-    //         if (response.getState() === 'SUCCESS') {
-    //             var result = response.getReturnValue();
-    //             console.log('Admin Data ==> ',result);
+    changeEventHelper: function(component, event, helper) {
+        var group = component.find('costCodeId');
+        group.set("v._text_value", '');
+        var product = component.get('v.selectedLookUpRecord');
+        var compEvent = $A.get('e.c:BT_CLearLightningLookupEvent');
+        compEvent.setParams({
+            "recordByEvent": product
+        });
+        compEvent.fire();
+        component.set('v.productfamily', undefined);
+        component.set('v.newBudgetLine.Name', '');
+        component.set('v.selectedContractor', null);
+        component.set('v.newBudgetLine.buildertek__Group__c', '');
+        component.set('v.newBudgetLine.buildertek__Sub_Grouping__c', null);
+        component.set('v.options', '');
+        component.set('v.newBudgetLine.buildertek__Sales_Price__c', '');
+        component.set('v.newBudgetLine.buildertek__Unit_Price__c', '');
+        component.set('v.newBudgetLine.buildertek__Quantity__c', '1');
+        component.set('v.newBudgetLine.buildertek__Cost_Code__c', '');
+        $A.enqueueAction(component.get("c.clearLookupValue"));
+        $A.get("e.c:BT_SpinnerEvent").setParams({
+            "action": "HIDE"
+        }).fire();
 
-    //             var page = component.get("v.page") || 1;
-    //             component.set("v.Isbtvalue", true);
-    //             // result.buildertek__Budget_Grouping_Data__c = 'test'
-    //             if (result.buildertek__Budget_Grouping_Data__c == 'Group By Category') {
-    //                 // component.find("Cost Code").set("v.checked", true);
-    //                 component.set("v.groupBytoggle2", true);
-    //                 component.set("v.groupByVendortoggle", false);
-    //                 component.set("v.groupByCostCode", false);
-    //                 component.set("v.groupBytoggle", false);
+        //$A.get('e.force:refreshView').fire();
 
-    //             } else if(result.buildertek__Budget_Grouping_Data__c == 'Group By Vendor') {
-    //                 component.set("v.groupBytoggle2", false);
-    //                 // component.find("vendor").set("v.checked", true);
-    //                 component.set("v.groupBytoggle", true);
-    //                 component.set("v.groupByVendortoggle2", false);
-    //                 component.set("v.groupByVendortoggle1", false);
-    //                 component.set("v.groupByCostCode", false);
-    //             } else if(result.buildertek__Budget_Grouping_Data__c == 'Group By Cost Code') {
-    //                 console.log('-----))))----');
-    //                 component.set("v.groupBytoggle", false);
-    //                 component.set("v.groupByVendortoggle", false);
-    //                 component.set("v.groupByVendortoggle1", false);
-    //                 component.set("v.groupByVendortoggle2", false);
-    //                 component.set("v.groupBytoggle2", false);
-    //                 helper.CostCodeFilterHelper(component, event, helper, page);
+        var action = component.get("c.getProductfamilyRecords");
+        var pribooknames = component.get("v.pricebookName");
+        // set param to method  
+        action.setParams({
+            'ObjectName': "Product2",
+            'parentId': component.get("v.pricebookName")
+        });
+        // set a callBack    
+        action.setCallback(this, function(response) {
+            $A.util.removeClass(component.find("mySpinner"), "slds-show");
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                helper.fetchPickListVal(component, event, helper);
+                var storeResponse = response.getReturnValue();
+                console.log('storeResponse --> ', storeResponse);
+                // if storeResponse size is equal 0 ,display No Result Found... message on screen.                }
+                if (storeResponse.length == 0) {
+                    component.set("v.Message", 'No Result Found...');
+                } else {
+                    component.set("v.Message", '');
+                }
+                // set searchResult list with return value from server.
+                component.set("v.listofproductfamily", storeResponse);
+                if (component.get("v.listofproductfamily").length > 0) {
+                    component.set("v.productfamily", component.get("v.listofproductfamily")[0].productfamilyvalues);
+                }
+                console.log('productfamily --> ', component.get("v.productfamily"));
+                console.log('listofproductfamily --> ', component.get("v.listofproductfamily"));
+            }
 
-
-    //             } else {
-    //                 component.set("v.groupByVendortoggle", false);
-    //             }
-    //         }
-    //     });
-    //     $A.enqueueAction(btadminaction);
-    //     callback();
-    // },
+        });
+        // enqueue the Action  
+        $A.enqueueAction(action);
+    },
     
 })

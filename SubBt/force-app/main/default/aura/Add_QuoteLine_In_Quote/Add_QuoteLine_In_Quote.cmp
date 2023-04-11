@@ -17,6 +17,8 @@
     <aura:attribute name="selectedProducts" type="List" />
     <aura:attribute name="quoteLineGroupOptions" type="List" />
     <aura:attribute name="selectedQuoteLineGroupId" type="Id" />
+    <aura:attribute name="getPhase" type="String" />
+
 
     
 
@@ -142,7 +144,7 @@
                         </tbody>
                     </table>
                     <aura:if isTrue="{!v.selectedPricebookId == ''}">
-                        <center class="elseMsg">Please Select PriceBook!!!</center>
+                        <center class="elseMsg">Please Select a PriceBook!!!</center>
                         <aura:set attribute="else" >
                             <aura:if isTrue="{!v.tableDataList.length == 0}">
                                 <center class="elseMsg">No Products Found!!!</center>
@@ -211,9 +213,9 @@
                                         <lightning:input name="input3" label="" value="{!item.buildertek__Description__c}" />
                                     </td>
                                     <td>
-                                        <lightning:select name="mySelect" label="" value="{!item.buildertek__Grouping__c}">
+                                        <lightning:select  name="mySelect" label="" value="{!item.buildertek__Grouping__c}">
                                             <aura:iteration items="{!v.quoteLineGroupOptions}" var="rec">
-                                                <option value="{!rec.value}">{!rec.key}</option>
+                                                <option value="{!rec.value}" >{!rec.key}</option>
                                             </aura:iteration>
                                         </lightning:select>
                                     </td>

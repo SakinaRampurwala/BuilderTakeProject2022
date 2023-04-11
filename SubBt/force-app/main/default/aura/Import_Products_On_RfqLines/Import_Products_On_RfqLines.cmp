@@ -60,15 +60,19 @@
    			 overflow-y: none !important;
      overflow: hidden !important;
 		}
+        .slds-modal__container{
+            max-width: 80rem !important;
+            width:90% !important;
+        }
     </aura:html> 
 
        <div class="slds-modal__header" style="padding-top:0px">
             <div class="searchCointainer" style="padding-top:1px">             
                 <div class="selectStyle">
                     <lightning:select name="pricebooks" label=""  aura:id="searchPriceBook" value="{!v.searchPriceBookFilter}" onchange="{!c.changeEvent}">
-                        <option text="None" value=""/>
+                        <!-- <option text="None" value=""/> -->
                         <aura:iteration items="{!v.pbList}" var="temp">
-                            <option text="{!temp.Name}" value="{!temp.Id}"/>
+                            <option selected="{!temp.value == v.searchPriceBookFilter}" value="{!temp.value}">{!temp.key}</option>
                         </aura:iteration>
                     </lightning:select> 
                 </div>

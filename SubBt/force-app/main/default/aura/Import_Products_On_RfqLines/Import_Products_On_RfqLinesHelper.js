@@ -140,5 +140,32 @@
             }
         });
         $A.enqueueAction(action);
-    }
+    },
+    changeEventHelper: function (component, event, helper) {
+        component.set("v.Spinner", true);
+
+		var productAction = component.get("c.productfamilyList");
+        productAction.setParams({
+            ObjectName : "Product2",
+            parentId: component.get("v.searchPriceBookFilter")
+        });
+        productAction.setCallback(this, function(response){
+            console.log(response.getError());
+            if(response.getState() === "SUCCESS"){
+                component.set("v.Spinner", false);
+                console.log(response.getReturnValue());
+				component.set("v.listofproductfamily",response.getReturnValue());
+                if (component.get("v.listofproductfamily").length > 0) {
+                    if(component.get("v.listofproductfamily").length == 1){
+                        component.set("v.searchProductFamilyFilter", component.get("v.listofproductfamily")[0].productfamilyvalues);
+                    }else{
+                        component.set("v.searchProductFamilyFilter", '');
+                    }
+				}
+            }else{
+                component.set("v.Spinner", false);
+            }     
+        });
+        $A.enqueueAction(productAction);
+	},
 })

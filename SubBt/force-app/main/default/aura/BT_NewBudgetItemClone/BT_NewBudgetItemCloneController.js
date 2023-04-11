@@ -1,101 +1,4 @@
 ({
-    initialize: function(component, event, helper) {
-
-    },
-    checkToogle: function(component, event, helper) {
-        event.preventDefault();
-        var page = component.get("v.page") || 1;
-        var checked = event.getSource().get("v.name");
-        if (checked == "Group By Vendor") {
-            component.set("v.groupBytoggle2", false);
-            if (!event.getSource().get("v.checked")) {
-                component.find("vendor").set("v.checked", true);
-                component.set("v.groupBytoggle", true);
-                component.set("v.groupByVendortoggle2", false);
-                component.set("v.groupByVendortoggle1", false);
-                component.set("v.groupByCostCode", false);
-
-            } else {
-                component.find("vendor").set("v.checked", false);
-                component.set("v.groupBytoggle", false);
-                component.set("v.groupByVendortoggle1", false);
-                component.set("v.groupByVendortoggle2", false);
-                component.set("v.groupByCostCode", false);
-            }
-        }
-        var toggleVal = component.get("v.groupBytoggle");
-        helper.getBudgetGroups(component, event, helper, page ,function(){});
-    },
-
-    checkToogle1: function(component, event, helper) {
-        //  alert("hai");
-        console.log('--toogle 1--');
-        event.preventDefault();
-        var page = component.get("v.page") || 1;
-        var checked = event.getSource().get("v.name");
-        // alert(checked);
-        if (checked == "Group By Cost Code1") {
-            if (!event.getSource().get("v.checked")) {
-                component.find("Cost Code1").set("v.checked", true);
-                component.get("v.groupBytoggle1");
-                component.find("vendor").set("v.checked", false);
-                component.set("v.groupBytoggle", false);
-                component.set("v.groupByVendortoggle1", true);
-                component.set("v.groupByCostCode", false);
-
-                // component.set("v.groupByVendortoggle1",true);
-            } else {
-                component.find("Cost Code1").set("v.checked", false);
-                component.find("vendor").set("v.checked", true);
-                component.set("v.groupBytoggle", true);
-
-                //alert( component.set("v.groupBytoggle",true));
-                component.set("v.groupByVendortoggle2", false);
-                component.set("v.groupByVendortoggle1", false);
-                component.set("v.groupByCostCode", false);
-            }
-        }
-        var toggleVal = component.get("v.groupBytoggle1");
-        helper.getBudgetGroups(component, event, helper, page , function(){});
-    },
-
-    checkToogle2: function(component, event, helper) {
-        console.log('---toogle2---');
-        event.preventDefault();
-        var page = component.get("v.page") || 1;
-        var checked = event.getSource().get("v.name");
-        var bt = component.get("v.Isbtvalue");
-        // alert('bt'+bt);
-        if (checked == "Group By Cost Code") {
-            if (!event.getSource().get("v.checked")) {
-                component.find("Cost Code").set("v.checked", true);
-                component.set("v.groupBytoggle2", true);
-                component.set("v.groupByVendortoggle", false);
-                component.set("v.groupByCostCode", false);
-                component.set("v.groupBytoggle", false);
-            } else {
-                component.find("Cost Code").set("v.checked", false);
-                component.set("v.groupBytoggle2", false);
-                component.set("v.groupByCostCode", false);
-                component.set("v.groupBytoggle", false);
-            }
-
-        }
-        var toggleVal = component.get("v.groupBytoggle2");
-        helper.getBudgetGroups(component, event, helper, page , function(){});
-    },
-
-    closetab: function(component, event, helper) {
-        var workspaceAPI = component.find("workspace");
-        workspaceAPI.getFocusedTabInfo().then(function(response) {
-                var focusedTabId = response.tabId;
-                workspaceAPI.closeTab({ tabId: focusedTabId });
-            })
-            .catch(function(error) {
-                console.log(error);
-            });
-    },
-
     doInit: function(component, event, helper) {
 
 
@@ -112,24 +15,6 @@
                 iconAlt: 'Budget'
             });
         });
-
-
-
-        // alert(component.get("v.recordId"));
-        //  $A.get('e.force:refreshView').fire();
-
-        //  alert('main obj');
-        /*var action = component.get("c.getBudgetDetails");
-            action.setParams({
-                budgetRecordId : component.get("v.recordId")
-            });
-            action.setCallback(this, function (response) {
-                if (response.getState() === "SUCCESS") {
-                    var result = JSON.parse(JSON.stringify(response.getReturnValue()));
-                    component.set("v.sampleNewRecord",result);
-                }
-            });
-            $A.enqueueAction(action);*/
         component.set("v.budgetrecid", component.get("v.recordId"));
         $A.get("e.c:BT_SpinnerEvent").setParams({
             "action": "SHOW"
@@ -262,10 +147,102 @@
         });
         $A.enqueueAction(btadminaction);
 
-
-
-
     },
+    checkToogle: function(component, event, helper) {
+        event.preventDefault();
+        var page = component.get("v.page") || 1;
+        var checked = event.getSource().get("v.name");
+        if (checked == "Group By Vendor") {
+            component.set("v.groupBytoggle2", false);
+            if (!event.getSource().get("v.checked")) {
+                component.find("vendor").set("v.checked", true);
+                component.set("v.groupBytoggle", true);
+                component.set("v.groupByVendortoggle2", false);
+                component.set("v.groupByVendortoggle1", false);
+                component.set("v.groupByCostCode", false);
+
+            } else {
+                component.find("vendor").set("v.checked", false);
+                component.set("v.groupBytoggle", false);
+                component.set("v.groupByVendortoggle1", false);
+                component.set("v.groupByVendortoggle2", false);
+                component.set("v.groupByCostCode", false);
+            }
+        }
+        var toggleVal = component.get("v.groupBytoggle");
+        helper.getBudgetGroups(component, event, helper, page ,function(){});
+    },
+
+    checkToogle1: function(component, event, helper) {
+        //  alert("hai");
+        console.log('--toogle 1--');
+        event.preventDefault();
+        var page = component.get("v.page") || 1;
+        var checked = event.getSource().get("v.name");
+        // alert(checked);
+        if (checked == "Group By Cost Code1") {
+            if (!event.getSource().get("v.checked")) {
+                component.find("Cost Code1").set("v.checked", true);
+                component.get("v.groupBytoggle1");
+                component.find("vendor").set("v.checked", false);
+                component.set("v.groupBytoggle", false);
+                component.set("v.groupByVendortoggle1", true);
+                component.set("v.groupByCostCode", false);
+
+                // component.set("v.groupByVendortoggle1",true);
+            } else {
+                component.find("Cost Code1").set("v.checked", false);
+                component.find("vendor").set("v.checked", true);
+                component.set("v.groupBytoggle", true);
+
+                //alert( component.set("v.groupBytoggle",true));
+                component.set("v.groupByVendortoggle2", false);
+                component.set("v.groupByVendortoggle1", false);
+                component.set("v.groupByCostCode", false);
+            }
+        }
+        var toggleVal = component.get("v.groupBytoggle1");
+        helper.getBudgetGroups(component, event, helper, page , function(){});
+    },
+
+    checkToogle2: function(component, event, helper) {
+        console.log('---toogle2---');
+        event.preventDefault();
+        var page = component.get("v.page") || 1;
+        var checked = event.getSource().get("v.name");
+        var bt = component.get("v.Isbtvalue");
+        // alert('bt'+bt);
+        if (checked == "Group By Cost Code") {
+            if (!event.getSource().get("v.checked")) {
+                component.find("Cost Code").set("v.checked", true);
+                component.set("v.groupBytoggle2", true);
+                component.set("v.groupByVendortoggle", false);
+                component.set("v.groupByCostCode", false);
+                component.set("v.groupBytoggle", false);
+            } else {
+                component.find("Cost Code").set("v.checked", false);
+                component.set("v.groupBytoggle2", false);
+                component.set("v.groupByCostCode", false);
+                component.set("v.groupBytoggle", false);
+            }
+
+        }
+        var toggleVal = component.get("v.groupBytoggle2");
+        helper.getBudgetGroups(component, event, helper, page , function(){});
+    },
+
+    closetab: function(component, event, helper) {
+        var workspaceAPI = component.find("workspace");
+        workspaceAPI.getFocusedTabInfo().then(function(response) {
+                var focusedTabId = response.tabId;
+                workspaceAPI.closeTab({ tabId: focusedTabId });
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
+    },
+
+   
 
     /*sectionOne : function(component, event, helper) {
           helper.helperFun(component,event,'articleOne');
@@ -319,64 +296,7 @@
     },
 
     changeEvent: function(component, event, helper) {
-        var group = component.find('costCodeId');
-        group.set("v._text_value", '');
-        var product = component.get('v.selectedLookUpRecord');
-        var compEvent = $A.get('e.c:BT_CLearLightningLookupEvent');
-        compEvent.setParams({
-            "recordByEvent": product
-        });
-        compEvent.fire();
-        component.set('v.productfamily', undefined);
-        component.set('v.newBudgetLine.Name', '');
-        component.set('v.selectedContractor', null);
-        component.set('v.newBudgetLine.buildertek__Group__c', '');
-        component.set('v.newBudgetLine.buildertek__Sub_Grouping__c', null);
-        component.set('v.options', '');
-        component.set('v.newBudgetLine.buildertek__Sales_Price__c', '');
-        component.set('v.newBudgetLine.buildertek__Unit_Price__c', '');
-        component.set('v.newBudgetLine.buildertek__Quantity__c', '1');
-        component.set('v.newBudgetLine.buildertek__Cost_Code__c', '');
-        $A.enqueueAction(component.get("c.clearLookupValue"));
-        $A.get("e.c:BT_SpinnerEvent").setParams({
-            "action": "HIDE"
-        }).fire();
-
-        //$A.get('e.force:refreshView').fire();
-
-        var action = component.get("c.getProductfamilyRecords");
-        var pribooknames = component.get("v.pricebookName");
-        // set param to method  
-        action.setParams({
-            'ObjectName': "Product2",
-            'parentId': component.get("v.pricebookName")
-        });
-        // set a callBack    
-        action.setCallback(this, function(response) {
-            $A.util.removeClass(component.find("mySpinner"), "slds-show");
-            var state = response.getState();
-            if (state === "SUCCESS") {
-                helper.fetchPickListVal(component, event, helper);
-                var storeResponse = response.getReturnValue();
-                console.log('storeResponse --> ', storeResponse);
-                // if storeResponse size is equal 0 ,display No Result Found... message on screen.                }
-                if (storeResponse.length == 0) {
-                    component.set("v.Message", 'No Result Found...');
-                } else {
-                    component.set("v.Message", '');
-                }
-                // set searchResult list with return value from server.
-                component.set("v.listofproductfamily", storeResponse);
-                if (component.get("v.listofproductfamily").length > 0) {
-                    component.set("v.productfamily", component.get("v.listofproductfamily")[0].productfamilyvalues);
-                }
-                console.log('productfamily --> ', component.get("v.productfamily"));
-                console.log('listofproductfamily --> ', component.get("v.listofproductfamily"));
-            }
-
-        });
-        // enqueue the Action  
-        $A.enqueueAction(action);
+        helper.changeEventHelper(component, event, helper);
     },
 
     handleSaveSuccess: function(component, event, helper) {

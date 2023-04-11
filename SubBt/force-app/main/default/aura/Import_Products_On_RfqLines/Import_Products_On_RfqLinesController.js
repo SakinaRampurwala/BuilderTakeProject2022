@@ -1,17 +1,7 @@
 ({
     doInit : function(component, event, helper) {
-     /*   var pageNumber = component.get("v.PageNumber");
-        var pageSize = component.get("v.pageSize");
-        var productFamilyValue = component.get("v.searchProductFamilyFilter");
-        var productValue = component.get("v.searchProductFilter");
-        var productCategoryValue = component.get("v.searchCategoryFilter");
-        var productTypeValue = component.get("v.searchProductTypeFilter");
-        var tradeValue = component.get("v.searchTradeTypeFilter");
-        var priceBook = component.get("v.searchPriceBookFilter");
-        var vendor = component.get("v.searchVendorFilter");
-        var recId = component.get("v.mainObjectId");*/
-        
-         var pageNumber = component.get("v.PageNumber");
+        component.set("v.Spinner", true);
+        var pageNumber = component.get("v.PageNumber");
         var pageSize = component.get("v.pageSize");
         var productFamilyValue = component.get("v.searchProductFamilyFilter");
         var productValue = component.get("v.searchProductFilter").Name;
@@ -21,38 +11,71 @@
         var priceBook = component.get("v.searchPriceBookFilter");
         var vendor = component.get("v.searchVendorFilter");
         var recId = component.get("v.mainObjectId");
+    
         
-        var pbAction = component.get("c.pricebookList")
+        
+        var pbAction = component.get("c.pricebookList");
+        pbAction.setParams({
+            recordId:recId
+        });
         pbAction.setCallback(this, function(response){
             if(response.getState() === "SUCCESS"){
-				component.set("v.pbList",response.getReturnValue())
+                let result=response.getReturnValue();
+                console.log({result});
+                let projectHavePricebook=result[0].defaultValue;
+                let pricebookList= result[0].priceWrapList;
+                var pricebookOptions = [];
+
+
+                if(Object.keys(projectHavePricebook).length !=0){
+                    pricebookOptions.push({ key: projectHavePricebook.Name, value: projectHavePricebook.Id });
+                    result[0].priceWrapList.forEach(function(element){
+                        if(projectHavePricebook.Id !== element.Id){
+                            pricebookOptions.push({ key: element.Name, value: element.Id });
+                        }else{
+                            pricebookOptions.push({ key: "None", value: "" });
+
+                        }
+                    });
+                    component.set('v.searchPriceBookFilter' , projectHavePricebook.Id);
+
+                }else{
+                    pricebookOptions.push({ key: "None", value: "" });
+                    result[0].priceWrapList.forEach(function(element){
+                        pricebookOptions.push({ key: element.Name, value: element.Id });
+                    });
+                }
+                if(component.get('v.searchPriceBookFilter')!= undefined){
+                    helper.changeEventHelper(component, event, helper);
+                }else{
+                    component.set("v.Spinner", false);
+
+                }
+                component.set("v.pbList",pricebookOptions);
+            }else{
+                component.set("v.Spinner", false);
             }     
         });
         
         $A.enqueueAction(pbAction);
-        
-      /*  var productAction = component.get("c.productfamilyList");
-        productAction.setParams({
-            "ObjectName" : "Product2"
-        });
-        productAction.setCallback(this, function(response){
-            if(response.getState() === "SUCCESS"){
-				component.set("v.listofproductfamily",response.getReturnValue())
-            }     
-        });
-        $A.enqueueAction(productAction);*/
-        
-		var action = component.get("c.getTradeTypes"); 
+
+        var action = component.get("c.getTradeTypes"); 
         action.setParams({
             "RFQRecId" : recId
         });
         action.setCallback(this, function(response){
             if(response.getState() === "SUCCESS"){
-            	component.set("v.rfqtradeType", response.getReturnValue()); 
-                 helper.getRfqList(component, event, helper, pageNumber, pageSize, productFamilyValue, tradeValue, productTypeValue, productValue, productCategoryValue, priceBook,vendor);
+                console.log({priceBook});
+                console.log(component.get('v.searchPriceBookFilter'));
+                component.set("v.rfqtradeType", response.getReturnValue()); 
+                helper.getRfqList(component, event, helper, pageNumber, pageSize, productFamilyValue, tradeValue, productTypeValue, productValue, productCategoryValue, component.get('v.searchPriceBookFilter'),vendor);
             }     
         });
-        $A.enqueueAction(action);    
+        $A.enqueueAction(action);   
+       
+    
+        
+		 
     },
     changefamily: function (component, event, helper) {
 		var product = component.get('v.selectedLookUpRecord');
@@ -63,24 +86,7 @@
 		compEvent.fire();
 	},
     changeEvent: function (component, event, helper) {
-		var productAction = component.get("c.productfamilyList");
-        productAction.setParams({
-            ObjectName : "Product2",
-            parentId: component.get("v.searchPriceBookFilter")
-        });
-        productAction.setCallback(this, function(response){
-            if(response.getState() === "SUCCESS"){
-				component.set("v.listofproductfamily",response.getReturnValue());
-                if (component.get("v.listofproductfamily").length > 0) {
-                    if(component.get("v.listofproductfamily").length == 1){
-                        component.set("v.searchProductFamilyFilter", component.get("v.listofproductfamily")[0].productfamilyvalues);
-                    }else{
-                        component.set("v.searchProductFamilyFilter", '');
-                    }
-				}
-            }     
-        });
-        $A.enqueueAction(productAction);
+        helper.changeEventHelper(component, event, helper);
 	},
 
     handleComponentEvent : function(component, event, helper){

@@ -20,6 +20,8 @@
                 var pricebookList = response.getReturnValue();
                 let projectHavePricebook=pricebookList[0].hasOwnProperty('defaultValue');
                 var pricebookOptions = [];
+                let quoteLineWrap= component.get('v.quoteLineWrapperList');
+
 
                 if(projectHavePricebook){
                     let Objkeys = Object.keys(pricebookList[0].defaultValue);
@@ -28,14 +30,25 @@
                         label : Objkeys[0],
                         value : Objvalue[0],
                     });
-                    component.set('v.defaultPriceBookId',Objvalue[0])
+                    component.set('v.defaultPriceBookId',Objvalue[0]);
+                    console.log(component.get('v.quoteLineWrapperList'));
+                    for(var key in quoteLineWrap){
+                        console.log(quoteLineWrap[key]);
+                        quoteLineWrap[key].pricebookEntryId=Objvalue[0];
+                        
+                    }
                     for(var key in pricebookList[0].optionMap){
                         if(key !== Objkeys[0]){
                             pricebookOptions.push({
                                 label : key,
                                 value : pricebookList[0].optionMap[key],
                             });
-                        }                   
+                        }else{
+                            pricebookOptions.push({
+                                label : 'None',
+                                value : '',
+                            });
+                        }               
                     }
                 }else{
                     pricebookOptions.push({
@@ -52,13 +65,20 @@
 
                 console.log('pricebookOptions',pricebookOptions);
                 component.set("v.pricebookOptions",pricebookOptions);
+                for(var key in quoteLineWrap){
+                    if(quoteLineWrap[key].pricebookEntryId != undefined){
+                        helper.getFamily(component, event, helper, quoteLineWrap[key].pricebookEntryId, key);
 
-                let getWrapperlength= component.get('v.quoteLineWrapperList').length;
-                if(component.get('v.defaultPriceBookId') != undefined|| component.get('v.defaultPriceBookId')!= null){
-                    for(var index =0; index<getWrapperlength; index++){
-                        helper.getFamily(component, event, helper, component.get('v.defaultPriceBookId'), index);
                     }
+                    
                 }
+
+                // let getWrapperlength= component.get('v.quoteLineWrapperList').length;
+                // if(component.get('v.defaultPriceBookId') != undefined|| component.get('v.defaultPriceBookId')!= null){
+                //     for(var index =0; index<getWrapperlength; index++){
+                //         helper.getFamily(component, event, helper, component.get('v.defaultPriceBookId'), index);
+                //     }
+                // }
                 component.set('v.isLoading', false);
 
                 
@@ -167,6 +187,7 @@
     },
 
     onAddClick: function (component, event, helper) {
+        console.log('onAddClick:::::');
         component.set('v.isLoading', true);
 
         var quoteLineWrapperList = component.get("v.quoteLineWrapperList");
@@ -175,13 +196,14 @@
             quoteLineWrapperList.push(quoteLineWrapper);
         }
         component.set("v.quoteLineWrapperList", quoteLineWrapperList);
+        let quoteLineWrap= component.get('v.quoteLineWrapperList');
+        for(var key in quoteLineWrap){
+            quoteLineWrap[key].pricebookEntryId = component.get('v.defaultPriceBookId');
+            // if(quoteLineWrap[key].pricebookEntryId != undefined){
+                helper.getFamily(component, event, helper, quoteLineWrap[key].pricebookEntryId, key);
 
-        let getlength= component.get('v.quoteLineWrapperList').length;
-
-        for(var i = 0; i < getlength; i++) {
-            if(component.get('v.defaultPriceBookId') != undefined|| component.get('v.defaultPriceBookId')!= null){
-                helper.getFamily(component, event, helper, component.get('v.defaultPriceBookId'), i);
-            }
+            // }
+            
         }
     },
 

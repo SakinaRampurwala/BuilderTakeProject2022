@@ -151,6 +151,8 @@
     <aura:attribute name="hideMarkup" type="Boolean" default="false" />
 
     <aura:attribute type="Map" name="checkboxState" />
+    <aura:attribute name="phaseName" type="String" default="" />
+
 
 
     <lightning:workspaceAPI aura:id="workspace" />
@@ -976,12 +978,8 @@
                                                             {!group.Name}
 
                                                         </div>
-                                                        <div class="slds-col slds-size_6-of-12 slds-float_right"
-                                                            style="font-size: 10px; height:1.5rem; width:0px;">
-                                                            <lightning:button variant="neutral" label="Add Quote Line"
-                                                                name="{!groupIndex}" title="Add Quote Line"
-                                                                class="addBudgetLineStyle"
-                                                                onclick="{!c.addProductFromGroup}" />
+                                                        <div class="slds-col slds-size_6-of-12 slds-float_right" style="font-size: 10px; height:1.5rem; width:0px;">
+                                                            <lightning:button variant="neutral" value='{!group.Id}' label="Add Quote Line" name="{!groupIndex}" title="Add Quote Line" class="addBudgetLineStyle" onclick="{!c.addProductFromGroup}" />
                                                         </div>
                                                     </div>
                                                     <!-- <div class="slds-grid slds-gutters">
@@ -2227,7 +2225,7 @@
                             }
                             
                         </aura:html>                       
-                            <c:Add_QuoteLine_In_Quote quoteId="{!v.recordId}" openProductBox="{!v.openProductBox}" />
+                            <c:Add_QuoteLine_In_Quote getPhase="{!v.phaseName}" quoteId="{!v.recordId}" openProductBox="{!v.openProductBox}" />
 
                     </aura:if>
 

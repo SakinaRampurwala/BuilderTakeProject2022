@@ -7,7 +7,7 @@
         })
         action.setCallback(this, function(response){
             var result = response.getReturnValue();
-            console.log({result});
+            console.log(component.get('v.getPhase') , 'getPhase::::::;');
             let projectHavePricebook=result[0].defaultValue;
             console.log(Object.keys(projectHavePricebook).length);
             var pricebookOptions = [];
@@ -17,6 +17,8 @@
                 result[0].priceWrapList.forEach(function(element){
                     if(projectHavePricebook.Id !== element.Id){
                         pricebookOptions.push({ key: element.Name, value: element.Id });
+                    }else{
+                        pricebookOptions.push({ key: "None", value: "" });
                     }
                 });
                 component.set('v.selectedPricebookId' , projectHavePricebook.Id);
@@ -27,12 +29,15 @@
                     pricebookOptions.push({ key: element.Name, value: element.Id });
                 });
             }
-            if(component.get('v.selectedPricebookId')!= undefined || component.get('v.selectedPricebookId')!=null){
+            if(component.get('v.selectedPricebookId')!= undefined){
                 var selectedPricebook = component.find("selectedPricebook").get("v.value");
                 helper.changePricebookHelper(component, event, helper , selectedPricebook);
+            }else{
+                 component.set('v.Spinner', false);    
+
             }
             component.set("v.pricebookoptions", pricebookOptions);
-            component.set('v.Spinner', false);    
+            // component.set('v.Spinner', false);    
         });
         $A.enqueueAction(action);
 
@@ -41,10 +46,21 @@
         action1.setCallback(this, function(response){
             var result = response.getReturnValue();
             var quoteLineGroupOptions = [];
-            result.forEach(element => {
-                quoteLineGroupOptions.push({ key: element.Name, value: element.Id });
-            });
+            var selectedProducts = [];
+
+
+            // var phaseValue= component.get('v.getPhase');
+            // if(phaseValue != undefined){
+
+            // }else{
+                result.forEach(element => {
+                    quoteLineGroupOptions.push({ key: element.Name, value: element.Id });
+                });
+
+            // }
+            
             component.set("v.quoteLineGroupOptions", quoteLineGroupOptions);
+            // console.log({quoteLineGroupOptions});
             component.set("v.selectedQuoteLineGroupId", '');
         });  
         $A.enqueueAction(action1);      
@@ -152,6 +168,7 @@
         var quoteLineList = component.get("v.quoteLineList");
         console.log('quoteLineList => ',{quoteLineList});
         var selectedProducts = [];
+        var phaseValue= component.get('v.getPhase');
         //find No Grouping from quoteLineGroupOptions and store it's Id in noGroupingId
         var noGroupingId = '';
         var quoteLineGroupOptions = component.get("v.quoteLineGroupOptions");
@@ -162,7 +179,25 @@
             }
         });
         quoteLineList.forEach(element => {
-            if (element.Selected) {
+            console.log(phaseValue);
+            console.log(phaseValue!= undefined);
+
+            if (element.Selected && phaseValue != undefined) {
+                console.log(phaseValue != undefined);
+                    selectedProducts.push({
+                        'Name': element.Name,
+                        'buildertek__Unit_Price__c': element.UnitPrice,
+                        'buildertek__Grouping__c': phaseValue,
+                        'buildertek__Quantity__c': '1',
+                        'buildertek__Additional_Discount__c': element.Discount ? element.Discount : 0,
+                        'buildertek__Unit_Cost__c': element.UnitCost ? element.UnitCost : element.UnitPrice,
+                        'buildertek__Markup__c': element.MarkUp ? element.MarkUp : 0,
+                        'buildertek__Product__c': element.Id,
+                        'buildertek__Size__c': element.Size,
+                        'buildertek__Description__c': element.Description ? element.Description : element.Name,
+                        'buildertek__Product_Family__c': element.Family ? element.Family : 'No Grouping'
+                    })
+            }else if(element.Selected){
                 selectedProducts.push({
                     'Name': element.Name,
                     'buildertek__Unit_Price__c': element.UnitPrice,

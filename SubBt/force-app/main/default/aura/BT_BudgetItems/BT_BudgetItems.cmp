@@ -1,4 +1,6 @@
 <aura:component access="global" controller="BudgetDAO">
+    <aura:attribute name="budgetId" type="String" />
+
     <aura:attribute name="fieldSetName" type="String" />
     <aura:attribute name="fieldSetValues" type="List" />
     <aura:attribute name="arrfieldNames" type="List" />
@@ -80,6 +82,10 @@
     <lightning:overlayLibrary aura:id="overlayLib" />
     <lightning:workspaceAPI aura:id="workspace" />
     <ltng:require styles="{!$Resource.MOdalPreviewWidth72}" />
+    <aura:if isTrue="{!v.isLoading}">
+        <lightning:spinner alternativeText="Loading" variant="brand" size="large" />
+    </aura:if>
+
     
     <tr>
         <td>
@@ -151,5 +157,6 @@
             </span>
         </td>-->
     </tr>
+    
     
 </aura:component>

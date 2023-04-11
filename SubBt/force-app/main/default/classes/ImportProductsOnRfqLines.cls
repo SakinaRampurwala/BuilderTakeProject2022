@@ -48,11 +48,42 @@ public class ImportProductsOnRfqLines {
         public string productfamilyvalues{ get; set; }
     }
 
-    @AuraEnabled
-    public static List<Pricebook2>  pricebookList (){
-        List<Pricebook2> pbList= [Select Id,Name,Description From Pricebook2 ORDER BY Name];
-        return pbList;
+    // @AuraEnabled
+    // public static List<Pricebook2>  pricebookList (){
+    //     List<Pricebook2> pbList= [Select Id,Name,Description From Pricebook2 ORDER BY Name];
+    //     return pbList;
+    // }
+    public class pricebookWrapper{
+        @AuraEnabled
+        public List<pricebook2> priceWrapList;
+
+        @AuraEnabled
+        public pricebook2 defaultValue;
     }
+    @AuraEnabled
+    public static List<pricebookWrapper> pricebookList(string recordId){
+        List<pricebookWrapper> priceWrapper = new List<pricebookWrapper>();
+        
+        pricebookWrapper priceWrap = new pricebookWrapper();
+        priceWrap.defaultValue= new pricebook2();
+        priceWrap.priceWrapList = new List<pricebook2>();
+        List<Pricebook2> pbList= [Select Id,Name,Description From Pricebook2 ORDER BY Name];
+        priceWrap.priceWrapList=pbList;
+
+        if(recordId != null){
+            System.debug('recordId*********' + recordId);
+            buildertek__RFQ__c rfqRecord = [Select Id, Name , buildertek__Project__c , buildertek__Project__r.buildertek__Price_Book__c , buildertek__Project__r.buildertek__Price_Book__r.Name From buildertek__RFQ__c  WHERE Id = :recordId];
+            if(rfqRecord.buildertek__Project__c != null && rfqRecord.buildertek__Project__r.buildertek__Price_Book__c !=null){
+                pricebook2 selectedPriceList = [SELECT Id, Name , Description FROM pricebook2 where Id=:rfqRecord.buildertek__Project__r.buildertek__Price_Book__c LIMIT 1];
+                priceWrap.defaultValue= selectedPriceList;
+                System.debug(selectedPriceList+'selectedPriceList*********');
+
+            }
+        }
+        priceWrapper.add(priceWrap);
+        return priceWrapper;
+    }
+
     @AuraEnabled
     public static RfqDataTableWrapper getProducts(Integer pageNumber, Integer pageSize, string RFQRecId, String productFamily, String tradeType, String productType, String Product,String category, String priceBook, String vendor){
         List<Product2> rfqList = new List<Product2>();

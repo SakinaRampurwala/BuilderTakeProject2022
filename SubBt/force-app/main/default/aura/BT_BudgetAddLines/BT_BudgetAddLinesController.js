@@ -2,7 +2,7 @@
     doInit: function (component, event, helper) {
         
         
-        
+        console.log(component.get('v.recordId') , '{{{{{{RECORD ID}}}}}}}');
         var workspaceAPI = component.find("workspace");
         workspaceAPI.getEnclosingTabId().then((response) => {
             let opendTab = response.tabId;

@@ -1,6 +1,7 @@
 ({
 	doInit: function (component, event, helper) {
-    component.set('v.isLoading', true);
+        component.set('v.isLoading', true);
+        console.log(component.get("v.budgetId") , '{{{RECORD BUDGET}}}}}');
        var pageNumber = component.get("v.PageNumber");
         var pageSize = component.get("v.pageSize");
         
@@ -64,101 +65,8 @@
 		var childCmp = component.find("accountId");
 		var retnMsg = childCmp.clearLookup();
 	},
-    	changeEvent: function (component, event, helper) {
-		/*var group = component.find('groupId');
-		group.set("v._text_value", '');*/
-		var product = component.get('v.selectedLookUpRecord');
-          /*  if(Object.values(product)[0]){
-                var compEvent = $A.get('e.c:BT_CLearLightningLookupEvent');
-                compEvent.setParams({
-                    "recordByEvent": product
-                }); 
-                compEvent.fire();
-            }*/
-           
-		
-		if(Object.values(product)[0]){
-           /* var compEvent = $A.get('e.c:BT_CLearLightningLookupEvent');
-            compEvent.setParams({
-                "recordByEvent": product
-            });
-            compEvent.fire();*/
-            var compEvent = $A.get('e.c:BT_BudgetItemLookupEvent');
-            compEvent.setParams({
-                "message" : {
-                    "index" : component.get("v.index"),
-                    "Id":component.get("v.productId"),
-                    "Name":component.get("v.productName")
-                }
-            });
-            compEvent.fire();
-        }
-            
-		component.set('v.newBudgetLine.Name', '');
-		component.set('v.oSelectedRecordEvent', null);
-		component.set('v.newBudgetLine.buildertek__Group__c', null);
-		component.set('v.newBudgetLine.buildertek__Sub_Grouping__c', null);
-		component.set('v.options', '');
-		component.set('v.newBudgetLine.buildertek__Sales_Price__c', '');
-		component.set('v.newBudgetLine.buildertek__Unit_Price__c', '');
-		component.set('v.newBudgetLine.buildertek__Quantity__c', '1');
-        
-        /* var obj =  {
-                "productfamily": component.get("v.productfamily"),
-                "pricebookName" : component.get("v.pricebookName"),
-                "product": {
-                    "Id":'',
-                    "Name":''
-                },
-                "newBudgetLine" : component.get("v.newBudgetLine"),
-                "UOMvalues" : component.get("v.UOMvalues"),
-                "Vendor" : component.get("v.selectedContractor"),
-                "index": component.get("v.index")
-            }
-            component.set("v.recordItem",obj)*/
-            
-         
-		$A.enqueueAction(component.get("c.clearLookupValue"));
-		/*$A.get("e.c:BT_SpinnerEvent").setParams({
-			"action": "HIDE"
-		}).fire();*/
-        
-		//$A.get('e.force:refreshView').fire();
-
-		var action = component.get("c.getProductfamilyRecords");
-		var pribooknames = component.get("v.pricebookName");
-		// set param to method  
-		action.setParams({
-			'ObjectName': "Product2",
-			'parentId': component.get("v.pricebookName")
-		});
-		// set a callBack    
-		action.setCallback(this, function (response) {
-			$A.util.removeClass(component.find("mySpinner"), "slds-show");
-			var state = response.getState();
-			if (state === "SUCCESS") {
-				helper.fetchPickListVal(component, event, helper);
-				var storeResponse = response.getReturnValue();
-				// if storeResponse size is equal 0 ,display No Result Found... message on screen.                }
-				if (storeResponse.length == 0) {
-					component.set("v.Message", 'No Result Found...');
-				} else {
-					component.set("v.Message", '');
-				}
-				// set searchResult list with return value from server.
-				component.set("v.listofproductfamily", storeResponse);
-				if (component.get("v.listofproductfamily").length > 0) {
-					component.set("v.productfamily", component.get("v.listofproductfamily")[0].productfamilyvalues);
-				}
-			}
-
-		});
-		// enqueue the Action  
-		$A.enqueueAction(action);
-            var record = component.get('v.record');
-       // record[fieldLabel] = selectedValue != '' && selectedValue != 'None' ? selectedValue : '';
-       // alert('hello'+record);
-        component.set('v.record', record);
+    changeEvent: function (component, event, helper) {
+        helper.changeEventHelper(component, event, helper);
 	},
     changefamily: function (component, event, helper) {
         var product = component.get('v.selectedLookUpRecord');

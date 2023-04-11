@@ -1145,23 +1145,46 @@ budgetGroup = Database.query('Select Id, Name,('+soql+') from budget_line_group_
         return options;
     }
     
-    @AuraEnabled
+    
     //get Pricebook Values
-    public static Map<String, String> getpricebooks(){
-        Map<String, String> options = new Map<String, String>();
-        list<pricebook2> PriceList;
-        /* if(Schema.sObjectType.pricebook2.fields.Id.isAccessible()&&
-Schema.sObjectType.pricebook2.fields.Name.isAccessible()){*/
-        PriceList = [select Id, Name
-                     from pricebook2 
-                     Where buildertek__BT_Visible__c = true AND isActive = true ORDER BY Name ASC];
-        /* }*/
-        for (pricebook2 p : PriceList){
-            //Put Picklist Value & Label in Map
-            options.put(p.name, p.Id);
-        }
-        return options;
+    // public static Map<String, String> getpricebooks(){
+    //     Map<String, String> options = new Map<String, String>();
+    //     list<pricebook2> PriceList;
+    //     PriceList = [select Id, Name from pricebook2 Where buildertek__BT_Visible__c = true AND isActive = true ORDER BY Name ASC];
+    //     for (pricebook2 p : PriceList){
+    //         options.put(p.name, p.Id);
+    //     }
+    //     return options;
+    // }
+
+    public class pricebookWrapper{
+        @AuraEnabled
+        public List<pricebook2> priceWrapList;
+
+        @AuraEnabled
+        public pricebook2 defaultValue;
     }
+    @AuraEnabled
+    public static List<pricebookWrapper> getpricebooks(string recordId){
+        List<pricebookWrapper> priceWrapper = new List<pricebookWrapper>();
+        
+        pricebookWrapper priceWrap = new pricebookWrapper();
+        priceWrap.defaultValue= new pricebook2();
+        priceWrap.priceWrapList = new List<pricebook2>();
+        List<pricebook2> PriceList = [select Id, Name from pricebook2 Where buildertek__BT_Visible__c = true AND isActive = true ORDER BY Name ASC];
+        priceWrap.priceWrapList=PriceList;
+
+        if(recordId != null){
+            buildertek__Budget__c budgetRecord = [Select Id, Name , buildertek__Project__c , buildertek__Project__r.buildertek__Price_Book__c , buildertek__Project__r.buildertek__Price_Book__r.Name From buildertek__Budget__c  WHERE Id = :recordId];
+            if(budgetRecord.buildertek__Project__c != null && budgetRecord.buildertek__Project__r.buildertek__Price_Book__c !=null){
+                pricebook2 selectedPriceList = [SELECT Id, Name FROM pricebook2 where Id=:budgetRecord.buildertek__Project__r.buildertek__Price_Book__c LIMIT 1];
+                priceWrap.defaultValue= selectedPriceList;
+            }
+        }
+        priceWrapper.add(priceWrap);
+        return priceWrapper;
+    }
+
     
     @AuraEnabled
     public list<productfamilyClass> pfwrapperlst{ get; set; }
@@ -2699,7 +2722,6 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
 
         Map<Id, buildertek__Budget_Item__c> budgetItemMap = new Map<Id, buildertek__Budget_Item__c>();
         for (buildertek__Account_Payable_Clone__c invoiceAP : selectedInvoices) {
-            System.debug(invoiceAP);
             buildertek__Budget_Item__c budgetItem = new buildertek__Budget_Item__c();
             budgetItem.Name = invoiceAP.buildertek__Description__c;
             budgetItem.buildertek__Budget__c = RecId;

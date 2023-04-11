@@ -220,6 +220,10 @@
 
     addProductFromGroup: function(component, event, helper) {
         if (!component.get('v.isAddProductFromGroup')){
+            console.log(event.getSource().get('v.value'));
+            let phaseValue=event.getSource().get('v.value');
+            component.set('v.phaseName', phaseValue);
+            console.log(component.get('v.phaseName'));
             component.set('v.openProductBox', true);
             // console.log(component.get('v.runFirstTime'));
             // // if(component.get('v.runFirstTime') != true)){}

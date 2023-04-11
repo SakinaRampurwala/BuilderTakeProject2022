@@ -1,5 +1,4 @@
-<aura:component
-    implements="force:appHostable,lightning:isUrlAddressable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction"
+<aura:component implements="force:appHostable,lightning:isUrlAddressable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction"
     access="global" controller="BudgetDAO">
     <aura:attribute name="sObjectName" type="String" />
     <aura:attribute name="fieldSetName" type="String" />
@@ -169,7 +168,7 @@
                     </thead>
                     <tbody>
                         <aura:iteration items="{!v.listOfRecords}" var="row" indexVar="index">
-                            <c:BT_BudgetItems recordItem="{!row}" index="{!index}" />
+                            <c:BT_BudgetItems budgetId='{!v.recordId}' recordItem="{!row}" index="{!index}" />
                             <!--<span data-recordid="{!''+row.Id+'_'+index}" onclick="{!c.deletequotelineRecord}" data-index='{!index}'>
                                 <lightning:icon iconName="action:close" alternativeText="Delete"
                                                 class="some-indicator" size="x-small" title="Delete" />
