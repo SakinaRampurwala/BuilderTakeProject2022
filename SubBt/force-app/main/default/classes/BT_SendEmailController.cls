@@ -277,6 +277,13 @@ public with sharing class BT_SendEmailController{
             List<string> strCC = new List<string>();
             SET<Id> contactIdSet = new SET<Id>();
             List<Contact> conList;
+
+            //* nishit's logic for wide org email starts from here 
+                buildertek__WideOrgEmailsettings__c getEmail = buildertek__WideOrgEmailsettings__c.getOrgDefaults();
+                String wideOrgEmailName = getEmail.buildertek__WideEmail__c;
+                List<OrgWideEmailAddress> wideOrgEmail =[select Id,Address from OrgWideEmailAddress WHERE Address =:wideOrgEmailName];
+            //* nishit's logic for wide org email ends from here
+
             if (Schema.sObjectType.Contact.fields.Id.isAccessible() && Schema.sObjectType.Contact.fields.email.isAccessible()){
                 conList = [Select Id, email
                            from Contact
@@ -504,6 +511,11 @@ public with sharing class BT_SendEmailController{
                 body = body + '<br/><br/><br/>' + fileDetails;
             }
             mail.setSubject(subject);
+
+            if (wideOrgEmail.size() > 0) {
+                mail.setOrgWideEmailAddressId(wideOrgEmail[0].Id);
+            }
+
             if (body != null && String.isNotBlank(body) && body != ''){
                 mail.setHtmlBody(body);
             }else{

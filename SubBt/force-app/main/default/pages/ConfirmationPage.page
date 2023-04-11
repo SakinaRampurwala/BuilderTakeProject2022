@@ -266,7 +266,7 @@
                                         <div class="slds-form-element__control">
 
                                             <div id="signature-pad">
-                                                <canvas style="border:1px solid lightgray;width:100%;height:100%;margin-top:10px;" id="demo"></canvas>
+                                                <canvas style="border:1px solid lightgray;width:100%;height:100%;margin-top:10px; background-color:white; color:white;" id="demo"></canvas>
                                                 <!-- <canvas id="demo" style="touch-action: none;margin: 0px;"></canvas> 
                                                 <canvas id="emptycanvas" style="touch-action: none;margin: 0px;display:none"></canvas> -->
 
@@ -444,10 +444,19 @@
                if(x == 'Accepted'){
                   document.getElementById('acceptid').style.display = "block";
                 }else{
+                    signaturePad.fillStyle = "rgb(255,255,255)"; //white
                 if (signaturePad.isEmpty()) {
                     document.getElementById('signid').style.display = "block";
                 } else {
+
+                    signaturePad.fillStyle = "rgb(255,255,255)"; //white
+                    //set to draw behind current content
+                    // canvas.globalCompositeOperation = "destination-over";
+                    // canvas.fillStyle = "rgb(255,255,255)"; //white
+                    // canvas.fillRect(0,0,canvas.width, canvas.height); 
+
                     var image = canvas.toDataURL().split(',')[1];
+                    image.fillStyle = "rgb(255,255,255)"; //white
                     document.getElementById('signid').style.display = "none";
                     callSaveSigMethod(image);
 

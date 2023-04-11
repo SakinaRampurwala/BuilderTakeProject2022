@@ -2371,8 +2371,8 @@
                     record[k].Value != undefined &&
                     /*(*/
                     thisBuildPhaseName ==
-                    "Option" /* || serviceCategory == 'Option')*/ &&
-                    thisProductCode != "69201198"
+                    "Option" /* || serviceCategory == 'Option') &&
+                    thisProductCode != "69201198"*/
                   ) {
                     // alert('Inside');
                     optionValue = Number(optionValue) + Number(record[k].Value);

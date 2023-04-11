@@ -62,6 +62,38 @@
                                     </apex:repeat>
                                 </tr>
                             </apex:repeat>
+
+                            <tr style="font-weight: bold;">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+
+                                <apex:repeat value="{!group4.RecordsDataWrapperList[0].RecordDataList}" var="quoteItem">
+
+                                    <apex:outputPanel rendered="{!if(quoteItem.fieldName == 'Name' , true ,false)}">
+                                        <td>
+                                            Total
+                                        </td>
+                                    </apex:outputPanel>
+
+                                    <apex:outputPanel rendered="{!if(quoteItem.fieldName != 'Name' , true ,false)}">
+                                        <apex:outputPanel rendered="{!if(quoteItem.fieldType == 'currency' , true ,false)}">
+                                            <td>
+                                                <apex:repeat value="{!group4.totalFieldMap[quoteItem.fieldName]}" var="quoteItemTotal">
+                                                    {!quoteItemTotal}
+                                                </apex:repeat> 
+                                            </td>
+                                        </apex:outputPanel>
+    
+                                        <apex:outputPanel rendered="{!if(quoteItem.fieldType != 'currency' , true ,false)}">
+                                            <td> </td>
+                                        </apex:outputPanel>
+                                    </apex:outputPanel>
+                                   
+                                </apex:repeat>
+                            </tr>
+
                         </apex:repeat>
                     </apex:repeat>
                 </apex:repeat>
