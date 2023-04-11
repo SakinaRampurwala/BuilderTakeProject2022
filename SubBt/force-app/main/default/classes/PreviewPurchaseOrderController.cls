@@ -7,8 +7,12 @@ public with sharing class PreviewPurchaseOrderController {
            Schema.sObjectType.Emailtemplate.fields.Name.isAccessible() &&
            Schema.sObjectType.Emailtemplate.fields.folderid.isAccessible() &&
            Schema.sObjectType.Folder.fields.Name.isAccessible()){
+            List<String> nameList = new List<String>();
+            nameList.add('Purchase Order Lien Template');
+            nameList.add('Purchase Order Approved Template');
+
           // temrec = [Select Id, Name, folder.name from Emailtemplate where folder.name = 'BT PO' and Name !=:'Purchase Order Line Template'];
-           temrec = [Select Id, Name, folder.name from Emailtemplate where folder.name = 'BT PO' and Name !=:'Purchase Order Approved Template' and  DeveloperName !=:'Purchase_Order_Template'];
+           temrec = [Select Id, Name, folder.name from Emailtemplate where folder.name = 'BT PO' and Name !=: nameList and  DeveloperName !=:'Purchase_Order_Template'];
            }
        return temrec;
    }

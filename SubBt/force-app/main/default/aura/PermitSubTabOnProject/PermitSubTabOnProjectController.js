@@ -32,6 +32,7 @@
                 }
         });
         $A.enqueueAction(action);
+        
         }
         catch(error){
             alert("Error");
@@ -44,5 +45,33 @@
     
     selectAll :  function(component, event, helper) {
         
-    }
+    },
+    openRecordInSubTab: function(component, event, helper) {
+        console.log('Tab');
+
+        var workspaceAPI = component.find("workspace");
+        var record=event.target.id;
+        workspaceAPI.openTab({
+            url: '#/sObject/'+record+'/view',
+            focus: true
+        });
+        // var workspaceAPI = component.find("workspaceAPI");
+        // var recordId = component.get("v.recordId");
+        
+        // workspaceAPI.getEnclosingTabId().then(function(tabId) {
+        //     workspaceAPI.openSubtab({
+        //         parentTabId: tabId,
+        //         url: '/lightning/r/ObjectApiName/' + record + '/view',
+        //         focus: true
+        //     });
+        // });
+    
+
+        
+    
+        
+
+         
+    },
+    
 })

@@ -141,7 +141,7 @@
                             </thead>
                             <tbody>
                                 
-                                <tr>
+                                <tr  class='tableRow'>
                                     <td>
                                         <ui:inputSelect value="{! v.pricebookName }" change="{!c.changeEvent}" class="pricebook-class">
                                             <aura:iteration var="option" items="{! v.pricebookoptions }">

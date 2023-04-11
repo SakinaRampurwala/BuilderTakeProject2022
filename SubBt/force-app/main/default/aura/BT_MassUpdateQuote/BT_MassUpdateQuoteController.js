@@ -9,28 +9,63 @@
         helper.createQuoteLineWrapperList(component, event, helper);
         helper.QuoteLineGroups(component, event, helper);
         var action = component.get("c.getpricebooks");
+        action.setParams({
+            recordId:component.get('v.recordId')
+        })
         action.setCallback(this, function (response) {
             var state = response.getState();
+            console.log({state});
+            console.log(response.getReturnValue());
             if (state === "SUCCESS") {
                 var pricebookList = response.getReturnValue();
+                let projectHavePricebook=pricebookList[0].hasOwnProperty('defaultValue');
                 var pricebookOptions = [];
-                pricebookOptions.push({
-                    label : 'None',
-                    value : '',
-                })
-                for(var key in pricebookList){
+
+                if(projectHavePricebook){
+                    let Objkeys = Object.keys(pricebookList[0].defaultValue);
+                    let Objvalue = Object.values(pricebookList[0].defaultValue);
                     pricebookOptions.push({
-                        label : key,
-                        value : pricebookList[key],
-                    })
+                        label : Objkeys[0],
+                        value : Objvalue[0],
+                    });
+                    component.set('v.defaultPriceBookId',Objvalue[0])
+                    for(var key in pricebookList[0].optionMap){
+                        if(key !== Objkeys[0]){
+                            pricebookOptions.push({
+                                label : key,
+                                value : pricebookList[0].optionMap[key],
+                            });
+                        }                   
+                    }
+                }else{
+                    pricebookOptions.push({
+                        label : 'None',
+                        value : '',
+                    });
+                    for(var key in pricebookList[0].optionMap){
+                        pricebookOptions.push({
+                            label : key,
+                            value : pricebookList[0 ].optionMap[key],
+                        })
+                    }
                 }
+
                 console.log('pricebookOptions',pricebookOptions);
                 component.set("v.pricebookOptions",pricebookOptions);
+
+                let getWrapperlength= component.get('v.quoteLineWrapperList').length;
+                if(component.get('v.defaultPriceBookId') != undefined|| component.get('v.defaultPriceBookId')!= null){
+                    for(var index =0; index<getWrapperlength; index++){
+                        helper.getFamily(component, event, helper, component.get('v.defaultPriceBookId'), index);
+                    }
+                }
                 component.set('v.isLoading', false);
 
+                
             }
         });
         $A.enqueueAction(action);
+        
     },
 
     deleteRow : function(component, event, helper) {
@@ -46,6 +81,7 @@
         component.set('v.isLoading', true);       
         var priceBookId = event.getSource().get("v.value");
         var index = event.getSource().get("v.name");
+        console.log({index});
         if(priceBookId != ''){
             helper.getFamily(component, event, helper, priceBookId, index);
         }else{
@@ -131,12 +167,22 @@
     },
 
     onAddClick: function (component, event, helper) {
+        component.set('v.isLoading', true);
+
         var quoteLineWrapperList = component.get("v.quoteLineWrapperList");
         for(var i = 0; i < 5; i++) {
             let quoteLineWrapper = helper.createQuoteLineWrapper(component, event, helper);
             quoteLineWrapperList.push(quoteLineWrapper);
         }
         component.set("v.quoteLineWrapperList", quoteLineWrapperList);
+
+        let getlength= component.get('v.quoteLineWrapperList').length;
+
+        for(var i = 0; i < getlength; i++) {
+            if(component.get('v.defaultPriceBookId') != undefined|| component.get('v.defaultPriceBookId')!= null){
+                helper.getFamily(component, event, helper, component.get('v.defaultPriceBookId'), i);
+            }
+        }
     },
 
     onMassUpdate: function (component, event, helper) {

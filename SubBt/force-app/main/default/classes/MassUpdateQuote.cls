@@ -169,18 +169,37 @@ public with sharing class MassUpdateQuote{
         List<Boolean> islien = new List<Boolean>{checkSingleQLine, checkButtonMargin,checkButtonMarkup};
         return islien;
     }  
+    public class pricebookWrapper{
+        @AuraEnabled
+        public Map<String, String> optionMap;
+
+        @AuraEnabled
+        public Map<String, String> defaultValue;
+    }
 
     @AuraEnabled
-    public static Map<String, String> getpricebooks(){
-        Map<String, String> options = new Map<String, String>();
-        list<pricebook2> PriceList;
-        PriceList = [select Id, Name
-                     from pricebook2 
-                     Where buildertek__BT_Visible__c = true AND isActive = true ORDER BY Name ASC];
-        for (pricebook2 p : PriceList){
-            options.put(p.name, p.Id);
+    public static List<pricebookWrapper> getpricebooks(string recordId){
+        List<pricebookWrapper> priceWrapper = new List<pricebookWrapper>();
+        
+        pricebookWrapper priceWrap = new pricebookWrapper();
+
+        buildertek__Quote__c quoteRecord = [Select Id, Name , buildertek__Project__c , buildertek__Project__r.buildertek__Price_Book__c , buildertek__Project__r.buildertek__Price_Book__r.Name From buildertek__Quote__c  WHERE Id = :recordId];
+        if(quoteRecord.buildertek__Project__c != null && quoteRecord.buildertek__Project__r.buildertek__Price_Book__c !=null){
+            priceWrap.defaultValue= new Map<String, String>();
+            pricebook2 selectedPriceList = [select Id, Name from pricebook2 where Id=:quoteRecord.buildertek__Project__r.buildertek__Price_Book__c];
+            priceWrap.defaultValue.put(selectedPriceList.Name , quoteRecord.buildertek__Project__r.buildertek__Price_Book__c);
         }
-        return options;
+
+        priceWrap.optionMap = new Map<String, String>();
+        list<pricebook2> PriceList = [select Id, Name from pricebook2  Where buildertek__BT_Visible__c = true AND isActive = true ORDER BY Name ASC];
+        for (pricebook2 p : PriceList){
+            priceWrap.optionMap.put(p.name, p.Id);
+        }
+        priceWrapper.add(priceWrap);
+        
+
+      
+        return priceWrapper;
     }
 
     @AuraEnabled

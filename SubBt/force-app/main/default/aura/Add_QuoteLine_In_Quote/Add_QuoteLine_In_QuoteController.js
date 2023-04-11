@@ -10,7 +10,8 @@
    }, 
 
    changePricebook: function(component, event, helper) {
-       helper.changePricebookHelper(component, event, helper);
+     var selectedPricebook = component.find("selectedPricebook").get("v.value");
+       helper.changePricebookHelper(component, event, helper , selectedPricebook);
    },
 
    searchInDatatable: function(component, event, helper){

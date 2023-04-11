@@ -2,14 +2,36 @@
     doInitHelper : function(component, event, helper) {
         component.set('v.Spinner', true);
         var action = component.get("c.getPricebookList");
+        action.setParams({
+            recordId:component.get("v.quoteId")
+        })
         action.setCallback(this, function(response){
             var result = response.getReturnValue();
-            var pricebookoptions = [];
-            pricebookoptions.push({ key: "None", value: "" });
-            result.forEach(element => {
-                pricebookoptions.push({ key: element.Name, value: element.Id });
-            });
-            component.set("v.pricebookoptions", pricebookoptions);
+            console.log({result});
+            let projectHavePricebook=result[0].defaultValue;
+            console.log(Object.keys(projectHavePricebook).length);
+            var pricebookOptions = [];
+            if(Object.keys(projectHavePricebook).length !=0){
+
+                pricebookOptions.push({ key: projectHavePricebook.Name, value: projectHavePricebook.Id });
+                result[0].priceWrapList.forEach(function(element){
+                    if(projectHavePricebook.Id !== element.Id){
+                        pricebookOptions.push({ key: element.Name, value: element.Id });
+                    }
+                });
+                component.set('v.selectedPricebookId' , projectHavePricebook.Id);
+
+            }else{
+                pricebookOptions.push({ key: "None", value: "" });
+                result[0].priceWrapList.forEach(function(element){
+                    pricebookOptions.push({ key: element.Name, value: element.Id });
+                });
+            }
+            if(component.get('v.selectedPricebookId')!= undefined || component.get('v.selectedPricebookId')!=null){
+                var selectedPricebook = component.find("selectedPricebook").get("v.value");
+                helper.changePricebookHelper(component, event, helper , selectedPricebook);
+            }
+            component.set("v.pricebookoptions", pricebookOptions);
             component.set('v.Spinner', false);    
         });
         $A.enqueueAction(action);
@@ -28,18 +50,18 @@
         $A.enqueueAction(action1);      
     }, 
 
-    changePricebookHelper : function(component, event, helper){
+    changePricebookHelper : function(component, event, helper , priceBookId){
         component.find("selectAll").set("v.checked", false);
         component.set('v.Spinner', true);
         component.set("v.sProductFamily", '');
         component.set("v.sProductName", '');
-        var selectedPricebook = component.find("selectedPricebook").get("v.value");
-        console.log('selectedPricebook => '+selectedPricebook);
-        if (selectedPricebook != '') {
+        // var selectedPricebook = component.find("selectedPricebook").get("v.value");
+        console.log('selectedPricebook => '+priceBookId);
+        if (priceBookId != '') {
             
             var action = component.get("c.getProductsthroughPriceBook2");
             action.setParams({
-                "pbookId": selectedPricebook 
+                "pbookId": priceBookId 
             });
             action.setCallback(this, function(response) {
                 var rows = response.getReturnValue();

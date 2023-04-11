@@ -8,6 +8,7 @@
         dbAction.setCallback(this, function (response) {
             var state = response.getState();
             if (state === "SUCCESS") {
+                console.log(response.getReturnValue());
                 component.set("v.templates", response.getReturnValue());
                 component.set("v.Spinner", false);
             }

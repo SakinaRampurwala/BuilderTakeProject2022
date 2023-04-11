@@ -2333,10 +2333,37 @@ public with sharing class QuoteDAO{
         public Integer total{ get; set; }
     }
 
+    public class pricebookWrapper{
+        @AuraEnabled
+        public List<pricebook2> priceWrapList;
+
+        @AuraEnabled
+        public pricebook2 defaultValue;
+    }
+
+    // @AuraEnabled
+    // public static List<pricebook2> getPricebookList(){
+    //     List<pricebook2> PriceList = [SELECT Id, Name FROM pricebook2 ORDER BY Name ASC ];
+    //     return PriceList;
+    // }
     @AuraEnabled
-    public static List<pricebook2> getPricebookList(){
+    public static List<pricebookWrapper> getPricebookList(string recordId){
+        List<pricebookWrapper> priceWrapper = new List<pricebookWrapper>();
+        
+        pricebookWrapper priceWrap = new pricebookWrapper();
+        priceWrap.defaultValue= new pricebook2();
+        priceWrap.priceWrapList = new List<pricebook2>();
         List<pricebook2> PriceList = [SELECT Id, Name FROM pricebook2 ORDER BY Name ASC ];
-        return PriceList;
+        priceWrap.priceWrapList=PriceList;
+        if(recordId != null){
+            buildertek__Quote__c quoteRecord = [Select Id, Name , buildertek__Project__c , buildertek__Project__r.buildertek__Price_Book__c , buildertek__Project__r.buildertek__Price_Book__r.Name From buildertek__Quote__c  WHERE Id = :recordId];
+            if(quoteRecord.buildertek__Project__c != null && quoteRecord.buildertek__Project__r.buildertek__Price_Book__c !=null){
+                pricebook2 selectedPriceList = [SELECT Id, Name FROM pricebook2 where Id=:quoteRecord.buildertek__Project__r.buildertek__Price_Book__c LIMIT 1];
+                priceWrap.defaultValue= selectedPriceList;
+            }
+        }
+        priceWrapper.add(priceWrap);
+        return priceWrapper;
     }
 
     @AuraEnabled

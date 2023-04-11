@@ -33,6 +33,9 @@
     <aura:attribute name="hideGlobalMarkup" type="Boolean" default="false" />
     <aura:attribute name="removeSingleQuoteLineOption" type="Boolean" default="false" />
 
+    <aura:attribute name="defaultPriceBookId" type="String" />
+
+
     <aura:method name="reloadMethod" action="{!c.reloadMethod}" access="public" />
 
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />

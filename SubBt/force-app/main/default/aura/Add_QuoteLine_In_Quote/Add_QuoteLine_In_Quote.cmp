@@ -17,6 +17,9 @@
     <aura:attribute name="selectedProducts" type="List" />
     <aura:attribute name="quoteLineGroupOptions" type="List" />
     <aura:attribute name="selectedQuoteLineGroupId" type="Id" />
+
+    
+
     
     
 
