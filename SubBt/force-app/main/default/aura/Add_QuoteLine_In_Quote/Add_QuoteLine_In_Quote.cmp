@@ -144,7 +144,7 @@
                         </tbody>
                     </table>
                     <aura:if isTrue="{!v.selectedPricebookId == ''}">
-                        <center class="elseMsg">Please Select a PriceBook!!!</center>
+                        <center class="elseMsg">Please Select a PriceBook.</center>
                         <aura:set attribute="else" >
                             <aura:if isTrue="{!v.tableDataList.length == 0}">
                                 <center class="elseMsg">No Products Found!!!</center>

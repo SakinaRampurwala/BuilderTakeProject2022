@@ -1,17 +1,26 @@
 global without sharing class QuoteGroupFromBom {
 
-    public string quoteId;
-    public List<buildertek__Quote_Item__c> allQuoteLineList {get;set;}
-    public List<BT_Lightning_Utils.dataTableFields> columns {get;set;}
-    public quoteLineWrapperClass quoteLineWrapper {get;set;}
-    public List<String> groupingList {get;set;}
-    public Boolean layer1 {get;set;}
-    public Boolean layer2 {get;set;}
-    public Boolean layer3 {get;set;}
-    public Boolean layer4 {get;set;}
-    public Boolean runCls {get;set;}
+    global string quoteId;
+    global string queryfields;
+    global list<string> colsApiLst {get;set;}
+    global map<string,string> sortlablevalueMap {get;set;}
+    global List<buildertek__Quote_Item__c> allQuoteLineList {get;set;}
+    global List<BT_Lightning_Utils.dataTableFields> columns {get;set;}
+    global quoteLineWrapperClass quoteLineWrapper {get;set;}
+    global List<String> groupingList {get;set;}
+    global Boolean layer1 {get;set;}
+    global Boolean layer2 {get;set;}
+    global Boolean layer3 {get;set;}
+    global Boolean layer4 {get;set;}
+    global Boolean runCls {get;set;}
+    global Boolean firstGrouping {get;set;}
+    global Boolean secondGrouping {get;set;}
+    global Boolean thirdGrouping {get;set;}
+    global Boolean forthGrouping {get;set;}
 
-    public QuoteGroupFromBom() {
+    global QuoteGroupFromBom() {
+        colsApiLst = new List<string>();
+        sortlablevalueMap = new map<string,string>();
         allQuoteLineList = new List<buildertek__Quote_Item__c>();
         columns = new List<BT_Lightning_Utils.dataTableFields>();
         quoteLineWrapper = new quoteLineWrapperClass();
@@ -21,9 +30,13 @@ global without sharing class QuoteGroupFromBom {
         layer3 = false;
         layer4 = false;
         runCls = true;
+        firstGrouping = false;
+        secondGrouping = false;
+        thirdGrouping = false;
+        forthGrouping = false;
     }
 
-    public void setrelatedToId(string Id){
+    global void setrelatedToId(string Id){
         this.quoteId = Id;
         if (runCls) {
             runCls = false;
@@ -31,16 +44,41 @@ global without sharing class QuoteGroupFromBom {
         }
     }
     
-    public string getrelatedToId( ){
+    global string getrelatedToId( ){
         return quoteId;
     }
 
-    public void getQuoteData(){
+    global void setquerystring(string querystring){
+        this.queryfields = querystring;
+        colsApiLst = querystring.split(',');
+    }
+
+    global string getquerystring (){
+        return queryfields;
+    }
+
+    global void getQuoteData(){
         System.debug('-- getQuoteData --');
         String quoteId = this.quoteId;
         System.debug('quoteId ==> '+quoteId);
 
+        System.debug('this.colsApiLst ==> '+colsApiLst);
+
+        // Set field labels
+        Map<String, Schema.SObjectType> schemaMap = Schema.getGlobalDescribe();
+        Schema.SObjectType quoteItemSchema = schemaMap.get('buildertek__Quote_Item__c');
+        Map<String, Schema.SObjectField> fieldMap = quoteItemSchema.getDescribe().fields.getMap();
+        for (String fieldName: fieldMap.keySet()) {
+            String mylabel = fieldMap.get(fieldName).getDescribe().getLabel();
+             for (String colApi: colsApiLst) {
+                 if(colApi == fieldName){
+                     sortlablevalueMap.put(colApi, mylabel);
+                 }
+             }
+        }
+
         // Grouping field list for set 4 layer grouping on quote lines (Fix Value Used Only For Development)
+        // groupingList = new List<String>{'buildertek__Grouping__c', 'buildertek__Build_Phase__c', 'buildertek__Location_Detailed_Area__c', 'buildertek__Product_Family__c'};
         groupingList = new List<String>{'buildertek__Grouping__c', 'buildertek__Build_Phase__c', 'buildertek__Location_Detailed_Area__c', 'buildertek__Product_Family__c'};
 
         // All fields in list that can be available in grouping fields.
@@ -48,13 +86,15 @@ global without sharing class QuoteGroupFromBom {
         String apiString = '';
 
         // Get field data from buildertek__BT_Related_List_View_Fields field set
-        List<BT_Lightning_Utils.dataTableFields> column = BT_Lightning_Utils.getFieldSetForDataTable('buildertek__Quote_Item__c', 'buildertek__BT_Related_List_View_Fields');
+        columns = BT_Lightning_Utils.getFieldSetForDataTable('buildertek__Quote_Item__c', 'buildertek__BT_Related_List_View_Fields');
         String fieldsType = '[';
-        for(BT_Lightning_Utils.dataTableFields dtFields : column){
-            if (!gorupingFieldList.contains(dtFields.fieldName)) {
-                apiString += dtFields.fieldName + ', ';
-            }
-            fieldsType += '{"fieldName": "' + dtFields.fieldName + '","fieldType": "' + dtFields.type + '","isEditable":' + dtFields.editable + '},';
+        for(BT_Lightning_Utils.dataTableFields dtFields : columns){
+            if (colsApiLst.contains(dtFields.fieldName)) {
+                if (!gorupingFieldList.contains(dtFields.fieldName)) {
+                    apiString += dtFields.fieldName + ', ';
+                }
+                fieldsType += '{"fieldName": "' + dtFields.fieldName + '","fieldType": "' + dtFields.type + '","isEditable":' + dtFields.editable + '},';
+            }   
         }
         fieldsType = fieldsType.removeEnd(',')+']';
 
@@ -78,6 +118,17 @@ global without sharing class QuoteGroupFromBom {
             query += ', '+groupingList[3];
             layer4 = true;
         }
+
+        if (layer4) {
+            forthGrouping = true;
+        } else if (layer3) {
+            thirdGrouping = true;
+        } else if (layer2) {
+            secondGrouping = true;
+        } else if (layer1) {
+            firstGrouping = true;
+        }
+
         query += ' NULLS LAST';
         System.debug('query ==> '+query);
 
@@ -85,6 +136,7 @@ global without sharing class QuoteGroupFromBom {
         System.debug('allQuoteLineList ==> '+allQuoteLineList);
 
         quoteLineWrapper.columns = columns;
+        quoteLineWrapper.totalCols = columns.size();
         quoteLineWrapper.quoteLineList = allQuoteLineList;
 
         if (layer1 & allQuoteLineList.size() > 0) {
@@ -98,7 +150,7 @@ global without sharing class QuoteGroupFromBom {
     }
 
     // Use method for 1st layer grouping
-    public List<group1Wrapper> firstLayerGrouping(List<RecordsDataWrapper> quoteLineWrapper){
+    global List<group1Wrapper> firstLayerGrouping(List<RecordsDataWrapper> quoteLineWrapper){
         System.debug('-- firstLayerGrouping --');
         List<group1Wrapper> group1WrapperList = new List<group1Wrapper>();
 
@@ -137,7 +189,6 @@ global without sharing class QuoteGroupFromBom {
                 } else {
                     currentGroupName = 'No Grouping';
                 }
-                currentGroupName = String.valueOf(quoteLineWrapper[i].quoteLine.getSobject(groupingList[0].removeEnd('c')+'r').get('Name'));
             } else {
                 currentGroupName = String.valueOf(quoteLineWrapper[i].quoteLine.get(groupingList[0]));
                 if (currentGroupName == '' || currentGroupName == null) {
@@ -200,7 +251,7 @@ global without sharing class QuoteGroupFromBom {
     }
 
     // Use method for 2nd layer grouping
-    public List<group2Wrapper> secordLayerGrouping(List<RecordsDataWrapper> quoteLineWrapper){
+    global List<group2Wrapper> secordLayerGrouping(List<RecordsDataWrapper> quoteLineWrapper){
         System.debug('-- secordLayerGrouping --');
         List<group2Wrapper> group2WrapperList = new List<group2Wrapper>();
 
@@ -300,7 +351,7 @@ global without sharing class QuoteGroupFromBom {
     }
 
     // Use method for 3rd layer grouping
-    public List<group3Wrapper> thirdLayerGrouping(List<RecordsDataWrapper> quoteLineWrapper){
+    global List<group3Wrapper> thirdLayerGrouping(List<RecordsDataWrapper> quoteLineWrapper){
         System.debug('-- thirdLayerGrouping --');
         List<group3Wrapper> group3WrapperList = new List<group3Wrapper>();
 
@@ -400,7 +451,7 @@ global without sharing class QuoteGroupFromBom {
     }
 
     // Use method for 4th layer grouping
-    public List<group4Wrapper> forthLayerGrouping(List<RecordsDataWrapper> quoteLineWrapper){
+    global List<group4Wrapper> forthLayerGrouping(List<RecordsDataWrapper> quoteLineWrapper){
         System.debug('-- forthLayerGrouping --');
         List<group4Wrapper> group4WrapperList = new List<group4Wrapper>();
 
@@ -490,7 +541,7 @@ global without sharing class QuoteGroupFromBom {
         return group4WrapperList;
     }
 
-    public List<RecordsDataWrapper> getQuoteItemData(List<buildertek__Quote_Item__c> ListOfRecords, String fieldString){
+    global List<RecordsDataWrapper> getQuoteItemData(List<buildertek__Quote_Item__c> ListOfRecords, String fieldString){
         System.debug('-- getQuoteItemData --');
         List<RecordsDataWrapper> RecordsDataWrapperList = new List<RecordsDataWrapper>();
         List<RecordsData> RecordsDataList = (List<RecordsData>)System.JSON.deserialize(fieldString, List<RecordsData>.class);
@@ -520,7 +571,7 @@ global without sharing class QuoteGroupFromBom {
         return RecordsDataWrapperList;
     }
 
-    public Map<String, Decimal> countTotal(Map<String, Decimal> quoteItemTotalMap, RecordsDataWrapper quoteItemWrap){
+    global Map<String, Decimal> countTotal(Map<String, Decimal> quoteItemTotalMap, RecordsDataWrapper quoteItemWrap){
         System.debug('-- countTotal --');
         for (RecordsData recordData : quoteItemWrap.RecordDataList) {
             if (recordData.fieldType == 'currency') {
@@ -532,7 +583,7 @@ global without sharing class QuoteGroupFromBom {
         return quoteItemTotalMap;
     }
 
-    public Map<String, Decimal> initalTotalMap(){
+    global Map<String, Decimal> initalTotalMap(){
         System.debug('-- initalTotalMap --');
         Map<String, Decimal> quoteItemTotalMap = new Map<String, Decimal>();
         RecordsDataWrapper RecordsDataWrap = quoteLineWrapper.RecordsDataWrapperList[0];
@@ -544,58 +595,59 @@ global without sharing class QuoteGroupFromBom {
         return quoteItemTotalMap;
     }
 
-    public class quoteLineWrapperClass{
-        public List<BT_Lightning_Utils.dataTableFields> columns {get; set;}
-        public List<buildertek__Quote_Item__c> quoteLineList {get; set;}
-        public List<RecordsDataWrapper> RecordsDataWrapperList {get; set;}
-        public List<group1Wrapper> groupWrapperList {get; set;}
+    global class quoteLineWrapperClass{
+        global List<BT_Lightning_Utils.dataTableFields> columns {get; set;}
+        global List<buildertek__Quote_Item__c> quoteLineList {get; set;}
+        global List<RecordsDataWrapper> RecordsDataWrapperList {get; set;}
+        global List<group1Wrapper> groupWrapperList {get; set;}
+        global Integer totalCols {get; set;}
     }
 
-    public class group1Wrapper{
-        public Integer index {get; set;}
-        public String groupName {get; set;}
-        public List<buildertek__Quote_Item__c> quoteLineList {get; set;}
-        public List<RecordsDataWrapper> RecordsDataWrapperList {get; set;}
-        public Map<String, Decimal> totalFieldMap {get; set;}
-        public List<group2Wrapper> groupWrapperList {get; set;}
+    global class group1Wrapper{
+        global Integer index {get; set;}
+        global String groupName {get; set;}
+        global List<buildertek__Quote_Item__c> quoteLineList {get; set;}
+        global List<RecordsDataWrapper> RecordsDataWrapperList {get; set;}
+        global Map<String, Decimal> totalFieldMap {get; set;}
+        global List<group2Wrapper> groupWrapperList {get; set;}
     }
 
-    public class group2Wrapper{
-        public Integer index {get; set;}
-        public String groupName {get; set;}
-        public List<buildertek__Quote_Item__c> quoteLineList {get; set;}
-        public List<RecordsDataWrapper> RecordsDataWrapperList {get; set;}
-        public Map<String, Decimal> totalFieldMap {get; set;}
-        public List<group3Wrapper> groupWrapperList {get; set;}
+    global class group2Wrapper{
+        global Integer index {get; set;}
+        global String groupName {get; set;}
+        global List<buildertek__Quote_Item__c> quoteLineList {get; set;}
+        global List<RecordsDataWrapper> RecordsDataWrapperList {get; set;}
+        global Map<String, Decimal> totalFieldMap {get; set;}
+        global List<group3Wrapper> groupWrapperList {get; set;}
     }
     
-    public class group3Wrapper{
-        public Integer index {get; set;}
-        public String groupName {get; set;}
-        public List<buildertek__Quote_Item__c> quoteLineList {get; set;}
-        public List<RecordsDataWrapper> RecordsDataWrapperList {get; set;}
-        public Map<String, Decimal> totalFieldMap {get; set;}
-        public List<group4Wrapper> groupWrapperList {get; set;}
+    global class group3Wrapper{
+        global Integer index {get; set;}
+        global String groupName {get; set;}
+        global List<buildertek__Quote_Item__c> quoteLineList {get; set;}
+        global List<RecordsDataWrapper> RecordsDataWrapperList {get; set;}
+        global Map<String, Decimal> totalFieldMap {get; set;}
+        global List<group4Wrapper> groupWrapperList {get; set;}
     }
 
-    public class group4Wrapper{
-        public Integer index {get; set;}
-        public String groupName {get; set;}
-        public List<buildertek__Quote_Item__c> quoteLineList {get; set;}
-        public List<RecordsDataWrapper> RecordsDataWrapperList {get; set;}
-        public Map<String, Decimal> totalFieldMap {get; set;}
+    global class group4Wrapper{
+        global Integer index {get; set;}
+        global String groupName {get; set;}
+        global List<buildertek__Quote_Item__c> quoteLineList {get; set;}
+        global List<RecordsDataWrapper> RecordsDataWrapperList {get; set;}
+        global Map<String, Decimal> totalFieldMap {get; set;}
     }
 
-    public class RecordsDataWrapper{
-        public buildertek__Quote_Item__c quoteLine {get; set;}
-        public List<RecordsData> RecordDataList {get; set;}
+    global class RecordsDataWrapper{
+        global buildertek__Quote_Item__c quoteLine {get; set;}
+        global List<RecordsData> RecordDataList {get; set;}
     }
 
-    public class RecordsData{
-        public Boolean isEditable {get; set;}
-        public String fieldName {get; set;}
-        public String fieldType {get; set;}
-        public Object fieldValue {get; set;}
+    global class RecordsData{
+        global Boolean isEditable {get; set;}
+        global String fieldName {get; set;}
+        global String fieldType {get; set;}
+        global Object fieldValue {get; set;}
     }
 
 }

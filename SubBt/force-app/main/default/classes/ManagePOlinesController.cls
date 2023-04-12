@@ -1554,10 +1554,6 @@ public with sharing class ManagePOlinesController {
         Map<Id, buildertek__Quote_Item__c> qtLineMap = new Map<Id, buildertek__Quote_Item__c>();
         
         Map<String,List<String>> myMap = (Map<String,List<String>>)JSON.deserialize(mapFieldData, Map<String,List<String>>.class);
-        
-        for(Id key : myMap.keySet()){
-            system.debug('myMap --> '+myMap.get(key));
-        }
 
         try {
             bom = [SELECT ID, Name,buildertek__BT_Quote__c,buildertek__Tax_Rate_1__c, 
@@ -1587,6 +1583,7 @@ public with sharing class ManagePOlinesController {
                 if (bom[0].buildertek__Selection_Sheet_Takeoff_Lines__r.size() > 0) {
                     buildertek__Quote__c quote = new buildertek__Quote__c();
                     quote.Name = 'Quote - '+bom[0].Name;
+                    quote.buildertek__Bill_of_Material__c = bom[0].Id;
                     insert quote;
                     bom[0].buildertek__BT_Quote__c = quote.Id;
                     update bom[0];

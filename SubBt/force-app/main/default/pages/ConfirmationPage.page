@@ -390,6 +390,8 @@
             };
         </script>
         <script>
+
+            signaturePad.fillStyle = "rgb(255,255,255)"; //white
             var canvas = document.getElementById("demo");
             var context = canvas.getContext("2d");
             var mouseButton = 0;
@@ -404,6 +406,7 @@
                     if (signaturePad.isEmpty()) {
                         document.getElementById('rejectId').style.display = "block";
                     } else {
+                        signaturePad.fillStyle = "rgb(255,255,255)"; //white
                         var image = canvas.toDataURL().split(',')[1];
                         document.getElementById('rejectId').style.display = "none";
                         callRejectPopup(image);
