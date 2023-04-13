@@ -4,6 +4,7 @@ global without sharing class QuoteGroupFromBom {
     global string queryfields;
     global list<string> colsApiLst {get;set;}
     global map<string,string> sortlablevalueMap {get;set;}
+    global string orgCurr {get; set;}
     global List<buildertek__Quote_Item__c> allQuoteLineList {get;set;}
     global List<BT_Lightning_Utils.dataTableFields> columns {get;set;}
     global quoteLineWrapperClass quoteLineWrapper {get;set;}
@@ -19,6 +20,7 @@ global without sharing class QuoteGroupFromBom {
     global Boolean forthGrouping {get;set;}
 
     global QuoteGroupFromBom() {
+        orgCurr = UserInfo.getDefaultCurrency();
         colsApiLst = new List<string>();
         sortlablevalueMap = new map<string,string>();
         allQuoteLineList = new List<buildertek__Quote_Item__c>();

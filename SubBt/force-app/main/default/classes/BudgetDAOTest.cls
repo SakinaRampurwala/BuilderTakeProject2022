@@ -169,7 +169,7 @@ public class BudgetDAOTest {
       //  BudgetDAO.deleteBudgetItem(budgetITemLst,  GroupRef.id, budgetITem.budget__c);
        // BudgetDAO.getBudgetItem(String.valueOf(budgetITem1.Id));
         BudgetDAO.getpricebook(budgetRef.buildertek__Budget__c);
-        BudgetDAO.getpricebooks();
+        BudgetDAO.getpricebooks(budgetRecs.Id);
         BudgetDAO.deleteBudgetLineItem(budgetRef1.Id);
         BudgetDAO.prepareString(BudgetJson1);
         BudgetDAO.saveUpdatedValues(budgetListRef2);

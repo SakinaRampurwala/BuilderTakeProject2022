@@ -49,7 +49,7 @@ private class ImportProductsOnRfqLinesTest {
         ImportProductsOnRfqLines.getTradeTypes(rfq.Id);
         ImportProductsOnRfqLines.getprodlist();
         ImportProductsOnRfqLines.productfamilyList('Product2' , priceBookId);
-        ImportProductsOnRfqLines.pricebookList();
+        ImportProductsOnRfqLines.pricebookList(rfq.Id);
         ImportProductsOnRfqLines.getProducts(1 , 2, rfq.Id ,'' , '' ,'' , '' ,'' ,'' ,'test');
         ImportProductsOnRfqLines.addProductToRfq(productIds, rfq.Id );
         ImportProductsOnRfqLines.addProductToPO(productIds, rfq.Id );

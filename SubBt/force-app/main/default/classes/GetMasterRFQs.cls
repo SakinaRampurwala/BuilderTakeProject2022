@@ -1,7 +1,14 @@
 public class GetMasterRFQs {
     @AuraEnabled
-    public static RfqDataTableWrapper getRFQs(Integer pageNumber, Integer pageSize, string RFQRecId, String vendorName, String tradeType, String description){
+    public static RfqDataTableWrapper getRFQs(string budgetId, Integer pageNumber, Integer pageSize, string RFQRecId, String vendorName, String tradeType, String description){
          List<buildertek__RFQ__c> rfqList = new List<buildertek__RFQ__c>();
+        buildertek__Budget__c budgetRec = [Select Id , Name , buildertek__Project__c From buildertek__Budget__c Where Id=:budgetId  limit 1];
+         
+         List<String> statusList= new List<String>();
+         statusList.add('Awarded');
+         statusList.add('Accepted');
+
+
         //rfqList = [SELECT COUNT() FROM buildertek__RFQ__c WHERE buildertek__Status__c =:'Awarded' OR buildertek__Status__c =:'Accepted'];
         
         //system.debug(vendorName+''+tradeType+''+description+''+description!='');
@@ -41,6 +48,8 @@ public class GetMasterRFQs {
          if(vendorName != '' || tradeType != '' || description != ''){
              String queryList = 'Select Id,Name,buildertek__Vendor__r.Name,buildertek__Trade_Type__r.Name,buildertek__Awarded_Date__c,buildertek__Vendor_Quote__c FROM buildertek__RFQ__c';
              queryList = queryList +  ' WHERE (buildertek__Status__c =\'Awarded\' OR buildertek__Status__c =\'Accepted\') ';
+             
+
              if(description != '' && description != null){
                  queryList = queryList+ 'AND (Name LIKE \'%'+description+'%\')'; //String.escapeSingleQuotes(description)
              }
@@ -50,16 +59,28 @@ public class GetMasterRFQs {
              if(vendorName != '' && vendorName != null){
                  queryList = queryList+ ' AND (buildertek__Vendor__r.Name LIKE \'%'+vendorName+'%\')';
              }
+             if(budgetRec.buildertek__Project__c!= null){
+                queryList = queryList +  ' AND buildertek__Project__c=\''+budgetRec.buildertek__Project__c+ '\'';
+            }
              queryList = queryList+ ' ORDER BY Name LIMIT :pageSize OFFSET :offset';
              system.debug(queryList);
              objDT.recordList = Database.query(queryList);
              system.debug(objDT.recordList);
              
          }else{
-             objDT.recordList = [Select Id,Name,buildertek__Vendor__r.Name,buildertek__Trade_Type__r.Name,buildertek__Awarded_Date__c,buildertek__Vendor_Quote__c 
-                             FROM buildertek__RFQ__c WHERE buildertek__Status__c ='Awarded' OR buildertek__Status__c ='Accepted' ORDER BY Name 
-                            LIMIT :pageSize
-                            OFFSET :offset];
+            //  objDT.recordList = [Select Id,Name,buildertek__Vendor__r.Name,buildertek__Trade_Type__r.Name,buildertek__Awarded_Date__c,buildertek__Vendor_Quote__c 
+            //                  FROM buildertek__RFQ__c WHERE buildertek__Status__c ='Awarded' OR buildertek__Status__c ='Accepted' ORDER BY Name 
+            //                 LIMIT :pageSize
+            //                 OFFSET :offset];
+            if(budgetRec.buildertek__Project__c!= null){
+                objDT.recordList = [SELECT Id,Name,buildertek__Project__c , buildertek__Vendor__r.Name,buildertek__Trade_Type__r.Name,buildertek__Awarded_Date__c,buildertek__Vendor_Quote__c 
+                                    FROM buildertek__RFQ__c WHERE buildertek__Status__c IN:statusList AND  buildertek__Project__c=:budgetRec.buildertek__Project__c ORDER BY Name 
+                                    LIMIT :pageSize OFFSET :offset];
+
+            }else{
+                objDT=null;
+            }
+
          }
          
         

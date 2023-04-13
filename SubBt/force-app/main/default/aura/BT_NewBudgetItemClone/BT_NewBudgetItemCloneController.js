@@ -368,11 +368,10 @@
         console.log('v.selectedRecs ==> ', { selectedRecs });
         if (selectedRecs.length > 0) {
             if(selectedRecs.length == 1){
-
                 var BudgetIds = [];
                 var rowData;
                 var newPOItems = [];
-            // if (selectedRecs.length > 0) {
+                // if (selectedRecs.length > 0) {
                 var budgetlineid = BudgetIds[0];
                 var action=component.get("c.BudgetItemList");
                 action.setParams({
@@ -396,17 +395,17 @@
                 $A.enqueueAction(action);
 
 
-            // } else {
-            //     $A.get("e.c:BT_SpinnerEvent").setParams({
-            //         "action": "HIDE"
-            //     }).fire();
-            //     component.find('notifLib').showNotice({
-            //         "variant": "error",
-            //         "header": "Please Select Budget Line!",
-            //         "message": "Please Select Budget Line to Create TimeCard.",
-            //         closeCallback: function() {}
-            //     });
-            // }
+                // } else {
+                //     $A.get("e.c:BT_SpinnerEvent").setParams({
+                //         "action": "HIDE"
+                //     }).fire();
+                //     component.find('notifLib').showNotice({
+                //         "variant": "error",
+                //         "header": "Please Select Budget Line!",
+                //         "message": "Please Select Budget Line to Create TimeCard.",
+                //         closeCallback: function() {}
+                //     });
+                // }
 
 
             }else{
@@ -3844,7 +3843,9 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
     },
     checkAllTimeCards:function(component, event, helper){
         var value= event.getSource().get('v.value');
+        console.log('value ',value);
         let listOfRecords= component.get("v.recordList");
+        console.log('listOfRecords ',listOfRecords);
         var existingId=[];
 
         listOfRecords.forEach(function(element){
@@ -3852,6 +3853,7 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
             existingId.push(element.Id);
 
         });
+        console.log('listOfRecords ',listOfRecords);
         component.set("v.recordList", listOfRecords);
         component.set("v.selectedExistingTC", existingId);
 

@@ -49,12 +49,7 @@
     <lightning:workspaceAPI aura:id="workspace"/>
     
     <ltng:require styles="{!$Resource.MOdalPreviewWidth72}"/>
-    <!-- <aura:html tag="style">
-        .slds-modal__container{
-            max-width: 80rem !important;
-            width:100% !important;
-        }
-    </aura:html> -->
+    
   <aura:html tag="style">
         .slds-modal__content{
    			 overflow-y: none !important;
@@ -70,7 +65,6 @@
             <div class="searchCointainer" style="padding-top:1px">             
                 <div class="selectStyle">
                     <lightning:select name="pricebooks" label=""  aura:id="searchPriceBook" value="{!v.searchPriceBookFilter}" onchange="{!c.changeEvent}">
-                        <!-- <option text="None" value=""/> -->
                         <aura:iteration items="{!v.pbList}" var="temp">
                             <option selected="{!temp.value == v.searchPriceBookFilter}" value="{!temp.value}">{!temp.key}</option>
                         </aura:iteration>
@@ -81,8 +75,7 @@
                     <lightning:select name="pricebooks" label=""  aura:id="searchPriceBook" value="{!v.searchProductFamilyFilter}" >
 						<option text="None" value=""/>                       
                         <aura:iteration var="option" items="{!v.listofproductfamily}">
-                            <option value="{!option.productfamilyvalues}"
-                                    > <!-- selected="{!option.productfamilyvalues == v.searchProductFamilyFilter}" -->
+                            <option value="{!option.productfamilyvalues}"> 
                                 {!option.productfamilyvalues}</option>
                         </aura:iteration>
                     </lightning:select>
@@ -93,32 +86,14 @@
                      <c:BT_LightningLookup aura:id="productId" objectAPIName="Product2"
                                                                           IconName="standard:product" selectedRecord="{!v.searchProductFilter}"
                                                                           parentId="{!v.searchPriceBookFilter }" prodctfamly="{!v.searchProductFamilyFilter}" /> 
-                   <!-- <c:customLookup aura:id="searchProduct" objectAPIName="Product2" IconName="standard:Product2" selectedRecord="{!v.searchProductFilter}" /> -->
             
                 </div>
                 <div style="width: 14%; display: inline-block; padding: 0% 2% 0% 0%;position:relative;"  >
-                   <!-- <c:customLookup aura:id="searchCategory" objectAPIName="buildertek__Category__c" placeholder ="Category" isplaceholder = "true"
-                                    IconName="standard:buildertek__Category__c" selectedRecord="{!v.searchCategoryFilter}" /> -->
-                    <lightning:input
-                                     style=" display: inline-block; padding: 0% 2% 0% 0%;"
-                                     autocomplete="off"
-                                     aura:id="searchCategory_1"
-                                     name="enter-search"
-                                     type="search"
-                                     placeholder="Category"
-                                     value="{!v.searchCategoryFilter}"
-                                     onclick="{!c.showDropDownCategory}"
-                                    onblur ="{!c.hideDropDownCategory}"
-                                     />
+                    <lightning:input style=" display: inline-block; padding: 0% 2% 0% 0%;" autocomplete="off" aura:id="searchCategory_1" name="enter-search"  type="search"  placeholder="Category"  value="{!v.searchCategoryFilter}" onclick="{!c.showDropDownCategory}" onblur ="{!c.hideDropDownCategory}"/>
                     <ul aura:id="searchCategoryRes_1" style="min-height:40px;margin-top:0px !important;position: absolute;" class="Filterdropdown_1 slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid slds-lookup__menu slds" role="listbox">
                         <lightning:spinner class="slds-hide" variant="brand" size="small" aura:id="mySpinner"/>
                         <aura:iteration items="{!v.rfqCategoryList}" var="singleRec">
                             <li role="presentation" class="slds-listbox__item" onclick="{!c.selectRecordOption}" aura:id="searchCategoryResOption" style="text-align: left;">
-                                <!-- <span id="listbox-option-unique-id-01" class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
-                                    <span class="slds-media__body">  
-                                        <span class="slds-listbox__option-text slds-listbox__option-text_entity">{!singleRec}</span>    
-                                    </span>
-                                </span> -->
                                 <div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small slds-media slds-listbox__option slds-listbox__option_entity slds-media_center" role="option">
                                     <span class="slds-media__figure slds-listbox__option-icon ">
                                         <lightning:icon iconName="custom:custom79" size="small" alternativeText="Approved" title="Approved" />
@@ -134,29 +109,11 @@
                     </ul> 
                 </div>
                 <div style="width: 14%; display: inline-block; padding: 0% 2% 0% 0%; position:relative;" >
-                    <!-- <c:customLookup aura:id="searchProductType" objectAPIName="buildertek__Product_Type__c" placeholder ="Product Type" isplaceholder = "true"
-                                    IconName="standard:buildertek__Product_Type__c" selectedRecord="{!v.searchProductTypeFilter}" /> -->
-                    <lightning:input
-                                     
-                                     style=" display: inline-block; padding: 0% 2% 0% 0%;"
-                                     autocomplete="off"
-                                     aura:id="searchCategory_2"
-                                     name="enter-search"
-                                     type="search"
-                                     placeholder="Product Type"
-                                     value="{!v.searchProductTypeFilter}"
-                                     onclick="{!c.showDropDownCategory}"
-                                     onblur ="{!c.hideDropDownCategory}"
-                                     />
+                    <lightning:input style=" display: inline-block; padding: 0% 2% 0% 0%;" autocomplete="off" aura:id="searchCategory_2" name="enter-search" type="search" placeholder="Product Type" value="{!v.searchProductTypeFilter}"  onclick="{!c.showDropDownCategory}"  onblur ="{!c.hideDropDownCategory}"/>
                     <ul aura:id="searchCategoryRes_2" style="min-height:40px;margin-top:0px !important;position: absolute;" class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid slds-lookup__menu slds" role="listbox">
                         <lightning:spinner class="slds-hide" variant="brand" size="small" aura:id="mySpinner"/>
                         <aura:iteration items="{!v.rfqproducttypeList}" var="singleRec">
                             <li role="presentation" class="slds-listbox__item" onclick="{!c.selectRecordOptionforproducttype}" style="text-align: left;">
-                                <!-- <span id="listbox-option-unique-id-01" class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
-                                    <span class="slds-media__body">  
-                                        <span class="slds-listbox__option-text slds-listbox__option-text_entity">{!singleRec}</span>    
-                                    </span>
-                                </span> -->
                                 <div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small slds-media slds-listbox__option slds-listbox__option_entity slds-media_center" role="option">
                                     <span class="slds-media__figure slds-listbox__option-icon ">
                                         <lightning:icon iconName="custom:custom70" size="small" alternativeText="Approved" title="Approved" />
@@ -172,28 +129,11 @@
                     </ul> 
                 </div>
                 <div style="width: 14%; display: inline-block; padding: 0% 2% 0% 0%; position:relative;">
-                   <!-- <c:customLookup aura:id="searchTradeType" objectAPIName="buildertek__Trade_Type__c" placeholder ="Trade Type" isplaceholder = "true"
-                                    IconName="standard:buildertek__Trade_Type__c" selectedRecord="{!v.searchTradeTypeFilter}" /> -->
-					<lightning:input
-                             style=" display: inline-block; padding: 0% 2% 0% 0%;"
-                             autocomplete="off"
-                             aura:id="searchCategory_3"
-                             name="enter-search"
-                             type="search"
-                             placeholder="Trade Type"
-                             value="{!v.searchTradeTypeFilter}"
-                             onclick="{!c.showDropDownCategory}"
-                             onblur ="{!c.hideDropDownCategory}"
-                             />
+					<lightning:input   style=" display: inline-block; padding: 0% 2% 0% 0%;"  autocomplete="off"  aura:id="searchCategory_3" name="enter-search" type="search"  placeholder="Trade Type"   value="{!v.searchTradeTypeFilter}"  onclick="{!c.showDropDownCategory}" onblur ="{!c.hideDropDownCategory}"/>
                     <ul aura:id="searchCategoryRes_3" style="min-height:40px;margin-top:0px !important;position: absolute;" class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid slds-lookup__menu slds" role="listbox">
                         <lightning:spinner class="slds-hide" variant="brand" size="small" aura:id="mySpinner"/>
                         <aura:iteration items="{!v.rfqtradetypeList}" var="singleRec">
                             <li role="presentation" class="slds-listbox__item" onclick="{!c.selectRecordOptionfortradetype}" style="text-align: left;">
-                                <!-- <span id="listbox-option-unique-id-01" class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
-                                    <span class="slds-media__body">  
-                                        <span class="slds-listbox__option-text slds-listbox__option-text_entity">{!singleRec}</span>    
-                                    </span>
-                                </span> -->
                                 <div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small slds-media slds-listbox__option slds-listbox__option_entity slds-media_center" role="option">
                                     <span class="slds-media__figure slds-listbox__option-icon ">
                                         <lightning:icon iconName="custom:custom67" size="small" alternativeText="Approved" title="Approved" />
@@ -209,28 +149,11 @@
                     </ul> 
                 </div>
                 <div style="width: 14%; display: inline-block; padding: 0% 2% 0% 0%; position:relative;">
-                   <!-- <c:customLookup aura:id="searchvendor" objectAPIName="Account" placeholder ="Vendor" isplaceholder = "true"
-                                    IconName="standard:Account" selectedRecord="{!v.searchVendorFilter}" /> -->
-                    <lightning:input
-                             style=" display: inline-block; padding: 0% 2% 0% 0%;"
-                             autocomplete="off"
-                             aura:id="searchCategory_4"
-                             name="enter-search"
-                             type="search"
-                             placeholder="Vendor"
-                             value="{!v.searchVendorFilter}"
-                             onclick="{!c.showDropDownCategory}"
-                             onblur ="{!c.hideDropDownCategory}"
-                             />
+                    <lightning:input  style=" display: inline-block; padding: 0% 2% 0% 0%;" autocomplete="off"   aura:id="searchCategory_4" name="enter-search" type="search" placeholder="Vendor"  value="{!v.searchVendorFilter}" onclick="{!c.showDropDownCategory}"  onblur ="{!c.hideDropDownCategory}" />
                     <ul aura:id="searchCategoryRes_4" style="min-height:40px;margin-top:0px !important;position: absolute;" class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid slds-lookup__menu slds" role="listbox">
                         <lightning:spinner class="slds-hide" variant="brand" size="small" aura:id="mySpinner"/>
                         <aura:iteration items="{!v.rfqvendorList}" var="singleRec">
                             <li role="presentation" class="slds-listbox__item" onclick="{!c.selectRecordOptionforvendor}" style="text-align: left;">
-                                <!-- <span id="listbox-option-unique-id-01" class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
-                                    <span class="slds-media__body">  
-                                        <span class="slds-listbox__option-text slds-listbox__option-text_entity">{!singleRec}</span>    
-                                    </span>
-                                </span> -->
                                 <div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small slds-media slds-listbox__option slds-listbox__option_entity slds-media_center" role="option">
                                     <span class="slds-media__figure slds-listbox__option-icon ">
                                         <lightning:icon iconName="custom:custom21" size="small" alternativeText="Approved" title="Approved" />
@@ -249,89 +172,15 @@
         </div>
     </div> 
     
-   <!-- <div class="slds-modal__header" style="padding-top:0px">
-        <div class="searchCointainer" style="padding-top:1px">
-             <lightning:input
-                             style="width: 14%; display: inline-block; padding: 0% 2% 0% 0%;"
-                             autocomplete="off"
-                             aura:id="searchPriceBook"
-                             name="enter-search"
-                             type="search"
-                             placeholder="Price Book"
-                             value="{!v.searchPriceBookFilter}"
-                             /> 
-            
-           
-            <lightning:input 
-                             style="width: 14%; display: inline-block;padding: 0% 2% 0% 0%;"
-                             autocomplete="off"
-                             aura:id="searchProductFamily"
-                             name="enter-search"
-                             type="search"
-                             placeholder="Product Family"
-                             value="{!v.searchProductFamilyFilter}"
-                             />
-            <lightning:input
-                             
-                             style="width: 14%; display: inline-block; padding: 0% 2% 0% 0%;"
-                             autocomplete="off"
-                             aura:id="searchProduct"
-                             name="enter-search"
-                             type="search"
-                             placeholder="Product"
-                             value="{!v.searchProductFilter}"
-                             />
-            <lightning:input
-                             
-                             style="width: 14%; display: inline-block; padding: 0% 2% 0% 0%;"
-                             autocomplete="off"
-                             aura:id="searchCategory"
-                             name="enter-search"
-                             type="search"
-                             placeholder="Category"
-                             value="{!v.searchCategoryFilter}"
-                             />
-            <lightning:input
-                             
-                             style="width: 14%; display: inline-block; padding: 0% 2% 0% 0%;"
-                             autocomplete="off"
-                             aura:id="searchProductType"
-                             name="enter-search"
-                             type="search"
-                             placeholder="Product Type"
-                             value="{!v.searchProductTypeFilter}"
-                             />
-            <lightning:input
-                             
-                             style="width: 14%; display: inline-block; padding: 0% 2% 0% 0%;"
-                             autocomplete="off"
-                             aura:id="searchTradeType"
-                             name="enter-search"
-                             type="search"
-                             placeholder="Trade Type"
-                             value="{!v.searchTradeTypeFilter}"
-                             />
-            <lightning:input
-                             
-                             style="width: 14%; display: inline-block; padding: 0% 2% 0% 0%;"
-                             autocomplete="off"
-                             aura:id="searchvendor"
-                             name="enter-search"
-                             type="search"
-                             placeholder="Vendor"
-                             value="{!v.searchVendorFilter}"
-                             />
-            
-        </div>
-    </div> -->
-    <!--<div class="slds-scrollable" style="height:26rem;width:70rem;" >-->
- <div class="slds-modal__content" style="padding-top:0px; padding-bottom:0px;">
+   
+    <div class="slds-modal__content" style="padding-top:0px; padding-bottom:0px;">
         <div class="slds-scrollable" style="height:20rem;" >
             <table class="slds-table slds-table_bordered slds-table_cell-buffer">
                 <thead>
                     <tr class="slds-text-heading--label">
                         <th class="slds-is-sortable" scope="col" width="5px">
                             <lightning:input type="checkbox" aura:id="headCheckRFQ" checked="false" onchange="{!c.selectAllRfq}"/> 
+                            
                         </th>
                         <th scope="col" >
                             <div class="slds-truncate" title="Product Family">
@@ -375,6 +224,9 @@
                         <tr>
                             <td>
                                 <lightning:input type="checkbox" aura:id="checkRFQ"  checked="false" name="{!item.Id}" onchange="{!c.selectRfq}"/>
+                                <!-- <lightning:input type="checkbox" name="input1" checked="{!item.isSelected}" id="{!item.Id}" onchange="{!c.unCheckAllRFQ}" /> -->
+
+
                             </td>
                              <td>
                                 <div class="slds-truncate" title="{!item.Family}" >
@@ -460,7 +312,6 @@
             </aura:if>
       
     </div>
-<!--</div>-->
    
     <!-- <footer> -->
     <div class="slds-modal__footer">

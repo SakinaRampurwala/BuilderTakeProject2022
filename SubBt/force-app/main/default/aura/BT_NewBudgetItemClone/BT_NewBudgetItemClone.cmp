@@ -1890,7 +1890,7 @@
                                         </aura:iteration>
                                         <aura:if isTrue="{!empty(v.ExpenseRecordList)}">
                                             <td colspan="5" style="text-align: center; line-height: 10rem; font-size: 18px; ">
-                                                No Data Found
+                                                No Records Found
                                             </td>
                                         </aura:if>
                                     </tbody>

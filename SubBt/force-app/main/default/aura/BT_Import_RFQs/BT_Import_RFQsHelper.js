@@ -61,6 +61,7 @@
         }) */
         var recId = component.get("v.recordId");
         action.setParams({
+            "budgetId":component.get('v.recordId'),
             "pageNumber" : pageNumber,
             "pageSize": pageSize,
             "RFQRecId" : recId,
@@ -70,6 +71,7 @@
             
         });
         action.setCallback(this, function (result) {
+            console.log(component.get('v.recordId') , ':::::::');
             var state = result.getState();
             if (component.isValid() && state === "SUCCESS") {
                 var resultData = result.getReturnValue();

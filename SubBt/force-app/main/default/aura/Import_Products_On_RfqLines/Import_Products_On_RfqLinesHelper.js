@@ -34,6 +34,11 @@
         });
         action.setCallback(this, function(response) {
 
+            console.log(response.getState());
+            console.log(response.getError());
+            console.log(response.getReturnValue());
+
+
             if (response.getState() == "SUCCESS") {
                 var recId = response.getReturnValue();
                 // alert(recId);
@@ -77,10 +82,6 @@
     getRfqList: function(component, event, helper, pageNumber, pageSize, productFamilyValue, tradeValue, productTypeValue, productValue, productCategoryValue, priceBook, vendor) {
         var action = component.get("c.getProducts");
         var tradetype = component.get("v.rfqtradeType");
-        // alert('tradeValue'+tradeValue);
-        //alert('tradeValue.trim()'+tradeValue.trim());
-        //  alert('productValue'+productValue);
-        // alert(priceBook);
         var recId = component.get("v.recordId");
         action.setParams({
             "pageNumber": pageNumber,
@@ -120,6 +121,9 @@
                 } else if (resultData.vendorList) {
                     component.set("v.rfqvendorList", resultData.vendorList.slice(0, 5));
                 }
+
+                console.log(component.get("v.rfqRecordList"));
+
 
                 component.set("v.rfqRecordList", resultData.recordList);
                 console.log("Records : ", resultData.recordList)

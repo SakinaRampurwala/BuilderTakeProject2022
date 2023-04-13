@@ -119,17 +119,7 @@
     },
     handleNext: function (component, event, helper) {
        
-      /*  var pageNumber = component.get("v.PageNumber");
-        var pageSize = component.get("v.pageSize");
-        pageNumber++;
-        var productFamilyValue = component.get("v.searchProductFamilyFilter");
-        var productValue = component.get("v.searchProductFilter");
-        var productCategoryValue = component.get("v.searchCategoryFilter");
-        var productTypeValue = component.get("v.searchProductTypeFilter");
-        var tradeValue = component.get("v.searchTradeTypeFilter");
-         var priceBook = component.get("v.searchPriceBookFilter");
-        var vendor = component.get("v.searchVendorFilter");*/
-        
+  
         var pageNumber = component.get("v.PageNumber");
         var pageSize = component.get("v.pageSize");
          pageNumber++;
@@ -168,18 +158,13 @@
         var vendor = component.get("v.searchVendorFilter");
         helper.getRfqList(component, event, helper, pageNumber, pageSize, productFamilyValue, tradeValue, productTypeValue, productValue, productCategoryValue, priceBook,vendor);
          console.log("List of Ids : ",component.get("v.listOfSelectedRFQIds"))
+
     },
     selectRfq: function (component, event, helper) {
         var checkbox = event.getSource();
         var selectedRfqIds = component.get("v.listOfSelectedRFQIds");
         var getAllId = component.find("checkRFQ");
-      /*  for (var i = 0; i < selectedRfqIds.length; i++) {
-            if (selectedRfqIds[i].Id == checkbox.get("v.name") && selectedRfqIds[i].productCheck) {
-                selectedRfqIds[i].productCheck = true;
-            } else if (selectedRfqIds[i].Id == checkbox.get("v.name") && selectedRfqIds[i].productCheck == false) {
-                selectedRfqIds[i].productCheck = false;
-            }
-        }*/
+      
         if(checkbox.get("v.checked")){
             if(selectedRfqIds.indexOf(checkbox.get("v.name")) == -1){
                 selectedRfqIds.push(checkbox.get("v.name"));
@@ -206,6 +191,23 @@
         }
         console.log(selectedRfqIds);
         component.set("v.listOfSelectedRFQIds",selectedRfqIds);
+    },
+    unCheckAllRFQ:function (component, event, helper) {
+    //     let selectedId = event.getSource().get("v.text");
+    //     var rfqList = component.get('v.rfqRecordList');
+    //     let deSelectGroup = new Set()
+
+       console.log(component.get("v.rfqRecordList"));
+
+    //    var tableDataList = component.get("v.rfqRecordList");
+    //    var checkAll = true;
+    //    tableDataList.forEach(element => {
+    //        if (!element.Selected) {
+    //            checkAll = false
+    //        }
+    //    });
+    //    component.find("selectAll").set("v.checked", checkAll);
+
     },
     
     selectAllRfq : function (component, event, helper) {
