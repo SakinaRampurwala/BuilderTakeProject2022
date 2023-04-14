@@ -46,6 +46,7 @@
     },
 
     fetchpricebooks: function (component, event, helper) {
+        console.log('fetchpricebooks');
         var action = component.get("c.getpricebook");
         action.setParams({
             "BudgetId": component.get("v.recordId")
@@ -58,24 +59,61 @@
             }
         });
         $A.enqueueAction(action);
+
+        console.log(component.get("v.parentRecordId"));
+
         var actions = component.get("c.getpricebooks");
+        actions.setParams({
+            recordId: component.get("v.parentRecordId")
+        });
 
         var opts = [];
         actions.setCallback(this, function (response) {
             if (response.getState() == "SUCCESS") {
                 var result = response.getReturnValue();
-                var opts = [];
-                opts.push({
-                    key: "None",
-                    value: ""
-                });
-                for (var key in result) {
-                    opts.push({
-                        key: key,
-                        value: result[key]
+
+                console.log({result});
+                let projectHavePricebook=result[0].defaultValue;
+                var pricebookOptions = [];
+                if(Object.keys(projectHavePricebook).length !=0){
+                    pricebookOptions.push({ key: projectHavePricebook.Name, value: projectHavePricebook.Id });
+                    result[0].priceWrapList.forEach(function(element){
+                        if(projectHavePricebook.Id !== element.Id){
+                            pricebookOptions.push({ key: element.Name, value: element.Id });
+                        }else{
+                            pricebookOptions.push({ key: "None", value: "" });
+
+                        }
                     });
+                    component.set('v.pricebookName' , projectHavePricebook.Name);
+                    component.set('v.pricebookoptions' , pricebookOptions);
+
+
+                }else{
+                    pricebookOptions.push({ key: "None", value: "" });
+                    result[0].priceWrapList.forEach(function(element){
+                        pricebookOptions.push({ key: element.Name, value: element.Id });
+                    });
+                    component.set("v.pricebookoptions", pricebookOptions);                
+
                 }
-                component.set("v.pricebookoptions", opts);
+
+
+                // var opts = [];
+                // opts.push({
+                //     key: "None",
+                //     value: ""
+                // });
+                // for (var key in result) {
+                //     opts.push({
+                //         key: key,
+                //         value: result[key]
+                //     });
+                // }
+                // component.set("v.pricebookoptions", opts);
+              
+                // $A.get('e.force:refreshView').fire();
+                   
                 component.set("v.Spinner", false);
             }
         });

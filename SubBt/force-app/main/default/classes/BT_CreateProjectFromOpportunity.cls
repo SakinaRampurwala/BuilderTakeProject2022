@@ -62,7 +62,7 @@ public with sharing class BT_CreateProjectFromOpportunity {
             project.buildertek__Customer__c = account;
           }
            project.OwnerId = opp.OwnerId;
-           if(adminInterfaceNodeConfigurations[0].buildertek__Org_Base_URL__c != null){
+           if(adminInterfaceNodeConfigurations[0].buildertek__Org_Base_URL__c != null && oppquotereclist.size() > 0){
            project.buildertek__Pictures__c = adminInterfaceNodeConfigurations[0].buildertek__Org_Base_URL__c+'/lightning/r/buildertek__Quote__c/'+oppquotereclist[0].Id+'/related/AttachedContentDocuments/view';
            }
                // project.buildertek__Contract_Amount__c = totalquoteamount;

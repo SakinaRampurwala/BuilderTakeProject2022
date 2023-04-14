@@ -10,6 +10,8 @@
             mode: "pester",
         });
         toastEvent.fire();
+        component.set("v.Spinner", false);
+
     },
     showSuccessToast: function(component, event, helper, title, message) {
         var toastEvent = $A.get("e.force:showToast");
@@ -25,6 +27,7 @@
     },
 
     addProductToRfqLines: function(component, event, helper, productIds, RfqId) {
+        console.log({productIds});
         var action = component.get("c.addProductToRfq");
         component.set("v.Spinner", true);
         component.set("v.showMessage", true);
@@ -67,12 +70,6 @@
                     console.log(error);
                 });
 
-                /* var urlEvent = $A.get("e.force:navigateToURL");
-                 urlEvent.setParams({
-                     "url": '/lightning/r/buildertek__RFQ_Items__c/'+recordId+'/related/buildertek__RFQ_Items__r/view'
-                 });
-                 urlEvent.fire();*/
-
             } else {
                 helper.showErrorToast(component, event, helper, "Error occurs", "Something went wrong!");
             }
@@ -84,8 +81,6 @@
         var tradetype = component.get("v.rfqtradeType");
         var recId = component.get("v.recordId");
         action.setParams({
-            "pageNumber": pageNumber,
-            "pageSize": pageSize,
             "RFQRecId": recId,
             "productFamily": productFamilyValue,
             "tradeType": tradeValue,
@@ -99,8 +94,32 @@
         });
         action.setCallback(this, function(result) {
             var state = result.getState();
+            console.log({state});
+            console.log(result.getError());
+
             if (component.isValid() && state === "SUCCESS") {
                 var resultData = result.getReturnValue();
+                var records=resultData.recordList;
+                component.set("v.rfqRecordList", resultData.recordList);
+
+
+
+                var pageSize = component.get("v.pageSize");
+                var totalRecordsList = records;
+                var totalLength = totalRecordsList.length ;
+                component.set("v.totalRecordsCount", totalLength);
+                component.set("v.startPage",0);
+                component.set("v.endPage",pageSize-1);
+
+                var PaginationLst = [];
+                for(var i=0; i < pageSize; i++){
+                    if(component.get("v.rfqRecordList").length > i){
+                        PaginationLst.push(records[i]);    
+                    } 
+                }
+                component.set('v.PaginationList', PaginationLst);
+                component.set("v.TotalPages", Math.ceil(totalLength / pageSize)); 
+                console.log({resultData});
                 if (resultData.categoryList && resultData.categoryList.length > 5) {
                     component.set("v.rfqCategoryList", resultData.categoryList.slice(0, 5));
                 } else if (resultData.categoryList) {
@@ -122,30 +141,14 @@
                     component.set("v.rfqvendorList", resultData.vendorList.slice(0, 5));
                 }
 
-                console.log(component.get("v.rfqRecordList"));
-
-
-                component.set("v.rfqRecordList", resultData.recordList);
-                console.log("Records : ", resultData.recordList)
-                component.set("v.PageNumber", resultData.pageNumber);
-                component.set("v.TotalRecords", resultData.totalRecords);
-                component.set("v.RecordStart", resultData.recordStart);
-                component.set("v.RecordEnd", resultData.recordEnd);
-                component.set(
-                    "v.TotalPages",
-                    Math.ceil(resultData.totalRecords / pageSize)
-                );
-                /* var rfqrecordlist = component.get("v.rfqRecordList");
-                if(rfqrecordlist.length > 0){
-					component.set("v.RecordEnd", true);                    
-                }else{
-                    component.set("v.RecordEnd", true);                 
-                }*/
+               
+                
             }
         });
         $A.enqueueAction(action);
     },
     changeEventHelper: function (component, event, helper) {
+        console.log('changeEventHelper');
         component.set("v.Spinner", true);
 
 		var productAction = component.get("c.productfamilyList");
@@ -156,6 +159,7 @@
         productAction.setCallback(this, function(response){
             console.log(response.getError());
             if(response.getState() === "SUCCESS"){
+                
                 component.set("v.Spinner", false);
                 console.log(response.getReturnValue());
 				component.set("v.listofproductfamily",response.getReturnValue());
@@ -166,10 +170,70 @@
                         component.set("v.searchProductFamilyFilter", '');
                     }
 				}
+
+                
+                
             }else{
                 component.set("v.Spinner", false);
             }     
         });
         $A.enqueueAction(productAction);
 	},
+    next : function(component,event,sObjectList,end,start,pageSize){
+        var Paginationlist = [];
+        var counter = 0;
+        for(var i = end + 1; i < end + pageSize + 1; i++){
+            if(sObjectList.length > i){ 
+                Paginationlist.push(sObjectList[i]);  
+            }
+            counter ++ ;
+        }
+        start = start + counter;
+        end = end + counter;
+        component.set("v.startPage",start);
+        component.set("v.endPage",end);
+        component.set('v.PaginationList', Paginationlist);
+
+        const allActive = Paginationlist.every(function(obj) {
+            return obj.isChecked === true;
+         });
+         if(allActive){
+            component.find("selectAllRFQ").set("v.value", true);
+
+        }else{
+           component.find("selectAllRFQ").set("v.value", false);
+
+        }
+         
+
+      
+    },
+    previous : function(component,event,sObjectList,end,start,pageSize){
+
+        var Paginationlist = [];
+        var counter = 0;
+        for(var i= start-pageSize; i < start ; i++){
+            if(i > -1){
+                Paginationlist.push(sObjectList[i]); 
+                counter ++;
+            }else{
+                start++;
+            }
+        }
+        start = start - counter;
+        end = end - counter;
+        component.set("v.startPage",start);
+        component.set("v.endPage",end);
+        component.set('v.PaginationList', Paginationlist);
+        const allActive = Paginationlist.every(function(obj) {
+            return obj.isChecked === true;
+         });
+         if(allActive){
+            component.find("selectAllRFQ").set("v.value", true);
+
+        }else{
+           component.find("selectAllRFQ").set("v.value", false);
+
+        }
+    },
 })

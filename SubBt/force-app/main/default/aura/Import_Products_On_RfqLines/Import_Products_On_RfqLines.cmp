@@ -4,7 +4,6 @@
     <aura:attribute name="rfqRecordList" type="Product2[]" />
     <aura:attribute name="listOfSelectedRFQIds" type="List" default="[]"/>
     <aura:attribute name="PageNumber" type="integer" default="1" />
-    <aura:attribute name="pageSize" type="integer" default="20" />
     <aura:attribute name="TotalPages" type="integer" default="0" />
     <aura:attribute name="TotalRecords" type="integer" default="0" />
     <aura:attribute name="RecordStart" type="integer" default="0" />
@@ -44,6 +43,17 @@
     <aura:attribute name="rfqproducttypeList" type="List" />
     <aura:attribute name="rfqtradetypeList" type="List" />
     <aura:attribute name="rfqvendorList" type="List" />
+
+    <aura:attribute name="startPage" type="Integer" />
+    <aura:attribute name="endPage" type="Integer"/>
+    <aura:attribute name="pageSize" type="integer" default="20" />
+    <aura:attribute name="PaginationList" type="list"/> 
+    <aura:attribute name="totalRecordsCount" type="Integer"/>
+    <aura:attribute name="currentPage" type="integer" default="1"/>
+
+
+
+
     
     <aura:attribute name="pbList"  type="Pricebook2[]" />
     <lightning:workspaceAPI aura:id="workspace"/>
@@ -179,8 +189,9 @@
                 <thead>
                     <tr class="slds-text-heading--label">
                         <th class="slds-is-sortable" scope="col" width="5px">
-                            <lightning:input type="checkbox" aura:id="headCheckRFQ" checked="false" onchange="{!c.selectAllRfq}"/> 
-                            
+                            <!-- <lightning:input type="checkbox" aura:id="headCheckRFQ" checked="false" onchange="{!c.selectAllRfq}"/>  -->
+                            <ui:inputCheckbox  change="{!c.selectAllRfq}"  aura:id="selectAllRFQ" />
+                        
                         </th>
                         <th scope="col" >
                             <div class="slds-truncate" title="Product Family">
@@ -220,28 +231,29 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <aura:iteration items="{!v.rfqRecordList}" var="item" indexVar="index">
+                    <aura:iteration items="{!v.PaginationList}" var="item" indexVar="index">
                         <tr>
                             <td>
-                                <lightning:input type="checkbox" aura:id="checkRFQ"  checked="false" name="{!item.Id}" onchange="{!c.selectRfq}"/>
+                                <!-- <lightning:input type="checkbox" aura:id="checkRFQ"  checked="false" name="{!item.product.Id}" onchange="{!c.selectRfq}"/> -->
                                 <!-- <lightning:input type="checkbox" name="input1" checked="{!item.isSelected}" id="{!item.Id}" onchange="{!c.unCheckAllRFQ}" /> -->
+                                <ui:inputCheckbox text="{!item.product.Id}"  value="{!item.isChecked}"  change="{!c.selectRfq}"  aura:id="checkid"/>
 
 
                             </td>
                              <td>
-                                <div class="slds-truncate" title="{!item.Family}" >
-                                    {!item.Family}
+                                <div class="slds-truncate" title="{!item.product.Family}" >
+                                    {!item.product.Family}
                                 </div>
                             </td>
                             <td>
-                                <div class="slds-truncate" title="{!item.Name}" style="white-space: pre-wrap;">
-                                    {!item.Name}
+                                <div class="slds-truncate" title="{!item.product.Name}" style="white-space: pre-wrap;">
+                                    {!item.product.Name}
                                 </div>
                             </td>
                           <td>
-                                <aura:if isTrue="{!item.buildertek__Category__r != undefined}">
-                                    <div class="slds-truncate" title="{!item.buildertek__Category__r.Name}" >
-                                        {!item.buildertek__Category__r.Name}
+                                <aura:if isTrue="{!item.product.buildertek__Category__r != undefined}">
+                                    <div class="slds-truncate" title="{!item.product.buildertek__Category__r.Name}" >
+                                        {!item.product.buildertek__Category__r.Name}
                                     </div>
                                     <aura:set attribute="else">
                                         <div class="slds-truncate" title="">
@@ -254,9 +266,9 @@
                             
                             <td>
                                
-                                <aura:if isTrue="{!item.buildertek__Product_Type__r != undefined}">
-                                    <div class="slds-truncate" title="{!item.buildertek__Product_Type__r.Name}" >
-                                        {!item.buildertek__Product_Type__r.Name}
+                                <aura:if isTrue="{!item.product.buildertek__Product_Type__r != undefined}">
+                                    <div class="slds-truncate" title="{!item.product.buildertek__Product_Type__r.Name}" >
+                                        {!item.product.buildertek__Product_Type__r.Name}
                                     </div>
                                     <aura:set attribute="else">
                                         <div class="slds-truncate" title="">
@@ -267,9 +279,9 @@
                                 
                             </td>
                             <td>
-                                <aura:if isTrue="{!item.buildertek__Trade_Type__r != undefined}">
-                                    <div class="slds-truncate" title="{!item.buildertek__Trade_Type__r.Name}" >
-                                        {!item.buildertek__Trade_Type__r.Name}
+                                <aura:if isTrue="{!item.product.buildertek__Trade_Type__r != undefined}">
+                                    <div class="slds-truncate" title="{!item.product.buildertek__Trade_Type__r.Name}" >
+                                        {!item.product.buildertek__Trade_Type__r.Name}
                                     </div>
                                     <aura:set attribute="else">
                                         <div class="slds-truncate" title="" >
@@ -279,14 +291,14 @@
                                 </aura:if>
                             </td> 
                             <td>
-                                <div class="slds-truncate" title="{!item.buildertek__Vendor__r}" >
-                                    {!item.buildertek__Vendor__r.Name}
+                                <div class="slds-truncate" title="{!item.product.buildertek__Vendor__r}" >
+                                    {!item.product.buildertek__Vendor__r.Name}
                                 </div>
                             </td>
                             
                             <td>
-                                <div class="slds-truncate" title="{!item.StockKeepingUnit}" >
-                                    {!item.StockKeepingUnit}
+                                <div class="slds-truncate" title="{!item.product.StockKeepingUnit}" >
+                                    {!item.product.StockKeepingUnit}
                                 </div>
                             </td>
                             
@@ -315,15 +327,11 @@
    
     <!-- <footer> -->
     <div class="slds-modal__footer">
-        <lightning:button disabled="{!v.PageNumber == 1}" variant="brand" aura:id="prevPage" label="Prev"
-                          onclick="{!c.handlePrev}"  class="slds-float_left"/>
-        <lightning:button disabled="{!v.PageNumber >= v.TotalPages}" aura:id="nextPage" variant="brand"
-                          label="Next" onclick="{!c.handleNext}" class="slds-float_left"/>
-        <lightning:button variant="neutral"  label="Cancel"
-                          onclick="{!c.closeModal}" />
+        <lightning:button disabled="{!v.startPage == 0}"  name="previous" variant="brand" aura:id="prevPage" label="Prev" onclick="{!c.navigation}"  class="slds-float_left"/>
+        <lightning:button disabled="{!(v.endPage + 1) >= v.totalRecordsCount}" aura:id="nextPage" variant="brand" name="next"  label="Next" onclick="{!c.navigation}" class="slds-float_left"/>
+        <lightning:button variant="neutral"  label="Cancel"   onclick="{!c.closeModal}" />
         
-        <lightning:button aura:id="nextPage" variant="brand"
-                          label="Add RFQ Lines" onclick="{!c.addToRfqLines}" />
+        <lightning:button aura:id="nextPage" variant="brand" label="Add RFQ Lines" onclick="{!c.addToRfqLines}" />
         
     </div> 
     <!-- </footer> -->

@@ -14,15 +14,22 @@
             var relatedList = window.location.pathname;
             var stringList = relatedList.split("/");
             parentRecordId = stringList[4];
-            if (parentRecordId == 'related') {
+            if (parentRecordId === 'related') {
                 var stringList = relatedList.split("/");
                 parentRecordId = stringList[3];
+                console.log({parentRecordId});
+                component.set("v.parentRecordId", parentRecordId);
             }
 
-            component.set("v.parentRecordId", parentRecordId);
+
             console.log({parentRecordId});
         }
-        helper.fetchpricebooks(component, event, helper);
+        window.setTimeout(
+            $A.getCallback(function () {
+                helper.fetchpricebooks(component, event, helper);
+            }), 2000
+        );
+        // helper.fetchpricebooks(component, event, helper);
         helper.getFields(component, event, helper);
     },
 

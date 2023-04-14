@@ -1,23 +1,23 @@
-public with sharing class DisplayImageController{
-    public String baseURL{ get; set; }
+global with sharing class DisplayImageController{
+    global String baseURL{ get; set; }
     
-    public string documentId{ get; set; }
+    global string documentId{ get; set; }
     
-    public string orgId{ get; set; }
+    global string orgId{ get; set; }
     
-    public decimal height{ get; set; }
+    global decimal height{ get; set; }
     
-    public decimal width{ get; set; }
+    global decimal width{ get; set; }
     
-    public string customLabelValue{ get; set; }
+    global string customLabelValue{ get; set; }
     
-    public List<Document> lstDocument{ get; set; }
+    global List<Document> lstDocument{ get; set; }
     
-    public List<buildertek__ConfirmationPageSiteURL__c> confirmationURL{ get; set; }
+    global List<buildertek__ConfirmationPageSiteURL__c> confirmationURL{ get; set; }
     
-    public String siteUrl{ get; set; }
+    global String siteUrl{ get; set; }
     
-    public DisplayImageController(){
+    global DisplayImageController(){
         baseURL = URL.getSalesforceBaseUrl().toExternalForm();
         orgId = UserInfo.getOrganizationId();
         customLabelValue = System.Label.Company_Logo;

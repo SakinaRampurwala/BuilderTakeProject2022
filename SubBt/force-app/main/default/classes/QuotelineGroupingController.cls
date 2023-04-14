@@ -5,30 +5,30 @@
 */
 
 
-public without sharing class QuotelineGroupingController {
-   // public string relatedToId {get;set;}
-    public string quoteid;
-    public string RollupAllGroupName {get;set;}
-    public list<buildertek__Quote_Item__c> QuoteItem;
-    public list<buildertek__Quote_Line_Group__c> Quotelinegroup ;
-    Public map<id,list<buildertek__Quote_Item__c>> quotegroupingmap;
-    public decimal Totalquotelineamount {get;set;}
-    public list<wrapperClass> wrapperlst {get;set;}
-    public list<buildertek__Quote__c> quotesList{get;set;}
+global without sharing class QuotelineGroupingController {
+   // global string relatedToId {get;set;}
+    global string quoteid;
+    global string RollupAllGroupName {get;set;}
+    global list<buildertek__Quote_Item__c> QuoteItem;
+    global list<buildertek__Quote_Line_Group__c> Quotelinegroup ;
+    global map<id,list<buildertek__Quote_Item__c>> quotegroupingmap;
+    global decimal Totalquotelineamount {get;set;}
+    global list<wrapperClass> wrapperlst {get;set;}
+    global list<buildertek__Quote__c> quotesList{get;set;}
      
    
-    public QuotelineGroupingController(){
+    global QuotelineGroupingController(){
         
     }
-     public void setrelatedToId(string Id){
+     global void setrelatedToId(string Id){
         this.quoteid = Id;
        Quotelinegroupingdata();
     }
-    public string getrelatedToId( ){
+    global string getrelatedToId( ){
         return quoteid;
     }
     
-    public void Quotelinegroupingdata() {
+    global void Quotelinegroupingdata() {
       
          wrapperlst = new list<wrapperClass>();
          Totalquotelineamount = 0.0;
@@ -113,10 +113,10 @@ public without sharing class QuotelineGroupingController {
         }
    }  
     
-     public class wrapperClass {
-        public String groupName { get; set; }
-        public decimal netunitprice { get; set; }
-        public decimal listTotal { get; set; }
+     global class wrapperClass {
+        global String groupName { get; set; }
+        global decimal netunitprice { get; set; }
+        global decimal listTotal { get; set; }
      }
     
     

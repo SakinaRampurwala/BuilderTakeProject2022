@@ -117,153 +117,83 @@
         $A.enqueueAction(action); 
         
     },
-    handleNext: function (component, event, helper) {
+    // handleNext: function (component, event, helper) {
        
   
-        var pageNumber = component.get("v.PageNumber");
-        var pageSize = component.get("v.pageSize");
-         pageNumber++;
-        var productFamilyValue = component.get("v.searchProductFamilyFilter");
-        var productValue = component.get("v.searchProductFilter").Name;
-        var productCategoryValue = component.get("v.searchCategoryFilter");
-        var productTypeValue = component.get("v.searchProductTypeFilter");
-        var tradeValue = component.get("v.searchTradeTypeFilter");
-        var priceBook = component.get("v.searchPriceBookFilter");
-        var vendor = component.get("v.searchVendorFilter");
-        helper.getRfqList(component, event, helper, pageNumber, pageSize, productFamilyValue, tradeValue, productTypeValue, productValue, productCategoryValue, priceBook,vendor);
-         console.log("List of Ids : ",component.get("v.listOfSelectedRFQIds"))
-    },
+    //     var pageNumber = component.get("v.PageNumber");
+    //     var pageSize = component.get("v.pageSize");
+    //      pageNumber++;
+    //     var productFamilyValue = component.get("v.searchProductFamilyFilter");
+    //     var productValue = component.get("v.searchProductFilter").Name;
+    //     var productCategoryValue = component.get("v.searchCategoryFilter");
+    //     var productTypeValue = component.get("v.searchProductTypeFilter");
+    //     var tradeValue = component.get("v.searchTradeTypeFilter");
+    //     var priceBook = component.get("v.searchPriceBookFilter");
+    //     var vendor = component.get("v.searchVendorFilter");
+    //     helper.getRfqList(component, event, helper, pageNumber, pageSize, productFamilyValue, tradeValue, productTypeValue, productValue, productCategoryValue, priceBook,vendor);
+    //      console.log("List of Ids : ",component.get("v.listOfSelectedRFQIds"))
+    // },
     
-    handlePrev: function (component, event, helper) {
-       /* var pageNumber = component.get("v.PageNumber");
-        var pageSize = component.get("v.pageSize");
-        pageNumber--;
-        var productFamilyValue = component.get("v.searchProductFamilyFilter");
-        var productValue = component.get("v.searchProductFilter");
-        var productCategoryValue = component.get("v.searchCategoryFilter");
-        var productTypeValue = component.get("v.searchProductTypeFilter");
-        var tradeValue = component.get("v.searchTradeTypeFilter");
-         var priceBook = component.get("v.searchPriceBookFilter");
-        var vendor = component.get("v.searchVendorFilter");*/
-        
-        var pageNumber = component.get("v.PageNumber");
-        var pageSize = component.get("v.pageSize");
-         pageNumber--;
-        var productFamilyValue = component.get("v.searchProductFamilyFilter");
-        var productValue = component.get("v.searchProductFilter").Name;
-        var productCategoryValue = component.get("v.searchCategoryFilter");
-        var productTypeValue = component.get("v.searchProductTypeFilter");
-        var tradeValue = component.get("v.searchTradeTypeFilter");
-        var priceBook = component.get("v.searchPriceBookFilter");
-        var vendor = component.get("v.searchVendorFilter");
-        helper.getRfqList(component, event, helper, pageNumber, pageSize, productFamilyValue, tradeValue, productTypeValue, productValue, productCategoryValue, priceBook,vendor);
-         console.log("List of Ids : ",component.get("v.listOfSelectedRFQIds"))
+    // handlePrev: function (component, event, helper) { 
+    //     var pageNumber = component.get("v.PageNumber");
+    //     var pageSize = component.get("v.pageSize");
+    //      pageNumber--;
+    //     var productFamilyValue = component.get("v.searchProductFamilyFilter");
+    //     var productValue = component.get("v.searchProductFilter").Name;
+    //     var productCategoryValue = component.get("v.searchCategoryFilter");
+    //     var productTypeValue = component.get("v.searchProductTypeFilter");
+    //     var tradeValue = component.get("v.searchTradeTypeFilter");
+    //     var priceBook = component.get("v.searchPriceBookFilter");
+    //     var vendor = component.get("v.searchVendorFilter");
+    //     helper.getRfqList(component, event, helper, pageNumber, pageSize, productFamilyValue, tradeValue, productTypeValue, productValue, productCategoryValue, priceBook,vendor);
+    //      console.log("List of Ids : ",component.get("v.listOfSelectedRFQIds"))
 
-    },
+    // },
     selectRfq: function (component, event, helper) {
-        var checkbox = event.getSource();
-        var selectedRfqIds = component.get("v.listOfSelectedRFQIds");
-        var getAllId = component.find("checkRFQ");
-      
-        if(checkbox.get("v.checked")){
-            if(selectedRfqIds.indexOf(checkbox.get("v.name")) == -1){
-                selectedRfqIds.push(checkbox.get("v.name"));
-            }
-            if(!Array.isArray(getAllId)) {
-                if(!component.find("headCheckRFQ").get("v.checked")){
-                    component.find("headCheckRFQ").set("v.checked",true);
-                }
-            }else{
-                if(selectedRfqIds.length == getAllId.length){
-                    if(!component.find("headCheckRFQ").get("v.checked")){
-                        component.find("headCheckRFQ").set("v.checked",true);
-                    }
-                }
-            }
-        }else{
-            if(component.find("headCheckRFQ").get("v.checked")){
-                component.find("headCheckRFQ").set("v.checked",false);
-            }
-            if(selectedRfqIds.indexOf(checkbox.get("v.name")) > -1){
-                var index = selectedRfqIds.indexOf(checkbox.get("v.name"));
-                selectedRfqIds.splice(index,1);
-            }
-        }
-        console.log(selectedRfqIds);
-        component.set("v.listOfSelectedRFQIds",selectedRfqIds);
+        console.log('rfq');
+        let PaginationLst= component.get('v.PaginationList');
+
+        const allActive = PaginationLst.every(function(obj) {
+            return obj.isChecked === true;
+         });
+         if(allActive){
+            component.find("selectAllRFQ").set("v.value", true);
+
+         }else{
+            component.find("selectAllRFQ").set("v.value", false);
+
+         }
     },
-    unCheckAllRFQ:function (component, event, helper) {
-    //     let selectedId = event.getSource().get("v.text");
-    //     var rfqList = component.get('v.rfqRecordList');
-    //     let deSelectGroup = new Set()
 
-       console.log(component.get("v.rfqRecordList"));
-
-    //    var tableDataList = component.get("v.rfqRecordList");
-    //    var checkAll = true;
-    //    tableDataList.forEach(element => {
-    //        if (!element.Selected) {
-    //            checkAll = false
-    //        }
-    //    });
-    //    component.find("selectAll").set("v.checked", checkAll);
-
-    },
-    
     selectAllRfq : function (component, event, helper) {
-        var checkStatus = event.getSource().get("v.checked");
-        var rfqRecordList = JSON.parse(JSON.stringify(component.get("v.rfqRecordList")));
-        var getAllId = component.find("checkRFQ");
-        var recordIds = [];
-        if(checkStatus){
-            if(rfqRecordList.length){
-                if (!Array.isArray(getAllId)) {
-                    component.find("checkRFQ").set("v.checked", true);
-                    var Id = component.find("checkRFQ").get("v.name");
-                    if(recordIds.indexOf(Id) == -1){
-                        recordIds.push(Id)
-                    }
-                }else{
-                    for (var i = 0; i < getAllId.length; i++) {
-                        component.find("checkRFQ")[i].set("v.checked", true);
-                        var Id = component.find("checkRFQ")[i].get("v.name");
-                        if(recordIds.indexOf(Id) == -1){
-                            recordIds.push(Id)
-                        }
-                        //rfqRecordList[i].checkValue = "true";
-                    }
-                }
-                component.set("v.listOfSelectedRFQIds",recordIds);
-            }
-        }else{
-            if(rfqRecordList.length){
-                if (!Array.isArray(getAllId)) {
-                    component.find("checkRFQ").set("v.checked", false);
-                    var Id = component.find("checkRFQ").get("v.name");
-                    if(recordIds.indexOf(Id) > -1){
-                        var index = recordIds.indexOf(Id);
-                        recordIds.splice(index,1);
-                    }
-                }else{
-                    for (var i = 0; i < getAllId.length; i++) {
-                        component.find("checkRFQ")[i].set("v.checked", false);
-                        var Id = component.find("checkRFQ")[i].get("v.name");
-                        if(recordIds.indexOf(Id) > -1){
-                            var index = recordIds.indexOf(Id);
-                            recordIds.splice(index,1);
-                        }
-                        //rfqRecordList[i].checkValue = "true";
-                    }
-                }
-                component.set("v.listOfSelectedRFQIds",recordIds);
-            }
+
+        var checkValue = event.getSource().get("v.value");
+        var listOfAllRFQ = component.get("v.rfqRecordList");
+        var PaginationList = component.get("v.PaginationList");
+        let headerIndex=event.getSource().get('v.name');
+
+        if(headerIndex=== component.get('v.currentPage')){
+            console.log('currentPage');
         }
-        console.log(recordIds);
+        console.log({PaginationList});
+
+        PaginationList.forEach(function(element){
+            element.isChecked=checkValue;
+
+        });
+        component.set("v.PaginationList" , PaginationList);
     },
     
     addToRfqLines: function (component, event, helper) {
         var records = component.get("v.rfqRecordList");
-        var productIds = component.get("v.listOfSelectedRFQIds");
+        var productIds=[]
+        records.forEach(function(value){
+            if(value.isChecked == true){
+                console.log(value);
+                productIds.push(value.product.Id);
+            }
+        })
+
         var RfqId = component.get("v.recordId");
         var Spinner = component.get("v.spinner");
         if(productIds.length>0){
@@ -275,22 +205,9 @@
     
     closeModal: function (component, event, helper) {
         component.get("v.onCancel")();
-       // location.reload();
-        //$A.get('e.force:refreshView').fire();
     },
     
     doRfqSearch: function (component, event, helper) {
-        //var value = component.get("v.searchRfqFilter");//event.getSource().get("v.value");
-       /* var pageNumber = component.get("v.PageNumber");
-        var pageSize = component.get("v.pageSize");
-        var productFamilyValue = component.get("v.searchProductFamilyFilter");
-        var productValue = component.get("v.searchProductFilter");
-        var productCategoryValue = component.get("v.searchCategoryFilter");
-        var productTypeValue = component.get("v.searchProductTypeFilter");
-        var tradeValue = component.get("v.searchTradeTypeFilter");
-        var priceBook = component.get("v.searchPriceBookFilter");
-        var vendor = component.get("v.searchVendorFilter");*/
-        
         if(productCategoryValue){
             var categoryAction = component.get(c.showDropDownCategory);
             $A.enqueueAction(categoryAction);
@@ -304,14 +221,10 @@
         var tradeValue = component.get("v.searchTradeTypeFilter");
         var priceBook = component.get("v.searchPriceBookFilter");
         var vendor = component.get("v.searchVendorFilter");
-       // alert(component.get("v.searchPriceBookFilter"));
-       // alert(priceBook);
         helper.getRfqList(component, event, helper, pageNumber, pageSize, productFamilyValue, tradeValue, productTypeValue, productValue, productCategoryValue, priceBook,vendor);
     },
     selectRecordOption : function (component, event, helper) {
         event.preventDefault();
-        //console.log(event.target)
-        //console.log(event.currentTarget)
         event.stopPropagation();
         component.set("v.searchCategoryFilter",event.target.innerText);
         var forOpen = component.find("searchCategoryRes_1");
@@ -321,8 +234,6 @@
     },
     selectRecordOptionforproducttype : function (component, event, helper) {
         event.preventDefault();
-        //console.log(event.target)
-        //console.log(event.currentTarget)
         event.stopPropagation();
         component.set("v.searchProductTypeFilter",event.target.innerText);
         var forOpen = component.find("searchCategoryRes_2");
@@ -332,8 +243,6 @@
     },
     selectRecordOptionfortradetype : function (component, event, helper) {
         event.preventDefault();
-        //console.log(event.target)
-        //console.log(event.currentTarget)
         event.stopPropagation();
         component.set("v.searchTradeTypeFilter",event.target.innerText);
         var forOpen = component.find("searchCategoryRes_3");
@@ -343,8 +252,6 @@
     },
     selectRecordOptionforvendor : function (component, event, helper) {
         event.preventDefault();
-        //console.log(event.target)
-        //console.log(event.currentTarget)
         event.stopPropagation();
         component.set("v.searchVendorFilter",event.target.innerText);
         var forOpen = component.find("searchCategoryRes_4");
@@ -353,9 +260,7 @@
             forOpen.getElement().style.display = 'none';
         }
     },
-    showDropDownCategory : function (component, event, helper) {
-      //  $A.util.addClass(component.find("mySpinner"), "slds-show");
-      
+    showDropDownCategory : function (component, event, helper) {      
       var auraId = event.getSource().getLocalId();
         var auraIdName = auraId.split('_')[0];
         var index = auraId.split('_')[1];
@@ -369,9 +274,6 @@
                
             }
         }
-           /* $A.util.addClass(forOpen, 'slds-is-open');
-            $A.util.removeClass(forOpen, 'slds-is-close');*/
-        // Get Default 5 Records order by createdDate DESC  
         forOpen.getElement().style.display = 'block'
          var getInputkeyWord = '';
          event.stopPropagation();
@@ -379,7 +281,6 @@
     },
     hideDropDownCategory : function (component, event, helper) {
         event.preventDefault();
-      //  $A.util.addClass(component.find("mySpinner"), "slds-show");
         var eve = event.getSource();
         console.log(event.target)
         if(eve.getLocalId() == 'searchCategory_1'){
@@ -422,12 +323,25 @@
                 }), 1000
             );
         }
-        
-      /* if(eve.getLocalId() != 'searchCategoryResOption' && eve.getLocalId() != 'searchCategory_1' && eve.getLocalId() != 'searchCategoryRes'){
-             forOpen.getElement().style.display = 'none';
-       }*/
-        //forOpen.getElement().style.display = 'none'
         var getInputkeyWord = '';
        
+    },
+    navigation: function(component, event, helper) {
+        var sObjectList = component.get("v.rfqRecordList");
+        var end = component.get("v.endPage");
+        var start = component.get("v.startPage");
+        var pageSize = component.get("v.pageSize");
+        var whichBtn = event.getSource().get("v.name");
+        console.log({whichBtn});
+        // check if whichBtn value is 'next' then call 'next' helper method
+        if (whichBtn == 'next') {
+            component.set("v.currentPage", component.get("v.currentPage") + 1);
+            helper.next(component, event, sObjectList, end, start, pageSize);
+        }
+        // check if whichBtn value is 'previous' then call 'previous' helper method
+        else if (whichBtn == 'previous') {
+            component.set("v.currentPage", component.get("v.currentPage") - 1);
+            helper.previous(component, event, sObjectList, end, start, pageSize);
+        }
     },
 })

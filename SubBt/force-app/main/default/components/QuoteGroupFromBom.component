@@ -25,7 +25,7 @@
     
                             <apex:outputPanel rendered="{!if(quoteItem.fieldName != 'Name' , true ,false)}">
                                 <apex:outputPanel rendered="{!if(quoteItem.fieldType == 'currency' , true ,false)}">
-                                    <td style="font-size: 14px; padding: 5px 15px; color:white; text-align: right; border-left: 1px solid #ccc; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);">
+                                    <td style="font-size: 14px; padding: 5px 15px; color:white; text-align: right; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);">
                                         <apex:repeat value="{!group1.totalFieldMap[quoteItem.fieldName]}" var="quoteItemTotal">
                                             {!orgCurr} {!quoteItemTotal}
                                         </apex:repeat> 
@@ -87,7 +87,7 @@
     
                                 <apex:outputPanel rendered="{!if(quoteItem.fieldName != 'Name' , true ,false)}">
                                     <apex:outputPanel rendered="{!if(quoteItem.fieldType == 'currency' , true ,false)}">
-                                        <td style="font-size: 14px; padding: 5px 15px; color:white; text-align: right; border-left: 1px solid #ccc; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);">
+                                        <td style="font-size: 14px; padding: 5px 15px; color:white; text-align: right; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);">
                                             <apex:repeat value="{!group2.totalFieldMap[quoteItem.fieldName]}" var="quoteItemTotal">
                                                 {!orgCurr} {!quoteItemTotal}
                                             </apex:repeat> 
@@ -159,7 +159,7 @@
     
                                     <apex:outputPanel rendered="{!if(quoteItem.fieldName != 'Name' , true ,false)}">
                                         <apex:outputPanel rendered="{!if(quoteItem.fieldType == 'currency' , true ,false)}">
-                                            <td style="font-size: 14px; padding: 5px 15px; color:white; text-align: right; border-left: 1px solid #ccc; border-bottom: 1px solid  #ccc; background-color: rgb(27 82 151);">
+                                            <td style="font-size: 14px; padding: 5px 15px; color:white; text-align: right; border-bottom: 1px solid  #ccc; background-color: rgb(27 82 151);">
                                                 <apex:repeat value="{!group3.totalFieldMap[quoteItem.fieldName]}" var="quoteItemTotal">
                                                     {!orgCurr} {!quoteItemTotal}
                                                 </apex:repeat> 
@@ -245,7 +245,7 @@
     
                                         <apex:outputPanel rendered="{!if(quoteItem.fieldName != 'Name' , true ,false)}">
                                             <apex:outputPanel rendered="{!if(quoteItem.fieldType == 'currency' , true ,false)}">
-                                                <td style="font-size: 14px; padding: 5px 15px; color:white; text-align: right; border-left: 1px solid #ccc; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);">
+                                                <td style="font-size: 14px; padding: 5px 15px; color:white; text-align: right; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);">
                                                     <apex:repeat value="{!group4.totalFieldMap[quoteItem.fieldName]}" var="quoteItemTotal">
                                                         {!orgCurr} {!quoteItemTotal}
                                                     </apex:repeat> 

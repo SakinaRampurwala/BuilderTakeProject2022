@@ -46,7 +46,7 @@
         <!-- Body -->
         <div class="slds-modal__content" id="modal-content-id-1">
             <lightning:recordEditForm aura:id="recordEditForm" objectApiName="buildertek__Billings__c"  onsubmit="{!c.handleSubmit}" density="Comfy">    
-                <lightning:messages /> 
+                <lightning:messages />
                 <div style="height:50vh;overflow-y:scroll">
                     <lightning:layout multipleRows="true">
                         <!-- Display fields -->

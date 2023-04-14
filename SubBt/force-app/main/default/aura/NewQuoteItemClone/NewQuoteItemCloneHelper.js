@@ -820,8 +820,6 @@
                     var diffVal = res[0].UnitPrice - res[0].buildertek__Unit_Cost__c;
                     console.log("Diff Value : " + diffVal)
                     var mark = (diffVal / res[0].buildertek__Unit_Cost__c);
-                    debugger
-                    console.log('what is mark ',mark);
                     //ProductDetails.buildertek__Markup__c = (diffVal/res[0].buildertek__Unit_Cost__c) * 100;
                     if (mark != 'Infinity') {
                         //  ProductDetails.buildertek__Markup__c = (diffVal/res[0].buildertek__Unit_Cost__c).toFixed(2); 
@@ -864,11 +862,12 @@
                 component.set("v.newQuote.buildertek__Unit_Cost__c", ProductDetails.buildertek__Unit_Cost__c );
                 console.log("unitCost----->", JSON.parse(JSON.stringify(ProductDetails)));
             }
-            console.log("Grouping-->", res[0].Product2.buildertek__Quote_Group__c )
-            if(res[0].Product2.buildertek__Quote_Group__c != undefined && res[0].Product2.buildertek__Quote_Group__c != null){
-                console.log("Inside Grouping-->", res[0].Product2.buildertek__Quote_Group__c )
-                component.set("v.newQuote.buildertek__Grouping__c", res[0].Product2.buildertek__Quote_Group__c);
-                component.set("v.newQuote.buildertek__Grouping__r.Name", res[0].Product2.buildertek__Quote_Group__r.Name);
+            if (res.length > 0) {
+                if(res[0].Product2.buildertek__Quote_Group__c != undefined && res[0].Product2.buildertek__Quote_Group__c != null){
+                    console.log("Inside Grouping-->", res[0].Product2.buildertek__Quote_Group__c )
+                    component.set("v.newQuote.buildertek__Grouping__c", res[0].Product2.buildertek__Quote_Group__c);
+                    component.set("v.newQuote.buildertek__Grouping__r.Name", res[0].Product2.buildertek__Quote_Group__r.Name);
+                }
             }
         });
         $A.enqueueAction(action);
