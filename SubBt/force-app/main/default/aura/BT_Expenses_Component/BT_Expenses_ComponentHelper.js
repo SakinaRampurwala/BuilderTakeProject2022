@@ -127,6 +127,15 @@
         if(component.get("v.selectedBudgetId")){
             component.set("v.Spinner", true);
             var expenses = component.get("v.selectedExpenses");
+            console.log('exp length-->',expenses.length);
+
+            var selectedBudget = component.get("v.selectedBudgetId");
+            component.set("v.selectedBudgetName", component.get("v.budgetsOptions").find(function(budget){
+                return budget.Id == selectedBudget;
+            }).Name);
+            var budgetvalue = component.get("v.selectedBudgetName");
+            console.log('selectedBudgetName => '+component.get("v.selectedBudgetName"));
+
             var saveExp = component.get("c.saveExp");
             saveExp.setParams({
                 "expenses": expenses
@@ -138,7 +147,7 @@
                     var toastEvent = $A.get("e.force:showToast");
                     toastEvent.setParams({
                         title: 'Success',
-                        message: 'Expenses are updated successfully',
+                        message: expenses.length+' Lines have been created for Budget '+budgetvalue,
                         duration: ' 5000',
                         key: 'info_alt',
                         type: 'success',
@@ -326,7 +335,16 @@
         if(component.get("v.selectedBudgetId")){
             component.set("v.Spinner", true);
             var TimeCard = component.get("v.selectedTimeCards");
+            console.log('TimeCard-->>',TimeCard.length);
             var action = component.get("c.saveTC");
+
+            var selectedBudget = component.get("v.selectedBudgetId");
+            component.set("v.selectedBudgetName", component.get("v.budgetsOptions").find(function(budget){
+                return budget.Id == selectedBudget;
+            }).Name);
+            var budgetvalue = component.get("v.selectedBudgetName");
+            console.log('selectedBudgetName => '+component.get("v.selectedBudgetName"));
+
             action.setParams({
                 "TimeCard": TimeCard
             });
@@ -336,7 +354,7 @@
                     var toastEvent = $A.get("e.force:showToast");
                     toastEvent.setParams({
                         title: 'Success',
-                        message: 'Time Cards have been saved.',
+                        message: TimeCard.length+' Lines have been created for Budget '+budgetvalue,
                         duration: ' 2000',
                         key: 'info_alt',
                         type: 'success',
@@ -466,6 +484,14 @@
         if(component.get("v.selectedBudgetId")){
             component.set("v.Spinner", true);
             var Invoices = component.get("v.selectedInvoices");
+
+            var selectedBudget = component.get("v.selectedBudgetId");
+            component.set("v.selectedBudgetName", component.get("v.budgetsOptions").find(function(budget){
+                return budget.Id == selectedBudget;
+            }).Name);
+            var budgetvalue = component.get("v.selectedBudgetName");
+            console.log('selectedBudgetName => '+component.get("v.selectedBudgetName"));
+
             var action = component.get("c.saveInv");
             action.setParams({
                 "Invoices": Invoices
@@ -476,7 +502,7 @@
                     var toastEvent = $A.get("e.force:showToast");
                     toastEvent.setParams({
                         title: 'Success',
-                        message: 'Invoices have been saved.',
+                        message: Invoices.length+' Lines have been created for Budget '+budgetvalue,
                         duration: ' 2000',
                         key: 'info_alt',
                         type: 'success',

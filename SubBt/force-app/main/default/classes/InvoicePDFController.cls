@@ -137,7 +137,7 @@ public without sharing class InvoicePDFController{
         email.setWhatId(recordId);
         email.setTargetObjectId(con.Id);
        // email.setToAddresses(new List<String>{'noreplay@buildertek.com'});
-        email.setToAddresses(new List<String>{'pavan.pinnamaraju@diligentforcelabs.com'});
+        email.setToAddresses(new List<String>{'info@buildertek.com'});
         msgList.add(email);
         SavePoint sp = Database.setSavePoint();
         Messaging.SendEmailResult[] r = Messaging.sendEmail(new Messaging.SingleEmailMessage[]{email});

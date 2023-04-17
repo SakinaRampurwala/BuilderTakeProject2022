@@ -437,7 +437,7 @@
             if (allow == 'Numbers') { AllowableCharacters = '1234567890'; }
             if (allow == 'NameCharacters') { AllowableCharacters = ' ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-.\''; }
             if (allow == 'NameCharactersAndNumbers') { AllowableCharacters = '1234567890 ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-\''; }
-            if (allow == 'Currency') { AllowableCharacters = '1234567890.'; }
+            if (allow == 'Currency') { AllowableCharacters = '1234567890.,'; }
 
             var k = document.all ? parseInt(e.keyCode) : parseInt(e.which);
             if (k != 13 && k != 8 && k != 0) {

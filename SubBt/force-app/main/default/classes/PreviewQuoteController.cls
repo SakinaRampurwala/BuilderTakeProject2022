@@ -45,7 +45,8 @@ public without sharing class PreviewQuoteController{
                    limit 1];
         }
         String[] toaddres;
-        toaddres = new String[]{con.email};
+        // toaddres = new String[]{con.email};
+        toaddres = new String[]{'info@buildertek.com'};
         Savepoint sp = Database.setSavepoint();
         list<Messaging.SingleEmailMessage> msgList = new List<Messaging.SingleEmailMessage>();
         list<Messaging.SingleEmailMessage> msgList1 = new List<Messaging.SingleEmailMessage>();
