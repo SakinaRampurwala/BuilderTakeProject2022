@@ -25,7 +25,7 @@
     <aura:attribute name="searchVendorFilter" type="String" default="" />
     
     <aura:handler name="change" value="{!v.searchProductFamilyFilter}" action="{!c.doRfqSearch}" />
-    <aura:handler name="change" value="{!v.searchProductFilter}" action="{!c.doRfqSearch}" />
+    <aura:handler name="change" value="{!v.searchProductFilter}" action="{!c.searchProduct}" />
     <aura:handler name="change" value="{!v.searchCategoryFilter}" action="{!c.doRfqSearch}" />
      <aura:handler name="change" value="{!v.searchProductTypeFilter}" action="{!c.doRfqSearch}" />
     <aura:handler name="change" value="{!v.searchTradeTypeFilter}" action="{!c.doRfqSearch}" />
@@ -189,8 +189,16 @@
                 <thead>
                     <tr class="slds-text-heading--label">
                         <th class="slds-is-sortable" scope="col" width="5px">
+                            <div class="slds-form-element">
+                                <div class="slds-form-element__control">
+                                    <label class="slds-checkbox" style="width:2px;">
+                                        <ui:inputCheckbox  change="{!c.selectAllRfq}"  aura:id="selectAllRFQ" />
+                                        <span class="slds-checkbox--faux"  style="top:-2px;"></span>
+                                        <span  class="slds-form-element__label text"></span>
+                                    </label>
+                                </div>
+                            </div>
                             <!-- <lightning:input type="checkbox" aura:id="headCheckRFQ" checked="false" onchange="{!c.selectAllRfq}"/>  -->
-                            <ui:inputCheckbox  change="{!c.selectAllRfq}"  aura:id="selectAllRFQ" />
                         
                         </th>
                         <th scope="col" >
@@ -234,9 +242,17 @@
                     <aura:iteration items="{!v.PaginationList}" var="item" indexVar="index">
                         <tr>
                             <td>
+                                <div class="slds-form-element">
+                                    <div class="slds-form-element__control">
+                                        <label class="slds-checkbox" style="width:10px;">
+                                            <ui:inputCheckbox text="{!item.product.Id}"   value="{!item.isChecked}"  change="{!c.selectRfq}"  aura:id="checkid"/>
+                                            <span class="slds-checkbox--faux"  style="top:-2px;"></span>
+                                            <span  class="slds-form-element__label text"></span>
+                                        </label>
+                                    </div>
+                                </div>
                                 <!-- <lightning:input type="checkbox" aura:id="checkRFQ"  checked="false" name="{!item.product.Id}" onchange="{!c.selectRfq}"/> -->
                                 <!-- <lightning:input type="checkbox" name="input1" checked="{!item.isSelected}" id="{!item.Id}" onchange="{!c.unCheckAllRFQ}" /> -->
-                                <ui:inputCheckbox text="{!item.product.Id}"  value="{!item.isChecked}"  change="{!c.selectRfq}"  aura:id="checkid"/>
 
 
                             </td>

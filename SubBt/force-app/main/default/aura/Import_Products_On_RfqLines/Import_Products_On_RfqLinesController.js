@@ -344,4 +344,10 @@
             helper.previous(component, event, sObjectList, end, start, pageSize);
         }
     },
+    searchFamily:function(component, event, helper) {
+       helper.searchFamilyHelper(component, event, helper);
+
+
+    },
+    // searchProduct
 })

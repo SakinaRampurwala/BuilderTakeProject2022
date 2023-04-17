@@ -148,8 +148,11 @@
         $A.enqueueAction(action);
     },
     changeEventHelper: function (component, event, helper) {
+
         console.log('changeEventHelper');
         component.set("v.Spinner", true);
+        component.find("selectAllRFQ").set("v.value", false);
+
 
 		var productAction = component.get("c.productfamilyList");
         productAction.setParams({
@@ -204,7 +207,6 @@
            component.find("selectAllRFQ").set("v.value", false);
 
         }
-         
 
       
     },
@@ -235,5 +237,34 @@
            component.find("selectAllRFQ").set("v.value", false);
 
         }
+    },
+    searchFamilyHelper:function(component, event, helper) {
+        var allRecordList= component.get('v.rfqRecordList');
+        var paginationList=component.get('v.PaginationList');
+        var updatedList=[];
+        console.log(component.get('v.searchProductFamilyFilter'));
+        var productFamily=component.get('v.searchProductFamilyFilter');
+        allRecordList.forEach(function(value){
+            if(productFamily!== undefined && productFamily!== ''){
+                console.log('go there go');
+
+                if(value.product.Family === component.get('v.searchProductFamilyFilter')){
+                    updatedList.push(value);
+                }
+            }else{
+                console.log('go here');
+                updatedList=allRecordList;
+            }
+           
+
+        });
+        console.log({allRecordList});
+        console.log({updatedList});
+        component.set('v.PaginationList' ,updatedList);
+
+        console.log(component.get('v.PaginationList').length);
+
+
+
     },
 })
