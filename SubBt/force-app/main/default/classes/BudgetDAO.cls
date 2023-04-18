@@ -2429,7 +2429,7 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
                 List<buildertek__Budget_Item__c> budgetItemList = new List<buildertek__Budget_Item__c>();
                 List<multipleBudgetLinesClass> items = (List<multipleBudgetLinesClass>)JSON.deserialize(updatedRecords, List<multipleBudgetLinesClass>.class);
                 if(items.Size()>0){
-               // system.debug(items );
+               system.debug('items to check '+items);
                 List<buildertek__Budget_Line_Group__c> budgetGroup = [select Id, Name
                                                                             from buildertek__Budget_Line_Group__c
                                                                             where Name = 'No Grouping'];
@@ -2439,93 +2439,68 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
                                             FROM product2]);
  
                     for(multipleBudgetLinesClass listItem : items){
-                  //  system.debug(listItem);
-                  //  system.debug(listItem.pricebookName);
-                   // system.debug(listItem.UOMvalues);
-                   // system.debug(listItem.Vendor);
-                   // system.debug(listItem.product);
-                   // system.debug(listItem.productfamily);
-                       // system.debug(listItem.newBudgetLine);
-                         buildertek__Budget_Item__c budgetRec = new buildertek__Budget_Item__c();
-                    budgetRec  = listItem.newBudgetLine;
-                  //  system.debug('Budget Group ------------> ' + budgetRec.buildertek__Budget_Line_Group__c);
-                    
+                        buildertek__Budget_Item__c budgetRec = new buildertek__Budget_Item__c();
+                        budgetRec  = listItem.newBudgetLine;
                 
-                    if (budgetRec.buildertek__Group__c == null){
-                        
-                        if (budgetGroup.size() > 0){
-                            budgetRec.buildertek__Group__c = budgetGroup[0].Id;
-                        } else{
-                            if(nogroupId == null){
-                                buildertek__Budget_Line_Group__c budGroup = new buildertek__Budget_Line_Group__c();
-                                budGroup.Name = 'No Grouping';
-                                insert budGroup;
-                                nogroupId = budGroup.Id;
-                            }else{
-                                budgetRec.buildertek__Group__c = nogroupId ;
+                        if (budgetRec.buildertek__Group__c == null){
+                            
+                            if (budgetGroup.size() > 0){
+                                budgetRec.buildertek__Group__c = budgetGroup[0].Id;
+                            } else{
+                                if(nogroupId == null){
+                                    buildertek__Budget_Line_Group__c budGroup = new buildertek__Budget_Line_Group__c();
+                                    budGroup.Name = 'No Grouping';
+                                    insert budGroup;
+                                    nogroupId = budGroup.Id;
+                                }else{
+                                    budgetRec.buildertek__Group__c = nogroupId ;
+                                }
                             }
                         }
-                    }
+                        
+                        if (budgetRec.buildertek__Product__c != null){
+                                                budgetRec.buildertek__Cost_Code__c = prdctrec.get(budgetRec.buildertek__Product__c).buildertek__Cost_Code__c;
+                        }
+                        
+                        buildertek__Budget_Item__c BudgetLineToInsert = new buildertek__Budget_Item__c();
                     
-                    if (budgetRec.buildertek__Product__c != null){
-                                              budgetRec.buildertek__Cost_Code__c = prdctrec.get(budgetRec.buildertek__Product__c).buildertek__Cost_Code__c;
-                    }
-                    buildertek__Budget_Item__c BudgetLineToInsert = new buildertek__Budget_Item__c();
+                        BudgetLineToInsert.buildertek__Product__c = budgetRec.buildertek__Product__c;
+                        //BudgetLineToInsert.buildertek__Product__c = productId;
+                        System.debug('budgetRec.Name '+budgetRec.Name);
+                        if (budgetRec.Name.length() > 79){
+                            BudgetLineToInsert.Name = budgetRec.Name.left(78);
+                            BudgetLineToInsert.buildertek__Description__c = budgetRec.Name;
+                        } else{
+                            BudgetLineToInsert.Name = budgetRec.Name;
+                        }
+                        BudgetLineToInsert.buildertek__Budget__c = recordId;
+                        BudgetLineToInsert.buildertek__Budget_Line_Group__c = budgetRec.buildertek__Budget_Line_Group__c;
+                        BudgetLineToInsert.buildertek__UOM__c = listItem.UOMvalues;
                     
-                  //  System.debug('p------>---Budget Line Items recordId --> ' + budgetRec.buildertek__Product__c);
-                    //System.debug('---Budget Line Items recordId --> '+recordId);
-                    BudgetLineToInsert.buildertek__Product__c = budgetRec.buildertek__Product__c;
-                    //BudgetLineToInsert.buildertek__Product__c = productId;
-                    if (budgetRec.Name.length() > 79){
-                        BudgetLineToInsert.Name = budgetRec.Name.left(78);
-                        BudgetLineToInsert.buildertek__Description__c = budgetRec.Name;
-                    } else{
-                        BudgetLineToInsert.Name = budgetRec.Name;
-                    }
-                    BudgetLineToInsert.buildertek__Budget__c = recordId;
-                    BudgetLineToInsert.buildertek__Budget_Line_Group__c = budgetRec.buildertek__Budget_Line_Group__c;
-                    BudgetLineToInsert.buildertek__UOM__c = listItem.UOMvalues;
-                   if(listItem.Vendor != null){
-                       BudgetLineToInsert.buildertek__Contractor__c = listItem.Vendor.Id;
-                   }
+                        if(listItem.Vendor != null){
+                            BudgetLineToInsert.buildertek__Contractor__c = listItem.Vendor.Id;
+                        }
                     
-                    // BudgetLineToInsert.buildertek__Trade_Type__c = tradeType;
-                    BudgetLineToInsert.buildertek__Unit_Price__c = budgetRec.buildertek__Unit_Price__c;
-                    BudgetLineToInsert.buildertek__Sales_Price__c = budgetRec.buildertek__Sales_Price__c;
-                    BudgetLineToInsert.buildertek__Quantity__c = budgetRec.buildertek__Quantity__c;
-                    //BudgetLineToInsert.buildertek__Budget__c = budgetRec.buildertek__Budget__c;
-                    BudgetLineToInsert.buildertek__Cost_Code__c = budgetRec.buildertek__Cost_Code__c;
-                    BudgetLineToInsert.buildertek__Group__c = budgetRec.buildertek__Group__c;
-                    BudgetLineToInsert.buildertek__Sub_Grouping__c = budgetRec.buildertek__Sub_Grouping__c;
-                    BudgetLineToInsert.buildertek__Discount__c = budgetRec.buildertek__Discount__c;
-                    BudgetLineToInsert.buildertek__Notes__c=budgetRec.buildertek__Notes__c;
-                     System.debug('---Budget Line Items recordId 321--> ' + BudgetLineToInsert);
-                     budgetItemList.add(BudgetLineToInsert);
+                        // BudgetLineToInsert.buildertek__Trade_Type__c = tradeType;
+                        BudgetLineToInsert.buildertek__Unit_Price__c = budgetRec.buildertek__Unit_Price__c;
+                        BudgetLineToInsert.buildertek__Sales_Price__c = budgetRec.buildertek__Sales_Price__c;
+                        BudgetLineToInsert.buildertek__Quantity__c = budgetRec.buildertek__Quantity__c;
+                        //BudgetLineToInsert.buildertek__Budget__c = budgetRec.buildertek__Budget__c;
+                        BudgetLineToInsert.buildertek__Cost_Code__c = budgetRec.buildertek__Cost_Code__c;
+                        BudgetLineToInsert.buildertek__Group__c = budgetRec.buildertek__Group__c;
+                        BudgetLineToInsert.buildertek__Sub_Grouping__c = budgetRec.buildertek__Sub_Grouping__c;
+                        BudgetLineToInsert.buildertek__Discount__c = budgetRec.buildertek__Discount__c;
+                        BudgetLineToInsert.buildertek__Notes__c=budgetRec.buildertek__Notes__c;
+                        System.debug('---Budget Line Items recordId 321--> ' + BudgetLineToInsert);
+                        budgetItemList.add(BudgetLineToInsert);
                      
                     }
                    
                  //  system.debug('budgetItemList --->'+ budgetItemList);
                    if(budgetItemList.Size()>0){
                        insert budgetItemList;
-                   }
-                    
-
+                   }  
                 }
-               // system.debug('items'+items);
-               /* for (buildertek__Budget_Item__c item : items){
-                    if(item.Id == null){
-                        item.buildertek__Budget__c= recordId;
-                    }
-                }
-                if (items.size() > 0){
-                    upsert items;
-                }
-                List<buildertek__Budget_Item__c> deleteList = [SELECT Id from buildertek__Budget_Item__c WHERE Id IN: deleteLineitems];
-               // system.debug('delete==>'+deleteList);
-                if(deleteList.Size()>0){
-                    delete deleteList;
-                }
-                return getRecords(recordId, fieldSetName, pageNumber, pageSize);*/
             }
         } catch (Exception e){
             System.debug('Error::' + e.getMessage());

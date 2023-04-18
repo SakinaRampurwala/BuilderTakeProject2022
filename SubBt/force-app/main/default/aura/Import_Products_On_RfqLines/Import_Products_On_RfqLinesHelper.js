@@ -249,121 +249,168 @@
 
         }
     },
-    
-
-    searchHelper:function(component, event, helper, selectedValue , filterName) {
-        console.log({filterName});
-        var allRecordList= component.get('v.rfqRecordList');
-        var paginationList=component.get('v.PaginationList');
-        var updatedList=[];
-        var productFamily=component.get('v.searchProductFamilyFilter');
-        var product=component.get('v.searchProductFilter');
-        var productCategory=component.get('v.searchCategoryFilter');
-        var productType=component.get('v.searchProductTypeFilter');
-        var tradeType=component.get('v.searchTradeTypeFilter');
-        var vendor=component.get('v.searchVendorFilter');
-
-        console.log({productFamily});
-        console.log({product});
-        console.log({productCategory});
-        console.log({productType});
-        console.log({tradeType});
-        console.log({vendor});
-
-
-
-
-
-        var familyFilter=component.get('v.searchProductFamilyFilter');
+    applyFilters : function(component, event, helper) {
+        var filters = {
+            productFamily: component.get('v.productFamily'),
+            productCategory: component.get('v.productCategory'),
+            productType: component.get('v.productType'),
+            tradeType: component.get('v.tradeType'),
+            vendor: component.get('v.vendor')
+        };
         
-        // var productFamily=selectedValue;
-        allRecordList.forEach(function(value){
-            if(selectedValue!== undefined && selectedValue!== ''){
+        var updatedList = helper.searchHelper(component.get('v.rfqRecordList'), filters);
+        component.set('v.filteredList', updatedList);
+    },
+
+    searchHelper : function(originalList, filters) {
+        var updatedList = [];
+        
+        component.get('v.rfqRecordList').forEach(function(value) {
+            if(helper.passesFilters(value, filters)) {
+                updatedList.push(value);
+            }
+        });
+        console.log({updatedList});
+        
+        return updatedList;
+    },
+    passesFilters : function(value, filters) {
+        if(filters.productFamily && value.product.Family !== filters.productFamily) {
+            return false;
+        }
+        
+        if(filters.productCategory && (!value.product.buildertek__Category__c || value.product.buildertek__Category__r.Name !== filters.productCategory)) {
+            return false;
+        }
+        
+        if(filters.productType && (!value.product.buildertek__Product_Type__c || value.product.buildertek__Product_Type__r.Name !== filters.productType)) {
+            return false;
+        }
+        
+        if(filters.tradeType && (!value.product.buildertek__Trade_Type__c || value.product.buildertek__Trade_Type__r.Name !== filters.tradeType)) {
+            return false;
+        }
+        
+        if(filters.vendor && (!value.product.buildertek__Vendor__c || value.product.buildertek__Vendor__r.Name !== filters.vendor)) {
+            return false;
+        }
+        
+        return true;
+    },
+
+    // searchHelper:function(component, event, helper, selectedValue , filterName) {
+    //     console.log({filterName});
+    //     var allRecordList= component.get('v.rfqRecordList');
+    //     var paginationList=component.get('v.PaginationList');
+    //     var updatedList=[];
+    //     var productFamily=component.get('v.searchProductFamilyFilter');
+    //     var product=component.get('v.searchProductFilter');
+    //     var productCategory=component.get('v.searchCategoryFilter');
+    //     var productType=component.get('v.searchProductTypeFilter');
+    //     var tradeType=component.get('v.searchTradeTypeFilter');
+    //     var vendor=component.get('v.searchVendorFilter');
+
+    //     console.log({productFamily});
+    //     console.log({product});
+    //     console.log({productCategory});
+    //     console.log({productType});
+    //     console.log({tradeType});
+    //     console.log({vendor});
+
+
+
+
+
+    //     var familyFilter=component.get('v.searchProductFamilyFilter');
+        
+    //     // var productFamily=selectedValue;
+    //     allRecordList.forEach(function(value){
+    //         if(selectedValue!== undefined && selectedValue!== ''){
                 
-                // if(productFamily!='' && productFamily!= undefined && product== '' && productCategory == '' && productType =='' &&  tradeType== '' && vendor==''){
-                //     if(value.product.Family === productFamily){
-                //                 updatedList.push(value);        
-                //     }
-                // }else if(productFamily!='' && productFamily!= undefined && product== '' && productCategory != '' && productType =='' &&  tradeType== '' && vendor==''){
-                //     if(value.product.Family === productFamily &&  value.product.buildertek__Category__c!= undefined && value.product.buildertek__Category__r.Name ===productCategory){
-                //             updatedList.push(value);        
-                //     }
-                // }else if(productFamily!='' && productFamily!= undefined && product== '' && productCategory != '' && productType !='' &&  tradeType== '' && vendor==''){
-                //     if(value.product.Family === productFamily &&  value.product.buildertek__Category__c!= undefined && value.product.buildertek__Category__r.Name ===productCategory &&  value.product.buildertek__Product_Type__c!= undefined && value.product.buildertek__Product_Type__r.Name ===productType){
-                //         updatedList.push(value);        
-                //     }
-                // }else if(productFamily!='' && productFamily!= undefined && product== '' && productCategory != '' && productType !='' &&  tradeType!= '' && vendor==''){
-                //     if(value.product.Family === productFamily &&  value.product.buildertek__Category__c!= undefined && value.product.buildertek__Category__r.Name ===productCategory &&  value.product.buildertek__Product_Type__c!= undefined && value.product.buildertek__Product_Type__r.Name ===productType &&  value.product.buildertek__Trade_Type__c!= undefined && value.product.buildertek__Trade_Type__r.Name ===tradeType){
-                //         updatedList.push(value);        
-                //     }
-                // }else if(productFamily!='' && productFamily!= undefined && product== '' && productCategory != '' && productType !='' &&  tradeType!= '' && vendor!=''){
-                //     if(value.product.Family === productFamily &&  value.product.buildertek__Category__c!= undefined && value.product.buildertek__Category__r.Name ===productCategory &&  value.product.buildertek__Product_Type__c!= undefined && value.product.buildertek__Product_Type__r.Name ===productType &&  value.product.buildertek__Trade_Type__c!= undefined && value.product.buildertek__Trade_Type__r.Name ===tradeType &&  value.product.buildertek__Vendor__c!= undefined && value.product.buildertek__Vendor__r.Name ===vendor){
-                //         updatedList.push(value);        
-                //     }
-                // }else if(productFamily=='' && product== '' && productCategory != '' && productType =='' &&  tradeType== '' && vendor==''){
-                //     if(value.product.buildertek__Category__c!= undefined && value.product.buildertek__Category__r.Name ===productCategory){
-                //         updatedList.push(value);        
-                //     }
-                // }else if(productFamily=='' && product== '' && productCategory == '' && productType !='' &&  tradeType == '' && vendor==''){
-                //     if(value.product.buildertek__Product_Type__c!= undefined && value.product.buildertek__Product_Type__r.Name ===productType){
-                //         updatedList.push(value);        
-                //     }
-                // }else if(productFamily=='' && product== '' && productCategory == '' && productType =='' &&  tradeType != '' && vendor==''){
-                //     if(value.product.buildertek__Trade_Type__c!= undefined && value.product.buildertek__Trade_Type__r.Name ===tradeType){
-                //         updatedList.push(value);        
-                //     }
-                // }else if(productFamily=='' && product== '' && productCategory == '' && productType =='' &&  tradeType == '' && vendor !=''){
-                //     if(value.product.buildertek__Vendor__c!= undefined && value.product.buildertek__Vendor__r.Name ===vendor){
-                //         updatedList.push(value);        
-                //     }
-                // }
+    //             // if(productFamily!='' && productFamily!= undefined && product== '' && productCategory == '' && productType =='' &&  tradeType== '' && vendor==''){
+    //             //     if(value.product.Family === productFamily){
+    //             //                 updatedList.push(value);        
+    //             //     }
+    //             // }else if(productFamily!='' && productFamily!= undefined && product== '' && productCategory != '' && productType =='' &&  tradeType== '' && vendor==''){
+    //             //     if(value.product.Family === productFamily &&  value.product.buildertek__Category__c!= undefined && value.product.buildertek__Category__r.Name ===productCategory){
+    //             //             updatedList.push(value);        
+    //             //     }
+    //             // }else if(productFamily!='' && productFamily!= undefined && product== '' && productCategory != '' && productType !='' &&  tradeType== '' && vendor==''){
+    //             //     if(value.product.Family === productFamily &&  value.product.buildertek__Category__c!= undefined && value.product.buildertek__Category__r.Name ===productCategory &&  value.product.buildertek__Product_Type__c!= undefined && value.product.buildertek__Product_Type__r.Name ===productType){
+    //             //         updatedList.push(value);        
+    //             //     }
+    //             // }else if(productFamily!='' && productFamily!= undefined && product== '' && productCategory != '' && productType !='' &&  tradeType!= '' && vendor==''){
+    //             //     if(value.product.Family === productFamily &&  value.product.buildertek__Category__c!= undefined && value.product.buildertek__Category__r.Name ===productCategory &&  value.product.buildertek__Product_Type__c!= undefined && value.product.buildertek__Product_Type__r.Name ===productType &&  value.product.buildertek__Trade_Type__c!= undefined && value.product.buildertek__Trade_Type__r.Name ===tradeType){
+    //             //         updatedList.push(value);        
+    //             //     }
+    //             // }else if(productFamily!='' && productFamily!= undefined && product== '' && productCategory != '' && productType !='' &&  tradeType!= '' && vendor!=''){
+    //             //     if(value.product.Family === productFamily &&  value.product.buildertek__Category__c!= undefined && value.product.buildertek__Category__r.Name ===productCategory &&  value.product.buildertek__Product_Type__c!= undefined && value.product.buildertek__Product_Type__r.Name ===productType &&  value.product.buildertek__Trade_Type__c!= undefined && value.product.buildertek__Trade_Type__r.Name ===tradeType &&  value.product.buildertek__Vendor__c!= undefined && value.product.buildertek__Vendor__r.Name ===vendor){
+    //             //         updatedList.push(value);        
+    //             //     }
+    //             // }else if(productFamily=='' && product== '' && productCategory != '' && productType =='' &&  tradeType== '' && vendor==''){
+    //             //     if(value.product.buildertek__Category__c!= undefined && value.product.buildertek__Category__r.Name ===productCategory){
+    //             //         updatedList.push(value);        
+    //             //     }
+    //             // }else if(productFamily=='' && product== '' && productCategory == '' && productType !='' &&  tradeType == '' && vendor==''){
+    //             //     if(value.product.buildertek__Product_Type__c!= undefined && value.product.buildertek__Product_Type__r.Name ===productType){
+    //             //         updatedList.push(value);        
+    //             //     }
+    //             // }else if(productFamily=='' && product== '' && productCategory == '' && productType =='' &&  tradeType != '' && vendor==''){
+    //             //     if(value.product.buildertek__Trade_Type__c!= undefined && value.product.buildertek__Trade_Type__r.Name ===tradeType){
+    //             //         updatedList.push(value);        
+    //             //     }
+    //             // }else if(productFamily=='' && product== '' && productCategory == '' && productType =='' &&  tradeType == '' && vendor !=''){
+    //             //     if(value.product.buildertek__Vendor__c!= undefined && value.product.buildertek__Vendor__r.Name ===vendor){
+    //             //         updatedList.push(value);        
+    //             //     }
+    //             // }
 
 
-                // if(filterName === 'Family'){
-                //     if(value.product.Family === component.get('v.searchProductFamilyFilter')){
-                //         updatedList.push(value);
-                //         // familyList.push(value);
+    //             // if(filterName === 'Family'){
+    //             //     if(value.product.Family === component.get('v.searchProductFamilyFilter')){
+    //             //         updatedList.push(value);
+    //             //         // familyList.push(value);
 
-                //     }
-                // }
-                // if(filterName === 'Category'){
-                //     if(value.product.Family!= undefined && value.product.Family === component.get('v.searchProductFamilyFilter') 
-                //         && value.product.buildertek__Category__c!= undefined && value.product.buildertek__Category__r.Name === component.get('v.searchCategoryFilter')){
-                //         updatedList.push(value);
+    //             //     }
+    //             // }
+    //             // if(filterName === 'Category'){
+    //             //     if(value.product.Family!= undefined && value.product.Family === component.get('v.searchProductFamilyFilter') 
+    //             //         && value.product.buildertek__Category__c!= undefined && value.product.buildertek__Category__r.Name === component.get('v.searchCategoryFilter')){
+    //             //         updatedList.push(value);
 
-                //     }
+    //             //     }
 
-                // }
+    //             // }
               
                 
-            }else{
-                updatedList=allRecordList;
-            }
+    //         }else{
+    //             updatedList=allRecordList;
+    //         }
            
 
-        });
-        console.log({allRecordList});
-        console.log({updatedList});
+    //     });
+    //     console.log({allRecordList});
+    //     console.log({updatedList});
 
-        updatedList.filter(function(value){
+    //     updatedList.filter(function(value){
 
-        });
+    //     });
 
-        component.set('v.PaginationList' ,updatedList);
+    //     component.set('v.PaginationList' ,updatedList);
 
-        console.log(component.get('v.PaginationList').length);
+    //     console.log(component.get('v.PaginationList').length);
 
-        const allActive = updatedList.every(function(obj) {
-            return obj.isChecked === true;
-         });
-         if(allActive){
-            component.find("selectAllRFQ").set("v.value", true);
+    //     const allActive = updatedList.every(function(obj) {
+    //         return obj.isChecked === true;
+    //      });
+    //      if(allActive){
+    //         component.find("selectAllRFQ").set("v.value", true);
 
-        }else{
-           component.find("selectAllRFQ").set("v.value", false);
+    //     }else{
+    //        component.find("selectAllRFQ").set("v.value", false);
 
-        }
+    //     }
 
         
-    },
+    // },
 })

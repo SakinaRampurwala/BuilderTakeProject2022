@@ -180,7 +180,7 @@
                                 <tr>
                                     <td style="font-size: 14px; padding: 5px 15px; color:black; text-align: left; border-bottom:  1px solid #ccc;"></td>
                                     <td style="font-size: 14px; padding: 5px 15px; color:black; text-align: left; border-bottom:  1px solid #ccc;"></td>
-                                    <td style=""></td>
+                                    <td style="font-size: 14px; padding: 5px 15px; color:black; text-align: left; border-bottom:  1px solid #ccc;"></td>
                                     <apex:repeat value="{!quoteItemWrapper.RecordDataList}" var="quoteItem">
                                         <td style="border-right: 1px solid #ccc; font-size: 14px; padding: 5px 15px; color:black; border-bottom: 1px solid #ccc; {!if(OR(quoteItem.fieldType == 'currency', quoteItem.fieldType == 'number'),'text-align:right;' , 'text-align: left')}">
                                             <apex:outputPanel rendered="{!if(quoteItem.fieldType == 'currency' , true ,false)}">

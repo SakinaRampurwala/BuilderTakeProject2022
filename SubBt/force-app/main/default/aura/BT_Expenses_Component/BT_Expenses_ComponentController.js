@@ -1,8 +1,15 @@
 ({
     
     doInit : function(component, event, helper) {
-        // helper.tabName(component);
-        // helper.getProjects(component);
+        var recordId =  component.get("v.recordId");
+        console.log('recordId => '+recordId);
+        if(recordId == null || recordId == ''){
+            helper.tabName(component);
+            helper.getProjects(component);
+        }else{
+            component.set("v.projectId" , recordId);
+        }
+        console.log('projectId => '+component.get("v.projectId"));
         component.set("v.transactionTypeOptions", [
             {label: '--None--', value: ''},
             {label: 'Expense', value: 'Expense'},
@@ -41,41 +48,66 @@
         helper.getProjectData(component, event, helper);
     },
 
-    // changeProject : function(component, event, helper) {
-    //     // var selectedProject = component.find("selectedProject").get("v.value");
-    //     // component.set("v.selectedProjectId", selectedProject);
-    //     // console.log('selectedProject => '+selectedProject);
-    //     var selectedTransactionType = component.get("v.selectedTransactionType");
-    //     if(selectedProject != null && selectedProject != ''){
-    //         component.set("v.Spinner", true);
-    //         if(selectedTransactionType == 'Expense'){
-    //             helper.getExpenses(component);
-    //         }else if(selectedTransactionType == 'Time Card'){
-    //             helper.getTimeCards(component);
-    //         }else if(selectedTransactionType == 'Purchase Order'){
-    //             helper.getPurchaseOrders(component);
-    //         }else if(selectedTransactionType == 'Invoice(AP)'){
-    //             helper.getInvoices(component);
-    //         }else{
-    //             component.set("v.Spinner", false);
-    //             var toastEvent = $A.get("e.force:showToast");
-    //             toastEvent.setParams({
-    //                 title: 'Error',
-    //                 message: 'Please select Transaction Type.',
-    //                 duration: ' 2000',
-    //                 key: 'info_alt',
-    //                 type: 'error',
-    //                 mode: 'pester'
-    //             });
-    //             toastEvent.fire();
-    //         }
-    //     }else{
-    //         component.set("v.tableDataList", []);
-    //     }
-    //     component.set("v.checkedAll", false);
-    // },
+    changeProject : function(component, event, helper) {
+        var selectedProject = component.find("selectedProject").get("v.value");
+        console.log('selectedProject => '+selectedProject);
+        if(selectedProject != null && selectedProject != ''){
+            component.set("v.projectId", selectedProject);
+        }else{
+            component.set("v.projectId", null);
+            component.set("v.selectedTransactionType", '');
+            component.set("v.SelectExp", false);
+            component.set("v.SelectTC", false);
+            component.set("v.SelectPO", false);
+            component.set("v.SelectInv", false);
+            component.set("v.SelectNone", false);
+        }
+        console.log('projectId => '+component.get("v.projectId"));
+        var selectedTransactionType = component.get("v.selectedTransactionType");
+        if(selectedProject != null && selectedProject != ''){
+            component.set("v.Spinner", true);
+            if(selectedTransactionType == 'Expense'){
+                helper.getExpenses(component);
+            }else if(selectedTransactionType == 'Time Card'){
+                helper.getTimeCards(component);
+            }else if(selectedTransactionType == 'Purchase Order'){
+                helper.getPurchaseOrders(component);
+            }else if(selectedTransactionType == 'Invoice(AP)'){
+                helper.getInvoices(component);
+            }else{
+                component.set("v.Spinner", false);
+                // var toastEvent = $A.get("e.force:showToast");
+                // toastEvent.setParams({
+                //     title: 'Error',
+                //     message: 'Please select Transaction Type.',
+                //     duration: ' 2000',
+                //     key: 'info_alt',
+                //     type: 'error',
+                //     mode: 'pester'
+                // });
+                // toastEvent.fire();
+                console.log('Please select Transaction Type.');
+            }
+        }else{
+            component.set("v.tableDataList", []);
+        }
+        component.set("v.checkedAll", false);
+    },
 
     page2 : function(component, event, helper) {
+        if(component.get("v.projectId") == null || component.get("v.projectId") == ''){
+            var toastEvent = $A.get("e.force:showToast");
+            toastEvent.setParams({
+                title: 'Error',
+                message: 'Please select Project.',
+                duration: ' 2000',
+                key: 'info_alt',
+                type: 'error',
+                mode: 'pester'
+            });
+            toastEvent.fire();
+            return;
+        }
         var selectedTransactionType = component.get("v.selectedTransactionType");
         if(selectedTransactionType == 'Expense'){
             helper.ExpensesPage2(component, event, helper);
@@ -168,7 +200,22 @@
     },
 
     closeModel: function(component, event, helper) {
-        $A.get("e.force:closeQuickAction").fire();
+        var recordId = component.get("v.recordId");
+        console.log('recordId in close => '+recordId);
+        if(recordId == null || recordId == ''){
+            var workspaceAPI = component.find("workspace");
+            console.log('workspaceAPI => '+workspaceAPI);
+            workspaceAPI.getFocusedTabInfo().then(function(response) {
+                var focusedTabId = response.tabId;
+                workspaceAPI.closeTab({tabId: focusedTabId});
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
+        }else{
+            //close the quick action
+            $A.get("e.force:closeQuickAction").fire();
+        }
     },
 
 

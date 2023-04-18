@@ -395,6 +395,11 @@
             var mouseButton = 0;
             var lastX = lastY = null;
 
+            setTimeout(function() {
+                context.fillStyle = '#fff';
+                context.fillRect(0, 0, canvas.width, canvas.height);
+            }, 1000);
+
             function showRejectPopup() {
             const x ='{!Result}';
                if(x == 'Accepted'){

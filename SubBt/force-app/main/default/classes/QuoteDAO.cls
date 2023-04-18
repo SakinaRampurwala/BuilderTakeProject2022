@@ -2304,6 +2304,10 @@ public with sharing class QuoteDAO{
 
         Integer totalQuoteLine = [SELECT count() FROM buildertek__Quote_Item__c WHERE buildertek__Quote__c = :quoteId];
 
+        buildertek__Quote__c quote = [SELECT Id, Name, buildertek__Quote_Line_Grouping_Fields__c FROM buildertek__Quote__c WHERE Id =: quoteId];
+        quote.buildertek__Quote_Line_Grouping_Fields__c = JSON.serialize(groupingList);
+        update quote;
+
         mainWrapper.quoteLineList = quoteLineList;
         mainWrapper.columns = column;
         mainWrapper.pageSize = recordToDisply;

@@ -1,41 +1,38 @@
 ({
 
-    // getProjects : function(component) {
-    //     var action = component.get("c.getProjects");
-    //     action.setCallback(this, function(response){
-    //         var state = response.getState();
-    //         if(state === "SUCCESS"){
-    //             console.log(response.getReturnValue());
-    //             //add none option
-    //             var noneOption = {
-    //                 Name: "--None--",
-    //                 Id: ""
-    //             };
-    //             // component.set("v.selectedProjectId", '');
-    //             var projects = response.getReturnValue();
-    //             projects.unshift(noneOption);
-    //             component.set("v.projectsOptions", projects);
-    //         }
-    //     });
-    //     $A.enqueueAction(action);
-    // },
+    getProjects : function(component) {
+        var action = component.get("c.getProjects");
+        action.setCallback(this, function(response){
+            var state = response.getState();
+            if(state === "SUCCESS"){
+                console.log(response.getReturnValue());
+                //add none option
+                var noneOption = {
+                    Name: "--None--",
+                    Id: '',
+                };
+                component.set("v.projectId", null);
+                var projects = response.getReturnValue();
+                projects.unshift(noneOption);
+                component.set("v.projectsOptions", projects);
+            }
+        });
+        $A.enqueueAction(action);
+    },
 
     tabName : function(component) {
         var workspaceAPI = component.find("workspace");
-        workspaceAPI.getFocusedTabInfo().then(function(response) {
-            var focusedTabId = response.tabId;
+        workspaceAPI.getEnclosingTabId().then((response) => {
+            let opendTab = response.tabId;
             workspaceAPI.setTabLabel({
-                tabId: focusedTabId,
-                label: "BT Expense Component"
+                tabId: opendTab,
+                label: "Mass Transaction"
             });
             workspaceAPI.setTabIcon({
-                tabId: focusedTabId,
-                icon: "standard:link",
-                iconAlt: "BT Expense Component"
+                tabId: opendTab,
+                icon: 'standard:link',
+                iconAlt: 'Mass Transaction'
             });
-        }
-        ).catch(function(error) {
-            console.log(error);
         }); 
 
     },
@@ -43,7 +40,7 @@
     getExpenses : function(component) {
         var action = component.get("c.getExpenses");
         action.setParams({
-            "projectId": component.get("v.recordId")
+            "projectId": component.get("v.projectId")
         });
         action.setCallback(this, function(response){
             var state = response.getState();
@@ -80,7 +77,7 @@
     getBudegts : function(component) {
         var action = component.get("c.getBudgets");
         action.setParams({
-            "projectId": component.get("v.recordId")
+            "projectId": component.get("v.projectId")
         });
         action.setCallback(this, function(response){
             var state = response.getState();
@@ -154,6 +151,10 @@
                         mode: 'pester'
                     });
                     toastEvent.fire();
+                    var recordId = component.get("v.recordId");
+                    if(recordId == null || recordId == ''){
+                        window.location.reload();
+                    }
                 }
                 component.set("v.Spinner", false);
                 $A.get("e.force:closeQuickAction").fire();
@@ -178,7 +179,7 @@
     getTimeCards : function(component) {
         var action = component.get("c.getTimeCards");
         action.setParams({
-            "projectId": component.get("v.recordId")
+            "projectId": component.get("v.projectId")
         });
         action.setCallback(this, function(response){
             var state = response.getState();
@@ -361,6 +362,10 @@
                         mode: 'pester'
                     });
                     toastEvent.fire();
+                    var recordId = component.get("v.recordId");
+                    if(recordId == null || recordId == ''){
+                        window.location.reload();
+                    }
                 }
                 console.log('TimeCard => '+JSON.stringify(TimeCard));
                 component.set("v.Spinner", false);
@@ -385,7 +390,7 @@
         component.set("v.Spinner", true);
         var action = component.get("c.getInvoices");
         action.setParams({
-            "projectId": component.get("v.recordId")
+            "projectId": component.get("v.projectId")
         });
         action.setCallback(this, function(response) {
             var state = response.getState();
@@ -509,6 +514,10 @@
                         mode: 'pester'
                     });
                     toastEvent.fire();
+                    var recordId = component.get("v.recordId");
+                    if(recordId == null || recordId == ''){
+                        window.location.reload();
+                    }
                 }
                 console.log('Invoices => '+JSON.stringify(Invoices));
                 component.set("v.Spinner", false);
@@ -533,7 +542,7 @@
         component.set("v.Spinner", true);
         var action = component.get("c.getPurchaseOrders");
         action.setParams({
-            "projectId": component.get("v.recordId")
+            "projectId": component.get("v.projectId")
         });
         action.setCallback(this, function(response) {
             var state = response.getState();
@@ -662,6 +671,10 @@
                         mode: 'pester'
                     });
                     toastEvent.fire();
+                    var recordId = component.get("v.recordId");
+                    if(recordId == null || recordId == ''){
+                        window.location.reload();
+                    }
                 }
                 console.log('purchaseOrders => '+JSON.stringify(purchaseOrders));
                 component.set("v.Spinner", false);

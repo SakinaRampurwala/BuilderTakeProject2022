@@ -79,9 +79,14 @@ global without sharing class QuoteGroupFromBom {
              }
         }
 
-        // Grouping field list for set 4 layer grouping on quote lines (Fix Value Used Only For Development)
-        // groupingList = new List<String>{'buildertek__Grouping__c', 'buildertek__Build_Phase__c', 'buildertek__Location_Detailed_Area__c', 'buildertek__Product_Family__c'};
-        groupingList = new List<String>{'buildertek__Grouping__c', 'buildertek__Build_Phase__c', 'buildertek__Location_Detailed_Area__c', 'buildertek__Product_Family__c'};
+        // Grouping field list for set 4 layer grouping on quote lines
+        buildertek__Quote__c quote = [SELECT Id, Name, buildertek__Quote_Line_Grouping_Fields__c FROM buildertek__Quote__c WHERE Id =: quoteId];
+        String groupingData = quote.buildertek__Quote_Line_Grouping_Fields__c;
+        if (groupingData != null && groupingData != '') {
+            groupingList = (List<String>) JSON.deserialize(groupingData, List<String>.class);
+        } else {
+            groupingList = new List<String>{'buildertek__Grouping__c'};
+        }
 
         // All fields in list that can be available in grouping fields.
         List<String> gorupingFieldList = new List<String>{'id','buildertek__Build_Phase__c', 'buildertek__Build_Reference_1__c','buildertek__Base_Location__c','buildertek__Location_Picklist__c','buildertek__Location_Detailed_Area__c','buildertek__Location_Detail_Reference_1__c','buildertek__BL_SERVICE_CATEGORY__c', 'buildertek__Product_Family__c', 'buildertek__Sub_Group__c', 'buildertek__Grouping__c'};

@@ -49,7 +49,26 @@ public with sharing class BudgetItemTriggerHandler {
  	}
      
  	public void OnBeforeDelete(Budget_Item__c[] BudgetItemToDelete, Map<ID, Budget_Item__c> BudgetItemMap){
-     	
+		Set<Id> budgetLineIds = BudgetItemMap.keySet();
+		
+     	List<buildertek__Expense__c> expenseList = [SELECT Id, Name, buildertek__Budget__c, buildertek__Budget_Line__c FROM buildertek__Expense__c WHERE buildertek__Budget_Line__c IN: budgetLineIds];
+		for (buildertek__Expense__c expense : expenseList) {
+			expense.buildertek__Budget__c = null;
+			expense.buildertek__Budget_Line__c = null;
+		}
+		if (expenseList.size() > 0) {
+			update expenseList;
+		}
+
+		List<buildertek__Time_Cards__c> timeCardList = [SELECT Id, Name, buildertek__Budget__c, buildertek__Budget_Line__c FROM buildertek__Time_Cards__c WHERE buildertek__Budget_Line__c IN: budgetLineIds];
+		for (buildertek__Time_Cards__c timeCard : timeCardList) {
+			timeCard.buildertek__Budget__c = null;
+			timeCard.buildertek__Budget_Line__c = null;
+		}
+		if (timeCardList.size() > 0) {
+			// update timeCardList;
+		}
+
  	}
      
  	public void OnAfterInsert(Budget_Item__c[] newBudgetItems, Map<ID, Budget_Item__c> newBudgetItemsMap){ 
@@ -65,6 +84,6 @@ public with sharing class BudgetItemTriggerHandler {
  	}
  	
  	public void OnAfterDelete(Budget_Item__c[] oldBudgetItems){
-     
+    	
  	}
 }

@@ -74,7 +74,7 @@ public class ImportProductsOnRfqLines {
             System.debug('recordId*********' + recordId);
             buildertek__RFQ__c rfqRecord = [Select Id, Name , buildertek__Project__c , buildertek__Project__r.buildertek__Price_Book__c , buildertek__Project__r.buildertek__Price_Book__r.Name From buildertek__RFQ__c  WHERE Id = :recordId];
             if(rfqRecord.buildertek__Project__c != null && rfqRecord.buildertek__Project__r.buildertek__Price_Book__c !=null){
-                pricebook2 selectedPriceList = [SELECT Id, Name , Description FROM pricebook2 where Id=:rfqRecord.buildertek__Project__r.buildertek__Price_Book__c LIMIT 1 ];
+                pricebook2 selectedPriceList = [SELECT Id, Name , Description FROM pricebook2 where Id=:rfqRecord.buildertek__Project__r.buildertek__Price_Book__c LIMIT 1];
                 priceWrap.defaultValue= selectedPriceList;
                 System.debug(selectedPriceList+'selectedPriceList*********');
 

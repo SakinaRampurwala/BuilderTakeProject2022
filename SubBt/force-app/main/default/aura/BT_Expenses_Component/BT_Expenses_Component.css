@@ -15,3 +15,8 @@
     text-align: right;
     margin-right: 12px;
 }
+
+.THIS .addScroll {
+    /* overflow-y: scroll;
+    height: 100%; */
+}

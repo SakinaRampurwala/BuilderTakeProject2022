@@ -1,7 +1,7 @@
 <aura:component implements="force:hasRecordId,force:lightningQuickActionWithoutHeader,lightning:isUrlAddressable,lightning:actionOverride,force:hasSObjectName,force:appHostable" access="global" controller="BT_Expenses_ComponentController">
 
-    <!-- <aura:attribute name="projectsOptions" type="List" /> -->
-    <!-- <aura:attribute name="selectedProjectId" type="Id" /> -->
+    <aura:attribute name="projectsOptions" type="List" />
+    <aura:attribute name="selectedProjectId" type="Id" />
     <aura:attribute name="expenses" type="List" />
     <aura:attribute name="tableDataList" type="List" />
     <aura:attribute name="Spinner" type="Boolean" default="false" />
@@ -30,6 +30,8 @@
     <aura:attribute name="purchaseOrders" type="List" />
     <aura:attribute name="PurchaseOrderP2" type="Boolean" default="false" />
     <aura:attribute name="selectedPurchaseOrders" type="List" />
+    <aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="projectId" type="Id" />
 
 
 
@@ -103,6 +105,26 @@
                         
                         <!-- <lightning:card> -->
                             <aura:if isTrue="{!v.Page1}">
+                                <aura:if isTrue="{!v.recordId == null}">
+                                    <lightning:layout>
+                                        <lightning:layoutItem padding="around-small" size="6">
+                                            <label class="slds-form-element__label slds-size_6-of-12">Project</label>
+                                            <div>
+                                                <ui:inputSelect aura:id="selectedProject" value="{!v.selectedProjectId}" change="{!c.changeProject}">
+                                                    <aura:iteration items="{!v.projectsOptions}" var="option" >
+                                                        <option value="{!option.Id}" selected="{!option.Id == v.selectedProjectId}">{!option.Name}</option>
+                                                    </aura:iteration>
+                                                </ui:inputSelect>
+                                            </div>
+                                        </lightning:layoutItem>
+                                        <!-- <lightning:layoutItem padding="around-small" size="6">
+                                            <label class="slds-form-element__label slds-size_6-of-12"> </label>
+                                            <div style="text-align: right;">
+                                            <lightning:button label="Add to Budget Line Item" variant="brand" onclick="{!c.page2}" />
+                                            </div>
+                                        </lightning:layoutItem> -->
+                                    </lightning:layout>
+                                </aura:if>
                                 <lightning:layout>
                                     <lightning:layoutItem padding="around-small" size="6">
                                         <label class="slds-form-element__label slds-size_6-of-12">Transaction Type</label>
@@ -121,26 +143,9 @@
                                         </div>
                                     </lightning:layoutItem> -->
                                 </lightning:layout>
-                    
-                                <!-- <lightning:layout>
-                                    <lightning:layoutItem padding="around-small" size="6">
-                                        <label class="slds-form-element__label slds-size_6-of-12">Project</label>
-                                        <div>
-                                            <ui:inputSelect aura:id="selectedProject" value="{!v.selectedProjectId}" change="{!c.changeProject}">
-                                                <aura:iteration items="{!v.projectsOptions}" var="option" >
-                                                    <option value="{!option.Id}" selected="{!option.Id == v.selectedProjectId}">{!option.Name}</option>
-                                                </aura:iteration>
-                                            </ui:inputSelect>
-                                        </div>
-                                    </lightning:layoutItem>
-                                    <lightning:layoutItem padding="around-small" size="6">
-                                        <label class="slds-form-element__label slds-size_6-of-12"> </label>
-                                        <div style="text-align: right;">
-                                        <lightning:button label="Add to Budget Line Item" variant="brand" onclick="{!c.page2}" />
-                                        </div>
-                                    </lightning:layoutItem>
-                                </lightning:layout> -->
                             </aura:if>
+
+                            <div class="addScroll">
                     
                             <aura:if isTrue="{!v.SelectExp}">            
                                 <br />                
@@ -402,6 +407,8 @@
                                     </aura:if>
                                 </table> 
                             </aura:if>
+
+                        `   </div>
                     
                             <aura:if isTrue="{!v.Page2}">
                                 <lightning:layout>
