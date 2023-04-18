@@ -1,5 +1,6 @@
 ({
     doInit : function(component, event, helper) {
+        console.log('doInit');
         component.set("v.Spinner", true);
         var pageNumber = component.get("v.PageNumber");
         var pageSize = component.get("v.pageSize");
@@ -68,7 +69,7 @@
                 console.log({priceBook});
                 console.log(component.get('v.searchPriceBookFilter'));
                 component.set("v.rfqtradeType", response.getReturnValue()); 
-                helper.getRfqList(component, event, helper, pageNumber, pageSize, productFamilyValue, tradeValue, productTypeValue, productValue, productCategoryValue, component.get('v.searchPriceBookFilter'),vendor);
+                helper.getRfqList(component, event, helper, productFamilyValue, tradeValue, productTypeValue, productValue, productCategoryValue, component.get('v.searchPriceBookFilter'),vendor);
             }     
         });
         $A.enqueueAction(action);   
@@ -100,7 +101,7 @@
         var priceBook = component.get("v.searchPriceBookFilter");
         var vendor = component.get("v.searchVendorFilter");
         var recId = component.get("v.mainObjectId");
-       helper.getRfqList(component, event, helper, pageNumber, pageSize, productFamilyValue, tradeValue, productTypeValue, productValue, productCategoryValue, priceBook,vendor);
+       helper.getRfqList(component, event, helper, productFamilyValue, tradeValue, productTypeValue, productValue, productCategoryValue, priceBook,vendor);
                              
          
     },
@@ -221,7 +222,7 @@
         var tradeValue = component.get("v.searchTradeTypeFilter");
         var priceBook = component.get("v.searchPriceBookFilter");
         var vendor = component.get("v.searchVendorFilter");
-        helper.getRfqList(component, event, helper, pageNumber, pageSize, productFamilyValue, tradeValue, productTypeValue, productValue, productCategoryValue, priceBook,vendor);
+        helper.getRfqList(component, event, helper, productFamilyValue, tradeValue, productTypeValue, productValue, productCategoryValue, priceBook,vendor);
     },
     selectRecordOption : function (component, event, helper) {
         event.preventDefault();
@@ -345,9 +346,59 @@
         }
     },
     searchFamily:function(component, event, helper) {
-       helper.searchFamilyHelper(component, event, helper);
+        var selectedValue= component.get('v.searchProductFamilyFilter');
+        var filterName='Family';
+        
+       helper.searchHelper(component, event, helper, selectedValue , filterName);
 
 
     },
-    // searchProduct
+    searchProduct:function(component, event, helper) {
+        console.log('searchProduct');
+        var selectedValue= component.get('v.searchProductFilter');
+        var filterName='Product';
+
+        helper.searchHelper(component, event, helper , selectedValue ,filterName);
+ 
+ 
+     },
+     searchCategory:function(component, event, helper) {
+        console.log('search Category');
+        var selectedValue= component.get('v.searchCategoryFilter');
+        console.log({selectedValue});
+        var filterName='Category';
+
+        helper.searchHelper(component, event, helper , selectedValue ,filterName);
+ 
+ 
+     },
+
+     searchProductType:function(component, event, helper) {
+        console.log('search Product type');
+        var selectedValue= component.get('v.searchProductTypeFilter');
+        console.log({selectedValue});
+        var filterName='productType';
+
+        helper.searchHelper(component, event, helper , selectedValue ,filterName);
+ 
+ 
+     },
+     searchTradeType:function(component, event, helper) {
+        console.log('search trade type');
+        var selectedValue= component.get('v.searchTradeTypeFilter');
+        console.log({selectedValue});
+        var filterName='tradeType';
+
+        helper.searchHelper(component, event, helper , selectedValue ,filterName);
+ 
+     },
+     searchVendor:function(component, event, helper) {
+        console.log('search trade type');
+        var selectedValue= component.get('v.searchVendorFilter');
+        console.log({selectedValue});
+        var filterName='Vendor';
+
+        helper.searchHelper(component, event, helper , selectedValue ,filterName);
+ 
+     },
 })

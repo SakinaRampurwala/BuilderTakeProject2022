@@ -8,8 +8,8 @@ public with sharing class PreviewPurchaseOrderLineController {
            Schema.sObjectType.Emailtemplate.fields.folderid.isAccessible() &&
            Schema.sObjectType.Folder.fields.Name.isAccessible()){
              //  temrec = [Select Id, Name, folder.name from Emailtemplate where Name =: 'Purchase Order Line Template'];
-            //    temrec = [Select Id, Name, folder.name from Emailtemplate where Name =: 'Purchase Order Lien Template']; 
-               temrec = [Select Id, Name, folder.name from Emailtemplate where folder.name = 'BT PO' and Name !=:'Purchase Order Approved Template' and  DeveloperName !=:'Purchase_Order_Template'];
+               temrec = [Select Id, Name, folder.name from Emailtemplate where Name =: 'Purchase Order Lien Template']; 
+            //    temrec = [Select Id, Name, folder.name from Emailtemplate where folder.name = 'BT PO' and Name !=:'Purchase Order Approved Template' and  DeveloperName !=:'Purchase_Order_Template'];
 
            }
         return temrec;

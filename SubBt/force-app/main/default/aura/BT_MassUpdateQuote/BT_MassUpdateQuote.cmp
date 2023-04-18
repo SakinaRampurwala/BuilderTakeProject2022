@@ -149,7 +149,8 @@
                                     <lightning:input name="{!index}" value="{!quoteLineWrapper.QuoteLine.buildertek__Quantity__c}" class="quantity-class" type="number" />
                                 </td>
                                 <td>
-                                    <lightning:input name="{!index}" value="{!quoteLineWrapper.QuoteLine.buildertek__Unit_Cost__c}" class="unit-cost-class" type="number"/>
+                                    <lightning:input name="{!index}" value="{!quoteLineWrapper.QuoteLine.buildertek__Unit_Cost__c}" class="unit-cost-class" type="number" formatter="currency" step="0.001" />
+                                    <!-- <ui:inputCurrency name="{!index}"  value="{!quoteLineWrapper.QuoteLine.buildertek__Unit_Cost__c}" class="unit-cost-class" aura:id="unitCostId" /> -->
                                 </td>
                                 <aura:if isTrue="{!!v.hideGlobalMargin}">
                                     <td>
