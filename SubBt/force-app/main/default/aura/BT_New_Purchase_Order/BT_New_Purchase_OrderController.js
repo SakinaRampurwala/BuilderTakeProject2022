@@ -117,8 +117,12 @@
         }
 		
         action.setCallback(this, function (response) {
+            console.log(response.getState());
+            console.log(response.getError());
+
             if (component.isValid() && response.getState() === "SUCCESS") {
             	var result = response.getReturnValue();
+                console.log({result});
             	if(result.isSuccess === true){
             	  
                     var sObjectEvent = $A.get("e.force:navigateToSObject");

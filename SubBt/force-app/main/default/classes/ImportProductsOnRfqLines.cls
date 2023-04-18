@@ -252,8 +252,10 @@ public class ImportProductsOnRfqLines {
             
         }
         else{
-            
+            System.debug('=====IN ELSE CONDITION=====');
             List<Product2> productList = [Select Id,Name,Family,buildertek__Product_Type__r.Name,buildertek__Trade_Type__r.Name,buildertek__Vendor__r.Name,buildertek__Category__r.Name,StockKeepingUnit FROM Product2  ORDER BY Name];
+            objDT.recordList = new List<ProductWrapper>();
+            System.debug(productList);
             for (Product2 prod : productList) {
                 ProductWrapper productWrapper = new ProductWrapper();
                 productWrapper.product = prod;

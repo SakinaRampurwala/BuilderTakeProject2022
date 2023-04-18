@@ -28,11 +28,11 @@
                                           onsubmit="{!c.handleSubmit}"
                                           onsuccess="{!c.handleSuccess}" 
                                           onerror = "{!handleError}">
-                    <lightning:layout class="slds-m-horizontal_x-large slds-m-top_large" horizontalAlign="space" verticalAlign="center" multipleRows="true">
+                    <lightning:layout verticalAlign="center" multipleRows="true">
                         <aura:iteration items="{!v.listOfFields}" var="field">
                             <br />
                             <br />
-                            <lightning:layoutItem flexibility="auto" size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="6">
+                            <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
                                 <div class="custom-box"> 
                                     <aura:if isTrue="{!and(field.name !='buildertek__Payable__c')}">
                                         <lightning:inputField fieldName="{!field.name}" value="" />
