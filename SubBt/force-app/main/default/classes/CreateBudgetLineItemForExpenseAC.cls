@@ -145,6 +145,7 @@ public with sharing class CreateBudgetLineItemForExpenseAC {
                     buildertek__Expense_To_Budget_Item_Link__c ExpnseToBudgetItemLink = new buildertek__Expense_To_Budget_Item_Link__c();
                     ExpnseToBudgetItemLink.buildertek__Expense__c = expns.Id;
                     ExpnseToBudgetItemLink.buildertek__Budget_Line__c = expns.buildertek__Budget_Line__c;
+                    ExpnseToBudgetItemLink.Auto_Roll_Up__c = true;
                     ExpenseToBudgetItemLinks.add(ExpnseToBudgetItemLink);
                 }
             

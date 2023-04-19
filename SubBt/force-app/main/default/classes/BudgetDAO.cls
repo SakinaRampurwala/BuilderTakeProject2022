@@ -2051,16 +2051,24 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
             string rfqrecords = 'SELECT Id, Name, buildertek__Project__c, buildertek__Project__r.Name,buildertek__PO_Type__c,buildertek__Description__c,'+
                             'buildertek__Vendor__c,buildertek__Vendor__r.Name,buildertek__PO_Total__c'+
                             ' FROM buildertek__Purchase_Order__c'+
-                            ' where buildertek__Project__c =\'' +RFQRec.buildertek__Project__c+'\' ORDER BY Name LIMIT :pageSize OFFSET :offset';
+                            ' where buildertek__Budget__c = null AND buildertek__Budget_Line__c =null AND buildertek__Project__c =\'' +RFQRec.buildertek__Project__c+'\' ORDER BY Name LIMIT :pageSize OFFSET :offset';
                objDT.recordList = Database.query(rfqrecords);
             }else{
+                // objDT.recordList = [SELECT Id, Name, buildertek__Project__c, buildertek__Project__r.Name,buildertek__PO_Type__c,buildertek__Description__c,
+                //             buildertek__Vendor__c,buildertek__Vendor__r.Name,buildertek__PO_Total__c
+                //             FROM buildertek__Purchase_Order__c
+                //             where buildertek__Project__c = :RFQRec.buildertek__Project__c
+                //             ORDER BY Name
+                //             LIMIT :pageSize
+                //             OFFSET :offset];
+                
                 objDT.recordList = [SELECT Id, Name, buildertek__Project__c, buildertek__Project__r.Name,buildertek__PO_Type__c,buildertek__Description__c,
-                            buildertek__Vendor__c,buildertek__Vendor__r.Name,buildertek__PO_Total__c
-                            FROM buildertek__Purchase_Order__c
-                            where buildertek__Project__c = :RFQRec.buildertek__Project__c
-                            ORDER BY Name
-                            LIMIT :pageSize
-                            OFFSET :offset];
+                                    buildertek__Vendor__c,buildertek__Vendor__r.Name,buildertek__PO_Total__c
+                                    FROM buildertek__Purchase_Order__c
+                                    where buildertek__Budget__c = null AND buildertek__Budget_Line__c =null AND buildertek__Project__c = :RFQRec.buildertek__Project__c
+                                    ORDER BY Name
+                                    LIMIT :pageSize
+                                    OFFSET :offset];
             }
         /*objDT.recordList = [SELECT Id, Name, buildertek__Project__c, buildertek__Project__r.Name,buildertek__PO_Type__c,buildertek__Description__c,
                             buildertek__Vendor__c,buildertek__Vendor__r.Name,buildertek__PO_Total__c

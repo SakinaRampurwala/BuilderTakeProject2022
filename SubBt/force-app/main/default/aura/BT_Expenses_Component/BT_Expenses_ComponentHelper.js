@@ -84,14 +84,14 @@
             if(state === "SUCCESS"){
                 var budgets = response.getReturnValue();
                 console.log('budgetsOptions => ',budgets);
-                if(budgets.length > 1){
+                if(budgets.length > 0){
                     component.set("v.budgetsOptions", budgets);
                 }
-                if(budgets.length == 1){
-                    component.set("v.selectedBudgetId", budgets[0].Id);
-                    component.set("v.budgetsOptions", budgets);
-                    this.getBudgetLines(component);
-                }
+                // if(budgets.length == 1){
+                //     component.set("v.selectedBudgetId", budgets[0].Id);
+                //     component.set("v.budgetsOptions", budgets);
+                //     this.getBudgetLines(component);
+                // }
             }
         });
         $A.enqueueAction(action);

@@ -40,6 +40,8 @@
                 reader.onload = function(evt) {
                     var csv = evt.target.result;
                     var result = helper.CSV2JSON(component, event, helper, csv);
+                    console.log('csv data ',result);
+                    debugger
 
                     if (result != undefined && result != '') {
                         window.setTimeout(

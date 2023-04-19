@@ -76,9 +76,43 @@
         });
         $A.enqueueAction(action);
     },
-    getRfqList: function(component, event, helper, productFamilyValue, tradeValue, productTypeValue, productValue, productCategoryValue, priceBook, vendor) {
-       
-        component.set("v.Spinner", true);
+    getRfqList: function(component, event, helper, pageNumber, pageSize, productFamilyValue, tradeValue, productTypeValue, productValue, productCategoryValue, priceBook, vendor) {
+        var allSelectedIds = component.get("v.allSelectedIds");
+        console.log({allSelectedIds});
+        var rfqRecordList = component.get("v.rfqRecordList");
+
+        if (allSelectedIds.length == 0) {
+            var currentSelectedIds = [];
+            rfqRecordList.forEach(element => {
+                if(element.isChecked == true){
+                    currentSelectedIds.push(element.product.Id);
+                }
+            });
+            allSelectedIds = currentSelectedIds;
+        } else{
+            var newUnselectedIds = [];
+            rfqRecordList.forEach(element => {
+                if (allSelectedIds.includes(element.product.Id)) {
+                    if (element.isChecked == true) {
+                        allSelectedIds.push(element.product.Id);
+                    } else {
+                        newUnselectedIds.push(element.product.Id);
+                    }
+                } else{
+                    if (element.isChecked == true) {
+                        allSelectedIds.push(element.product.Id);
+                    } 
+                }
+            });
+
+            var currentSelectedIds = allSelectedIds.filter( function( Id ) {
+                return !newUnselectedIds.includes( Id );
+            });
+
+            allSelectedIds = currentSelectedIds;
+        }
+        component.set("v.allSelectedIds", currentSelectedIds);
+
         var action = component.get("c.getProducts");
         var tradetype = component.get("v.rfqtradeType");
         var recId = component.get("v.recordId");
@@ -101,13 +135,15 @@
 
             if (component.isValid() && state === "SUCCESS") {
                 var resultData = result.getReturnValue();
-                var records=resultData.recordList;
-                component.set("v.rfqRecordList", resultData.recordList);
-                console.log({records});
-                console.log({productFamilyValue});
-                console.log({priceBook});
-                console.log({tradeValue});
-
+                var records = resultData.recordList;
+                if (allSelectedIds.length > 0) {
+                    records.forEach(element => {
+                        if (allSelectedIds.includes(element.product.Id)) {
+                            element.isChecked = true;
+                        }
+                    });
+                }
+                component.set("v.rfqRecordList", records);
 
 
 
@@ -120,12 +156,23 @@
 
                 var PaginationLst = [];
                 for(var i=0; i < pageSize; i++){
-                    console.log(component.get("v.rfqRecordList").length > i);
                     if(component.get("v.rfqRecordList").length > i){
                         PaginationLst.push(records[i]);    
                     } 
                 }
                 component.set('v.PaginationList', PaginationLst);
+
+                const allActive = PaginationLst.every(function(obj) {
+                    return obj.isChecked === true;
+                 });
+                 if(allActive){
+                    component.find("selectAllRFQ").set("v.value", true);
+        
+                }else{
+                   component.find("selectAllRFQ").set("v.value", false);
+        
+                }
+
                 component.set("v.TotalPages", Math.ceil(totalLength / pageSize)); 
                 console.log({resultData});
                 if (resultData.categoryList && resultData.categoryList.length > 5) {
@@ -149,21 +196,17 @@
                     component.set("v.rfqvendorList", resultData.vendorList.slice(0, 5));
                 }
 
-                 component.set("v.Spinner", false);
-
                
                 
             }
         });
         $A.enqueueAction(action);
+
+        
     },
     changeEventHelper: function (component, event, helper) {
-
         console.log('changeEventHelper');
         component.set("v.Spinner", true);
-        component.find("selectAllRFQ").set("v.value", false);
-
-        console.log(component.get("v.searchPriceBookFilter") , '{{}}');
 
 		var productAction = component.get("c.productfamilyList");
         productAction.setParams({
@@ -185,8 +228,7 @@
                     }
 				}
 
-                console.log(component.get("v.searchPriceBookFilter") , 'FILTER---');
-                helper.getRfqList(component, event, helper, '', '', '', '', '', component.get("v.searchPriceBookFilter"), '');
+                
                 
             }else{
                 component.set("v.Spinner", false);
@@ -219,6 +261,7 @@
            component.find("selectAllRFQ").set("v.value", false);
 
         }
+         
 
       
     },
@@ -249,122 +292,5 @@
            component.find("selectAllRFQ").set("v.value", false);
 
         }
-    },
-    
-
-    searchHelper:function(component, event, helper, selectedValue , filterName) {
-        console.log({filterName});
-        var allRecordList= component.get('v.rfqRecordList');
-        var paginationList=component.get('v.PaginationList');
-        var updatedList=[];
-        var productFamily=component.get('v.searchProductFamilyFilter');
-        var product=component.get('v.searchProductFilter');
-        var productCategory=component.get('v.searchCategoryFilter');
-        var productType=component.get('v.searchProductTypeFilter');
-        var tradeType=component.get('v.searchTradeTypeFilter');
-        var vendor=component.get('v.searchVendorFilter');
-
-        console.log({productFamily});
-        console.log({product});
-        console.log({productCategory});
-        console.log({productType});
-        console.log({tradeType});
-        console.log({vendor});
-
-
-
-
-
-        var familyFilter=component.get('v.searchProductFamilyFilter');
-        
-        // var productFamily=selectedValue;
-        allRecordList.forEach(function(value){
-            if(selectedValue!== undefined && selectedValue!== ''){
-                
-                if(productFamily!='' && productFamily!= undefined && product== '' && productCategory == '' && productType =='' &&  tradeType== '' && vendor==''){
-                    if(value.product.Family === productFamily){
-                                updatedList.push(value);        
-                    }
-                }else if(productFamily!='' && productFamily!= undefined && product== '' && productCategory != '' && productType =='' &&  tradeType== '' && vendor==''){
-                    if(value.product.Family === productFamily &&  value.product.buildertek__Category__c!= undefined && value.product.buildertek__Category__r.Name ===productCategory){
-                            updatedList.push(value);        
-                    }
-                }else if(productFamily!='' && productFamily!= undefined && product== '' && productCategory != '' && productType !='' &&  tradeType== '' && vendor==''){
-                    if(value.product.Family === productFamily &&  value.product.buildertek__Category__c!= undefined && value.product.buildertek__Category__r.Name ===productCategory &&  value.product.buildertek__Product_Type__c!= undefined && value.product.buildertek__Product_Type__r.Name ===productType){
-                        updatedList.push(value);        
-                    }
-                }else if(productFamily!='' && productFamily!= undefined && product== '' && productCategory != '' && productType !='' &&  tradeType!= '' && vendor==''){
-                    if(value.product.Family === productFamily &&  value.product.buildertek__Category__c!= undefined && value.product.buildertek__Category__r.Name ===productCategory &&  value.product.buildertek__Product_Type__c!= undefined && value.product.buildertek__Product_Type__r.Name ===productType &&  value.product.buildertek__Trade_Type__c!= undefined && value.product.buildertek__Trade_Type__r.Name ===tradeType){
-                        updatedList.push(value);        
-                    }
-                }else if(productFamily!='' && productFamily!= undefined && product== '' && productCategory != '' && productType !='' &&  tradeType!= '' && vendor!=''){
-                    if(value.product.Family === productFamily &&  value.product.buildertek__Category__c!= undefined && value.product.buildertek__Category__r.Name ===productCategory &&  value.product.buildertek__Product_Type__c!= undefined && value.product.buildertek__Product_Type__r.Name ===productType &&  value.product.buildertek__Trade_Type__c!= undefined && value.product.buildertek__Trade_Type__r.Name ===tradeType &&  value.product.buildertek__Vendor__c!= undefined && value.product.buildertek__Vendor__r.Name ===vendor){
-                        updatedList.push(value);        
-                    }
-                }else if(productFamily=='' && product== '' && productCategory != '' && productType =='' &&  tradeType== '' && vendor==''){
-                    if(value.product.buildertek__Category__c!= undefined && value.product.buildertek__Category__r.Name ===productCategory){
-                        updatedList.push(value);        
-                    }
-                }else if(productFamily=='' && product== '' && productCategory == '' && productType !='' &&  tradeType == '' && vendor==''){
-                    if(value.product.buildertek__Product_Type__c!= undefined && value.product.buildertek__Product_Type__r.Name ===productType){
-                        updatedList.push(value);        
-                    }
-                }else if(productFamily=='' && product== '' && productCategory == '' && productType =='' &&  tradeType != '' && vendor==''){
-                    if(value.product.buildertek__Trade_Type__c!= undefined && value.product.buildertek__Trade_Type__r.Name ===tradeType){
-                        updatedList.push(value);        
-                    }
-                }else if(productFamily=='' && product== '' && productCategory == '' && productType =='' &&  tradeType == '' && vendor !=''){
-                    if(value.product.buildertek__Vendor__c!= undefined && value.product.buildertek__Vendor__r.Name ===vendor){
-                        updatedList.push(value);        
-                    }
-                }
-
-
-                // if(filterName === 'Family'){
-                //     if(value.product.Family === component.get('v.searchProductFamilyFilter')){
-                //         updatedList.push(value);
-                //         // familyList.push(value);
-
-                //     }
-                // }
-                // if(filterName === 'Category'){
-                //     if(value.product.Family!= undefined && value.product.Family === component.get('v.searchProductFamilyFilter') 
-                //         && value.product.buildertek__Category__c!= undefined && value.product.buildertek__Category__r.Name === component.get('v.searchCategoryFilter')){
-                //         updatedList.push(value);
-
-                //     }
-
-                // }
-              
-                
-            }else{
-                updatedList=allRecordList;
-            }
-           
-
-        });
-        console.log({allRecordList});
-        console.log({updatedList});
-
-        updatedList.filter(function(value){
-
-        });
-
-        component.set('v.PaginationList' ,updatedList);
-
-        console.log(component.get('v.PaginationList').length);
-
-        const allActive = updatedList.every(function(obj) {
-            return obj.isChecked === true;
-         });
-         if(allActive){
-            component.find("selectAllRFQ").set("v.value", true);
-
-        }else{
-           component.find("selectAllRFQ").set("v.value", false);
-
-        }
-
-        
     },
 })

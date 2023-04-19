@@ -20,7 +20,7 @@ trigger ExpenseToBudgetlineTrigger on buildertek__Expense__c (after delete, afte
         }
         
         else if(Trigger.isUpdate && Trigger.isAfter){
-            handler.OnAfterUpdate(Trigger.old, Trigger.new, Trigger.newMap, trigger.oldMap);
+            handler.OnAfterUpdate(Trigger.new, Trigger.newMap, Trigger.oldMap);
         }
         
         else if(Trigger.isDelete && Trigger.isBefore){

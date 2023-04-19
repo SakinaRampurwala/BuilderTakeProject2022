@@ -416,9 +416,9 @@
                                         <label class="slds-form-element__label slds-size_6-of-12">Budget</label>
                                         <div>
                                             <ui:inputSelect aura:id="selectedBudget" value="{!v.selectedBudgetId}" change="{!c.changeBudget}">
-                                                <aura:if isTrue="{!v.budgetsOptions.length > 1}">
-                                                    <option value="" selected="true">Select a Budget</option>
-                                                </aura:if>
+                                                <!-- <aura:if isTrue="{!v.budgetsOptions.length > 1}">
+                                                </aura:if> -->
+                                                <option value="" selected="true">Select a Budget</option>
                                                 <aura:iteration items="{!v.budgetsOptions}" var="option" >
                                                     <option value="{!option.Id}" selected="{!option.Id == v.selectedBudgetId}">{!option.Name}</option>
                                                 </aura:iteration>

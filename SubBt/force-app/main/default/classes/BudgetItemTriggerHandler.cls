@@ -57,7 +57,10 @@ public with sharing class BudgetItemTriggerHandler {
 			expense.buildertek__Budget_Line__c = null;
 		}
 		if (expenseList.size() > 0) {
+			ExpenseToBudgetItemTriggerHandler.blnSkipExpenseUpdateTrigger = true;
 			update expenseList;
+			ExpenseToBudgetItemTriggerHandler.blnSkipExpenseUpdateTrigger = false;
+
 		}
 
 		List<buildertek__Time_Cards__c> timeCardList = [SELECT Id, Name, buildertek__Budget__c, buildertek__Budget_Line__c FROM buildertek__Time_Cards__c WHERE buildertek__Budget_Line__c IN: budgetLineIds];

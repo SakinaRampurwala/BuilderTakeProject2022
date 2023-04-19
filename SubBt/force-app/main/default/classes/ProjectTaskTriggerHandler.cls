@@ -35,13 +35,14 @@ public class ProjectTaskTriggerHandler{
         }
 		System.debug('schedulerIds ==> '+schedulerIds);
         if (schedulerIds.size() > 0) {
-            Map<id, buildertek__Project_Task__c> projectTaskMap = new Map<id, buildertek__Project_Task__c>([SELECT Id, buildertek__Dependency__c, buildertek__Schedule__c FROM buildertek__Project_Task__c WHERE buildertek__Schedule__c IN : schedulerIds]);
+            Map<id, buildertek__Project_Task__c> projectTaskMap = new Map<id, buildertek__Project_Task__c>([SELECT Id, buildertek__Dependency__c, buildertek__Dependency__r.Name, buildertek__Schedule__c FROM buildertek__Project_Task__c WHERE buildertek__Schedule__c IN : schedulerIds]);
 
 			System.debug('projectTaskMap ==> '+projectTaskMap);
             for (buildertek__Project_Task__c projectTask : updatedProjectTasks) {
 				System.debug('projectTask.buildertek__Schedule__c ==> '+projectTask.buildertek__Dependency__c);
                 if (schedulerIds.contains(projectTask.buildertek__Schedule__c)) {
 					System.debug('projectTaskMap.get(projectTask.buildertek__Dependency__c) ==> '+projectTaskMap.get(projectTask.buildertek__Dependency__c));
+					System.debug('projectTaskMap.get(Name) ==> '+projectTaskMap.get(projectTask.buildertek__Dependency__r.Name));
 					if (projectTaskMap.get(projectTask.buildertek__Dependency__c) != null) {
 						Id taskId = projectTask.Id;
 						Id parentId = projectTaskMap.get(projectTask.buildertek__Dependency__c).buildertek__Dependency__c;

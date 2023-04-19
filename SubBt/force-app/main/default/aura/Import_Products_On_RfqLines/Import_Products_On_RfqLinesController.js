@@ -1,6 +1,5 @@
 ({
     doInit : function(component, event, helper) {
-        console.log('doInit');
         component.set("v.Spinner", true);
         var pageNumber = component.get("v.PageNumber");
         var pageSize = component.get("v.pageSize");
@@ -69,7 +68,7 @@
                 console.log({priceBook});
                 console.log(component.get('v.searchPriceBookFilter'));
                 component.set("v.rfqtradeType", response.getReturnValue()); 
-                helper.getRfqList(component, event, helper, productFamilyValue, tradeValue, productTypeValue, productValue, productCategoryValue, component.get('v.searchPriceBookFilter'),vendor);
+                helper.getRfqList(component, event, helper, pageNumber, pageSize, productFamilyValue, tradeValue, productTypeValue, productValue, productCategoryValue, component.get('v.searchPriceBookFilter'),vendor);
             }     
         });
         $A.enqueueAction(action);   
@@ -101,7 +100,7 @@
         var priceBook = component.get("v.searchPriceBookFilter");
         var vendor = component.get("v.searchVendorFilter");
         var recId = component.get("v.mainObjectId");
-       helper.getRfqList(component, event, helper, productFamilyValue, tradeValue, productTypeValue, productValue, productCategoryValue, priceBook,vendor);
+       helper.getRfqList(component, event, helper, pageNumber, pageSize, productFamilyValue, tradeValue, productTypeValue, productValue, productCategoryValue, priceBook,vendor);
                              
          
     },
@@ -186,14 +185,41 @@
     },
     
     addToRfqLines: function (component, event, helper) {
-        var records = component.get("v.rfqRecordList");
-        var productIds=[]
-        records.forEach(function(value){
-            if(value.isChecked == true){
-                console.log(value);
-                productIds.push(value.product.Id);
-            }
-        })
+        var allSelectedIds = component.get("v.allSelectedIds");
+        var rfqRecordList = component.get("v.rfqRecordList");
+
+        if (allSelectedIds.length == 0) {
+            var currentSelectedIds = [];
+            rfqRecordList.forEach(element => {
+                if(element.isChecked == true){
+                    currentSelectedIds.push(element.product.Id);
+                }
+            });
+            allSelectedIds = currentSelectedIds;
+        } else{
+            var newUnselectedIds = [];
+            rfqRecordList.forEach(element => {
+                if (allSelectedIds.includes(element.product.Id)) {
+                    if (element.isChecked == true) {
+                        allSelectedIds.push(element.product.Id);
+                    } else {
+                        newUnselectedIds.push(element.product.Id);
+                    }
+                } else{
+                    if (element.isChecked == true) {
+                        allSelectedIds.push(element.product.Id);
+                    } 
+                }
+            });
+
+            var currentSelectedIds = allSelectedIds.filter( function( Id ) {
+                return !newUnselectedIds.includes( Id );
+            });
+
+            allSelectedIds = currentSelectedIds;
+        }
+        component.set("v.allSelectedIds", currentSelectedIds);
+        var productIds=component.get("v.allSelectedIds");
 
         var RfqId = component.get("v.recordId");
         var Spinner = component.get("v.spinner");
@@ -222,7 +248,9 @@
         var tradeValue = component.get("v.searchTradeTypeFilter");
         var priceBook = component.get("v.searchPriceBookFilter");
         var vendor = component.get("v.searchVendorFilter");
-        helper.getRfqList(component, event, helper, productFamilyValue, tradeValue, productTypeValue, productValue, productCategoryValue, priceBook,vendor);
+        helper.getRfqList(component, event, helper, pageNumber, pageSize, productFamilyValue, tradeValue, productTypeValue, productValue, productCategoryValue, priceBook,vendor);
+
+        
     },
     selectRecordOption : function (component, event, helper) {
         event.preventDefault();
@@ -345,60 +373,4 @@
             helper.previous(component, event, sObjectList, end, start, pageSize);
         }
     },
-    searchFamily:function(component, event, helper) {
-        var selectedValue= component.get('v.searchProductFamilyFilter');
-        var filterName='Family';
-        
-       helper.searchHelper(component, event, helper, selectedValue , filterName);
-
-
-    },
-    searchProduct:function(component, event, helper) {
-        console.log('searchProduct');
-        var selectedValue= component.get('v.searchProductFilter');
-        var filterName='Product';
-
-        helper.searchHelper(component, event, helper , selectedValue ,filterName);
- 
- 
-     },
-     searchCategory:function(component, event, helper) {
-        console.log('search Category');
-        var selectedValue= component.get('v.searchCategoryFilter');
-        console.log({selectedValue});
-        var filterName='Category';
-
-        helper.searchHelper(component, event, helper , selectedValue ,filterName);
- 
- 
-     },
-
-     searchProductType:function(component, event, helper) {
-        console.log('search Product type');
-        var selectedValue= component.get('v.searchProductTypeFilter');
-        console.log({selectedValue});
-        var filterName='productType';
-
-        helper.searchHelper(component, event, helper , selectedValue ,filterName);
- 
- 
-     },
-     searchTradeType:function(component, event, helper) {
-        console.log('search trade type');
-        var selectedValue= component.get('v.searchTradeTypeFilter');
-        console.log({selectedValue});
-        var filterName='tradeType';
-
-        helper.searchHelper(component, event, helper , selectedValue ,filterName);
- 
-     },
-     searchVendor:function(component, event, helper) {
-        console.log('search trade type');
-        var selectedValue= component.get('v.searchVendorFilter');
-        console.log({selectedValue});
-        var filterName='Vendor';
-
-        helper.searchHelper(component, event, helper , selectedValue ,filterName);
- 
-     },
 })

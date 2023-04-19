@@ -24,13 +24,13 @@
     <aura:attribute name="searchPriceBookFilter" type="String" default="" />
     <aura:attribute name="searchVendorFilter" type="String" default="" />
     
-    <!-- <aura:handler name="change" value="{!v.searchProductFamilyFilter}" action="{!c.doRfqSearch}" /> -->
-    <aura:handler name="change" value="{!v.searchProductFilter}" action="{!c.searchProduct}" />
-    <aura:handler name="change" value="{!v.searchCategoryFilter}" action="{!c.searchCategory}" />
-     <aura:handler name="change" value="{!v.searchProductTypeFilter}" action="{!c.searchProductType}" />
-    <aura:handler name="change" value="{!v.searchTradeTypeFilter}" action="{!c.searchTradeType}" />
-    <!-- <aura:handler name="change" value="{!v.searchPriceBookFilter}" action="{!c.doRfqSearch}" /> -->
-    <aura:handler name="change" value="{!v.searchVendorFilter}" action="{!c.searchVendor}" />
+    <aura:handler name="change" value="{!v.searchProductFamilyFilter}" action="{!c.doRfqSearch}" />
+    <aura:handler name="change" value="{!v.searchProductFilter}" action="{!c.doRfqSearch}" />
+    <aura:handler name="change" value="{!v.searchCategoryFilter}" action="{!c.doRfqSearch}" />
+     <aura:handler name="change" value="{!v.searchProductTypeFilter}" action="{!c.doRfqSearch}" />
+    <aura:handler name="change" value="{!v.searchTradeTypeFilter}" action="{!c.doRfqSearch}" />
+    <aura:handler name="change" value="{!v.searchPriceBookFilter}" action="{!c.doRfqSearch}" />
+    <aura:handler name="change" value="{!v.searchVendorFilter}" action="{!c.doRfqSearch}" />
     
     
     <aura:attribute name="pricebookName" type="string" />
@@ -50,12 +50,7 @@
     <aura:attribute name="PaginationList" type="list"/> 
     <aura:attribute name="totalRecordsCount" type="Integer"/>
     <aura:attribute name="currentPage" type="integer" default="1"/>
-    <aura:attribute name="filteredList" type="list"/> 
-
-
-
-
-
+    <aura:attribute name="allSelectedIds" type="List" default="[]" />
     
     <aura:attribute name="pbList"  type="Pricebook2[]" />
     <lightning:workspaceAPI aura:id="workspace"/>
@@ -84,7 +79,7 @@
                 </div>
               
                 <div style="width: 14%; display: inline-block; padding: 0% 2% 0% 0%;">
-                    <lightning:select name="pricebooks" label=""  aura:id="searchPriceBook" value="{!v.searchProductFamilyFilter}" onchange="{!c.searchFamily}">
+                    <lightning:select name="pricebooks" label=""  aura:id="searchPriceBook" value="{!v.searchProductFamilyFilter}" >
 						<option text="None" value=""/>                       
                         <aura:iteration var="option" items="{!v.listofproductfamily}">
                             <option value="{!option.productfamilyvalues}"> 
@@ -95,7 +90,9 @@
                    
                 <div style="width: 14%; display: inline-block; padding: 0% 2% 0% 0%;">
                     
-                     <c:BT_LightningLookup aura:id="productId" objectAPIName="Product2"  IconName="standard:product" selectedRecord="{!v.searchProductFilter}"  parentId="{!v.searchPriceBookFilter }" prodctfamly="{!v.searchProductFamilyFilter}" /> 
+                     <c:BT_LightningLookup aura:id="productId" objectAPIName="Product2"
+                                                                          IconName="standard:product" selectedRecord="{!v.searchProductFilter}"
+                                                                          parentId="{!v.searchPriceBookFilter }" prodctfamly="{!v.searchProductFamilyFilter}" /> 
             
                 </div>
                 <div style="width: 14%; display: inline-block; padding: 0% 2% 0% 0%;position:relative;"  >
@@ -197,9 +194,7 @@
                                         <span  class="slds-form-element__label text"></span>
                                     </label>
                                 </div>
-                            </div>
-                            <!-- <lightning:input type="checkbox" aura:id="headCheckRFQ" checked="false" onchange="{!c.selectAllRfq}"/>  -->
-                        
+                            </div>                        
                         </th>
                         <th scope="col" >
                             <div class="slds-truncate" title="Product Family">
@@ -251,10 +246,6 @@
                                         </label>
                                     </div>
                                 </div>
-                                <!-- <lightning:input type="checkbox" aura:id="checkRFQ"  checked="false" name="{!item.product.Id}" onchange="{!c.selectRfq}"/> -->
-                                <!-- <lightning:input type="checkbox" name="input1" checked="{!item.isSelected}" id="{!item.Id}" onchange="{!c.unCheckAllRFQ}" /> -->
-
-
                             </td>
                              <td>
                                 <div class="slds-truncate" title="{!item.product.Family}" >

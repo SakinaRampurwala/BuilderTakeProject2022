@@ -74,49 +74,134 @@ public class ExpenseToBudgetItemTriggerHandler {
         }
     }
      
-    public void OnAfterUpdate(buildertek__Expense__c[] oldExpense, buildertek__Expense__c[] updatedExpense, Map<ID, buildertek__Expense__c> ExpenserecMap, Map<Id, buildertek__Expense__c> oldExpenseMap){
-       // if(!CreateBudgetLineItemForExpenseAC.isUpdateExpense){
-            CreateBudgetLineItemForExpenseAC.createExpenseToBudgetItemLink(updatedExpense);  
-      //  }
-      CreateBudgetLineItemForExpenseAC.RollUpExpenseAmount(ExpenserecMap.KeySet());
-       list<Id> budgetitemIds = new list<Id>();
-       List<buildertek__Expense__c> expenseList = new List<buildertek__Expense__c>();
-       List<buildertek__Expense__c> expenseWObudget = new List<buildertek__Expense__c>();
-       List<buildertek__Expense__c> expenseWOBL = new List<buildertek__Expense__c>();
-        for(buildertek__Expense__c exp : updatedExpense){
-            if(oldExpenseMap.get(exp.Id).buildertek__Budget_Line__c != exp.buildertek__Budget_Line__c){
-                expenseList.add(oldExpenseMap.get(exp.Id));
-                budgetitemIds.add(oldExpenseMap.get(exp.Id).buildertek__Budget_Line__c);
-            }
-            // if(oldExpenseMap.get(exp.Id).buildertek__Budget__c == null && exp.buildertek__Budget__c != null){
-            //     expenseWObudget.add(exp);
-            // }
-            if(oldExpenseMap.get(exp.Id).buildertek__Budget__c != exp.buildertek__Budget__c){
-                expenseWObudget.add(exp);
+    // Create by Krunal
+    public void OnAfterUpdate(buildertek__Expense__c[] newExpenseList, Map<Id, buildertek__Expense__c> newExpenseMap, Map<Id, buildertek__Expense__c> oldExpenseMap){
+        List<buildertek__Expense_To_Budget_Item_Link__c> expenseLinkList = [SELECT Id, Name, buildertek__Expense__c, buildertek__Budget_Line__c, Auto_Roll_Up__c FROM buildertek__Expense_To_Budget_Item_Link__c WHERE buildertek__Expense__c IN: oldExpenseMap.KeySet()];
+        Map<Id, buildertek__Expense_To_Budget_Item_Link__c> expenseLinkMap = new Map<Id, buildertek__Expense_To_Budget_Item_Link__c>();
+
+        for (buildertek__Expense_To_Budget_Item_Link__c expenseLink : expenseLinkList) {
+            expenseLinkMap.put(expenseLink.buildertek__Expense__c, expenseLink);
+            // update roll up field for execute work flow and update expense cost data on budget line
+            expenseLink.Auto_Roll_Up__c = true;
+        }
+
+        List<buildertek__Expense__c> createExpenseList = new List<buildertek__Expense__c>();
+        List<buildertek__Expense_To_Budget_Item_Link__c> deleteExpenseLinkList = new List<buildertek__Expense_To_Budget_Item_Link__c>();  
+        Map<Id, buildertek__Budget_Item__c> newBudgetItemMap = new Map<Id, buildertek__Budget_Item__c>();
+        List<Id> deleteBudgetLineIdList = new List<Id>();
+
+        for (buildertek__Expense__c expense : newExpenseList) {
+            // get expense list for create new junction object
+            if (expenseLinkMap.get(expense.Id) == null && expense.buildertek__Budget_Line__c != null) {
+                createExpenseList.add(expense);
             }
 
-            if(oldExpenseMap.get(exp.Id).buildertek__Budget_Line__c != null && exp.buildertek__Budget_Line__c == null){
-                expenseWOBL.add(exp);
+            // when we change budget line on expense at that time we need to delete old junction object so create junction object list for delete old record
+            if(oldExpenseMap.get(expense.Id).buildertek__Budget_Line__c != expense.buildertek__Budget_Line__c){
+                if (expenseLinkMap.get(expense.Id) != null) {
+                    if (expenseLinkMap.get(expense.Id).buildertek__Budget_Line__c == oldExpenseMap.get(expense.Id).buildertek__Budget_Line__c) {
+                        deleteExpenseLinkList.add(expenseLinkMap.get(expense.Id));
+                    }
+                }
+            }
+
+            // If user change budget and expense is not linked with any budget line then it's create nee budget line under that budget
+            if(oldExpenseMap.get(expense.Id).buildertek__Budget__c != expense.buildertek__Budget__c && expense.buildertek__Budget__c != null && expense.buildertek__Budget_Line__c == null){
+                buildertek__Budget_Item__c budgetItem = new buildertek__Budget_Item__c();
+                budgetItem.buildertek__Budget__c = expense.buildertek__Budget__c;
+                budgetItem.Name = expense.buildertek__Description__c;
+                budgetItem.buildertek__Quantity__c = 1; 
+                budgetItem.buildertek__UOM__c = 'Each';
+                budgetItem.buildertek__Cost_Code__c = expense.buildertek__Cost_Code__c;
+                budgetItem.buildertek__Contractor__c = expense.buildertek__Vendor__c;
+                newBudgetItemMap.put(expense.Id, budgetItem);
+            }
+
+            // if user remove budget line from the expense and that budget line is auto created from code then we need to delete that budget line record
+            if(oldExpenseMap.get(expense.Id).buildertek__Budget_Line__c != null && expense.buildertek__Budget_Line__c == null){
+                deleteBudgetLineIdList.add(oldExpenseMap.get(expense.Id).buildertek__Budget_Line__c);
+            }
+
+        }
+
+        // update roll up field for execute work flow and update expense cost data on budget line
+        if (expenseLinkList.size() > 0) {
+            update expenseLinkList;
+        }
+
+        // delete old junction object list
+        if(deleteExpenseLinkList.size () > 0){
+            delete deleteExpenseLinkList;
+        }
+
+        // create new budget line record under budget when we change budget on expense
+        if (newBudgetItemMap.size() > 0) {
+            List<buildertek__Budget_Line_Group__c>  budgetlinegroup =[SELECT Id, Name FROM buildertek__Budget_Line_Group__c WHERE Name = 'Expense'];
+            String groupId = '';
+            if (budgetlinegroup.size() > 0) {
+                groupId = budgetlinegroup[0].Id;
+            } else {
+                buildertek__Budget_Line_Group__c budgetGroup = new buildertek__Budget_Line_Group__c();
+                budgetGroup.Name = 'Expense';
+                insert budgetGroup;
+                
+                groupId = budgetGroup.Id;
+            }
+
+            for (Id expenseId : newBudgetItemMap.keySet()) {
+                buildertek__Budget_Item__c budgetItem = newBudgetItemMap.get(expenseId);
+                budgetItem.buildertek__Group__c = groupId;
+            }
+            insert newBudgetItemMap.Values();
+
+            List<buildertek__Expense__c> newBudgetExpenseList = new List<buildertek__Expense__c>();
+            for (Id expenseId : newBudgetItemMap.keySet()) {
+                buildertek__Expense__c newBudgetExpense = newExpenseMap.get(expenseId);
+                newBudgetExpense.buildertek__Budget_Line__c = newBudgetItemMap.get(expenseId).Id;
+                newBudgetExpenseList.add(newBudgetExpense);
+                
+            }
+            if (newBudgetExpenseList.size() > 0) {
+                update newBudgetExpenseList;
+                createExpenseList.addAll(newBudgetExpenseList);
             }
         }
 
-        if(budgetitemIds.size() > 0){
-            
-           //CreateBudgetLineItemForExpenseAC.deletemethod(budgetitemIds); 
-           CreateBudgetLineItemForExpenseAC.deletemethodJunction(expenseList,budgetitemIds); 
+        // create new junction object record
+        if (createExpenseList.size() > 0) {
+            CreateBudgetLineItemForExpenseAC.createExpenseToBudgetItemLink(createExpenseList);  
         }
 
-        if(expenseWObudget.size() > 0){
-            for(buildertek__Expense__c exp : expenseWObudget){
-                CreateBudgetLineItemForExpenseAC.updateBudgetItem(exp.Id); 
+        // if user remove budget line from the expense and that budget line is auto created from code then we need to delete that budget line record
+        if (!blnSkipExpenseUpdateTrigger && deleteBudgetLineIdList.size() > 0) {
+            List<buildertek__Budget_Item__c> budgetLineList = [SELECT Id, Name FROM buildertek__Budget_Item__c WHERE Id IN: deleteBudgetLineIdList];
+            List<buildertek__Budget_Item__c> deleteBudgetLineList = new List<buildertek__Budget_Item__c>();
+
+            for (buildertek__Budget_Item__c budgetLine : budgetLineList) {
+                for (Id expenseId : oldExpenseMap.keySet()) {
+                    if (oldExpenseMap.get(expenseId).buildertek__Budget_Line__c == budgetLine.Id && newExpenseMap.get(expenseId).buildertek__Description__c == budgetLine.Name) {
+                        deleteBudgetLineList.add(budgetLine);
+                    }
+                }
+            }
+            if (deleteBudgetLineList.size() > 0) {
+                delete deleteBudgetLineList;
             }
         }
 
-        if(expenseWOBL.size() > 0){
-            for(buildertek__Expense__c exp : expenseWOBL){
-                CreateBudgetLineItemForExpenseAC.deleteBudgetItem(exp.Id, oldExpenseMap.get(exp.Id).buildertek__Budget_Line__c);
+        // Just remove etra budget from expense 
+        List<buildertek__Expense__c> newUpdatedExpenses = [SELECT Id, Name, buildertek__Budget__c, buildertek__Budget_Line__c FROM buildertek__Expense__c WHERE Id IN: newExpenseMap.keySet() AND buildertek__Budget__c != null AND buildertek__Budget_Line__c = null];
+        List<buildertek__Expense__c> newUpdatedExpenseList = new List<buildertek__Expense__c>();
+        for (buildertek__Expense__c expense : newUpdatedExpenses) {
+            if (oldExpenseMap.get(expense.Id).buildertek__Budget_Line__c != null) {
+                expense.buildertek__Budget__c = null;
+                newUpdatedExpenseList.add(expense);
             }
         }
+        if (newUpdatedExpenseList.size() > 0) {
+            update newUpdatedExpenseList;
+        }
+
     }
 
     public void OnBeforeDelete(buildertek__Expense__c[] oldExpense, Map<Id, buildertek__Expense__c> oldExpenseMap){
