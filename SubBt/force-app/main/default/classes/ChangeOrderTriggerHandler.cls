@@ -5,7 +5,7 @@ All rights reserved.
 Developed By: Sagar
 Date:  19-Sep-2017
 */
-public with sharing class ChangeOrderTriggerHandler {
+public without sharing class ChangeOrderTriggerHandler {
     //Boolean variable to allow skipping execution of trigger in certain scenarios
     public static Boolean blnSkipChangeOrderUpdateTrigger = false;
     

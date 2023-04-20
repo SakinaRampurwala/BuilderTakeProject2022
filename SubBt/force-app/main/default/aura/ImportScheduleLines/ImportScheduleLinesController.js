@@ -1,5 +1,5 @@
 ({
-    doInit: function(component, event, helper) {
+    doInit: function (component, event, helper) {
         component.set("v.isOpen", true);
         var url = location.href;
         var baseURL = url.substring(0, url.indexOf('--', 0));
@@ -14,14 +14,14 @@
         if (recordId) {
             component.set("v.RecordId", recordId)
             component.set("v.isNewGantt", myPageRef.state.buildertek__isFromNewGantt)
-                //recordId = component.get("v.RecordId");
-                /*if(!recordId){
-                    recordId = myPageRef.attributes.recordId
-                }*/
+            //recordId = component.get("v.RecordId");
+            /*if(!recordId){
+                recordId = myPageRef.attributes.recordId
+            }*/
         }
     },
 
-    CreateRecord: function(component, event, helper) {
+    CreateRecord: function (component, event, helper) {
         // debugger;
         component.set("v.Spinner", true);
         component.set("v.showMessage", true);
@@ -37,28 +37,25 @@
                 component.set("v.showError", false);
                 var reader = new FileReader();
                 reader.readAsText(file, "UTF-8");
-                reader.onload = function(evt) {
+                reader.onload = function (evt) {
                     var csv = evt.target.result;
                     var result = helper.CSV2JSON(component, event, helper, csv);
-                    console.log('csv data ',result);
-                    debugger
-
                     if (result != undefined && result != '') {
                         window.setTimeout(
-                            $A.getCallback(function() {
+                            $A.getCallback(function () {
                                 helper.CreateAccount(component, result);
                             }), 100
                         );
                     }
                 }
-                reader.onerror = function(evt) {
+                reader.onerror = function (evt) {
                     console.log("error reading file");
                 }
             }
         }
     },
 
-    handleFilesChange: function(component, event, helper) {
+    handleFilesChange: function (component, event, helper) {
         component.set("v.startdateError", false)
         var fileName = 'No File Selected..';
         if (event.getSource().get("v.files").length > 0) {
@@ -68,7 +65,7 @@
         // helper.parseFile(component,event.getSource().get("v.files")[0]);
     },
 
-    closeModel: function(component, event, helper) {
+    closeModel: function (component, event, helper) {
         component.set("v.isOpen", false);
         var baseURL = component.get("v.BaseURLs");
         var recordId = component.get("v.RecordId");
@@ -78,11 +75,11 @@
             // window.open('/'+recordId, "_top");
             var workspaceAPI = component.find("workspace");
             if (workspaceAPI.getFocusedTabInfo()) {
-                workspaceAPI.getFocusedTabInfo().then(function(response) {
-                        var focusedTabId = response.tabId;
-                        workspaceAPI.closeTab({ tabId: focusedTabId });
-                    })
-                    .catch(function(error) {
+                workspaceAPI.getFocusedTabInfo().then(function (response) {
+                    var focusedTabId = response.tabId;
+                    workspaceAPI.closeTab({ tabId: focusedTabId });
+                })
+                    .catch(function (error) {
                         console.log(error);
                         var navEvt = $A.get("e.force:navigateToSObject");
                         navEvt.setParams({
@@ -103,7 +100,7 @@
 
         // window.open(baseURL + '.lightning.force.com/lightning/r/buildertek__Schedule__c/' + escape(recordId) + '/view', '_self');
     },
-    downloadCsv: function(component, event, helper) {
+    downloadCsv: function (component, event, helper) {
         var csv = helper.convertArrayOfObjectsToCSV(component, event, helper);
         if (csv == null) { return; }
         // ####--code for create a temp. <a> html tag [link tag] for download the CSV file--####     

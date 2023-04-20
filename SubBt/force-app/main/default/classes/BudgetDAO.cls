@@ -2245,7 +2245,7 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
         if (strRecordId.size() > 0) {
             try {
                 List<buildertek__Account_Payable_Clone__c> invoiceAPList =  [SELECT Id, Name, buildertek__Total_Amount__c, buildertek__Budget__c, buildertek__Budget_Line__c FROM buildertek__Account_Payable_Clone__c WHERE Id =:strRecordId];
-                buildertek__Budget_Item__c budgetItem = new buildertek__Budget_Item__c();
+                buildertek__Budget_Item__c budgetItem = [SELECT Id, Name, buildertek__Invoice_total__c, buildertek__Budget__c FROM buildertek__Budget_Item__c WHERE Id IN :strList LIMIT 1];
                 List<buildertek__Account_Payable_Clone__c> updateInvoiceAPList = new  List<buildertek__Account_Payable_Clone__c>();
                 Decimal Value=0;
 
@@ -2260,7 +2260,7 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
                         
                     }
                     update updateInvoiceAPList;
-                    budgetItem = [SELECT Id, Name, buildertek__Invoice_total__c, buildertek__Budget__c FROM buildertek__Budget_Item__c WHERE Id IN :strList LIMIT 1];
+                    // budgetItem = [SELECT Id, Name, buildertek__Invoice_total__c, buildertek__Budget__c FROM buildertek__Budget_Item__c WHERE Id IN :strList LIMIT 1];
 
                     // invoiceAP.buildertek__Budget__c = budgetItem.buildertek__Budget__c;
                     // invoiceAP.buildertek__Budget_Line__c = budgetItem.Id;
@@ -2897,6 +2897,36 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
             }
         }
         return budgetItems;
+    }
+
+    @AuraEnabled
+    public static void updatePO(List<String> POId, List<String> BudgetLineId, String budgetId){
+        System.debug('POId -----------> ' + POId);
+        System.debug('BudgetLineId -----------> ' + BudgetLineId);
+        System.debug('budgetId -----------> ' + budgetId);
+        List<Id> POIds = new List<Id>();
+        for(String PO : POId){
+            POIds.add(Id.valueOf(PO));
+        }
+        List<Id> BudgetLineIds = new List<Id>();
+        for(String BudgetLine : BudgetLineId){
+            BudgetLineIds.add(Id.valueOf(BudgetLine));
+        }
+        //get all the PO
+        List<buildertek__Purchase_Order__c> purchaseOrders = [Select Id, buildertek__Budget_Line__c, buildertek__Budget_Line__r.Name
+                                                                                   from buildertek__Purchase_Order__c
+                                                                                   where Id IN :POIds];
+        //get all the budget line
+        List<buildertek__Budget_Item__c> budgetLines = [Select Id, Name, buildertek__Budget__c, buildertek__Budget__r.Name
+                                                                                   from buildertek__Budget_Item__c
+                                                                                   where Id IN :BudgetLineIds];
+        //loop over all purchase order and update budget and budget line id in PO
+        for(buildertek__Purchase_Order__c purchaseOrder : purchaseOrders){
+            purchaseOrder.buildertek__Budget__c = budgetLines[0].buildertek__Budget__c;
+            purchaseOrder.buildertek__Budget_Line__c = budgetLines[0].Id;
+        }
+        System.debug('purchaseOrders -----------> ' + purchaseOrders);
+        update purchaseOrders;
     }
     
     

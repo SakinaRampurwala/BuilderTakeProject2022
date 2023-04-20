@@ -1528,7 +1528,7 @@
                             </div>
                             <footer class="slds-modal__footer">
                                 <lightning:button variant="neutral" title="Cancel" label="Cancel" onclick="{! c.doCancel }" />
-                                <lightning:button variant="brand" type="submit" name="Save" label="Save" onclick="{!c.newPO}" />
+                                <lightning:button variant="brand" type="submit" name="Save" label="Save" onclick="{!c.updateBLPO}" />
                             </footer>
                         </div>
                     </div>

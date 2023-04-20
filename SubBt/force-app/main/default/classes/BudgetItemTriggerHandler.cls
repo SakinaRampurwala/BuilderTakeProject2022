@@ -51,6 +51,7 @@ public with sharing class BudgetItemTriggerHandler {
  	public void OnBeforeDelete(Budget_Item__c[] BudgetItemToDelete, Map<ID, Budget_Item__c> BudgetItemMap){
 		Set<Id> budgetLineIds = BudgetItemMap.keySet();
 		
+		//* for expense
      	List<buildertek__Expense__c> expenseList = [SELECT Id, Name, buildertek__Budget__c, buildertek__Budget_Line__c FROM buildertek__Expense__c WHERE buildertek__Budget_Line__c IN: budgetLineIds];
 		for (buildertek__Expense__c expense : expenseList) {
 			expense.buildertek__Budget__c = null;
@@ -60,16 +61,30 @@ public with sharing class BudgetItemTriggerHandler {
 			ExpenseToBudgetItemTriggerHandler.blnSkipExpenseUpdateTrigger = true;
 			update expenseList;
 			ExpenseToBudgetItemTriggerHandler.blnSkipExpenseUpdateTrigger = false;
-
 		}
 
+		//* for timeCard
 		List<buildertek__Time_Cards__c> timeCardList = [SELECT Id, Name, buildertek__Budget__c, buildertek__Budget_Line__c FROM buildertek__Time_Cards__c WHERE buildertek__Budget_Line__c IN: budgetLineIds];
 		for (buildertek__Time_Cards__c timeCard : timeCardList) {
 			timeCard.buildertek__Budget__c = null;
 			timeCard.buildertek__Budget_Line__c = null;
 		}
 		if (timeCardList.size() > 0) {
-			// update timeCardList;
+			TimeCardTriggerHandler.blnSkipTrigger = true;
+			update timeCardList;
+			TimeCardTriggerHandler.blnSkipTrigger = false;
+		}
+
+		//* for Invoice(AP)
+		List<buildertek__Account_Payable_Clone__c> invoiceAPList = [SELECT Id, Name, buildertek__Budget__c, buildertek__Budget_Line__c FROM buildertek__Account_Payable_Clone__c WHERE buildertek__Budget_Line__c IN: budgetLineIds];
+		for (buildertek__Account_Payable_Clone__c invoiceAP : invoiceAPList) {
+			invoiceAP.buildertek__Budget__c = null;
+			invoiceAP.buildertek__Budget_Line__c = null;
+		}
+		if (invoiceAPList.size() > 0) {
+			InvoiceAPTriggerHandler.skipDeleteMethod = true;
+			update invoiceAPList;
+			InvoiceAPTriggerHandler.skipDeleteMethod = false;
 		}
 
  	}

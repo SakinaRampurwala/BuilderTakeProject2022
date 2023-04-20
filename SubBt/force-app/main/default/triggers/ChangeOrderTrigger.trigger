@@ -32,7 +32,7 @@ trigger ChangeOrderTrigger on Change_Order__c (after delete, after insert, after
         }
         
         else if(Trigger.isUpdate && Trigger.isAfter){
-            handler.OnAfterUpdate(Trigger.old, Trigger.new, Trigger.newMap, trigger.oldMap);
+            // handler.OnAfterUpdate(Trigger.old, Trigger.new, Trigger.newMap, trigger.oldMap);
             handler.UpdateProjectValueInChangeOrder(Trigger.new, trigger.oldMap); 
             //handler.ManageBudgetLineOnInsert(Trigger.new);           
         }

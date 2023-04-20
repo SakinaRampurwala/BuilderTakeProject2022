@@ -165,7 +165,7 @@ timecard.adderror('You Need to close your last Time Card before you can create a
         }
 
         System.debug('timeCardWOBL' + timeCardWOBL.size());
-        if(timeCardWOBL.size() > 0){
+        if(!blnSkipTrigger && timeCardWOBL.size() > 0){
             for(buildertek__Time_Cards__c timeCard : timeCardWOBL){
                 CreateBudgetLineItemForTimeCard.deleteBudgetItem(timeCard.Id, oldTimeCardMap.get(timeCard.Id).buildertek__Budget_Line__c);
                 System.debug('after delte method!!!');

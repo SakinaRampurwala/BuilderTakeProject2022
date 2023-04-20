@@ -1,5 +1,5 @@
 public with sharing class createBudgetlineitemForTimeCard_AC {
-    /**/
+
     @AuraEnabled
     public static object getBudgets(string ResourcelogRecId){
         buildertek__Time_Cards__c reslog = [select id,Name,buildertek__Project__c from buildertek__Time_Cards__c where Id =:ResourcelogRecId];

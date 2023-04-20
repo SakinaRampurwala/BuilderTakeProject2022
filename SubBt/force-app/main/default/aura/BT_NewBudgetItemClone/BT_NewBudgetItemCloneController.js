@@ -508,6 +508,15 @@
     },
     addPO: function (component, event, helper) {
         var selectedRecs = component.get('v.selectedRecs');
+        if(selectedRecs.length > 1){
+            component.find('notifLib').showNotice({
+                "variant": "error",
+                "header": "Too many Budget Lines selected.",
+                "message": "Please Select only 1 Budget Line to add PO.",
+                closeCallback: function() {}
+            });
+            return;
+        }
         console.log('v.selectedRecs ==> ', { selectedRecs });
         if (selectedRecs.length > 0) {
             var BudgetIds = [];
@@ -3896,7 +3905,78 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
 
 
 
-    }
+    },
+
+    updateBLPO : function(component, event, helper) {
+        component.set("v.addposection", false);
+        $A.get("e.c:BT_SpinnerEvent").setParams({
+            "action": "SHOW"
+        }).fire();
+        var selectedRecords = component.get("v.selectedRecs");
+        var POList = component.get("v.recordList");
+        var selectedPOList = [];
+        POList.forEach(function(element) {
+            if(element.Selected){
+                selectedPOList.push(element.Id);
+            }
+        });
+        if(selectedPOList.length == 0){
+            component.set("v.addposection", true);
+            $A.get("e.c:BT_SpinnerEvent").setParams({
+                "action": "HIDE"
+            }).fire();
+            var toastEvent = $A.get("e.force:showToast");
+            toastEvent.setParams({
+                type: 'ERROR',
+                message: 'Please select PO',
+                duration: '3000',
+            });
+            toastEvent.fire();
+            return;
+        }
+        
+        var budgetid = component.get("v.sampleNewRecord").Id
+        console.log('selectedPOList',{selectedPOList});
+        console.log('budgetid',{budgetid});
+        console.log('selectedRecords',{selectedRecords}); 
+        debugger;
+        var action = component.get("c.updatePO");
+        action.setParams({
+            "POId" : selectedPOList,
+            "BudgetLineId" : selectedRecords,
+            "budgetId" : budgetid
+        });
+        action.setCallback(this, function(response) {
+            $A.get("e.c:BT_SpinnerEvent").setParams({
+                "action": "HIDE"
+            }).fire();
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    type: 'SUCCESS',
+                    message: 'PO added Successfully',
+                    duration: '5000',
+                });
+                toastEvent.fire();               
+                var action1 = component.get("c.doInit");
+                $A.enqueueAction(action1);
+            } else {
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    type: 'ERROR',
+                    message: 'Something Went Wrong',
+                    duration: '5000',
+                });
+                toastEvent.fire();
+            }
+            // $A.get('e.force:refreshView').fire();
+            // window.location.reload();
+        });
+        $A.enqueueAction(action);
+        
+
+    },
 
 
 })

@@ -164,15 +164,18 @@
 
                 const allActive = PaginationLst.every(function(obj) {
                     return obj.isChecked === true;
-                 });
-                 if(allActive){
-                    component.find("selectAllRFQ").set("v.value", true);
-        
+                });
+                 
+                if(PaginationLst.length > 0){
+                    if(allActive){
+                        component.find("selectAllRFQ").set("v.value", true);
+                    }else{
+                       component.find("selectAllRFQ").set("v.value", false);
+                    }
                 }else{
-                   component.find("selectAllRFQ").set("v.value", false);
-        
+                    component.find("selectAllRFQ").set("v.value", false);
                 }
-
+                
                 component.set("v.TotalPages", Math.ceil(totalLength / pageSize)); 
                 console.log({resultData});
                 if (resultData.categoryList && resultData.categoryList.length > 5) {
