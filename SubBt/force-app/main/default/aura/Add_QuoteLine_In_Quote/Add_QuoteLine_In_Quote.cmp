@@ -18,6 +18,7 @@
     <aura:attribute name="quoteLineGroupOptions" type="List" />
     <aura:attribute name="selectedQuoteLineGroupId" type="Id" />
     <aura:attribute name="getPhase" type="String" />
+    
 
 
     
@@ -42,7 +43,6 @@
     </aura:if>
      <div class="slds-modal__container">
             <aura:if isTrue="{!v.selecteProducts}">
-
             <header class="slds-modal__header">
                     <h2 class="slds-text-heading_medium slds-hyphenate">Products</h2>
             </header>
@@ -171,6 +171,7 @@
                     <table class="slds-table slds-table_cell-buffer slds-table_bordered" aria-label="Example default base table of Opportunities">
                         <thead>
                             <tr class="slds-line-height_reset">
+                                <th></th>
                                 <th class="" scope="col">
                                     <div class="slds-truncate" title="Price Book">Price Book</div>
                                 </th>
@@ -203,6 +204,11 @@
                         <tbody>
                             <aura:iteration items="{!v.selectedProducts}" var="item" indexVar="recIndex">
                                 <tr title="Product">
+                                    <td>
+                                        <span data-id="{!item.Id}"  onclick="{!c.removeQuoteLine}">
+                                            <lightning:icon iconName="utility:delete" size="xx-small" />   
+                                        </span>                     
+                                    </td>
                                     <td>
                                         <lightning:input name="input1" label="" value="{!item.buildertek__Size__c}" disabled="true" />
                                     </td>

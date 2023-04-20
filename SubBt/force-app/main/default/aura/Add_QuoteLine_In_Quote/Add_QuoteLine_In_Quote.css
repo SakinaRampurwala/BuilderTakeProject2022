@@ -15,3 +15,6 @@
     align-items: center;
     height: 150px
 }
+.THIS .slds-icon-text-default {
+    fill:rgb(116, 116, 116) !important;
+ }

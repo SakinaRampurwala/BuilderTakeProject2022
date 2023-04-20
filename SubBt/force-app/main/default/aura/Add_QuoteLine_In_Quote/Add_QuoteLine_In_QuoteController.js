@@ -64,30 +64,69 @@
        component.set("v.Spinner", true);
        console.log('saveQuoteLine');
        var listQlines = component.get("v.selectedProducts");
-       var action10 = component.get("c.QuoteLinesInsert");
-       action10.setParams({
-           "Quotelines": listQlines,
-           "QuoteId": component.get("v.quoteId")
+
+       if(listQlines.length > 0){
+            var action10 = component.get("c.QuoteLinesInsert");
+            action10.setParams({
+                "Quotelines": listQlines,
+                "QuoteId": component.get("v.quoteId")
+            });
+
+            action10.setCallback(this, function(response) {
+                console.log(response.getReturnValue());
+                component.set("v.openQuoteLineBox", false);
+                $A.get("e.force:refreshView").fire();
+                component.set("v.Spinner", false);
+                component.set("v.openProductBox", false);        
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    title: 'Success',
+                    message: 'Quote Lines are created successfully',
+                    duration: ' 5000',
+                    key: 'info_alt',
+                    type: 'success',
+                    mode: 'pester'
+                });
+                toastEvent.fire();
+            });
+            $A.enqueueAction(action10);
+
+       }else{
+        component.set("v.Spinner", false);
+
+        var toastEvent = $A.get("e.force:showToast");
+            toastEvent.setParams({
+                title: 'Error',
+                message: 'Please select at least one Product.',
+                duration: ' 5000',
+                key: 'info_alt',
+                type: 'error',
+                mode: 'pester'
+            });
+            toastEvent.fire();
+
+       }
+       
+   },
+   removeQuoteLine:function(component, event, helper){
+     var currentId=event.currentTarget.dataset.id;
+     var productList=component.get('v.selectedProducts');
+     var updatedList=[];
+     productList.forEach(function(value){
+        if(value.Id !== currentId){
+            updatedList.push(value);
+        }
+
+     });
+     component.set('v.selectedProducts' , updatedList);
+
+     var quoteLineList = component.get("v.quoteLineList");
+       quoteLineList.forEach(element => {
+            if(element.Id === currentId){
+                element.Selected=false;
+            }
        });
 
-       action10.setCallback(this, function(response) {
-           console.log(response.getReturnValue());
-           component.set("v.openQuoteLineBox", false);
-           $A.get("e.force:refreshView").fire();
-           component.set("v.Spinner", false);
-           component.set("v.openProductBox", false);        
-           var toastEvent = $A.get("e.force:showToast");
-           toastEvent.setParams({
-               title: 'Success',
-               message: 'Quote Lines are created successfully',
-               duration: ' 5000',
-               key: 'info_alt',
-               type: 'success',
-               mode: 'pester'
-           });
-           toastEvent.fire();
-       });
-       $A.enqueueAction(action10);
    }
 
-})
+}) 

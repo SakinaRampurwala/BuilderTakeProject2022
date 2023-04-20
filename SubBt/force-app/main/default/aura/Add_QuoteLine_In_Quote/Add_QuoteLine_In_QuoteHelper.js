@@ -185,6 +185,7 @@
             if (element.Selected && phaseValue != undefined) {
                 console.log(phaseValue != undefined);
                     selectedProducts.push({
+                        'Id':element.Id,
                         'Name': element.Name,
                         'buildertek__Unit_Price__c': element.UnitPrice,
                         'buildertek__Grouping__c': phaseValue,
@@ -199,6 +200,7 @@
                     })
             }else if(element.Selected){
                 selectedProducts.push({
+                    'Id':element.Id,
                     'Name': element.Name,
                     'buildertek__Unit_Price__c': element.UnitPrice,
                     'buildertek__Grouping__c': element.Phase ? element.Phase : noGroupingId,
