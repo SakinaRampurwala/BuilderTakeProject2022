@@ -61,27 +61,27 @@
 
             <apex:outputPanel rendered="{!if(secondGrouping , true ,false)}">
                 <tr style="font-weight: bold;">
-                    <th style="font-size: 15px; border-bottom: 1px solid #ccc; padding: 5px 15px; text-align: left; background-color: #ddd;"></th>
-                    <th style="font-size: 15px; border-bottom: 1px solid #ccc; padding: 5px 15px; text-align: left; background-color: #ddd;"></th>
+                    <td style="font-size: 15px; border-bottom: 1px solid #ccc; padding: 5px 15px; text-align: left; background-color: #ddd;"></td>
+                    <td style="font-size: 15px; border-bottom: 1px solid #ccc; padding: 5px 15px; text-align: left; background-color: #ddd;"></td>
                     <apex:repeat value="{!quoteLineWrapper.RecordsDataWrapperList[0].RecordDataList}" var="quoteItem">
-                        <th style="border-right: 1px solid #ccc; font-size: 15px; border-bottom: 1px solid #ccc; padding: 5px 15px; background-color: #ddd; {!if(OR(quoteItem.fieldType == 'currency', quoteItem.fieldType == 'number'),'text-align:right;' , 'text-align: left')}">
+                        <td style="border-right: 1px solid #ccc; font-size: 15px; border-bottom: 1px solid #ccc; padding: 5px 15px; background-color: #ddd; {!if(OR(quoteItem.fieldType == 'currency', quoteItem.fieldType == 'number'),'text-align:right;' , 'text-align: left')}">
                             {!sortlablevalueMap[quoteItem.fieldName]}
-                        </th>
+                        </td>
                     </apex:repeat>
                 </tr>
 
                 <apex:repeat value="{!quoteLineWrapper.groupWrapperList}" var="group1">
                     <tr>
-                        <th colspan="{!quoteLineWrapper.totalCols}" style="font-size: 14px; padding: 5px 15px; color:white; text-align: left; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);">
+                        <td colspan="{!quoteLineWrapper.totalCols}" style="font-size: 14px; padding: 5px 15px; color:white; text-align: left; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);">
                             {!group1.groupName}
-                        </th>
+                        </td>
                     </tr>
                     <apex:repeat value="{!group1.groupWrapperList}" var="group2">
                         <tr>
-                            <th style="font-size: 14px; padding: 5px 15px; color:white; text-align: left; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);"></th>
-                            <th colspan="2" style="font-size: 14px; padding: 5px 15px; color:white; text-align: left; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);">
+                            <td style="font-size: 15px; padding: 5px 15px; color:white; text-align: left; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);"></td>
+                            <td colspan="2" style="font-size: 14px; padding: 5px 15px; color:white; text-align: left; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);">
                                 {!group2.groupName}
-                            </th>
+                            </td>
 
                             <apex:repeat value="{!group2.RecordsDataWrapperList[0].RecordDataList}" var="quoteItem">
     
