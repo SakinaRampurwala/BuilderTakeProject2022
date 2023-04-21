@@ -314,7 +314,7 @@
                                 <button type="button" class="slds-button slds-button_destructive" onclick="showRejectPopup();" style="margin-left:0.25rem;"
                                     status="status"> Reject </button>
                             </apex:outputPanel>
-                            <button type="button" class="slds-button slds-button_brand" onclick="saveImage();" status="status"> Accept </button>
+                            <button type="button" class="slds-button slds-button_brand" onclick="saveImage();" status="status" style="{!IF(allQuoteLineAccepted, '', 'display:none;')}"> Accept </button>
                         </center>
                     </div>
                 </div>

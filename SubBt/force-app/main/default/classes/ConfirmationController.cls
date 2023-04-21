@@ -55,6 +55,9 @@ public without sharing class ConfirmationController{
     public Boolean isActionMethodCall{ get; set; }
     public String quoteMessage{ get; set; }
     public Boolean isAccepted{ get; set; }
+
+    public Boolean allQuoteLineAccepted{ get; set; }
+
     public String Result{ get; set; }
     public String RejectResult{ get; set; }
 
@@ -70,6 +73,7 @@ public without sharing class ConfirmationController{
         isOrderLien = false;
         isActionMethodCall = true;
         isAccepted = false;
+        allQuoteLineAccepted=true;
         Result = 'Not Accepted';
         RejectResult = 'Not Accepted';
         contrctrec = new buildertek__Contract__c();
@@ -395,9 +399,11 @@ public without sharing class ConfirmationController{
                 if (quoteitemrec.buildertek__Status__c == 'Accept'){
                     qlinewrap.isApproved = true;
                     qlinewrap.isRejected = false;
+                    // allQuoteLineAccepted=true;
                 } else{
                     qlinewrap.isApproved = false;
                     qlinewrap.isRejected = true;
+                    allQuoteLineAccepted=false;
                 }
                 if (quoteitemrec.buildertek__Net_Unit__c != null){
                     quoteitemNetunitprice += quoteitemrec.buildertek__Net_Unit__c;
