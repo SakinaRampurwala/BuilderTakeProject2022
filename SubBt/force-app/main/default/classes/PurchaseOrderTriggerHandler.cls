@@ -335,6 +335,13 @@ PurchaseOrderDAO.isUpdatePurchaseOrder = true;
           //  system.debug('purchaseorderRecord----->'+purchaseRec);
             
             list<buildertek__Purchase_Order_Item__c> purchaseOrderItem = [Select id,Name,buildertek__Purchase_Order__c,buildertek__Budget_Item__c from buildertek__Purchase_Order_Item__c where buildertek__Purchase_Order__c IN: purchaseIds order by CreatedDate limit 1];
+
+            // if(purchaseOrderItem.size() == 0){
+            //     buildertek__Purchase_Order_Item__c purchaseOrderItemRec = new buildertek__Purchase_Order_Item__c();
+            //     purchaseOrderItemRec.Name = 'New Purchase Order Item - ' + newPurchaseOrders[0].Name;
+            //     purchaseOrderItemRec.buildertek__Purchase_Order__c = newPurchaseOrders[0].Id;
+            //     insert purchaseOrderItemRec;
+            // }
             
             system.debug('purchaseorderItemRecord----->'+purchaseOrderItem);
             

@@ -3,6 +3,7 @@ public with sharing class UpdateInvoiceOnBudgetLineHandler {
 
    //After Insert , Update and Undelete this method is excecuted
     public void afterTrigger(List<buildertek__Account_Payable_Item_Clone__c> invLineList) {
+        System.debug('invLineList 1'+invLineList);
         for(buildertek__Account_Payable_Item_Clone__c invoiceLineAp:invLineList){
             if(invoiceLineAp.buildertek__Budget_Line__c	!= null){
                 setBudgetLineIds.add(invoiceLineAp.buildertek__Budget_Line__c);
@@ -33,6 +34,7 @@ public with sharing class UpdateInvoiceOnBudgetLineHandler {
     }
     // After Delete and update this method is eexecuted
     public void afterDelete(List<buildertek__Account_Payable_Item_Clone__c> invLineList) {
+        System.debug('invLineList 2'+invLineList);
         for(buildertek__Account_Payable_Item_Clone__c invoiceLineAp:invLineList){
             if(invoiceLineAp.buildertek__Budget_Line__c	!= null){
                 setBudgetLineIds.add(invoiceLineAp.buildertek__Budget_Line__c);

@@ -216,6 +216,20 @@ timecard.adderror('You Need to close your last Time Card before you can create a
             budgetItemLine.buildertek__Labor__c = val;
         }
         update budgetItemLines;
+
+
+         // Just remove etra budget from Time Card 
+         List<buildertek__Time_Cards__c> newUpdatedTimeCard = [SELECT Id, Name, buildertek__Budget__c, buildertek__Budget_Line__c FROM buildertek__Time_Cards__c WHERE Id IN: newTimeCardMap.keySet() AND buildertek__Budget__c != null AND buildertek__Budget_Line__c = null];
+         List<buildertek__Time_Cards__c> newUpdatedTimeCardList = new List<buildertek__Time_Cards__c>();
+         for (buildertek__Time_Cards__c timeCard : newUpdatedTimeCard) {
+             if (oldTimeCardMap.get(timeCard.Id).buildertek__Budget_Line__c != null) {
+                timeCard.buildertek__Budget__c = null;
+                newUpdatedTimeCardList.add(timeCard);
+             }
+         }
+         if (newUpdatedTimeCardList.size() > 0) {
+             update newUpdatedTimeCardList;
+         }
         
         //date weekStartDate;
         //date weekEndDate;

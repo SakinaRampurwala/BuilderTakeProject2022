@@ -35,7 +35,36 @@ public with sharing class PurchaseOrderItemTriggerHandler {
  	}
      
  	public void OnBeforeDelete(Purchase_Order_Item__c[] PurchaseOrderItemToDelete, Map<ID, Purchase_Order_Item__c> PurchaseOrderItemMap){
-     	
+		Set<Id> POItemIds = new Set<Id>();
+		List<buildertek__PO_Item_To_Budget_Item_Link__c> POItemToBudgetItemLinkList = [SELECT Id, buildertek__Budget_Item__c, buildertek__Approved_PO__c, buildertek__PO_Item__c FROM buildertek__PO_Item_To_Budget_Item_Link__c WHERE buildertek__PO_Item__c IN :PurchaseOrderItemToDelete];
+		Map<Id, buildertek__PO_Item_To_Budget_Item_Link__c> POItemToJunctionMap = new Map<Id, buildertek__PO_Item_To_Budget_Item_Link__c>();
+		for(buildertek__PO_Item_To_Budget_Item_Link__c POItemToBudgetItemLink : POItemToBudgetItemLinkList){
+			for(Purchase_Order_Item__c POItem : PurchaseOrderItemToDelete){
+				if(POItemToBudgetItemLink.buildertek__PO_Item__c == POItem.Id && POItemToBudgetItemLink.buildertek__Approved_PO__c != POItem.buildertek__Total_Price__c){
+					POItemIds.add(POItem.Id);
+					POItemToJunctionMap.put(poItem.Id, POItemToBudgetItemLink);
+				}
+			}
+		}
+		Map<Id, buildertek__PO_Item_To_Budget_Item_Link__c> POToJunctionMap = new Map<Id, buildertek__PO_Item_To_Budget_Item_Link__c>();
+		
+		for(Id POItemId : POItemIds){
+			POToJunctionMap.put(PurchaseOrderItemMap.get(POItemId).buildertek__Purchase_Order__c, POItemToJunctionMap.get(POItemId));
+		}
+
+		List<buildertek__Purchase_Order__c> POList = [SELECT Id, Name,buildertek__PO_Total__c, (SELECT Id, Name FROM Purchase_Order_Items__r WHERE Id NOT IN: POItemIds) FROM buildertek__Purchase_Order__c WHERE Id IN :POToJunctionMap.keyset()];
+		List<buildertek__PO_Item_To_Budget_Item_Link__c>  budgetItemLinkRecs= new List<buildertek__PO_Item_To_Budget_Item_Link__c>();
+		for(buildertek__Purchase_Order__c PO : POList){
+			if(PO.Purchase_Order_Items__r.size() > 0){
+				buildertek__PO_Item_To_Budget_Item_Link__c potobudgetRec = new buildertek__PO_Item_To_Budget_Item_Link__c();
+				potobudgetRec.buildertek__Budget_Item__c = POToJunctionMap.get(PO.Id).buildertek__Budget_Item__c;
+				potobudgetRec.buildertek__PO_Item__c = PO.Purchase_Order_Items__r[0].Id;
+				potobudgetRec.buildertek__Approved_PO__c =PO.buildertek__PO_Total__c;
+				budgetItemLinkRecs.add(potobudgetRec);
+			}
+		}
+		insert budgetItemLinkRecs;
+		
  	}
      
  	public void OnAfterInsert(Purchase_Order_Item__c[] newPurchaseOrderItems, Map<ID, Purchase_Order_Item__c> newPurchaseOrderItemsMap){ 
