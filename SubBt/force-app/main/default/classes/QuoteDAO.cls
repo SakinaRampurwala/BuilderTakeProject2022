@@ -822,7 +822,7 @@ public with sharing class QuoteDAO{
         fieldsType += '{"fieldName": "Id","fieldType": "","isEditable": false}]';
 
         List<wrapperClass> wrapperList = new List<wrapperClass>();
-        wrapperList = groupValues(quoteId, fieldsList, allFields, groupIds, recordToDisply, offset);
+        wrapperList = groupValues(quoteId, fieldsList, allFields, groupIds, recordToDisply, offset ,status );
         TargetTable tarTable = new TargetTable();
         //List<FieldClass> fieldClassList = (List<FieldClass>)System.JSON.deserialize(fieldsType, List<FieldClass>.class);
         tarTable = getQuoteItemData(quoteId, allFields, fieldsType, recordToDisply, offset , status);
@@ -1589,7 +1589,7 @@ public with sharing class QuoteDAO{
     }
 
     //@AuraEnabled
-    public static List<wrapperClass> groupValues(String recordId, list<String> currencyFields, List<String> allFields, List<String> groupIds, Decimal recordToDisply, Integer offset){
+    public static List<wrapperClass> groupValues(String recordId, list<String> currencyFields, List<String> allFields, List<String> groupIds, Decimal recordToDisply, Integer offset, string status){
        System.debug(':::::::groupValues:::::::');
         Map<string, string> mapForLabel = new Map<string, string>();
         Map<string, string> mapForFieldType = new Map<string, string>();
@@ -1612,7 +1612,7 @@ public with sharing class QuoteDAO{
         for (string sumOfFields : currencyFields){
             queryFields += ', ' + sumOfFields.trim();
         }
-        string status = 'Accept';
+        // string status = 'Accept';
         myquery = 'select buildertek__Grouping__c ' + queryFields + ' from buildertek__Quote_Item__c where buildertek__Quote__c =: recordId AND buildertek__Status__c =: status Order by buildertek__Grouping__r.buildertek__Sort_Id__c,buildertek__Grouping__r.Name, buildertek__Priority__c ASC, Name ASC limit ' + recordToDisply + ' OFFSET ' + offset;
         system.debug('----myquery -----------> ' + myquery);
         /*if(Schema.sObjectType.buildertek__Quote_Item__c.fields.Id.isAccessible()&&
