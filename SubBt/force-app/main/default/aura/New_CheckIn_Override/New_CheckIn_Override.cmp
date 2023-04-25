@@ -6,6 +6,7 @@
     <aura:attribute name="parentRecordId" type="String" default="" />
     <aura:attribute name="todayDateTime" type="DateTime"/>
     <aura:attribute name="isLoading" type="Boolean" />
+    <aura:attribute name="isSaveNew" type="Boolean" default="false" />
     <aura:attribute name="listOfFields" type="List" />
     <aura:attribute name="ismessage" type="boolean" default="false" />
     <aura:attribute name="isnew" type="boolean" default="true" />
@@ -111,9 +112,8 @@
                                 </div> -->
                     <div class="modal-footer slds-modal__footer slds-size_1-of-1">
                         <lightning:button variant="neutral" title="Cancel" label="Cancel" onclick="{! c.closeModel }" />
-                        <lightning:button variant="neutral" title="Save &amp; New" label="Save &amp; New"
-                                          onclick="{!c.saveAndNew}" />
-                        <lightning:button variant="brand" type="submit" name="save" label="Save" />
+                        <lightning:button variant="neutral" type="submit" title="Save &amp; New" label="Save &amp; New" onclick="{!c.saveAndNew}"/>
+                        <lightning:button variant="brand" type="submit" name="save" label="Save" onclick="{!c.save}"/>
                     </div>
                 </div>
             </lightning:recordEditForm>

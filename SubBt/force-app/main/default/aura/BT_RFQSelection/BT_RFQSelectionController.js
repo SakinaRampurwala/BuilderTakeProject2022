@@ -123,6 +123,8 @@
 		 for( key in quotes) {
 		    if( !quotes.hasOwnProperty(key) ) continue;
 		    item = quotes[key];
+
+            console.log({item});
 		    line = {  buildertek__RFQ__c: item.buildertek__RFQ__c,
 	    			  Name:item.Name,
 	    			  buildertek__Item_Name__c:item.buildertek__Item_Name__c,

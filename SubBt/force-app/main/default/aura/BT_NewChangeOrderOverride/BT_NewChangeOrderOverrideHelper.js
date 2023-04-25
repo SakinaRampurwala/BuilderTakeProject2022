@@ -9,7 +9,6 @@
         return decodeURIComponent(results[2].replace(/\+/g, " "));
     },
     getFields: function (component, event, helper,selectedRecordTypeId) {    
-        debugger;
        component.set('v.isLoading', true);
         var action = component.get("c.getFieldSet");
         action.setParams({
@@ -88,7 +87,6 @@
     },
     
     getRecType : function (component, event, helper) {
-        debugger;
         component.set('v.isLoading', true);
         var recType = component.get("c.getRecordTypeName");
         recType.setParams({

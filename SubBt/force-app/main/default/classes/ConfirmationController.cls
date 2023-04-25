@@ -66,6 +66,7 @@ public without sharing class ConfirmationController{
      public string imageContentforReject{ get; set; }
 
     public ConfirmationController(){
+        isAccepted  = false; 
         // std = ApexPages.StandardSetController;
         //        System.debug('Constrctor 2::'+std);
         contractstatus = true;

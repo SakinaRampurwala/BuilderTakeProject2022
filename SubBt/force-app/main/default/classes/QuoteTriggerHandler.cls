@@ -176,9 +176,11 @@ public without sharing class QuoteTriggerHandler {
     
     public void OnBeforeDelete(Quote__c[] QuotesToDelete, Map<ID, Quote__c> QuotesMap){
         for(buildertek__Quote__c qtemp : QuotesToDelete){
-            if(qtemp.buildertek__Status__c=='Sent' || qtemp.buildertek__Status__c=='Customer Accepted'){ 
+            if(qtemp.buildertek__Status__c=='Sent'){
                 //  qtemp.addError('Shouldn\'t be able to delete a \'Sent\' or \'Accepted\' Quote.');
-                qtemp.addError('You cannot Delete a Quote that has a Sent or Customer Accepted Status.');
+                qtemp.addError('You cannot Delete a Quote that has a Sent Status.');
+            }else if (qtemp.buildertek__Status__c=='Customer Accepted') {
+                qtemp.addError('You cannot Delete a Quote that has a Customer Accepted Status.');
             }
         }
     }

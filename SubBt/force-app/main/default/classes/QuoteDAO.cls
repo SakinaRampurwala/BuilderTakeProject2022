@@ -312,13 +312,14 @@ public with sharing class QuoteDAO{
             insert quoteItemsToInsert;
             List<buildertek__RFQ_Item__c> rfqLinesList =[Select Id ,buildertek__RFQ_Package__c  , buildertek__Quote_Item__c ,Name From buildertek__RFQ_Item__c where buildertek__RFQ_Package__c=:rfqIds];
 
+
             for (buildertek__Quote_Item__c qItem : quoteItemsToInsert){
+                qItem.buildertek__RFQ__c=qItem.buildertek__Quote__c;
                 for(buildertek__RFQ_Item__c rfqline:rfqLinesList){
                     rfqline.buildertek__Quote_Item__c=qItem.Id;
                 }
             }
             update rfqLinesList;
-
 
             return 'Success';
         } catch (Exception ex){

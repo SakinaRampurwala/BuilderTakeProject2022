@@ -27,6 +27,20 @@
         .helpOrb {
             display: none;
         }
+
+        .custom-loading-text {
+            transform: rotate(-90deg);
+            position: absolute;
+            top: -0.5rem;
+            left: 1rem;
+            white-space: nowrap;
+            font-size: 20px;
+        }
+
+        .slds-spinner_container{
+            position: fixed !important;
+        }
+
     </style>
     <script>
         function scrolldown() {
@@ -74,19 +88,39 @@
     <script>
 
         function reloadPage() {
-            const x ='{!RejectResult}';
-                if(x == 'Accepted' || x == 'Rejected'){
-                  document.getElementById('acceptrejectid').style.display = "block";
-            }else{
-                displayquotelinesdata();
-                window.location.reload();
-            }
+            // const x ='{!RejectResult}';
+            //     if(x == 'Accepted' || x == 'Rejected'){
+            //       document.getElementById('acceptrejectid').style.display = "block";
+            // }else{
+            //     displayquotelinesdata();
+            //     window.location.reload();
+            // }
             
         }
         function closeModal() {
             ClosePopup();
         }
     </script>
+
+    <div class="slds-scope">
+        <div id="spinner" class="slds-spinner_container" >
+
+            <div class="slds-spinner--brand slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+                <div class="custom-loading-text">
+                    <b>Processing, Please Wait</b>
+                </div>
+            </div>
+
+        </div>
+    </div> 
+
+    <script>
+        document.getElementById('spinner').className += ' slds-hide';
+    </script>
+
     <apex:outputPanel rendered="{!isAccepted}" id="acceptquote">    
         <div style='text-align: center;padding:20px;font-size:20px;'> 
         <h1 class="slds-text-heading--medium" style="font-size: 20px;text-align:center;background-color: Green;color: white;">
@@ -430,12 +464,23 @@
                 }
             }
             function saveacceptRejectlines() {
+                document.getElementById('spinner').className -= ' slds-hide';
+                document.getElementById('spinner').className += ' slds-spinner_container';
+                
                 const x ='{!RejectResult}';
                 if(x == 'Accepted' || x == 'Rejected'){
                     document.getElementById('acceptrejectid').style.display = "block";
                 }else{
                     saveacceptandRejectlines();
                 }
+
+                setTimeout(
+                    function(){ 
+                        window.location.reload();
+                        // document.getElementById('spinner').className += ' slds-hide';
+                     }, 5000
+                );
+
                 return;
             }
 

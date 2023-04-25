@@ -99,8 +99,7 @@
 							<td>
 								<!--<div class="slds-truncate" title="{!item.Name}"><lightning:input name="product item" label=" " value="{!item.changeOrderItem.Name}" /></div>-->
 								<div class="slds-truncate">
-									<lightning:recordEditForm aura:id="recordViewForm"
-										objectApiName="buildertek__Purchase_Order_Item__c">
+									<lightning:recordEditForm aura:id="recordViewForm" objectApiName="buildertek__Purchase_Order_Item__c">
 										<lightning:messages />
 										<lightning:inputField onchange="{!c.updateProductInfo}" aura:id="{!index}"
 											fieldName="buildertek__Product__c"

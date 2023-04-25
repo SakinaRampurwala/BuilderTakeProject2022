@@ -181,8 +181,25 @@
         quoteLineList.forEach(element => {
             console.log(phaseValue);
             console.log(phaseValue!= undefined);
+            if(element.Selected){
+                selectedProducts.push({
+                    'Id':element.Id,
+                    'Name': element.Name,
+                    'buildertek__Unit_Price__c': element.UnitPrice,
+                    'buildertek__Grouping__c': element.Phase ? element.Phase : noGroupingId,
+                    'buildertek__Quantity__c': '1',
+                    'buildertek__Additional_Discount__c': element.Discount ? element.Discount : 0,
+                    'buildertek__Unit_Cost__c': element.UnitCost ? element.UnitCost : element.UnitPrice,
+                    'buildertek__Markup__c': element.MarkUp ? element.MarkUp : 0,
+                    'buildertek__Product__c': element.Id,
+                    'buildertek__Size__c': element.Size,
+                    'buildertek__Description__c': element.Description ? element.Description : element.Name,
+                    'buildertek__Product_Family__c': element.Family ? element.Family : 'No Grouping'
+                })
+            }
 
-            if (element.Selected && phaseValue != undefined) {
+            // =====BUIL-3198 ====
+            /*if (element.Selected && phaseValue != undefined) {
                 console.log(phaseValue != undefined);
                     selectedProducts.push({
                         'Id':element.Id,
@@ -213,7 +230,10 @@
                     'buildertek__Description__c': element.Description ? element.Description : element.Name,
                     'buildertek__Product_Family__c': element.Family ? element.Family : 'No Grouping'
                 })
-            }
+            }*/
+
+            // ====BUIL-3198===
+            
         });
         console.log('selectedProducts => ',{selectedProducts});
         component.set("v.selectedProducts", selectedProducts);
