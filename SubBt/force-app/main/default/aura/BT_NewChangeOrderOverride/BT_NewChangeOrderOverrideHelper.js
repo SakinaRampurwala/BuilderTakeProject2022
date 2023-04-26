@@ -100,7 +100,7 @@
                 console.log(result);
                 if(result != null){
                     component.set("v.RecordTypeId",result);
-                    component.set('v.isopen',true);
+                    component.set('v.createWithOutCOLines',true);
                     component.set('v.isLoading', false);
                      helper.getFields(component, event, helper,result);
                 }
@@ -180,43 +180,7 @@
 		});
 		$A.enqueueAction(action);
 
-        var toastEvent = $A.get("e.force:showToast");
-        toastEvent.setParams({
-            "type": "Success",
-            "title": "Success!",
-            "message": "The record has been created successfully."
-        });
-        toastEvent.fire();
-  
-        var saveNnew = component.get("v.isSaveNew");
-        console.log('saveNnew: ' + saveNnew);
-
-        if(saveNnew){
-            $A.get('e.force:refreshView').fire();
-        }
-        else{
-            console.log('---Else---');
-            console.log('saveAndClose');
-            var navEvt = $A.get("e.force:navigateToSObject");
-            navEvt.setParams({
-                "recordId": recordId,
-                "slideDevName": "Detail"
-            });
-            navEvt.fire();
-            component.set("v.parentRecordId", null);
-
-            var focusedTabId = '';
-            var workspaceAPI = component.find("workspace");
-            workspaceAPI.getFocusedTabInfo().then(function(response) {
-                focusedTabId = response.tabId;
-            })
-
-            window.setTimeout(
-                $A.getCallback(function() {
-                    workspaceAPI.closeTab({tabId: focusedTabId});
-                }), 1000
-            );
-        }
+       
 	},
     
 })

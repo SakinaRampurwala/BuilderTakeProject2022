@@ -10,7 +10,7 @@
 
 
             
-<!-- 
+            <!-- 
                 <apex:selectRadio layout="pageDirection" label="Are you using products?">
                     <Label>Yes</Label><input type="radio" name="radioButton" value="{!CheckRecordTypeVisibilityYes}" checked="{!CheckRecordTypeVisibilityYes}"/>
                     <Label>No</Label><input type="radio" name="radioButton" value="{!CheckRecordTypeVisibilityNo}" checked="{!CheckRecordTypeVisibilityNo}"/>
@@ -21,6 +21,12 @@
                     <apex:selectOptions value="{!Options}"/>
                 </apex:selectRadio>
                 
+
+                <apex:selectList label="Create Change Order" value="{!createCO}" multiselect="false" size="1">
+                    <apex:selectOption itemValue="Without CO Lines" itemLabel="Without CO Lines"/>
+                    <apex:selectOption itemValue="With CO Lines" itemLabel="With CO Lines"/>
+                </apex:selectList>
+
 
                 <!-- <apex:selectRadio id="radioSelect" value="{!isExempt}" layout="pageDirection" >
                    

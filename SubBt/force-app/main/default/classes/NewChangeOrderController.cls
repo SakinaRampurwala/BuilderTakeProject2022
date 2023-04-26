@@ -211,7 +211,7 @@ public static List<ListView> getListViews() {
     }
 
     @AuraEnabled
-    public static List<buildertek__Change_Order_Item__c> saveCOLineItems (List<buildertek__Change_Order_Item__c> listofCOItemsToSave, Id recordId ){
+    public static String saveCOLineItems (List<buildertek__Change_Order_Item__c> listofCOItemsToSave, Id recordId ){
         System.debug('listofPOItemsToSave ==? '+listofCOItemsToSave);
         System.debug('recordId ==? '+recordId);
         //loop over the list and set the PO Id
@@ -220,8 +220,20 @@ public static List<ListView> getListViews() {
         }
         insert listofCOItemsToSave;
 
-        return listofCOItemsToSave;
+        return 'Success';
     }
+
+    @AuraEnabled
+    public static String getadminvalues(){
+        buildertek__Admin_Interface_Node_Configuration__c adminInterfaceNodeConfigurations = [Select Id,buildertek__Change_Order_Configuration__c,buildertek__Email_Subject__c , buildertek__Create_Change_order__c 
+                                                                                              from buildertek__Admin_Interface_Node_Configuration__c WHERE Name=:'Change Order Configuration'];
+
+        String createCO = adminInterfaceNodeConfigurations.buildertek__Create_Change_order__c ;
+
+
+
+        return createCO;
+    }   
 
 
 
