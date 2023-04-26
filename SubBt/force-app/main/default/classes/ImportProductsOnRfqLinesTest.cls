@@ -50,7 +50,7 @@ private class ImportProductsOnRfqLinesTest {
         ImportProductsOnRfqLines.getprodlist();
         ImportProductsOnRfqLines.productfamilyList('Product2' , priceBookId);
         ImportProductsOnRfqLines.pricebookList(rfq.Id);
-        ImportProductsOnRfqLines.getProducts(1 , 2, rfq.Id ,'' , '' ,'' , '' ,'' ,'' ,'test');
+        ImportProductsOnRfqLines.getProducts(rfq.Id ,'' , '' ,'' , '' ,'' ,'' ,'test');
         ImportProductsOnRfqLines.addProductToRfq(productIds, rfq.Id );
         ImportProductsOnRfqLines.addProductToPO(productIds, rfq.Id );
 
@@ -65,7 +65,7 @@ private class ImportProductsOnRfqLinesTest {
         Id priceBookId = Test.getStandardPricebookId();
         buildertek__RFQ__c rfq=[Select Id , Name from  buildertek__RFQ__c LIMIT 1];
         Test.startTest();
-        ImportProductsOnRfqLines.getProducts(1 , 2, rfq.Id ,'test' , 'test' ,'test' , 'test' ,'test' ,'tset' ,'test');
+        ImportProductsOnRfqLines.getProducts(rfq.Id ,'test' , 'test' ,'test' , 'test' ,'test' ,'tset' ,'test');
         Test.stopTest();
 
         

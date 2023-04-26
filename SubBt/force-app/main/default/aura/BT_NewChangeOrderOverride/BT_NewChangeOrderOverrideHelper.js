@@ -109,6 +109,114 @@
             }
         });
         $A.enqueueAction(recType);
-    }
+    },
+    getCOFields : function (component, event, helper) {
+        console.log('getCOFields');
+        var action2 = component.get("c.getCOFieldSet");
+        action2.setParams({
+            objectName: 'buildertek__Change_Order__c',
+            fieldSetName: 'buildertek__CreateCoFromProjectFieldSet'
+        });
+        action2.setCallback(this, function (response) {
+            console.log(response.getState());
+            console.log(response.getError());
+
+            if (response.getState() == 'SUCCESS' && response.getReturnValue()) {
+                component.set("v.Spinner", false);
+                var listOfFields0 = JSON.parse(response.getReturnValue());
+                console.log('coLinesFields-->>',{listOfFields0});
+                component.set("v.listOfCOFields", listOfFields0);
+            }
+        });
+        $A.enqueueAction(action2);
+    },
+    setCOLines:function (component, event, helper) {
+        try{
+            var listofCOItems=component.get("v.coLineList");
+            listofCOItems.push({
+                'index':listofCOItems.length,
+                'Name': '',
+                'buildertek__Quantity__c': '',
+                'buildertek__Unit_Price__c': '',
+                'buildertek__Markup__c': '',
+            });
+            component.set("v.coLineList" , listofCOItems);
+        }catch(error){
+            console.log({error});
+        }
+       
+    
+    },
+    saveCOLineItems : function(component, event, helper, recordId) {
+		var listofCOItems = component.get("v.coLineList");
+        console.log({listofCOItems});
+		var listofCOItemsToSave = [];
+		for (var i = 0; i < listofCOItems.length; i++){
+			if (listofCOItems[i].Name != undefined && listofCOItems[i].Name != '' ) {
+				// listofPOItemsToSave.push(listofPOItems[i]);
+				let coLineObj = {
+					'Name' : listofCOItems[i].Name,
+					'buildertek__Quantity__c' : listofCOItems[i].buildertek__Quantity__c,
+					'buildertek__Unit_Price__c' : listofCOItems[i].buildertek__Unit_Price__c,
+					'buildertek__Markup__c' : listofCOItems[i].buildertek__Markup__c,
+				}
+				listofCOItemsToSave.push(coLineObj);
+			}
+		}
+		console.log('listofPOItemsToSave-->>',{listofCOItemsToSave});
+		console.log('recordId-->>',{recordId});
+        
+		var action = component.get("c.saveCOLineItems");
+		action.setParams({
+			listofCOItemsToSave: listofCOItemsToSave,
+			recordId: recordId
+		});
+		action.setCallback(this, function (response) {
+			console.log('response.getState()'+ response.getState());
+			if (response.getState() == 'SUCCESS' && response.getReturnValue()) {
+				console.log('inserted');
+                console.log(response.getReturnValue());
+			}
+		});
+		$A.enqueueAction(action);
+
+        var toastEvent = $A.get("e.force:showToast");
+        toastEvent.setParams({
+            "type": "Success",
+            "title": "Success!",
+            "message": "The record has been created successfully."
+        });
+        toastEvent.fire();
+  
+        var saveNnew = component.get("v.isSaveNew");
+        console.log('saveNnew: ' + saveNnew);
+
+        if(saveNnew){
+            $A.get('e.force:refreshView').fire();
+        }
+        else{
+            console.log('---Else---');
+            console.log('saveAndClose');
+            var navEvt = $A.get("e.force:navigateToSObject");
+            navEvt.setParams({
+                "recordId": recordId,
+                "slideDevName": "Detail"
+            });
+            navEvt.fire();
+            component.set("v.parentRecordId", null);
+
+            var focusedTabId = '';
+            var workspaceAPI = component.find("workspace");
+            workspaceAPI.getFocusedTabInfo().then(function(response) {
+                focusedTabId = response.tabId;
+            })
+
+            window.setTimeout(
+                $A.getCallback(function() {
+                    workspaceAPI.closeTab({tabId: focusedTabId});
+                }), 1000
+            );
+        }
+	},
     
 })

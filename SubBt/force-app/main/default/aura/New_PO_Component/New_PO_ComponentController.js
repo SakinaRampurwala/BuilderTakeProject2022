@@ -47,14 +47,21 @@
                     var objName = response.getReturnValue();
                     if(objName == 'buildertek__Project__c'){
                         component.set("v.parentprojectRecordId", parentRecordId);
+                        console.log('We got the parentRecordId', component.get("v.parentprojectRecordId"));
+                        component.set("v.ProjectContainer", true);
+                        component.set("v.MainContainer", false);
+                        helper.getCustomerId(component, event, helper, parentRecordId);                  
+                        helper.getFieldSetwithProject(component, event, helper); 
+                        helper.setupListofPOItem(component, event, helper);
                     }
                 } 
             });
             $A.enqueueAction(action);
         }
         $A.enqueueAction(action2);
+        // helper.getFieldSetforPOLine(component, event, helper);
     },
-
+    
     closeModel: function(component, event, helper) {
         var workspaceAPI = component.find("workspace");
         workspaceAPI.getFocusedTabInfo().then(function(response) {
@@ -74,6 +81,7 @@
    },
 
   handleSubmit : function(component, event, helper) {
+    component.set("v.Spinner", true);
       console.log('handleSubmit');
       event.preventDefault();  
       var fields = event.getParam('fields');
@@ -93,7 +101,11 @@
               console.log(response.getReturnValue());
               var recordId = response.getReturnValue();
               console.log('recordId-->>',{recordId});
-              
+              var listofPOItems = component.get("v.listofPOItems");
+              if(listofPOItems.length > 0){
+                helper.savePOLineItems(component, event, helper, recordId);
+                }
+                component.set("v.Spinner", false);              
               var toastEvent = $A.get("e.force:showToast");
               toastEvent.setParams({
                   "type": "Success",
@@ -153,5 +165,42 @@
   saveNnew : function(component, event, helper) {
       component.set("v.saveAndNew", true);
       console.log('saveNnew');
-  }
+  },
+
+  removePOLine : function(component, event, helper) {
+    var currentId=event.currentTarget.dataset.id;
+    console.log('current ID', {currentId});
+    var listofPOItems=component.get("v.listofPOItems");
+    //loop over the list and find the index to remove
+    for(var i=0;i<listofPOItems.length;i++){
+        if(listofPOItems[i].index==currentId){
+            listofPOItems.splice(i,1);
+            break;
+        }
+    }
+    component.set("v.listofPOItems",listofPOItems);
+  },
+
+  addNewRow : function(component, event, helper) {
+    var listofPOItems=component.get("v.listofPOItems");
+    listofPOItems.push({
+        index: listofPOItems.length,
+        Name : '',
+        buildertek__Quantity__c : '',
+        buildertek__Unit_Price__c : '',
+    });
+    component.set("v.listofPOItems",listofPOItems);
+  },
+
+  handleVersionChange : function(component, event, helper) {
+    var selectedVersion = component.find("version").get("v.value");
+    console.log('selectedVersion', {selectedVersion});
+    // var listofPOItems=component.get("v.listofPOItems");
+    // for(var i=0;i<listofPOItems.length;i++){
+    //     listofPOItems[i].buildertek__Version__c = selectedVersion;
+    // }
+    // component.set("v.listofPOItems",listofPOItems);
+    
+  },
+
 })

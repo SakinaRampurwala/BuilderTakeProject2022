@@ -10,20 +10,20 @@ public with sharing class BT_SendEmailController{
     public static Change_Order__c co{get;set;}
     public List<Change_Order__c> changeOdrList{get;set;}
     public static List<Change_Order__c> changeOdrList1{get;set;}
-    public String yrcId {get;set;}                
+    public String yrcId {get;set;}
 
     public BT_SendEmailController(){
 
         yrcId = ApexPages.currentPage().getParameters().get('id');
         System.debug('yrcId>>>'+yrcId);
-    
-        changeOdrList = [SELECT Id,buildertek__CO_Number__c,buildertek__Project__r.Name,buildertek__Project__r.buildertek__Customer__r.Name,buildertek__Project__r.buildertek__Customer__r.billingstreet,        
+
+        changeOdrList = [SELECT Id,buildertek__CO_Number__c,buildertek__Project__r.Name,buildertek__Project__r.buildertek__Customer__r.Name,buildertek__Project__r.buildertek__Customer__r.billingstreet,
                             buildertek__Project__r.buildertek__Customer__r.billingcity,buildertek__Project__r.buildertek__Customer__r.billingstate,buildertek__Project__r.buildertek__Customer__r.billingpostalcode,
-                           
+
                             buildertek__Project__r.buildertek__Customer__r.billingCountry,buildertek__Project__r.buildertek__Customer__r.Phone,Name,Total_Amount_Tax__c,buildertek__Status__c,
-                            
+
                             Total_Amount__c,Tax_Rate__c,(SELECT Name,Description__c,Quantity__c,Unit_Sales_Price__c,Total__c FROM Change_Order_Items__r) FROM Change_Order__c WHERE buildertek__Project__c =:yrcId AND buildertek__Type__c = 'Customer' AND (buildertek__Status__c = 'Customer Approved' OR buildertek__Status__c = 'Paid' OR buildertek__Status__c = 'Partially Paid')];
-    }    
+    }
 
 
     // public Pagereference savecontent(Id recordId,Blob bvalue){
@@ -34,11 +34,11 @@ public with sharing class BT_SendEmailController{
     //     cv.VersionData = bvalue;
     //     cv.IsMajorVersion = true;
     //     insert cv;
-        
+
     //     //Get Content Documents
     //     Id conDocId = [SELECT ContentDocumentId FROM ContentVersion WHERE Id =:cv.Id].ContentDocumentId;
-        
-    //     //Create ContentDocumentLink 
+
+    //     //Create ContentDocumentLink
     //     ContentDocumentLink cdl = new ContentDocumentLink();
     //     cdl.LinkedEntityId = rcId;
     //     cdl.ContentDocumentId = conDocId;
@@ -47,7 +47,7 @@ public with sharing class BT_SendEmailController{
     // }
     // public void generatepdf(){
 
-    //     PageReference defaultPage = new PageReference('/apex/CreateSignedChangeVfWrapper'); //page location        
+    //     PageReference defaultPage = new PageReference('/apex/CreateSignedChangeVfWrapper'); //page location
     //     pageData = defaultPage.getContentAsPDF();
     // }
 
@@ -57,13 +57,13 @@ public with sharing class BT_SendEmailController{
         if(String.isNotBlank(folderName)){
             List<EmailTemplate> emailTemplateList;
         //  if (Schema.sObjectType.Emailtemplate.fields.Id.isAccessible() && Schema.sObjectType.Emailtemplate.fields.Name.isAccessible() && Schema.sObjectType.Folder.fields.Name.isAccessible()){
-    
+
                 emailTemplateList = [Select Id, Name, folder.name
                                      from Emailtemplate
                                      where folder.name = :folderName];
         //  }
             return emailTemplateList;
-        } 
+        }
         return null;
     }
 
@@ -73,58 +73,58 @@ public with sharing class BT_SendEmailController{
         if(String.isNotBlank(folderName)){
             List<EmailTemplate> emailTemplateList;
         //  if (Schema.sObjectType.Emailtemplate.fields.Id.isAccessible() && Schema.sObjectType.Emailtemplate.fields.Name.isAccessible() && Schema.sObjectType.Folder.fields.Name.isAccessible()){
-    
+
                 emailTemplateList = [Select Id, Name, folder.name,Body
                                      from Emailtemplate
                                      where folder.name = :folderName];
         //  }
         system.debug(emailTemplateList[0].Body);
             return emailTemplateList;
-        } 
+        }
         return null;
     }
-    
+
      @AuraEnabled
     public Static String gettemplatebodyContent(String recordId, String templateId){
         string templateBody = '';
         string templateBody1 = '';
-        
+
         Contact con ;
-        
+
         con = [select id, Email from Contact where email != null order by createddate desc limit 1 ];
-        
+
         String[] toaddres;
         toaddres = new String[]{con.email};
         Savepoint sp = Database.setSavepoint();
-        list<Messaging.SingleEmailMessage> msgList= new List<Messaging.SingleEmailMessage>(); 
-        list<Messaging.SingleEmailMessage> msgList1= new List<Messaging.SingleEmailMessage>(); 
+        list<Messaging.SingleEmailMessage> msgList= new List<Messaging.SingleEmailMessage>();
+        list<Messaging.SingleEmailMessage> msgList1= new List<Messaging.SingleEmailMessage>();
         List<String> templateList = new List<String>();
         Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
         List<EmailTemplate> templateRecordList = [SELECT Id,Body FROM EmailTemplate WHERE Id =: templateId];
-        string theTemplate = [SELECT Id,Body FROM EmailTemplate WHERE Id =: templateId].Id; 
+        string theTemplate = [SELECT Id,Body FROM EmailTemplate WHERE Id =: templateId].Id;
         email.setTemplateId(theTemplate);
-        email.setWhatId(recordId);                        
-        email.setTargetObjectId(con.Id);       
+        email.setWhatId(recordId);
+        email.setTargetObjectId(con.Id);
         email.setSaveAsActivity(false);
-        email.setToAddresses(toaddres);  
+        email.setToAddresses(toaddres);
        // email.setHtmlBody(templateRecordList[0].Body);
         msgList.add(email);
         system.debug('&&&&&recordId'+recordId);
-        Messaging.SendEmailResult [] r = Messaging.sendEmail(new Messaging.SingleEmailMessage[] {email}); 
+        Messaging.SendEmailResult [] r = Messaging.sendEmail(new Messaging.SingleEmailMessage[] {email});
         System.debug('Email Results isSuccess = ' +  r[0].IsSuccess());
-        Database.rollback(sp); 
-        for (Messaging.SingleEmailMessage emailNew : msgList) { 
+        Database.rollback(sp);
+        for (Messaging.SingleEmailMessage emailNew : msgList) {
             system.debug(emailNew);
             system.debug(emailNew.getPlainTextBody());
             system.debug(emailNew.getHTMLBody());
-            templateBody1 = emailNew.getHTMLBody(); 
+            templateBody1 = emailNew.getHTMLBody();
         }
         system.debug(templateBody1);
         return templateBody1;
     }
-    
-    
-    
+
+
+
     @AuraEnabled
     public Static String getFileAttachments(String recordId){
         Map<Id, list<ContentDocumentLink>> FilesListMap = new Map<Id, list<ContentDocumentLink>>();
@@ -278,7 +278,7 @@ public with sharing class BT_SendEmailController{
             SET<Id> contactIdSet = new SET<Id>();
             List<Contact> conList;
 
-            //* nishit's logic for wide org email starts from here 
+            //* nishit's logic for wide org email starts from here
                 buildertek__WideOrgEmailsettings__c getEmail = buildertek__WideOrgEmailsettings__c.getOrgDefaults();
                 String wideOrgEmailName = getEmail.buildertek__WideEmail__c;
                 List<OrgWideEmailAddress> wideOrgEmail =[select Id,Address from OrgWideEmailAddress WHERE Address =:wideOrgEmailName];
@@ -400,7 +400,7 @@ public with sharing class BT_SendEmailController{
                 subject = subject + ' Warranty - [ref:' + recordId + ']';
                 body = body;
             }
-            
+
             if (Id.valueOf(recordId).getSObjectType().getDescribe().getName() == 'Account'){
                 //mail.setTemplateId(templateId);
                 subject = subject + ' - [ref:' + recordId + ']';
@@ -412,14 +412,14 @@ public with sharing class BT_SendEmailController{
                 body = body;
             }
             if (Id.valueOf(recordId).getSObjectType().getDescribe().getName() == 'buildertek__Permit__c'){
-                buildertek__Permit__c permit = new buildertek__Permit__c(); 
+                buildertek__Permit__c permit = new buildertek__Permit__c();
                 permit = [SELECT Id, Name, buildertek__Permit_Number__c FROM buildertek__Permit__c WHERE Id =:recordId];
 
                 if (templateId != null && templateId != '') {
                     mail.setTemplateId(templateId);
                     mail.setWhatId(recordId);
                     mail.setTargetObjectId(conList[0].Id);
-    
+
                     Savepoint sp = Database.setSavepoint();
                     Messaging.SendEmailResult[] r = Messaging.sendEmail(new Messaging.SingleEmailMessage[]{mail});
                     Database.rollback(sp);
@@ -471,9 +471,9 @@ public with sharing class BT_SendEmailController{
                 subject = subject + ' Submittal - [ref:' + recordId + ']';
                 body = body.replaceAll('<p><br></p>', '<br>');
                 body = body.replaceAll('<p>', '<p style="margin-top: 0.1em; margin-bottom: 0em; ">');
-                
+
             }
-            
+
             //added by sai start
             if (Id.valueOf(recordId).getSObjectType().getDescribe().getName() == 'buildertek__Account_Payable__c'){
                 mail.setTemplateId(templateId);
@@ -490,13 +490,13 @@ public with sharing class BT_SendEmailController{
                 subject = subject + ' - [ref:' + recordId + ']';
                 body = body;
             }
-            
+
             system.debug('ObjectApiName--->'+Id.valueOf(recordId).getSObjectType().getDescribe().getName());
             system.debug('recordId-->'+recordId);
             system.debug('templateId-->'+templateId);
             system.debug('body-->'+body);
             //added by sai end
-            
+
             List<File__c> flList;
 
 
@@ -537,10 +537,19 @@ public with sharing class BT_SendEmailController{
 
             // Attached record pdf as an attachment
             List<Messaging.Emailfileattachment> fileAttachments = new List<Messaging.Emailfileattachment>();
-            if (Id.valueOf(recordId).getSObjectType().getDescribe().getName() != 'buildertek__RFQ__c' && Id.valueOf(recordId).getSObjectType().getDescribe().getName() != 'buildertek__RFI__c' && Id.valueOf(recordId).getSObjectType().getDescribe().getName() != 'buildertek__Permit__c'){
+            if (Id.valueOf(recordId).getSObjectType().getDescribe().getName() != 'buildertek__RFQ__c' && Id.valueOf(recordId).getSObjectType().getDescribe().getName() != 'buildertek__RFI__c' && Id.valueOf(recordId).getSObjectType().getDescribe().getName() != 'buildertek__Permit__c' && Id.valueOf(recordId).getSObjectType().getDescribe().getName() != 'buildertek__Billings__c'){
                 if (String.isNotBlank(templateId)){
                     Messaging.Emailfileattachment efa = new Messaging.Emailfileattachment();
                     efa.setFileName(pdfFileName + '.pdf');
+                    efa.setBody(setAttachmentBody(recordId, templateId));
+                    fileAttachments.add(efa);
+                }
+            }
+
+            if (Id.valueOf(recordId).getSObjectType().getDescribe().getName() == 'buildertek__Billings__c' ){
+                if (String.isNotBlank(templateId)){
+                    Messaging.Emailfileattachment efa = new Messaging.Emailfileattachment();
+                    efa.setFileName('Invoice' + '.pdf');
                     efa.setBody(setAttachmentBody(recordId, templateId));
                     fileAttachments.add(efa);
                 }
@@ -564,10 +573,10 @@ public with sharing class BT_SendEmailController{
                     //fileAttachments.add(docs);
                     contentVersionIds.add(docs.Id);
                 }
-            } 
+            }
             List<Attachment> attList;
 
- 
+
             attList = [Select Id, Name, Body
                        from Attachment
                        where Id IN :files];
@@ -590,48 +599,48 @@ public with sharing class BT_SendEmailController{
             mail.setEntityAttachments(contentVersionIds);
             if(Id.valueOf(recordId).getSObjectType().getDescribe().getName() == 'buildertek__Change_Order__c'){
             mail.setFileAttachments(fileAttachments);
-            } 
+            }
               if(Id.valueOf(recordId).getSObjectType().getDescribe().getName() == 'buildertek__Billings__c'){
             mail.setFileAttachments(fileAttachments);
-            } 
-            
+            }
+
              /* Developed by Hemanth Kumar */
               if(Id.valueOf(recordId).getSObjectType().getDescribe().getName() == 'buildertek__Warranty__c'){
             mail.setFileAttachments(fileAttachments);
-            } 
+            }
              if(Id.valueOf(recordId).getSObjectType().getDescribe().getName() == 'buildertek__Punch_List__c'){
             mail.setFileAttachments(fileAttachments);
-            } 
+            }
              if(Id.valueOf(recordId).getSObjectType().getDescribe().getName() == 'Account'){
             mail.setFileAttachments(fileAttachments);
-            } 
+            }
              if(Id.valueOf(recordId).getSObjectType().getDescribe().getName() == 'buildertek__Project__c'){
             mail.setFileAttachments(fileAttachments);
-            } 
+            }
              if(Id.valueOf(recordId).getSObjectType().getDescribe().getName() == 'buildertek__Permit__c'){
             mail.setFileAttachments(fileAttachments);
-            } 
+            }
              if(Id.valueOf(recordId).getSObjectType().getDescribe().getName() == 'buildertek__Contract__c'){
             mail.setFileAttachments(fileAttachments);
-            } 
+            }
                if(Id.valueOf(recordId).getSObjectType().getDescribe().getName() == 'buildertek__Account_Payable__c'){
             mail.setFileAttachments(fileAttachments);
-            } 
+            }
                if(Id.valueOf(recordId).getSObjectType().getDescribe().getName() == 'buildertek__Account_Payable_Clone__c'){
             mail.setFileAttachments(fileAttachments);
-            } 
+            }
               if(Id.valueOf(recordId).getSObjectType().getDescribe().getName() == 'buildertek__Submittal__c'){
             mail.setFileAttachments(fileAttachments);
-            } 
+            }
              if(Id.valueOf(recordId).getSObjectType().getDescribe().getName() == 'buildertek__RFI__c'){
             mail.setFileAttachments(fileAttachments);
-            } 
+            }
              if(Id.valueOf(recordId).getSObjectType().getDescribe().getName() == 'buildertek__Quote__c'){
             mail.setFileAttachments(fileAttachments);
-            } 
-            
+            }
+
             System.debug('mail ==> '+mail);
-            
+
             mails.add(mail);
             Messaging.SendEmailResult[] results = Messaging.sendEmail(mails);
             system.debug('results ----------> ' + results);
@@ -657,7 +666,7 @@ public with sharing class BT_SendEmailController{
                     }
                     system.debug('CCaddresses ----------> ' + CCaddresses);
                     if (Id.valueOf(recordId).getSObjectType().getDescribe().getName() == 'buildertek__Change_Order__c'){
-                        //* Date: 28/03/2023 logic added for Date Emailed for Signature 
+                        //* Date: 28/03/2023 logic added for Date Emailed for Signature
                         List<buildertek__Change_Order__c> coList = new List<buildertek__Change_Order__c>();
                         coList = [SELECT Id, Name, buildertek__Sender_Email_Response__c, buildertek__CO_Submit_Date__c FROM buildertek__Change_Order__c WHERE Id =:recordId LIMIT 1];
                         if (coList.size() > 0) {
@@ -745,8 +754,8 @@ public with sharing class BT_SendEmailController{
                             quote.buildertek__Date_Sent_To_Customer__c = system.today();
                         }
                         quote.buildertek__Sender_Email_Response__c = UserInfo.getUserEmail();
-                       // if (Schema.sObjectType.buildertek__Quote__c.fields.Id.isUpdateable() 
-                           // && Schema.sObjectType.buildertek__Quote__c.fields.buildertek__Status__c.isUpdateable() 
+                       // if (Schema.sObjectType.buildertek__Quote__c.fields.Id.isUpdateable()
+                           // && Schema.sObjectType.buildertek__Quote__c.fields.buildertek__Status__c.isUpdateable()
                           //  && Schema.sObjectType.buildertek__Quote__c.fields.buildertek__Sender_Email_Response__c.isUpdateable()){
                             update quote;
                      //   }
@@ -765,7 +774,7 @@ public with sharing class BT_SendEmailController{
                         inv.buildertek__Sender_Email_Response__c = UserInfo.getUserEmail();
                             system.debug(inv.buildertek__Sender_Email_Response__c);
                         if (Schema.sObjectType.buildertek__Billings__c.fields.buildertek__Invoiced_Date__c.isUpdateable()){
-                            
+
                             update inv;
                             system.debug('inv date -------> ' + inv.buildertek__Invoiced_Date__c);
                         }
@@ -786,7 +795,7 @@ public with sharing class BT_SendEmailController{
                     caseEmailMessage.MessageDate = system.now();
                     //caseEmailMessage.TextBody = body.replaceAll('<br/>', '\n');
                     //caseEmailMessage.TextBody = body;
-                    
+
                     system.debug('caseEmailMessage.TextBody ---------> ' + caseEmailMessage.TextBody);
                     system.debug('Content length ---------> ' + body.length());
                     /*if(body.length() >= 131000 ){
@@ -801,7 +810,7 @@ public with sharing class BT_SendEmailController{
                     //caseEmailMessage.ActivityId = '0011K00002S8KIbQAN';
 
                     insert caseEmailMessage;
-                    
+
 
 
                     EmailMessageRelation emr = new EmailMessageRelation();
@@ -812,36 +821,36 @@ public with sharing class BT_SendEmailController{
 
 
                     insert emr;
-                    
+
                     system.debug('*****************6^^^^^^**********************');
                     system.debug(caseEmailMessage.Id);
                     system.debug(files);
                     List<ContentVersion> attachmentList = [Select id,VersionData from ContentVersion where id IN:files];
-                    
-                    
-                    
-                   
+
+
+
+
                        system.debug(attachmentList);
                        List<Attachment> newAttList = new List<Attachment>();
                     for (ContentVersion att : attachmentList){
                        Attachment attch = new Attachment();
                        attch.Body = att.VersionData;
                        attch.Name = 'test';
-                       attch.ParentId = caseEmailMessage.Id; 
+                       attch.ParentId = caseEmailMessage.Id;
                        newAttList.add(attch);
                     }
                     system.debug(newAttList);
                     insert(newAttList);
                     system.debug(newAttList);
 
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
+
+
+
+
+
+
+
+
 
 
                     /*List<Contact> toAddressList = [SELECT Id, Email FROM Contact WHERE Id IN: contactIdSet];
@@ -867,7 +876,7 @@ public with sharing class BT_SendEmailController{
                 }
                 system.debug(body);
             }
-            
+
             String message = 'Success';
             return message;
         } catch (Exception exp){
@@ -1093,13 +1102,13 @@ public with sharing class BT_SendEmailController{
 
         public String contactId{ get; set; }
     }
-    
+
       @AuraEnabled
     public static String uploadFile(String parentId, String fileName, String base64Data, String contentType, String fileId) {
         // check if fileId id ''(Always blank in first chunk), then call the saveTheFile method,
-        //  which is save the check data and return the attachemnt Id after insert, 
+        //  which is save the check data and return the attachemnt Id after insert,
         //  next time (in else) we are call the appentTOFile() method
-        //   for update the attachment with reamins chunks  
+        //   for update the attachment with reamins chunks
         System.debug(' parentId  ++++++++++++++++++++++++++++++++++'+parentId);
         if (fileId == '') {
             fileId = saveTheFile(parentId, fileName, base64Data, contentType);
@@ -1109,7 +1118,7 @@ public with sharing class BT_SendEmailController{
         }
         return string.valueOf(fileId);
     }
-    public static Id saveTheFile(String parentId, String fileName, String base64Data, String contentType) { 
+    public static Id saveTheFile(String parentId, String fileName, String base64Data, String contentType) {
         system.debug('parentId--->'+parentId);
         base64Data = EncodingUtil.urlDecode(base64Data, 'UTF-8');
         ContentVersion conVer = new ContentVersion();
@@ -1124,7 +1133,7 @@ public with sharing class BT_SendEmailController{
         insert conVer;    //Insert ContentVersion
         // First get the Content Document Id from ContentVersion Object
         Id conDoc = [SELECT ContentDocumentId FROM ContentVersion WHERE Id =:conVer.Id].ContentDocumentId;
-        //create ContentDocumentLink  record 
+        //create ContentDocumentLink  record
         ContentDocumentLink conDocLink = New ContentDocumentLink();
         Set<SObjectField> ContentDocumentLinkFields = new set<SObjectField>{ContentDocumentLink.LinkedEntityId,
             ContentDocumentLink.ContentDocumentId,
@@ -1136,12 +1145,12 @@ public with sharing class BT_SendEmailController{
         system.debug('inserted--------------'+conDocLink.Id);
         return conVer.Id;
     }
-    
+
     @AuraEnabled
     public static String getTemplatesBody(){
 
-        List<EmailTemplate> et = [SELECT Id,Name,HtmlValue FROM EmailTemplate WHERE Name='Change Order'];        
-        
+        List<EmailTemplate> et = [SELECT Id,Name,HtmlValue FROM EmailTemplate WHERE Name='Change Order'];
+
         // co = [SELECT Id,buildertek__CO_Number__c,buildertek__Project__r.buildertek__Customer__r.Name,buildertek__Project__r.buildertek__Customer__r.billingstreet,
         //                     buildertek__Project__r.buildertek__Customer__r.billingcity,buildertek__Project__r.buildertek__Customer__r.billingstate,buildertek__Project__r.buildertek__Customer__r.billingpostalcode,
         //                     buildertek__Project__r.buildertek__Customer__r.billingCountry,buildertek__Project__r.buildertek__Customer__r.Phone,Name,Total_Amount_Tax__c,buildertek__Status__c,
@@ -1161,12 +1170,12 @@ public with sharing class BT_SendEmailController{
 
         // email.setTemplateId(et[0].Id);
         // email.setTargetObjectId(co.Id);
-        // email.setWhatId(co.Id);                                            
-        // email.setToAddresses(toaddres);  
-        // email.setSaveAsActivity(false);   
-        // email.setHtmlBody(et[0].HtmlValue);                   
-        // msgList.add(email);        
-        
+        // email.setWhatId(co.Id);
+        // email.setToAddresses(toaddres);
+        // email.setSaveAsActivity(false);
+        // email.setHtmlBody(et[0].HtmlValue);
+        // msgList.add(email);
+
         // System.debug('msgList>>>'+msgList);
 
         List<String> emailBodyList = new List<String>();
@@ -1180,25 +1189,25 @@ public with sharing class BT_SendEmailController{
         String ems = '';
 
         for(String s : emailBodyList){
-            s = s.replace('</body>','<div style="page-break-after:always !important;"></div></body>'); 
-            ems += s;            
-            ems = ems.replaceAll('<span style="font-size: 14px;', '<span style="font-size: 10px !important;');        
+            s = s.replace('</body>','<div style="page-break-after:always !important;"></div></body>');
+            ems += s;
+            ems = ems.replaceAll('<span style="font-size: 14px;', '<span style="font-size: 10px !important;');
         }
         // String str = EncodingUtil.base64Encode(ems);
-        // System.debug('str>>'+str);        
+        // System.debug('str>>'+str);
         System.debug('ems>>>'+ems);
         Blob b = blob.valueOf(ems);
 
         String bs = EncodingUtil.base64Encode(b);
 
         // pdf = EncodingUtil.base64Encode(b);
-        
+
 
         // Attachment att = new Attachment();
         // att.Name = 'test111.pdf';
         // att.Body = Blob.valueOf(bs);
         // att.ParentId = 'a1Q1K000004OIswUAG';
-        // att.ContentType = 'application/pdf';        
+        // att.ContentType = 'application/pdf';
         // insert att;
 
         // ContentVersion cv = new ContentVersion();
@@ -1207,11 +1216,11 @@ public with sharing class BT_SendEmailController{
         // cv.VersionData = Blob.toPdf(ems);
         // cv.IsMajorVersion = true;
         // Insert cv;
-        
+
         // //Get Content Documents
         // Id conDocId = [SELECT ContentDocumentId FROM ContentVersion WHERE Id =:cv.Id].ContentDocumentId;
-        
-        // //Create ContentDocumentLink 
+
+        // //Create ContentDocumentLink
         // ContentDocumentLink cdl = new ContentDocumentLink();
         // cdl.LinkedEntityId = 'a1Q1K000004OIswUAG';
         // cdl.ContentDocumentId = conDocId;
@@ -1219,16 +1228,16 @@ public with sharing class BT_SendEmailController{
         // Insert cdl;
 
         String templateBody1;
-        for (Messaging.SingleEmailMessage emailNew : msgList) { 
-                        
+        for (Messaging.SingleEmailMessage emailNew : msgList) {
+
             system.debug('em html body>>>'+emailNew.getHTMLBody());
-            templateBody1 = emailNew.getHTMLBody(); 
+            templateBody1 = emailNew.getHTMLBody();
         }
 
         return templateBody1;
 
     }
-    
+
 
     @AuraEnabled
     public Static List<EmailTemplate> getTemplatesForSignedChange(){
@@ -1236,12 +1245,12 @@ public with sharing class BT_SendEmailController{
         List<Emailtemplate> temrec;
 
         temrec = [Select Id, Name, folder.name from Emailtemplate where folder.name = 'BT CO' and Name !=:'Change Order1'];
-            
+
         return temrec;
     }
-    
+
     @AuraEnabled
-    public static string getChangeOrderLines(String recordId, String templateId){        
+    public static string getChangeOrderLines(String recordId, String templateId){
 
         // changeOdrList1 = getChangeOrders(recordId);
         System.debug('recordId>>>'+recordId);
@@ -1250,34 +1259,34 @@ public with sharing class BT_SendEmailController{
         string templateBody1 = '';
         string templateBody2 = '';
         Contact con ;
-       
+
             con = [select id, Email from Contact where email != null order by createddate desc limit 1 ];
-            
+
         String[] toaddres;
         toaddres = new String[]{con.email};
         Savepoint sp = Database.setSavepoint();
-        list<Messaging.SingleEmailMessage> msgList= new List<Messaging.SingleEmailMessage>(); 
-        list<Messaging.SingleEmailMessage> msgList1= new List<Messaging.SingleEmailMessage>(); 
+        list<Messaging.SingleEmailMessage> msgList= new List<Messaging.SingleEmailMessage>();
+        list<Messaging.SingleEmailMessage> msgList1= new List<Messaging.SingleEmailMessage>();
         List<String> templateList = new List<String>();
         Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
-        
-        string theTemplate = [SELECT Id FROM EmailTemplate WHERE Id =: templateId].Id; 
+
+        string theTemplate = [SELECT Id FROM EmailTemplate WHERE Id =: templateId].Id;
         email.setTemplateId(theTemplate);
-        email.setWhatId(recordId);                        
-        email.setTargetObjectId(con.Id);       
+        email.setWhatId(recordId);
+        email.setTargetObjectId(con.Id);
         email.setSaveAsActivity(true);
         email.setToAddresses(toaddres);
         msgList.add(email);
-        
-        // Messaging.SendEmailResult [] r = Messaging.sendEmail(new Messaging.SingleEmailMessage[] {email}); 
+
+        // Messaging.SendEmailResult [] r = Messaging.sendEmail(new Messaging.SingleEmailMessage[] {email});
         // System.debug('Email Results isSuccess = ' +  r[0].IsSuccess());
-        // Database.rollback(sp); 
-        // for (Messaging.SingleEmailMessage emailNew : msgList) {                   
-        //     templateBody1 = emailNew.getHTMLBody(); 
+        // Database.rollback(sp);
+        // for (Messaging.SingleEmailMessage emailNew : msgList) {
+        //     templateBody1 = emailNew.getHTMLBody();
         // }
         // templateBody = templateBody1 ;
 
-        
+
         //Added for signed email change
 
         List<String> emailBodyList = new List<String>();
@@ -1285,34 +1294,34 @@ public with sharing class BT_SendEmailController{
         changeOdrList1 = [SELECT Id,buildertek__CO_Number__c,buildertek__Project__r.Name,buildertek__Project__r.buildertek__Customer__r.Name,buildertek__Project__r.buildertek__Customer__r.billingstreet,
                             buildertek__Project__r.buildertek__Customer__r.billingcity,buildertek__Project__r.buildertek__Customer__r.billingstate,buildertek__Project__r.buildertek__Customer__r.billingpostalcode,
                             buildertek__Project__r.buildertek__Customer__r.billingCountry,buildertek__Project__r.buildertek__Customer__r.Phone,Name,Total_Amount_Tax__c,buildertek__Status__c,
-                            Total_Amount__c,Tax_Rate__c,(SELECT Name,Description__c,Quantity__c,Unit_Sales_Price__c,Total__c FROM Change_Order_Items__r) FROM Change_Order__c WHERE buildertek__Project__c=:recordId AND buildertek__Type__c = 'Customer' AND (buildertek__Status__c = 'Customer Approved' OR buildertek__Status__c = 'Paid' OR buildertek__Status__c = 'Partially Paid')];                                            
-        
-        List<EmailTemplate> et = [SELECT Id,Name,HtmlValue FROM EmailTemplate WHERE Name='Change Order']; 
+                            Total_Amount__c,Tax_Rate__c,(SELECT Name,Description__c,Quantity__c,Unit_Sales_Price__c,Total__c FROM Change_Order_Items__r) FROM Change_Order__c WHERE buildertek__Project__c=:recordId AND buildertek__Type__c = 'Customer' AND (buildertek__Status__c = 'Customer Approved' OR buildertek__Status__c = 'Paid' OR buildertek__Status__c = 'Partially Paid')];
+
+        List<EmailTemplate> et = [SELECT Id,Name,HtmlValue FROM EmailTemplate WHERE Name='Change Order'];
 
         for (Change_Order__c co : changeOdrList1) {
 
             Messaging.SingleEmailMessage email1 = Messaging.renderStoredEmailTemplate(et[0].Id, null, co.Id);
 
-            emailBodyList.add(email1.getHTMLBody());            
+            emailBodyList.add(email1.getHTMLBody());
         }
 
         for(String s : emailBodyList){
 
             s = s.replace('</html>','<hr></html>');
             templateBody += s;
-        }                             
+        }
 
         system.debug('Final templateBody ----------> '+templateBody);
         return templateBody;
-        
+
     }
 
     @AuraEnabled
     public static string saveSign(String recId,String base64Data, String contentType,string signName){
         system.debug('base64Data-------------'+base64Data);
         string conversn;
-        if(base64Data.length() > 1696 || Test.isRunningTest()){  
-            base64Data = EncodingUtil.urlDecode(base64Data, 'UTF-8');   
+        if(base64Data.length() > 1696 || Test.isRunningTest()){
+            base64Data = EncodingUtil.urlDecode(base64Data, 'UTF-8');
             ContentVersion conVer = new ContentVersion();
             conVer.ContentLocation = 'S'; // to use S specify this document is in Salesforce, to use E for external files
             conVer.PathOnClient = 'SignatureName.png'; // The files name, extension is very important here which will help the file in preview.
@@ -1322,14 +1331,14 @@ public with sharing class BT_SendEmailController{
             system.debug('*******conVer*******'+conVer);
             // First get the Content Document Id from ContentVersion Object
             Id conDoc = [SELECT ContentDocumentId FROM ContentVersion WHERE Id =:conVer.Id].ContentDocumentId;
-            //create ContentDocumentLink  record 
+            //create ContentDocumentLink  record
             ContentDocumentLink conDocLink = New ContentDocumentLink();
             conDocLink.LinkedEntityId = recId; // Specify RECORD ID here i.e Any Object ID (Standard Object/Custom Object)
             conDocLink.ContentDocumentId = conDoc;  //ContentDocumentId Id from ContentVersion
             conDocLink.shareType = 'I';
-            insert conDocLink;  
+            insert conDocLink;
            system.debug('conDocLink---'+conDocLink.id);
-           
+
             list<buildertek__Change_Order__c> corec;
             RecordType rt;
             list<buildertek__Contract__c>  contractlist  = new list<buildertek__Contract__c>();
@@ -1344,27 +1353,27 @@ public with sharing class BT_SendEmailController{
                       contractlist = [select id,Name,buildertek__Project__c from buildertek__Contract__c where buildertek__Project__c =: corec[0].buildertek__Project__c AND
                                                                    RecordTypeId =: rt.id order by CreatedDate ];
                  }
-             
+
                    /* corec = [select id,
                                         Name,
                                         buildertek__Status__c,
                                         buildertek__Date_Approved__c
                                         from buildertek__Change_Order__c where Id=:recId limit 1];*/
-                
+
                 if(corec.size()>0){
-                    
+
                             corec[0].buildertek__Status__c = 'Customer Approved';
-                           
+
                              corec[0].buildertek__Date_Approved__c = system.now();
                              corec[0].buildertek__Customer_Accepted_Date__c = System.today();
                             if(contractlist.size() > 0){
                                 corec[0].buildertek__Contract__c = contractlist[0].id;
                             }
-                          
+
                             update corec;
                     system.debug(corec+'corec---'+corec[0].buildertek__Date_Approved__c);
                 }
-                
+
              conversn = [SELECT Id,VersionData FROM ContentVersion WHERE ContentDocumentId = :conDoc AND IsLatest = true].Id;
             //system.debug('conversn[0].Id ='+conversn[0].Id);
             return conversn;
@@ -1372,15 +1381,15 @@ public with sharing class BT_SendEmailController{
              String message = 'NoImage';
             return message;
         }
-        
-    } 
-    
+
+    }
+
 
     @AuraEnabled
     public static String sendEmailApex1(List<String> to, List<String> cc, String emailsubject, String emailBody,String recordId) {
-        
+
         try{
-            
+
             List<Contact> tolst = [SELECT Id,Name,Email FROM Contact where ID IN:to];
             List<Contact> cclst = [SELECT Id,Name,Email FROM Contact where ID IN:cc];
 
@@ -1397,16 +1406,16 @@ public with sharing class BT_SendEmailController{
             eServices = [SELECT Id, AuthorizedSenders, EmailDomainName, IsActive, LocalPart
                         FROM EmailServicesAddress
                         where LocalPart = 'projects'];
-        
+
             String fromAddress = eServices.LocalPart + '@' + eServices.EmailDomainName;
 
-            messaging.SingleEmailMessage mail = new messaging.SingleEmailMessage();                                
+            messaging.SingleEmailMessage mail = new messaging.SingleEmailMessage();
             mail.setToAddresses(toEmaillst);
             mail.setCcAddresses(ccEmaillst);
-            mail.setReplyTo(fromAddress);            
+            mail.setReplyTo(fromAddress);
             mail.setSubject(emailsubject);
             mail.setHtmlBody(emailBody);
-        
+
             PageReference vfPage = Page.generateMergePdf;
             vfPage.getParameters().put('id',recordId);
 
@@ -1418,7 +1427,7 @@ public with sharing class BT_SendEmailController{
             {
                 System.debug(ex);
             }
-            Blob pageData = vfPage.getContentAsPDF();                        
+            Blob pageData = vfPage.getContentAsPDF();
 
             ContentVersion cv = new ContentVersion();
             cv.Title = 'Create Signed Change '+'('+date.today().format()+')';
@@ -1426,11 +1435,11 @@ public with sharing class BT_SendEmailController{
             cv.VersionData = pageData;
             cv.IsMajorVersion = true;
             insert cv;
-                        
+
             //Get Content Documents
             Id conDocId = [SELECT ContentDocumentId FROM ContentVersion WHERE Id =:cv.Id].ContentDocumentId;
-            
-            //Create ContentDocumentLink 
+
+            //Create ContentDocumentLink
             ContentDocumentLink cdl = new ContentDocumentLink();
             cdl.LinkedEntityId = recordId;
             cdl.ContentDocumentId = conDocId;
@@ -1451,11 +1460,11 @@ public with sharing class BT_SendEmailController{
             throw new AuraHandledException(e.getMessage());
             return null;
         }
-        
+
     }
 
     // public class getProjectNameANDautoNumber {
-    //     @AuraEnabled 
+    //     @AuraEnabled
     //     public String ProjectName{get;set;}
     //     @AuraEnabled
     //      public String AutoNumber{get;set;}
@@ -1473,7 +1482,7 @@ public with sharing class BT_SendEmailController{
             }else{
                 pdfName=changeRec.buildertek__Auto_Number__c;
             }
-           
+
         }else if (objectAPIName == 'buildertek__Quote__c'){
             buildertek__Quote__c quoteRec=[Select Id , Name From buildertek__Quote__c where Id=:recordId LIMIT 1];
             pdfName=quoteRec.Name;
@@ -1483,35 +1492,35 @@ public with sharing class BT_SendEmailController{
         return pdfName;
     }
 
-    
 
 
 
-   
 
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

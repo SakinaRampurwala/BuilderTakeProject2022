@@ -121,7 +121,7 @@ public class QuoteDAOTest {
         QuoteDAO.deleteLineItems(budgetItemIds);
         QuoteDAO.deleteSelectedItems(budgetItemIds);
         //BudgetDAO.deleteBudgetLineItem(budgetRef.Id);
-        QuoteDAO.groupValues(quoteRec.Id, currencyFields, allFields, groupIds, 10, 0);
+        QuoteDAO.groupValues(quoteRec.Id, currencyFields, allFields, groupIds, 10, 0 , 'Accept');
         QuoteDAO.getQuoteItemData(quoteRec.Id, allFields, fieldString, 10, 0, 'Accept');
         QuoteDAO.getQuoteItemData(quoteRec.Id, allFields, fieldString, 10, 0, 'Reject');
 

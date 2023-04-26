@@ -66,4 +66,27 @@ public with sharing class New_PO_ComponentController {
         String sObjName = recordId.getSObjectType().getDescribe().getName();  
         return sObjName;
     }
+
+    @AuraEnabled
+    public static String getCustomerId (Id recordId){
+        String sObjName = recordId.getSObjectType().getDescribe().getName();  
+        if(sObjName == 'buildertek__Project__c'){
+            buildertek__Project__c project = [SELECT buildertek__Customer__c FROM buildertek__Project__c WHERE Id = :recordId];
+            return project.buildertek__Customer__c;
+        }
+        return '';
+    }
+
+    @AuraEnabled
+    public static String savePOLineItems (List<buildertek__Purchase_Order_Item__c> listofPOItemsToSave, Id recordId ){
+        System.debug('listofPOItemsToSave ==? '+listofPOItemsToSave);
+        System.debug('recordId ==? '+recordId);
+        //loop over the list and set the PO Id
+        for(buildertek__Purchase_Order_Item__c poItem : listofPOItemsToSave){
+            poItem.buildertek__Purchase_Order__c = recordId;
+        }
+        insert listofPOItemsToSave;
+
+        return 'Success';
+    }
 }

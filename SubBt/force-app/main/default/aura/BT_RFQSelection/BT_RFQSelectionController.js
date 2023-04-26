@@ -86,7 +86,7 @@
                 line = {  buildertek__RFQ__c: item.Id,
                         Name:item.Name,
                         buildertek__Item_Name__c:item.Name,
-                        buildertek__Description__c:item.buildertek__RFQ_Details__c,
+                        buildertek__Description__c:item.Name,
                         buildertek__Quantity__c:1,
                         buildertek__Unit_Price__c:item.buildertek__Vendor_Quote__c,
                         buildertek__Markup__c:0,

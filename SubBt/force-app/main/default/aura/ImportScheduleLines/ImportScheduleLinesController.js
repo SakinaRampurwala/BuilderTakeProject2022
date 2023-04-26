@@ -46,6 +46,18 @@
                                 helper.CreateAccount(component, result);
                             }), 100
                         );
+                    } else {
+                        var toastEvent = $A.get("e.force:showToast");
+                        toastEvent.setParams({
+                            title: 'Error',
+                            message: 'Circular Dependency',
+                            duration: ' 5000',
+                            key: 'info_alt',
+                            type: 'error',
+                            mode: 'dismissible'
+                        });
+                        toastEvent.fire();
+                        component.set("v.Spinner", false);
                     }
                 }
                 reader.onerror = function (evt) {
@@ -103,11 +115,11 @@
     downloadCsv: function (component, event, helper) {
         var csv = helper.convertArrayOfObjectsToCSV(component, event, helper);
         if (csv == null) { return; }
-        // ####--code for create a temp. <a> html tag [link tag] for download the CSV file--####     
+        // ####--code for create a temp. <a> html tag [link tag] for download the CSV file--####
         var hiddenElement = document.createElement('a');
         hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
-        hiddenElement.target = '_self'; // 
-        hiddenElement.download = 'Import Schedules.csv'; // CSV file Name* you can change it.[only name not .csv] 
+        hiddenElement.target = '_self'; //
+        hiddenElement.download = 'Import Schedules.csv'; // CSV file Name* you can change it.[only name not .csv]
         document.body.appendChild(hiddenElement); // Required for FireFox browser
         hiddenElement.click(); // using click() js function to download csv file
     },

@@ -1,9 +1,8 @@
 ({
-    CSV2JSON: function(component, event, helper, csv) {
-        // debugger;
+    CSV2JSON: function (component, event, helper, csv) {
         var arr = [];
+        var cirDep = false;
         arr = csv.split('\n');
-        arr.pop();
         var jsonObj = [];
         var headers = arr[0].split(',');
         console.log('headers::', headers);
@@ -15,23 +14,16 @@
         }
         var startIndex;
         var endIndex;
-        for (var i = 1; i < arr.length; i++) {
-            if (i >= 23) {
-                // alert("hai");
-                // debugger;
-            }
-            if (arr[i] != undefined) {
 
+        for (var i = 1; i < arr.length; i++) {
+            if (arr[i] != undefined) {
                 while (arr[i].indexOf('"') > -1) {
                     if (startIndex == null) {
                         startIndex = arr[i].indexOf('"');
-
                         arr[i] = arr[i].substring(0, startIndex) + ':quotes:' + arr[i].substring(startIndex + 1, arr[i].length);
-
                     } else {
                         if (endIndex == null) {
                             endIndex = arr[i].indexOf('"');
-
                             arr[i] = arr[i].substring(0, endIndex) + ':quotes:' + arr[i].substring(endIndex + 1, arr[i].length);
                         }
                     }
@@ -42,37 +34,9 @@
                         arr[i] = arr[i].substring(0, startIndex) + sub + arr[i].substring(endIndex, arr[i].length);
                         startIndex = null;
                         endIndex = null;
-
                     }
                 }
-                // alert(arr[i]);
-                /* var name = arr[i].match(new RegExp('"' + "(.*)" + '"'));
-               // alert(name);
-               // alert(name[1]);
-                if (name != null) {
-                    alert(arr[i].match(new RegExp(name[1] + '",' + "(.*)"))[1]);
-                    arr[i] = arr[i].match(new RegExp(name[1] + '",' + "(.*)"))[1];
-                    alert(arr[i]);
-                    var data = arr[i].split(',');
-                    alert(data);
-                    var obj = {};
-                    alert(obj);
-                    obj.Name = name[1];
-                    alert(obj.Name = name[1]);
-                    debugger;
-                    for (var j = 0; j < data.length; j++) {
-                        if (headers[j + 1].trim() == 'StartDate') {
-                            var date = data[j].trim();
-                            var splitDate = date.split("/");
-                            var month = parseInt(splitDate[0]) < 10 ? month = '0' + splitDate[0] : month = splitDate[0];
-                            var day = parseInt(splitDate[1]) < 10 ? day = '0' + splitDate[1] : day = splitDate[1];
-                            obj[headers[j + 1].trim()] = splitDate[2] + '-' + month + '-' + day;
-                        } else {
-                            obj[headers[j + 1].trim()] = data[j].trim();
-                        }
-                    }
-                } else {*/
-                //  alert("else");
+
                 var data = arr[i].split(',');
                 var obj = {};
                 var month = '';
@@ -97,9 +61,6 @@
                         } else {
                             day = splitDate[1]
                         }
-                        //var month = parseInt(splitDate[0]) < 10 ? month = '0' + splitDate[0] : month = splitDate[0];
-                        //var day = parseInt(splitDate[1]) < 10 ? day = '0' + splitDate[1] : day = splitDate[1];
-                        /*   obj[headers[j].trim()] = splitDate[2] + '-' + month + '-' + day; */
 
                         obj[headers[j].trim()] = month.split('-').reverse().join('-');
                     } else {
@@ -112,7 +73,7 @@
                     }
                     // }
                 }
-                //obj.StartDate != undefined && obj.StartDate != '' ? jsonObj.push(obj) : '';
+
                 if (obj.StartDate != undefined && obj.StartDate != '') {
                     jsonObj.push(obj);
                 } else {
@@ -124,18 +85,18 @@
                     today = yyyy + '-' + mm + '-' + dd;
                     obj.StartDate = today;
                     jsonObj.push(obj);
-                    /*  var toastEvent = $A.get("e.force:showToast");
-                      toastEvent.setParams({
-                          title : 'Error',
-                          message: 'StartDate should not be null',
-                          duration:' 10000',
-                          key: 'info_alt',
-                          type: 'error',
-                          mode: 'dismissible'
-                      });
-                      toastEvent.fire();
-                      component.set("v.startdateError",true);
-                      component.set("v.Spinner", false); */
+
+                    toastEvent.setParams({
+                        title: 'Error',
+                        message: 'StartDate should not be null',
+                        duration: ' 10000',
+                        key: 'info_alt',
+                        type: 'error',
+                        mode: 'dismissible'
+                    });
+                    toastEvent.fire();
+                    component.set("v.startdateError", true);
+                    component.set("v.Spinner", false);
                 }
                 if (obj.percentComplete != "" && obj.percentComplete != undefined) {
 
@@ -153,11 +114,91 @@
                     component.set("v.startdateError", true);
                     component.set("v.Spinner", false);
                 }
-                //jsonObj.push(obj);
+
             }
         }
+
+        console.log('jsonObj ', jsonObj);
+        const taskMap = new Map();
+        for (let i = 0; i < jsonObj.length; i++) {
+            let element = jsonObj[i];
+            taskMap.set('PT - ' + i, element.Name);
+        }
+
+        for (let i = 0; i < jsonObj.length; i++) {
+            let e = jsonObj[i];
+            e.ID = 'PT - ' + i;
+        }
+
+        jsonObj.forEach(ele => {
+            for (let [key, value] of taskMap.entries()) {
+                if (ele.Dependency === value) {
+                    ele.parentID = key;
+                }
+            }
+        });
+
+        let parentMap = new Map();
+        jsonObj.forEach(element => {
+            parentMap.set(element.ID, element);
+        });
+
+        console.time("test_timer");
+
+        let ij =0;
+        jsonObj.forEach(ele => {
+            if (ele.parentID != undefined && ele.parentID != '') {
+                let taskId = ele.ID;
+                let parentId = parentMap.get(ele.parentID).parentID;
+                let flag = true;
+                while (flag) {
+                    ij++
+                    if (taskId != parentId) {
+                        if (parentId != '' && parentMap.has(parentId) && parentMap.get(parentId).parentID != '') {
+                            parentId = parentMap.get(parentId).parentID;
+                        } else {
+                            flag = false;
+                        }
+                    } else {
+                        flag = false;
+                        cirDep = true;
+                        console.log('Circular Dependency');
+                    }
+                }
+            }
+        });
+
+        console.timeEnd("test_timer");
+        console.log('i ',ij);
+
+        /* if (projectTaskMap.get(projectTask.buildertek__Dependency__c) != null) {
+            Id taskId = projectTask.Id;
+            Id parentId = projectTaskMap.get(projectTask.buildertek__Dependency__c).buildertek__Dependency__c;
+
+            System.debug('taskId ==> '+taskId);
+            System.debug('parentId ==> '+parentId);
+            let flag = true;
+            while (flag) {
+                if (taskId != parentId) {
+                    if (parentId != null && projectTaskMap.get(parentId).buildertek__Dependency__c != null) {
+                        parentId = projectTaskMap.get(parentId).buildertek__Dependency__c;
+                    } else {
+                        flag = false;
+                    }
+                } else {
+                    flag = false;
+                    System.debug('Circular Dependency');
+                    projectTask.Id.addError('Circular Dependency');
+                }
+            }
+        } */
+
         var json = JSON.stringify(jsonObj);
-        return json;
+        if (!cirDep) {
+            return json;
+        }else{
+            return '';
+        }
     },
 
     /*  parseFile : function(component,uploadFile) {
@@ -179,7 +220,7 @@
         }
         if(fileType == 'csv'){
             //component.set("v.showButton", false);
-        	this.parse(component,file);    
+            this.parse(component,file);
         }else{
             var toastEvent = $A.get("e.force:showToast");
             toastEvent.setParams({
@@ -202,8 +243,8 @@
             var headers = results.data[0];
             for(var h=0;h<headers.length;h++){
                 if(headers[h].includes(' ')){
-                	headers[h] = headers[h].replaceAll(' ', '_');	    
-                }    
+                    headers[h] = headers[h].replaceAll(' ', '_');
+                }
             }
             var jsonObj = [];
             for(var i=0;i<data.length;i++){
@@ -211,9 +252,9 @@
                 var rowData = data[i];
                 for(var j=0;j<rowData.length;j++){
                     if(headers[j] != '' && rowData[j] != ''){
-                    	obj[headers[j]] = rowData[j];    
-                    }	    
-                } 
+                        obj[headers[j]] = rowData[j];
+                    }
+                }
                 jsonObj.push(obj);
             }
             console.log('jsonObj -------> '+JSON.stringify(jsonObj));
@@ -225,11 +266,11 @@
         })
 
         Papa.parse(thing,{complete: complete});
-	},*/
+    },*/
 
 
 
-    CreateAccount: function(component, jsonstr) {
+    CreateAccount: function (component, jsonstr) {
         // component.set("v.isOpen", false);
         var jsonData = JSON.parse(jsonstr);
         var recordId = component.get("v.RecordId");
@@ -240,7 +281,7 @@
             "recordId": component.get("v.RecordId"),
             "strFileData": JSON.stringify(jsonData)
         });
-        action.setCallback(this, function(response) {
+        action.setCallback(this, function (response) {
             var state = response.getState();
             console.log({ state });
             // debugger;
@@ -269,38 +310,38 @@
                     if (component.get('v.isNewGantt')) {
                         var workspaceAPI = component.find("workspace");
                         if (workspaceAPI.getFocusedTabInfo()) {
-                            workspaceAPI.getFocusedTabInfo().then(function(response) {
-                                    var focusedTabId = response.tabId;
-                                    workspaceAPI.closeTab({ tabId: focusedTabId }).then(function(res) {
-                                        window.setTimeout(function() {
-                                            window.open('/' + recordId, '_top');
-                                            location.reload();
-                                        }, 2000)
-                                        if (workspaceAPI.getFocusedTabInfo()) {
-                                            workspaceAPI.getFocusedTabInfo().then(function(response) {
-                                                    var focusedTabId = response.tabId;
-                                                    //location.reload();
-                                                    // $A.get('e.force:refreshView').fire();
-                                                    window.setTimeout(function() {
-                                                            window.open('/' + recordId, '_top');
-                                                            location.reload();
-                                                        }, 2000)
-                                                        // component.set("v.isOpen", false);
-                                                })
-                                                .catch(function(error) {
-                                                    console.log(error);
+                            workspaceAPI.getFocusedTabInfo().then(function (response) {
+                                var focusedTabId = response.tabId;
+                                workspaceAPI.closeTab({ tabId: focusedTabId }).then(function (res) {
+                                    window.setTimeout(function () {
+                                        window.open('/' + recordId, '_top');
+                                        location.reload();
+                                    }, 2000)
+                                    if (workspaceAPI.getFocusedTabInfo()) {
+                                        workspaceAPI.getFocusedTabInfo().then(function (response) {
+                                            var focusedTabId = response.tabId;
+                                            //location.reload();
+                                            // $A.get('e.force:refreshView').fire();
+                                            window.setTimeout(function () {
+                                                window.open('/' + recordId, '_top');
+                                                location.reload();
+                                            }, 2000)
+                                            // component.set("v.isOpen", false);
+                                        })
+                                            .catch(function (error) {
+                                                console.log(error);
 
 
-                                                });
-                                        }
+                                            });
+                                    }
 
 
-                                        //$A.enqueueAction(component.get('c.doInit'))
-                                        // $A.enqueueAction(navEvt.fire());
-                                    });
+                                    //$A.enqueueAction(component.get('c.doInit'))
+                                    // $A.enqueueAction(navEvt.fire());
+                                });
 
-                                })
-                                .catch(function(error) {
+                            })
+                                .catch(function (error) {
                                     console.log(error);
                                     var navEvt = $A.get("e.force:navigateToSObject");
                                     navEvt.setParams({
@@ -308,7 +349,7 @@
                                         "recordId": recordId,
                                         "slideDevName": "detail"
                                     });
-                                    window.setTimeout(function() {
+                                    window.setTimeout(function () {
                                         location.reload();
                                     }, 500)
                                     navEvt.fire();
@@ -324,7 +365,7 @@
                     } else {
                         window.open('/apex/BT_Task_Manager?recordId=' + escape(recordId), '_self')
                     }
-                    // window.open('/apex/BT_Task_Manager?recordId=' + escape(recordId), '_self') 
+                    // window.open('/apex/BT_Task_Manager?recordId=' + escape(recordId), '_self')
                 } else {
 
                     component.set("v.Spinner", false);
@@ -511,21 +552,21 @@
                     toastEvent.fire();
             component.set("v.Spinner", false);
         }else if(component.get("v.startdateError") == true){
-            
+
         }
         else{
             $A.enqueueAction(action);
         }*/
 
     },
-    convertArrayOfObjectsToCSV: function(component, event, helper) {
+    convertArrayOfObjectsToCSV: function (component, event, helper) {
         // declare variables
         var csvStringResult, keys, columnDivider;
         columnDivider = ',';
         keys = ['Name', 'Dependency', 'StartDate', 'Duration', '% Complete', 'Phase', 'Notes', 'Lag'];
         csvStringResult = '';
         csvStringResult += keys.join(columnDivider);
-        // return the CSV formate String 
+        // return the CSV formate String
         return csvStringResult;
     },
 })

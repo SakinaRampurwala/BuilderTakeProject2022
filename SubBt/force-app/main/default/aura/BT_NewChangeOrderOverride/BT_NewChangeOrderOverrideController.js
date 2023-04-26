@@ -6,7 +6,6 @@
         
         
         helper.getRecType(component,event,helper);
-        
         var action4 = component.get("c.getvendor");
         action4.setCallback(this, function (response) {
             var result4 = response.getReturnValue();
@@ -60,7 +59,10 @@
                         component.set("v.CustomerAccountName", parentRecordId);
                     }else if(objName == 'buildertek__Project__c'){
                         component.set('v.createCO', true);
-                        component.set('v.isopen', true);
+                        component.set('v.isopen', false);
+                        helper.getCOFields(component,event,helper);
+                        helper.setCOLines(component,event,helper);
+
                         component.set("v.parentprojectRecordId", parentRecordId);
                         helper.CustomerAccount(component,event,helper);
                     }else if(objName == 'buildertek__RFQ__c'){
@@ -79,6 +81,8 @@
             });
             $A.enqueueAction(action);
         }
+
+      
         
         
         
@@ -136,8 +140,9 @@
     },
     
     handleSubmit: function (component, event, helper) {
-        debugger;
         component.set('v.isLoading', true);
+        event.preventDefault(); // Prevent default submit  
+
         var rfq = component.get('v.parentRFQRecordId');
         var contract = component.get('v.parentContractRecordId');
         var project = component.get('v.parentprojectRecordId');
@@ -145,6 +150,7 @@
         var budget = component.get('v.parentbudgetRecordId');
         var accountingperiod = component.get('v.parentaccountingPeriodRecordId');
         var fields = event.getParam("fields");
+        console.log({fields});
         var name = component.find("Name").get("v.value");
         if(name != null && name != "" ){ 
             fields["Name"] = name;
@@ -165,8 +171,45 @@
             fields["buildertek__Period__c"] = accountingperiod;
         }
         fields["RecordTypeId"] =  component.get("v.RecordTypeId");
-        event.preventDefault(); // Prevent default submit  
-        component.find('recordViewForm').submit(fields); // Submit form
+
+        console.log('fields: ' + JSON.stringify(fields));
+        var data = JSON.stringify(fields);
+        console.log('data-->>',{data});
+        var action = component.get("c.saveRecord");
+        action.setParams({
+            "data": data
+        });
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+            var error = response.getError();
+            console.log('Error =>',{error});
+            if (state === "SUCCESS") {
+                console.log('success');
+                console.log(response.getReturnValue());
+                var recordId = response.getReturnValue();
+                console.log('recordId-->>',{recordId});
+                var listofPOItems = component.get("v.listOfCOFields");
+                if(listofPOItems.length > 0){
+                  helper.saveCOLineItems(component, event, helper, recordId);
+                }
+                
+                
+            }
+            else if (state === "ERROR") {
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    "type": "Error",
+                    "title": "Error!",
+                    "message": "Something Went Wrong"
+                });
+                toastEvent.fire();
+                console.log('error', response.getError());
+            }
+        });
+        $A.enqueueAction(action);
+
+        
+        // component.find('recordViewForm').submit(fields); // Submit form
     },
     
     onRecordSuccess: function (component, event, helper) {
@@ -269,5 +312,35 @@
         event.preventDefault(); // Prevent default submit        
         component.find('recordViewForm').submit(fields); // Submit form
         $A.get('e.force:refreshView').fire();
-    }
+    },
+    addNewLine:function (component, event, helper) {
+        var listofCOItems=component.get("v.coLineList");
+        listofCOItems.push({
+            'index':listofCOItems.length,
+            'Name': '',
+            'buildertek__Quantity__c': '',
+            'buildertek__Unit_Price__c': '',
+            'buildertek__Markup__c': '',
+        });
+        component.set("v.coLineList" , listofCOItems);
+        console.log(component.get('v.coLineList'));
+
+    },
+    removeCOLine:function (component, event, helper) {
+
+        var currentId=event.currentTarget.dataset.id;
+        console.log(currentId);
+        var getList=component.get('v.coLineList');
+        console.log(getList);
+
+        getList.splice(currentId,1);
+        console.log(getList);
+
+        component.set('v.coLineList' ,getList);
+
+        
+    },
+    handlesaveNnew : function(component, event, helper) {
+        component.set("v.isSaveNew", true);
+    },
 })
