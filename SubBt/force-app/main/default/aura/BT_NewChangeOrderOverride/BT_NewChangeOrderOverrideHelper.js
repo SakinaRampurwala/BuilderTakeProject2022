@@ -100,7 +100,6 @@
                 console.log(result);
                 if(result != null){
                     component.set("v.RecordTypeId",result);
-                    component.set('v.createWithOutCOLines',true);
                     component.set('v.isLoading', false);
                      helper.getFields(component, event, helper,result);
                 }
@@ -110,26 +109,7 @@
         });
         $A.enqueueAction(recType);
     },
-    getCOFields : function (component, event, helper) {
-        console.log('getCOFields');
-        var action2 = component.get("c.getCOFieldSet");
-        action2.setParams({
-            objectName: 'buildertek__Change_Order__c',
-            fieldSetName: 'buildertek__CreateCoFromProjectFieldSet'
-        });
-        action2.setCallback(this, function (response) {
-            console.log(response.getState());
-            console.log(response.getError());
 
-            if (response.getState() == 'SUCCESS' && response.getReturnValue()) {
-                component.set("v.Spinner", false);
-                var listOfFields0 = JSON.parse(response.getReturnValue());
-                console.log('coLinesFields-->>',{listOfFields0});
-                component.set("v.listOfCOFields", listOfFields0);
-            }
-        });
-        $A.enqueueAction(action2);
-    },
     setCOLines:function (component, event, helper) {
         try{
             var listofCOItems=component.get("v.coLineList");

@@ -62,7 +62,7 @@
 
 	setupListofPOItem: function (component, event, helper) {
 		var listofPOItems = [];
-		for (var i = 1; i < 3; i++){
+		for (var i = 1; i < 2; i++){
 			listofPOItems.push({
 				'index': i,
 				'Name': '',

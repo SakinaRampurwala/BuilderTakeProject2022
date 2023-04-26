@@ -1,6 +1,15 @@
 ({
     doInit : function(component, event, helper) {
         component.set("v.Spinner", true);
+        var adminAction = component.get("c.getadminvalues");
+		adminAction.setCallback(this, function (response) {
+			if (response.getState() == 'SUCCESS') {
+                console.log(response.getReturnValue());
+            }
+        });
+        $A.enqueueAction(adminAction);
+
+
         var value = helper.getParameterByName(component, event, 'inContextOfRef');
         console.log('value-->>',{value});
         var context = '';

@@ -15,17 +15,16 @@
                 if(result=='Without CO Lines'){
                     component.set('v.createWithOutCOLines', true);
                     component.set('v.createWithCOLines', false);
-                    helper.getRecType(component,event,helper);
 
                 }else{
                     component.set('v.createWithCOLines', true);
                     component.set('v.createWithOutCOLines', false);
-                    helper.getCOFields(component,event,helper);
+                    // helper.getCOFields(component,event,helper);
                     helper.setCOLines(component,event,helper);
 
 
                 }
-
+                helper.getRecType(component,event,helper);
                 var action4 = component.get("c.getvendor");
                 action4.setCallback(this, function (response) {
                     var result4 = response.getReturnValue();

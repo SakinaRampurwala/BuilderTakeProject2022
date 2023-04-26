@@ -17,11 +17,11 @@
 
                 <apex:repeat value="{!quoteLineWrapper.groupWrapperList}" var="group1">
                     <tr>
-                        <th colspan="2" style="font-size: 14px; padding: 5px 15px; color:white; text-align: left; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);">
+                        <th colspan="{!quoteLineWrapper.totalCols}" style="font-size: 14px; padding: 5px 15px; color:white; text-align: left; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);">
                             {!group1.groupName}
                         </th>
 
-                        <apex:repeat value="{!group1.RecordsDataWrapperList[0].RecordDataList}" var="quoteItem">
+                        <!-- <apex:repeat value="{!group1.RecordsDataWrapperList[0].RecordDataList}" var="quoteItem">
     
                             <apex:outputPanel rendered="{!if(quoteItem.fieldName != 'Name' , true ,false)}">
                                 <apex:outputPanel rendered="{!if(quoteItem.fieldType == 'currency' , true ,false)}">
@@ -37,7 +37,7 @@
                                 </apex:outputPanel>
                             </apex:outputPanel>
                             
-                        </apex:repeat>
+                        </apex:repeat> -->
                     </tr>
 
                     <apex:repeat value="{!group1.RecordsDataWrapperList}" var="quoteItemWrapper">
@@ -78,12 +78,12 @@
                     </tr>
                     <apex:repeat value="{!group1.groupWrapperList}" var="group2">
                         <tr>
-                            <th style="font-size: 15px; padding: 5px 15px; color:white; text-align: left; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);"></th>
-                            <th colspan="2" style="font-size: 14px; padding: 5px 15px; color:white; text-align: left; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);">
-                                {!group2.groupName}
+                            <th colspan="{!quoteLineWrapper.totalCols}" style="font-size: 14px; padding: 5px 15px; color:white; text-align: left; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);">
+                                <span style="padding-left: 30px;"> </span>
+                                <span> {!group2.groupName} </span>
                             </th>
 
-                            <apex:repeat value="{!group2.RecordsDataWrapperList[0].RecordDataList}" var="quoteItem">
+                            <!-- <apex:repeat value="{!group2.RecordsDataWrapperList[0].RecordDataList}" var="quoteItem">
     
                                 <apex:outputPanel rendered="{!if(quoteItem.fieldName != 'Name' , true ,false)}">
                                     <apex:outputPanel rendered="{!if(quoteItem.fieldType == 'currency' , true ,false)}">
@@ -99,7 +99,7 @@
                                     </apex:outputPanel>
                                 </apex:outputPanel>
                                 
-                            </apex:repeat>
+                            </apex:repeat> -->
                         </tr>
                         
                         <apex:repeat value="{!group2.RecordsDataWrapperList}" var="quoteItemWrapper">
@@ -142,20 +142,21 @@
                     </tr>
                     <apex:repeat value="{!group1.groupWrapperList}" var="group2">
                         <tr>
-                            <th style="font-size: 14px; padding: 5px 15px; color:white; text-align: left; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);"></th>
                             <th colspan="{!quoteLineWrapper.totalCols}" style="font-size: 14px; padding: 5px 15px; color:white; text-align: left; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);">
-                                {!group2.groupName}
+                                <span style="padding-left: 30px;"> </span>
+                                <span> {!group2.groupName} </span>
                             </th>
                         </tr>
                         <apex:repeat value="{!group2.groupWrapperList}" var="group3">
                             <tr>
-                                <th style="font-size: 14px; padding: 5px 15px; color:white; text-align: left; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);"></th>
-                                <th style="font-size: 14px; padding: 5px 15px; color:white; text-align: left; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);"></th>
-                                <th colspan="2" style="font-size: 14px; padding: 5px 15px; color:white; text-align: left; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);">
+                                <th colspan="{!quoteLineWrapper.totalCols}" style="font-size: 14px; padding: 5px 15px; color:white; text-align: left; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);">
                                     {!group3.groupName}
+                                    <span style="padding-left: 30px;"> </span>
+                                    <span style="padding-left: 30px;"> </span>
+                                    <span> {!group3.groupName} </span>
                                 </th>
 
-                                <apex:repeat value="{!group3.RecordsDataWrapperList[0].RecordDataList}" var="quoteItem">
+                                <!-- <apex:repeat value="{!group3.RecordsDataWrapperList[0].RecordDataList}" var="quoteItem">
     
                                     <apex:outputPanel rendered="{!if(quoteItem.fieldName != 'Name' , true ,false)}">
                                         <apex:outputPanel rendered="{!if(quoteItem.fieldType == 'currency' , true ,false)}">
@@ -171,7 +172,7 @@
                                         </apex:outputPanel>
                                     </apex:outputPanel>
                                     
-                                </apex:repeat>
+                                </apex:repeat> -->
 
                             </tr>
                             
@@ -219,29 +220,29 @@
                     </tr>
                     <apex:repeat value="{!group1.groupWrapperList}" var="group2">
                         <tr>
-                            <th style="font-size: 14px; padding: 5px 15px; color:white; text-align: left; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);"></th>
                             <th colspan="{!quoteLineWrapper.totalCols}" style="font-size: 14px; padding: 5px 15px; color:white; text-align: left; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);">
-                                {!group2.groupName}
+                                <span style="padding-left: 30px;"> </span>
+                                <span> {!group2.groupName} </span>
                             </th>
                         </tr>
                         <apex:repeat value="{!group2.groupWrapperList}" var="group3">
                             <tr>
-                                <th style="font-size: 14px; padding: 5px 15px; color:white; text-align: left; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);"></th>
-                                <th style="font-size: 14px; padding: 5px 15px; color:white; text-align: left; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);"></th>
                                 <th colspan="{!quoteLineWrapper.totalCols}" style="font-size: 14px; padding: 5px 15px; color:white; text-align: left; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);">
-                                    {!group3.groupName}
+                                    <span style="padding-left: 30px;"> </span>
+                                    <span style="padding-left: 30px;"> </span>
+                                    <span> {!group3.groupName} </span>
                                 </th>
                             </tr>
                             <apex:repeat value="{!group3.groupWrapperList}" var="group4">
                                 <tr>
-                                    <th style="font-size: 14px; padding: 5px 15px; color:white; text-align: left; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);"></th>
-                                    <th style="font-size: 14px; padding: 5px 15px; color:white; text-align: left; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);"></th>
-                                    <th style="font-size: 14px; padding: 5px 15px; color:white; text-align: left; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);"></th>
-                                    <th colspan="2" style="font-size: 14px; padding: 5px 15px; color:white; text-align: left; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);">
-                                        {!group4.groupName}
+                                    <th colspan="{!quoteLineWrapper.totalCols}" style="font-size: 14px; padding: 5px 15px; color:white; text-align: left; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);">
+                                        <span style="padding-left: 30px;"> </span>
+                                        <span style="padding-left: 30px;"> </span>
+                                        <span style="padding-left: 30px;"> </span>
+                                        <span> {!group4.groupName} </span>
                                     </th>
 
-                                    <apex:repeat value="{!group4.RecordsDataWrapperList[0].RecordDataList}" var="quoteItem">
+                                    <!-- <apex:repeat value="{!group4.RecordsDataWrapperList[0].RecordDataList}" var="quoteItem">
     
                                         <apex:outputPanel rendered="{!if(quoteItem.fieldName != 'Name' , true ,false)}">
                                             <apex:outputPanel rendered="{!if(quoteItem.fieldType == 'currency' , true ,false)}">
@@ -257,7 +258,7 @@
                                             </apex:outputPanel>
                                         </apex:outputPanel>
                                        
-                                    </apex:repeat>
+                                    </apex:repeat> -->
 
                                 </tr>
                                 <apex:repeat value="{!group4.RecordsDataWrapperList}" var="quoteItemWrapper">
