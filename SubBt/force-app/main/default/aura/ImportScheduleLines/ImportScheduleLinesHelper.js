@@ -139,13 +139,10 @@
         });
 
         let parentMap = new Map();
-        jsonObj.forEach(element => {
-            parentMap.set(element.ID, element);
-        });
 
         console.time("test_timer");
 
-        let ij =0;
+        let ij = 0;
         jsonObj.forEach(ele => {
             if (ele.parentID != undefined && ele.parentID != '') {
                 let taskId = ele.ID;
@@ -169,7 +166,7 @@
         });
 
         console.timeEnd("test_timer");
-        console.log('i ',ij);
+        console.log('i ', ij);
 
         /* if (projectTaskMap.get(projectTask.buildertek__Dependency__c) != null) {
             Id taskId = projectTask.Id;
@@ -196,7 +193,7 @@
         var json = JSON.stringify(jsonObj);
         if (!cirDep) {
             return json;
-        }else{
+        } else {
             return '';
         }
     },

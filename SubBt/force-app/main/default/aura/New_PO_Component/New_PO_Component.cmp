@@ -85,7 +85,7 @@
                         <div class="slds-p-around_medium" style="background-color:white;">
                             <h2 class="slds-section-title--divider">Information</h2>
                             <lightning:layout multipleRows="true">
-                                <aura:iteration items="{!v.listOfFields1}" var="field">
+                                <aura:iteration items="{!v.listOfFields0}" var="field">
                                     <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small"> 
                                         <aura:if isTrue="{!and(field.name!='buildertek__Project__c',field.name!='buildertek__Vendor__c')}">
                                             <lightning:inputField fieldName="{!field.name}" />
@@ -94,10 +94,10 @@
                                                     <lightning:inputField fieldName="Name" required="true"/>
                                                 </aura:if> -->
                                                 <aura:if isTrue="{!field.name=='buildertek__Project__c'}" > 
-                                                    <lightning:inputField fieldName="{!field.name}" value="{!v.parentprojectRecordId}" disabled="true" />
+                                                    <lightning:inputField fieldName="{!field.name}" value="{!v.parentprojectRecordId}" />
                                                 </aura:if>
                                                 <aura:if isTrue="{!field.name=='buildertek__Vendor__c'}" > 
-                                                    <lightning:inputField fieldName="{!field.name}" value="{!v.customerId}" disabled="true" />
+                                                    <lightning:inputField fieldName="{!field.name}" value="{!v.customerId}" />
                                                 </aura:if>
                                             </aura:set>
                                         </aura:if>

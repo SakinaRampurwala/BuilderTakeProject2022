@@ -11,7 +11,7 @@
 
     saveExpense: function (component, event, helper, fields) {
         var action = component.get("c.creteExpense");
-        action.setParams({ 
+        action.setParams({
             expenseData : fields
         });
         action.setCallback(this, function(response) {
@@ -56,7 +56,7 @@
                 toastEvent.fire();
             }
         });
-        $A.enqueueAction(action);
+        // $A.enqueueAction(action);
     },
 
     setbudgetData: function (component, event, helper, parentRecordId){
@@ -86,7 +86,7 @@
                             var budgetLineList = response.getReturnValue()
                             console.log('budgetLineList ==> ',[budgetLineList]);
                             component.set('v.budgetLineList' , budgetLineList);
-                        }   
+                        }
                     })
                     $A.enqueueAction(action);
                 }

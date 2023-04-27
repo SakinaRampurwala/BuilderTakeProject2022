@@ -487,49 +487,52 @@
                     "aura:id": "btSelectRFQ",
                     "projectId": "",
                     "quotId": component.get("v.recordId"),
-                    "saveCallback": function(Items) {
-                        //console.log(Items);
-                        $A.get("e.c:BT_SpinnerEvent").setParams({
-                            "action": "SHOW"
-                        }).fire();
+                    "saveCallback": function(result) {
                         overlayLib.close();
-                        var action = component.get("c.createQuoteItem");
-                        action.setParams({
-                            quoteItemsJSON: JSON.stringify(Items)
-                        });
-                        action.setCallback(this, function(response) {
-                            var state = response.getState();
-                            if (state === "SUCCESS") {
-                                /*var grid = component.find('quoteItemList');
-                                grid.refreshData();*/
-                                window.setTimeout(
-                                    $A.getCallback(function() {
-                                        var toastEvent = $A.get("e.force:showToast");
-                                        toastEvent.setParams({
-                                            mode: 'sticky',
-                                            message: 'Quote line added successfully',
-                                            type: 'success',
-                                            duration: '10000',
-                                            mode: 'dismissible'
-                                        });
-                                        toastEvent.fire();
-                                    }), 3000
-                                );
-                                component.refreshComponent();
-                            } else if (state === "INCOMPLETE") {
-                                // do something
-                            } else if (state === "ERROR") {
-                                var errors = response.getError();
-                                if (errors) {
-                                    if (errors[0] && errors[0].message) {
-                                        console.log("Error message: " + errors[0].message);
-                                    }
-                                } else {
-                                    //console.log("Unknown error");
-                                }
-                            }
-                        });
-                        $A.enqueueAction(action);
+                        console.log('result--->>>', result);
+                        component.refreshComponent();
+                        //console.log(Items);
+                        // $A.get("e.c:BT_SpinnerEvent").setParams({
+                        //     "action": "SHOW"
+                        // }).fire();
+                        // overlayLib.close();
+                        // var action = component.get("c.createQuoteItem");
+                        // action.setParams({
+                        //     quoteItemsJSON: JSON.stringify(Items)
+                        // });
+                        // action.setCallback(this, function(response) {
+                        //     var state = response.getState();
+                        //     if (state === "SUCCESS") {
+                        //         /*var grid = component.find('quoteItemList');
+                        //         grid.refreshData();*/
+                        //         window.setTimeout(
+                        //             $A.getCallback(function() {
+                        //                 var toastEvent = $A.get("e.force:showToast");
+                        //                 toastEvent.setParams({
+                        //                     mode: 'sticky',
+                        //                     message: 'Quote line added successfully',
+                        //                     type: 'success',
+                        //                     duration: '10000',
+                        //                     mode: 'dismissible'
+                        //                 });
+                        //                 toastEvent.fire();
+                        //             }), 3000
+                        //         );
+                        //         component.refreshComponent();
+                        //     } else if (state === "INCOMPLETE") {
+                        //         // do something
+                        //     } else if (state === "ERROR") {
+                        //         var errors = response.getError();
+                        //         if (errors) {
+                        //             if (errors[0] && errors[0].message) {
+                        //                 console.log("Error message: " + errors[0].message);
+                        //             }
+                        //         } else {
+                        //             //console.log("Unknown error");
+                        //         }
+                        //     }
+                        // });
+                        // $A.enqueueAction(action);
                     },
                     "cancelCallback": function() {
                         overlayLib.close();

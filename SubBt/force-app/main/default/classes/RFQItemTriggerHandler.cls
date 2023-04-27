@@ -87,6 +87,20 @@ public with sharing class RFQItemTriggerHandler {
         if(prldList.size() > 0){
             update prldList;
         }  */
+        System.debug('In After Update');
+        // set<Id> rfqId = new set<Id>();
+        // for(RFQ_Item__c rfqItem : updatedRFQItems){
+        //     if(rfqItem.buildertek__Quote_Item__c == null && oldRFQItemsMap.get(rfqItem.Id).buildertek__Quote_Item__c != rfqItem.buildertek__Quote_Item__c){
+        //         rfqId.add(rfqItem.buildertek__RFQ_Package__c);
+        //     }
+        // }
+        // List<buildertek__RFQ__c> rfqList = [select id,name, buildertek__Added_to_Quote__c from buildertek__RFQ__c where id IN : rfqId ];
+        // for(buildertek__RFQ__c rfq : rfqList){
+        //     if(rfq.buildertek__Added_to_Quote__c != null || rfq.buildertek__Added_to_Quote__c != '' ){
+        //         rfq.buildertek__Added_to_Quote__c = null;
+        //     }
+        // }
+        // update rfqList;
     }
     
     

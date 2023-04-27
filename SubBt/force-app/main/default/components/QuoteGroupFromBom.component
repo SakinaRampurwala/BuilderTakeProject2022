@@ -20,24 +20,6 @@
                         <th colspan="{!quoteLineWrapper.totalCols}" style="font-size: 14px; padding: 5px 15px; color:white; text-align: left; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);">
                             {!group1.groupName}
                         </th>
-
-                        <!-- <apex:repeat value="{!group1.RecordsDataWrapperList[0].RecordDataList}" var="quoteItem">
-    
-                            <apex:outputPanel rendered="{!if(quoteItem.fieldName != 'Name' , true ,false)}">
-                                <apex:outputPanel rendered="{!if(quoteItem.fieldType == 'currency' , true ,false)}">
-                                    <th style="font-size: 14px; padding: 5px 15px; color:white; text-align: right; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);">
-                                        <apex:repeat value="{!group1.totalFieldMap[quoteItem.fieldName]}" var="quoteItemTotal">
-                                            {!orgCurr} {!quoteItemTotal}
-                                        </apex:repeat> 
-                                    </th>
-                                </apex:outputPanel>
-
-                                <apex:outputPanel rendered="{!if(quoteItem.fieldType != 'currency' , true ,false)}">
-                                    <th style="font-size: 14px; padding: 5px 15px; color:white; text-align: left; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);"> </th>
-                                </apex:outputPanel>
-                            </apex:outputPanel>
-                            
-                        </apex:repeat> -->
                     </tr>
 
                     <apex:repeat value="{!group1.RecordsDataWrapperList}" var="quoteItemWrapper">
@@ -82,24 +64,6 @@
                                 <span style="padding-left: 30px;"> </span>
                                 <span> {!group2.groupName} </span>
                             </th>
-
-                            <!-- <apex:repeat value="{!group2.RecordsDataWrapperList[0].RecordDataList}" var="quoteItem">
-    
-                                <apex:outputPanel rendered="{!if(quoteItem.fieldName != 'Name' , true ,false)}">
-                                    <apex:outputPanel rendered="{!if(quoteItem.fieldType == 'currency' , true ,false)}">
-                                        <th style="font-size: 14px; padding: 5px 15px; color:white; text-align: right; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);">
-                                            <apex:repeat value="{!group2.totalFieldMap[quoteItem.fieldName]}" var="quoteItemTotal">
-                                                {!orgCurr} {!quoteItemTotal}
-                                            </apex:repeat> 
-                                        </th>
-                                    </apex:outputPanel>
-
-                                    <apex:outputPanel rendered="{!if(quoteItem.fieldType != 'currency' , true ,false)}">
-                                        <th style="font-size: 14px; padding: 5px 15px; color:white; text-align: left; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);"> </th>
-                                    </apex:outputPanel>
-                                </apex:outputPanel>
-                                
-                            </apex:repeat> -->
                         </tr>
                         
                         <apex:repeat value="{!group2.RecordsDataWrapperList}" var="quoteItemWrapper">
@@ -150,33 +114,12 @@
                         <apex:repeat value="{!group2.groupWrapperList}" var="group3">
                             <tr>
                                 <th colspan="{!quoteLineWrapper.totalCols}" style="font-size: 14px; padding: 5px 15px; color:white; text-align: left; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);">
-                                    {!group3.groupName}
                                     <span style="padding-left: 30px;"> </span>
                                     <span style="padding-left: 30px;"> </span>
                                     <span> {!group3.groupName} </span>
                                 </th>
-
-                                <!-- <apex:repeat value="{!group3.RecordsDataWrapperList[0].RecordDataList}" var="quoteItem">
-    
-                                    <apex:outputPanel rendered="{!if(quoteItem.fieldName != 'Name' , true ,false)}">
-                                        <apex:outputPanel rendered="{!if(quoteItem.fieldType == 'currency' , true ,false)}">
-                                            <th style="font-size: 14px; padding: 5px 15px; color:white; text-align: right; border-bottom: 1px solid  #ccc; background-color: rgb(27 82 151);">
-                                                <apex:repeat value="{!group3.totalFieldMap[quoteItem.fieldName]}" var="quoteItemTotal">
-                                                    {!orgCurr} {!quoteItemTotal}
-                                                </apex:repeat> 
-                                            </th>
-                                        </apex:outputPanel>
-    
-                                        <apex:outputPanel rendered="{!if(quoteItem.fieldType != 'currency' , true ,false)}">
-                                            <th style="font-size: 14px; padding: 5px 15px; color:white; text-align: left; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);"> </th>
-                                        </apex:outputPanel>
-                                    </apex:outputPanel>
-                                    
-                                </apex:repeat> -->
-
                             </tr>
-                            
-                           
+
                             <apex:repeat value="{!group3.RecordsDataWrapperList}" var="quoteItemWrapper">
                                 <tr>
                                     <td style="font-size: 14px; padding: 5px 15px; color:black; text-align: left; border-bottom:  1px solid #ccc;"></td>
@@ -241,26 +184,8 @@
                                         <span style="padding-left: 30px;"> </span>
                                         <span> {!group4.groupName} </span>
                                     </th>
-
-                                    <!-- <apex:repeat value="{!group4.RecordsDataWrapperList[0].RecordDataList}" var="quoteItem">
-    
-                                        <apex:outputPanel rendered="{!if(quoteItem.fieldName != 'Name' , true ,false)}">
-                                            <apex:outputPanel rendered="{!if(quoteItem.fieldType == 'currency' , true ,false)}">
-                                                <th style="font-size: 14px; padding: 5px 15px; color:white; text-align: right; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);">
-                                                    <apex:repeat value="{!group4.totalFieldMap[quoteItem.fieldName]}" var="quoteItemTotal">
-                                                        {!orgCurr} {!quoteItemTotal}
-                                                    </apex:repeat> 
-                                                </th>
-                                            </apex:outputPanel>
-        
-                                            <apex:outputPanel rendered="{!if(quoteItem.fieldType != 'currency' , true ,false)}">
-                                                <th style="font-size: 14px; padding: 5px 15px; color:white; text-align: left; border-bottom: 1px solid  #ccc; background-color: rgb(27 82 151);"> </th>
-                                            </apex:outputPanel>
-                                        </apex:outputPanel>
-                                       
-                                    </apex:repeat> -->
-
                                 </tr>
+                                
                                 <apex:repeat value="{!group4.RecordsDataWrapperList}" var="quoteItemWrapper">
                                     <tr>
                                         <td style="font-size: 14px; padding: 5px 15px; color:black; text-align: left; border-bottom: 1px solid #ccc;"></td>

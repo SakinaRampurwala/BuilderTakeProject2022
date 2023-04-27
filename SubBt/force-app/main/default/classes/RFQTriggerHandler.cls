@@ -10,6 +10,7 @@ public with sharing class RFQTriggerHandler {
     public static Boolean blnSkipRFQUpdateTrigger = false;
     
     public static Boolean blnSkipemaileTrigger = false;
+    public static Boolean skipDeleteQuoteLine = false;
     
     private boolean m_isExecuting = false;
     private integer BatchSize = 0;
@@ -95,6 +96,8 @@ public with sharing class RFQTriggerHandler {
                 quoteItem.buildertek__Item_Name__c=rfq.Name;
                 quoteItem.buildertek__RFQ__c=rfq.Id;
                 quoteItem.buildertek__Quote__c=rfq.buildertek__Added_to_Quote__c;
+                quoteItem.buildertek__Quantity__c=1;
+                quoteItem.buildertek__Unit_Cost__c=rfq.buildertek__Vendor_Quote__c;
                 quoteItemList.add(quoteItem);
             }
         }
@@ -154,6 +157,8 @@ public with sharing class RFQTriggerHandler {
                 quoteItem.buildertek__Item_Name__c=rf.Name;
                 quoteItem.buildertek__RFQ__c=rf.Id;
                 quoteItem.buildertek__Quote__c=rf.buildertek__Added_to_Quote__c;
+                quoteItem.buildertek__Quantity__c=1;
+                quoteItem.buildertek__Unit_Cost__c=rf.buildertek__Vendor_Quote__c;
                 quoteLineList.add(quoteItem);
             }else if(oldRFqrec.buildertek__Added_to_Quote__c != rf.buildertek__Added_to_Quote__c && rf.buildertek__Added_to_Quote__c!= null && oldRFqrec.buildertek__Added_to_Quote__c != null){
                 oldQuoteLineIds.add(oldRFqrec.buildertek__Added_to_Quote__c);
@@ -163,6 +168,8 @@ public with sharing class RFQTriggerHandler {
                 quoteItem.buildertek__Item_Name__c=rf.Name;
                 quoteItem.buildertek__RFQ__c=rf.Id;
                 quoteItem.buildertek__Quote__c=rf.buildertek__Added_to_Quote__c;
+                quoteItem.buildertek__Quantity__c=1;
+                quoteItem.buildertek__Unit_Cost__c=rf.buildertek__Vendor_Quote__c;
                 quoteLineList.add(quoteItem);
             }else if(oldRFqrec.buildertek__Added_to_Quote__c != rf.buildertek__Added_to_Quote__c && rf.buildertek__Added_to_Quote__c== null && oldRFqrec.buildertek__Added_to_Quote__c != null){
                 oldQuoteLineIds.add(oldRFqrec.buildertek__Added_to_Quote__c);
@@ -172,8 +179,10 @@ public with sharing class RFQTriggerHandler {
             insert quoteLineList;
             List<buildertek__RFQ_Item__c> rfqItemList = [Select Id , Name , buildertek__Quote_Item__c , buildertek__RFQ_Package__c FROM buildertek__RFQ_Item__c where buildertek__RFQ_Package__c=:rfqIdSet];
           
-            List<buildertek__Quote_Item__c> oldQuoteItemList= [Select Id , Name , buildertek__Quote__c , (Select Id , Name , buildertek__Quote_Item__c , buildertek__RFQ_Package__c FROM buildertek__RFQ_Items__r where buildertek__RFQ_Package__c=:rfqIdSet) , buildertek__RFQ__c From buildertek__Quote_Item__c WHERE buildertek__Quote__c=:oldQuoteLineIds AND buildertek__RFQ__c=:rfqIdSet];
-            delete oldQuoteItemList;
+            if (!skipDeleteQuoteLine) {
+                List<buildertek__Quote_Item__c> oldQuoteItemList= [Select Id , Name , buildertek__Quote__c , (Select Id , Name , buildertek__Quote_Item__c , buildertek__RFQ_Package__c FROM buildertek__RFQ_Items__r where buildertek__RFQ_Package__c=:rfqIdSet) , buildertek__RFQ__c From buildertek__Quote_Item__c WHERE buildertek__Quote__c=:oldQuoteLineIds AND buildertek__RFQ__c=:rfqIdSet];
+                delete oldQuoteItemList;
+            }
 
 
             for(buildertek__RFQ_Item__c rfqItem : rfqItemList){
@@ -189,10 +198,9 @@ public with sharing class RFQTriggerHandler {
 
         }
 
-        if(oldQuoteLineIds.size() > 0 && quoteLineList.size() ==0){
+        if(oldQuoteLineIds.size() > 0 && quoteLineList.size() ==0 && !skipDeleteQuoteLine){
             List<buildertek__Quote_Item__c> oldQuoteItemList= [Select Id , Name , buildertek__Quote__c , (Select Id , Name , buildertek__Quote_Item__c , buildertek__RFQ_Package__c FROM buildertek__RFQ_Items__r where buildertek__RFQ_Package__c=:rfqIdSet) , buildertek__RFQ__c From buildertek__Quote_Item__c WHERE buildertek__Quote__c=:oldQuoteLineIds AND buildertek__RFQ__c=:rfqIdSet];
             delete oldQuoteItemList;
-
         }
 
 

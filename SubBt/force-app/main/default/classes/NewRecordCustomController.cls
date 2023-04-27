@@ -9,7 +9,7 @@ public with sharing class NewRecordCustomController{
         try{
         if (String.isNotBlank(recordId)){
             List<buildertek__Budget__c> budgetList = [SELECT Id, Name, buildertek__Project__c FROM buildertek__Budget__c  WHERE buildertek__Project__c = :recordId  ORDER BY CreatedDate DESC];
-            return budgetList;            
+            return budgetList;
             }
         } catch (Exception e){
             throw new AuraHandledException(e.getMessage());
@@ -47,7 +47,7 @@ public with sharing class NewRecordCustomController{
             budgetList = [SELECT Id , buildertek__Project__c, Name FROM buildertek__Budget__c WHERE buildertek__Project__c =: recordId];
         } else {
             String bName = '\''+budgetNameStr+'%\'';
-            string Query = 'SELECT Id , buildertek__Project__c, Name FROM buildertek__Budget__c WHERE buildertek__Project__c =: recordId AND Name LIKE '+bName; 
+            string Query = 'SELECT Id , buildertek__Project__c, Name FROM buildertek__Budget__c WHERE buildertek__Project__c =: recordId AND Name LIKE '+bName;
             System.debug('Query ==> '+Query);
             budgetList = Database.query(Query);
         }
@@ -61,7 +61,7 @@ public with sharing class NewRecordCustomController{
             budgetLineList = [SELECT Id , buildertek__Budget__c, Name FROM buildertek__Budget_Item__c WHERE buildertek__Budget__c =: recordId];
         } else {
             String bName = '\''+budgetLineNameStr+'%\'';
-            string Query = 'SELECT Id , buildertek__Budget__c, Name FROM buildertek__Budget_Item__c WHERE buildertek__Budget__c =: recordId AND Name LIKE '+bName; 
+            string Query = 'SELECT Id , buildertek__Budget__c, Name FROM buildertek__Budget_Item__c WHERE buildertek__Budget__c =: recordId AND Name LIKE '+bName;
             System.debug('Query ==>'+Query);
             budgetLineList = Database.query(Query);
         }
@@ -71,10 +71,10 @@ public with sharing class NewRecordCustomController{
 
       @AuraEnabled
     public static String getobjectName(Id recordId){
-        String sObjName = recordId.getSObjectType().getDescribe().getName();  
+        String sObjName = recordId.getSObjectType().getDescribe().getName();
         return sObjName;
     }
-    
+
     @AuraEnabled
     public static String getFieldSet(String objectName, String fieldSetName){
         String result = '';
@@ -109,7 +109,7 @@ public with sharing class NewRecordCustomController{
                     result += jsonPart;
                 }
             }
-            
+
         } catch (Exception e){
             result += e.getLineNumber()+' : ' + e.getMessage();
             System.debug('Error::' + e.getMessage());
@@ -117,7 +117,7 @@ public with sharing class NewRecordCustomController{
         }
         return '[' + result + ']';
     }
-    
+
     @AuraEnabled
     public static List<String> getDropDown(String objName, String fieldName){
         List<String> pickListValuesList = new List<String>();
@@ -135,13 +135,13 @@ public with sharing class NewRecordCustomController{
         }
         return pickListValuesList;
     }
-   
+
     @AuraEnabled
     public Static LookupWrapper getParentObjRec(string parentrecordid){
         Id recordid = parentrecordid;
         string sObjName = recordid.getSObjectType().getDescribe().getName();
         string  Query;
-        Query = 'select Id, Name from ' +sObjName +' where Id=:recordid';  
+        Query = 'select Id, Name from ' +sObjName +' where Id=:recordid';
         SObject ObjectRec = Database.query(Query);
         LookupWrapper NewWrapperRec = new LookupWrapper();
         NewWrapperRec.LookupRec = ObjectRec;
@@ -153,20 +153,20 @@ public with sharing class NewRecordCustomController{
         Public SObject LookupRec {get;set;}
         @AuraEnabled
         Public String ObjectName {get;set;}
-        
+
     }
     @AuraEnabled
     public static List<ListView> getListViews() {
         List<ListView> listviews =
             [SELECT Id, Name FROM ListView WHERE SobjectType = 'buildertek__Expense__c'];
-        
+
         // Perform isAccessible() check here
         return listviews;
     }
     @AuraEnabled
     public static String getbudgetrecord(String Expenserecid){
         list<buildertek__Admin_Interface_Node_Configuration__c> adminInterfaceNodeConfigurations = [Select Id,
-                                                                                                  buildertek__Automatically_add_Expense_to_Budget__c 
+                                                                                                  buildertek__Automatically_add_Expense_to_Budget__c
                                                                                                   from buildertek__Admin_Interface_Node_Configuration__c
                                                                                                   WHERE Name=:'Budget Configuration' and buildertek__Automatically_add_Expense_to_Budget__c !=false limit 1];
          if(adminInterfaceNodeConfigurations.size()>0 ){
@@ -174,11 +174,11 @@ public with sharing class NewRecordCustomController{
                  return 'Message';
              }
              else{
-                return null; 
+                return null;
              }
          }
         else{
-            return null; 
+            return null;
         }
     }
     @AuraEnabled
@@ -192,18 +192,18 @@ public with sharing class NewRecordCustomController{
                  return 'Message';
              }
              else{
-                return null; 
+                return null;
              }
          }
         else{
-            return null; 
+            return null;
         }
     }
     @AuraEnabled
     public static Boolean duplicateExpense(String expenseAmount, String expenseType, String expensePaymentMethod, String expenseDescription){
         Decimal Amount = null;
         if(expenseAmount != null){
-           Amount = Decimal.valueOf(expenseAmount); 
+           Amount = Decimal.valueOf(expenseAmount);
         }
 
         System.debug('expenseDescription ==> '+expenseDescription);
@@ -211,7 +211,7 @@ public with sharing class NewRecordCustomController{
         System.debug('expensePaymentMethod ==> '+expensePaymentMethod);
         System.debug('Amount ==>'+Amount);
         list<buildertek__Expense__c> expenselist = [select id, Name, buildertek__Description__c,buildertek__Type__c,buildertek__Payment_Method__c,buildertek__Amount__c
-                                             from buildertek__Expense__c where buildertek__Description__c =: expenseDescription and buildertek__Type__c =: expenseType and 
+                                             from buildertek__Expense__c where buildertek__Description__c =: expenseDescription and buildertek__Type__c =: expenseType and
                                                                                buildertek__Payment_Method__c =: expensePaymentMethod and buildertek__Amount__c =: Amount];
 
         System.debug('expenselist ==>'+expenselist);
@@ -220,7 +220,7 @@ public with sharing class NewRecordCustomController{
         }else{
             return false;
         }
-    } 
+    }
 
     @AuraEnabled
     public static void bypassTrigger(){
@@ -229,7 +229,7 @@ public with sharing class NewRecordCustomController{
 
         System.debug('ExpenseToBudgetItemTriggerHandler.blnSkipExpenseUpdateTrigger  ==> '+ExpenseToBudgetItemTriggerHandler.blnSkipExpenseUpdateTrigger );
     }
-    
+
      @AuraEnabled
     public static string getBudgets(String RecordId){
         buildertek__Budget__c budgetRec = [select id,Name,buildertek__Project__c from buildertek__Budget__c  where id =: RecordId];
@@ -249,14 +249,14 @@ public with sharing class NewRecordCustomController{
     public static List<ListView> getListView() {
         List<ListView> listviews =
             [SELECT Id, Name FROM ListView WHERE SobjectType = 'buildertek__RFQ__c' and Name='All'];
-    
+
         // Perform isAccessible() check here
         return listviews;
     }
-    
+
        @AuraEnabled
     public static String getRecordField(Id recordId) {
-    
+
         buildertek__Project__c admin = [select id,buildertek__Administrator__c from buildertek__Project__c where id =:recordId];
         if(admin.buildertek__Administrator__c != null){
             return admin.buildertek__Administrator__c;
@@ -268,6 +268,7 @@ public with sharing class NewRecordCustomController{
 
     @AuraEnabled
     public static String creteExpense(buildertek__Expense__c expenseData) {
+        ExpenseToBudgetItemTriggerHandler.blnSkipExpenseUpdateTrigger = true;
         System.debug('expenseData ==> '+expenseData);
         System.debug('expenseData.buildertek__Budget_Line__c =>'+expenseData.buildertek__Budget_Line__c);
 
@@ -276,7 +277,7 @@ public with sharing class NewRecordCustomController{
         String budgetLine = expenseData.buildertek__Budget_Line__c;
         if (expenseData.buildertek__Budget_Line__c != null && budgetLine != '') {
             insert expenseData;
-            
+
         } else {
             insert expenseData;
 
@@ -291,7 +292,7 @@ public with sharing class NewRecordCustomController{
                 budgetitem.Name = expenseData.buildertek__Description__c;
                 budgetitem.buildertek__Quantity__c = 0;
                 budgetitem.buildertek__UOM__c = 'Each';
-                budgetitem.buildertek__Group__c  = budgetlinegroup.id; 
+                budgetitem.buildertek__Group__c  = budgetlinegroup.id;
                 budgetitem.buildertek__Cost_Code__c = expenseData.buildertek__Cost_Code__c;
                 budgetitem.buildertek__Contractor__c = expenseData.buildertek__Vendor__c;
                 budgetitem.buildertek__Unit_Price__c = expenseData.buildertek__Amount__c;
@@ -310,6 +311,8 @@ public with sharing class NewRecordCustomController{
         }
 
         BudgetDAO.isCreateExpense = false;
+        ExpenseToBudgetItemTriggerHandler.blnSkipExpenseUpdateTrigger = false;
+
         return expenseData.Id;
     }
 

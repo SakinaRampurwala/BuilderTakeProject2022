@@ -1142,6 +1142,8 @@ public with sharing class BT_Utils{
                  insert cloneSObjGroupList.values();*/
             }
             Map<String,SObject> projectTaskMap = new Map<String,SObject>();
+
+            List<sObject> cloneChildRec= new List<sObject>();
             
 
             for (Sobject sobj : sobjList){
@@ -1155,6 +1157,7 @@ public with sharing class BT_Utils{
                             Sobject obj = sobj.clone(false, true);
                             obj.put(parentFieldApiName, cloneSObjList.get(parentId).id);//Changing the parent id
                             system.debug('---obj---' + obj);
+                            cloneChildRec.add(obj);
 
                             if (childObjName == 'buildertek__Contract_Item__c' && sobj.get('buildertek__Contract_Line_Group__c') != null){
                                 system.debug('Contract Group Id ---------> ' + sobj.get('buildertek__Grouping__c'));
@@ -1164,6 +1167,7 @@ public with sharing class BT_Utils{
                             }
 
                             if (childObjName == 'buildertek__Quote_Item__c' && sobj.get('buildertek__Grouping__c') != null){
+
                                 system.debug('Quote Group Id ---------> ' + sobj.get('buildertek__Grouping__c'));
                                 system.debug('sObjeGroupList --------> ' + cloneSObjGroupList);
                                 system.debug('Grouping --------> ' + cloneSObjGroupList.get((Id)sobj.get('buildertek__Grouping__c')));
@@ -1182,11 +1186,15 @@ public with sharing class BT_Utils{
                                     projectTaskMap.put(String.valueOf(sobj.get('Id')),obj);
                                 }
                             }
+
                         }
                     }
                 }
             }
 
+            if(cloneChildRec.size() > 0){
+                insert cloneChildRec;
+            }
             // Add Code For Change Predecessor (Start)
 
             if (childObjName == 'buildertek__Project_Task__c') {

@@ -66,6 +66,19 @@ public with sharing class QuoteItemTriggerHandler {
     }
      
     public void OnBeforeDelete(Quote_Item__c[] QuoteItemToDelete, Map<ID, Quote_Item__c> QuoteItemMap){
+        RFQTriggerHandler.skipDeleteQuoteLine = true;
+        set<id> QuoteId = new set<id>();
+        for(Quote_Item__c qItem: QuoteItemToDelete) {
+            QuoteId.add(qItem.buildertek__Quote__c);
+        } 
+        List<buildertek__RFQ__c> rfqList = [SELECT Id, buildertek__Added_to_Quote__c FROM buildertek__RFQ__c WHERE buildertek__Added_to_Quote__c IN :QuoteId];
+        if(rfqList.size() > 0){
+            for(buildertek__RFQ__c rfq : rfqList){
+                rfq.buildertek__Added_to_Quote__c = null;
+            }
+            update rfqList;
+        }
+        RFQTriggerHandler.skipDeleteQuoteLine = false;
         
     }
      

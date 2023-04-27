@@ -11,6 +11,10 @@ trigger QuoteItemTrigger on Quote_Item__c (after delete, after insert, after und
             system.debug('Trigger.New: ' + Trigger.New);
             handler.OnBeforeUpdateQuoteLine(Trigger.new);
         }
+
+        if(Trigger.isDelete && Trigger.isBefore){
+            handler.OnBeforeDelete(Trigger.old, Trigger.oldMap);
+        }
          
     }
 }

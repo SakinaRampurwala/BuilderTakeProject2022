@@ -132,6 +132,7 @@
         console.log({listofCOItems});
 		var listofCOItemsToSave = [];
 		for (var i = 0; i < listofCOItems.length; i++){
+            console.log(listofCOItems[i].Name);
 			if (listofCOItems[i].Name != undefined && listofCOItems[i].Name != '' ) {
 				// listofPOItemsToSave.push(listofPOItems[i]);
 				let coLineObj = {
@@ -145,20 +146,23 @@
 		}
 		console.log('listofPOItemsToSave-->>',{listofCOItemsToSave});
 		console.log('recordId-->>',{recordId});
-        
-		var action = component.get("c.saveCOLineItems");
-		action.setParams({
-			listofCOItemsToSave: listofCOItemsToSave,
-			recordId: recordId
-		});
-		action.setCallback(this, function (response) {
-			console.log('response.getState()'+ response.getState());
-			if (response.getState() == 'SUCCESS' && response.getReturnValue()) {
-				console.log('inserted');
-                console.log(response.getReturnValue());
-			}
-		});
-		$A.enqueueAction(action);
+        if(listofCOItemsToSave.length > 0){
+            var action = component.get("c.saveCOLineItems");
+            action.setParams({
+                listofCOItemsToSave: listofCOItemsToSave,
+                recordId: recordId
+            });
+            action.setCallback(this, function (response) {
+                console.log('response.getState()'+ response.getState());
+                if (response.getState() == 'SUCCESS' && response.getReturnValue()) {
+                    console.log('inserted');
+                    console.log(response.getReturnValue());
+                }
+            });
+            $A.enqueueAction(action);
+
+        }
+		
 
        
 	},

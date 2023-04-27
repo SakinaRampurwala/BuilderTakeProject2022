@@ -1,10 +1,16 @@
 ({
     doInit : function(component, event, helper) {
         component.set("v.Spinner", true);
+        var adminSetting 
         var adminAction = component.get("c.getadminvalues");
 		adminAction.setCallback(this, function (response) {
 			if (response.getState() == 'SUCCESS') {
-                console.log(response.getReturnValue());
+                adminSetting = response.getReturnValue();
+                console.log('adminSetting-->>',{adminSetting});
+                if(adminSetting == 'With PO Lines'){
+                    component.set("v.ProjectContainer", true);
+                    component.set("v.MainContainer", false);
+                }
             }
         });
         $A.enqueueAction(adminAction);
@@ -57,18 +63,22 @@
                     if(objName == 'buildertek__Project__c'){
                         component.set("v.parentprojectRecordId", parentRecordId);
                         console.log('We got the parentRecordId', component.get("v.parentprojectRecordId"));
-                        component.set("v.ProjectContainer", true);
-                        component.set("v.MainContainer", false);
                         helper.getCustomerId(component, event, helper, parentRecordId);                  
                         helper.getFieldSetwithProject(component, event, helper); 
-                        helper.setupListofPOItem(component, event, helper);
-                    }
-                } 
-            });
-            $A.enqueueAction(action);
-        }
-        $A.enqueueAction(action2);
-        // helper.getFieldSetforPOLine(component, event, helper);
+                        // if(adminSetting == 'With PO Lines'){
+                            //     component.set("v.ProjectContainer", true);
+                            //     component.set("v.MainContainer", false);
+                            //     helper.getCustomerId(component, event, helper, parentRecordId);                  
+                            //     helper.getFieldSetwithProject(component, event, helper); 
+                            //     helper.setupListofPOItem(component, event, helper);
+                            // }
+                        }
+                    } 
+                });
+                $A.enqueueAction(action);
+            }
+            $A.enqueueAction(action2);
+            helper.setupListofPOItem(component, event, helper);
     },
     
     closeModel: function(component, event, helper) {

@@ -1883,7 +1883,7 @@ Throws [Exceptions]:
             }
             //append that id of rfq should not be in rfqIds
             String rfqItemrecords = 'Select Id, Name, buildertek__RFQ_Details__c, buildertek__Status__c, buildertek__Vendor__r.Name, buildertek__Vendor_Quote__c,CurrencyIsoCode, buildertek__Project__c, buildertek__Project__r.Name from buildertek__RFQ__c'+
-                ' where buildertek__project__c =\'' + projectId +'\' and buildertek__status__c =\'' +status+'\' and Id NOT IN :rfqIds ORDER BY Name';
+                ' where buildertek__Added_to_Quote__c = null and buildertek__project__c =\'' + projectId +'\' and buildertek__status__c =\'' +status+'\' and Id NOT IN :rfqIds ORDER BY Name';
             system.debug('rfqItemrecords'+rfqItemrecords);
             rfqlist = Database.query(rfqItemrecords);
             return rfqlist;
@@ -2791,6 +2791,18 @@ return vendor;
         @AuraEnabled
         public List<Contact>  ConList;
         
+    }
+
+    @AuraEnabled
+    public static string saveRFQs(List<buildertek__RFQ__c>selectedRFQS, Id quoteId){
+        System.debug('selectedRFQS'+selectedRFQS);
+        System.debug('quoteId'+quoteId);
+        for(buildertek__RFQ__c rfq : selectedRFQS){
+            rfq.buildertek__Added_to_Quote__c = quoteId;
+        }
+        update selectedRFQS;
+        return 'success';
+
     }
     
 }
