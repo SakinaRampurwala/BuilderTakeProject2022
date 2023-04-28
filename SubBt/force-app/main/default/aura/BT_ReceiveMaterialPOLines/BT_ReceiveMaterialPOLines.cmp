@@ -15,6 +15,13 @@
     <aura:attribute name="endPage" type="Integer" />
     <aura:attribute name="totalRecords" type="Integer" />
     <aura:attribute name="pageSize" type="Integer" default="10" />
+
+    <aura:attribute name="fileData2" type="List" access="global"/>
+    <aura:attribute name="fileName2" type="String" access="global"/>
+    <aura:attribute name="FileLabelList" type="List" default="[]"/>
+    <aura:attribute name="FileNameList" type="List" />
+    <aura:attribute name="fileBody" type="string" access="global"/>
+    <aura:attribute name="orgCurr" type="string" />
     
       <aura:handler name="change" value="{!v.value}" action="{!c.valueChangeValidation}"/>
     
@@ -58,6 +65,7 @@
                             Quantity Delivered
                         </div>
                     </th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -92,7 +100,6 @@
                             </aura:if>
                             
                         </td>
-                        <!-- Quantity Remaining -->
                         <td>
                             <aura:if isTrue="{!item.buildertek__Quantity_Remaining__c != undefined}">
                                 <div class="slds-truncate" title="{!item.buildertek__Quantity_Remaining__c}" >
@@ -108,8 +115,6 @@
 
                         </td>
                         <td>
-                            
-                            
                             <div class="slds-truncate" title="{!item.Name}" >
                                 <aura:if isTrue="{!item.buildertek__Quantity_Remaining__c != 0}">
                                     <lightning:input name="{!index}" type="number" value="{!item.quantity_recieved}" autocomplete="off" onkeyup="{!c.handleBlur}"  messageWhenBadInput="You must enter number"  />
@@ -119,8 +124,37 @@
                                 </aura:if>
                             </div>
                         </td>
-                        
-                        
+                        <td>
+                            
+                            <div class="slds-file-selector__dropzone">
+                                <aura:if isTrue="{!item.buildertek__Quantity_Remaining__c != 0}">
+                                    <input type="file" class="slds-file-selector__input slds-assistive-text" data-index = "{!item.Id}" id="{!index}" onchange="{!c.handleFilesChange}" aria-labelledby="file-selector-primary-label file-selector-secondary-label"  multiple="true"/>
+                                </aura:if>
+                                <aura:if isTrue="{!item.buildertek__Quantity_Remaining__c == 0}">
+                                    <input type="file" class="slds-file-selector__input slds-assistive-text" data-index = "{!index}" id="{!index}" onchange="{!c.handleFilesChange}" aria-labelledby="file-selector-primary-label file-selector-secondary-label"  multiple="true" disabled="true"/>
+                                </aura:if>             
+                                <label class="slds-file-selector__body" for="{!index}" id="file-selector-secondary-label2"> 
+                                    <span class="slds-file-selector__button slds-button slds-button_neutral">
+                                        Upload Files 
+                                    </span>
+                                </label>
+                                
+                                <aura:iteration items="{!v.FileNameList}" var="sr" indexVar="fileindex">
+                                    <aura:if isTrue="{!sr.Index == item.Id}">
+                                        <div>
+                                            <span>
+                                                <lightning:pill class="slds-m-around_xx-small slds-text-body_small slds-text-color_error" label="{!sr.FileName}" name="{!fileindex+'_'+item.Id}" onremove="{! c.clear }">
+                                                    <aura:set attribute="media">
+                                                        <lightning:icon iconName="standard:file" size="x-small" alternativeText="icon"/>
+                                                    </aura:set>
+                                                </lightning:pill>
+                                            </span>
+                                        </div>
+                                    </aura:if>
+                                </aura:iteration>
+                            </div>
+                            
+                        </td>
                     </tr>
                 </aura:iteration>
             </tbody>

@@ -5,9 +5,7 @@ trigger ExpenseToBudgetlineTrigger on buildertek__Expense__c (after delete, afte
         ExpenseToBudgetItemTriggerHandler handler = new ExpenseToBudgetItemTriggerHandler (Trigger.isExecuting, Trigger.size);
 
         if(Trigger.isInsert && Trigger.isBefore){
-            if (!ExpenseToBudgetItemTriggerHandler.blnSkipExpenseUpdateTrigger) {
-                handler.OnBeforeInsert(Trigger.new, Trigger.newMap);
-            }
+            handler.OnBeforeInsert(Trigger.new, Trigger.newMap);
         }
 
         else if(Trigger.isInsert && Trigger.isAfter){

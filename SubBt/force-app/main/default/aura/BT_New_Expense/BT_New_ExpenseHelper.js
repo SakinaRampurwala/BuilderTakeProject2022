@@ -56,7 +56,7 @@
                 toastEvent.fire();
             }
         });
-        // $A.enqueueAction(action);
+        $A.enqueueAction(action);
     },
 
     setbudgetData: function (component, event, helper, parentRecordId){

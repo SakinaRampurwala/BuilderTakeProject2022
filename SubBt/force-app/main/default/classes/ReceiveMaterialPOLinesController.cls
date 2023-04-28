@@ -22,6 +22,8 @@ public with sharing class ReceiveMaterialPOLinesController {
         list<RfqDataTableWrapper> newProductList = (list<RfqDataTableWrapper>)JSON.deserialize(ProductsList, list<RfqDataTableWrapper>.class);
         List<buildertek__Inventory_Tracking__c> invTrackList= new List<buildertek__Inventory_Tracking__c>();
 
+        System.debug(newProductList);
+
         //iterate over list and store the polineid in a list
         List<Id> polineIds = new List<Id>();
         for(RfqDataTableWrapper p: newProductList){
@@ -119,10 +121,50 @@ public with sharing class ReceiveMaterialPOLinesController {
                 insert invTrackList;
             }
 
+            Map<Id,Id> polineIdInvTrackIdMap = new Map<Id,Id>();
+            for(buildertek__Inventory_Tracking__c invTrack: invTrackList){
+                polineIdInvTrackIdMap.put(invTrack.buildertek__BT_Purchase_Order_Line__c,invTrack.Id);
+            }
 
+            List<ContentVersion> contentVersionList = new List<ContentVersion>();
+            for(RfqDataTableWrapper p: newProductList){
+                if(p.fileContent != null){
+                    ContentVersion contentVersion = new ContentVersion();
+                    contentVersion.ContentLocation = 'S';
+                    contentVersion.PathOnClient = p.FileName;
+                    contentVersion.Title = p.FileName;
+                    contentVersion.VersionData = EncodingUtil.base64Decode(p.fileContent);
+                    contentVersion.Description = p.polineId;
+                    contentVersion.IsMajorVersion = true;
+                    contentVersionList.add(contentVersion);
+                }
+            }
+            if(contentVersionList.size() > 0){
+                insert contentVersionList;
+            }
 
+            //get contentDocumentId
+            List<ContentDocument> contentDocumentList = [SELECT Id, Title FROM ContentDocument WHERE Id IN (SELECT ContentDocumentId FROM ContentVersion WHERE Id IN: contentVersionList)];
+            Map<String,Id> contentDocumentIdMap = new Map<String,Id>();
+            for(ContentDocument contentDocument: contentDocumentList){
+                contentDocumentIdMap.put(contentDocument.Title,contentDocument.Id);
+            }
+            
+            List<ContentDocumentLink> contentDocumentLinkList = new List<ContentDocumentLink>();
+            for(ContentVersion contentVersion: contentVersionList){
+                ContentDocumentLink contentDocumentLink = new ContentDocumentLink();
+                contentDocumentLink.ContentDocumentId = contentDocumentIdMap.get(contentVersion.Title);
+                contentDocumentLink.LinkedEntityId = polineIdInvTrackIdMap.get(contentVersion.Description) ;
+                contentDocumentLink.ShareType = 'V';
+                contentDocumentLink.Visibility = 'AllUsers';
+                contentDocumentLinkList.add(contentDocumentLink);
+            }
+            if(contentDocumentLinkList.size() > 0){
+                insert contentDocumentLinkList;
+            }
 
-
+                      
+                       
             return true;
         }
         
@@ -142,5 +184,12 @@ public with sharing class ReceiveMaterialPOLinesController {
 
         @AuraEnabled
         public Id polineId{ get; set;}
+
+        @AuraEnabled
+        public String FileName{ get; set; }
+
+        @AuraEnabled
+        public String fileContent{ get; set; }
+
     }
 }

@@ -125,16 +125,28 @@
             }
             
         }
+        
+        var fileData2 = component.get("v.fileData2");
+        
+        for(var i=0;i<productList.length;i++){
+            for(var j=0;j<fileData2.length;j++){
+                if(productList[i].polineId == fileData2[j].Index){
+                    productList[i].fileName = fileData2[j].fileName;
+                    productList[i].fileContent = fileData2[j].fileContent;
+                    
+                }
+            }   
+        }
+        
         console.log(rfqlist);
         console.log(productList);
-
+        debugger;
 
         component.set("v.Spinner", true);
         component.set("v.showMessage", true);
         action.setParams({
-            productId:productIdList,
+            "productId":productIdList,
             "ProductsList" : JSON.stringify(productList),
-            
         })
         
         action.setCallback(this,function(response){
@@ -268,6 +280,66 @@
         component.set("v.endPage", end);
         component.set('v.paginationList', paginationList);
     },
+
+    handleFilesChange: function(component, event, helper) {
+        // var paginationList = component.get("v.paginationList");
+        // var index = event.getSource().get("v.name");
+        // console.log('file name is ' + event.getSource().get("v.files")[0]['name']);
+        // console.log('Index is ' + index);
+        var fileName = "No File Selected..";
+		var fileCount = event.target.files;
+		var files = '';
+		if (fileCount.length > 0) {
+			component.set("v.uploadFile", true);
+			for (var i = 0; i < fileCount.length; i++) {
+				fileName = fileCount[i]["name"];
+				if (files == '') {
+					files = fileName;
+				} else {
+					files = files + ',' + fileName;
+				}
+				helper.readFiles2(component, event, helper, fileCount[i], event.currentTarget.dataset.index);
+
+			}
+		}
+		component.set("v.fileName2", files);
+        
+    },
+
+    clear: function (component, event, helper) {
+		// debugger;
+		event.stopPropagation();
+		event.preventDefault();
+		var selectedPillId = event.getSource().get("v.name");
+		var selectedPillIndex = selectedPillId.split("_")[0];
+		var selectedPillPo = selectedPillId.split("_")[1];
+		var allFileList = component.get("v.fileData2");
+        console.log('allFileList ==> ',allFileList);
+		var AllPillsList = component.get("v.selectedfilesFill");
+
+		if (allFileList.length != undefined) {
+			for (var i = 0; i < allFileList.length; i++) {
+				if (allFileList[i].Index == selectedPillPo && i == Number(selectedPillIndex)) {
+					allFileList.splice(i, 1);
+					//component.set("v.selectedfilesFill", AllPillsList);
+				}
+			}
+		}
+		component.set("v.fileData2", allFileList);
+        console.log('fileData2 ==> ',component.get("v.fileData2"));
+		var names = []
+		if (component.get("v.fileData2") != undefined) {
+			for (var i = 0; i < component.get("v.fileData2").length; i++) {
+                var name = {};
+                name['FileName'] = [];
+                name['Index'] = (JSON.parse(JSON.stringify(component.get("v.fileData2")[i])).Index)
+                name['FileName'] = JSON.parse(JSON.stringify(component.get("v.fileData2")[i]))["fileName"];
+                names.push(name);
+            }
+		}
+		component.set("v.FileNameList", names);
+        console.log('FileNameList ==> ',component.get("v.FileNameList"));
+	},
     
     
 })

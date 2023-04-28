@@ -1,7 +1,6 @@
 ({
     CSV2JSON: function (component, event, helper, csv) {
         var arr = [];
-        var cirDep = false;
         arr = csv.split('\n');
         var jsonObj = [];
         var headers = arr[0].split(',');
@@ -139,62 +138,40 @@
         });
 
         let parentMap = new Map();
+        jsonObj.forEach(element => {
+            parentMap.set(element.ID, element.parentID);
+        });
+        console.log('parentMap ==> ',parentMap);
 
-        console.time("test_timer");
-
-        let ij = 0;
-        jsonObj.forEach(ele => {
-            if (ele.parentID != undefined && ele.parentID != '') {
-                let taskId = ele.ID;
-                let parentId = parentMap.get(ele.parentID).parentID;
-                let flag = true;
-                while (flag) {
-                    ij++
-                    if (taskId != parentId) {
-                        if (parentId != '' && parentMap.has(parentId) && parentMap.get(parentId).parentID != '') {
-                            parentId = parentMap.get(parentId).parentID;
-                        } else {
-                            flag = false;
-                        }
-                    } else {
-                        flag = false;
-                        cirDep = true;
-                        console.log('Circular Dependency');
+        var circularDependency = false;
+        let totalLoop = 0;
+        var dependentRecord;
+        jsonObj.every(ele => {
+            var currentId = ele.ID;
+            for (let index = 0; index <= jsonObj.length+1; index++) {
+                totalLoop++
+                if (parentMap.has(currentId)) {
+                    currentId = parentMap.get(currentId);
+                    if(index > jsonObj.length){
+                        circularDependency = true;
+                        dependentRecord = ele;
+                        break;
                     }
+                } else{
+                    break;
                 }
             }
+            return !circularDependency;
         });
 
-        console.timeEnd("test_timer");
-        console.log('i ', ij);
-
-        /* if (projectTaskMap.get(projectTask.buildertek__Dependency__c) != null) {
-            Id taskId = projectTask.Id;
-            Id parentId = projectTaskMap.get(projectTask.buildertek__Dependency__c).buildertek__Dependency__c;
-
-            System.debug('taskId ==> '+taskId);
-            System.debug('parentId ==> '+parentId);
-            let flag = true;
-            while (flag) {
-                if (taskId != parentId) {
-                    if (parentId != null && projectTaskMap.get(parentId).buildertek__Dependency__c != null) {
-                        parentId = projectTaskMap.get(parentId).buildertek__Dependency__c;
-                    } else {
-                        flag = false;
-                    }
-                } else {
-                    flag = false;
-                    System.debug('Circular Dependency');
-                    projectTask.Id.addError('Circular Dependency');
-                }
-            }
-        } */
-
-        var json = JSON.stringify(jsonObj);
-        if (!cirDep) {
-            return json;
-        } else {
+        console.log("Total Loop => "+totalLoop);
+        if (circularDependency) {
+            console.log('dependentRecord ==> ',dependentRecord);
+            console.log('Circular Dependency');
             return '';
+        } else{
+            var json = JSON.stringify(jsonObj);
+            return json;
         }
     },
 
