@@ -1164,7 +1164,7 @@ public with sharing class BT_Utils{
                                 system.debug('Contract sObjeGroupList --------> ' + cloneSObjGroupList);
                                 system.debug('Contract Grouping --------> ' + cloneSObjGroupList.get((Id)sobj.get('buildertek__Grouping__c')));
                                 // obj.put('buildertek__Contract_Line_Group__c', cloneSObjGroupList.get((Id)sobj.get('buildertek__Contract_Line_Group__c')).id);//Changing the Group id
-                                obj.put('buildertek__Grouping__c', sobj.get('buildertek__Grouping__c'));//Changing the Group id
+                                obj.put('buildertek__Contract_Line_Group__c', sobj.get('buildertek__Contract_Line_Group__c'));//Changing the Group id
 
                             }
 

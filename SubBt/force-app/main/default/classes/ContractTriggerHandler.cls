@@ -49,7 +49,7 @@ public without sharing class ContractTriggerHandler{
         RecordType rt;
         // if(Schema.sObjectType.RecordType.fields.id.isAccessible() && Schema.sObjectType.RecordType.fields.Name.isAccessible() && Schema.sObjectType.RecordType.fields.sObjectType.isAccessible()){
         
-        rt = [SELECT Id
+        rt = [SELECT Id, Name
               FROM RecordType
               WHERE sObjectType = 'buildertek__Contract__c' AND Name = 'Prime Contract'];
         // }
