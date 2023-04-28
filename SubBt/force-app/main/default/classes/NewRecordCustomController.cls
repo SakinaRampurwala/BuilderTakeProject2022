@@ -268,7 +268,7 @@ public with sharing class NewRecordCustomController{
 
     @AuraEnabled
     public static String creteExpense(buildertek__Expense__c expenseData) {
-        ExpenseToBudgetItemTriggerHandler.blnSkipExpenseUpdateTrigger = true;
+
         System.debug('expenseData ==> '+expenseData);
         System.debug('expenseData.buildertek__Budget_Line__c =>'+expenseData.buildertek__Budget_Line__c);
 
@@ -285,33 +285,32 @@ public with sharing class NewRecordCustomController{
             System.debug('BudgetId ==> '+BudgetId);
             if (BudgetId != null && BudgetId != '') {
 
-                buildertek__Budget_Line_Group__c  budgetlinegroup =[select id,Name from buildertek__Budget_Line_Group__c  where Name = 'Expense' limit 1];
+                // buildertek__Budget_Line_Group__c  budgetlinegroup =[select id,Name from buildertek__Budget_Line_Group__c  where Name = 'Expense' limit 1];
 
-                buildertek__Budget_Item__c budgetitem = new buildertek__Budget_Item__c();
-                budgetitem.buildertek__Budget__c = BudgetId;
-                budgetitem.Name = expenseData.buildertek__Description__c;
-                budgetitem.buildertek__Quantity__c = 0;
-                budgetitem.buildertek__UOM__c = 'Each';
-                budgetitem.buildertek__Group__c  = budgetlinegroup.id;
-                budgetitem.buildertek__Cost_Code__c = expenseData.buildertek__Cost_Code__c;
-                budgetitem.buildertek__Contractor__c = expenseData.buildertek__Vendor__c;
-                budgetitem.buildertek__Unit_Price__c = expenseData.buildertek__Amount__c;
-                insert budgetitem;
+                // buildertek__Budget_Item__c budgetitem = new buildertek__Budget_Item__c();
+                // budgetitem.buildertek__Budget__c = BudgetId;
+                // budgetitem.Name = expenseData.buildertek__Description__c;
+                // budgetitem.buildertek__Quantity__c = 0;
+                // budgetitem.buildertek__UOM__c = 'Each';
+                // budgetitem.buildertek__Group__c  = budgetlinegroup.id;
+                // budgetitem.buildertek__Cost_Code__c = expenseData.buildertek__Cost_Code__c;
+                // budgetitem.buildertek__Contractor__c = expenseData.buildertek__Vendor__c;
+                // budgetitem.buildertek__Unit_Price__c = expenseData.buildertek__Amount__c;
+                // insert budgetitem;
 
-                expenseData.buildertek__Budget_Line__c = budgetitem.id;
-                update expenseData;
+                // expenseData.buildertek__Budget_Line__c = budgetitem.id;
+                // update expenseData;
 
-                buildertek__Expense_To_Budget_Item_Link__c ExpnseToBudgetItemLink = new buildertek__Expense_To_Budget_Item_Link__c();
-                ExpnseToBudgetItemLink.buildertek__Expense__c = expenseData.Id;
-                ExpnseToBudgetItemLink.buildertek__Budget_Line__c = budgetitem.Id;
-                ExpnseToBudgetItemLink.Auto_Roll_Up__c = true;
-                insert ExpnseToBudgetItemLink;
+                // buildertek__Expense_To_Budget_Item_Link__c ExpnseToBudgetItemLink = new buildertek__Expense_To_Budget_Item_Link__c();
+                // ExpnseToBudgetItemLink.buildertek__Expense__c = expenseData.Id;
+                // ExpnseToBudgetItemLink.buildertek__Budget_Line__c = budgetitem.Id;
+                // ExpnseToBudgetItemLink.Auto_Roll_Up__c = true;
+                // insert ExpnseToBudgetItemLink;
 
             }
         }
 
         BudgetDAO.isCreateExpense = false;
-        ExpenseToBudgetItemTriggerHandler.blnSkipExpenseUpdateTrigger = false;
 
         return expenseData.Id;
     }

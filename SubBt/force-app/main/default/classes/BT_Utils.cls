@@ -1157,13 +1157,15 @@ public with sharing class BT_Utils{
                             Sobject obj = sobj.clone(false, true);
                             obj.put(parentFieldApiName, cloneSObjList.get(parentId).id);//Changing the parent id
                             system.debug('---obj---' + obj);
-                            cloneChildRec.add(obj);
+
 
                             if (childObjName == 'buildertek__Contract_Item__c' && sobj.get('buildertek__Contract_Line_Group__c') != null){
                                 system.debug('Contract Group Id ---------> ' + sobj.get('buildertek__Grouping__c'));
                                 system.debug('Contract sObjeGroupList --------> ' + cloneSObjGroupList);
                                 system.debug('Contract Grouping --------> ' + cloneSObjGroupList.get((Id)sobj.get('buildertek__Grouping__c')));
-                                obj.put('buildertek__Contract_Line_Group__c', cloneSObjGroupList.get((Id)sobj.get('buildertek__Contract_Line_Group__c')).id);//Changing the Group id
+                                // obj.put('buildertek__Contract_Line_Group__c', cloneSObjGroupList.get((Id)sobj.get('buildertek__Contract_Line_Group__c')).id);//Changing the Group id
+                                obj.put('buildertek__Grouping__c', sobj.get('buildertek__Grouping__c'));//Changing the Group id
+
                             }
 
                             if (childObjName == 'buildertek__Quote_Item__c' && sobj.get('buildertek__Grouping__c') != null){
@@ -1171,11 +1173,15 @@ public with sharing class BT_Utils{
                                 system.debug('Quote Group Id ---------> ' + sobj.get('buildertek__Grouping__c'));
                                 system.debug('sObjeGroupList --------> ' + cloneSObjGroupList);
                                 system.debug('Grouping --------> ' + cloneSObjGroupList.get((Id)sobj.get('buildertek__Grouping__c')));
-                                obj.put('buildertek__Grouping__c', cloneSObjGroupList.get((Id)sobj.get('buildertek__Grouping__c')).id);//Changing the Group id
+                                // obj.put('buildertek__Grouping__c', cloneSObjGroupList.get((Id)sobj.get('buildertek__Grouping__c')).id);//Changing the Group id
+                                obj.put('buildertek__Grouping__c', sobj.get('buildertek__Grouping__c'));//Changing the Group id
+
                             }
 
                             if (childObjName == 'buildertek__Budget_Item__c' && sobj.get('buildertek__Group__c') != null && cloneSObjGroupList.get((Id)sobj.get('buildertek__Group__c')) != null){
-                                obj.put('buildertek__Group__c', cloneSObjGroupList.get((Id)sobj.get('buildertek__Group__c')).id);//Changing the Group id
+                                // obj.put('buildertek__Group__c', cloneSObjGroupList.get((Id)sobj.get('buildertek__Group__c')).id);//Changing the Group id
+                                obj.put('buildertek__Group__c', sobj.get('buildertek__Group__c'));//Changing the Group id
+
                             }
 
                             // here we are getting parent as null for some resone we need to investigate this in detail
@@ -1186,6 +1192,9 @@ public with sharing class BT_Utils{
                                     projectTaskMap.put(String.valueOf(sobj.get('Id')),obj);
                                 }
                             }
+
+                            cloneChildRec.add(obj);
+
 
                         }
                     }

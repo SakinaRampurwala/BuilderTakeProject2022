@@ -247,8 +247,7 @@
         <lightning:button variant="neutral"  label="Cancel"
                           onclick="{!c.closeModal}" />
         
-            <lightning:button aura:id="nextPage" variant="brand"
-                              label="Add To PoItems " onclick="{!c.addToPOLines}" />
+            <lightning:button aura:id="nextPage" variant="brand" label="Add To PoItems " onclick="{!c.addToPOLines}" />
         
         
         

@@ -72,6 +72,26 @@
 
             } else {
                 helper.showErrorToast(component, event, helper, "Error occurs", "Something went wrong!");
+                component.set("v.Spinner", false);
+
+                var recordId = component.get("v.mainObjectId");
+                $A.get("e.force:navigateToSObject").setParams({
+                    "recordId": recordId
+
+                }).fire();
+
+                var workspaceAPI = component.find("workspace");
+                workspaceAPI.getFocusedTabInfo().then(function(response) {
+                    var focusedTabId = response.tabId;
+                    workspaceAPI.refreshTab({
+                            tabId: focusedTabId,
+                            includeAllSubtabs: true
+                    });
+                })
+                .catch(function(error) {
+                    console.log(error);
+                });
+
             }
         });
         $A.enqueueAction(action);

@@ -19,7 +19,7 @@
                 let budgetList = response.getReturnValue();
                 if (budgetList.length > 0) {
                     var budgetId = budgetList[0].Id;
-                    component.set("v.budgetId", budgetId);
+                    component.set("v.selectedBudgetName", budgetId);
                 }
             } else {
                 console.log('Error');
@@ -59,6 +59,7 @@
                 component.set("v.listOfFields", listOfFields);
             } else {
                 console.log('Error');
+
             }
         });
         $A.enqueueAction(action);
@@ -74,10 +75,14 @@
                 var lookuprec = response.LookupRec;
                 var ObjName = response.ObjectName;
                 component.set('v.parentobjectName', ObjName);
-                // alert('parentobjectName'+component.get('v.parentobjectName'));
+                component.set('v.isLoading' , false);
+            }else{
+                component.set('v.isLoading' , false);
+
             }
         });
         $A.enqueueAction(action);
+        
     },
     getbtadminrecord: function (component, event, helper) {
         var action = component.get("c.getbudgetrecord");
@@ -95,6 +100,8 @@
         $A.enqueueAction(action);
     },
     getMessage: function (component, event, helper) {
+        component.set('v.isLoading' , true);
+
         setTimeout(function () {
             var workspaceAPI = component.find("workspace");
             workspaceAPI.getFocusedTabInfo().then(function (response) {
@@ -131,8 +138,96 @@
                 navEvt.fire();
             }, 50);
             component.set("v.ismessage", false);
-        }, 2000);
-    },
+            component.set('v.isLoading' , false);
 
+        }, 2000);
+
+
+    },
+    handleChangeProjectHelper:function(component, event, helper) {
+		console.log('change project ');
+		let getValue= component.find("projectlookupid").get("v.value")
+
+        if(getValue!= '' && getValue != undefined){
+            var action = component.get("c.getBudget");
+            action.setParams({
+                recordId:getValue
+            });
+            action.setCallback(this, function(response) {
+                var state = response.getState();
+                console.log(response.getError());
+                console.log({state});
+                var result= response.getReturnValue();
+                if (state === "SUCCESS") {
+
+                    console.log({result});
+                    component.set('v.budgetList' ,result);
+                    component.set('v.loaded', false);
+
+                    component.set('v.allBudgetRecords' ,result);
+
+                    
+                }
+            });
+            $A.enqueueAction(action);
+
+        }else{
+            component.set('v.loaded', false);
+
+            // component.set('v.budgetList' ,'');
+
+        }
+        
+		
+     },
+     handleBudgetHelper:function(component, event, helper) {
+		console.log('change project ');
+		let getValue= component.get("v.selectedBudgetId");
+        console.log({getValue});
+        console.log(component.get('v.selectedBudgetName'));
+
+        if(getValue!= '' && getValue != undefined){
+
+            var action = component.get("c.getBudgetline");
+            action.setParams({
+                recordId:getValue
+            });
+            action.setCallback(this, function(response) {
+                var state = response.getState();
+                console.log(response.getError());
+                console.log({state});
+                var result= response.getReturnValue();
+                if (state === "SUCCESS") {
+
+                    console.log({result});
+                    component.set('v.budgetLineList' ,result);
+                    component.set('v.loaded', false);
+                    component.set('v.allbudgetLine', result);
+
+
+
+                    
+                }
+            });
+            $A.enqueueAction(action);
+        }else{
+            component.set('v.loaded', false);
+        }
+		
+     },
+     handleLoad: function (component, event, helper) {
+        let isSaveNew = component.get('v.isSaveNew');
+        if (!isSaveNew) {
+            component.set('v.typevalue', 'Material');
+            var RecordId = component.get("v.parentRecordId");
+            if (component.get('v.parentobjectName') == 'buildertek__Budget__c') {
+               
+                component.find("budgetInput").set("v.value", RecordId);
+            }
+            if (component.get('v.parentobjectName') == 'buildertek__Project__c' && component.get('v.isProjectFieldExist') == true) {
+                component.find("projectlookupid").set("v.value", RecordId);
+            }
+        }
+    },
 
 })

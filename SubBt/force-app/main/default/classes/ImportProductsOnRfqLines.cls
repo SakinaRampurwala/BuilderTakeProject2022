@@ -272,17 +272,15 @@ public class ImportProductsOnRfqLines {
     }
     
     @AuraEnabled
-    public static void addProductToRfq(List<String>productIds, String RfqId){
-        try{
+    public static String addProductToRfq(List<String>productIds, String RfqId){
+        // try{
             List<String> SelectedProductIds = productIds;
             System.debug(SelectedProductIds);
-            // List<String> RFQrecordIds = productIds;
             
             String RfqRecId = RfqId;
             System.debug(RfqRecId);
 
-            // String budgetRecId = RfqId;
-            // 
+
             List<Product2> Products = [SELECT Id, Name,  buildertek__Trade_Type__c  FROM Product2 Where id IN :SelectedProductIds];
             System.debug(Products);
             List<buildertek__RFQ_Item__c> rfqItemList = new List<buildertek__RFQ_Item__c>();
@@ -301,25 +299,21 @@ public class ImportProductsOnRfqLines {
                 rfqItem.buildertek__Description__c = des;
                 rfqItem.buildertek__RFQ_Package__c = RfqRecId;
                 rfqItem.buildertek__Product__c = Product.Id;
-                rfqItem.buildertek__Quantity__c = 1;
-                /*if(rfqLineItem.buildertek__RFQ_Package__r.buildertek__Vendor__r.buildertek__Vendor__c != null){
-rfqItem.buildertek__Contractor__c = rfqLineItem.buildertek__RFQ_Package__r.buildertek__Vendor__r.buildertek__Vendor__c;
-}*/
-                
+                rfqItem.buildertek__Quantity__c = 1;                
                 rfqItem.buildertek__Trade_Type__c = Product.buildertek__Trade_Type__c;
                 rfqItemList.add(rfqItem);
             }
             system.debug(rfqItemList);
             insert rfqItemList;
             System.debug(rfqItemList + '----');
-            // return rfqItemList;
-        }catch (Exception ex){
-            String error =ex.getMessage();
-            Integer line = ex.getLineNumber();
-            System.debug(line);
-            System.debug(error);
-            // return error;
-        }
+            return 'Success';
+        // }catch (Exception ex){
+        //     String error =ex.getMessage();
+        //     Integer line = ex.getLineNumber();
+        //     System.debug(line);
+        //     System.debug(error);
+        //     return error;
+        // }
         
     }
     

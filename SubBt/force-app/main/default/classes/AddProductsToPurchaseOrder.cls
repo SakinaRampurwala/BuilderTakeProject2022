@@ -110,7 +110,13 @@ public class AddProductsToPurchaseOrder {
             List<buildertek__Purchase_Order_Item__c> PoItemList = new List<buildertek__Purchase_Order_Item__c>();
             for(Product2  Product : Products){
                 buildertek__Purchase_Order_Item__c POItem = new buildertek__Purchase_Order_Item__c();
-                POItem.Name = Product.Name;
+                // POItem.Name = Product.Name;
+                if(Product.Name.length() > 80){
+                    POItem.Name = Product.Name.substring(0,79);
+                    PoItem.buildertek__Description__c = Product.Name;
+                }else{
+                    POItem.Name = Product.Name;
+                }
                 POItem.buildertek__Purchase_Order__c = RfqRecId;
                 POItem.buildertek__Product__c = Product.Id;
                 POItem.buildertek__Quantity__c = 1;
