@@ -1785,6 +1785,9 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
             width: 200,
             editor: false,
             renderer: (record) => {
+              if (record.record._data.type == "Project") {
+                return "";
+              }
               if (record.record._data.type == "Phase") {
                 return "";
               }

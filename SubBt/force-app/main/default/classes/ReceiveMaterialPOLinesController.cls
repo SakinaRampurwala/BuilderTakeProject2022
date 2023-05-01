@@ -144,16 +144,22 @@ public with sharing class ReceiveMaterialPOLinesController {
             }
 
             //get contentDocumentId
-            List<ContentDocument> contentDocumentList = [SELECT Id, Title FROM ContentDocument WHERE Id IN (SELECT ContentDocumentId FROM ContentVersion WHERE Id IN: contentVersionList)];
+            // List<ContentDocument> contentDocumentList = [SELECT Id, Title FROM ContentDocument WHERE Id IN (SELECT ContentDocumentId FROM ContentVersion WHERE Id IN: contentVersionList)];
+            // Map<String,Id> contentDocumentIdMap = new Map<String,Id>();
+            // for(ContentDocument contentDocument: contentDocumentList){
+            //     contentDocumentIdMap.put(contentDocument.Title,contentDocument.Id);
+            // }
+
+            List<ContentVersion> contentVersionList1 = [SELECT Id, Title, ContentDocumentId FROM ContentVersion WHERE Id IN: contentVersionList];
             Map<String,Id> contentDocumentIdMap = new Map<String,Id>();
-            for(ContentDocument contentDocument: contentDocumentList){
-                contentDocumentIdMap.put(contentDocument.Title,contentDocument.Id);
+            for(ContentVersion contentVersion: contentVersionList1){
+                contentDocumentIdMap.put(contentVersion.Id,contentVersion.ContentDocumentId);
             }
             
             List<ContentDocumentLink> contentDocumentLinkList = new List<ContentDocumentLink>();
             for(ContentVersion contentVersion: contentVersionList){
                 ContentDocumentLink contentDocumentLink = new ContentDocumentLink();
-                contentDocumentLink.ContentDocumentId = contentDocumentIdMap.get(contentVersion.Title);
+                contentDocumentLink.ContentDocumentId = contentDocumentIdMap.get(contentVersion.Id);
                 contentDocumentLink.LinkedEntityId = polineIdInvTrackIdMap.get(contentVersion.Description) ;
                 contentDocumentLink.ShareType = 'V';
                 contentDocumentLink.Visibility = 'AllUsers';

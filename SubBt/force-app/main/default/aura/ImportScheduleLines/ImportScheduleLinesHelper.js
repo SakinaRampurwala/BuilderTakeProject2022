@@ -83,8 +83,11 @@
 
                     today = yyyy + '-' + mm + '-' + dd;
                     obj.StartDate = today;
+                    console.log('today ',today);
+                    console.log('obj.StartDate ',obj.StartDate);
                     jsonObj.push(obj);
 
+                    var toastEvent = $A.get("e.force:showToast");
                     toastEvent.setParams({
                         title: 'Error',
                         message: 'StartDate should not be null',

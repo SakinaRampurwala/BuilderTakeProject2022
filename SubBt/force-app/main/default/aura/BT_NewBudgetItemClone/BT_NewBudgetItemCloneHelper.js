@@ -364,6 +364,7 @@
                                         }
                                     }
                                     var result = Array.from(recordsMap.entries());
+
                                     for (var i in result) {
                                         var obj = {};
                                         obj.groupId = result[i][0].split('(#&%*)')[0];
@@ -995,6 +996,13 @@
                         }
                     }
 
+                    for (var i in result.groupHierarchy) {
+                        if (result.groupHierarchy[i].groupId == 'undefined' || result.groupHierarchy[i].groupId == null || result.groupHierarchy[i].groupId == '') {
+                            result.groupHierarchy.splice(i, 1);
+                        }
+                    }
+
+
                     // console.log('&&&&&&&&&&&&&&&&&&&&&&&&');
                     // console.log('toggleVal ==> '+toggleVal);
                     // console.log('toggleVal1 ==> '+toggleVal1);
@@ -1003,6 +1011,8 @@
                     // if (toggleVal == true && toggleVal1 == true && toggleVal2 == false && bt1 == true) {
                     //     console.log('For No Vendor Condition');
                     // }
+
+
 
 
                     if (toggleVal == true && result.groupHierarchy == '') {
