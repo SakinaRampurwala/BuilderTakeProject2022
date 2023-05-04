@@ -22,9 +22,9 @@
                 </apex:selectRadio>
                 
 
-                <apex:selectList label="Create Change Order" value="{!createCO}" multiselect="false" size="1">
-                    <apex:selectOption itemValue="Without CO Lines" itemLabel="Without CO Lines"/>
-                    <apex:selectOption itemValue="With CO Lines" itemLabel="With CO Lines"/>
+                <apex:selectList label="Custom New Button" value="{!createCO}" multiselect="false" size="1">
+                    <apex:selectOption itemValue="Without CO Lines" itemLabel="Standard Button"/>
+                    <apex:selectOption itemValue="With CO Lines" itemLabel="Custom Button"/>
                 </apex:selectList>
 
 
