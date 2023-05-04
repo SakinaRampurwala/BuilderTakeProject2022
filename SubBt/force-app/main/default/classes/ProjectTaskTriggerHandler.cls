@@ -60,7 +60,7 @@ public class ProjectTaskTriggerHandler{
 							} else {
 								flag = false;
 								System.debug('Circular Dependency');
-								projectTask.Id.addError('Circular Dependency');				   
+								projectTask.Id.addError('Circular Dependency');
 							}
 						}
 					}
@@ -1041,7 +1041,7 @@ public class ProjectTaskTriggerHandler{
 		if (projectTaskToUpdate.size() > 0){
 			update projectTaskToUpdate;
 		}
-		
+
 		/*if(predesecorTaskList.size()> 0){
 		 ProjectTaskTriggerHandler.checkDependency(predesecorTaskList);
 		 }*/
@@ -1286,7 +1286,6 @@ public class ProjectTaskTriggerHandler{
 
 				Date taskEndDate;
 				if (Integer.valueOf(lastTask.buildertek__Duration__c) > 0){
-					system.debug('1-->');
 					// taskEndDate = taskItem.buildertek__Start__c.addDays(Integer.valueOf(taskItem.buildertek__Duration__c) - 1);
 					Integer duration = Integer.valueOf(taskItem.buildertek__Duration__c) + Integer.valueOf(taskItem.buildertek__Lag__c) - 1;
 					taskItem.buildertek__Finish__c = addDaysSkippingWeekends(taskItem.buildertek__Start__c, duration);
@@ -1295,7 +1294,7 @@ public class ProjectTaskTriggerHandler{
 					taskItem.buildertek__Finish__c = taskItem.buildertek__Start__c; //.addDays(1)
 				}
 				// taskItem.buildertek__Finish__c = taskEndDate;
-				
+
 				newUpdateProjectTaskMap.put(taskItem.Id, taskItem);
 			}
 			System.debug('#taskName '+taskItem.Name+' startDate '+taskItem.buildertek__Start__c+' finish date '+taskItem.buildertek__finish__c);

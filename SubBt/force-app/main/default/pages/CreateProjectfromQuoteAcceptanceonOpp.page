@@ -21,6 +21,8 @@
                 </apex:inputcheckbox>
                 <apex:inputcheckbox value="{!hideGlobalMarkup}" label="Hide Global Markup">
                 </apex:inputcheckbox>
+                <apex:inputcheckbox value="{!reject_Quote_on_Rejected_Lines}" label="Reject Quote on Rejected Lines">
+                </apex:inputcheckbox>
                 <center>
                     <apex:commandButton value="Save" id="onCreateProjectfromQuoteAcceptanceonOpp" styleClass="slds-button slds-button_brand" action="{!onCreateProjectfromQuoteAcceptanceonOpp}"></apex:commandButton>
                 </center>

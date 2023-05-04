@@ -328,12 +328,13 @@ public without sharing class PreviewQuoteController{
                         }
                         i++;
                     }
+                    integer j = 0;
                     for (String Str : strCC){
                         CCaddresses += Str;
-                        if (strCC.size() > i){
+                        if (strCC.size() > j){
                             CCaddresses += ';';
                         }
-                        i++;
+                        j++;
 
                     }
                     system.debug('CCaddresses ----------> ' + CCaddresses);

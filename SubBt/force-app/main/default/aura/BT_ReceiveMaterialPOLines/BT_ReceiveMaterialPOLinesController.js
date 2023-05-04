@@ -23,6 +23,7 @@
                     if (component.get("v.rfqRecordList").length > i)
                         paginationList.push(obj[i]);
                 }
+                console.log(paginationList);
                 component.set('v.paginationList', paginationList);
             
             
@@ -109,7 +110,7 @@
                     obj['prodId'] = rfqlist[i].buildertek__Product__c
                     obj['quantity_recieved'] = rfqlist[i].quantity_recieved
                     obj['polineId'] = rfqlist[i].Id
-                    
+                    obj['ContentDocumnetIdList'] = rfqlist[i].ContentDocumnetIdList                    
                     productList.push(obj);
                 }
             }
@@ -119,34 +120,23 @@
                 if(rfqlist[i].quantity_recieved != null && rfqlist[i].quantity_recieved != 0){
                     obj['quantity_recieved'] = rfqlist[i].quantity_recieved
                     obj['polineId'] = rfqlist[i].Id
-                    
+                    obj['ContentDocumnetIdList'] = rfqlist[i].ContentDocumnetIdList
                     productList.push(obj);
                 }
             }
             
         }
-        
-        var fileData2 = component.get("v.fileData2");
-        
-        for(var i=0;i<productList.length;i++){
-            for(var j=0;j<fileData2.length;j++){
-                if(productList[i].polineId == fileData2[j].Index){
-                    productList[i].fileName = fileData2[j].fileName;
-                    productList[i].fileContent = fileData2[j].fileContent;
-                    
-                }
-            }   
-        }
-        
         console.log(rfqlist);
         console.log(productList);
         debugger;
 
+
         component.set("v.Spinner", true);
         component.set("v.showMessage", true);
         action.setParams({
-            "productId":productIdList,
+            productId:productIdList,
             "ProductsList" : JSON.stringify(productList),
+            
         })
         
         action.setCallback(this,function(response){
@@ -165,7 +155,17 @@
                     var recordId = component.get("v.recordId");
                     
                     $A.get("e.force:closeQuickAction").fire();
-                    setTimeout(function(){ location.reload(); }, 1800);
+                    var workspaceAPI = component.find("workspace");
+                    var Spinner = component.get("v.spinner",true);
+                    workspaceAPI.getFocusedTabInfo().then(function(response) {
+                        var focusedTabId = response.tabId;
+                        workspaceAPI.closeTab({tabId: focusedTabId});
+                    })
+                    
+                    .catch(function(error) {
+                        console.log(error);
+                    });
+                    // setTimeout(function(){ location.reload(); }, 1800);
                     component.set("v.Spinner", false);
                     component.set("v.showMessage", false);
                 // alert(recordId);
@@ -179,6 +179,9 @@
                         "url": '/lightning/r/buildertek__Purchase_Order__c/'+recordId+'/view'
                     });
                     urlEvent.fire();
+                    setTimeout(function(){ 
+                        $A.get('e.force:refreshView').fire();
+                     }, 1800);
                 }else{
                     component.set("v.Spinner", false);
                     var toastEvent = $A.get("e.force:showToast");
@@ -281,65 +284,63 @@
         component.set('v.paginationList', paginationList);
     },
 
-    handleFilesChange: function(component, event, helper) {
-        // var paginationList = component.get("v.paginationList");
-        // var index = event.getSource().get("v.name");
-        // console.log('file name is ' + event.getSource().get("v.files")[0]['name']);
-        // console.log('Index is ' + index);
-        var fileName = "No File Selected..";
-		var fileCount = event.target.files;
-		var files = '';
-		if (fileCount.length > 0) {
-			component.set("v.uploadFile", true);
-			for (var i = 0; i < fileCount.length; i++) {
-				fileName = fileCount[i]["name"];
-				if (files == '') {
-					files = fileName;
-				} else {
-					files = files + ',' + fileName;
-				}
-				helper.readFiles2(component, event, helper, fileCount[i], event.currentTarget.dataset.index);
+    handleUploadFinished: function(component, event, helper) {
+        var Index = event.getSource().get("v.name");
+        console.log('Index ==> '+Index);
+        console.log('handleUploadFinished');
+        var uploadedFiles = event.getParam("files");
+        console.log('file data--->',uploadedFiles);
+        var paginationList = component.get("v.paginationList");
+        if(paginationList[Index].filesNameList == undefined){
+            paginationList[Index].filesNameList = [];
+        }
+        var FileNameList = paginationList[Index].filesNameList;
+        if(paginationList[Index].ContentDocumnetIdList == undefined){
+            paginationList[Index].ContentDocumnetIdList = [];
+        }
+        var ContentDocumnetId = paginationList[Index].ContentDocumnetIdList;
+        for(var i=0; i<uploadedFiles.length; i++) {
+            FileNameList.push({
+                'documentName' : uploadedFiles[i].name,
+                'documentId' : uploadedFiles[i].documentId
+            })
+            ContentDocumnetId.push(uploadedFiles[i].documentId);
+        }
+        paginationList[Index].filesNameList = FileNameList;
+        paginationList[Index].ContentDocumnetIdList = ContentDocumnetId;
+        component.set("v.paginationList", paginationList);
+        console.log('paginationList ==> ',paginationList); 
 
-			}
-		}
-		component.set("v.fileName2", files);
-        
     },
 
-    clear: function (component, event, helper) {
-		// debugger;
-		event.stopPropagation();
-		event.preventDefault();
-		var selectedPillId = event.getSource().get("v.name");
-		var selectedPillIndex = selectedPillId.split("_")[0];
-		var selectedPillPo = selectedPillId.split("_")[1];
-		var allFileList = component.get("v.fileData2");
-        console.log('allFileList ==> ',allFileList);
-		var AllPillsList = component.get("v.selectedfilesFill");
-
-		if (allFileList.length != undefined) {
-			for (var i = 0; i < allFileList.length; i++) {
-				if (allFileList[i].Index == selectedPillPo && i == Number(selectedPillIndex)) {
-					allFileList.splice(i, 1);
-					//component.set("v.selectedfilesFill", AllPillsList);
-				}
-			}
-		}
-		component.set("v.fileData2", allFileList);
-        console.log('fileData2 ==> ',component.get("v.fileData2"));
-		var names = []
-		if (component.get("v.fileData2") != undefined) {
-			for (var i = 0; i < component.get("v.fileData2").length; i++) {
-                var name = {};
-                name['FileName'] = [];
-                name['Index'] = (JSON.parse(JSON.stringify(component.get("v.fileData2")[i])).Index)
-                name['FileName'] = JSON.parse(JSON.stringify(component.get("v.fileData2")[i]))["fileName"];
-                names.push(name);
+    clear : function(component, event, helper) {
+        var documentId = event.getSource().get("v.name");
+        console.log('documentId ==> '+documentId);
+        var action = component.get("c.deleteDocument");
+        action.setParams({
+            "documentId": documentId
+        });
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+            console.log('state==>',state);
+        });
+        $A.enqueueAction(action);
+        var paginationList = component.get("v.paginationList");
+        for(var i=0; i<paginationList.length; i++) {
+            if(paginationList[i].ContentDocumnetIdList != undefined){
+                for(var j=0; j<paginationList[i].ContentDocumnetIdList.length; j++) {
+                    if(paginationList[i].ContentDocumnetIdList[j] == documentId){
+                        paginationList[i].ContentDocumnetIdList.splice(j,1);
+                        paginationList[i].filesNameList.splice(j,1);
+                    }
+                }
             }
-		}
-		component.set("v.FileNameList", names);
-        console.log('FileNameList ==> ',component.get("v.FileNameList"));
-	},
+        }
+        component.set("v.paginationList", paginationList);
+        console.log('paginationList ==> ',paginationList);
+        
+         
+    }
     
     
 })

@@ -348,7 +348,14 @@
                                 <button type="button" class="slds-button slds-button_destructive" onclick="showRejectPopup();" style="margin-left:0.25rem;"
                                     status="status"> Reject </button>
                             </apex:outputPanel>
-                            <button type="button" class="slds-button slds-button_brand" onclick="saveImage();" status="status" style="{!IF(allQuoteLineAccepted, '', 'display:none;')}"> Accept </button>
+
+                            <apex:outputPanel rendered="{!IF(reject_Quote_on_Rejected_Lines == true, true, false)}">
+                                <button type="button" class="slds-button slds-button_brand" onclick="saveImage();" status="status" style="{!IF(allQuoteLineAccepted, '', 'display:none;')}"> Accept </button>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!IF(reject_Quote_on_Rejected_Lines  == false, true, false)}">
+                                <button type="button" class="slds-button slds-button_brand" onclick="saveImage();" status="status"> Accept </button> 
+                            </apex:outputPanel>
+                            
                         </center>
                     </div>
                 </div>

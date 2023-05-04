@@ -132,7 +132,7 @@ public with sharing class ImportMasterSchedules{
                         schItem.buildertek__Original_End_Date__c = Date.today().adddays(Integer.valueOf(scheduleitem.buildertek__Duration__c));
                         schItem.buildertek__Phase__c = scheduleitem.buildertek__Phase__c;
                         schItem.buildertek__Type__c = scheduleitem.buildertek__Type__c;
-                        schItem.buildertek__Project__c = scheduleitem.buildertek__Project__c;
+                        // schItem.buildertek__Project__c = scheduleitem.buildertek__Project__c;
                         schItem.buildertek__Purchase_Order__c = scheduleitem.buildertek__Purchase_Order__c;
                         schItem.buildertek__Reason_for_Date_Change__c = scheduleitem.buildertek__Reason_for_Date_Change__c;
                         schItem.buildertek__Reason_for_Date_Change_PL__c = scheduleitem.buildertek__Reason_for_Date_Change_PL__c;

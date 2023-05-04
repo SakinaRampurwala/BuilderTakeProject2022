@@ -9,6 +9,16 @@ public with sharing class ReceiveMaterialPOLinesController {
         system.debug(Products);
         return Products;
     }
+
+    @auraEnabled
+    public static boolean deleteDocument(String ContentDocumentId){
+        List<ContentDocument> cd = [SELECT Id FROM ContentDocument WHERE Id =: ContentDocumentId];
+        system.debug(cd);
+        if(cd.size() >= 0){
+            delete cd;
+        }
+        return true;
+    }
     
     
     @auraEnabled
@@ -21,14 +31,18 @@ public with sharing class ReceiveMaterialPOLinesController {
         List<String> selectedProdIds = new List<String>();
         list<RfqDataTableWrapper> newProductList = (list<RfqDataTableWrapper>)JSON.deserialize(ProductsList, list<RfqDataTableWrapper>.class);
         List<buildertek__Inventory_Tracking__c> invTrackList= new List<buildertek__Inventory_Tracking__c>();
-
-        System.debug(newProductList);
-
+        Map<Id, List<string>> POLinetoCdId = new map<Id, List<string>>();
+        
         //iterate over list and store the polineid in a list
+        System.debug(newProductList);
         List<Id> polineIds = new List<Id>();
         for(RfqDataTableWrapper p: newProductList){
             polineIds.add(p.polineId);
+            if(p.ContentDocumnetIdList != null){
+                POLinetoCdId.put(p.polineId, p.ContentDocumnetIdList);
+            }
         }
+        System.debug(POLinetoCdId);
         //System.debug(polineIds);
         List<buildertek__Purchase_Order_Item__c> polineList = [Select Id , buildertek__Purchase_Order__c, buildertek__Product__c,buildertek__Item_Name__c,buildertek__Quantity_Received__c,buildertek__Product__r.buildertek__Available_Quantity__c,buildertek__Quantity_Remaining__c FROM buildertek__Purchase_Order_Item__c WHERE Id IN:polineIds];
         System.debug(polineList);
@@ -121,56 +135,44 @@ public with sharing class ReceiveMaterialPOLinesController {
                 insert invTrackList;
             }
 
-            Map<Id,Id> polineIdInvTrackIdMap = new Map<Id,Id>();
+            //create a map of polineid and inventory tracking id
+            Map<Id, Id> POLinetoInvTrackId = new map<Id, Id>();
             for(buildertek__Inventory_Tracking__c invTrack: invTrackList){
-                polineIdInvTrackIdMap.put(invTrack.buildertek__BT_Purchase_Order_Line__c,invTrack.Id);
+                POLinetoInvTrackId.put(invTrack.buildertek__BT_Purchase_Order_Line__c, invTrack.Id);
             }
+            System.debug('POLinetoInvTrackId' + POLinetoInvTrackId);
 
-            List<ContentVersion> contentVersionList = new List<ContentVersion>();
-            for(RfqDataTableWrapper p: newProductList){
-                if(p.fileContent != null){
-                    ContentVersion contentVersion = new ContentVersion();
-                    contentVersion.ContentLocation = 'S';
-                    contentVersion.PathOnClient = p.FileName;
-                    contentVersion.Title = p.FileName;
-                    contentVersion.VersionData = EncodingUtil.base64Decode(p.fileContent);
-                    contentVersion.Description = p.polineId;
-                    contentVersion.IsMajorVersion = true;
-                    contentVersionList.add(contentVersion);
+            
+            Map<Id, Id> ContentDocumentIdtoInvTrackId = new map<Id, Id>();
+            for(Id polineId : POLinetoCdId.keySet()){
+               List<Id> cdIdList = POLinetoCdId.get(polineId);
+               Id invTrackId = POLinetoInvTrackId.get(polineId);
+                for(Id cdId : cdIdList){
+                     ContentDocumentIdtoInvTrackId.put(cdId, invTrackId);
                 }
             }
-            if(contentVersionList.size() > 0){
-                insert contentVersionList;
-            }
+            System.debug('ContentDocumentIdtoInvTrackId' + ContentDocumentIdtoInvTrackId);
 
-            //get contentDocumentId
-            // List<ContentDocument> contentDocumentList = [SELECT Id, Title FROM ContentDocument WHERE Id IN (SELECT ContentDocumentId FROM ContentVersion WHERE Id IN: contentVersionList)];
-            // Map<String,Id> contentDocumentIdMap = new Map<String,Id>();
-            // for(ContentDocument contentDocument: contentDocumentList){
-            //     contentDocumentIdMap.put(contentDocument.Title,contentDocument.Id);
-            // }
-
-            List<ContentVersion> contentVersionList1 = [SELECT Id, Title, ContentDocumentId FROM ContentVersion WHERE Id IN: contentVersionList];
-            Map<String,Id> contentDocumentIdMap = new Map<String,Id>();
-            for(ContentVersion contentVersion: contentVersionList1){
-                contentDocumentIdMap.put(contentVersion.Id,contentVersion.ContentDocumentId);
-            }
             
-            List<ContentDocumentLink> contentDocumentLinkList = new List<ContentDocumentLink>();
-            for(ContentVersion contentVersion: contentVersionList){
-                ContentDocumentLink contentDocumentLink = new ContentDocumentLink();
-                contentDocumentLink.ContentDocumentId = contentDocumentIdMap.get(contentVersion.Id);
-                contentDocumentLink.LinkedEntityId = polineIdInvTrackIdMap.get(contentVersion.Description) ;
-                contentDocumentLink.ShareType = 'V';
-                contentDocumentLink.Visibility = 'AllUsers';
-                contentDocumentLinkList.add(contentDocumentLink);
+            
+
+            //create a contentdocumentlink list
+            List<ContentDocumentLink> cdlList = new List<ContentDocumentLink>();
+            for(Id cdId : ContentDocumentIdtoInvTrackId.keySet()){
+                ContentDocumentLink cdl = new ContentDocumentLink();
+                cdl.ContentDocumentId = cdId;
+                cdl.LinkedEntityId = ContentDocumentIdtoInvTrackId.get(cdId);
+                cdl.ShareType = 'V';
+                cdlList.add(cdl);
             }
-            if(contentDocumentLinkList.size() > 0){
-                insert contentDocumentLinkList;
+            System.debug('cdlList' + cdlList);
+            if(cdlList.size() > 0){
+                insert cdlList;
             }
 
-                      
-                       
+
+
+
             return true;
         }
         
@@ -192,10 +194,6 @@ public with sharing class ReceiveMaterialPOLinesController {
         public Id polineId{ get; set;}
 
         @AuraEnabled
-        public String FileName{ get; set; }
-
-        @AuraEnabled
-        public String fileContent{ get; set; }
-
+        public List<String> ContentDocumnetIdList { get; set; }
     }
 }

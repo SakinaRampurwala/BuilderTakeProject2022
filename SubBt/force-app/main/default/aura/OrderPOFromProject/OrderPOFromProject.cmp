@@ -141,27 +141,27 @@
         <lightning:layout multipleRows="true" class="searchbarList">
      
             <lightning:layoutItem padding="around-small" size="2">
-                <lightning:input autocomplete="off" type="search" placeholder="Search for Purchase Order" variant="label-hidden" value="{!v.searchItemFilter}" />
+                <lightning:input autocomplete="off" type="search" placeholder="Purchase Order" variant="label-hidden" value="{!v.searchItemFilter}" />
             </lightning:layoutItem>
             
             <lightning:layoutItem padding="around-small" size="2">
-                <lightning:input autocomplete="off" type="search" placeholder="Search for Product Code" variant="label-hidden" value="{!v.searchProductFilter}" />
+                <lightning:input autocomplete="off" type="search" placeholder="Product Code" variant="label-hidden" value="{!v.searchProductFilter}" />
             </lightning:layoutItem>
 
             <lightning:layoutItem padding="around-small" size="2">
-                <lightning:input autocomplete="off" type="search" placeholder="Search for Purchase Order Item" variant="label-hidden" value="{!v.searchDescriptionFilter}" />
+                <lightning:input autocomplete="off" type="search" placeholder="PO Item" variant="label-hidden" value="{!v.searchDescriptionFilter}" />
             </lightning:layoutItem>
 
             <lightning:layoutItem padding="around-small" size="2">
-                <lightning:input autocomplete="off" type="search" placeholder="Search for PO's By Permit" variant="label-hidden" value="{!v.searchPermitFilter}" />
+                <lightning:input autocomplete="off" type="search" placeholder="PO's By Permit" variant="label-hidden" value="{!v.searchPermitFilter}" />
             </lightning:layoutItem>
 
             <lightning:layoutItem padding="around-small" size="2">
-                <lightning:input autocomplete="off" type="search" placeholder="Search for Trade Type" variant="label-hidden" value="{!v.searchTradeTypeFilter}" />
+                <lightning:input autocomplete="off" type="search" placeholder="Trade Type" variant="label-hidden" value="{!v.searchTradeTypeFilter}" />
             </lightning:layoutItem>
             
             <lightning:layoutItem padding="around-small" size="2">
-                <lightning:input autocomplete="off" type="search" placeholder="Search for Vendor" variant="label-hidden" value="{!v.searchProjectFilter}" />
+                <lightning:input autocomplete="off" type="search" placeholder="Vendor" variant="label-hidden" value="{!v.searchProjectFilter}" />
             </lightning:layoutItem>
 
         </lightning:layout>

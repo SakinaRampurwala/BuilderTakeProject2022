@@ -64,6 +64,7 @@ public without sharing class ConfirmationController{
     //public ApexPages.StandardController std;
     public transient string imageContent{ get; set; }
      public string imageContentforReject{ get; set; }
+    public Boolean reject_Quote_on_Rejected_Lines{ get; set; }
 
     public ConfirmationController(){
         isAccepted  = false; 
@@ -85,6 +86,9 @@ public without sharing class ConfirmationController{
         } else{
             isOrderLien = false;
         }
+
+        buildertek__Admin_Interface_Node_Configuration__c adminInterfaceNodeConfigurations = [SELECT Id, Name, buildertek__Reject_Quote_on_Rejected_Lines__c FROM buildertek__Admin_Interface_Node_Configuration__c WHERE Name =: 'Quote Configuration'];
+        reject_Quote_on_Rejected_Lines = adminInterfaceNodeConfigurations.buildertek__Reject_Quote_on_Rejected_Lines__c;
 
         //recordID =  std.getRecord().Id;
         Checkcustomerview = apexpages.currentPage().getParameters().get('view');
@@ -292,22 +296,24 @@ public without sharing class ConfirmationController{
                 }
             }
             if (objectAPIName.contains('buildertek__Quote__c')){
-                // for (linewrapper rec : wraplst){
-                //     for (quotelinewrapper wrapp : rec.warapperrec){
-                //         if (wrapp.isRejected == true){
-                //             customerrecjectlineids.add(wrapp.Qlinerec.Id);
-                //         }
-                //     }
-                // }
-                // if (customerrecjectlineids.size() > 0){
-                //     customerrejectQuotelinerecords = [select id, Name, Net_Total_Price__c, buildertek__Quote__c, buildertek__Status__c
-                //                                       from buildertek__Quote_Item__c
-                //                                       where buildertek__Quote__c = :recordID and Id IN :customerrecjectlineids];
-                //     for (buildertek__Quote_Item__c qlinerec : customerrejectQuotelinerecords){
-                //         qlinerec.buildertek__Status__c = 'Accept';
-                //     }
-                //     update customerrejectQuotelinerecords;
-                // }
+                if (!reject_Quote_on_Rejected_Lines) {
+                    for (linewrapper rec : wraplst){
+                        for (quotelinewrapper wrapp : rec.warapperrec){
+                            if (wrapp.isRejected == true){
+                                customerrecjectlineids.add(wrapp.Qlinerec.Id);
+                            }
+                        }
+                    }
+                    if (customerrecjectlineids.size() > 0){
+                        customerrejectQuotelinerecords = [select id, Name, Net_Total_Price__c, buildertek__Quote__c, buildertek__Status__c
+                                                          from buildertek__Quote_Item__c
+                                                          where buildertek__Quote__c = :recordID and Id IN :customerrecjectlineids];
+                        for (buildertek__Quote_Item__c qlinerec : customerrejectQuotelinerecords){
+                            qlinerec.buildertek__Status__c = 'Accept';
+                        }
+                        update customerrejectQuotelinerecords;
+                    }
+                }
                 buildertek__Quote__c quoterec;
 
                 quoterec = [select id, Name, buildertek__Status__c, buildertek__Customer_Accepted_Date__c
@@ -400,11 +406,12 @@ public without sharing class ConfirmationController{
                 if (quoteitemrec.buildertek__Status__c == 'Accept'){
                     qlinewrap.isApproved = true;
                     qlinewrap.isRejected = false;
-                    // allQuoteLineAccepted=true;
                 } else{
                     qlinewrap.isApproved = false;
                     qlinewrap.isRejected = true;
-                    allQuoteLineAccepted=false;
+                    if (reject_Quote_on_Rejected_Lines){
+                        allQuoteLineAccepted=false;
+                    }
                 }
                 if (quoteitemrec.buildertek__Net_Unit__c != null){
                     quoteitemNetunitprice += quoteitemrec.buildertek__Net_Unit__c;

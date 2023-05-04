@@ -3,6 +3,8 @@
     <aura:attribute name="Spinner" type="Boolean" default="false"/>
     <aura:attribute name="recordId" type="String" />
 
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
     <aura:attribute name="changeOrder" type="Change_Order__c" default="{'sobjectType':'Change_Order__c',
         'Name':'',
         'buildertek__Details__c':'',
@@ -18,50 +20,35 @@
         </div>
     </aura:if> 
     <aura:html tag="style">
-        .container{
-            height: auto !important;
+        .quick-actions-panel {
+        overflow: hidden !important;
         }
-        .slds-modal__content {
-            overflow: hidden !important;
+        .slds-modal__content{
+        overflow: hidden !important;
         }
-        .slds-modal__close{
-            display:block !important;    
-        }
-        .slds-modal__container{
-            max-width: 40rem !important;
-            width:50% !important;
-          
-          }
-        .slds-docked-form-footer{
-            bottom: auto;
-        }
-        .slds-p-around--medium{
-            padding: 0;
-        }
-        .forceChatterBasePublisher :not(.PHONE) .cuf-content{
-            padding: 0;
-        }
-    </aura:html>
-    <div class="slds-modal__content">
+    </aura:html> 
+    <ltng:require styles="{!$Resource.MOdalPreviewWidth72}"/>
+    <div class="slds-modal__content ">
         <div class="slds slds-scope">
             <header class="slds-modal__header">
-                <div class="" id="header" style="font-size:20px;">
-                    Create Change Order
+                <lightning:buttonIcon iconName="utility:close" alternativeText="close12"
+                                      variant="bare-inverse" class="slds-modal__close" />
+                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Create Change Order</h2>
+            </header>
+            <div class="slds-modal__content" id="modal-content-id-1" style="height:100%">
+                <div class="slds-m-around_medium">
+                    <lightning:recordEditForm objectApiName="buildertek__Change_Order__c">
+                        <lightning:inputField fieldName="Name" value="{!v.changeOrder.Name}" />
+                        <lightning:inputField fieldName="buildertek__Details__c" value="{!v.changeOrder.buildertek__Details__c}" />
+                        <lightning:inputField fieldName="buildertek__Due_Date__c" value="{!v.changeOrder.buildertek__Due_Date__c}" />
+                    </lightning:recordEditForm>
                 </div>
-            </header>             
+                <div class="slds-col modal-footer slds-modal__footer slds-buttoncustom" >
+                    <lightning:button label="Cancel" title="Cancel" onclick="{!c.closePopup}" class="myBtn"/>
+                    <lightning:button variant="brand" label="Save" title="Save" onclick="{!c.createRecord}" class="myBtn2"/>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="slds-m-around_medium">
-
-        <lightning:recordEditForm objectApiName="buildertek__Change_Order__c">
-            <lightning:inputField fieldName="Name" value="{!v.changeOrder.Name}" />
-            <lightning:inputField fieldName="buildertek__Details__c" value="{!v.changeOrder.buildertek__Details__c}" />
-            <lightning:inputField fieldName="buildertek__Due_Date__c" value="{!v.changeOrder.buildertek__Due_Date__c}" />
-        </lightning:recordEditForm>
 
     </div>
-    <footer role="contentinfo" class="slds-docked-form-footer fixedFooter" style="display:block;text-align:right;padding-right:5px;">
-        <lightning:button label="Cancel" title="Cancel" onclick="{!c.closePopup}" class="myBtn"/>
-        <lightning:button variant="brand" label="Save" title="Save" onclick="{!c.createRecord}" class="myBtn2"/>
-    </footer>
 </aura:component>

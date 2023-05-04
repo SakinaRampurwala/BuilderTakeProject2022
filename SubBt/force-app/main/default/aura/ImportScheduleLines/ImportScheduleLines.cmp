@@ -12,6 +12,7 @@
     <aura:attribute name="isErrorOccured" type="boolean" default="false" />
     <aura:attribute name="isOpen" type="boolean" default="false" />
     <aura:attribute name="BaseURLs" type="string" />
+    <aura:attribute name="CircularDependencyName" type="String" />
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     
     <lightning:workspaceAPI aura:id="workspace"/>

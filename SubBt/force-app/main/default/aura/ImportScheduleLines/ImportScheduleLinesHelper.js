@@ -2,6 +2,11 @@
     CSV2JSON: function (component, event, helper, csv) {
         var arr = [];
         arr = csv.split('\n');
+        
+        if (arr[arr.length - 1] == '' || arr[arr.length - 1] == undefined || arr[arr.length - 1] == null) {
+            arr.pop();
+        }
+        
         var jsonObj = [];
         var headers = arr[0].split(',');
         console.log('headers::', headers);
@@ -157,6 +162,8 @@
                     currentId = parentMap.get(currentId);
                     if(index > jsonObj.length){
                         circularDependency = true;
+                        console.log('ele.Name ==> '+ele.Name);
+                        component.set("v.CircularDependencyName", ele.Name);
                         dependentRecord = ele;
                         break;
                     }

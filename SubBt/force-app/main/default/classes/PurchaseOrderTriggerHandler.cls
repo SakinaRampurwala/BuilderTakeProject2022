@@ -133,7 +133,7 @@ public with sharing class PurchaseOrderTriggerHandler{
         List<Messaging.SingleEmailMessage> mails = new List<Messaging.SingleEmailMessage>();
         for (Purchase_Order__c newPO : updatedPurchaseOrders){
             String status = oldPurchaseOrdersMap.get(newPO.Id).buildertek__Status__c;
-            system.debug('&&&&&&'+status);
+            // system.debug('&&&&&&'+status);
             if (newPO.buildertek__Status__c == 'Approved' && newPO.buildertek__Status__c != status){
                 if (adminInterfaceNodeConfigurations.size() > 0){
                     POIdsToSendEmail.add(newPO.Id);

@@ -39,6 +39,8 @@
                 reader.readAsText(file, "UTF-8");
                 reader.onload = function (evt) {
                     var csv = evt.target.result;
+                    console.log( 'csv ----> ' + csv);
+                    debugger;
                     var result = helper.CSV2JSON(component, event, helper, csv);
                     if (result != undefined && result != '') {
                         window.setTimeout(
@@ -47,10 +49,11 @@
                             }), 100
                         );
                     } else {
+                        var CircularDependencyName = component.get("v.CircularDependencyName");
                         var toastEvent = $A.get("e.force:showToast");
                         toastEvent.setParams({
                             title: 'Error',
-                            message: 'Circular Dependency',
+                            message: 'Circular Dependency due to \''+CircularDependencyName+'\' Record',
                             duration: ' 5000',
                             key: 'info_alt',
                             type: 'error',
