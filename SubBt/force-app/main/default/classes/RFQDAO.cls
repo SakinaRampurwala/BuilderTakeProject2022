@@ -1965,7 +1965,7 @@ Throws [Exceptions]:
     
     @AuraEnabled
     public static String emailPreview(String rfqId, String vendorId){
-        return BT_SendEmailController.getEmailBodyFromTemplate(vendorId, null, null, 'RFQ Invitation Email New');
+        return BT_SendEmailController.getEmailBodyFromTemplate(vendorId, null, null, 'RFQ Invitation Email');
     }
     
     @AuraEnabled

@@ -7,6 +7,7 @@
         helper.createBudgetItemWrapperList(component, event, helper);
         helper.getBudgetLineGroups(component, event, helper);
         helper.getAccounts(component, event, helper);
+        helper.getUOM(component, event, helper);
         var action = component.get("c.getpricebooks");
         action.setParams({
             "recordId" : recordId
@@ -27,6 +28,9 @@
                         label: pricebookList[0].priceWrapList[i].Name,
                         value: pricebookList[0].priceWrapList[i].Id
                     });
+                }
+                if(pricebookList[0].defaultValue != ''){
+                    console.log('pricebookList[0].defaultValue: ', pricebookList[0].defaultValue);
                 }
                 console.log('pricebookOptions: ', pricebookOptions);
                 component.set("v.pricebookOptions", pricebookOptions);
@@ -64,11 +68,11 @@
                 buildertek__Budget__c : component.get("v.recordId"),
                 buildertek__Product__c : '',
                 Name : '',
-                buildertek__Grouping__c : '',
+                buildertek__Group__c : '',
                 buildertek__Quantity__c : '',
                 buildertek__UOM__c : '',
-                buildertek__Vendor__c : '',
-                buildertek__Unit_Cost__c : '',
+                buildertek__Contractor__c : '',
+                buildertek__Unit_Price__c : '',
             };
             component.set("v.budgetLineWrapperList", budgetlineWrapperList);
             component.set("v.isLoading", false);       
@@ -103,11 +107,11 @@
                 buildertek__Budget__c : component.get("v.recordId"),
                 buildertek__Product__c : '',
                 Name : '',
-                buildertek__Grouping__c : '',
+                buildertek__Group__c : '',
                 buildertek__Quantity__c : '',
                 buildertek__UOM__c : '',
-                buildertek__Vendor__c : '',
-                buildertek__Unit_Cost__c : '',
+                buildertek__Contractor__c : '',
+                buildertek__Unit_Price__c : '',
             }
             component.set("v.budgetLineWrapperList", budgetlineWrapperList);
             component.set("v.isLoading", false);
@@ -128,11 +132,11 @@
                 buildertek__Budget__c : component.get("v.recordId"),
                 buildertek__Product__c : '',
                 Name : '',
-                buildertek__Grouping__c : '',
+                buildertek__Group__c : '',
                 buildertek__Quantity__c : '',
                 buildertek__UOM__c : '',
-                buildertek__Vendor__c : '',
-                buildertek__Unit_Cost__c : '',
+                buildertek__Contractor__c : '',
+                buildertek__Unit_Price__c : '',
             };
             component.set("v.budgetLineWrapperList", budgetlineWrapperList);
             component.set("v.isLoading", false);
@@ -148,12 +152,12 @@
     },
 
     onAddClick : function(component, event, helper) {
+        component.set("v.isLoading", true);
         var budgetLineWrapperList = component.get("v.budgetLineWrapperList");
-        for(var i = 0; i < 5; i++) {
-            let budgetLineWrapper = helper.createBudgetLineWrapper(component, event, helper);
-            budgetLineWrapperList.push(budgetLineWrapper);
-        }
+        let budgetLineWrapper = helper.createBudgetLineWrapper(component, event, helper);
+        budgetLineWrapperList.push(budgetLineWrapper);
         component.set("v.budgetLineWrapperList", budgetLineWrapperList);
+        component.set("v.isLoading", false);
     },
 
     deleteRow : function(component, event, helper) {
@@ -173,6 +177,58 @@
             }
         }
         if(budgetLineList.length > 0) {
+            //iterate over budgetLineList and check if any budgetLine has quantity in decimal and if yes then show error, also check if the unit cost has more than 2 decimal places and if yes then show error
+            var isDecimal = false;
+            var isUnitCostDecimal = false;
+            for(var i = 0; i < budgetLineList.length; i++) {
+                if(budgetLineList[i].buildertek__Quantity__c != undefined && budgetLineList[i].buildertek__Quantity__c != null && budgetLineList[i].buildertek__Quantity__c != '') {
+                    var quantity = budgetLineList[i].buildertek__Quantity__c;
+                    var quantityString = quantity.toString();
+                    if(quantityString.includes('.')) {
+                        isDecimal = true;
+                        break;
+                    }
+                }
+                if(budgetLineList[i].buildertek__Unit_Price__c != undefined && budgetLineList[i].buildertek__Unit_Price__c != null && budgetLineList[i].buildertek__Unit_Price__c != '') {
+                    var unitCost = budgetLineList[i].buildertek__Unit_Price__c;
+                    var unitCostString = unitCost.toString();
+                    if(unitCostString.includes('.')) {
+                        var unitCostDecimal = unitCostString.split('.')[1];
+                        if(unitCostDecimal.length > 2) {
+                            isUnitCostDecimal = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            if(isDecimal) {
+                component.set("v.isLoading", false);
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    title: 'Error',
+                    message: 'Quantity cannot be in decimal.',
+                    duration: ' 5000',
+                    key: 'info_alt',
+                    type: 'error',
+                    mode: 'pester'
+                });
+                toastEvent.fire();
+                return;
+            }
+            if(isUnitCostDecimal) {
+                component.set("v.isLoading", false);
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    title: 'Error',
+                    message: 'Unit Cost cannot have more than 2 decimal places.',
+                    duration: ' 5000',
+                    key: 'info_alt',
+                    type: 'error',
+                    mode: 'pester'
+                });
+                toastEvent.fire();
+                return;
+            }
             helper.saveBudgetLine(component, event, helper, budgetLineList);
         }else{
             component.set("v.isLoading", false);

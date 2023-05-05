@@ -21,27 +21,19 @@
             productFamily : '',
             Product : '',
             ProductName : '',
-            Grouping : '',
-            UOM : '',
-            Vendor : '',
-            VendorName : '',
-            Quantity : '',
-            UnitCost : '',
             BudgetLine : {
                 buildertek__Budget__c : component.get("v.recordId"),
                 buildertek__Product__c : '',
                 Name : '',
-                buildertek__Grouping__c : '',
+                buildertek__Group__c : '',
                 buildertek__UOM__c : '',
-                buildertek__Vendor__c : '',
+                buildertek__Contractor__c : '',
                 buildertek__Quantity__c : '',
-                buildertek__Unit_Cost__c : '',
+                buildertek__Unit_Price__c : '',
             },
             productFamilyList : [],
             ProductList : [],
-            productOptionList : [],
-            UOMList : [],
-            VendorList : [],
+            productOptionList : [],            
         };
         return budgetLineWrapper;
     },
@@ -116,6 +108,16 @@
                     }
                 } 
                 budgetLineWrapperList[index].productOptionList = productOptionList;
+                budgetLineWrapperList[index].BudgetLine = {
+                    buildertek__Budget__c : component.get("v.recordId"),
+                    buildertek__Product__c : '',
+                    Name : '',
+                    buildertek__Group__c : '',
+                    buildertek__Quantity__c : '',
+                    buildertek__UOM__c : '',
+                    buildertek__Contractor__c : '',
+                    buildertek__Unit_Price__c : '',
+                }
                 component.set("v.budgetLineWrapperList", budgetLineWrapperList);
                 console.log('budgetLineWrapperList: ', budgetLineWrapperList);
                 component.set("v.isLoading", false);
@@ -146,11 +148,11 @@
             buildertek__Budget__c : component.get("v.recordId"),
             buildertek__Product__c : '',
             Name : '',
-            buildertek__Grouping__c : '',
+            buildertek__Group__c : '',
             buildertek__Quantity__c : '',
             buildertek__UOM__c : '',
-            buildertek__Vendor__c : '',
-            buildertek__Unit_Cost__c : '',
+            buildertek__Contractor__c : '',
+            buildertek__Unit_Price__c : '',
         }
         component.set("v.budgetLineWrapperList", budgetLineWrapperList);
         component.set("v.isLoading", false);
@@ -174,7 +176,7 @@
                     });
                 }
                 component.set("v.vendorList", vendorList);
-                console.log('vendorList: ', component.get("v.vendorList"));
+                // console.log('vendorList: ', component.get("v.vendorList"));
             }
         }
         );
@@ -199,11 +201,11 @@
                     buildertek__Budget__c : component.get("v.recordId"),
                     buildertek__Product__c : productId,
                     Name : ProductList[i].Name,
-                    buildertek__Grouping__c : noGroupingId,
+                    buildertek__Group__c : noGroupingId,
                     buildertek__Quantity__c : '',
                     buildertek__UOM__c : '',
-                    buildertek__Vendor__c : '',
-                    buildertek__Unit_Cost__c : ProductList[i].UnitPrice,
+                    buildertek__Contractor__c : '',
+                    buildertek__Unit_Price__c : ProductList[i].UnitPrice,
                 }
             }
         }
@@ -212,6 +214,8 @@
     },
 
     saveBudgetLine : function(component, event, helper,budgetLineList) {
+        console.log('budgetLineList: ', budgetLineList);
+        debugger;
         var action = component.get("c.saveBudgetLine");
         action.setParams({
             budgetLineList : budgetLineList
@@ -220,7 +224,6 @@
             var state = response.getState();
             if(state === "SUCCESS") {
                 //close modal
-                component.set("v.isLoading", false);
                 var toastEvent = $A.get("e.force:showToast");
                 toastEvent.setParams({
                     title : 'Success',
@@ -231,14 +234,8 @@
                     mode: 'dismissible'
                 });
                 toastEvent.fire();
-                var workspace = component.find("workspace");
-                workspace.getFocusedTabInfo().then(function(response) {
-                    var focusedTabId = response.tabId;
-                    workspace.closeTab({tabId: focusedTabId});
-                }
-                ).catch(function(error) {
-                    console.log(error);
-                });
+                component.set("v.isLoading", false);
+                helper.closeNrefresh(component, event, helper);
             } else {
                 component.set("v.isLoading", false);
                 var toastEvent = $A.get("e.force:showToast");
@@ -257,6 +254,60 @@
         );
         $A.enqueueAction(action);
 
+    },
+
+    getUOM : function(component, event, helper) {
+        var action = component.get("c.getPicklistValues");
+        action.setParams({
+            objectName : 'buildertek__Budget_Item__c',
+            fieldName : 'buildertek__UOM__c'
+        });
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+            if(state === "SUCCESS") {
+                var uomList = response.getReturnValue();
+                var uomOptionList = [];
+                uomOptionList.push({
+                    label: '--Select UOM--',
+                    value: ''
+                });
+                for(var i = 0; i < uomList.length; i++) {
+                    uomOptionList.push({
+                        label: uomList[i],
+                        value: uomList[i]
+                    });
+                }
+                component.set("v.uomOptionList", uomOptionList);
+                console.log('uomOptionList: ', component.get("v.uomOptionList"));
+            }
+        }
+        );
+        $A.enqueueAction(action);
+    },
+
+    closeNrefresh : function(component, event, helper) {
+            var workspaceAPI = component.find("workspace");
+            workspaceAPI.getFocusedTabInfo().then(function (response) {
+                var focusedTabId = response.tabId;
+                workspaceAPI.closeTab({
+                    tabId: focusedTabId
+                });
+            }) 
+         
+            .catch(function (error) {
+                var navEvt = $A.get("e.force:navigateToSObject");
+                navEvt.setParams({
+                    "recordId": component.get('v.recordId'),
+                    "slideDevName": "related"
+                });
+                navEvt.fire();
+            });
+            $A.get("e.force:closeQuickAction").fire();
+            window.setTimeout(
+                $A.getCallback(function () {
+                    $A.get('e.force:refreshView').fire();
+                }), 1000
+            );
     },
     
 

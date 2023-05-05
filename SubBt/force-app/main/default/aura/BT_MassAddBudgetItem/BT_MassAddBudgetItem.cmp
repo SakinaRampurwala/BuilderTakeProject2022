@@ -7,6 +7,8 @@
     <aura:attribute name="pricebookOptions" type="List" />
     <aura:attribute name="isLoading" type="Boolean" default="false" />
     <aura:attribute name="vendorList" type="List" />
+    <aura:attribute name="uomOptionList" type="List" />
+    <aura:attribute name="selectedPricebook" type="String" />
 
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 
@@ -89,14 +91,14 @@
                                 </td>
                                 <td>
                                     <aura:if isTrue="{!budgetLineWrapper.BudgetLine.buildertek__Product__c != ''}">
-                                        <lightning:select name="{!index}" value="{!budgetLineWrapper.BudgetLine.buildertek__Grouping__c}" class="grouping-class pointer1">
+                                        <lightning:select name="{!index}" value="{!budgetLineWrapper.BudgetLine.buildertek__Group__c}" class="grouping-class pointer1">
                                             <aura:iteration items="{!budgetLineWrapper.GroupingOptions}" var="groupingOption">
                                                 <option name="{!budgetLineWrapper}" value="{!groupingOption.Id}">{!groupingOption.Name}</option>
                                             </aura:iteration>
                                         </lightning:select>
                                     </aura:if>
                                     <aura:if isTrue="{!budgetLineWrapper.BudgetLine.buildertek__Product__c == ''}">
-                                        <lightning:select name="{!index}" value="{!budgetLineWrapper.BudgetLine.buildertek__Grouping__c}" class="grouping-class pointer1">
+                                        <lightning:select name="{!index}" value="{!budgetLineWrapper.BudgetLine.buildertek__Group__c}" class="grouping-class pointer1">
                                             <aura:iteration items="{!dummy}" var="groupingOption">
                                                 <option name="{!budgetLineWrapper}" value="{!groupingOption.Id}">{!groupingOption.Name}</option>
                                             </aura:iteration>
@@ -104,34 +106,43 @@
                                     </aura:if>
                                 </td>
                                 <td>
-                                    <lightning:select name="{!index}" value="{!budgetLineWrapper.UOM}" class="uom-class pointer1">
-                                        <aura:iteration items="{!budgetLineWrapper.uomList}" var="uomOption">
-                                            <option name="{!budgetLineWrapper}" value="{!uomOption.value}">{!uomOption.label}</option>
-                                        </aura:iteration>
-                                    </lightning:select>
+                                    <!-- <aura:if isTrue="{!budgetLineWrapper.BudgetLine.buildertek__Product__c != ''}"> -->
+                                        <lightning:select name="{!index}" value="{!budgetLineWrapper.BudgetLine.buildertek__UOM__c}" class="uom-class pointer1">
+                                            <aura:iteration items="{!v.uomOptionList}" var="uomOption">
+                                                <option name="{!budgetLineWrapper}" value="{!uomOption.value}">{!uomOption.label}</option>
+                                            </aura:iteration>
+                                        </lightning:select>
+                                    <!-- </aura:if>
+                                    <aura:if isTrue="{!budgetLineWrapper.BudgetLine.buildertek__Product__c == ''}">
+                                        <lightning:select name="{!index}" value="{!budgetLineWrapper.BudgetLine.buildertek__UOM__c}" class="uom-class pointer1">
+                                            <aura:iteration items="{!dummy}" var="uomOption">
+                                                <option name="{!budgetLineWrapper}" value="{!uomOption.Id}">{!uomOption.Name}</option>
+                                            </aura:iteration>
+                                        </lightning:select>
+                                    </aura:if> -->
                                 </td>
                                 <td>
-                                    <aura:if isTrue="{!budgetLineWrapper.BudgetLine.buildertek__Product__c != ''}">
-                                        <lightning:select name="{!index}" value="{!budgetLineWrapper.BudgetLine.buildertek__Vendor__c}" class="vendor-class pointer1">
+                                    <!-- <aura:if isTrue="{!budgetLineWrapper.BudgetLine.buildertek__Product__c != ''}"> -->
+                                        <lightning:select name="{!index}" value="{!budgetLineWrapper.BudgetLine.buildertek__Contractor__c}" class="vendor-class pointer1">
                                         <aura:iteration items="{!v.vendorList}" var="vendorOption">
                                                 <option name="{!budgetLineWrapper}" value="{!vendorOption.value}">{!vendorOption.label}</option>
                                             </aura:iteration>
                                         </lightning:select>
-                                    </aura:if>
+                                    <!-- </aura:if>
                                     <aura:if isTrue="{!budgetLineWrapper.BudgetLine.buildertek__Product__c == ''}">
-                                        <lightning:select name="{!index}" value="{!budgetLineWrapper.BudgetLine.buildertek__Vendor__c}" class="vendor-class pointer1">
+                                        <lightning:select name="{!index}" value="{!budgetLineWrapper.BudgetLine.buildertek__Contractor__c}" class="vendor-class pointer1">
                                             <aura:iteration items="{!vendorList}" var="vendorOption">
                                                 <option name="{!budgetLineWrapper}" value="{!vendorOption.value}">{!vendorOption.label}</option>
                                             </aura:iteration>
                                         </lightning:select>
-                                    </aura:if>
+                                    </aura:if> -->
                                     
                                 </td>
                                 <td>
-                                    <lightning:input name="{!index}" value="{!budgetLineWrapper.BudgetLine.buildertek__Quantity__c}" class="quantity-class" />
+                                    <lightning:input name="{!index}" value="{!budgetLineWrapper.BudgetLine.buildertek__Quantity__c}" class="quantity-class"  type="number" />
                                 </td>
                                 <td>
-                                    <lightning:input name="{!index}" value="{!budgetLineWrapper.BudgetLine.buildertek__Unit_Cost__c}" class="unitCost-class" />
+                                    <lightning:input name="{!index}" value="{!budgetLineWrapper.BudgetLine.buildertek__Unit_Price__c}" class="unitCost-class"  type="number" step="0.01" />
                                 </td>
                                 <td>
                                     <span onclick="{!c.deleteRow}" data-index="{!index}" class="slds-icon_container slds-icon-utility-delete pointer1" title="Delete">
