@@ -564,7 +564,7 @@
     onClickAddlines: function (component, event, helper) {
         var evt = $A.get("e.force:navigateToComponent");
         evt.setParams({
-            componentDef: "c:BT_BudgetAddLines",
+            componentDef: "c:BT_MassAddBudgetItem",
             /*componentAttributes: {
                 recordId: component.get("v.recordId + 'groups'"),
                 // "_gFiled": "buildertek__Group__c",

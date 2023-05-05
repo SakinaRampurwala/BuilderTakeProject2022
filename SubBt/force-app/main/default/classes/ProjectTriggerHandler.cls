@@ -692,15 +692,53 @@ public with sharing class ProjectTriggerHandler {
             }
         }
 
-        // if (objAPI == 'buildertek__Warranty__c'){
-        //     for (SObject sObj : cloneSObjList.values()){
-        //         sObj.put('buildertek__Warranty__c', null);
-        //     }
-        // }
+        if (objAPI == 'buildertek__Warranty__c'){
 
-        // Insert records
-        Database.SaveResult[] newObjectRecords = Database.Insert(cloneSObjList.values(), false);
-        System.debug('newObjectRecords ==> '+newObjectRecords);
+            Map<String, SObject> warrantyMap = new Map<String, SObject>();
+            Map<String, String> parentMap = new Map<String, String>();
+
+            for (SObject sObj : cloneSObjList.values()){
+                parentMap.put(String.valueOf(sObj.Id), String.valueOf(sObj.get('buildertek__Warranty__c')));
+                sObj.put('buildertek__Warranty__c', null);
+    
+                SObject obj = sobj.clone(false, true);
+    
+                warrantyMap.put(String.valueOf(sObj.Id), obj);
+            }
+
+            Database.SaveResult[] newObjectRecords = Database.Insert(warrantyMap.values(), false);
+            System.debug('newObjectRecords ==> '+newObjectRecords);
+
+            Map<String, String> newParentMap = new Map<String, String>();
+            for (String oldRecId : parentMap.keySet()) {
+                if (parentMap.get(oldRecId) != null) {
+                    String newRecId = warrantyMap.get(oldRecId).Id;
+                    String newParentRecId = warrantyMap.get(parentMap.get(oldRecId)).Id;
+                    newParentMap.put(newRecId, newParentRecId);
+                }
+            }
+
+            // List<SObject> updateTaskList = new List<SObject>();
+            // for (SObject warranty : warrantyMap.values()) {
+            //     warranty.put('buildertek__Warranty__c', newParentMap.get(String.valueOf(warranty.Id)));
+            //     updateTaskList.add(warranty);
+            // }
+            // update updateTaskList;
+
+            for (String warrantyId : warrantyMap.keySet()) {
+                SObject warrantyVal = warrantyMap.get(warrantyId);
+                warrantyVal.put('buildertek__Warranty__c', newParentMap.get(String.valueOf(warrantyVal.Id)));
+                cloneSObjList.put(warrantyId, warrantyVal);
+            }
+            update cloneSObjList.values();
+
+        } else {
+            
+            Database.SaveResult[] newObjectRecords = Database.Insert(cloneSObjList.values(), false);
+            System.debug('newObjectRecords ==> '+newObjectRecords);
+
+        }
+
 
         String childQry = prepareQuery(childObjAPI, objAPI, cloneSObjList.keySet());
         List<SObject> childSobjList = database.query(childQry);

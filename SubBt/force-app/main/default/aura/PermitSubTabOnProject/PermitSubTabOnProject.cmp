@@ -82,7 +82,7 @@
                     </aura:iteration>
                     <aura:set attribute="else">
                         <div class="slds-p-left_medium" style="text-align:center;">
-                       <div class="slds-p-around_small"> <b style="padding-left: 400px;">There is no records to display.  </b></div> 
+                       <div class="slds-p-around_small"> <b style="padding-left: 400px;">There are no records to display.  </b></div> 
                         </div>
                     </aura:set>
                 </aura:if> 
