@@ -10,15 +10,22 @@
 				cellAttributes: { alignment: "left" },
 			},
 			{
-				label: "Total Cost per Unit",
-				fieldName: "buildertek__Quantity__c",
-				type: "number",
+				label: "Total Cost Per Unit",
+				fieldName: "buildertek__Total_Cost_Per_Unit__c",
+				type: "currency",
 				cellAttributes: { alignment: "left" },
 			},
 			{
-				label: "Manufacturer",
-				fieldName: "ManufacturerName",
-				type: "text",
+				label: "Total Cost",
+				fieldName: "buildertek__Total_Cost__c",
+				type: "currency",
+				cellAttributes: { alignment: "left" },
+			},
+			{
+				label: "Markup",
+				fieldName: "buildertek__Markup__c",
+				type: "percent",
+				cellAttributes: { alignment: "left" },
 			},
 			{
 				label: "Sales Price",
@@ -26,6 +33,18 @@
 				type: "currency",
 				cellAttributes: { alignment: "left" },
 			},
+			{
+				label: "Total Sales Price",
+				fieldName: "buildertek__Total_Sales_Price__c",
+				type: "currency",
+				cellAttributes: { alignment: "left" },
+			},
+			{
+				label: "Manufacturer",
+				fieldName: "ManufacturerName",
+				type: "text",
+			},
+			
 			{
 				label: "Upgrade Cost",
 				fieldName: "buildertek__Upgrade_Costs__c",

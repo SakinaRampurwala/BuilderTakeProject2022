@@ -61,7 +61,9 @@ public with sharing class createCO_selectionType {
             buildertek__Change_Order_Item__c coItem = new buildertek__Change_Order_Item__c();
             coItem.Name = option.Name;
             coItem.buildertek__Quantity__c = option.buildertek__Quantity__c ;
-            coItem.buildertek__Unit_Price__c = option.buildertek__Upgrade_Costs__c;
+            // coItem.buildertek__Unit_Price__c = option.buildertek__Upgrade_Costs__c;
+            coItem.buildertek__Unit_Price__c = option.buildertek__Total_Cost_Per_Unit__c;
+            coItem.buildertek__Markup__c=option.buildertek__Markup__c;
             coItem.buildertek__Change_Order__c = coData.Id;
             coItemMap.put(option.Id, coItem);
         }
@@ -81,7 +83,7 @@ public with sharing class createCO_selectionType {
         
         List<buildertek__Question__c> optionList = new List<buildertek__Question__c>();
         
-        optionList = [SELECT Id, Name, buildertek__Manufacturer__c, buildertek__Manufacturer__r.Name, buildertek__Change_Order__c, buildertek__Cost__c, 
+        optionList = [SELECT Id, buildertek__Total_Sales_Price__c, buildertek__Markup__c, buildertek__Total_Cost__c, Name, buildertek__Manufacturer__c, buildertek__Manufacturer__r.Name, buildertek__Change_Order__c, buildertek__Total_Cost_Per_Unit__c , buildertek__Cost__c, 
                         buildertek__Quantity__c, buildertek__Upgrade_Costs__c, buildertek__Question_Group__r.buildertek__Section__r.buildertek__Selection__r.buildertek__Project__c 
                         FROM buildertek__Question__c WHERE buildertek__Question_Group__c =:selectionTypeId and buildertek__Upgrade__c = true AND buildertek__Change_Order__c = null];
         
@@ -93,7 +95,7 @@ public with sharing class createCO_selectionType {
         
         List<buildertek__Question__c> optionList = new List<buildertek__Question__c>();
         
-        optionList = [SELECT Id, Name, buildertek__Manufacturer__c, buildertek__Manufacturer__r.Name, buildertek__Change_Order__c, buildertek__Cost__c, 
+        optionList = [SELECT Id, buildertek__Total_Cost_Per_Unit__c, buildertek__Total_Cost__c, buildertek__Total_Sales_Price__c, buildertek__Markup__c, Name, buildertek__Manufacturer__c, buildertek__Manufacturer__r.Name, buildertek__Change_Order__c, buildertek__Cost__c, 
                         buildertek__Quantity__c, buildertek__Upgrade_Costs__c, buildertek__Question_Group__r.buildertek__Section__r.buildertek__Selection__r.buildertek__Project__c 
                         FROM buildertek__Question__c WHERE buildertek__Question_Group__c =:selectionTypeId AND buildertek__Change_Order__c = null];
         
