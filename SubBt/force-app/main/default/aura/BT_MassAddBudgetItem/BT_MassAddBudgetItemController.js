@@ -31,6 +31,12 @@
                 }
                 if(pricebookList[0].defaultValue != ''){
                     console.log('pricebookList[0].defaultValue: ', pricebookList[0].defaultValue);
+                    component.set("v.selectedPricebook", pricebookList[0].defaultValue.Id);
+                    //call helper for each index of budgetLineWrapperList
+                    var budgetLineWrapperList = component.get("v.budgetLineWrapperList");
+                    for(var i = 0; i < budgetLineWrapperList.length; i++) {
+                        helper.getFamily(component, event, helper, pricebookList[0].defaultValue.Id, i);
+                    }
                 }
                 console.log('pricebookOptions: ', pricebookOptions);
                 component.set("v.pricebookOptions", pricebookOptions);

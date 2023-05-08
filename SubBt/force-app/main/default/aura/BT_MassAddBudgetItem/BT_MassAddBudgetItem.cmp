@@ -68,7 +68,13 @@
                                 <td>
                                     <lightning:select name="{!index}" value="{!budgetLineWrapper.pricebookEntryId}" class="pricebook-class pointer1" onchange="{!c.getFamily}">
                                         <aura:iteration items="{!v.pricebookOptions}" var="pricebookOption">
-                                            <option name="{!budgetLineWrapper}" value="{!pricebookOption.value}">{!pricebookOption.label}</option>
+                                            <aura:if isTrue="{!pricebookOption.value == v.selectedPricebook}">
+                                                <option name="{!budgetLineWrapper}" value="{!pricebookOption.value}" selected="true">{!pricebookOption.label}</option>
+                                                <aura:set attribute="else">
+                                                    <option name="{!budgetLineWrapper}" value="{!pricebookOption.value}">{!pricebookOption.label}</option>
+                                                </aura:set>
+                                            </aura:if>
+                                            <!-- <option name="{!budgetLineWrapper}" value="{!pricebookOption.value}">{!pricebookOption.label}</option> -->
                                         </aura:iteration>
                                     </lightning:select>
                                 </td>
