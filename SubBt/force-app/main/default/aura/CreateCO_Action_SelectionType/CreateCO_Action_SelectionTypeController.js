@@ -10,6 +10,12 @@
 				cellAttributes: { alignment: "left" },
 			},
 			{
+				label: "Total Cost per Unit",
+				fieldName: "buildertek__Quantity__c",
+				type: "number",
+				cellAttributes: { alignment: "left" },
+			},
+			{
 				label: "Manufacturer",
 				fieldName: "ManufacturerName",
 				type: "text",
