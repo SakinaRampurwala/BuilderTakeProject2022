@@ -36,6 +36,8 @@
         action.setCallback(this, $A.getCallback(function (response) {
             var state = response.getState();
             var result = response.getReturnValue();
+            console.log({result});
+
             if (state === "SUCCESS") {
                 result.forEach(element => {
                     if (element.buildertek__Manufacturer__c != null) {

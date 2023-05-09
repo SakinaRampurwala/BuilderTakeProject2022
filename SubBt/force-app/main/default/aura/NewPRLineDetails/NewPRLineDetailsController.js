@@ -9,6 +9,9 @@
         var addressableContext = JSON.parse(window.atob(base64Context));
         component.set("v.recordId", addressableContext.attributes.recordId);
         component.set("v.PRLineDetails.buildertek__Pricing_Request_Line__c", component.get("v.recordId"));
+        if(component.get("v.recordId") != null && component.get("v.recordId") != undefined && component.get("v.recordId") != ''){
+            helper.getOptions(component, event, helper, component.get("v.recordId"));
+        }
 
     },
 
@@ -40,5 +43,18 @@
     closeSearchOption: function (component, event, helper){
         component.set("v.displayProduct", false);
     },
+
+    changeOptions: function(component, event, helper) {
+        component.set("v.Spinner", true);
+        var selectedOption = event.getParam("value");
+        var PRLId = selectedOption[0];
+        if(PRLId != null && PRLId != undefined && PRLId != ''){
+            helper.getOptions(component, event, helper, PRLId);
+            console.log('PRLId ==> '+ PRLId);
+        }else{
+            component.set("v.Spinner", false);
+            component.set("v.OptionList", []);
+        }
+    }
     
 })

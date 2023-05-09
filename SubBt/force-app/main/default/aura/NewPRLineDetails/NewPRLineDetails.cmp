@@ -5,6 +5,7 @@
 	<aura:attribute name="productList" type="List" />
 	<aura:attribute name="displayProduct" type="Boolean" default="false" />
     <aura:attribute name="searchProductValue" type="String" default="" />
+	<aura:attribute name="OptionList" type="List" />
 
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 
@@ -74,7 +75,15 @@
 							</div>
 
 							<div class="slds-col slds-size_1-of-2">
-								<lightning:inputField class="pad" fieldName="buildertek__Pricing_Request_Line__c" value="{!v.PRLineDetails.buildertek__Pricing_Request_Line__c}" />
+								<lightning:inputField class="pad" fieldName="buildertek__Pricing_Request_Line__c" value="{!v.PRLineDetails.buildertek__Pricing_Request_Line__c}" onchange="{!c.changeOptions}" />
+								<lightning:inputField class="pad" fieldName="buildertek__Option__c" value="{!v.PRLineDetails.buildertek__Option__c}" />
+								<!-- <lightning:select name="buildertek__Option__c" label="Option" value="{!v.PRLineDetails.buildertek__Option__c}">
+									<option value="" disabled="true">None</option>
+									<aura:iteration items="{!v.OptionList}" var="option">
+										<option value="{!option.value}">{!option.label}</option>
+									</aura:iteration>
+								</lightning:select> -->
+
 							</div>
 						</div>
 

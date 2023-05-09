@@ -59,7 +59,7 @@ public class ImportMasterSOVsToPaymentAppController {
             
             integer itemInc = 100;
         
-        if(lastSOV.size() > 0){
+        if(lastSOV.size() > 0 && lastSOV[0].buildertek__Item__c != null){
             itemInc = Integer.valueOf(lastSOV[0].buildertek__Item__c)+1;
         }
         
@@ -125,7 +125,8 @@ public class ImportMasterSOVsToPaymentAppController {
                         rfqItem.buildertek__Status__c = 'Pending';
                     }else{
                         if(SovRec.recordtype.name == 'Standard'){
-                            rfqItem.buildertek__Status__c = 'Approved';
+                            //BUIL - 3265 
+                            // rfqItem.buildertek__Status__c = 'Approved';
                             rfqItem.buildertek__Vendor_SOV_Line__c = masterRFQItem.Id;  
                         }else{
                             rfqItem.buildertek__Status__c = 'Pending';

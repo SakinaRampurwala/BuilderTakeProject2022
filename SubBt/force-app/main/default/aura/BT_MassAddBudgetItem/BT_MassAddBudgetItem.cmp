@@ -9,6 +9,9 @@
     <aura:attribute name="vendorList" type="List" />
     <aura:attribute name="uomOptionList" type="List" />
     <aura:attribute name="selectedPricebook" type="String" />
+    <aura:attribute name="DefaultproductFamilyList" type="List" />
+    <aura:attribute name="DefaultproductOptionList" type="List" />
+    
 
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 

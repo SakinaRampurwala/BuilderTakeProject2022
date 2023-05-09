@@ -120,9 +120,41 @@ public with sharing class MassAddBudgetItemController {
 
     @AuraEnabled
     public static string saveBudgetLine( List<buildertek__Budget_Item__c> budgetLineList){
+        //itertate through the list and insert the records
         System.debug('budgetLineList==>'+budgetLineList);
-        return 'success';
+        try{
+            insert budgetLineList;
+            return 'Success';
+        }catch(Exception e){
+            return e.getMessage();
+        }
     }
+
+    @AuraEnabled
+    public static List<String> getPicklistValues(String objectName, String fieldName){
+        System.debug('objectName==>'+objectName);
+        System.debug('fieldName==>'+fieldName);
+        List<String> picklistValues = new List<String>();
+        Schema.SObjectType targetType = Schema.getGlobalDescribe().get(objectName);
+        System.debug('targetType==>'+targetType);
+        if (targetType != null) {
+            Schema.DescribeSObjectResult targetDescribe = targetType.getDescribe();
+            System.debug('targetDescribe==>'+targetDescribe);
+            if (targetDescribe != null) {
+                Schema.DescribeFieldResult targetField = targetDescribe.fields.getMap().get(fieldName).getDescribe();
+                System.debug('targetField==>'+targetField);
+                if (targetField != null) {
+                    List<Schema.PicklistEntry> picklistEntries = targetField.getPicklistValues();
+                    for (Schema.PicklistEntry picklistEntry : picklistEntries) {
+                        picklistValues.add(picklistEntry.getValue());
+                    }
+                    System.debug('picklistValues==>'+picklistValues);
+                }
+            }
+        }
+        return picklistValues;
+    }
+
 
 
 }

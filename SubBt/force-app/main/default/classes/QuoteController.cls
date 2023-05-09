@@ -21,20 +21,22 @@ public with sharing class QuoteController {
             insert quoteRecord; 
             System.debug('quoteRecord => '+quoteRecord);
             
-            List<OpportunityLineItem> oppProdList = [SELECT id,Name,TotalPrice,Quantity,ListPrice FROM OpportunityLineItem WHERE OpportunityId=:recordId];
+            List<OpportunityLineItem> oppProdList = [SELECT id,Name,TotalPrice, Quantity, ListPrice FROM OpportunityLineItem WHERE OpportunityId=:recordId];
             System.debug('OpportunityLineItem====>' + oppProdList);
 
             List<buildertek__Quote_Item__c> quoteItemList=new List<buildertek__Quote_Item__c>();
            
             for (OpportunityLineItem prod : oppProdList) {
                 buildertek__Quote_Item__c quoteLine = new buildertek__Quote_Item__c();
-            	quoteLine.buildertek__Quote__c = quoteRecord.Id;
-            	quoteLine.Name = prod.Name;
+                quoteLine.buildertek__Quote__c = quoteRecord.Id;
+                quoteLine.Name = prod.Name;
                 quoteLine.buildertek__Quantity__c = prod.Quantity;
-                quoteLine.buildertek__Unit_Cost__c = prod.ListPrice;
-                if(prod.TotalPrice != null && prod.Quantity != null){
+                quoteLine.buildertek__Unit_Price__c = prod.ListPrice;   
+                                                          
+                if(prod.TotalPrice != null  && prod.Quantity != null){
                     quoteLine.buildertek__Unit_Price__c = prod.TotalPrice/prod.Quantity;
                 }
+                
                 System.debug('quoteLine => '+quoteLine);
                 quoteItemList.add(quoteLine);
             }            

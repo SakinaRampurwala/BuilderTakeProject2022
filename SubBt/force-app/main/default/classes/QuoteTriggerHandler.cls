@@ -225,18 +225,19 @@ public without sharing class QuoteTriggerHandler {
                 //quoteIdsList.add(qutrec.id);
             }
 
-            if(qutrec.buildertek__Status__c == 'Customer Accepted'){
-                string email = qutrec.buildertek__Bill_To_Email_Address__c;
-                if(email != null && email != ''){
-                    Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
-                    mail.setToAddresses(new String[] {email});
-                    mail.setSenderDisplayName('BuilderTek');
-                    mail.setSubject('BuilderTek Quote Accepted');
-                    mail.setPlainTextBody('Thank you for accepting the quote. We will be in touch with you shortly.');
-                    Messaging.sendEmail(new Messaging.SingleEmailMessage[] {mail});
-                    System.debug('Email sent to '+email);
-                }
-            }
+            //Commented this based on requirements in BUIL - 3264 
+            // if(qutrec.buildertek__Status__c == 'Customer Accepted'){
+            //     string email = qutrec.buildertek__Bill_To_Email_Address__c;
+            //     if(email != null && email != ''){
+            //         Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+            //         mail.setToAddresses(new String[] {email});
+            //         mail.setSenderDisplayName('BuilderTek');
+            //         mail.setSubject('BuilderTek Quote Accepted');
+            //         mail.setPlainTextBody('Thank you for accepting the quote. We will be in touch with you shortly.');
+            //         Messaging.sendEmail(new Messaging.SingleEmailMessage[] {mail});
+            //         System.debug('Email sent to '+email);
+            //     }
+            // }
 
         }
         list<buildertek__Admin_Interface_Node_Configuration__c> adminInterfaceNodeConfigurations = [Select Id,

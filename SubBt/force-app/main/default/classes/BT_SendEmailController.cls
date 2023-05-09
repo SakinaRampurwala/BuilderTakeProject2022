@@ -1015,6 +1015,8 @@ public with sharing class BT_SendEmailController{
         emailClass.emailBody = body;
         emailClass.emailSubject = strSubject;
         emailClass.contactId = rfq.buildertek__Contact__c;
+        emailClass.templateId = emailTemplateName;
+
         system.debug('emailClass --------> ' + emailClass);
         String finalString = JSON.serialize(emailClass);
         return finalString;
@@ -1101,6 +1103,8 @@ public with sharing class BT_SendEmailController{
         public String emailSubject{ get; set; }
 
         public String contactId{ get; set; }
+        public String templateId{ get; set; }
+
     }
 
       @AuraEnabled

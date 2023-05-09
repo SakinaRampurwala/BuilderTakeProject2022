@@ -162,5 +162,21 @@
             PRLineDetails.buildertek__Product__c = null;
             component.set("v.PRLineDetails", PRLineDetails);
         }
-    }
+    },
+
+    getOptions: function(component, event, helper, PRLId){
+        var action = component.get("c.getOptions");
+        action.setParams({
+            "recordId": PRLId
+        });
+        action.setCallback(this, function(response) {
+            var status = response.getState();
+            if (status === "SUCCESS") {
+                var options = response.getReturnValue();
+                console.log('options ==> ',{options});
+                component.set("v.PRLineDetails.buildertek__Option__c",options);
+            }
+        });
+        $A.enqueueAction(action);            
+    },
 })

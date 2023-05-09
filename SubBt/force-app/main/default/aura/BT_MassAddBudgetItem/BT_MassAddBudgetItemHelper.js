@@ -305,7 +305,8 @@
             $A.get("e.force:closeQuickAction").fire();
             window.setTimeout(
                 $A.getCallback(function () {
-                    $A.get('e.force:refreshView').fire();
+                    // $A.get('e.force:refreshView').fire();
+                    window.location.reload();
                 }), 1000
             );
     },

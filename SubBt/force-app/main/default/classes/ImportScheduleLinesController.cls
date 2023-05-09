@@ -149,7 +149,7 @@ public with sharing class ImportScheduleLinesController{
                 system.debug('schItemList -----------> ' + schItemList);
                 Integer i =0 ;
                 List<String> nameStringList = new List<String>();
-                for (buildertek__Project_Task__c items : schItemList){
+                for (buildertek__Project_Task__c items : schItemToInsert){
                     myMap.put(items.buildertek__Full_Name__c+'__'+i, items.Id);
                     durationMap.put(items.buildertek__Full_Name__c+'__'+i, items.buildertek__Duration__c);
                     nameStringList.add(items.buildertek__Full_Name__c);
