@@ -63,10 +63,10 @@
                         <lightning:inputField fieldName="Name" required="true"></lightning:inputField> 
                         <!--    <lightning:inputField fieldName="buildertek__Project__c"></lightning:inputField>  -->
                         <!-- <lightning:inputField fieldName="buildertek__Project__c" value = "{!v.parentprojectRecordId}" required="true"></lightning:inputField> -->
-                        <aura:if isTrue="{!v.RecordTypeName == 'Master'}">
+                        <aura:if isTrue="{!v.RecordTypeName != 'Master'}">
                             <lightning:inputField fieldName="buildertek__Project__c" value = "{!v.parentprojectRecordId}" required="true"></lightning:inputField>
                         </aura:if>
-                        <aura:if isTrue="{!v.RecordTypeName != 'Master'}">
+                        <aura:if isTrue="{!v.RecordTypeName == 'Master'}">
                             <lightning:inputField fieldName="buildertek__Project__c" value = "{!v.parentprojectRecordId}"></lightning:inputField>
                         </aura:if>
                          <aura:if isTrue="{!!v.Iscommunity}">

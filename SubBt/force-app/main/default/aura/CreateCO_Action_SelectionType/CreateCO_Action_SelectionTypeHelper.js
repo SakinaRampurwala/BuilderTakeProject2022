@@ -36,14 +36,22 @@
         action.setCallback(this, $A.getCallback(function (response) {
             var state = response.getState();
             var result = response.getReturnValue();
-            console.log({result});
+                        console.log({result});
+
 
             if (state === "SUCCESS") {
                 result.forEach(element => {
                     if (element.buildertek__Manufacturer__c != null) {
                         element.ManufacturerName = element.buildertek__Manufacturer__r.Name;
-                    }                  
+
+                    }     
+                    
+                    if (element.buildertek__Markup__c != null) {
+                
+                        element.buildertek__Markup__c=element.buildertek__Markup__c.toFixed(2)+'%';
+                    }
                 });
+                console.log({result});
                 cmp.set('v.myData', result);
                 
             } else if (state === "ERROR") {

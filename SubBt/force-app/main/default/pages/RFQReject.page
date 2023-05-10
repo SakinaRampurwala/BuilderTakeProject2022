@@ -16,7 +16,7 @@
          <apex:includeScript value="{!$Resource.FileUploadJs}"/>
     </head>
     <body>
-        <center style="background: #ff0000bf;color: white;font-size: 16px;font-weight: bold; width: 50vw; margin: 10% auto; padding: 20px;">{!getVendorName} is Rejected.</center> 
+        <center style="background: #ff0000bf;color: white;font-size: 16px;font-weight: bold; width: 50vw; margin: 10% auto; padding: 20px;">You have rejected RFQ "{!getRFQName}". If you have any questions please contact "{!getOwnerName}."</center> 
 
     </body>
 

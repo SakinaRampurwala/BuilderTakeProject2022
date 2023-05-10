@@ -741,12 +741,6 @@ public with sharing class ProjectTriggerHandler {
 
         if (childObjAPI == 'buildertek__Project_Task__c') {
 
-            String childSobjListJson = JSON.serialize(childSobjList);
-            System.debug('childSobjListJson ==> '+childSobjListJson);
-            String cloneSObjListJson = JSON.serialize(cloneSObjList);
-            System.debug('cloneSObjListJson ==> '+cloneSObjListJson);
-            // createProjectTask(childSobjListJson, objAPI, cloneSObjListJson);
-            
             Map<String, String> predecessorMap = new Map<String, String>();
             Map<String, SObject> scheduleTaskMap = new Map<String, SObject>();
 
@@ -760,8 +754,6 @@ public with sharing class ProjectTriggerHandler {
 
                 scheduleTaskMap.put(String.valueOf(sObj.Id), obj);
             }
-
-            System.debug('scheduleTaskMap ==> '+scheduleTaskMap);
 
             if (scheduleTaskMap.size() > 0) {
                 insert scheduleTaskMap.values();
@@ -843,54 +835,5 @@ public with sharing class ProjectTriggerHandler {
 
         return qryString;
     }
-
-    @future
-    public static void createProjectTask(String SerialisedList1, String objAPI, String SerialisedList2){
-        List<SObject> childSobjList = (List<SObject>)JSON.deserialize(SerialisedList1, List<SObject>.class);
-        Map<String, SObject> cloneSObjList = (Map<String, SObject>)JSON.deserialize(SerialisedList2, Map<String, SObject>.class);
-        System.debug('childSobjList ==> '+childSobjList);
-        System.debug('cloneSObjList ==> '+cloneSObjList);
-        Map<String, String> predecessorMap = new Map<String, String>();
-        Map<String, SObject> scheduleTaskMap = new Map<String, SObject>();
-
-        for (SObject sObj : childSobjList){
-            predecessorMap.put(String.valueOf(sObj.Id), String.valueOf(sObj.get('buildertek__Dependency__c')));
-            sObj.put('buildertek__Dependency__c', null);
-
-            String oldParentId = String.valueOf(sObj.get(objAPI));
-            SObject obj = sobj.clone(false, true);
-            obj.put(objAPI, cloneSObjList.get(oldParentId).Id);
-
-            scheduleTaskMap.put(String.valueOf(sObj.Id), obj);
-        }
-
-        System.debug('scheduleTaskMap ==> '+scheduleTaskMap);
-
-        if (scheduleTaskMap.size() > 0) {
-            insert scheduleTaskMap.values();
-
-            Map<String, String> newPredecessorMap = new Map<String, String>();
-            for (String taskId : predecessorMap.keySet()) {
-                if (predecessorMap.get(taskId) != null) {
-                    String newTaskId = scheduleTaskMap.get(taskId).Id;
-                    String newParentId = scheduleTaskMap.get(predecessorMap.get(taskId)).Id;
-                    newPredecessorMap.put(newTaskId, newParentId);
-                }
-            }
-
-            List<SObject> updateTaskList = new List<SObject>();
-            for (SObject task : scheduleTaskMap.values()) {
-                task.put('buildertek__Dependency__c', newPredecessorMap.get(String.valueOf(task.Id)));
-                updateTaskList.add(task);
-            }
-
-            if (updateTaskList.size() > 0) {
-                update updateTaskList;
-            }
-        }
-    }
-
-
-
    
 }

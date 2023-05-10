@@ -153,11 +153,11 @@ public without sharing class PreviewQuoteController{
 
         List<EmailTemplate> et = [SELECT Id,Name,Subject FROM EmailTemplate WHERE Id =:templateId];
 
-        //* nishit's logic for wide org email starts from here 
+        //* nishit's logic for wide org email starts from here
         buildertek__WideOrgEmailsettings__c getEmail = buildertek__WideOrgEmailsettings__c.getOrgDefaults();
         String wideOrgEmailName = getEmail.buildertek__WideEmail__c;
         List<OrgWideEmailAddress> wideOrgEmail =[select Id,Address from OrgWideEmailAddress WHERE Address =:wideOrgEmailName];
-        //* nishit's logic for wide org email ends from here 
+        //* nishit's logic for wide org email ends from here
 
         system.debug('recordId----' + recordId);
             system.debug('templateId----' + templateId);
@@ -308,7 +308,7 @@ public without sharing class PreviewQuoteController{
             efa.setFileName(quoterecbody[0].Name+'.pdf');
 
 
-            
+
             system.debug('Blob ---> ' + setAttachmentBody(recordId, templateId, fileid));
             efa.setBody(setAttachmentBody(recordId, templateId, fileid));
             fileAttachments.add(efa);
@@ -382,7 +382,7 @@ public without sharing class PreviewQuoteController{
                 //}
                 if(quoterec[0].buildertek__Date_Rejected_by_Customer__c == null && quoterec[0].buildertek__Date_Accepted_by_Customer__c == null){
                     quoterec[0].buildertek__Date_Sent_To_Customer__c = System.today();
-                } 
+                }
                 quoterec[0].buildertek__Memo__c = '';
                 update quoterec;
 
@@ -454,12 +454,12 @@ public without sharing class PreviewQuoteController{
             SET<Id> contactIdSet = new SET<Id>();
             List<Contact> conList = new List<Contact>();
 
-            //* nishit's logic for wide org email starts from here 
+            //* nishit's logic for wide org email starts from here
             buildertek__WideOrgEmailsettings__c getEmail = buildertek__WideOrgEmailsettings__c.getOrgDefaults();
             String wideOrgEmailName = getEmail.buildertek__WideEmail__c;
             List<OrgWideEmailAddress> wideOrgEmail =[select Id,Address from OrgWideEmailAddress WHERE Address =:wideOrgEmailName];
             //* nishit's logic for wide org email ends from here
-            
+
             system.debug('to'+to);
             if (Schema.sObjectType.Contact.fields.Id.isAccessible() && Schema.sObjectType.Contact.fields.email.isAccessible()){
                 conList = [Select Id, email
@@ -526,7 +526,8 @@ public without sharing class PreviewQuoteController{
             List<Messaging.Emailfileattachment> fileAttachments = new List<Messaging.Emailfileattachment>();
             Messaging.Emailfileattachment efa = new Messaging.Emailfileattachment();
             if(salesRepEmail.size()>0){
-                efa.setFileName(salesRepEmail[0].Name);
+                String fileName = salesRepEmail[0].Name + '.pdf';
+                efa.setFileName(fileName);
 
             }
             //system.debug('Blob ---> ' + setAttachmentBody(recordId, templateId, fileid));
