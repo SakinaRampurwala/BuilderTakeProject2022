@@ -88,7 +88,7 @@
             <div class="slds-p-around_xx-small">
                 <lightning:layout multipleRows="true" class="leftClass">
                     
-                    <lightning:layoutItem size="4">
+                    <lightning:layoutItem size="5">
                         <table>
                             <tbody>
                                 <tr>
@@ -110,9 +110,9 @@
                         </table>
                     </lightning:layoutItem>
                     
-                    <lightning:layoutItem size="4"> </lightning:layoutItem>
+                    <!-- <lightning:layoutItem size="4"> </lightning:layoutItem> -->
 
-                    <lightning:layoutItem size="4" class="rightClass">
+                    <lightning:layoutItem size="7" class="rightClass">
                         <table>
                             <tbody>
                                 <tr>

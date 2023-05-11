@@ -884,6 +884,12 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
       }
       that.GanttVar.project.propagate();
       that.GanttVar.refresh();
+      const evt = new ShowToastEvent({
+        title: "Success",
+        message: task._data.type + " " + task._data.name + " deleted successfully",
+        variant: "success",
+      });
+      that.dispatchEvent(evt);
       if (deleteId.indexOf("_generate") == -1) {
         deleteTasks({
           taskId: deleteId,

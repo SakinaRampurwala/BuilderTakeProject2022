@@ -835,7 +835,7 @@ public with sharing class BT_AdminConfigurationController{
         TurnoffCostOptionAllowanceCheck.Icon_URL__c = '/resource/'+nameSpacePrefix+'SLDS/assets/icons/utility/settings_60.png';
         TurnoffCostOptionAllowanceCheck.Open_New_Tab__c = false;
         TurnoffCostOptionAllowanceCheck.Tab_Name__c = 'Turn off Cost Option Allowance Check';
-        TurnoffCostOptionAllowanceCheck.Page_URL__c = '/apex/BT_CreateContractOnQuoteAcceptance';
+        TurnoffCostOptionAllowanceCheck.Page_URL__c = '/apex/BT_CostOverageCheck';
         firstLevelNodes.add(TurnoffCostOptionAllowanceCheck);
 
         Admin_Interface_Node_Configuration__c MSAConfiguration1 = new Admin_Interface_Node_Configuration__c();
@@ -1006,6 +1006,7 @@ public with sharing class BT_AdminConfigurationController{
         QuoteConfiguration.buildertek__Create_Project_from_Opportunity__c = true;
         QuoteConfiguration.buildertek__Quote_Configuration__c = true;
         QuoteConfiguration.buildertek__Update_the_Opp_Amount__c = true;
+        QuoteConfiguration.buildertek__Email_Subject__c = 'Quote Preview';
         firstLevelNodes.add(QuoteConfiguration);
 
         try {

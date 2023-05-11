@@ -538,6 +538,7 @@ public without sharing class PreviewQuoteController{
             mails.add(mail);
             Messaging.SendEmailResult[] results = Messaging.sendEmail(mails);
             String message = 'Success';
+            System.debug('results '+results);
             if (results.size() > 0){
                 if (results[0].isSuccess()){
                     string Toaddresses = '';
@@ -559,6 +560,9 @@ public without sharing class PreviewQuoteController{
 
                     }
                     system.debug('CCaddresses ----------> ' + CCaddresses);
+                    system.debug('body ----------> ' + body);
+                    system.debug('subject ----------> ' + subject);
+                    system.debug('Toaddresses ----------> ' + Toaddresses);
                     EmailMessage caseEmailMessage = new EmailMessage();
                     caseEmailMessage.fromAddress = UserInfo.getUserEmail();
                     caseEmailMessage.ToAddress = Toaddresses;
