@@ -33,6 +33,10 @@
         access="global" />
     <aura:handler name="oSelectedRecordEvent" event="c:BT_LightningLookupEvent" action="{!c.handleComponentEvent}" />
     <aura:handler name="SelectedRecordEvent" event="c:BT_LightningLookupEvent" action="{!c.handleComponentEvents}" />
+
+    <!-- this attribute is when we create po line from po -->
+    <aura:attribute name="isCalledFromParent" type="Boolean" default="false" />
+    <!-- end -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     <ltng:require styles="{!$Resource.ModalPreview62moreMedia}" />
     <lightning:notificationsLibrary aura:id="notifLib" />

@@ -1,4 +1,41 @@
 ({
+    doInit: function (component, event, helper) {
+        component.set("v.isOpen", true);
+        component.set("v.isLoading", true);
+        var value = helper.getParameterByName(component, event, 'inContextOfRef');
+        var context = '';
+        var parentRecordId = '';
+        component.set("v.parentRecordId", parentRecordId);
+        if (value != null) {
+            context = JSON.parse(window.atob(value));
+            parentRecordId = context.attributes.recordId;
+            component.set("v.parentRecordId", parentRecordId);
+        } else {
+            var relatedList = window.location.pathname;
+            var stringList = relatedList.split("/");
+            parentRecordId = stringList[4];
+            console.log(parentRecordId);
+            component.set("v.parentRecordId", parentRecordId);
+
+            if (parentRecordId === 'related') {
+                var stringList = relatedList.split("/");
+                parentRecordId = stringList[3];
+                console.log({parentRecordId});
+                component.set("v.parentRecordId", parentRecordId);
+            }
+
+
+
+            console.log({parentRecordId});
+        }
+        window.setTimeout(
+            $A.getCallback(function () {
+                helper.fetchpricebooks(component, event, helper);
+            }), 2000
+        );
+        // helper.fetchpricebooks(component, event, helper);
+        helper.getFields(component, event, helper);
+    },
     getParameterByName: function (component, event, name) {
         name = name.replace(/[\[\]]/g, "\\$&");
         var url = window.location.href;
