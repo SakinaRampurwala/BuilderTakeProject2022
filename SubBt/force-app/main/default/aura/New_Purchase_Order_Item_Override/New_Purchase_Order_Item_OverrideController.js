@@ -1,36 +1,6 @@
 ({
     doInit: function (component, event, helper) {
-        component.set("v.isOpen", true);
-        component.set("v.isLoading", true);
-        var value = helper.getParameterByName(component, event, 'inContextOfRef');
-        var context = '';
-        var parentRecordId = '';
-        component.set("v.parentRecordId", parentRecordId);
-        if (value != null) {
-            context = JSON.parse(window.atob(value));
-            parentRecordId = context.attributes.recordId;
-            component.set("v.parentRecordId", parentRecordId);
-        } else {
-            var relatedList = window.location.pathname;
-            var stringList = relatedList.split("/");
-            parentRecordId = stringList[4];
-            if (parentRecordId === 'related') {
-                var stringList = relatedList.split("/");
-                parentRecordId = stringList[3];
-                console.log({parentRecordId});
-                component.set("v.parentRecordId", parentRecordId);
-            }
-
-
-            console.log({parentRecordId});
-        }
-        window.setTimeout(
-            $A.getCallback(function () {
-                helper.fetchpricebooks(component, event, helper);
-            }), 2000
-        );
-        // helper.fetchpricebooks(component, event, helper);
-        helper.getFields(component, event, helper);
+        helper.doInit(component, event, helper);
     },
 
     handleComponentEvent: function (component, event, helper) {
@@ -53,8 +23,12 @@
 
     closeModel: function (component, event, helper) {
         // for Hide/Close Model,set the "isOpen" attribute to "Fasle" 
-        var workspaceAPI = component.find("workspace");
-        workspaceAPI.getFocusedTabInfo().then(function (response) {
+        var isCalledFromParent=component.get('v.isCalledFromParent');
+        if(isCalledFromParent){
+            $A.get("e.force:closeQuickAction").fire();
+        }else{
+            var workspaceAPI = component.find("workspace");
+            workspaceAPI.getFocusedTabInfo().then(function (response) {
                 var focusedTabId = response.tabId;
                 workspaceAPI.closeTab({
                     tabId: focusedTabId
@@ -63,13 +37,16 @@
             .catch(function (error) {
                 console.log(error);
             });
-        $A.get("e.force:closeQuickAction").fire();
-        component.set("v.isOpen", false);
-        window.setTimeout(
-            $A.getCallback(function () {
-                $A.get('e.force:refreshView').fire();
-            }), 1000
-        );
+            $A.get("e.force:closeQuickAction").fire();
+            component.set("v.isOpen", false);
+            window.setTimeout(
+                $A.getCallback(function () {
+                     $A.get('e.force:refreshView').fire();
+                }), 1000
+            );
+
+        }
+        
     },
 
     // save: function (component, event, helper) {
@@ -368,6 +345,8 @@
                 });
                 toastEvent.fire();
                 component.set("v.isDisabled", false);
+                component.set("v.isLoading", false);
+
             }else{
                 var errors = response.getError();
                 if (errors[0].pageErrors != undefined && (errors[0].pageErrors[0].statusCode.includes('REQUIRED_FIELD_MISSING') && errors[0].pageErrors[0].message.includes('Vendor'))) {
@@ -402,6 +381,11 @@
         // component.find('recordViewForm').submit(fields); // Submit form
         // $A.get('e.force:refreshView').fire();
         component.set("v.isSaveNew", true);
+        var isCalledFromParent=component.get('v.isCalledFromParent');
+        if(isCalledFromParent){
+            $A.get('e.force:refreshView').fire();
+            helper.doInit(component, event, helper);
+        }
 
     },
     handleProductChange:function (component, event, helper) {
