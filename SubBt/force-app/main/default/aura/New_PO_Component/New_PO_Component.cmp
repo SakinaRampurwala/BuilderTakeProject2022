@@ -1,5 +1,5 @@
 <aura:component implements="force:hasRecordId,force:lightningQuickActionWithoutHeader,lightning:actionOverride" access="global" controller="New_PO_ComponentController">
-   
+
 <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 <ltng:require styles="{!$Resource.ModalPreview62moreMedia}"/>
 <lightning:notificationsLibrary aura:id="notifLib"/>
@@ -48,14 +48,14 @@
                         <div class="slds-p-around_medium" style="background-color:white;">
                             <lightning:layout multipleRows="true">
                                 <aura:iteration items="{!v.listOfFields0}" var="field">
-                                    <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small"> 
+                                    <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
                                         <aura:if isTrue="{!and(field.name!='buildertek__Project__c',field.name!='Name')}">
                                             <lightning:inputField fieldName="{!field.name}" />
                                             <aura:set attribute="else">
-                                                <aura:if isTrue="{!field.name=='Name'}" > 
+                                                <aura:if isTrue="{!field.name=='Name'}" >
                                                     <lightning:inputField fieldName="Name" required="true"/>
                                                 </aura:if>
-                                                <aura:if isTrue="{!field.name=='buildertek__Project__c'}" > 
+                                                <aura:if isTrue="{!field.name=='buildertek__Project__c'}" >
                                                     <lightning:inputField fieldName="{!field.name}" value="{!v.parentprojectRecordId}" />
                                                 </aura:if>
                                             </aura:set>
@@ -71,7 +71,7 @@
                         <lightning:button variant="brand" type="submit" name="save" label="Save" disabled="{!v.isDisabled}"/>
                     </footer>
                 </lightning:recordEditForm>
-            </div>          
+            </div>
         </div>
     </aura:if>
     <aura:if isTrue="{!v.ProjectContainer}">
@@ -86,17 +86,17 @@
                             <h2 class="slds-section-title--divider">Information</h2>
                             <lightning:layout multipleRows="true">
                                 <aura:iteration items="{!v.listOfFields0}" var="field">
-                                    <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small"> 
+                                    <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
                                         <aura:if isTrue="{!and(field.name!='buildertek__Project__c',field.name!='buildertek__Vendor__c')}">
                                             <lightning:inputField fieldName="{!field.name}" />
                                             <aura:set attribute="else">
-                                                <!-- <aura:if isTrue="{!field.name=='Name'}" > 
+                                                <!-- <aura:if isTrue="{!field.name=='Name'}" >
                                                     <lightning:inputField fieldName="Name" required="true"/>
                                                 </aura:if> -->
-                                                <aura:if isTrue="{!field.name=='buildertek__Project__c'}" > 
+                                                <aura:if isTrue="{!field.name=='buildertek__Project__c'}" >
                                                     <lightning:inputField fieldName="{!field.name}" value="{!v.parentprojectRecordId}" />
                                                 </aura:if>
-                                                <aura:if isTrue="{!field.name=='buildertek__Vendor__c'}" > 
+                                                <aura:if isTrue="{!field.name=='buildertek__Vendor__c'}" >
                                                     <lightning:inputField fieldName="{!field.name}" value="{!v.customerId}" />
                                                 </aura:if>
                                             </aura:set>
@@ -117,10 +117,10 @@
                                       <div class="slds-truncate">PO Item Name</div>
                                     </th>
                                     <th class="" scope="col">
-                                      <div class="slds-truncate">Unit Cost</div>
+                                      <div class="slds-truncate">Quantity</div>
                                     </th>
                                     <th class="" scope="col">
-                                      <div class="slds-truncate">Quantity</div>
+                                        <div class="slds-truncate">Unit Cost</div>
                                     </th>
                                     <th class="" scope="col">
                                       <div class="slds-truncate"></div>
@@ -136,26 +136,26 @@
                                             <td data-label="PO Item Name">
                                                 <lightning:input aura:id="poItemName" value="{!item.Name}" />
                                             </td>
-                                            <td data-label="Unit Cost">
-                                                <lightning:input type="number" step="0.01" aura:id="unitCost" value="{!item.buildertek__Unit_Price__c}" />
-                                                <!-- <lightining:input type="number" step="0.01" aura:id="unitCost" value="{!item.buildertek__Unit_Price__c}" /> -->
-                                            </td>
                                             <td data-label="Quantity">
                                                 <lightning:input type="number" aura:id="quantity" value="{!item.buildertek__Quantity__c}" />
                                                 <!-- <lightining:input type="number" aura:id="quantity" value="{!item.buildertek__Quantity__c}" /> -->
                                             </td>
+                                            <td data-label="Unit Cost">
+                                                <lightning:input type="number" step="0.01" aura:id="unitCost" value="{!item.buildertek__Unit_Price__c}" />
+                                                <!-- <lightining:input type="number" step="0.01" aura:id="unitCost" value="{!item.buildertek__Unit_Price__c}" /> -->
+                                            </td>
                                             <td>
                                                 <span data-id="{!item.index}"  onclick="{!c.removePOLine}">
                                                     <!-- <lightning:icon iconName="utility:delete" size="small" />   -->
-                                                    <lightning:icon iconName="action:delete" size="x-small" alternativeText="Error!"  variant="error" class="imageAction" /> 
-                                                </span>                     
+                                                    <lightning:icon iconName="action:delete" size="x-small" alternativeText="Error!"  variant="error" class="imageAction" />
+                                                </span>
                                             </td>
                                         </tr>
-                                    </aura:iteration>           
+                                    </aura:iteration>
                                 </tbody>
-                              </table> 
+                              </table>
                               <br/>
-                              <lightning:button variant="brand" label="Add New Row" onclick="{!c.addNewRow}" />                             
+                              <lightning:button variant="brand" label="Add New Row" onclick="{!c.addNewRow}" />
                         </div>
                     </div>
                     <footer aura:id="footer" class="slds-modal__footer">
@@ -164,9 +164,9 @@
                         <lightning:button variant="brand" type="submit" name="save" label="Save" disabled="{!v.isDisabled}"/>
                     </footer>
                 </lightning:recordEditForm>
-            </div>          
+            </div>
         </div>
     </aura:if>
-    
+
 
 </aura:component>

@@ -1,0 +1,24 @@
+<aura:component controller="PreviewPurchaseOrderController" implements="lightning:actionOverride,force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader" access="global">
+    <!-- <ltng:require styles="{!$Resource.ModalPreviewCSS}" /> -->
+   
+    <div>
+        <c:New_Purchase_Order_Item_Override />
+    </div>
+    <!-- <aura:html tag="style">
+        .slds-modal__container {
+        width:80% !important;
+        max-width: 80% !important;
+        overflow: hidden !important;
+
+        }
+        .slds-modal__content {
+        overflow: hidden !important;
+        background:transparent: !important
+        }
+        .slds-modal__close{
+        display:block !important;
+        }
+    </aura:html> -->
+
+
+</aura:component>
