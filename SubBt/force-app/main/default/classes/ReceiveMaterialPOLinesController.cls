@@ -26,6 +26,8 @@ public with sharing class ReceiveMaterialPOLinesController {
         
         //   list<Product2> prod = [select Id from Product2 where Id IN:= POItems ];
         // system.debug('workinggggg' + productId);
+        boolean flag = false;
+        Decimal old_quantity_recieved = 0;
         
         system.debug('productsKist'+ ProductsList);
         List<String> selectedProdIds = new List<String>();
@@ -49,9 +51,12 @@ public with sharing class ReceiveMaterialPOLinesController {
         for(buildertek__Purchase_Order_Item__c poline: polineList){
             if(newProductList[0].quantity_recieved != null){
                 if(poline.buildertek__Quantity_Remaining__c - newProductList[0].quantity_recieved >= 0){
-                    if(poline.buildertek__Quantity_Received__c == null)
+                    if(poline.buildertek__Quantity_Received__c == null){
                         poline.buildertek__Quantity_Received__c = newProductList[0].quantity_recieved;
+                        flag = true;
+                    }
                     else if(poline.buildertek__Quantity_Received__c != null){
+                        old_quantity_recieved = poline.buildertek__Quantity_Received__c;
                         poline.buildertek__Quantity_Received__c = poline.buildertek__Quantity_Received__c + newProductList[0].quantity_recieved;
                     }
                 }
@@ -119,14 +124,16 @@ public with sharing class ReceiveMaterialPOLinesController {
             for(buildertek__Purchase_Order_Item__c poline: polineList){
                 buildertek__Inventory_Tracking__c  invTrack= new buildertek__Inventory_Tracking__c();
                 invTrack.buildertek__Date_Received__c= Date.today();
-                invTrack.buildertek__Old_Quantity__c= poline.buildertek__Product__r.buildertek__Available_Quantity__c;
+                if(flag){
+                    invTrack.buildertek__Old_Quantity__c= 0;
+                }else{
+                    invTrack.buildertek__Old_Quantity__c= old_quantity_recieved;
+                }
                 invTrack.buildertek__New_Quantity__c= poline.buildertek__Quantity_Received__c;
                 invTrack.buildertek__Product__c= poline.buildertek__Product__c;
                 invTrack.buildertek__Description__c= poline.buildertek__Item_Name__c;
-
                 invTrack.buildertek__BT_Purchase_Order_Line__c= poline.Id;
                 invTrack.buildertek__Purchase_Order__c= poline.buildertek__Purchase_Order__c;
-
                 invTrackList.add(invTrack);
 
             }

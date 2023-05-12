@@ -321,15 +321,18 @@
                 }else{
                     var workspaceAPI = component.find("workspace");
                     var focusedTabId = response.tabId;
+                    var isCalledFromParent=component.get('v.isCalledFromParent');
                     //timeout
-                    window.setTimeout(
-                        $A.getCallback(function() {
-                            workspaceAPI.getFocusedTabInfo().then(function(response) {
-                                workspaceAPI.closeTab({tabId: focusedTabId});
-                                component.set("v.isLoading", false);
-                            })
-                        }), 1000
-                        );
+                    if(!isCalledFromParent){
+                        window.setTimeout(
+                            $A.getCallback(function() {
+                                workspaceAPI.getFocusedTabInfo().then(function(response) {
+                                    workspaceAPI.closeTab({tabId: focusedTabId});
+                                    component.set("v.isLoading", false);
+                                })
+                            }), 1000
+                            );
+                    }
                     var navEvt = $A.get("e.force:navigateToSObject");
                     navEvt.setParams({
                         "recordId": result,
@@ -381,11 +384,11 @@
         // component.find('recordViewForm').submit(fields); // Submit form
         // $A.get('e.force:refreshView').fire();
         component.set("v.isSaveNew", true);
-        var isCalledFromParent=component.get('v.isCalledFromParent');
-        if(isCalledFromParent){
-            $A.get('e.force:refreshView').fire();
-            helper.doInit(component, event, helper);
-        }
+        // var isCalledFromParent=component.get('v.isCalledFromParent');
+        // if(isCalledFromParent){
+        //     $A.get('e.force:refreshView').fire();
+        //     helper.doInit(component, event, helper);
+        // }
 
     },
     handleProductChange:function (component, event, helper) {

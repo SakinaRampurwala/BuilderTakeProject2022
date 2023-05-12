@@ -27,6 +27,8 @@ public with sharing class NewPO_From_PO {
             buildertek__Purchase_Order__c po = [SELECT Id, Name, buildertek__Vendor__c, buildertek__Project__c FROM buildertek__Purchase_Order__c WHERE Id =: recordId];
             buildertek__Purchase_Order__c newPO = new buildertek__Purchase_Order__c();
             newPO.buildertek__Vendor__c = po.buildertek__Vendor__c;
+            newPO.buildertek__Status__c = 'Open';
+            newPO.buildertek__Type__c = 'Material';            
             newPO.buildertek__Project__c = po.buildertek__Project__c;
             newPO.buildertek__Old_Purchase_Order__c = po.Id;
             insert newPO;

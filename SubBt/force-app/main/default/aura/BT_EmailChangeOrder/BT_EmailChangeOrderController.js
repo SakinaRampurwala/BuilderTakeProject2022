@@ -38,6 +38,8 @@
             console.log(error);
         });
            window.open("/lightning/r/buildertek__Project__c/"+component.get("v.parentRecordId")+"/related/buildertek__Change_Orders__r/view","_self");
+
+
       /*   var urlEvent = $A.get("e.force:navigateToURL");
          urlEvent.setParams({
              "url": "/lightning/r/buildertek__Project__c/"+component.get("v.parentRecordId")+"/related/buildertek__Change_Orders__r/view"
