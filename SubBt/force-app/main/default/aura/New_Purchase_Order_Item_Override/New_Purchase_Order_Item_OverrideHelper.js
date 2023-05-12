@@ -28,12 +28,12 @@
 
             console.log({parentRecordId});
         }
-        window.setTimeout(
-            $A.getCallback(function () {
-                helper.fetchpricebooks(component, event, helper);
-            }), 2000
-        );
-        // helper.fetchpricebooks(component, event, helper);
+        // window.setTimeout(
+        //     $A.getCallback(function () {
+        //         helper.fetchpricebooks(component, event, helper);
+        //     }), 2000
+        // );
+        helper.fetchpricebooks(component, event, helper);
         helper.getFields(component, event, helper);
     },
     getParameterByName: function (component, event, name) {
@@ -81,6 +81,7 @@
         });
         $A.enqueueAction(action);
     },
+    
 
     fetchpricebooks: function (component, event, helper) {
         console.log('fetchpricebooks');
@@ -108,50 +109,24 @@
         actions.setCallback(this, function (response) {
             if (response.getState() == "SUCCESS") {
                 var result = response.getReturnValue();
-
                 console.log({result});
                 let projectHavePricebook=result[0].defaultValue;
                 var pricebookOptions = [];
+                pricebookOptions.push({ key: "None", value: "" });
+                result[0].priceWrapList.forEach(function(element){
+                    pricebookOptions.push({ key: element.Name, value: element.Id });
+                });
+                component.set("v.pricebookoptions", pricebookOptions);                
                 if(Object.keys(projectHavePricebook).length !=0){
-                    pricebookOptions.push({ key: projectHavePricebook.Name, value: projectHavePricebook.Id });
-                    result[0].priceWrapList.forEach(function(element){
-                        if(projectHavePricebook.Id !== element.Id){
-                            pricebookOptions.push({ key: element.Name, value: element.Id });
-                        }else{
-                            pricebookOptions.push({ key: "None", value: "" });
-
-                        }
-                    });
-                    component.set('v.pricebookName' , projectHavePricebook.Name);
-                    component.set('v.pricebookoptions' , pricebookOptions);
-
-
-                }else{
-                    pricebookOptions.push({ key: "None", value: "" });
-                    result[0].priceWrapList.forEach(function(element){
-                        pricebookOptions.push({ key: element.Name, value: element.Id });
-                    });
-                    component.set("v.pricebookoptions", pricebookOptions);                
+                    console.log(projectHavePricebook.Id );
+                    console.log(projectHavePricebook.Name );
+                    component.set('v.pricebookName',projectHavePricebook.Id);
 
                 }
-
-
-                // var opts = [];
-                // opts.push({
-                //     key: "None",
-                //     value: ""
-                // });
-                // for (var key in result) {
-                //     opts.push({
-                //         key: key,
-                //         value: result[key]
-                //     });
-                // }
-                // component.set("v.pricebookoptions", opts);
-              
-                // $A.get('e.force:refreshView').fire();
-                   
+    
                 component.set("v.Spinner", false);
+                helper.changeEvent(component, event, helper);    
+
             }
         });
         $A.enqueueAction(actions);
@@ -172,5 +147,42 @@
             }
         });
         $A.enqueueAction(action);
-    }
+    },
+    changeEvent: function (component, event, helper) {
+
+        var pribooknames = component.get("v.pricebookName");
+        console.log({pribooknames});
+        var action = component.get("c.getProductfamilyRecords");
+        // set param to method  
+        action.setParams({
+            'ObjectName': "Product2",
+            'parentId': component.get("v.pricebookName")
+        });
+        // set a callBack    
+        action.setCallback(this, function (response) {
+            $A.util.removeClass(component.find("mySpinner"), "slds-show");
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                // helper.fetchPickListVal(component, event, helper);
+                var storeResponse = response.getReturnValue();
+                // if storeResponse size is equal 0 ,display No Result Found... message on screen.                }
+                if (storeResponse.length == 0) {
+                    component.set("v.Message", 'No Result Found...');
+                } else {
+                    component.set("v.Message", '');
+                }
+                // set searchResult list with return value from server.
+                component.set("v.listofproductfamily", storeResponse);
+
+                if (component.get("v.listofproductfamily").length > 0) {
+                    component.set("v.productfamily", component.get("v.listofproductfamily")[0].productfamilyvalues);
+                }
+
+            }
+
+        });
+        // enqueue the Action  
+        $A.enqueueAction(action);
+    },
+    
 })

@@ -199,10 +199,7 @@
         let quoteLineWrap= component.get('v.quoteLineWrapperList');
         for(var key in quoteLineWrap){
             quoteLineWrap[key].pricebookEntryId = component.get('v.defaultPriceBookId');
-            // if(quoteLineWrap[key].pricebookEntryId != undefined){
                 helper.getFamily(component, event, helper, quoteLineWrap[key].pricebookEntryId, key);
-
-            // }
             
         }
     },

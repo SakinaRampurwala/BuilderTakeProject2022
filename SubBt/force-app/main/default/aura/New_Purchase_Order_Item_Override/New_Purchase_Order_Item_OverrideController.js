@@ -24,9 +24,7 @@
     closeModel: function (component, event, helper) {
         // for Hide/Close Model,set the "isOpen" attribute to "Fasle" 
         var isCalledFromParent=component.get('v.isCalledFromParent');
-        if(isCalledFromParent){
-            $A.get("e.force:closeQuickAction").fire();
-        }else{
+        if(!isCalledFromParent){
             var workspaceAPI = component.find("workspace");
             workspaceAPI.getFocusedTabInfo().then(function (response) {
                 var focusedTabId = response.tabId;
@@ -45,125 +43,11 @@
                 }), 1000
             );
 
+        }else{
+            $A.get("e.force:closeQuickAction").fire();
         }
         
     },
-
-    // save: function (component, event, helper) {
-
-    //     var selectedPO = component.get("v.selectedPORecord");
-    //     var parentRecordId = component.get("v.parentRecordId");
-    //     var selectedPORecordId;
-    //     if (parentRecordId != undefined) {
-    //         selectedPORecordId = parentRecordId;
-    //     } else {
-    //         if (selectedPO != undefined) {
-    //             selectedPORecordId = selectedPO.Id;
-    //         }
-    //     }
-
-    //     //component.set("v.newPOItem.buildertek__Purchase_Order__c", PO);
-    //     var POLineToInsert = JSON.stringify(component.get("v.listOfFields"));
-    //     console.log('PO Lines::', POLineToInsert);
-    //     if (selectedPORecordId != undefined) {
-    //         component.set("v.Spinner", true);
-    //         var action = component.get("c.savePOItem");
-    //         action.setParams({
-    //             POLines: POLineToInsert,
-    //             POId: selectedPORecordId
-    //         });
-    //         action.setCallback(this, function (response) {
-    //             var state = response.getState();
-    //             if (state === "SUCCESS") {
-    //                 var url = location.href;
-    //                 var baseURL = url.substring(0, url.indexOf('/', 14));
-    //                 var result = response.getReturnValue();
-    //                 $A.get("e.force:closeQuickAction").fire();
-    //                 var workspaceAPI = component.find("workspace");
-    //                 workspaceAPI.getFocusedTabInfo().then(function (response) {
-    //                         var focusedTabId = response.tabId;
-    //                         workspaceAPI.closeTab({
-    //                             tabId: focusedTabId
-    //                         });
-    //                         //$A.get('e.force:refreshView').fire();
-    //                     })
-    //                     .catch(function (error) {
-    //                         console.log(error);
-    //                     });
-
-    //                 var toastEvent = $A.get("e.force:showToast");
-    //                 toastEvent.setParams({
-    //                     mode: 'sticky',
-    //                     message: 'Purchase Order Line was created ',
-    //                     messageTemplate: "Purchase Order Line {0} was created",
-    //                     messageTemplateData: [{
-    //                         url: baseURL + '/lightning/r/buildertek__Purchase_Order_Item__c/' + escape(result.Id) + '/view',
-    //                         label: result.Name,
-    //                     }],
-    //                     type: 'success',
-    //                     duration: '10000',
-    //                     mode: 'dismissible'
-    //                 });
-    //                 toastEvent.fire();
-
-    //                 window.open("/" + result.Id, "_Self");
-    //             }
-    //         });
-    //         $A.enqueueAction(action);
-    //     } else {
-    //         var pillTarget = component.find("errorId");
-    //         $A.util.addClass(pillTarget, 'showErrorMessage');
-    //     }
-
-    // },
-    // saveAndNew: function (component, event, helper) {
-    //     component.set("v.Spinner", true);
-
-    //     var selectedPO = component.get("v.selectedPORecord");
-    //     var parentRecordId = component.get("v.parentRecordId");
-    //     var selectedPORecordId;
-    //     if (parentRecordId != undefined) {
-    //         selectedPORecordId = parentRecordId;
-    //     } else {
-    //         if (selectedPO != undefined) {
-    //             selectedPORecordId = selectedPO.Id;
-    //         }
-    //     }
-
-    //     component.set("v.newPOItem.buildertek__Purchase_Order__c", selectedPORecordId);
-    //     var POLineToInsert = JSON.stringify(component.get("v.newPOItem"));
-    //     var action = component.get("c.savePOItem");
-    //     action.setParams({
-    //         POLines: POLineToInsert,
-    //         POId: selectedPORecordId
-    //     });
-    //     action.setCallback(this, function (response) {
-    //         var state = response.getState();
-    //         if (state === "SUCCESS") {
-    //             var url = location.href;
-    //             var baseURL = url.substring(0, url.indexOf('/', 14));
-    //             var result = response.getReturnValue();
-    //             component.set("v.newPOItem", null);
-    //             component.set("v.Spinner", false);
-    //             var toastEvent = $A.get("e.force:showToast");
-    //             toastEvent.setParams({
-    //                 mode: 'sticky',
-    //                 message: 'Purchase Order Line was created',
-    //                 messageTemplate: "Purchase Order Line {0} was created",
-    //                 messageTemplateData: [{
-    //                     url: baseURL + '/lightning/r/buildertek__Purchase_Order_Item__c/' + escape(result.Id) + '/view',
-    //                     label: result.Name,
-    //                 }],
-    //                 type: 'success',
-    //                 duration: '10000',
-    //                 mode: 'dismissible'
-    //             });
-    //             toastEvent.fire();
-    //             window.location.reload(true);
-    //         }
-    //     });
-    //     $A.enqueueAction(action);
-    // },
 
     changefamily: function (component, event, helper) {
 
@@ -178,107 +62,10 @@
 
     },
     changeEvent: function (component, event, helper) {
-
-        // var product = component.get('v.selectedLookUpRecord');
-        // console.log({product});
-        // var compEvent = $A.get('e.c:BT_CLearLightningLookupEvent');
-        // compEvent.setParams({
-        //     "recordByEvent": product
-        // });
-        // compEvent.fire();
-
-        // console.log({product});
-
-        var pribooknames = component.get("v.pricebookName");
-        var action = component.get("c.getProductfamilyRecords");
-        // set param to method  
-        action.setParams({
-            'ObjectName': "Product2",
-            'parentId': component.get("v.pricebookName")
-        });
-        // set a callBack    
-        action.setCallback(this, function (response) {
-            $A.util.removeClass(component.find("mySpinner"), "slds-show");
-            var state = response.getState();
-            if (state === "SUCCESS") {
-                // helper.fetchPickListVal(component, event, helper);
-                var storeResponse = response.getReturnValue();
-                // if storeResponse size is equal 0 ,display No Result Found... message on screen.                }
-                if (storeResponse.length == 0) {
-                    component.set("v.Message", 'No Result Found...');
-                } else {
-                    component.set("v.Message", '');
-                }
-                // set searchResult list with return value from server.
-                component.set("v.listofproductfamily", storeResponse);
-
-                if (component.get("v.listofproductfamily").length > 0) {
-                    component.set("v.productfamily", component.get("v.listofproductfamily")[0].productfamilyvalues);
-                }
-
-            }
-
-        });
-        // enqueue the Action  
-        $A.enqueueAction(action);
+        helper.changeEvent(component, event, helper);
     },
 
-    // handleSubmit: function (component, event, helper) {
-    //     component.set('v.Spinner', true);
-    //     var fields = event.getParam("fields");
-    //     var selectedProductId = component.get('v.selectedLookUpRecord');
-    //     if (selectedProductId != undefined && selectedProductId.Id != undefined) {
-    //         if(fields.buildertek__Product__c == undefined){
-    //             fields.buildertek__Product__c='';
-    //         }
-    //         fields.buildertek__Product__c = selectedProductId.Id;
-    //         if(fields.Name.length > 80){
-    //             fields.Name = fields.Name.substring(0,80);
-    //         }
-    //     }
-    //     event.preventDefault(); // Prevent default submit
-    //     component.find('recordViewForm').submit(fields); // Submit form
-    // },
-
-    // onRecordSuccess: function (component, event, helper) {
-    //     var workspaceAPI = component.find("workspace");
-    //     workspaceAPI.getFocusedTabInfo().then(function (response) {
-    //         var focusedTabId = response.tabId;
-    //         workspaceAPI.closeTab({
-    //             tabId: focusedTabId
-    //         });
-    //     }).catch(function (error) {
-    //         console.log('Error', JSON.stringify(error));
-    //     });
-    //     setTimeout(function () {
-    //         component.set("v.isOpen", false);
-    //         component.set('v.Spinner', false);
-    //         var payload = event.getParams().response;
-    //         var url = location.href;
-    //         var baseURL = url.substring(0, url.indexOf('/', 14));
-    //         var toastEvent = $A.get("e.force:showToast");
-    //         toastEvent.setParams({
-    //             mode: 'sticky',
-    //             message: 'Purchase Order Line created successfully',
-    //             messageTemplate: "Purchase Order Line created successfully.",
-    //             messageTemplateData: [{
-    //                 url: baseURL + '/lightning/r/buildertek__Purchase_Order__c/' + escape(payload.id) + '/view',
-    //                 label: payload.name,
-    //             }],
-    //             type: 'success',
-    //             duration: '10000',
-    //             mode: 'dismissible'
-    //         });
-    //         toastEvent.fire();
-
-    //         var navEvt = $A.get("e.force:navigateToSObject");
-    //         navEvt.setParams({
-    //             "recordId": payload.id,
-    //             "slideDevName": "related"
-    //         });
-    //         navEvt.fire();
-    //     }, 200);
-    // },
+   
     handleSubmit : function (component, event, helper) {
         component.set("v.isDisabled", true);
 		component.set("v.isLoading", true);
@@ -315,13 +102,27 @@
                 var result = response.getReturnValue();
                 console.log({result});
                 var saveNnew = component.get("v.isSaveNew");
+                var isCalledFromParent=component.get('v.isCalledFromParent');
+                console.log({isCalledFromParent});
+
+
+                if(isCalledFromParent){
+                    component.set('v.selectedLookUpRecord' , '');
+                    component.set('v.productfamily' , '');
+
+                    
+                    component.find('field').forEach(function(f) {
+                        f.reset();
+                    });
+                    
+                }
+
                 if(saveNnew){
                     $A.get('e.force:refreshView').fire();
                     component.set("v.isSaveNew", false);
                 }else{
                     var workspaceAPI = component.find("workspace");
                     var focusedTabId = response.tabId;
-                    var isCalledFromParent=component.get('v.isCalledFromParent');
                     //timeout
                     if(!isCalledFromParent){
                         window.setTimeout(
@@ -378,18 +179,9 @@
     },
 
     saveAndNew: function (component, event, helper) {
-        // component.set('v.Spinner', true);
-        // event.preventDefault(); // Prevent default submit
-        // var fields = event.getParam("listOfFields");
-        // component.find('recordViewForm').submit(fields); // Submit form
-        // $A.get('e.force:refreshView').fire();
+        
         component.set("v.isSaveNew", true);
-        // var isCalledFromParent=component.get('v.isCalledFromParent');
-        // if(isCalledFromParent){
-        //     $A.get('e.force:refreshView').fire();
-        //     helper.doInit(component, event, helper);
-        // }
-
+        var isCalledFromParent=component.get('v.isCalledFromParent');
     },
     handleProductChange:function (component, event, helper) {
         console.log('handleProductChange');
@@ -413,5 +205,6 @@
         });
         // enqueue the Action  
         $A.enqueueAction(action);
-    }
+    },
+    
 })
