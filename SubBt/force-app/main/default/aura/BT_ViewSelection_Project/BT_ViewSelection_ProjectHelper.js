@@ -10,7 +10,9 @@
             var state = response.getState();
             if (state === "SUCCESS") {
                 var data = response.getReturnValue();
-                console.table(data);
+                console.table('type of data '+typeof(data));
+                console.table('selection view data ',data);
+                debugger
                 //Change "related child records" key to "_children"
                 for (var i = 0; i < data.length; i++) {
                     data[i]._children = data[i]['categories']; // set Client Selection Categories
@@ -22,7 +24,7 @@
                         for (var iii = 0; iii < data[i]._children[ii].cattypes.length; iii++) {
                             if (JSON.stringify(data[i]._children[ii].Id) === JSON.stringify(data[i]._children[ii].cattypes[iii].selectionid)) {
                                 //console.log('***** keys match *****');
-                                //data[i]._children[ii]._children = data[i]._children[ii].cattypes; // Set Category related Types   
+                                //data[i]._children[ii]._children = data[i]._children[ii].cattypes; // Set Category related Types
                                 if (data[i]._children[ii]._children === undefined) {
                                     data[i]._children[ii]._children = [];
                                 }
@@ -38,7 +40,7 @@
                                     }
                                 }
 
-                                // break; 
+                                // break;
                             }
                         }
                     }
@@ -46,6 +48,8 @@
                 }
                 console.table(data);
                 cmp.set('v.gridData', data);
+            }else{
+                console.log('error ',response.getError());
             }
             // error handling when state is "INCOMPLETE" or "ERROR"
         });

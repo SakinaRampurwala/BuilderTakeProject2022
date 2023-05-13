@@ -68,4 +68,12 @@ public with sharing class SendChangeOrderPDF {
         system.debug('LstSelectedCases...........'+LstSelectedCases);
         JSON.serialize(LstSelectedCases); */
     }
+
+    public void callCancel() {
+        System.debug('Inside callCancel');
+        ApexPages.StandardController sc = new ApexPages.StandardController(new Change_Order__c());
+        sc.cancel();
+
+        
+    }
 }

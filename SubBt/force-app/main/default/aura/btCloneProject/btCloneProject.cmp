@@ -5,9 +5,9 @@
                                                         {'label': 'Quote', 'value': 'Quote'},
                                                         {'label': 'Punch List', 'value': 'PunchList'},
                                                         {'label': 'Purchase Order', 'value': 'Purchase Order'},
-                                                        {'label': 'Schedule', 'value': 'Schedule'},
                                                         {'label': 'Selection', 'value': 'Selection'},
                                                         {'label': 'Warranty', 'value': 'Warranty'} ]"/> 
+                                                        <!-- {'label': 'Schedule', 'value': 'Schedule'}, -->
     <aura:attribute name="value" type="List" default=""/>
     <aura:attribute name="recordId" type="Id" />
     <aura:attribute name="projects" type="List" default=""/>

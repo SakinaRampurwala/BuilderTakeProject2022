@@ -1,4 +1,7 @@
 <apex:page standardController="Change_Order__c" recordSetVar="objects" extensions="SendChangeOrderPDF" >
+    <apex:form >
+        <apex:actionfunction name="callfromJS"  action="{!cancel}" />
+    </apex:form>
     <apex:param name="CasesSelectedRecs" value="{!caseids}" />
     <!-- <apex:param name="pId" value="{!parentId}" /> -->
         <apex:includeLightning />
@@ -16,14 +19,17 @@
                                            records : object,
                                            parentRecordId : parentId
                                        },
-                                       
+
                                        "lightning",
                                        function(component) {
+                                            
+
                                        }
                                       );
         });
     }
       else{
+          callfromJS();
            if(app == 'noApp'){
               sforce.one.showToast({
                         
@@ -34,7 +40,8 @@
                         "type": "error" //supported types are error, success, info, warning
                         
                     });
-                sforce.one.navigateToURL("/lightning/r/buildertek__Project__c/"+"{!parentId}"+"/related/buildertek__Change_Orders__r/view");
+                    
+                // sforce.one.navigateToURL("/lightning/r/buildertek__Project__c/"+"{!parentId}"+"/related/buildertek__Change_Orders__r/view");
                //window.open("/lightning/r/buildertek__Project__c/"+"{!parentId}"+"/related/buildertek__Change_Orders__r/view","_self");
            }
            else{ 
@@ -52,7 +59,7 @@
                    // sforce.console.getEnclosingTabId(closeSubtab);
                // windows.close()
                //  }
-                sforce.one.navigateToURL("/lightning/r/buildertek__Project__c/"+"{!parentId}"+"/related/buildertek__Change_Orders__r/view");
+                // sforce.one.navigateToURL("/lightning/r/buildertek__Project__c/"+"{!parentId}"+"/related/buildertek__Change_Orders__r/view");
                // windows.close():
                //  window.open("/lightning/r/buildertek__Project__c/"+"{!parentId}"+"/related/buildertek__Change_Orders__r/view","_self");
                }
@@ -67,5 +74,7 @@
         //  closeWin();
         } 
         </script>
+
+    
     
 </apex:page>

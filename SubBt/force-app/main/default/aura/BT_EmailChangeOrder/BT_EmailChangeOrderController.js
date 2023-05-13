@@ -22,6 +22,8 @@
           },
     
      closeModel: function (component, event, helper) {
+        $A.get("e.force:closeQuickAction").fire();
+          debugger;
        // component.set("v.isOpen", false);
     // alert(component.get("v.parentRecordId"));
      var workspaceAPI = component.find("workspace");
@@ -37,7 +39,12 @@
         .catch(function(error) {
             console.log(error);
         });
-           window.open("/lightning/r/buildertek__Project__c/"+component.get("v.parentRecordId")+"/related/buildertek__Change_Orders__r/view","_self");
+        //    window.open("/lightning/r/buildertek__Project__c/"+component.get("v.parentRecordId")+"/related/buildertek__Change_Orders__r/view","_self");
+        var vfFunction = window.myVFAction;
+        $A.getCallback(function() {
+            vfFunction();
+        })();
+
 
 
       /*   var urlEvent = $A.get("e.force:navigateToURL");
