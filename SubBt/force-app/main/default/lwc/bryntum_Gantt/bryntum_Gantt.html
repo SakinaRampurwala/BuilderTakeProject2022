@@ -402,18 +402,18 @@
               size="small" ></lightning-icon>
             <span class="slds-assistive-text">Close</span>
         </button>
-        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Export Schedule</h2>
+        <h2  class="slds-text-heading_medium slds-hyphenate">Export Schedule</h2>
       </header>
 
       <!-- modal body start -->
-      <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
-        <input type="text" value={fileName}  />
+      <div class="slds-modal__content slds-p-around_medium" >
+        <lightning-input type="text" label="File Name" autocomplete="off"  value={fileName}  onchange={changeFileName}> </lightning-input>
       </div>
 
       <!-- modal footer start-->
       <footer class="slds-modal__footer">
         <button class="slds-button slds-button_neutral" onclick={hideModalBox}>Cancel</button>
-        <button class="slds-button slds-button_neutral" onclick={exportScheduleData}>Export</button>
+        <button class="slds-button slds-button_brand" onclick={exportScheduleData}>Export</button>
 
       </footer>
 

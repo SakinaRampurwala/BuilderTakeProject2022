@@ -1142,62 +1142,32 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
       false
     );
   }
-
+  changeFileName(event){
+    this.fileName=event.target.value;
+  }
   exportData(){
     console.log('click export');
-
     this.showExportPopup=true;
-    // var formatedSchData = formatData(
-    //   this.scheduleData,
-    //   this.scheduleItemsData,
-    //   this.scheduleItemsDataList
-    // );
-    // console.log('=== formatedSchData ===');
-    // console.log(this.scheduleData);
-    // // console.log(); 
-    // console.log('Test***', JSON.parse(JSON.stringify(this.scheduleItemsData)));
-
-    
-
-    // console.log(this.scheduleItemsDataList);
-    // console.log({formatedSchData});
-    // console.log(formatedSchData.rows);
-
-    // console.log(Papa);
-
-    // console.log(GANTTModule);
-
-    // var csvData = Papa.unparse(this.scheduleItemsDataList);
-    // let cloneData= this.scheduleItemsDataList;
-    // console.log({csvData});
-    // const element = document.createElement('a');
-    // element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvData));
-    // element.setAttribute('download', 'gantt_data.csv');
-    // element.style.display = 'none';
-    // document.body.appendChild(element);
-    // element.click();
-    // document.body.removeChild(element);
-
-
-
-    // const csvData = this.Papa.unparse(formatedSchData.rows);
-
-
   }
 
   exportScheduleData(){
-
     var csvData = Papa.unparse(this.scheduleItemsDataList);
     let cloneData= this.scheduleItemsDataList;
     console.log({csvData});
     const element = document.createElement('a');
     element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvData));
-    element.setAttribute('download', fileName+'.csv');
+    element.setAttribute('download', this.fileName+'.csv');
     element.style.display = 'none';
     document.body.appendChild(element);
     element.click();
     document.body.removeChild(element);
+    this.showExportPopup=false;
 
+
+  }
+
+  hideModalBox(){
+    this.showExportPopup=false;
   }
 
   openScheduleLines() {
