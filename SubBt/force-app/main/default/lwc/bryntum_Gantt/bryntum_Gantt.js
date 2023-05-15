@@ -1146,14 +1146,32 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
     this.fileName=event.target.value;
   }
   exportData(){
-    console.log('click export');
     this.showExportPopup=true;
+    console.log(this.scheduleItemsDataList);
   }
 
   exportScheduleData(){
-    var csvData = Papa.unparse(this.scheduleItemsDataList);
-    let cloneData= this.scheduleItemsDataList;
-    console.log({csvData});
+    let getColumns=["Name" ,"buildertek__Dependency__r.Name","buildertek__Start__c" , "buildertek__Finish__c" , "buildertek__Completion__c" , "buildertek__Phase__c" , "buildertek__Notes__c" , "buildertek__Lag__c" ];    
+    const convertedObject = this.scheduleItemsDataList.map(item => {
+      const obj = {};
+      getColumns.forEach(column => {
+        if (item.hasOwnProperty(column)) {
+          obj[column] = item[column];
+        } else {
+          obj[column] = null; 
+        }
+
+        if (item.hasOwnProperty("buildertek__Dependency__c")) {
+          obj["buildertek__Dependency__r.Name"] = item.buildertek__Dependency__r.Name;
+        } else {
+          obj["buildertek__Dependency__r.Name"] = null; 
+        }
+      });
+      return obj;
+    });
+
+
+    var csvData = Papa.unparse(convertedObject);
     const element = document.createElement('a');
     element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvData));
     element.setAttribute('download', this.fileName+'.csv');
