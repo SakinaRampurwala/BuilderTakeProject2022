@@ -269,8 +269,10 @@
                 <apex:outputPanel rendered="{!If(objectAPIName =='buildertek__Quote__c',true,false)}">
                     <apex:outputPanel rendered="{!!customSignature}">
                         <!--  <apex:outputPanel rendered="{!If(Checkcustomerview =='customerview',true,false)}"> -->
-                        <button type="button" style="float:right" class="slds-button slds-button_brand" onclick="openPopupForQuotelines()" status="status">
-                            Accept/Reject Lines </button>
+                            <apex:outputPanel rendered="{!IF(reject_Quote_on_Rejected_Lines  == false, true, false)}">
+                                <button type="button" style="float:right" class="slds-button slds-button_brand" onclick="openPopupForQuotelines()" status="status">
+                                    Accept/Reject Lines </button>
+                            </apex:outputPanel>
                     </apex:outputPanel>
                 </apex:outputPanel>
                 <!--  </apex:outputPanel> -->

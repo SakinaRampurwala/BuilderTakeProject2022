@@ -122,6 +122,12 @@ public with sharing class MassAddBudgetItemController {
     public static string saveBudgetLine( List<buildertek__Budget_Item__c> budgetLineList){
         //itertate through the list and insert the records
         System.debug('budgetLineList==>'+budgetLineList);
+        for(buildertek__Budget_Item__c budgetLine : budgetLineList){
+            if(budgetLine.Name.length() > 79){
+                budgetLine.buildertek__Item_Name__c = budgetLine.Name;
+                budgetLine.Name = budgetLine.Name.substring(0,79);
+            }
+        }
         try{
             insert budgetLineList;
             return 'Success';

@@ -1,5 +1,14 @@
 ({
     doInit: function (component, event, helper) {
+        var url = window.location.href;
+        console.log('url', url);
+        var urlsplit = url.split('/view');
+        if (urlsplit[1] != null && urlsplit[1] != undefined && urlsplit[1] != '') {
+            component.set("v.additionalUrl", urlsplit[1]);
+        }else{
+            var additionalUrl = '?ws=%2Flightning%2Fr%2Fbuildertek__Budget__c%2F'+component.get("v.recordId")+'%2Fview';
+            component.set("v.additionalUrl", additionalUrl);
+        }
 
 
         var workspaceAPI = component.find("workspace");

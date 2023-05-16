@@ -94,6 +94,9 @@ trigger ScheduleRecTrigger on buildertek__Schedule__c (after insert, after updat
                 for (AggregateResult ag : [SELECT buildertek__Project__c, AVG(buildertek__Complete__c)avg
                                            FROM buildertek__Schedule__c
                                            GROUP BY buildertek__Project__c]){
+
+                                            System.debug('ag Aegon '+ag);
+                                            System.debug('2nd line aegon '+(Id)ag.get('buildertek__Project__c'));
                     if ((Id)ag.get('buildertek__Project__c') != null){
                         projectList.add(new buildertek__Project__c(Id = (Id)ag.get('buildertek__Project__c'), buildertek__Project_Completion__c = (Decimal)ag.get('avg')));
                     }

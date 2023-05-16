@@ -13,6 +13,7 @@
     <aura:attribute name="searchFilter" type="String" />
     <aura:attribute name="IconName" type="String" default="custom:custom5" />
     <aura:handler name="change" value="{!v.searchFilter}" action="{!c.doSearchBudget}" />
+    <aura:attribute name="additionalUrl" type="String" default="" />
     <!-- <aura:handler name="searchBudget" event="c:BT_SearchBudgetLineEvent" action="{!c.doSearchBudget}"/> -->
     <!-- <aura:handler event="c:BT_SearchBudgetLineAppEvent" action="{!c.doSearchBudget}"/> -->
     <aura:attribute name="showSelectSchedule" type="Boolean" default="false" />
@@ -890,10 +891,9 @@
 
                                                                     <aura:set attribute="else">
                                                                         <span style="white-space: pre-wrap;">
-                                                                            <ui:outputURL
-                                                                                value="{!'/one/one.app?#/sObject/'+ recs.recordId + '/view'}"
-                                                                                target="_blank"
-                                                                                label="{!recs.recordName}" />
+                                                                             <ui:outputURL
+                                                                                value="{!'/one/one.app?#/sObject/'+ recs.recordId + '/view' + v.additionalUrl}"
+                                                                                label="{!recs.recordName}" /> 
                                                                         </span>
                                                                     </aura:set>
 

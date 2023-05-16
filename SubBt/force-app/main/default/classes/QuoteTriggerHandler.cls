@@ -210,6 +210,8 @@ public without sharing class QuoteTriggerHandler {
     }
     
     public void OnAfterUpdate(Quote__c[] oldQuotes, Quote__c[] updatedQuotes, Map<ID, Quote__c> QuotesMap, Map<Id, Quote__c> oldQuotesMap){
+
+        list<buildertek__Admin_Interface_Node_Configuration__c> adminSetting = [Select Id, Name , buildertek__Send_customer_Quote_after_signature__c from buildertek__Admin_Interface_Node_Configuration__c WHERE Name=:'Quote Configuration' limit 1];
         
         //Create Project from Quote Acceptance on Opportunity 
         set<Id> quoteoppoids = new set<Id>();
@@ -225,7 +227,7 @@ public without sharing class QuoteTriggerHandler {
                 //quoteIdsList.add(qutrec.id);
             }
 
-            //Commented this based on requirements in BUIL - 3264 
+            // Commented this based on requirements in BUIL - 3264 
             // if(qutrec.buildertek__Status__c == 'Customer Accepted'){
             //     string email = qutrec.buildertek__Bill_To_Email_Address__c;
             //     if(email != null && email != ''){
@@ -238,8 +240,39 @@ public without sharing class QuoteTriggerHandler {
             //         System.debug('Email sent to '+email);
             //     }
             // }
+                     
+            if(adminSetting.size() > 0 && adminSetting[0].buildertek__Send_customer_Quote_after_signature__c == true){
+                if(qutrec.buildertek__Status__c == 'Customer Accepted'  && oldQuotesMap.get(qutrec.id).buildertek__Status__c != qutrec.buildertek__Status__c){
+                    string emailbody = '<html><body><h3>  Your Quote has been Accepted </h3>'  + '<br/>';
+                    emailbody += 'Quote Name : '+qutrec.Name+'<br/>';
+                    if(qutrec.buildertek__Customer_Account__c != null){
+                        emailbody += 'Customer Name : '+qutrec.buildertek__Customer_Account__r.Name+'<br/>';
+                    }
+                    if(qutrec.buildertek__Grand_Total__c != null){
+                        emailbody += 'Quote Amount : '+qutrec.buildertek__Grand_Total__c+'<br/>';
+                    }
+                    if(qutrec.OwnerId != null){
+                        emailbody += 'Quote Owner : '+qutrec.Owner.Name+'<br/></body></html>';
+                    }
+    
+                    string email = qutrec.OwnerId;
+                    System.debug('Jaimin : Owner is '+qutrec.OwnerId);
+                    if(email != null && email != ''){
+                        Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+                        mail.setToAddresses(new String[] {email});
+                        mail.setSenderDisplayName('Admin');
+                        mail.setSubject('Quote Accepted (Quote Id : '+qutrec.Id+')');
+                        mail.setHtmlBody(emailbody);
+                        Messaging.sendEmail(new Messaging.SingleEmailMessage[] {mail});
+                        System.debug('Email sent to '+email);
+                    }
+                }
 
+            }
+            
         }
+
+
         list<buildertek__Admin_Interface_Node_Configuration__c> adminInterfaceNodeConfigurations = [Select Id,
                                                                                                     buildertek__Quote_Configuration__c,buildertek__Update_the_Opp_Amount__c,
                                                                                                     buildertek__Default_Project_Owner__c,buildertek__Org_Base_URL__c
