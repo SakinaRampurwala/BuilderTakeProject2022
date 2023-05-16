@@ -243,6 +243,8 @@ public without sharing class QuoteTriggerHandler {
                      
             if(adminSetting.size() > 0 && adminSetting[0].buildertek__Send_customer_Quote_after_signature__c == true){
                 if(qutrec.buildertek__Status__c == 'Customer Accepted'  && oldQuotesMap.get(qutrec.id).buildertek__Status__c != qutrec.buildertek__Status__c){
+                    System.debug('Jaimin : Customer ID is '+qutrec.buildertek__Customer_Account__c);
+                    System.debug('Jaimin : Quote Owner is '+qutrec.OwnerId);
                     string emailbody = '<html><body><h3>  Your Quote has been Accepted </h3>'  + '<br/>';
                     emailbody += 'Quote Name : '+qutrec.Name+'<br/>';
                     if(qutrec.buildertek__Customer_Account__c != null){
@@ -271,6 +273,20 @@ public without sharing class QuoteTriggerHandler {
             }
             
         }
+
+        map<Id, list<string>> quoteIdToQuoteOwnerAndCustomerNameMap = new map<Id, list<string>>();
+        for(buildertek__Quote__c qutrec : updatedQuotes){
+            if(qutrec.buildertek__Status__c == 'Customer Accepted'  && oldQuotesMap.get(qutrec.id).buildertek__Status__c != qutrec.buildertek__Status__c){
+                quoteIdsList.add(qutrec.id);
+                list<string> quoteOwnerAndCustomerNameList = new list<string>();
+                quoteOwnerAndCustomerNameList.add(qutrec.Owner.Name);
+                if(qutrec.buildertek__Customer_Account__c != null){
+                    quoteOwnerAndCustomerNameList.add(qutrec.buildertek__Customer_Account__r.Name);
+                }
+                quoteIdToQuoteOwnerAndCustomerNameMap.put(qutrec.id, quoteOwnerAndCustomerNameList);
+            }
+        }
+        System.debug('Jaimin : quoteIdToQuoteOwnerAndCustomerNameMap is '+quoteIdToQuoteOwnerAndCustomerNameMap);
 
 
         list<buildertek__Admin_Interface_Node_Configuration__c> adminInterfaceNodeConfigurations = [Select Id,

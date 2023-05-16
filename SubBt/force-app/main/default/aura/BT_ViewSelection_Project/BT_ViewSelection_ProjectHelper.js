@@ -10,7 +10,6 @@
             var state = response.getState();
             if (state === "SUCCESS") {
                 var data = response.getReturnValue();
-                console.table('type of data '+typeof(data));
                 console.table('selection view data ',data);
                 debugger
                 //Change "related child records" key to "_children"
