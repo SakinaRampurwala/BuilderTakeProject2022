@@ -211,13 +211,14 @@ public without sharing class QuoteTriggerHandler {
     
     public void OnAfterUpdate(Quote__c[] oldQuotes, Quote__c[] updatedQuotes, Map<ID, Quote__c> QuotesMap, Map<Id, Quote__c> oldQuotesMap){
 
-        list<buildertek__Admin_Interface_Node_Configuration__c> adminSetting = [Select Id, Name , buildertek__Send_customer_Quote_after_signature__c from buildertek__Admin_Interface_Node_Configuration__c WHERE Name=:'Quote Configuration' limit 1];
+        // list<buildertek__Admin_Interface_Node_Configuration__c> adminSetting = [Select Id, Name , buildertek__Send_customer_Quote_after_signature__c from buildertek__Admin_Interface_Node_Configuration__c WHERE Name=:'Quote Configuration' limit 1];
         
         //Create Project from Quote Acceptance on Opportunity 
         set<Id> quoteoppoids = new set<Id>();
         set<Id> quoteIdsList = new set<Id>();
         decimal totalamount = 0;
         string quoteOwner = '';    
+        Map<Id, List<Id>> quoteIdToUserIdsMap = new Map<Id, List<Id>>();
         for(buildertek__Quote__c qutrec : updatedQuotes){
             if(qutrec.buildertek__Status__c == 'Customer Accepted' && qutrec.buildertek__Opportunity__c !=null && oldQuotesMap.get(qutrec.id).buildertek__Status__c != qutrec.buildertek__Status__c){
                 quoteoppoids.add(qutrec.buildertek__Opportunity__c);
@@ -240,53 +241,62 @@ public without sharing class QuoteTriggerHandler {
             //         System.debug('Email sent to '+email);
             //     }
             // }
-                     
-            if(adminSetting.size() > 0 && adminSetting[0].buildertek__Send_customer_Quote_after_signature__c == true){
-                if(qutrec.buildertek__Status__c == 'Customer Accepted'  && oldQuotesMap.get(qutrec.id).buildertek__Status__c != qutrec.buildertek__Status__c){
-                    System.debug('Jaimin : Customer ID is '+qutrec.buildertek__Customer_Account__c);
-                    System.debug('Jaimin : Quote Owner is '+qutrec.OwnerId);
-                    string emailbody = '<html><body><h3>  Your Quote has been Accepted </h3>'  + '<br/>';
-                    emailbody += 'Quote Name : '+qutrec.Name+'<br/>';
-                    if(qutrec.buildertek__Customer_Account__c != null){
-                        emailbody += 'Customer Name : '+qutrec.buildertek__Customer_Account__r.Name+'<br/>';
-                    }
-                    if(qutrec.buildertek__Grand_Total__c != null){
-                        emailbody += 'Quote Amount : '+qutrec.buildertek__Grand_Total__c+'<br/>';
-                    }
-                    if(qutrec.OwnerId != null){
-                        emailbody += 'Quote Owner : '+qutrec.Owner.Name+'<br/></body></html>';
-                    }
-    
-                    string email = qutrec.OwnerId;
-                    System.debug('Jaimin : Owner is '+qutrec.OwnerId);
-                    if(email != null && email != ''){
-                        Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
-                        mail.setToAddresses(new String[] {email});
-                        mail.setSenderDisplayName('Admin');
-                        mail.setSubject('Quote Accepted (Quote Id : '+qutrec.Id+')');
-                        mail.setHtmlBody(emailbody);
-                        Messaging.sendEmail(new Messaging.SingleEmailMessage[] {mail});
-                        System.debug('Email sent to '+email);
-                    }
-                }
+             
+            //added by Jaimin for CHB-34    
+            // if(qutrec.buildertek__Status__c == 'Customer Accepted' && oldQuotesMap.get(qutrec.id).buildertek__Status__c != qutrec.buildertek__Status__c){
+            //     quoteIdsList.add(qutrec.id);
+            //     List<Id> userIdsList = new List<Id>();
+            //     userIdsList.add(qutrec.buildertek__Customer_Account__c);
+            //     userIdsList.add(qutrec.OwnerId);
+            //     quoteIdToUserIdsMap.put(qutrec.id, userIdsList);
+            // }
+        }
 
-            }
+        //added by Jaimin for CHB-34
+        // Set<Id> ownerIdsSet = new Set<Id>();
+        // for(Id quoteId : quoteIdToUserIdsMap.keySet()){
+        //     List<Id> userIdsList = quoteIdToUserIdsMap.get(quoteId);
+        //     ownerIdsSet.add(userIdsList.get(1));
+        // }
+        // Set<Id> CustomerIdSet = new Set<Id>();
+        // for(Id quoteId : quoteIdToUserIdsMap.keySet()){
+        //     List<Id> userIdsList = quoteIdToUserIdsMap.get(quoteId);
+        //     CustomerIdSet.add(userIdsList.get(0));
+        // }    
+        // Map<Id, User> ownerMap = new Map<Id, User>([SELECT Id, Name FROM User WHERE Id IN :ownerIdsSet]);
+        // Map<Id, Account> CustomerMap = new Map<Id, Account>([SELECT Id, Name FROM Account WHERE Id IN :CustomerIdSet]);
+
+        // for(buildertek__Quote__c qutrec : updatedQuotes){
+        //     if(adminSetting.size() > 0 && adminSetting[0].buildertek__Send_customer_Quote_after_signature__c == true){
+        //         if(qutrec.buildertek__Status__c == 'Customer Accepted'  && oldQuotesMap.get(qutrec.id).buildertek__Status__c != qutrec.buildertek__Status__c){
+        //             string emailbody = '<html><body><h3>  Your Quote has been Accepted </h3><br/>';
+        //             emailbody += 'Quote Name : '+qutrec.Name+'<br/>';
+        //             if(qutrec.buildertek__Customer_Account__c != null){
+        //                 // emailbody += 'Customer Name : '+qutrec.buildertek__Customer_Account__r.Name+'<br/>';
+        //                 emailbody += 'Customer Name : '+CustomerMap.get(qutrec.buildertek__Customer_Account__c).Name+'<br/>';
+        //             }
+        //             if(qutrec.buildertek__Grand_Total__c != null){
+        //                 emailbody += 'Quote Amount : '+qutrec.buildertek__Grand_Total__c+'<br/>';
+        //             }
+        //             if(qutrec.OwnerId != null){
+        //                 // emailbody += 'Quote Owner : '+qutrec.Owner.Name+'<br/></body></html>';
+        //                 emailbody += 'Quote Owner : '+ownerMap.get(qutrec.OwnerId).Name+'<br/></body></html>';
+        //             }
             
-        }
-
-        map<Id, list<string>> quoteIdToQuoteOwnerAndCustomerNameMap = new map<Id, list<string>>();
-        for(buildertek__Quote__c qutrec : updatedQuotes){
-            if(qutrec.buildertek__Status__c == 'Customer Accepted'  && oldQuotesMap.get(qutrec.id).buildertek__Status__c != qutrec.buildertek__Status__c){
-                quoteIdsList.add(qutrec.id);
-                list<string> quoteOwnerAndCustomerNameList = new list<string>();
-                quoteOwnerAndCustomerNameList.add(qutrec.Owner.Name);
-                if(qutrec.buildertek__Customer_Account__c != null){
-                    quoteOwnerAndCustomerNameList.add(qutrec.buildertek__Customer_Account__r.Name);
-                }
-                quoteIdToQuoteOwnerAndCustomerNameMap.put(qutrec.id, quoteOwnerAndCustomerNameList);
-            }
-        }
-        System.debug('Jaimin : quoteIdToQuoteOwnerAndCustomerNameMap is '+quoteIdToQuoteOwnerAndCustomerNameMap);
+        //             string email = qutrec.OwnerId;
+        //             if(email != null && email != ''){
+        //                 Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+        //                 mail.setToAddresses(new String[] {email});
+        //                 mail.setSenderDisplayName('Admin');
+        //                 mail.setSubject('Quote Accepted (Quote Id : '+qutrec.Id+')');
+        //                 mail.setHtmlBody(emailbody);
+        //                 Messaging.sendEmail(new Messaging.SingleEmailMessage[] {mail});
+        //                 System.debug('Email sent to '+email);
+        //             }
+        //         }
+            
+        //     }
+        // }
 
 
         list<buildertek__Admin_Interface_Node_Configuration__c> adminInterfaceNodeConfigurations = [Select Id,
@@ -793,8 +803,7 @@ public without sharing class QuoteTriggerHandler {
         
     }
     
-    public void OnAfterDelete(Quote__c[] oldQuotes){
-        
+    public void OnAfterDelete(Quote__c[] oldQuotes){       
     }
     
 }
