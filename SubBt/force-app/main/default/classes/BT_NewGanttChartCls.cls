@@ -1,4 +1,21 @@
 public class BT_NewGanttChartCls{
+
+    //* getting settings from admin object for hidding column
+    @AuraEnabled
+    public static List<Boolean> getColumnSettings(){
+        List<buildertek__Admin_Interface_Node_Configuration__c> adminSettings = new List<buildertek__Admin_Interface_Node_Configuration__c>();
+        List<Boolean> BoolList = new List<Boolean>{true,true,true};
+
+        adminSettings = [Select Id, buildertek__Hide_Internal_Resource__c, buildertek__Hide_Contractor__c, buildertek__Hide_Contractor_Resource__c from buildertek__Admin_Interface_Node_Configuration__c WHERE Name=:'Schedule Configuration'];
+        if (adminSettings.size() > 0) {
+            BoolList[0] = adminSettings[0].buildertek__Hide_Internal_Resource__c;
+            BoolList[1] = adminSettings[0].buildertek__Hide_Contractor__c;
+            BoolList[2] = adminSettings[0].buildertek__Hide_Contractor_Resource__c;
+        }
+
+        return BoolList;
+    }
+
     @AuraEnabled
     public static buildertek__Schedule__c getProject(String recordId){
         buildertek__Schedule__c proj = [SELECT Id, Name, buildertek__Description__c, buildertek__Project__c, buildertek__Project__r.Name
@@ -16,7 +33,7 @@ public class BT_NewGanttChartCls{
     @AuraEnabled
     public static List<Holiday> getholidays(){
         List<Holiday> holidays = [Select StartTimeInMinutes,Name, ActivityDate
-				            From Holiday 
+				            From Holiday
 				            Limit 50000];
         return holidays;
     }
@@ -1039,6 +1056,16 @@ public class BT_NewGanttChartCls{
             return data;
         }
     }
+
+
+    //* store wbs value
+    @AuraEnabled
+    public static void setWBSValue(String scheduleItemMap){
+        System.debug('scheduleItemMap'+ scheduleItemMap);
+       
+    }
+
+
 
     // wrapper class
     public with sharing class customValueWrapper{

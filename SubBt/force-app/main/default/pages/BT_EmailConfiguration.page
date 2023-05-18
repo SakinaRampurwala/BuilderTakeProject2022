@@ -2,7 +2,7 @@
     <apex:slds />
     <apex:form >
         <apex:pageBlock mode="maindetail">
-            <apex:pageMessages />  
+            <apex:pageMessages />
             <apex:pageblocksection >
                 <apex:inputtext value="{!emailaddress}" label="Email Address" />
                 <center>
@@ -11,5 +11,4 @@
             </apex:pageblocksection>
         </apex:pageBlock>
     </apex:form>
-    <c:QuoteGroupFromBom relatedTo_id="a081K00000yiRqQQAU"/>
 </apex:page>

@@ -118,9 +118,11 @@ public class opportunityclosewon {
     
    @AuraEnabled
     public static String getadminvalue(){
+        System.debug('---getadminvalue---');
         buildertek__Admin_Interface_Node_Configuration__c adminInterfaceNodeConfigurations = [Select Id,buildertek__Assign_to_Existing_Project_on_Closed_Won__c
                                                                                               from buildertek__Admin_Interface_Node_Configuration__c
                                                                                               WHERE Name = :'Opportunity Configuration' AND buildertek__Assign_to_Existing_Project_on_Closed_Won__c !=false];
+                                                                                              System.debug('adminInterfaceNodeConfigurations-->'+adminInterfaceNodeConfigurations);
         if(adminInterfaceNodeConfigurations.buildertek__Assign_to_Existing_Project_on_Closed_Won__c == true){
             return 'success';
         }else{

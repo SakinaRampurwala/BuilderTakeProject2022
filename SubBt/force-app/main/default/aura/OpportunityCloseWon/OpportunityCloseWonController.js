@@ -1,6 +1,7 @@
 ({
    
     doInit : function(component, event, helper) {
+        console.log('Init');
          var pageNumber = component.get("v.PageNumber");
         var pageSize = component.get("v.pageSize");
         var projectName = component.get("v.searchProjectNameFilter");
@@ -8,10 +9,13 @@
        // var Address = component.get("v.searchAddressFilter");
        
         var action = component.get("c.getadminvalue"); 
+        console.log('action-->',action);
         action.setCallback(this, function(response) {
             var state = response.getState(); 
             var result = response.getReturnValue();
+            console.log('result-->',result);
             if (result == 'success'){
+                console.log('---Success--');
                 component.set("v.isadmin", true);
             }else{
                 component.set("v.isadmin", false);   

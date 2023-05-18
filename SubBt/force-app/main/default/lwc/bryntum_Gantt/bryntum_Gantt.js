@@ -53,6 +53,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
 
   //VARIABLE ADDED TO GET PHASE DATES - 09/10
   @api phaseDates = [];
+  @api mapOfWBSValue;
 
   @api scheduleItemsDataList;
   @api storeRes;

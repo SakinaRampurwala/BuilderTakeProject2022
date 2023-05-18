@@ -12,47 +12,47 @@
 ************************************************************************** */
 public with sharing class BT_FileUploadPageConfigurationController {
     public Boolean isError{get; set;}
-    
+
     public File_Upload_Page_Configuration__c uploadPageConfiguration {get;set;}             //Custom setting for configuration
-    
+
     public List<SelectOption> leftAvailableAdministrativeFields{get; set;}                             // List of available Grantees on left side.
     public List<SelectOption> rightAvailableAdministrativeFields{get; set;}                            // List of available Grantees on right side.
     public List<String> leftSelectedAdministrativeFields {get; set;}                                   // Selected Grantees from selft side
     public List<String> rightSelectedAdministrativeFields {get; set;}                                  // Selected Grantees from right side
-    
+
     public List<SelectOption> leftAvailableGrantees{get; set;}                             // List of available Grantees on left side.
     public List<SelectOption> rightAvailableGrantees{get; set;}                            // List of available Grantees on right side.
     public List<String> leftSelectedGrantees {get; set;}                                   // Selected Grantees from selft side
     public List<String> rightSelectedGrantees {get; set;}                                  // Selected Grantees from right side
-    
+
     public List<SelectOption> presignedURLFrequencyOptions {get; set;}
-    
+
     public Boolean isFileDownloadHistoryActivate{get; set;}
-    
+
     public BT_FileUploadPageConfigurationController() {
         isError = false;
         isFileDownloadHistoryActivate = BT_HomeUtils.getIsFileDownloadHistoryActivate();
-        
+
         // Intializing all lists
-        presignedURLFrequencyOptions = BT_Utils.getPickListValues(BT_Constants.OBJECT_TYPE_FILE, 'Presigned_URL_Frequency__c');
-        
+        presignedURLFrequencyOptions = BT_Utils.getPickListValues(BT_Constants.OBJECT_TYPE_FILE, 'buildertek__Presigned_URL_Frequency__c');
+
         leftAvailableGrantees = new List<SelectOption>();
         rightAvailableGrantees = new List<SelectOption>();
         leftSelectedGrantees = new List<String>();
         rightSelectedGrantees = new List<String>();
-        
+
         leftAvailableAdministrativeFields = new List<SelectOption>();
         rightAvailableAdministrativeFields = new List<SelectOption>();
         leftSelectedAdministrativeFields = new List<String>();
         rightSelectedAdministrativeFields = new List<String>();
-        
+
         leftAvailableGrantees = getAllGrantees();
-        
+
         leftAvailableAdministrativeFields = getAllAdministrativeFields();
-        
+
         // Get the confugration done for file upload
         uploadPageConfiguration  = File_Upload_Page_Configuration__c.getValues(BT_Constants.FILE_UPLOAD_CONFIGURATION);
-        
+
         // If configuration is not done means we have to create new configration so here we are initializing new configuration
         if(uploadPageConfiguration  == null){
             // Set the name to "Amazon S3"
@@ -69,21 +69,21 @@ public with sharing class BT_FileUploadPageConfigurationController {
         movingGranteesToRight();
         movingAdministrativeFieldsToRight();
     }
-    
+
     /*
     *   Purpose:    Initialize the controller
-    *   Parameters: 
-    *   UnitTests:  
+    *   Parameters:
+    *   UnitTests:
     */
     public void init(){
          try{
              User currentUser;
              if(Schema.sObjectType.User.fields.Id.isAccessible()
                 && Schema.sObjectType.Profile.fields.Name.isAccessible()){
-                
-                currentUser = [Select Id, Profile.Name From User Where Id = :UserInfo.getUserId() LIMIT 1];    
+
+                currentUser = [Select Id, Profile.Name From User Where Id = :UserInfo.getUserId() LIMIT 1];
              }
-             
+
             if(currentUser.Profile.Name != 'System Administrator'){
                 throw new BT_ApplicationException(System.Label.Page_Access_Error);
             }
@@ -93,60 +93,60 @@ public with sharing class BT_FileUploadPageConfigurationController {
             return;
         }
     }
-    
+
     /*
     *   Purpose:    Initialize the system configuration
-    *   Parameters: 
-    *   UnitTests:  
+    *   Parameters:
+    *   UnitTests:
     */
     public void initialize(){
         Map<String, File_Upload_Page_Configuration__c> fileUploadConfigurationMap = File_Upload_Page_Configuration__c.getAll();
-        
+
         File_Upload_Page_Configuration__c config = fileUploadConfigurationMap.get(BT_Constants.FILE_UPLOAD_CONFIGURATION);
         if(config == null){
              config  = new File_Upload_Page_Configuration__c(Name = BT_Constants.FILE_UPLOAD_CONFIGURATION);
         }
-        
+
         // Set Default configuration
         setDefaultConfiguration(config);
-        
+
         // Insert default config
         DMLManager.upsertAsUser(config);
-        
+
         uploadPageConfiguration = config;
-        
-        
+
+
         // Intializing all lists
         leftAvailableGrantees = new List<SelectOption>();
         rightAvailableGrantees = new List<SelectOption>();
         leftSelectedGrantees = new List<String>();
         rightSelectedGrantees = new List<String>();
-        
+
         leftAvailableAdministrativeFields = new List<SelectOption>();
         rightAvailableAdministrativeFields = new List<SelectOption>();
         leftSelectedAdministrativeFields = new List<String>();
         rightSelectedAdministrativeFields = new List<String>();
-        
-        
-        
+
+
+
         leftAvailableGrantees = getAllGrantees();
         movingGranteesToRight();
-        
+
         leftAvailableAdministrativeFields = getAllAdministrativeFields();
         movingAdministrativeFieldsToRight();
     }
-    
-    
+
+
     /**************************************************************************
-       Purpose: Prepare the select option for Salesforce Access Type field. 
-       Parameters: 
-       Returns: 
-       Throws [Exceptions]: 
+       Purpose: Prepare the select option for Salesforce Access Type field.
+       Parameters:
+       Returns:
+       Throws [Exceptions]:
     ****************************************************************************/
     public static List<SelectOption> getSalesforceAccessTypePickListValue(){
         Schema.sObjectType sobjectType = File__c.getSObjectType();
         Schema.DescribeSObjectResult sobjectDescribe = sobjectType.getDescribe();
-        Map<String, Schema.SObjectField> fieldsMap = sobjectDescribe.fields.getMap();  
+        Map<String, Schema.SObjectField> fieldsMap = sobjectDescribe.fields.getMap();
         List<Schema.PicklistEntry> pickListValues;
         if(fieldsMap.containsKey('Access_Type__c')){
             pickListValues = fieldsMap.get('Access_Type__c').getDescribe().getPickListValues();
@@ -160,22 +160,22 @@ public with sharing class BT_FileUploadPageConfigurationController {
         }
 
     }
-    
+
     /**************************************************************************
-       Purpose: Retrieve the fieldset member list of file fieldset 
+       Purpose: Retrieve the fieldset member list of file fieldset
        Parameters:
        Returns: List of FieldSetMember
-       Throws [Exceptions]: 
+       Throws [Exceptions]:
     ****************************************************************************/
     public static List<Schema.FieldSetMember> fileAdministrativeFields() {
         List<Schema.FieldSetMember> fields = BT_Utils.getFieldSetMembers(BT_Utils.getNamespacePrefix()+'File_Fields_For_Upload_Page',BT_Constants.OBJECT_TYPE_FILE);
         return fields;
     }
-    
+
     /*
     *   Purpose:    Set Default configuration as per selected configuartion type
-    *   Parameters: 
-    *   UnitTests:  
+    *   Parameters:
+    *   UnitTests:
     */
     private void setDefaultConfiguration(File_Upload_Page_Configuration__c config){
         String nameSpacePrefix = BT_Utils.getNamespacePrefix();
@@ -188,11 +188,11 @@ public with sharing class BT_FileUploadPageConfigurationController {
         config.Default_Grantees_for_Private_Files__c = '';
         config.File_Administrative_Fields__c = nameSpacePrefix+'Access_Type__c,'+nameSpacePrefix+'Public_On_Amazon__c,'+nameSpacePrefix+'Allow_to_Copy_Move__c,'+nameSpacePrefix+'Allow_to_Download_by_Presigned_URL__c,'+nameSpacePrefix+'Track_Download_History__c';
     }
-    
+
     /*
     *   Purpose:    Get all administrative fields to available to display on file upload
-    *   Parameters: 
-    *   UnitTests:  
+    *   Parameters:
+    *   UnitTests:
     */
     public List<SelectOption> getAllAdministrativeFields(){
         List<SelectOption> allAdministrativeFields = new List<SelectOption>();
@@ -201,11 +201,11 @@ public with sharing class BT_FileUploadPageConfigurationController {
         }
         return allAdministrativeFields;
     }
-    
+
     /*
     *   Purpose:    Get all fields to available to display on file explorer page
-    *   Parameters: 
-    *   UnitTests:  
+    *   Parameters:
+    *   UnitTests:
     */
     public List<SelectOption> getAllGrantees(){
         List<SelectOption> allGrantees = new List<SelectOption>();
@@ -214,55 +214,55 @@ public with sharing class BT_FileUploadPageConfigurationController {
         }
         return allGrantees;
     }
-    
+
     /*
     *   Executed:   On click of "<"
     *   Purpose:    When administrative fields will be moved to left this method will be used
-    *   Parameters: 
-    *   UnitTests:  
+    *   Parameters:
+    *   UnitTests:
     */
     public void movingAdministrativeFieldsToLeft(){
         rightAvailableAdministrativeFields = BT_Utils.movingSelectOptionsToLeft(rightAvailableAdministrativeFields, rightSelectedAdministrativeFields, leftAvailableAdministrativeFields);
-    } 
-    
+    }
+
     /*
     *   Executed:   On click of ">"
     *   Purpose:    When administrative fields will be moved to right this method will be used
-    *   Parameters: 
-    *   UnitTests:  
+    *   Parameters:
+    *   UnitTests:
     */
     public void movingAdministrativeFieldsToRight(){
         leftAvailableAdministrativeFields = BT_Utils.movingSelectOptionsToRight(leftAvailableAdministrativeFields, leftSelectedAdministrativeFields, rightAvailableAdministrativeFields);
     }
-    
+
     /*
     *   Executed:   On click of "<"
     *   Purpose:    When grantees will be moved to left this method will be used
-    *   Parameters: 
-    *   UnitTests:  
+    *   Parameters:
+    *   UnitTests:
     */
     public void movingGranteesToLeft(){
         rightAvailableGrantees = BT_Utils.movingSelectOptionsToLeft(rightAvailableGrantees, rightSelectedGrantees, leftAvailableGrantees );
-    } 
-    
+    }
+
     /*
     *   Executed:   On click of ">"
     *   Purpose:    When grantees will be moved to right this method will be used
-    *   Parameters: 
-    *   UnitTests:  
+    *   Parameters:
+    *   UnitTests:
     */
     public void movingGranteesToRight(){
         leftAvailableGrantees = BT_Utils.movingSelectOptionsToRight(leftAvailableGrantees, leftSelectedGrantees, rightAvailableGrantees );
     }
-    
+
     /*
     *   Executed:   On click of "Save"
     *   Purpose:    Save the selected buckets and configuration
-    *   Parameters: 
-    *   UnitTests:  
+    *   Parameters:
+    *   UnitTests:
     */
     public pageReference Save() {
-        
+
         String grantees = '';
         if(rightAvailableGrantees != null && !rightAvailableGrantees.isEmpty()){
             for(SelectOption rightAvailableGrantee : rightAvailableGrantees){
@@ -274,7 +274,7 @@ public with sharing class BT_FileUploadPageConfigurationController {
             }
         }
         uploadPageConfiguration.Default_Grantees_for_Private_Files__c = grantees;
-        
+
         String administrativeFields = '';
         if(rightAvailableAdministrativeFields != null && !rightAvailableAdministrativeFields.isEmpty()){
             for(SelectOption rightAvailableAdministrativeField : rightAvailableAdministrativeFields){
@@ -286,7 +286,7 @@ public with sharing class BT_FileUploadPageConfigurationController {
             }
         }
         uploadPageConfiguration.File_Administrative_Fields__c = administrativeFields;
-        
+
         try{
             DMLManager.upsertAsUser(uploadPageConfiguration);
         } catch(Exception ex){
@@ -296,15 +296,15 @@ public with sharing class BT_FileUploadPageConfigurationController {
         }
         return null;
     }
-    
+
     /*
     *   Executed:   On click of "Cancel"
     *   Purpose:    User will be redirected to home page
-    *   Parameters: 
-    *   UnitTests:  
+    *   Parameters:
+    *   UnitTests:
     */
     public pageReference Cancel() {
-        return new pageReference('/home/home.jsp');    
+        return new pageReference('/home/home.jsp');
     }
 
 }
