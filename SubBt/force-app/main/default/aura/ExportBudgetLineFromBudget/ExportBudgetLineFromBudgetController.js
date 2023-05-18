@@ -20,6 +20,8 @@
         });
         $A.enqueueAction(action);
 
+
+
     },
     changeFileName: function(component, event, helper) {
         var getValue= event.getSource().get('v.value');
@@ -30,8 +32,28 @@
         console.log('**EXPORT DATA**');
         var fileName=component.get('v.fileName');
 
+        var columns= [ "Name" , "buildertek__Unit_Price__c", "buildertek__Product_Name__c", "buildertek__Quantity__c", "buildertek__Markup__c"," buildertek__Tax__c", "buildertek__Group_Name__c"];
+        var budggetLineList=component.get('v.budgetLineList');
+        const jsonArray= budggetLineList.map(function(item){
+            var obj={};
+            columns.forEach(function(column){
+                console.log(item.hasOwnProperty(column));
+                console.log(column);
+
+                if(item.hasOwnProperty(column)){
+                    obj[column]=item[column];
+                }else{
+                    obj[column]=null;
+                }
+            });
+            console.log(obj);
+            return obj;
+        });
+        console.log(jsonArray);
+
+
         var csvContent = "data:text/csv;charset=utf-8,";
-        var jsonArray= component.get('v.budgetLineList');
+        // var jsonArray= component.get('v.budgetLineList');
         console.log({jsonArray});
         if(jsonArray.length > 0){
             var headers = Object.keys(jsonArray[0]).join(",");
@@ -67,5 +89,3 @@
     },
     
 })
-
-

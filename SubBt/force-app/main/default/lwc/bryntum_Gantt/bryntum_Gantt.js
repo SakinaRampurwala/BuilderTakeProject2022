@@ -1646,7 +1646,11 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
   createGantt() {
     try {
       console.log('createGantt');
+      console.log(this.GanttVar);
       var GanttToolbar;
+      
+
+
       var loc = window.location.href;
       var domName = loc.split(".lightning.force.com")[0].split("https://")[1];
       if (domName == "viewinc--bees" || domName == "viewinc") {
@@ -1817,8 +1821,9 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
         minHeight: "80em",
         viewPreset: "weekAndDayLetter",
         dependencyIdField: "sequenceNumber",
-        //dependencyIdField: "wbsCode",
-        columns: [{
+        // dependencyIdField: "wbsCode",
+        columns: [
+          {
             type: "wbs",
             editor: false,
           },

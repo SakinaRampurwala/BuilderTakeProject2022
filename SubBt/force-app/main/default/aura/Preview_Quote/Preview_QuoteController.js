@@ -137,6 +137,8 @@
         cc.forEach(function(v) {
             ccIds.push(v.Id)
         });
+        console.log('toIds', toIds);
+        console.log('ccIds', ccIds);
         debugger;
         if (toIds.length != 0 || emailIds.length != 0) {
             var action = component.get("c.sendProposal");
