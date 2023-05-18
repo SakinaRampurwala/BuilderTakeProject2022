@@ -13,16 +13,12 @@
             var state= response.getState();
             console.log({state});
             if(state == 'SUCCESS'){
-
                 component.set('v.budgetLineList' , result);
             }
-
         });
         $A.enqueueAction(action);
-
-
-
     },
+
     changeFileName: function(component, event, helper) {
         var getValue= event.getSource().get('v.value');
         component.set('v.fileName', getValue);
@@ -37,24 +33,23 @@
         const jsonArray= budggetLineList.map(function(item){
             var obj={};
             columns.forEach(function(column){
-                console.log(item.hasOwnProperty(column));
-                console.log(column);
-
                 if(item.hasOwnProperty(column)){
-                    obj[column]=item[column];
+                    if (typeof item[column] === 'string') {
+                        obj[column]=item[column].replace(/[#,]/g , ';');
+                    }else{
+
+                        obj[column]=item[column];
+                    }
+
                 }else{
                     obj[column]=null;
                 }
             });
-            console.log(obj);
             return obj;
         });
-        console.log(jsonArray);
 
 
         var csvContent = "data:text/csv;charset=utf-8,";
-        // var jsonArray= component.get('v.budgetLineList');
-        console.log({jsonArray});
         if(jsonArray.length > 0){
             var headers = Object.keys(jsonArray[0]).join(",");
             csvContent += headers + "\n";
