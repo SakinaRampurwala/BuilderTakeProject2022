@@ -9,15 +9,17 @@
                 var pageSize = component.get("v.pageSize");
                 var result = response.getReturnValue();
                 console.log({result});
-                console.log(result);
+                let curr = result[0].masterBudgetRecord.CurrencyIsoCode;
+                console.log(curr);
                 component.set("v.masterBudgetsList", result);
                 component.set("v.totalRecords", component.get("v.masterBudgetsList").length);
                 component.set("v.startPage",0);
+                component.set("v.dynamicCurrencyCode",curr);
                 component.set("v.endPage",pageSize-1);
                 var PaginationList = [];
                 for(var i=0; i< pageSize; i++){
                     if(component.get("v.masterBudgetsList").length> i)
-                        PaginationList.push(result[i]);    
+                        PaginationList.push(result[i]);
                 }
                 //alert('PaginationList Length ------> '+PaginationList.length);
                 component.set('v.PaginationList', PaginationList);
@@ -26,9 +28,9 @@
         });
 	    $A.enqueueAction(action);
 	},
-	
+
 	handleCheck : function(component, event, helper) {
-        var checkbox = event.getSource();  
+        var checkbox = event.getSource();
         var Submittals = component.get("v.masterBudgetsList");
 	    /*for(var i=0 ; i < Submittals.length;i++){
 	        console.log('=========> ',i +' '+ Submittals.length);
@@ -46,7 +48,7 @@
 	             component.find("checkContractors").set("v.value", false);
 	        }
 	    }*/
-	    
+
 	    for(var i=0 ; i < Submittals.length;i++){
 	        if(Submittals[i].budgetRecord != null){
 	            if(Submittals[i].budgetRecord.Id == checkbox.get("v.text") && Submittals[i].budgetCheck == false){
@@ -54,78 +56,78 @@
     	        }
     	        else if(Submittals[i].budgetRecord.Id == checkbox.get("v.text") && Submittals[i].budgetCheck == true){
     	             Submittals[i].budgetCheck = false;
-    	        }    
+    	        }
 	        }else if(Submittals[i].masterBudgetRecord != null){
 	            if(Submittals[i].masterBudgetRecord.Id == checkbox.get("v.text") && Submittals[i].budgetCheck == false){
     	            Submittals[i].budgetCheck = true;
     	        }
     	        else if(Submittals[i].masterBudgetRecord.Id == checkbox.get("v.text") && Submittals[i].budgetCheck == true){
     	             Submittals[i].budgetCheck = false;
-    	        }    
+    	        }
 	        }
-	        
+
 	    }
     },
-    
-    selectAll : function(component, event, helper) {        
-        var selectedHeaderCheck = event.getSource().get("v.value"); 
+
+    selectAll : function(component, event, helper) {
+        var selectedHeaderCheck = event.getSource().get("v.value");
 		var Submittals = component.get("v.masterBudgetsList");
-        var getAllId = component.find("checkContractor"); 
+        var getAllId = component.find("checkContractor");
         if(Submittals != null){
             if(Submittals.length > 1){
                 if(! Array.isArray(getAllId)){
-                   if(selectedHeaderCheck == true){ 
-                      component.find("checkContractor").set("v.value", true); 
+                   if(selectedHeaderCheck == true){
+                      component.find("checkContractor").set("v.value", true);
                    }else{
                        component.find("checkContractor").set("v.value", false);
                    }
                 }
-                else{ 
+                else{
                     if (selectedHeaderCheck == true) {
                         for (var i = 0; i < getAllId.length; i++) {
-        					component.find("checkContractor")[i].set("v.value", true); 
-        					var checkbox = component.find("checkContractor")[i].get("v.text");  
+        					component.find("checkContractor")[i].set("v.value", true);
+        					var checkbox = component.find("checkContractor")[i].get("v.text");
                     	        Submittals[i].budgetCheck = true;
-                    	    
+
                         }
-                    } 
+                    }
                     else{
                         for (var i = 0; i < getAllId.length; i++) {
-            				component.find("checkContractor")[i].set("v.value", false); 
-            				
-            				var checkbox = component.find("checkContractor")[i].get("v.text"); 
+            				component.find("checkContractor")[i].set("v.value", false);
+
+            				var checkbox = component.find("checkContractor")[i].get("v.text");
             				var Submittals = component.get("v.masterBudgetsList");
             	                Submittals[i].budgetCheck = false;
                        }
-                   } 
-                } 
+                   }
+                }
             }
             else{
                 var i=0;
                     if (selectedHeaderCheck == true) {
-                        	component.find("checkContractor").set("v.value", true); 
-        					var checkbox = component.find("checkContractor").get("v.text");  
+                        	component.find("checkContractor").set("v.value", true);
+        					var checkbox = component.find("checkContractor").get("v.text");
                     	        Submittals[i].budgetCheck = true;
-                    	    
-                        
-                    } 
+
+
+                    }
                     else{
-                       		component.find("checkContractor").set("v.value", false); 
-            				
-            				var checkbox = component.find("checkContractor").get("v.text"); 
+                       		component.find("checkContractor").set("v.value", false);
+
+            				var checkbox = component.find("checkContractor").get("v.text");
             				var Submittals = component.get("v.masterBudgetsList");
             	                Submittals[i].budgetCheck = false;
-                       
-                   } 
+
+                   }
             }
         }
-     
+
     },
-	
+
 	closeModel : function(component, event, helper){
-	    $A.get("e.force:closeQuickAction").fire();    
+	    $A.get("e.force:closeQuickAction").fire();
 	},
-	
+
 	importBudget : function(component, event, helper){
 	    component.set("v.Spinner", true);
 	    var budgetsList = component.get("v.masterBudgetsList");
@@ -133,17 +135,17 @@
 	    var budgetIds = [];
 	    for(var i=0 ; i < budgetsList.length;i++){
 	        //alert('quoteCheck -------> '+quotesList[i].quoteCheck);
-	        
+
 	        if(budgetsList[i].budgetCheck == true){
 	            if(budgetsList[i].masterBudgetRecord != null){
-	                budgetIds.push(budgetsList[i].masterBudgetRecord.Id);    
+	                budgetIds.push(budgetsList[i].masterBudgetRecord.Id);
 	            }else if(budgetsList[i].budgetRecord != null){
-	                budgetIds.push(budgetsList[i].budgetRecord.Id);    
+	                budgetIds.push(budgetsList[i].budgetRecord.Id);
 	            }
 	        }
 	    }
 	    if(budgetIds.length > 0){
-	        var action = component.get("c.importMasterBudgetLines");  
+	        var action = component.get("c.importMasterBudgetLines");
 	        action.setParams({
 	            budgetIds : budgetIds,
 	            recordId : component.get("v.recordId")
@@ -151,7 +153,7 @@
 	        action.setCallback(this, function(response){
 	            var state = response.getState();
 	            if(state === "SUCCESS"){
-	                var result = response.getReturnValue();  
+	                var result = response.getReturnValue();
 	                if(result.Status === 'Success'){
 	                    var toastEvent = $A.get("e.force:showToast");
                         toastEvent.setParams({
@@ -159,12 +161,12 @@
                             "message": result.Message,
                             "type": 'Success'
                         });
-                        toastEvent.fire(); 
+                        toastEvent.fire();
                         component.set("v.Spinner", false);
-                        $A.get("e.force:closeQuickAction").fire();  
+                        $A.get("e.force:closeQuickAction").fire();
                         window.setTimeout(
                             $A.getCallback(function() {
-                                document.location.reload(true);    
+                                document.location.reload(true);
                             }), 1000
                         );
 	                }else{
@@ -175,7 +177,7 @@
                             "message": result.Message,
                             "type": 'Error'
                         });
-                        toastEvent.fire();    
+                        toastEvent.fire();
 	                }
 	            }
 	        });
@@ -189,11 +191,11 @@
                 "type": 'Error',
                 "duration": '10000',
 				"mode": 'dismissible'
-            });    
+            });
               toastEvent.fire();
 	    }
 	},
-	
+
 	next: function (component, event, helper) {
         var sObjectList = component.get("v.masterBudgetsList");
         var end = component.get("v.endPage");
@@ -214,7 +216,7 @@
         component.set('v.PaginationList', Paginationlist);
     },
     previous: function (component, event, helper) {
-        var sObjectList = component.get("v.masterBudgetsList"); 
+        var sObjectList = component.get("v.masterBudgetsList");
         var end = component.get("v.endPage");
         var start = component.get("v.startPage");
         var pageSize = component.get("v.pageSize");

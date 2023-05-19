@@ -1,19 +1,20 @@
 <aura:component controller="ImportmasterBudgetClass" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader" access="global">
     <aura:attribute name="masterBudgetsList" type="object" />
     <aura:attribute name="Spinner" type="Boolean" />
-    
+
     <!-- Attribute Declration For Pagination -->
-    
+
     <aura:attribute name="PaginationList" type="Object"/>
     <aura:attribute name="startPage" type="Integer" />
     <aura:attribute name="endPage" type="Integer"/>
     <aura:attribute name="totalRecords" type="Integer"/>
     <aura:attribute name="pageSize" type="Integer" default="10"/>
-    
+    <aura:attribute name="dynamicCurrencyCode" type="String" default="USD"/>
+
     <!-- Attribute Declration For Pagination End-->
-    
-    <aura:handler name="init" value="{!this}" action="{!c.doInit}" /> 
-    <ltng:require styles="{!$Resource.MOdalPreviewWidth72}"/> 
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <ltng:require styles="{!$Resource.MOdalPreviewWidth72}"/>
     <div class="slds-modal__header" style="font-size:17px;">
         Import Master Budgets
     </div>
@@ -23,7 +24,7 @@
     		    <thead>
     				<tr class="slds-text-title_caps">
     					<th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white; border-top-left-radius:5px;vertical-align: top;line-height: 2;width: 30px !important;">
-    				        <ui:inputCheckbox aura:id="checkContractors" change="{!c.selectAll}" />		
+    				        <ui:inputCheckbox aura:id="checkContractors" change="{!c.selectAll}" />
     					</th>
     					<th  style="background-color:rgba(27, 82, 151, 1.0); color:white;vertical-align: top;line-height: 2;">
     						Title
@@ -46,9 +47,9 @@
     			                <td width="3%">
         			                <ui:inputCheckbox aura:id="checkContractor" value="{rec.budgetCheck}" text="{!rec.masterBudgetRecord.Id}" change="{!c.handleCheck}" />
         			            <!--    <lightning:input aura:id="quoteselection" type="checkbox" value="{!rec.quoteCheck}" text="{!rec.quoteRecord.Id}" onclick="{!c.uncheckAll}" style="cursor: pointer !important;"/>-->
-        			            </td> 
+        			            </td>
         			            <td width="50%" role="gridcell">
-        			                <ui:outputText value="{!rec.masterBudgetRecord.Name}" />  
+        			                <ui:outputText value="{!rec.masterBudgetRecord.Name}" />
         			            </td>
         			            <td width="30%" role="gridcell">
         			             <span style="padding-left:98px">   <ui:outputText value="{!rec.masterBudgetRecord.buildertek__Project__r.Name}" />  </span>
@@ -57,36 +58,36 @@
                                     <span style="padding-left:106px"> <ui:outputText value="{!rec.masterBudgetRecord.buildertek__Type__c}" />  </span>
         			            </td>
                                  <td width="20%" role="gridcell">
-                                     <span style="padding-left:45px">  <lightning:formattedNumber value="{!rec.masterBudgetRecord.buildertek__Original_Budget__c}" style="currency" currencyCode="USD" currencyDisplayAs="code"/></span>
+                                     <span style="padding-left:45px">  <lightning:formattedNumber value="{!rec.masterBudgetRecord.buildertek__Original_Budget__c}" style="currency" currencyCode="{!v.dynamicCurrencyCode}" currencyDisplayAs="code"/></span>
         			            </td>
         						<aura:set attribute="else">
-        						    <td> 
+        						    <td>
             			                <ui:inputCheckbox aura:id="checkContractor" value="{rec.budgetCheck}" text="{!rec.budgetRecord.Id}" change="{!c.handleCheck}" />
             			            <!--    <lightning:input aura:id="quoteselection" type="checkbox" value="{!rec.quoteCheck}" text="{!rec.quoteRecord.Id}" onclick="{!c.uncheckAll}" style="cursor: pointer !important;"/>-->
-            			            </td> 
+            			            </td>
             			            <td role="gridcell">
-            			                <ui:outputText value="{!rec.budgetRecord.Name}" />  
+            			                <ui:outputText value="{!rec.budgetRecord.Name}" />
             			            </td>
             			            <td role="gridcell">
                                         <span style="padding-left:98px">  <ui:outputText value="{!rec.budgetRecord.buildertek__Project__r.Name}" />  </span>
             			            </td>
             			            <td role="gridcell">
                                         <span style="padding-left:106px">   <ui:outputText value="{!rec.budgetRecord.buildertek__Type__c}" />  </span>
-            			            </td>   
+            			            </td>
                                      <td role="gridcell">
-                                         <span style="padding-left:45px">  <lightning:formattedNumber value="{!rec.budgetRecord.buildertek__Original_Budget__c}" style="currency" currencyCode="USD" currencyDisplayAs="code"/></span>
+                                         <span style="padding-left:45px">  <lightning:formattedNumber value="{!rec.budgetRecord.buildertek__Original_Budget__c}" style="currency" currencyCode="{!v.dynamicCurrencyCode}" currencyDisplayAs="code"/></span>
 
-            			            </td>   
+            			            </td>
         						</aura:set>
     			            </aura:if>
-    			            
+
     			        </tr>
     			    </aura:iteration>
     			</tbody>
     		</table>
     		<br/>
-          
-        </div> 
+
+        </div>
         <aura:if isTrue="{!v.Spinner}">
             <div aura:id="spinnerId" class="slds-spinner_container">
                <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
@@ -104,11 +105,11 @@
         <div class="slds-clearfix">
             <div class="slds-float_left">
                 <lightning:buttonGroup >
-                    <lightning:button label="Previous" disabled="{!v.startPage == 0}"  
+                    <lightning:button label="Previous" disabled="{!v.startPage == 0}"
                                       onclick="{!c.previous}" variant="brand"
                                       iconName='utility:back' class="BorderRadius"/>
                     &nbsp; &nbsp; &nbsp;
-                    <lightning:button label="Next" disabled="{!v.endPage >= v.totalRecords}" 
+                    <lightning:button label="Next" disabled="{!v.endPage >= v.totalRecords}"
                                       onclick="{!c.next}" variant="brand"
                                       iconName='utility:forward' iconPosition='right'  class="BorderRadius"/>
                 </lightning:buttonGroup>            </div>
@@ -116,7 +117,7 @@
                 <button class="slds-button slds-button--neutral" onclick="{!c.closeModel}" >Cancel</button>
                 <button class="slds-button slds-button--brand" onclick="{!c.importBudget}">Import Master Budget</button>            </div>
         </div>
-        
-        
+
+
     </div>
 </aura:component>
