@@ -45,10 +45,13 @@
                 component.set("v.Spinner", false);
                 if (response.getState() == 'SUCCESS' && response.getReturnValue()) {
                     var objName = response.getReturnValue();
+                    console.log('objName '+objName);
                     if(objName == 'buildertek__Project__c'){
                         component.set("v.parentprojectRecordId", parentRecordId);
+                    } if(objName == 'Opportunity'){
+                        component.set("v.parentOppRecordId", parentRecordId);
                     }
-                } 
+                }
             });
             $A.enqueueAction(action);
         }
@@ -75,7 +78,7 @@
 
     handleSubmit : function(component, event, helper) {
         console.log('handleSubmit');
-        event.preventDefault();  
+        event.preventDefault();
         var fields = event.getParam('fields');
         console.log('fields: ' + JSON.stringify(fields));
         var data = JSON.stringify(fields);
@@ -93,7 +96,7 @@
                 console.log(response.getReturnValue());
                 var recordId = response.getReturnValue();
                 console.log('recordId-->>',{recordId});
-                
+
                 var toastEvent = $A.get("e.force:showToast");
                 toastEvent.setParams({
                     "type": "Success",

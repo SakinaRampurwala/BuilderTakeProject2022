@@ -1,0 +1,64 @@
+<apex:component controller="QuoteSummaryController" access="global">
+
+    <!-- <apex:attribute name="QuoteLineRecordList" type="buildertek__Quote_Item__c[]" description="Quote Line Record List" access="global"/> -->
+    <!-- <apex:attribute name="quoteId" type="id" assignTo="{!relatedTo}" description="RelatedTo"/> -->
+    <apex:attribute type="id" name="relatedTo_id" assignTo="{!relatedToId}" description="RelatedTo" />
+    
+    <!-- {!quote.Name}
+    {!quote.Id} -->
+    <!-- {!QuoteLineRecordList[0].Id} -->
+    <!-- {!QuoteLineRecordList[0].buildertek__Quantity__c} -->
+    <!-- {!QuoteLineRecordList[0].buildertek__Description__c} -->
+    <!-- {!QuoteLineRecordList[0].buildertek__Unit_Cost__c}
+    {!QuoteLineRecordList[0].buildertek__Total_Cost__c} -->
+    <!-- {!QuoteLineRecordList[1].Id}
+    {!QuoteLineRecordList[1].buildertek__Quantity__c} -->
+
+    <table style="width: 100%;text-align: left;border-spacing: 0;">
+        <tr style="background:lightgrey;">
+            <th colspan="1" style="width:29%; font-weight:800; color:black;">Service</th>
+            <th colspan="1" style="width:35%; font-weight:800; color:black;">Description</th>
+            <th colspan="1" style="width:12%; font-weight:800; color:black;">Price</th>
+            <th colspan="1" style="width:12%; font-weight:800; color:black;">Qty</th>
+            <th colspan="1" style="width:12%; font-weight:800; color:black;">Total</th>
+        </tr>
+        
+        <apex:repeat value="{!QuoteLineRecordList}" var="QuoteLineRecord">
+            <tr style="background:lightsteelblue;">
+                <!-- <td colspan="1" style="width:29%; font-size: 14px; padding: 5px 15px 5px 0px; color:white; text-align: left; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);"></td> -->
+                <td colspan="1" style="color:black">{!QuoteLineRecord.buildertek__BL_SERVICE_CATEGORY__c}</td>
+                <td colspan="1" style="color:black">{!QuoteLineRecord.buildertek__Description__c}</td>
+                <td colspan="1" style="color:black">{!QuoteLineRecord.buildertek__Quantity__c}</td>
+                <td><apex:outputText value="{0, number, ###,###,###,###,##0.00} (USD)"><apex:param value="{!QuoteLineRecord.Unit_Cost__c}" /></apex:outputText></td>
+                <td><apex:outputText value="{0, number, ###,###,###,###,##0.00} (USD)"><apex:param value="{!QuoteLineRecord.Total_Cost__c}"/></apex:outputText></td>
+                <!-- <td colspan="1" style="color:black">{!QuoteLineRecord.Unit_Cost__c}</td> -->
+                <!-- <td colspan="1" style="color:black">{!QuoteLineRecord.Total_Cost__c}</td> -->
+            </tr>
+        </apex:repeat>
+        <!-- <apex:dataTable value="{!QuoteLineRecordList}" var="quoteLine">
+            <apex:column headerValue="Id" value="{!quoteLine.Id}"/>
+            <apex:column headerValue="Quantity" value="{!quoteLine.buildertek__Description__c}"/>
+            <apex:column headerValue="Quantity" value="{!quoteLine.buildertek__Quantity__c}"/>
+            <apex:column headerValue="Unit Cost" value="{!quoteLine.buildertek__Unit_Cost__c}"/>
+            <apex:column headerValue="Total Cost" value="{!quoteLine.buildertek__Total_Cost__c}"/>
+            <apex:column headerValue="Quote" value="{!quoteLine.buildertek__Quote__c}"/>
+        </apex:dataTable> -->
+        <!-- <tr>
+            <th colspan="1" style="width:29%; font-size: 14px; padding: 5px 15px 5px 0px; color:white; text-align: left; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);">
+                {!relatedTo.buildertek__Service_Request__c}
+            </th>
+            <th colspan="1" style="width:35%; font-size: 14px; padding: 5px 15px 5px 0px; color:white; text-align: left; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);">
+                {!relatedTo.buildertek__Product__c}
+            </th>
+            <th colspan="1" style="width:12%; font-size: 14px; padding: 5px 15px 5px 0px; color:white; text-align: left; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);">
+                {!relatedTo.buildertek__Unit_Price__c}
+            </th>
+            <th colspan="1" style="width:12%; font-size: 14px; padding: 5px 15px 5px 0px; color:white; text-align: left; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);">
+                {!relatedTo.buildertek__Total_Quotes__c}
+            </th>
+            <th colspan="1" style="width:12%; font-size: 14px; padding: 5px 15px 5px 0px; color:white; text-align: left; border-bottom: 1px solid #ccc; background-color: rgb(27 82 151);">
+                {!relatedTo.buildertek__Total_Customer_Quote_Amount__c}
+            </th>
+        </tr> -->
+    </table> 
+</apex:component>

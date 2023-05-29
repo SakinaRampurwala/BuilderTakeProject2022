@@ -778,7 +778,7 @@ public with sharing class BT_Utils{
      Throws [Exceptions]:
      ****************************************************************************/
     public static String getFieldAPINamesUsingType(String strObjectName, String strFieldType, Boolean blnIsHtmlFormatted){
-        if (strObjectName != null && strObjectName.trim() != '' && strFieldType != null && strFieldType.trim() != '' && 
+        if (strObjectName != null && strObjectName.trim() != '' && strFieldType != null && strFieldType.trim() != '' &&
                         Schema.getGlobalDescribe().get(strObjectName) != null){
 
             String strFieldAPINames = '';
@@ -1144,12 +1144,12 @@ public with sharing class BT_Utils{
             Map<String,SObject> projectTaskMap = new Map<String,SObject>();
 
             List<sObject> cloneChildRec= new List<sObject>();
-            
+
 
             for (Sobject sobj : sobjList){
 
                 System.debug('sobj ==> '+sobj);
-                
+
                 if (sobj.get(parentFieldApiName) != null){
                     for (Id parentId : cloneSObjList.keyset()){
                         if (sobj.get(parentFieldApiName) == parentId){
@@ -1225,7 +1225,7 @@ public with sharing class BT_Utils{
                     // insert projectTaskMap.values();
                     Database.SaveResult[] saveResultList = Database.insert (projectTaskMap.values(), false);
                 }
-            
+
                 List<buildertek__Project_Task__c> updateTask = new List<buildertek__Project_Task__c>();
                 for (String key : predecessorMap.keySet()) {
                     System.debug('Task Id ==> '+key +' : Predecessor Id ==> '+predecessorMap.get(key));
@@ -1245,10 +1245,10 @@ public with sharing class BT_Utils{
                 }
 
             }
-            
+
             // Add Code For Change Predecessor (End)
-            
-            
+
+
             // Comment Code For Because Predecessor Logic Is Write Above
 
             // if(childObjName == 'buildertek__Project_Task__c'){

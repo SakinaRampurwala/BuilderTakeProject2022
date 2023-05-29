@@ -9,12 +9,9 @@
                 var pageSize = component.get("v.pageSize");
                 var result = response.getReturnValue();
                 console.log({result});
-                let curr = result[0].masterBudgetRecord.CurrencyIsoCode;
-                console.log(curr);
                 component.set("v.masterBudgetsList", result);
                 component.set("v.totalRecords", component.get("v.masterBudgetsList").length);
                 component.set("v.startPage",0);
-                component.set("v.dynamicCurrencyCode",curr);
                 component.set("v.endPage",pageSize-1);
                 var PaginationList = [];
                 for(var i=0; i< pageSize; i++){

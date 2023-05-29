@@ -17,7 +17,7 @@
             console.log(error);
         });
     },
-    
+
     /*  getResources: function (component) {
         var action = component.get("c.getAllResourcess");
         action.setCallback(this, function (response) {
@@ -28,10 +28,10 @@
         });
         $A.enqueueAction(action);
     },*/
-    
-    
-    
-    
+
+
+
+
     buildCalendarWithTasks:  function (component, helper,calendarTaskList,selectedResourceIndex) {
         component.set("v.rerendermonthly",true);
         var monthlyArray = [];
@@ -56,11 +56,11 @@
                 }else{
                     taskObj["color"]= "#99CCCC";
                 }
-                
+
                 //taskObj["color"]= "#99CCCC";
                 //taskObj["color"]= projColors[i%10];//"#99CCCC";"#99CCCC";
                 taskObj["url"]= '/lightning/r/buildertek__Project_Task__c/' + escape(task.Id) + '/view'; //need to add full url along with baseurl
-                monthlyArray.push(taskObj); 
+                monthlyArray.push(taskObj);
             }
         }else{
             //for selected project only
@@ -68,11 +68,11 @@
             //contractResourceIdList.push(calendarTaskList[i].ContractresourceId);
             var evetList = component.get("v.eventList");
             /* if(component.get("v.isConflictview") == "Conflicts"){
-                evetList = 
+                evetList =
             }*/
-            
+
             for(var i=0; i<evetList.length; i++){
-                
+
                 var task = evetList[i];
                 var taskObj = {};
                 taskObj["id"] = task.Id;
@@ -91,16 +91,16 @@
                 //taskObj["color"]= "#99CCCC";
                 // taskObj["color"]= projColors[i%10];//"#99CCCC";
                 taskObj["url"]= '/lightning/r/buildertek__Project_Task__c/' + escape(task.Id) + '/view'; //need to add full url along with baseurl
-                monthlyArray.push(taskObj); 
+                monthlyArray.push(taskObj);
             }
-            //component.set("v.contractResourceListIds",contractResourceIdList); 
+            //component.set("v.contractResourceListIds",contractResourceIdList);
         }
         var sampleEvents = {
             "monthly": monthlyArray
         }
-        
+
         component.set("v.calendarEvents",sampleEvents);
-        
+
         if(Object.keys(sampleEvents).length){
             if(typeof $ == 'function'){
                 var viewDate = new Date(component.get("v.dateval"));
@@ -113,10 +113,10 @@
                     // for today reset button
                     $('#mycalendar').append('<div class="weekly-header" style="display:none;"><div class="weekly-header-title"><a class="monthly-weekly-header-title-date"  style="pointer-events: none;" href="#" onclick="(function(event){event.preventDefault();return false;})();return false;">'+monthNamesList[viewDate.getMonth()]+'&nbsp;'+viewDate.getFullYear()+'</a><a class="weekly-header-title-date"  href="#" onclick="(function(event){event.preventDefault();return false;})();return false;">Week 1-7</a><a class="monthly-reset"  href="#" onclick="(function(event){event.preventDefault();return false;})();return false;"></a></div><a class="weekly-prev"  href="javascript:void(0);" onclick="(function(event){event.preventDefault();return false;})();return false;"></a><a class="weekly-next"  href="javascript:void(0);" onclick="(function(event){event.preventDefault();return false;})();return false;"></a></div>')
                 }
-                
+
                 if( $('#mycalendar').length){
                     //document.getElementById('mycalendar').innerHTML = '';
-                    
+
                    /* window.setTimeout(function(){
                          $('#mycalendar').monthly({
                                 mode: 'event',
@@ -125,9 +125,9 @@
                                 isFirst: component.get("v.isFirst"),
                                 viewMonth: viewDate.getMonth(),
                                 viewYear: viewDate.getFullYear()
-                            }); 
+                            });
                     },100);*/
-                              
+
                     $('#mycalendar').monthly({
                                 mode: 'event',
                                 dataType: 'json',
@@ -135,11 +135,11 @@
                                 isFirst: component.get("v.isFirst"),
                                 viewMonth: viewDate.getMonth(),
                                 viewYear: viewDate.getFullYear()
-                            }); 
-                   
+                            });
+
                     component.set("v.isFirst",false);
                 }
-                
+
             }
         }
         var activeEle = document.getElementsByClassName('viewChange active')[0];
@@ -150,13 +150,13 @@
         if(monthBtnEle){
             monthBtnEle.classList.add('active');
         }
-        
+
         component.resetEventListeners();
         console.log(sampleEvents);
-        
+
     },
-    
-    
+
+
     getTasksByProjects : function(component,helper,Datevalue){
         component.set("v.showSpinner", true);
         var today = new Date(Datevalue);
@@ -168,20 +168,20 @@
         if(today.getMonth() == 11){
             newtodate = new Date(today.getFullYear()+1, 0,0);
         }else{
-            newtodate = new Date(today.getFullYear(), today.getMonth()+1,0); 
+            newtodate = new Date(today.getFullYear(), today.getMonth()+1,0);
         }
-        //newtodate = new Date(newtodate.getFullYear(), newtodate.getMonth(),newtodate.getDate()+6-newtodate.getDay()); 
-        
+        //newtodate = new Date(newtodate.getFullYear(), newtodate.getMonth(),newtodate.getDate()+6-newtodate.getDay());
+
         var newFromstr,newTostr;
         /*newFromstr = $A.localizationService.formatDate(newfromdate, 'MM/dd/yyyy');
         newTostr = $A.localizationService.formatDate(newtodate, 'MM/dd/yyyy')*/
        /* newFromstr = $A.localizationService.formatDate(newfromdate, 'dd/MM/yyyy');
         newTostr = $A.localizationService.formatDate(newtodate, 'dd/MM/yyyy')*/
        // "yyyy MM dd"
-       // 
+       //
         newFromstr = $A.localizationService.formatDate(newfromdate, "yyyy-MM-dd");
         newTostr = $A.localizationService.formatDate(newtodate, "yyyy-MM-dd")
-        
+
         console.log('currentWeekDates 4 ========> ');
         //alert(JSON.stringify(component.get("v.selectedTradetype")));
         //alert(fromdateStr+'<-------from-----todate---->'+todateStr);
@@ -214,7 +214,7 @@
                             var weeks = component.get("v.dayNames")
                             response.getReturnValue().projectList[itemIdx].CalendarWrapList[j]['weekSubStr'] = weeks[new Date(Date.parse(startDate)).getDay()].substring(0,3); //weekName.substring(0,3);
                         }
-                        
+
                         response.getReturnValue().projectList[itemIdx].CalendarWrapList[j]['startdateNum'] = new Date(Date.parse(startDate)).getDate().toString().padStart(2, "0");
                         response.getReturnValue().projectList[itemIdx].CalendarWrapList[j]['startdateFormatted'] = $A.localizationService.formatDate(new Date(Date.parse(startDate)), 'MM-dd-yyyy');//new Date(Date.parse(startDate)).getDate().toString().padStart(2, "0")+'-'+(new Date(Date.parse(startDate)).getMonth()+1).toString().padStart(2, "0")+'-'+new Date(Date.parse(startDate)).getFullYear();
                         response.getReturnValue().projectList[itemIdx].CalendarWrapList[j]['enddateFormatted'] = $A.localizationService.formatDate(new Date(Date.parse(endDate)), 'MM-dd-yyyy'); //new Date(Date.parse(endDate)).getDate().toString().padStart(2, "0")+'-'+(new Date(Date.parse(endDate)).getMonth()+1).toString().padStart(2, "0")+'-'+new Date(Date.parse(endDate)).getFullYear();
@@ -224,15 +224,15 @@
                         }
                         evetList.push(response.getReturnValue().projectList[itemIdx].CalendarWrapList[j]);
                     }
-                    
+
                 }
                 component.set("v.eventList", evetList);
                 component.set("v.dateEventList",evetList);
                 component.set("v.standardEventList",evetList);
                 component.set("v.resourcesList",response.getReturnValue().calendarTaskList);
-                
+
                 component.set("v.projectColorMap",projColorMap);
-                
+
                 var contractResourceIdList = [];
                 for(var i=0;i<response.getReturnValue().calendarTaskList.length;i++){
                     contractResourceIdList.push(response.getReturnValue().calendarTaskList[i].ContractresourceId);
@@ -241,22 +241,22 @@
                 //component.set("v.eventList", response.getReturnValue());
                 //component.set("v.projectList", response.getReturnValue().projectList);
                 //component.set("v.eventList", response.getReturnValue().calendarTaskList);
-                
-                
-                
+
+
+
                 //reset selected values
                 component.set("v.newContractResource","");
                 //if(component.get("v.recordId") != '' && component.get("v.recordId") != undefined && component.get("v.recordId") != null){
                 //    component.set("v.newSelectedProjectId",component.get("v.newSelectedProjectIdClone"));
                // }else{
-               //     component.set("v.newSelectedProjectId",""); 
+               //     component.set("v.newSelectedProjectId","");
                 //}
                 component.set("v.newSelectedProjectId","");
                 component.set("v.selectedContractResourceIndex",-1);
                 component.set("v.currentCalendarView","monthView");
-                
+
                 var monthlyArray = [];
-                
+
                 var baseURL = component.get("v.BaseURLs");
                 for(var i=0; i<evetList.length; i++){
                     var task = evetList[i];
@@ -273,15 +273,15 @@
                     //taskObj["color"]= "#99CCCC";
                     //taskObj["color"]= projColors[i%10];//"#99CCCC";
                     taskObj["url"]= '/lightning/r/buildertek__Project_Task__c/' + escape(task.Id) + '/view'; //need to add full url along with baseurl
-                    monthlyArray.push(taskObj); 
+                    monthlyArray.push(taskObj);
                 }
-                
+
                 var sampleEvents = {
                     "monthly": monthlyArray
                 }
-                
+
                 component.set("v.calendarEvents",sampleEvents);
-                
+
                 if(Object.keys(sampleEvents).length){
                     if(typeof $ == 'function'){
                         var viewDate = new Date(component.get("v.dateval"));
@@ -294,10 +294,10 @@
                             // for today reset button
                             $('#mycalendar').append('<div class="weekly-header" style="display:none;"><div class="weekly-header-title"><a class="monthly-weekly-header-title-date"   style="pointer-events: none;" href="#" onclick="(function(event){event.preventDefault();return false;})();return false;">'+monthNamesList[viewDate.getMonth()]+'&nbsp;'+viewDate.getFullYear()+'</a><a class="weekly-header-title-date"  href="#" onclick="(function(event){event.preventDefault();return false;})();return false;">Week 1-7</a><a class="monthly-reset"  href="#" onclick="(function(event){event.preventDefault();return false;})();return false;"></a></div><a class="weekly-prev" href="javascript:void(0);" onclick="(function(event){event.preventDefault();return false;})();return false;"></a><a class="weekly-next" href="javascript:void(0);" onclick="(function(event){event.preventDefault();return false;})();return false;"></a></div>')
                         }
-                        
-                        
+
+
                         if( $('#mycalendar').length){
-                           
+
                             /*window.setTimeout(function(){
                                 $('#mycalendar').monthly({
                                     mode: 'event',
@@ -306,9 +306,9 @@
                                     isFirst: component.get("v.isFirst"),
                                     viewMonth: viewDate.getMonth(),
                                     viewYear: viewDate.getFullYear()
-                                }); 
+                                });
                             },100);*/
-                                                                    
+
                              $('#mycalendar').monthly({
                                     mode: 'event',
                                     dataType: 'json',
@@ -316,16 +316,16 @@
                                     isFirst: component.get("v.isFirst"),
                                     viewMonth: viewDate.getMonth(),
                                     viewYear: viewDate.getFullYear()
-                                }); 
-                            
+                                });
+
                             component.set("v.isFirst",false);
                         }
-                        
+
                         /* if(monthlyArray.length){
-                            
+
                             if( $('#mycalendar').length){
                                 //document.getElementById('mycalendar').innerHTML = '';
-                                
+
                                 $('#mycalendar').monthly({
                                     mode: 'event',
                                     dataType: 'json',
@@ -334,7 +334,7 @@
                                     viewMonth: viewDate.getMonth(),
                                     viewYear: viewDate.getFullYear()
                                 });
-                                
+
                                 component.set("v.isFirst",false);
                             }
                         }else{
@@ -346,12 +346,12 @@
                                 viewMonth: viewDate.getMonth(),
                                 viewYear: viewDate.getFullYear()
                             });
-                            
+
                             component.set("v.isFirst",false);
                         }*/
                     }
                 }
-                
+
                 var activeEle = document.getElementsByClassName('viewChange active')[0];
                 if(activeEle){
                     activeEle.classList.remove('active');
@@ -360,13 +360,13 @@
                 if(monthBtnEle){
                     monthBtnEle.classList.add('active');
                 }
-                
+
                 component.set("v.showSpinner", false);
                 component.resetEventListeners();
                 /*if(component.get("v.isConflictview") == "Conflicts"){
                     component.conflictData();
                 }*/
-                
+
                 console.log(sampleEvents);
             } else {
                 component.set("v.showSpinner", false);
@@ -377,18 +377,18 @@
                 if(actionCal){
                     $A.enqueueAction(actionCal);
                 }
-                
+
             }), 1000
         );
-        
+
     },
-    
-    
-    
+
+
+
     currentMonthsDates: function (component, Datevalue) {
         var today = new Date(Datevalue);
     },
-    
+
     /*  getprojectTaskscontacts: function (component,helper) {
         var action = component.get("c.getAllResourcess");
         var SelectedOptions = component.get("v.SelectedOptions");
@@ -400,14 +400,14 @@
             if (component.isValid() && state === "SUCCESS") {
                 component.set("v.projecttaskcontactlist", response.getReturnValue());
             }
-           
+
         });
         $A.enqueueAction(action);
     },*/
-    
+
     handleAfterScriptsLoaded : function(component, helper) {
         if(typeof $ == 'function'){
-            
+
             jQuery("document").ready(function(){
                 console.log('jQuery Loaded');
                 /* var sampleEvents = {
@@ -504,7 +504,7 @@
                         }
                     ]
                 };*/
-                
+
                 /*var sampleEvents = component.get("v.calendarEvents");
                 if( $('#mycalendar').length){
                     $('#mycalendar').monthly({

@@ -1009,6 +1009,28 @@ public with sharing class BT_AdminConfigurationController{
         QuoteConfiguration.buildertek__Email_Subject__c = 'Quote Preview';
         firstLevelNodes.add(QuoteConfiguration);
 
+        Admin_Interface_Node_Configuration__c scheduleConfiguration = new Admin_Interface_Node_Configuration__c();
+        scheduleConfiguration.Name = 'BT Schedule Configuration';
+        scheduleConfiguration.buildertek__Description__c = 'Configure Schedule for your organization.';
+        scheduleConfiguration.buildertek__Icon_URL__c = '/resource/'+nameSpacePrefix+'/assets/icons/utility/settings_60.png';
+        scheduleConfiguration.buildertek__Tab_Name__c = 'BT Schedule Configuration';
+        scheduleConfiguration.Index__c = 50;
+        scheduleConfiguration.Open_New_Tab__c = false;
+        scheduleConfiguration.Disable__c = false;
+        firstLevelNodes.add(scheduleConfiguration);
+
+
+        Admin_Interface_Node_Configuration__c scheduleChildConfiguration = new Admin_Interface_Node_Configuration__c();
+        scheduleChildConfiguration.Name = 'Schedule Configuration';
+        scheduleChildConfiguration.buildertek__Icon_URL__c = '/resource/'+nameSpacePrefix+'/assets/icons/utility/settings_60.png';
+        scheduleChildConfiguration.buildertek__Tab_Name__c = 'Schedule Configuration';
+        scheduleChildConfiguration.buildertek__Page_URL__c = '/apex/ConfigureScheduleFromSetting';
+        scheduleChildConfiguration.Index__c = 51;
+        scheduleChildConfiguration.Open_New_Tab__c = false;
+        scheduleChildConfiguration.Disable__c = false;
+        firstLevelNodes.add(scheduleChildConfiguration);
+
+
         try {
             DMLManager.insertAsUser(firstLevelNodes);
 
@@ -1040,6 +1062,7 @@ public with sharing class BT_AdminConfigurationController{
              indexMap2.put(47,45);
              indexMap2.put(48,31);
              indexMap2.put(49,21);
+             indexMap2.put(51,50);
  
              List<Admin_Interface_Node_Configuration__c> newNodeList = new List<Admin_Interface_Node_Configuration__c>();
              for(Decimal key : indexMap2.keySet()) {

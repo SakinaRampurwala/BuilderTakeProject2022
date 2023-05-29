@@ -21,6 +21,7 @@ public with sharing class ImportmasterBudgetClass {
             MasterBudgetsClass MasterBudgetsClassRecord = new MasterBudgetsClass();
             MasterBudgetsClassRecord.masterBudgetRecord = masterBudget;
             MasterBudgetsClassRecord.budgetCheck = false;
+            MasterBudgetsClassRecord.currencyCode = masterBudget.CurrencyIsoCode;
             MasterBudgetsClassList.add(MasterBudgetsClassRecord);
         }
         List<buildertek__Budget__c> quotesList;
@@ -33,6 +34,7 @@ public with sharing class ImportmasterBudgetClass {
                                         Name,
                                         buildertek__Project__r.Name,
                                         buildertek__Type__c,
+                                        CurrencyIsoCode,
                                         Original_Budget__c
                                         FROM buildertek__Budget__c
                                         WHERE buildertek__Type__c = 'Master'];
@@ -42,6 +44,7 @@ public with sharing class ImportmasterBudgetClass {
             MasterBudgetsClass MasterBudgetsClassRecord = new MasterBudgetsClass();
             MasterBudgetsClassRecord.budgetRecord = bud;
             MasterBudgetsClassRecord.budgetCheck = false;
+            MasterBudgetsClassRecord.currencyCode = bud.CurrencyIsoCode;
             MasterBudgetsClassList.add(MasterBudgetsClassRecord);
         }
         return  MasterBudgetsClassList;
@@ -166,6 +169,8 @@ public with sharing class ImportmasterBudgetClass {
          public buildertek__Master_Budget__c masterBudgetRecord {get;set;}
          @AuraEnabled
          public boolean budgetCheck {get;set;}
+         @AuraEnabled
+         public String currencyCode {get;set;}
     }
 
     public class MessageClass{

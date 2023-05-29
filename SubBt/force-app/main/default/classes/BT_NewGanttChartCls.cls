@@ -1061,8 +1061,43 @@ public class BT_NewGanttChartCls{
     //* store wbs value
     @AuraEnabled
     public static void setWBSValue(String scheduleItemMap){
-        System.debug('scheduleItemMap'+ scheduleItemMap);
-       
+        try {
+            System.debug('setWBSValue Called');
+
+            List<buildertek__Project_Task__c> scheduleItemList = new List<buildertek__Project_Task__c>();
+            Map<String, Object> dataMap = (Map<String, Object>) JSON.deserializeUntyped(scheduleItemMap);
+            Set<String> ScheduleItemIds= new Set<String>();
+
+            for (String key : dataMap.keySet()) {
+                Object value = dataMap.get(key);
+                // Process the key-value pair as needed
+                String jsonString = JSON.serialize(value);
+                jsonString = jsonString.replace('"','');
+                ScheduleItemIds.add(jsonString);
+            }
+
+            scheduleItemList = [Select Id , buildertek__WBS__c, Name From buildertek__Project_Task__c WHERE Id IN:ScheduleItemIds];
+
+            if (scheduleItemList.size() > 0) {
+                for(buildertek__Project_Task__c scheduleItem:scheduleItemList){
+                    for (String key : dataMap.keySet()) {
+                        Object value = dataMap.get(key);
+                        // Process the key-value pair as needed
+                        System.debug('Key: ' + key + ', Value: ' + value);
+                        if(value == scheduleItem.Id && key!= '1'){
+                            scheduleItem.buildertek__WBS__c=key;
+                        }
+                    }
+                }
+                ProjectTriggerHandler.blnSkipProjectTrigger = true;
+                update scheduleItemList;
+                ProjectTriggerHandler.blnSkipProjectTrigger = false;
+            }
+
+        } catch (Exception e) {
+            System.debug(e);
+            System.debug('line number for WBS ==>' + e.getLineNumber() + ' - error ==>' + e.getMessage());
+        }
     }
 
 

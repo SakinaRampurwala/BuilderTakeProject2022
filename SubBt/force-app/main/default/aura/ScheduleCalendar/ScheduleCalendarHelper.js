@@ -159,17 +159,13 @@
                 console.log('projectsList in sch ------> '+JSON.stringify(component.get("v.projectsList")));
                 var projectsList = component.get("v.projectsList")
                 result.forEach(function(key) {
-
                     for (var i = 0; i < projectsList.length; i++) {
                         if(key.buildertek__Schedule__r.buildertek__Project__c == projectsList[i].Id){
-                            if(projectsList[i].Color.includes('rgb(5,')){
-                            	color = 'rgb(50,105,105)';
-                            }else{
-                            	color = projectsList[i].Color;
-                            }
-
+                            color =  projectsList[i].Color;
+                            console.log('color::',color);
                         }
                     }
+                    console.log('new color::',color);
                     var vendorName;
                     var projectName;
                     if(key.buildertek__Contractor__c != undefined){
@@ -219,15 +215,22 @@
             	//component.set("v.projectsList", response.getReturnValue());
                 var result = response.getReturnValue();
                 var projectsList = [];
+                var red, green, blue, col;
                 for(var i=0;i<result.length;i++){
-                    var max = 250;
-        			var min = 150;
-        			var green = Math.floor(Math.random() * (max - min + 1)) + min;
+                    // var max = 250;
+        			// var min = 150;
+        			// var green = Math.floor(Math.random() * (max - min + 1)) + min;
+                    red = Math.floor(Math.random() * 150) + 100; 
+                    green = Math.floor(Math.random() * 150) + 100;
+                    blue = Math.floor(Math.random() * 150) + 100; 
+                    col = 'rgb(' + red + ', ' + green + ', ' + blue + ')'
+                    console.log('color:::',col);
                     projectsList.push({
                         'Id': result[i].Id,
                         'Name': result[i].Name,
-                        'Color': 'rgb('+i+','+parseInt(100+i)+','+green+')'
+                        'Color': col
                     });
+       
                 }
                 console.log('projectsList ---------> '+JSON.stringify(projectsList));
                 component.set("v.projectsList", projectsList);

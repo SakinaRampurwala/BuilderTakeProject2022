@@ -10,6 +10,8 @@
                 </apex:inputcheckbox>
                 <apex:inputcheckbox value="{!hideContractorResource}" label="Hide Contractor Resource">
                 </apex:inputcheckbox>
+                <apex:inputcheckbox value="{!donotShiftScheduleDatesbaseonPredecessors}" label="Do not Shift Schedule Dates base on Predecessors">
+                </apex:inputcheckbox>
                 <center>
                     <apex:commandButton value="Save" id="onSave" styleClass="slds-button slds-button_brand" action="{!onSave}"></apex:commandButton>
                 </center>

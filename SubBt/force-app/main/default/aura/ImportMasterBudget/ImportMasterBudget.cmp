@@ -9,7 +9,6 @@
     <aura:attribute name="endPage" type="Integer"/>
     <aura:attribute name="totalRecords" type="Integer"/>
     <aura:attribute name="pageSize" type="Integer" default="10"/>
-    <aura:attribute name="dynamicCurrencyCode" type="String" default="USD"/>
 
     <!-- Attribute Declration For Pagination End-->
 
@@ -58,7 +57,7 @@
                                     <span style="padding-left:106px"> <ui:outputText value="{!rec.masterBudgetRecord.buildertek__Type__c}" />  </span>
         			            </td>
                                  <td width="20%" role="gridcell">
-                                     <span style="padding-left:45px">  <lightning:formattedNumber value="{!rec.masterBudgetRecord.buildertek__Original_Budget__c}" style="currency" currencyCode="{!v.dynamicCurrencyCode}" currencyDisplayAs="code"/></span>
+                                     <span style="padding-left:45px">  <lightning:formattedNumber value="{!rec.masterBudgetRecord.buildertek__Original_Budget__c}" style="currency" currencyCode="{!rec.currencyCode}" currencyDisplayAs="code"/></span>
         			            </td>
         						<aura:set attribute="else">
         						    <td>
@@ -75,7 +74,7 @@
                                         <span style="padding-left:106px">   <ui:outputText value="{!rec.budgetRecord.buildertek__Type__c}" />  </span>
             			            </td>
                                      <td role="gridcell">
-                                         <span style="padding-left:45px">  <lightning:formattedNumber value="{!rec.budgetRecord.buildertek__Original_Budget__c}" style="currency" currencyCode="{!v.dynamicCurrencyCode}" currencyDisplayAs="code"/></span>
+                                         <span style="padding-left:45px">  <lightning:formattedNumber value="{!rec.budgetRecord.buildertek__Original_Budget__c}" style="currency" currencyCode="{!rec.currencyCode}" currencyDisplayAs="code"/></span>
 
             			            </td>
         						</aura:set>

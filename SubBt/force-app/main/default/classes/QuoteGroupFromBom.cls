@@ -2,6 +2,7 @@ global without sharing class QuoteGroupFromBom {
 
     global string quoteId;
     global string queryfields;
+    global buildertek__Quote__c quote {get;set;}
     global list<string> colsApiLst {get;set;}
     global map<string,string> sortlablevalueMap {get;set;}
     global string orgCurr {get; set;}
@@ -21,6 +22,7 @@ global without sharing class QuoteGroupFromBom {
 
     global QuoteGroupFromBom() {
         orgCurr = UserInfo.getDefaultCurrency();
+        quote = new buildertek__Quote__c();
         colsApiLst = new List<string>();
         sortlablevalueMap = new map<string,string>();
         allQuoteLineList = new List<buildertek__Quote_Item__c>();
@@ -80,7 +82,7 @@ global without sharing class QuoteGroupFromBom {
         }
 
         // Grouping field list for set 4 layer grouping on quote lines
-        buildertek__Quote__c quote = [SELECT Id, Name, buildertek__Quote_Line_Grouping_Fields__c FROM buildertek__Quote__c WHERE Id =: quoteId];
+        quote = [SELECT Id, Name, buildertek__Quote_Line_Grouping_Fields__c, buildertek__Roll_Up__c FROM buildertek__Quote__c WHERE Id =: quoteId];
         String groupingData = quote.buildertek__Quote_Line_Grouping_Fields__c;
         if (groupingData != null && groupingData != '') {
             groupingList = (List<String>) JSON.deserialize(groupingData, List<String>.class);
