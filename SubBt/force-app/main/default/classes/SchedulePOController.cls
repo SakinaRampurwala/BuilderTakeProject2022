@@ -116,9 +116,8 @@ public with sharing class SchedulePOController {
             
             //Set Schedule Item 
             pur.buildertek__Schedule_Item__c=projectTask.Id;
-            if (Schema.sObjectType.buildertek__Purchase_Order__c.fields.buildertek__Schedule_Item__c.isUpdateable()){
+            pur.buildertek__Schedule__c=scheduleId;
             update pur;
-            }
             
             errMessage.MessageType = 'Success';
             errMessage.Message = 'Purchase Order Scheduled Successfully';

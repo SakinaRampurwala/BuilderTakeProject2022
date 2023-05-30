@@ -308,7 +308,7 @@ public class ProjectTaskTriggerHandler{
 			buildertek__Purchase_Order__c PO = new buildertek__Purchase_Order__c();
 			PO.Id = purchaseOrderId;
 			PO.buildertek__Completion__c = purchaseOrderMap.get(purchaseOrderId);
-			PO.buildertek__Schedule_Item__c = scheduleIdMap.get(purchaseOrderId);
+			// PO.buildertek__Schedule_Item__c = scheduleIdMap.get(purchaseOrderId);
 			POList.add(PO);
 		}
 
@@ -579,7 +579,7 @@ public class ProjectTaskTriggerHandler{
 			buildertek__Purchase_Order__c PO = new buildertek__Purchase_Order__c();
 			PO.Id = purchaseOrderId;
 			PO.buildertek__Completion__c = purchaseOrderMap.get(purchaseOrderId);
-			PO.buildertek__Schedule_Item__c = scheduleIdMap.get(purchaseOrderId);
+			// PO.buildertek__Schedule_Item__c = scheduleIdMap.get(purchaseOrderId);
 			POList.add(PO);
 		}
 

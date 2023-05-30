@@ -860,12 +860,13 @@ public with sharing class QuoteDAO{
         String filterConditions = ' AND buildertek__Quote__c =:quoteId';
         String fieldSetAPI = 'buildertek__BT_Related_List_View_Fields';
         String soql = 'SELECT Id, Name ';
-        soql = soql + ', Grouping__c, Description__c ';
+        soql = soql + ', Grouping__c, buildertek__Description__c ';
 
         String namespacePrefix = BT_Utils.getNamespacePrefix();
         List<Schema.FieldSetMember> fieldSetMemberList = BT_Utils.getFieldSetMembers(fieldSetAPI, objectName);
         system.debug('fieldSetMemberList -----> ' + fieldSetMemberList);
         for (Schema.FieldSetMember fieldSetMemberObj : fieldSetMemberList){
+            System.debug('soql sakina'+ soql);
 
             if (!soql.contains(fieldSetMemberObj.getFieldPath())){
                 system.debug('fieldSetMemberObj ********' + fieldSetMemberObj.getFieldPath());
