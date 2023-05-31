@@ -345,8 +345,8 @@ public with sharing class PreviewPurchaseOrderController {
                                                                buildertek__Date_Confirmed__c
                                                                from buildertek__Purchase_Order__c where Id=:recordId limit 1];
                if(porec.size() > 0 ){
-                   porec[0].buildertek__Date_Confirmed__c = System.today();
-                   update porec;
+                //    porec[0].buildertek__Date_Confirmed__c = System.today();
+                //    update porec;
                }
                
             return message;                   
@@ -405,7 +405,7 @@ public with sharing class PreviewPurchaseOrderController {
                                                                buildertek__Rejection_Reason__c
                                                                from buildertek__Purchase_Order__c where Id=:recId limit 1];
                if(porec.size() > 0 ){
-                   porec[0].buildertek__Date_Confirmed__c = System.today();
+                //    porec[0].buildertek__Date_Confirmed__c = System.today();
                    porec[0].buildertek__Status__c = 'Vendor Accepted';
                    update porec;
                }

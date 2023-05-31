@@ -300,8 +300,15 @@
         var fileName = [];
         uploadedFiles.forEach(element => {
             console.log(element.name);
-            fileName.push(element.name);
+
+            var maxCharacters = 25; // Define the maximum number of characters to display
+            if (element.name.length > maxCharacters) {
+                fileName.push(element.name.slice(0, maxCharacters) + "...");
+            }else{
+                fileName.push(element.name);
+            }
             fileDocsId.push(element.documentId);
+
         });
         
         component.set("v.uploadedFileName",fileName);

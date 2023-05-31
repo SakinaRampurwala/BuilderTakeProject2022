@@ -610,7 +610,7 @@ Messaging.sendEmail(new Messaging.SingleEmailMessage[] { email });  */
                     porec.buildertek__Customer_Accepted_Date__c = nowDT;
                     porec.buildertek__Rejection_Reason__c = '';
                     porec.buildertek__Status__c = 'Vendor Accepted';
-                    porec.buildertek__Date_Confirmed__c = Date.today();
+                    
                 }
                 update porec;
             }

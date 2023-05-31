@@ -69,23 +69,19 @@
                 <div class="slds-form-element__row">
                     <div class="slds-form-element slds-size_1-of-2">
                         <div class="slds-form-element__control">
-                             <lightning:input type="date" label="Start Date" aura:id="startDate"
-                                             name="Start Date"
-                                             value="{!v.taskRecord.buildertek__Start__c}"/> 
+                             <lightning:input type="date" label="Start Date" aura:id="startDate" name="Start Date" value="{!v.taskRecord.buildertek__Start__c}" required="true"/> 
                         </div>
                     </div>
                     <div class="slds-form-element slds-size_1-of-2">
                         <div class="slds-form-element__control">
-                            <lightning:input type="date" label="Finish" aura:id="finishDate"
-                                             name="Finish Date"
-                                             value="{!v.taskRecord.buildertek__Finish__c}"/>    
+                            <lightning:input type="date" label="Finish" aura:id="finishDate"  name="Finish Date"  value="{!v.taskRecord.buildertek__Finish__c}"/>    
                         </div>
                     </div>
                 </div>
                 <div class="slds-form-element__row">
                     <div class="slds-form-element slds-size_1-of-2">
                         <div class="slds-form-element__control">
-                             <lightning:input type="text" label="Duration" value="{!v.taskRecord.buildertek__Duration__c}" />
+                             <lightning:input type="text" label="Duration" value="{!v.taskRecord.buildertek__Duration__c}" required="true" />
                         </div>
                     </div>
                     <div class="slds-form-element slds-size_1-of-2">
@@ -98,7 +94,7 @@
                 <div class="slds-form-element__row">
                     <div class="slds-form-element slds-size_1-of-2">
                         <div class="slds-form-element__control">
-                             <lightning:select name="colorId" label="Schedule" aura:id="colorId" value="{!v.selectedValue}">
+                             <lightning:select name="colorId" label="Schedule" aura:id="colorId" value="{!v.selectedValue}" required="true">
                                 <option text="None" value="" /> 
                                 <aura:iteration items="{!v.Schedules}" var="sch">
                                     <option text="{!sch.getSchedulesList.Name +' - '+sch.getSchedulesList.buildertek__Description__c}" value="{!sch.getSchedulesList.Id}" />

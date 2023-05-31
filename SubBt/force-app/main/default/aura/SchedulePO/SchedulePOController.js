@@ -62,6 +62,7 @@
        var selectedRecordId;
        var selectedAccountId;
        var selectedRecord = component.get("v.selectedLookUpRecord");
+       console.log({selectedRecord});
        if(selectedRecord != undefined){
            selectedRecordId = selectedRecord.Id;
        }else{
@@ -83,6 +84,7 @@
        }
        //alert('projectId --------> '+projectId);
        var scheduleId = component.get("v.selectedValue");
+       console.log({scheduleId});
        //alert('scheduleId --------> '+scheduleId);
        var action = component.get('c.insertScheduleTask');
        action.setParams({

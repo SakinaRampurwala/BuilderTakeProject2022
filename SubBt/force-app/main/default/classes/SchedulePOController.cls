@@ -126,6 +126,8 @@ public with sharing class SchedulePOController {
             errMessage.Message = exp.getMessage(); 
             errMessage.MessageType = 'Error';
             System.debug('error line :: '+exp.getLineNumber());
+            System.debug('error line :: '+exp.getMessage());
+
             return errMessage;
         }
         

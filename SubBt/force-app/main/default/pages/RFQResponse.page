@@ -594,7 +594,7 @@
                         </apex:pageBlockSection>
                     </div>
                     <br/>
-                    <div class="slds-box">
+                    <div class="slds-box" style="overflow:auto">
                         <b>
                             <div class="slds-badge" style="font-size: 0.8rem;border-radius: 0 !important;">RFQ Lines</div>
                         </b>
