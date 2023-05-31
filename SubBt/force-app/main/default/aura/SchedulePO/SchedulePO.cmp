@@ -32,6 +32,7 @@
     <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
         <div class="slds-form-element slds-form_compound">
             <div class="slds-form-element__group">
+                
                 <div class="slds-form-element__row">
                     <div class="slds-form-element slds-size_1-of-2">
                         <div class="slds-form-element__control">
@@ -49,13 +50,19 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="slds-form-element__row">
                     <div class="slds-form-element slds-size_1-of-2">
                         <div class="slds-form-element__control">
-                            <label >Predecessor</label>
-                            <c:BT_LightningLookup objectAPIName="buildertek__Project_Task__c" selectedRecord="{!v.selectedLookUpRecord}" />      
+                             <lightning:select name="colorId" label="Schedule" aura:id="colorId" value="{!v.selectedValue}" required="true">
+                                <option text="None" value="" /> 
+                                <aura:iteration items="{!v.Schedules}" var="sch">
+                                    <option text="{!sch.getSchedulesList.Name +' - '+sch.getSchedulesList.buildertek__Description__c}" value="{!sch.getSchedulesList.Id}" />
+                                </aura:iteration>
+                            </lightning:select>
                         </div>
                     </div>
+
                     <div class="slds-form-element slds-size_1-of-2">
                         <div class="slds-form-element__control">
                             <label >Contractor</label>
@@ -66,6 +73,25 @@
                         </div>
                     </div>
                 </div>
+
+
+                <div class="slds-form-element__row">
+                    <div class="slds-form-element slds-size_1-of-2">
+                        <div class="slds-form-element__control">
+                            <label >Predecessor</label>
+                            <c:BT_LightningLookup objectAPIName="buildertek__Project_Task__c" selectedRecord="{!v.selectedLookUpRecord}" />      
+                        </div>
+                    </div>
+
+                    <div class="slds-form-element slds-size_1-of-2">
+                        <div class="slds-form-element__control">
+                            <label>Phase</label>
+                            <ui:inputSelect aura:id="phaseId" value="{!v.taskRecord.buildertek__Phase__c}" />    
+                        </div>
+                    </div>
+                   
+                </div>
+
                 <div class="slds-form-element__row">
                     <div class="slds-form-element slds-size_1-of-2">
                         <div class="slds-form-element__control">
@@ -78,31 +104,16 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="slds-form-element__row">
                     <div class="slds-form-element slds-size_1-of-2">
                         <div class="slds-form-element__control">
                              <lightning:input type="text" label="Duration" value="{!v.taskRecord.buildertek__Duration__c}" required="true" />
                         </div>
                     </div>
-                    <div class="slds-form-element slds-size_1-of-2">
-                        <div class="slds-form-element__control">
-                            <label>Phase</label>
-                            <ui:inputSelect aura:id="phaseId" value="{!v.taskRecord.buildertek__Phase__c}" />    
-                        </div>
-                    </div>
+                  
                 </div>
-                <div class="slds-form-element__row">
-                    <div class="slds-form-element slds-size_1-of-2">
-                        <div class="slds-form-element__control">
-                             <lightning:select name="colorId" label="Schedule" aura:id="colorId" value="{!v.selectedValue}" required="true">
-                                <option text="None" value="" /> 
-                                <aura:iteration items="{!v.Schedules}" var="sch">
-                                    <option text="{!sch.getSchedulesList.Name +' - '+sch.getSchedulesList.buildertek__Description__c}" value="{!sch.getSchedulesList.Id}" />
-                                </aura:iteration>
-                            </lightning:select>
-                        </div>
-                    </div>
-                </div>
+               
             </div>
         </div>
     </div>    

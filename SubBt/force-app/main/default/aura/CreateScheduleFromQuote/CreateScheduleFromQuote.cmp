@@ -39,7 +39,7 @@
     </header>
     <lightning:recordEditForm aura:id="recordViewForm" objectApiName="buildertek__Schedule__c" onsubmit="{!c.handleSubmit}" onsuccess="{!c.onRecordSuccess}" onerror="{!c.handleError}">
         <div class="slds-modal__content " id="modal-content-id-1" style='padding:1rem' >
-            <lightning:inputField   fieldName="Name"/> 
+            <!-- <lightning:inputField   fieldName="Name"/>  -->
             <lightning:inputField  fieldName="buildertek__Initial_Start_Date__c" required="true" />
             <lightning:inputField fieldName="buildertek__Project_Managers__c" />
         </div>
