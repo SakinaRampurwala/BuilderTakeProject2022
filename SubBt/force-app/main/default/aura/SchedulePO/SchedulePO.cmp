@@ -24,15 +24,25 @@
      <aura:attribute name="selectedLookUpRecordName" type="String"/> 
      <aura:attribute name="selectedValue" type="String"/>
      <aura:attribute name="selectedProjectId" type="String"/>
+
+     <!-- predecessor lookup -->
+     <aura:attribute name="diplayPredecessorlist" type="boolean" default="false" />
+     <aura:attribute name="predecessorList" type="List" default="" />
+     <aura:attribute name="allPredecessorValue" type="List" default="" />
+
+     <aura:attribute name="selectedPredecessor" type="String" default="" />
+     <aura:attribute name="selectedPredecessorId" type="String" default="" />
+
+
      
      <ltng:require styles="{!$Resource.MOdalPreviewWidth52}"/>
      <header class="slds-modal__header">
         <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">New Task</h2>
      </header>   
-    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1"  >
         <div class="slds-form-element slds-form_compound">
-            <div class="slds-form-element__group">
-                
+            <div class="slds-form-element__group" >
+
                 <div class="slds-form-element__row">
                     <div class="slds-form-element slds-size_1-of-2">
                         <div class="slds-form-element__control">
@@ -54,7 +64,7 @@
                 <div class="slds-form-element__row">
                     <div class="slds-form-element slds-size_1-of-2">
                         <div class="slds-form-element__control">
-                             <lightning:select name="colorId" label="Schedule" aura:id="colorId" value="{!v.selectedValue}" required="true">
+                            <lightning:select name="colorId" label="Schedule" aura:id="colorId" value="{!v.selectedValue}" required="true" onchange="{!c.handleScheduleChange}">
                                 <option text="None" value="" /> 
                                 <aura:iteration items="{!v.Schedules}" var="sch">
                                     <option text="{!sch.getSchedulesList.Name +' - '+sch.getSchedulesList.buildertek__Description__c}" value="{!sch.getSchedulesList.Id}" />
@@ -79,7 +89,35 @@
                     <div class="slds-form-element slds-size_1-of-2">
                         <div class="slds-form-element__control">
                             <label >Predecessor</label>
-                            <c:BT_LightningLookup objectAPIName="buildertek__Project_Task__c" selectedRecord="{!v.selectedLookUpRecord}" />      
+                            <!-- <c:BT_LightningLookup objectAPIName="buildertek__Project_Task__c" selectedRecord="{!v.selectedLookUpRecord}" />       -->
+
+                            <lightning:input autocomplete="off" type="search" placeholder="Search Manufacturer" variant="label-hidden" value="{!v.selectedPredecessor}" onfocus="{!c.serachPredecessor}" onblur="{!c.hideList}" onkeyup="{!c.onkeyUp}" />
+                            <aura:if isTrue="{!v.diplayPredecessorlist}" >
+                                <div id="listbox-id-11" class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid searchResult" role="listbox">
+                                    <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                                        <aura:iteration items="{!v.predecessorList}" var="result">
+                                            <li role="presentation" class="slds-listbox__item" data-value="{!result.value}" onclick="{!c.clickPredecessorValue}" data-id="{!result.key}">
+                                                <div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small" role="option">
+                                                    <span class="slds-media__body">
+                                                        <span class="slds-truncate" title="All Predecessor">
+                                                            <span>{!result.value}</span>
+                                                        </span>
+                                                    </span>
+                                                </div>
+                                            </li>
+                                        </aura:iteration>
+
+
+                                        <aura:if isTrue="{!empty(v.predecessorList)}">
+                                            <span>
+                                                <p class="blank-lst">
+                                                No records found
+                                                </p>
+                                            </span>
+                                        </aura:if>
+                                    </ul>
+                                </div>
+                            </aura:if>
                         </div>
                     </div>
 
@@ -89,13 +127,13 @@
                             <ui:inputSelect aura:id="phaseId" value="{!v.taskRecord.buildertek__Phase__c}" />    
                         </div>
                     </div>
-                   
+                
                 </div>
 
                 <div class="slds-form-element__row">
                     <div class="slds-form-element slds-size_1-of-2">
                         <div class="slds-form-element__control">
-                             <lightning:input type="date" label="Start Date" aura:id="startDate" name="Start Date" value="{!v.taskRecord.buildertek__Start__c}" required="true"/> 
+                            <lightning:input type="date" label="Start Date" aura:id="startDate" name="Start Date" value="{!v.taskRecord.buildertek__Start__c}" required="true"/> 
                         </div>
                     </div>
                     <div class="slds-form-element slds-size_1-of-2">
@@ -108,24 +146,24 @@
                 <div class="slds-form-element__row">
                     <div class="slds-form-element slds-size_1-of-2">
                         <div class="slds-form-element__control">
-                             <lightning:input type="text" label="Duration" value="{!v.taskRecord.buildertek__Duration__c}" required="true" />
+                            <lightning:input type="text" label="Duration" value="{!v.taskRecord.buildertek__Duration__c}" required="true" />
                         </div>
                     </div>
-                  
+                
                 </div>
-               
+            
             </div>
         </div>
     </div>    
     <footer class="slds-modal__footer">
         <lightning:button variant="neutral" 
-                          label="Cancel"
-                          title="Cancel"
-                          onclick="{! c.closeModel }"/>
+                        label="Cancel"
+                        title="Cancel"
+                        onclick="{! c.closeModel }"/>
         <lightning:button variant="brand" 
-                          label="Save"
-                          title="Save"
-                          onclick="{! c.save }"/>
+                        label="Save"
+                        title="Save"
+                        onclick="{! c.save }"/>
     </footer>
     <!-- </aura:if>-->
     <aura:if isTrue="{!v.Spinner}">
