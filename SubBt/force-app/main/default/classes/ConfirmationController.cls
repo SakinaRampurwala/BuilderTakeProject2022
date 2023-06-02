@@ -67,7 +67,7 @@ public without sharing class ConfirmationController{
     public Boolean reject_Quote_on_Rejected_Lines{ get; set; }
 
     public ConfirmationController(){
-        isAccepted  = false; 
+        isAccepted  = false;
         // std = ApexPages.StandardSetController;
         //        System.debug('Constrctor 2::'+std);
         contractstatus = true;
@@ -123,16 +123,16 @@ public without sharing class ConfirmationController{
                 Result = 'Accepted';
                 RejectResult = 'Rejected';
             }else{
-                isAccepted  = false; 
+                isAccepted  = false;
             }
-            
+
         }
        // }
        /* if(recordID != null){
             objectAPIName = Id.valueOf(recordID).getSObjectType().getDescribe().getName();
             system.debug('objectAPIName&&&&&&&&&&&'+objectAPIName);
         }*/
-        
+
         /*  if(objectAPIName.contains('buildertek__Contract__c')){
          contrctrec = [select id,Name,buildertek__Status__c,buildertek__Project__c from buildertek__Contract__c where Id = :recordID limit 1];
          if(contrctrec.buildertek__Status__c == 'Accepted'){
@@ -485,7 +485,7 @@ public without sharing class ConfirmationController{
         for (Messaging.SingleEmailMessage emailNew : msgList){
             templateBody1 = emailNew.getHTMLBody();
         }
-      /*  String[] toAddresses = new String[] {'mailto:manisha.kotha@diligentforcelabs.com'}; 
+      /*  String[] toAddresses = new String[] {'mailto:manisha.kotha@diligentforcelabs.com'};
 
 email.setToAddresses(toAddresses);
 email.setSenderDisplayName('Salesforce Support');
@@ -499,16 +499,16 @@ email.setHtmlBody('Your case:<b> </b>has been created.<p>'+
 
 // Send the email you have created.
 Messaging.sendEmail(new Messaging.SingleEmailMessage[] { email });  */
-        
-        
-           
-        
-        
-        
-        
-        
-        
-        
+
+
+
+
+
+
+
+
+
+
 
         Messaging.SingleEmailMessage email1 = new Messaging.SingleEmailMessage();
         string theTemplate1 = [SELECT Id
@@ -550,7 +550,7 @@ Messaging.sendEmail(new Messaging.SingleEmailMessage[] { email });  */
     }
 
     public PageReference uploadSignature(){
-        
+
         transient Date nowDT = Date.today();
         System.debug('Check Debug log ==> '+nowDT);
         customerAcceptedDate = String.valueOf(DateTime.now());
@@ -610,7 +610,7 @@ Messaging.sendEmail(new Messaging.SingleEmailMessage[] { email });  */
                     porec.buildertek__Customer_Accepted_Date__c = nowDT;
                     porec.buildertek__Rejection_Reason__c = '';
                     porec.buildertek__Status__c = 'Vendor Accepted';
-                    
+
                 }
                 update porec;
             }
@@ -629,7 +629,7 @@ Messaging.sendEmail(new Messaging.SingleEmailMessage[] { email });  */
                 quoterec.buildertek__Date_Accepted_by_Customer__c = system.now();
                 quoterec.buildertek__Date_Sent_To_Customer__c = System.today();
                 update quoterec;
-        
+
                 /*if(quoterec.buildertek__Status__c == 'Customer Accepted' && Checkcustomerview == null){
                  string theTemplate;
                  if (templateId != null){

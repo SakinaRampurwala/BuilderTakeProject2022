@@ -1965,7 +1965,7 @@ Throws [Exceptions]:
     
     @AuraEnabled
     public static String emailPreview(String rfqId, String vendorId){
-        return BT_SendEmailController.getEmailBodyFromTemplate(vendorId, null, null, 'RFQ Invitation Email New');
+        return BT_SendEmailController.getEmailBodyFromTemplate(vendorId, null, null, 'RFQ Invitation Email');
     }
     
     @AuraEnabled
@@ -1999,7 +1999,7 @@ Throws [Exceptions]:
         
         et = [select id
               from EmailTemplate
-              where Name = 'RFQ Invitation Email New' and isActive = true];
+              where Name = 'RFQ Invitation Email' and isActive = true];
         
         mail.setTemplateId(et.id);
         List<OrgWideEmailAddress> owe;

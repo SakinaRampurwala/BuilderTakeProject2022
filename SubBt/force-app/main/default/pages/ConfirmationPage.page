@@ -41,6 +41,15 @@
             position: fixed !important;
         }
 
+        ul{
+            margin-top: 1% !important;
+        }
+
+        li{
+            list-style: disc;
+            margin-left: 2% !important;
+        }
+
     </style>
     <script>
         function scrolldown() {
@@ -95,7 +104,7 @@
             //     displayquotelinesdata();
             //     window.location.reload();
             // }
-            
+
         }
         function closeModal() {
             ClosePopup();
@@ -115,18 +124,18 @@
             </div>
 
         </div>
-    </div> 
+    </div>
 
     <script>
         document.getElementById('spinner').className += ' slds-hide';
     </script>
 
-    <apex:outputPanel rendered="{!isAccepted}" id="acceptquote">    
-        <div style='text-align: center;padding:20px;font-size:20px;'> 
+    <apex:outputPanel rendered="{!isAccepted}" id="acceptquote">
+        <div style='text-align: center;padding:20px;font-size:20px;'>
         <h1 class="slds-text-heading--medium" style="font-size: 20px;text-align:center;background-color: Green;color: white;">
             {!quoteMessage} </h1>
-        </div>  
-    </apex:outputPanel> 
+        </div>
+    </apex:outputPanel>
     <apex:form id="frmid">
         <apex:actionFunction name="displayquotelinesdata" action="{!displayQuotelinerecords}" rerender="tstpopup5">
         </apex:actionFunction>
@@ -136,8 +145,8 @@
         <div class="slds">
             <div aria-hidden="true" role="dialog" class="slds-modal slds-modal--large slds-fade-in-closed slds-modal-backdrop slds-modal-backdrop--closed "
                 id="tstpopup5">
-                <apex:outputPanel rendered="{!isAccepted}" id="acceptquote">    
-                </apex:outputPanel> 
+                <apex:outputPanel rendered="{!isAccepted}" id="acceptquote">
+                </apex:outputPanel>
                 <div class="slds-modal__container">
                     <header class="slds-modal__header">
                         <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Quote Lines</h2>
@@ -155,7 +164,7 @@
                                                 <div class="slds-truncate" title="">Reject</div>
                                             </th>
                                             <th scope="col" style="background-color:grey; color:white;border-right: 1px solid grey;">
-                                                <div class="slds-truncate" title="Product Description">Product Description</div>
+                                                <div class="slds-truncate" title="Product Description">Product Description </div>
                                             </th>
                                             <th scope="col" style="background-color:grey; color:white;border-right: 1px solid grey;">
                                                 <div class="slds-truncate" title="Total List price">Total List Price</div>
@@ -177,7 +186,7 @@
                                                 </td>
                                                 <td style="color:white;text-align: right;border-bottom:  1px solid  #ccc;border-right:  1px solid  #ccc;background-color:rgb(27 82 151);">
                                                     <!--  <apex:outputText value="{0, number, $###,###,###,##0.00}">
-                                                        <apex:param value="{!items.listTotal}" /> 
+                                                        <apex:param value="{!items.listTotal}" />
                                                     </apex:outputText> -->
                                                 </td>
                                             </tr>
@@ -263,7 +272,7 @@
             </apex:actionStatus>
             <div style="margin-bottom:20px;">
                 <!-- <span>
-                    <img src="{!$Resource.buildertek__Company_Logo}" width="20%" height="15%"/> 
+                    <img src="{!$Resource.buildertek__Company_Logo}" width="20%" height="15%"/>
                 </span> -->
 
                 <apex:outputPanel rendered="{!If(objectAPIName =='buildertek__Quote__c',true,false)}">
@@ -303,7 +312,7 @@
 
                                             <div id="signature-pad">
                                                 <canvas style="border:1px solid lightgray;width:100%;height:100%;margin-top:10px;" id="demo"></canvas>
-                                                <!-- <canvas id="demo" style="touch-action: none;margin: 0px;"></canvas> 
+                                                <!-- <canvas id="demo" style="touch-action: none;margin: 0px;"></canvas>
                                                 <canvas id="emptycanvas" style="touch-action: none;margin: 0px;display:none"></canvas> -->
 
                                                 <div style="float:right;margin-right:18px;" onclick="clearsignaturePad()">
@@ -355,9 +364,9 @@
                                 <button type="button" class="slds-button slds-button_brand" onclick="saveImage();" status="status" style="{!IF(allQuoteLineAccepted, '', 'display:none;')}"> Accept </button>
                             </apex:outputPanel>
                             <apex:outputPanel rendered="{!IF(reject_Quote_on_Rejected_Lines  == false, true, false)}">
-                                <button type="button" class="slds-button slds-button_brand" onclick="saveImage();" status="status"> Accept </button> 
+                                <button type="button" class="slds-button slds-button_brand" onclick="saveImage();" status="status"> Accept </button>
                             </apex:outputPanel>
-                            
+
                         </center>
                     </div>
                 </div>
@@ -475,7 +484,7 @@
             function saveacceptRejectlines() {
                 document.getElementById('spinner').className -= ' slds-hide';
                 document.getElementById('spinner').className += ' slds-spinner_container';
-                
+
                 const x ='{!RejectResult}';
                 if(x == 'Accepted' || x == 'Rejected'){
                     document.getElementById('acceptrejectid').style.display = "block";
@@ -484,7 +493,7 @@
                 }
 
                 setTimeout(
-                    function(){ 
+                    function(){
                         window.location.reload();
                         // document.getElementById('spinner').className += ' slds-hide';
                      }, 5000

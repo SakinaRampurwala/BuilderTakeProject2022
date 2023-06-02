@@ -93,7 +93,7 @@
 
                             <lightning:input autocomplete="off" type="search" placeholder="Search Manufacturer" variant="label-hidden" value="{!v.selectedPredecessor}" onfocus="{!c.serachPredecessor}" onblur="{!c.hideList}" onkeyup="{!c.onkeyUp}" />
                             <aura:if isTrue="{!v.diplayPredecessorlist}" >
-                                <div id="listbox-id-11" class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid searchResult" role="listbox">
+                                <div id="listbox-id-11" class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid searchResult" role="listbox" style="height:100px;">
                                     <ul class="slds-listbox slds-listbox_vertical" role="presentation">
                                         <aura:iteration items="{!v.predecessorList}" var="result">
                                             <li role="presentation" class="slds-listbox__item" data-value="{!result.value}" onclick="{!c.clickPredecessorValue}" data-id="{!result.key}">

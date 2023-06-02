@@ -136,10 +136,10 @@ public with sharing class SchedulePOController {
 
     @AuraEnabled
     public static  Map<String,String> getPredecessorList(String scheduleId) {
-        List<buildertek__Project_Task__c> schduleItemList= [Select Id , buildertek__Dependency__c, buildertek__Dependency__r.Name , buildertek__Schedule__c, Name From buildertek__Project_Task__c  WHERE buildertek__Schedule__c=:scheduleId];
+        List<buildertek__Project_Task__c> schduleItemList= [Select Id , Name , buildertek__Schedule__c From buildertek__Project_Task__c  WHERE buildertek__Schedule__c=:scheduleId];
         Map<String,String> predecessorMap= new Map<String, String>();
         for(buildertek__Project_Task__c scheduleItem: schduleItemList){
-            predecessorMap.put(scheduleItem.buildertek__Dependency__c , scheduleItem.buildertek__Dependency__r.Name);
+            predecessorMap.put(scheduleItem.Id , scheduleItem.Name);
         }
         return predecessorMap;
 

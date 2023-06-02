@@ -82,7 +82,7 @@ vendorUserMap.put(usr.AccountId,usr);
         // if (Schema.sObjectType.EmailTemplate.fields.id.isAccessible()){
         rfqInvitationTemplate = [SELECT Id,DeveloperName
                                  FROM EmailTemplate
-                                 WHERE DeveloperName = 'RFQ_Invitation_Email_New'].Id;
+                                 WHERE DeveloperName = 'RFQ_Invitation_Email'].Id;
         //} 
         string rfqRejectedTemplate;
         //if (Schema.sObjectType.EmailTemplate.fields.id.isAccessible()){

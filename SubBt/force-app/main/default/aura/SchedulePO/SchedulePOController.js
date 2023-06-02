@@ -206,6 +206,10 @@
     },
     handleScheduleChange:function(component, event, helper) {
         component.set('v.diplayPredecessorlist' , false);
+        component.set('v.selectedPredecessor' , '');
+        component.set('v.selectedPredecessorId' , '');
+
+
     },
     onkeyUp:function(component, event, helper) {
         var getkeyValue= event.getSource().get('v.value').toLowerCase();
@@ -223,11 +227,8 @@
         component.set('v.predecessorList' , tempArray);
     },
     hideList:function(component, event, helper){
-        // var value=component.get('v.diplayPredecessorlist');
-        // if(value){
-            component.set('v.diplayPredecessorlist' , false);
-        // }
-        
+            // component.set('v.diplayPredecessorlist' , false);
+
     },
 
 })

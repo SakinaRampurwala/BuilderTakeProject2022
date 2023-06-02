@@ -87,10 +87,21 @@ public class ProjectTaskTriggerHandler{
 			if (newProjectTask.buildertek__Completion__c == 100){
 				newProjectTask.buildertek__Actual_Completion_date__c = system.today();
 				newProjectTask.buildertek__Completed__c = true;
-			} else if (newProjectTask.buildertek__Completion__c < 100){
+			}else if (newProjectTask.buildertek__Completion__c < 100 && newProjectTask.buildertek__Actual_Start_Date__c == null){
+				newProjectTask.buildertek__Actual_Start_Date__c=system.today();
+			}else if (newProjectTask.buildertek__Completion__c < 100){
 				newProjectTask.buildertek__Actual_Completion_date__c = null;
 				newProjectTask.buildertek__Completed__c = false;
 			}
+			/**
+			 * BUIL-3308
+			 * When the user check the Completed checkbox it should set the Completion % field - 100 and set the Actual Completion Date = TODAY()
+			 */
+			if (newProjectTask.buildertek__Completed__c == true){
+				newProjectTask.buildertek__Actual_Completion_date__c = system.today();
+				newProjectTask.buildertek__Completion__c = 100;
+			} 
+
 			//Calculate Start Date And End Date with Weekends.
 			if (newProjectTask.buildertek__Start__c != null){
 				Date sDate = newProjectTask.buildertek__Start__c;
@@ -146,14 +157,28 @@ public class ProjectTaskTriggerHandler{
 			//Calculate Start Date And End Date with Weekends.
 			//system.debug(updatedProjectTask.buildertek__Start__c);
 
+			
 			//Actual Completion date
 			if (updatedProjectTask.buildertek__Completion__c == 100){
 				updatedProjectTask.buildertek__Actual_Completion_date__c = system.today();
 				updatedProjectTask.buildertek__Completed__c = true;
-			} else if (updatedProjectTask.buildertek__Completion__c < 100){
+			}else if (updatedProjectTask.buildertek__Completion__c < 100 && updatedProjectTask.buildertek__Actual_Start_Date__c == null){
+				updatedProjectTask.buildertek__Actual_Start_Date__c = system.today();
+			}else if (updatedProjectTask.buildertek__Completion__c < 100){
 				updatedProjectTask.buildertek__Actual_Completion_date__c = null;
 				updatedProjectTask.buildertek__Completed__c = false;
 			}
+
+			/**
+			 * BUIL-3308
+			 * When the user check the Completed checkbox it should set the Completion % field - 100 and set the Actual Completion Date = TODAY()
+			 */
+			if (updatedProjectTask.buildertek__Completed__c == true){
+				updatedProjectTask.buildertek__Actual_Completion_date__c = system.today();
+				updatedProjectTask.buildertek__Completion__c = 100;
+			} 
+
+
 			if (updatedProjectTask.buildertek__Completion__c > 0 && updatedProjectTask.buildertek__Completion_updated__c == false){
 				updatedProjectTask.buildertek__Actual_Start_Date__c = system.today();
 				updatedProjectTask.buildertek__Completion_updated__c = true;
