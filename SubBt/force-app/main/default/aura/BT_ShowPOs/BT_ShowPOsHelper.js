@@ -3,7 +3,7 @@
 	    $A.get("e.force:closeQuickAction").fire();    
 	},
     getPoList : function(component, event, helper){
-    	component.set("v.Spinner", true);
+    	// component.set("v.Spinner", true);
         var vendorValue = component.get("v.searchRfqVendorFilter");
         var statusValue = component.get("v.searchRfqStatusFilter");
         var descriptionValue = component.get("v.searchRfqDesFilter");
