@@ -9,7 +9,11 @@
         action.setCallback(this, function (response) {
             if (response.getState() == 'SUCCESS' && response.getReturnValue()) {
                 if(response.getReturnValue()){
-                    component.set("v.projName", response.getReturnValue());
+                    var scheduleData = response.getReturnValue();
+                    if(scheduleData.buildertek__Description__c.length > 100){
+                        scheduleData.buildertek__Description__c =  scheduleData.buildertek__Description__c.slice(0,100) + "...";
+                      }
+                    component.set("v.projName", scheduleData);
                 }
                 
             }

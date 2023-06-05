@@ -4,13 +4,14 @@ public class BT_NewGanttChartCls{
     @AuraEnabled
     public static List<Boolean> getColumnSettings(){
         List<buildertek__Admin_Interface_Node_Configuration__c> adminSettings = new List<buildertek__Admin_Interface_Node_Configuration__c>();
-        List<Boolean> BoolList = new List<Boolean>{true,true,true};
+        List<Boolean> BoolList = new List<Boolean>{true,true,true,true};
 
-        adminSettings = [Select Id, buildertek__Hide_Internal_Resource__c, buildertek__Hide_Contractor__c, buildertek__Hide_Contractor_Resource__c from buildertek__Admin_Interface_Node_Configuration__c WHERE Name=:'Schedule Configuration'];
+        adminSettings = [Select Id, buildertek__Hide_Internal_Resource__c, buildertek__Hide_Contractor__c, buildertek__Hide_Contractor_Resource__c, buildertek__Do_not_Shift_Schedule_Dates_base_on_Pred__c from buildertek__Admin_Interface_Node_Configuration__c WHERE Name=:'Schedule Configuration'];
         if (adminSettings.size() > 0) {
             BoolList[0] = adminSettings[0].buildertek__Hide_Internal_Resource__c;
             BoolList[1] = adminSettings[0].buildertek__Hide_Contractor__c;
             BoolList[2] = adminSettings[0].buildertek__Hide_Contractor_Resource__c;
+            BoolList[3] = adminSettings[0].buildertek__Do_not_Shift_Schedule_Dates_base_on_Pred__c;
         }
 
         return BoolList;

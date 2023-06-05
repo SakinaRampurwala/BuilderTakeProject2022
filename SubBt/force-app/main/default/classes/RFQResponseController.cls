@@ -126,16 +126,14 @@ public Boolean displayPopup1 {get;set;}
         files = new List<File__c>();
         try{
             String query = 'Select RFQ__r.Due_Date__c,RFQ__r.Name,RFQ__r.RFQ_Details__c,RFQ__r.Auto_Number__c,RFQ__r.Project__c,buildertek__RFQ__r.Project__r.Name,' + BT_Utils.getQueryStringForObjectWithAllFields('buildertek__RFQ_To_Vendor__c')+',(Select id,Name,Item_Name__c,Vendor_Note__c,buildertek__Estimated_Work_Days__c,Quantity__c,Unit_Price__c,Total_Price__c,Description__c,Budget_Line_Amount__c, buildertek__RFQ_Item__c from Vendor_Items__r),(Select Id, Name, File__r.Name, File__r.File_Presigned_URL__c,File__r.Description__c,File__r.Download_Link__c,File__r.Download_Link1__c from RFQ_To_Vendor_Document_Links__r), (Select Id, Name, File_Presigned_URL__c,Description__c from Files__r) From buildertek__RFQ_To_Vendor__c where ID =:rfqVendorId order by Name';
-            if (Schema.sObjectType.buildertek__RFQ_To_Vendor__c.fields.Id.isAccessible() && Schema.sObjectType.buildertek__RFQ_To_Vendor__c.fields.Name.isAccessible() && Schema.sObjectType.buildertek__RFQ_To_Vendor__c.fields.buildertek__Contact__c.isAccessible() && Schema.sObjectType.buildertek__RFQ_To_Vendor__c.fields.buildertek__Status__c.isAccessible() && Schema.sObjectType.buildertek__RFQ_To_Vendor__c.fields.buildertek__Quote_Amount__c.isAccessible() && Schema.sObjectType.buildertek__RFQ__c.fields.Id.isAccessible() && Schema.sObjectType.buildertek__RFQ__c.fields.buildertek__Vendor__c.isAccessible() && Schema.sObjectType.buildertek__RFQ__c.fields.buildertek__Status__c.isAccessible() && Schema.sObjectType.buildertek__RFQ_Vendor_Item__c.fields.Id.isAccessible() && Schema.sObjectType.buildertek__RFQ_Vendor_Item__c.fields.Name.isAccessible() && Schema.sObjectType.buildertek__RFQ_Vendor_Item__c.fields.buildertek__Item_Name__c.isAccessible() && Schema.sObjectType.buildertek__RFQ_Vendor_Item__c.fields.buildertek__Quantity__c.isAccessible() && Schema.sObjectType.buildertek__RFQ_Vendor_Item__c.fields.buildertek__Unit_Price__c.isAccessible() && Schema.sObjectType.buildertek__RFQ_Vendor_Item__c.fields.buildertek__Total_Price__c.isAccessible() && Schema.sObjectType.buildertek__RFQ_Vendor_Item__c.fields.buildertek__Description__c.isAccessible() && Schema.sObjectType.buildertek__RFQ_Vendor_Item__c.fields.buildertek__Budget_Line_Amount__c.isAccessible() && Schema.sObjectType.buildertek__RFQ_Vendor_Item__c.fields.buildertek__Vendor_Note__c.isAccessible() && Schema.sObjectType.buildertek__RFQ_Vendor_Item__c.fields.buildertek__Estimated_Work_Days__c.isAccessible() && Schema.sObjectType.buildertek__RFQ_To_Vendor_Document_Link__c.fields.Id.isAccessible() && Schema.sObjectType.buildertek__RFQ_To_Vendor_Document_Link__c.fields.Name.isAccessible() && Schema.sObjectType.buildertek__RFQ_To_Vendor_Document_Link__c.fields.buildertek__File__c.isAccessible() && Schema.sObjectType.buildertek__File__c.fields.Id.isAccessible() && Schema.sObjectType.buildertek__File__c.fields.Name.isAccessible() && Schema.sObjectType.buildertek__File__c.fields.buildertek__File_Presigned_URL__c.isAccessible() && Schema.sObjectType.buildertek__File__c.fields.buildertek__Download_Link__c.isAccessible() && Schema.sObjectType.buildertek__File__c.fields.buildertek__Download_Link1__c.isAccessible()){
-                rfqToVendor = (buildertek__RFQ_To_Vendor__c)Database.query(query)[0];
-                rfqId = rfqToVendor.RFQ__c;
-                rfqcontact=rfqToVendor.buildertek__Contact__c;
-                projectId =rfqToVendor.RFQ__r.Project__c;
+            rfqToVendor = (buildertek__RFQ_To_Vendor__c)Database.query(query)[0];
+            rfqId = rfqToVendor.RFQ__c;
+            rfqcontact=rfqToVendor.buildertek__Contact__c;
+            projectId =rfqToVendor.RFQ__r.Project__c;
 
-                rfqrec1 = [ Select Id, Name, OwnerId, Owner.Name,buildertek__RFI_Owner__c  From buildertek__RFQ__c Where Id=:rfqId];
-                newrfi.RFI_Assigned_To__c = rfqrec1.OwnerId;
+            rfqrec1 = [ Select Id, Name, OwnerId, Owner.Name,buildertek__RFI_Owner__c  From buildertek__RFQ__c Where Id=:rfqId];
+            newrfi.RFI_Assigned_To__c = rfqrec1.OwnerId;
 
-            }
             Integer count = 0;
             for (buildertek__RFQ_Vendor_Item__c rfqToVendorItem : rfqToVendor.buildertek__Vendor_Items__r){
                 rfqToVendorItemMap.put(count, rfqToVendorItem.Id);
@@ -143,11 +141,10 @@ public Boolean displayPopup1 {get;set;}
                 count++;
             }
             List<Folder__c> defaultBucketFolders;
-            if (Schema.sObjectType.Folder__c.fields.Id.isAccessible() && Schema.sObjectType.Folder__c.fields.Name.isAccessible() && Schema.sObjectType.Folder__c.fields.buildertek__Description__c.isAccessible()){
-                defaultBucketFolders = [Select Id, Name
-                                        From Folder__c
-                                        Where Default__c = true AND Active__c = true];
-            }
+            defaultBucketFolders = [Select Id, Name
+                                    From Folder__c
+                                    Where Default__c = true AND Active__c = true];
+
             if (defaultBucketFolders != null && !defaultBucketFolders.isEmpty()){
                 String folderId = defaultBucketFolders[0].Id;
                 String selectedBucketId = defaultBucketFolders[0].Id;
@@ -255,20 +252,16 @@ public Boolean displayPopup1 {get;set;}
                         system.debug('%%%%%%%%'+rfqToVendor.Status__c);
                         update rfqToVendor;
                         update rfqToVendor.Vendor_Items__r;
-                        if (Schema.sObjectType.buildertek__RFQ_Vendor_Item__c.isCreateable()
-                            && Schema.sObjectType.buildertek__RFQ_Vendor_Item__c.fields.buildertek__Quantity__c.isCreateable() && Schema.sObjectType.buildertek__RFQ_Vendor_Item__c.fields.buildertek__Unit_Price__c.isCreateable() && Schema.sObjectType.buildertek__RFQ_Vendor_Item__c.fields.buildertek__Vendor__c.isCreateable() && Schema.sObjectType.buildertek__RFQ_Vendor_Item__c.fields.buildertek__Vendor_Note__c.isCreateable() && Schema.sObjectType.buildertek__RFQ_Vendor_Item__c.fields.buildertek__Estimated_Work_Days__c.isCreateable() && Schema.sObjectType.buildertek__RFQ_Vendor_Item__c.fields.buildertek__Description__c.isCreateable()){
-                            insert RecordsToBeInserted;
-                        }
+                        insert RecordsToBeInserted;
+
                         refreshFiles();
                         wrapList = new List<WrapperVerdorLineList>();
                         if (rfqToVendor.buildertek__RFQ__c != null){
                             List<buildertek__RFQ__c> rfqreclst;
-                            if (Schema.sObjectType.buildertek__RFQ__c.fields.Name.isAccessible() && Schema.sObjectType.buildertek__RFQ__c.fields.buildertek__RFQ_s_Replied_To__c.isAccessible()){
                                 rfqreclst = [SELECT Id, Name, buildertek__RFQ_s_Replied_To__c
                                              FROM buildertek__RFQ__c
                                              WHERE Id = :rfqToVendor.buildertek__RFQ__c];
                                 system.debug('rfqreclst'+rfqreclst);
-                            }
                             if (rfqreclst.size() > 0){
                                 if (rfqreclst[0].buildertek__RFQ_s_Replied_To__c != null){
                                     rfqreclst[0].buildertek__RFQ_s_Replied_To__c += 1;
@@ -336,9 +329,7 @@ public Boolean displayPopup1 {get;set;}
         try{
             String query = 'Select RFQ__r.Due_Date__c,RFQ__r.Name,RFQ__r.RFQ_Details__c,RFQ__r.Auto_Number__c,RFQ__r.Project__r.Name,' + BT_Utils.getQueryStringForObjectWithAllFields('buildertek__RFQ_To_Vendor__c')+',(Select id,Name,Item_Name__c,Vendor_Note__c,buildertek__Estimated_Work_Days__c,Quantity__c,Unit_Price__c,Total_Price__c,Description__c,Budget_Line_Amount__c, buildertek__RFQ_Item__c from Vendor_Items__r),(Select Id, Name, File__r.Name, File__r.File_Presigned_URL__c,File__r.Description__c,File__r.Download_Link__c,File__r.Download_Link1__c from RFQ_To_Vendor_Document_Links__r), (Select Id, Name, File_Presigned_URL__c,Description__c from Files__r) From buildertek__RFQ_To_Vendor__c where ID =:rfqVendorId order by Name';
             buildertek__RFQ_To_Vendor__c rfqToVendor1;
-            if (Schema.sObjectType.buildertek__RFQ_To_Vendor__c.fields.Id.isAccessible() && Schema.sObjectType.buildertek__RFQ_To_Vendor__c.fields.Name.isAccessible() && Schema.sObjectType.buildertek__RFQ_To_Vendor__c.fields.buildertek__Contact__c.isAccessible() && Schema.sObjectType.buildertek__RFQ_To_Vendor__c.fields.buildertek__Status__c.isAccessible() && Schema.sObjectType.buildertek__RFQ_To_Vendor__c.fields.buildertek__Quote_Amount__c.isAccessible() && Schema.sObjectType.buildertek__RFQ__c.fields.Id.isAccessible() && Schema.sObjectType.buildertek__RFQ__c.fields.buildertek__Vendor__c.isAccessible() && Schema.sObjectType.buildertek__RFQ__c.fields.buildertek__Status__c.isAccessible() && Schema.sObjectType.buildertek__RFQ_Vendor_Item__c.fields.Id.isAccessible() && Schema.sObjectType.buildertek__RFQ_Vendor_Item__c.fields.Name.isAccessible() && Schema.sObjectType.buildertek__RFQ_Vendor_Item__c.fields.buildertek__Item_Name__c.isAccessible() && Schema.sObjectType.buildertek__RFQ_Vendor_Item__c.fields.buildertek__Quantity__c.isAccessible() && Schema.sObjectType.buildertek__RFQ_Vendor_Item__c.fields.buildertek__Unit_Price__c.isAccessible() && Schema.sObjectType.buildertek__RFQ_Vendor_Item__c.fields.buildertek__Total_Price__c.isAccessible() && Schema.sObjectType.buildertek__RFQ_Vendor_Item__c.fields.buildertek__Description__c.isAccessible() && Schema.sObjectType.buildertek__RFQ_Vendor_Item__c.fields.buildertek__Budget_Line_Amount__c.isAccessible() && Schema.sObjectType.buildertek__RFQ_Vendor_Item__c.fields.buildertek__Vendor_Note__c.isAccessible() && Schema.sObjectType.buildertek__RFQ_Vendor_Item__c.fields.buildertek__Estimated_Work_Days__c.isAccessible() && Schema.sObjectType.buildertek__RFQ_To_Vendor_Document_Link__c.fields.Id.isAccessible() && Schema.sObjectType.buildertek__RFQ_To_Vendor_Document_Link__c.fields.Name.isAccessible() && Schema.sObjectType.buildertek__RFQ_To_Vendor_Document_Link__c.fields.buildertek__File__c.isAccessible() && Schema.sObjectType.buildertek__File__c.fields.Id.isAccessible() && Schema.sObjectType.buildertek__File__c.fields.Name.isAccessible() && Schema.sObjectType.buildertek__File__c.fields.buildertek__File_Presigned_URL__c.isAccessible() && Schema.sObjectType.buildertek__File__c.fields.buildertek__Download_Link__c.isAccessible() && Schema.sObjectType.buildertek__File__c.fields.buildertek__Download_Link1__c.isAccessible()){
-                rfqToVendor1 = (buildertek__RFQ_To_Vendor__c)Database.query(query)[0];
-            }
+            rfqToVendor1 = (buildertek__RFQ_To_Vendor__c)Database.query(query)[0];
             rfqToVendor = rfqToVendor1;
             files = rfqToVendor1.Files__r;
             Integer count = 0;
@@ -392,11 +383,9 @@ public Boolean displayPopup1 {get;set;}
 
     public void gets3Key(){
         List<Folder__c> defaultBucketFolders;
-        if (Schema.sObjectType.Folder__c.fields.Id.isAccessible() && Schema.sObjectType.Folder__c.fields.Name.isAccessible() && Schema.sObjectType.Folder__c.fields.buildertek__Description__c.isAccessible()){
             defaultBucketFolders = [Select Id, Name
                                     From Folder__c
                                     Where Default__c = true AND Active__c = true];
-        }
 
         AmazonS3Credential s3LinkConfig;
         s3LinkConfig = new AmazonS3Credential();

@@ -646,69 +646,69 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                      }*/
 
 
-                    if (objectAPI.toLowerCase() == 'buildertek__rfq_to_vendor__c'){
-                        String status = plainTextBody.split('\n')[0];
+                    // if (objectAPI.toLowerCase() == 'buildertek__rfq_to_vendor__c'){
+                    //     String status = plainTextBody.split('\n')[0];
 
-                        if (status.toLowerCase() == 'accepted'){
-                            buildertek__rfq_to_vendor__c rfqToVendor;
-                            rfqToVendor = [select Id, name, buildertek__status__c, buildertek__RFQ__c,buildertek__Accepted_Date__c
-                                           from buildertek__rfq_to_vendor__c
-                                           where id = :relatedToId];
+                    //     if (status.toLowerCase() == 'accepted'){
+                    //         buildertek__rfq_to_vendor__c rfqToVendor;
+                    //         rfqToVendor = [select Id, name, buildertek__status__c, buildertek__RFQ__c,buildertek__Accepted_Date__c
+                    //                        from buildertek__rfq_to_vendor__c
+                    //                        where id = :relatedToId];
 
-                            if (rfqToVendor.Id != null){
-                                rfqToVendor.buildertek__status__c = 'Accepted';
-                                rfqToVendor.buildertek__Accepted_Date__c = system.now();
-                                update rfqToVendor;
+                    //         if (rfqToVendor.Id != null){
+                    //             rfqToVendor.buildertek__status__c = 'Accepted';
+                    //             rfqToVendor.buildertek__Accepted_Date__c = system.now();
+                    //             update rfqToVendor;
 
-                                if (rfqToVendor.buildertek__RFQ__c != null){
-                                    buildertek__RFQ__c rfqRec = [SELECT Id, Name, buildertek__Accepted_Date__c, buildertek__Awarded_Date__c, buildertek__RFQ_s_Replied_To__c
-                                                                 FROM buildertek__RFQ__c
-                                                                 WHERE Id = :rfqToVendor.buildertek__RFQ__c];
+                    //             if (rfqToVendor.buildertek__RFQ__c != null){
+                    //                 buildertek__RFQ__c rfqRec = [SELECT Id, Name, buildertek__Accepted_Date__c, buildertek__Awarded_Date__c, buildertek__RFQ_s_Replied_To__c
+                    //                                              FROM buildertek__RFQ__c
+                    //                                              WHERE Id = :rfqToVendor.buildertek__RFQ__c];
 
-                                    rfqRec.buildertek__Accepted_Date__c = System.today(); // here we update the accepted date when the status is accepted
-                                    rfqRec.buildertek__status__c = 'Accepted';
-                                   // rfqRec.buildertek__RFQ_s_Replied_To__c += 1; // here we get the count of replied email messages
-                                    update rfqRec;
-                                }
-                            }
-                        } else if (status.toLowerCase() == 'canceled' || status.toLowerCase() == 'rejected'){
-                            System.debug('Status::' + status);
-                            buildertek__rfq_to_vendor__c refqVendor;
-                            if (Schema.sObjectType.buildertek__rfq_to_vendor__c.fields.id.isAccessible() && Schema.sObjectType.buildertek__rfq_to_vendor__c.fields.Name.isAccessible() && Schema.sObjectType.buildertek__rfq_to_vendor__c.fields.buildertek__RFQ__c.isAccessible()){
-                                refqVendor = [SELECT Id, Name, buildertek__RFQ__c
-                                              FROM buildertek__rfq_to_vendor__c
-                                              WHERE Id = :relatedToId];
-                            }
+                    //                 rfqRec.buildertek__Accepted_Date__c = System.today(); // here we update the accepted date when the status is accepted
+                    //                 rfqRec.buildertek__status__c = 'Accepted';
+                    //                // rfqRec.buildertek__RFQ_s_Replied_To__c += 1; // here we get the count of replied email messages
+                    //                 update rfqRec;
+                    //             }
+                    //         }
+                    //     } else if (status.toLowerCase() == 'canceled' || status.toLowerCase() == 'rejected'){
+                    //         System.debug('Status::' + status);
+                    //         buildertek__rfq_to_vendor__c refqVendor;
+                    //         if (Schema.sObjectType.buildertek__rfq_to_vendor__c.fields.id.isAccessible() && Schema.sObjectType.buildertek__rfq_to_vendor__c.fields.Name.isAccessible() && Schema.sObjectType.buildertek__rfq_to_vendor__c.fields.buildertek__RFQ__c.isAccessible()){
+                    //             refqVendor = [SELECT Id, Name, buildertek__RFQ__c
+                    //                           FROM buildertek__rfq_to_vendor__c
+                    //                           WHERE Id = :relatedToId];
+                    //         }
 
-                            buildertek__rfq_to_vendor__c rfqToVendor = new buildertek__rfq_to_vendor__c();
-                            rfqToVendor.Id = relatedToId;
-                            rfqToVendor.buildertek__status__c = status;
-                            rfqToVendor.buildertek__Rejected_Date__c = system.now();
-                            rfqToVendor.buildertek__Awarded_Date__c = null;
-                            update rfqToVendor;
-                            System.debug('RFQ To vendor::' + rfqToVendor);
+                    //         buildertek__rfq_to_vendor__c rfqToVendor = new buildertek__rfq_to_vendor__c();
+                    //         rfqToVendor.Id = relatedToId;
+                    //         rfqToVendor.buildertek__status__c = status;
+                    //         rfqToVendor.buildertek__Rejected_Date__c = system.now();
+                    //         rfqToVendor.buildertek__Awarded_Date__c = null;
+                    //         update rfqToVendor;
+                    //         System.debug('RFQ To vendor::' + rfqToVendor);
 
-                            buildertek__RFQ__c rfq;
-                            rfq = [SELECT Id, Name, buildertek__Accepted_Date__c, buildertek__Awarded_Date__c, buildertek__RFQ_s_Replied_To__c
-                                   FROM buildertek__RFQ__c
-                                   WHERE Id = :refqVendor.buildertek__RFQ__c];
+                    //         buildertek__RFQ__c rfq;
+                    //         rfq = [SELECT Id, Name, buildertek__Accepted_Date__c, buildertek__Awarded_Date__c, buildertek__RFQ_s_Replied_To__c
+                    //                FROM buildertek__RFQ__c
+                    //                WHERE Id = :refqVendor.buildertek__RFQ__c];
 
-                            if (rfq != null){
-                                rfq.buildertek__Status__c = 'Canceled';
-                                rfq.buildertek__Awarded_Date__c = null;
-                               /* if (rfq.buildertek__RFQ_s_Replied_To__c != null){
-                                    rfq.buildertek__RFQ_s_Replied_To__c += 1;
-                                } else{
-                                    rfq.buildertek__RFQ_s_Replied_To__c = 1;
-                                } */
-                                update rfq;
-                                System.debug('Updated RFQ::' + rfq);
-                                System.debug([SELECT Id, Name, buildertek__Status__c
-                                              FROM buildertek__rfq_to_vendor__c
-                                              WHERE Id = :relatedToId]);
-                            }
-                        }
-                    }
+                    //         if (rfq != null){
+                    //             rfq.buildertek__Status__c = 'Canceled';
+                    //             rfq.buildertek__Awarded_Date__c = null;
+                    //            /* if (rfq.buildertek__RFQ_s_Replied_To__c != null){
+                    //                 rfq.buildertek__RFQ_s_Replied_To__c += 1;
+                    //             } else{
+                    //                 rfq.buildertek__RFQ_s_Replied_To__c = 1;
+                    //             } */
+                    //             update rfq;
+                    //             System.debug('Updated RFQ::' + rfq);
+                    //             System.debug([SELECT Id, Name, buildertek__Status__c
+                    //                           FROM buildertek__rfq_to_vendor__c
+                    //                           WHERE Id = :relatedToId]);
+                    //         }
+                    //     }
+                    // }
                 } catch (exception ex){
                     system.debug('----fail---' + ex);
                     throw ex;

@@ -1,7 +1,7 @@
 <aura:component  implements="force:hasRecordId,force:lightningQuickActionWithoutHeader,lightning:isUrlAddressable,lightning:actionOverride,force:hasSObjectName" access="global" controller="CreateScheduleFromQuoteController">
 
     <aura:attribute name="recordError" type="Object" />
-    <aura:attribute name="quoteRecord" type="Object" />
+    <aura:attribute name="budgetRecord" type="Object" />
     <aura:attribute name="recordFields" type="Object" />
     <aura:attribute name="isDisabled" type="Boolean" default="false" />
     <aura:attribute name="isLoading" type="Boolean" default="false" />
@@ -30,7 +30,7 @@
     layoutType="FULL"
     recordId="{!v.recordId}"
     targetError="{!v.recordError}"
-    targetRecord="{!v.quoteRecord}"
+    targetRecord="{!v.budgetRecord}"
     targetFields="{!v.recordFields}"
     mode="VIEW" />
 

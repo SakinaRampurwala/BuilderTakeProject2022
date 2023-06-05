@@ -67,5 +67,8 @@
     },
     closeModel:function (component, event, helper) {
         $A.get("e.force:closeQuickAction").fire();
-    }
+    },
+    // handleProjectChange:function (component, event, helper) {
+    //     console.log(event.getSource().get('v.value'));
+    // }
 })

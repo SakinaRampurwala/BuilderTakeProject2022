@@ -106,6 +106,13 @@ public without sharing class RFQAccepted{
                       // futuremethod(rfqStatus, rfqToVendorId);
                        System.debug('RFQ Email Send one');
                        rfqMessage = 'Thank-You for accepting our RFQ. We look forward to working with you!';
+
+                       rfqrec.buildertek__status__c = 'Accepted';
+                       rfqrec.buildertek__Accepted_Date__c = System.today();
+
+                       rfqToVendorListDup[0].buildertek__status__c = 'Accepted';
+                       rfqrec.buildertek__Accepted_Date__c = System.today();
+
                     //rfqMessage = rfqToVendorListDup[0].buildertek__RFQ__r.buildertek__Status__c +'_'+rfqToVendorListDup[0].buildertek__Status__c;
                    } else{
                         //futureContoller.futuremethod(rfqStatus, rfqToVendorId); 
@@ -113,7 +120,18 @@ public without sharing class RFQAccepted{
                      message.subject = 'Decline [ref:' + rfqToVendorId + ']';
                      message.plainTextBody = 'Rejected';
                        rfqMessage = 'You have rejected bid \"' +rfqrec.Name +'\".  If you feel you have rejected this bid in error please contact us.';
+
+                        rfqrec.buildertek__status__c = 'Rejected';
+                        rfqrec.buildertek__Awarded_Date__c = null;
+
+                        rfqToVendorListDup[0].buildertek__status__c = 'Canceled';
+                        rfqToVendorListDup[0].buildertek__Rejected_Date__c = system.now();
+                        rfqToVendorListDup[0].buildertek__Awarded_Date__c = null;
                    }
+
+                   update rfqrec;
+                   update rfqToVendorListDup;
+
                    if ( owea.size() > 0 ) {
                        message.setOrgWideEmailAddressId(owea.get(0).Id);
                    }

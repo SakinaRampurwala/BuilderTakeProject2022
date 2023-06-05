@@ -403,6 +403,12 @@ public class ProjectTaskTriggerHandler{
 	}
 
 	public void OnAfterUpdateOriginalstartandEndDates(Project_Task__c[] oldProjectTasks, Project_Task__c[] updatedProjectTasks, Map<ID, Project_Task__c> ProjectTaskMap, Map<Id, Project_Task__c> oldProjectTaskMap){
+		buildertek__Admin_Interface_Node_Configuration__c adminInterfaceNodeConfigurations = [Select Id, buildertek__Do_not_Shift_Schedule_Dates_base_on_Pred__c
+		                                                                                      from buildertek__Admin_Interface_Node_Configuration__c
+		                                                                                      WHERE Name = :'Schedule Configuration'];
+		Boolean donotShiftdatesofSchedules = adminInterfaceNodeConfigurations.buildertek__Do_not_Shift_Schedule_Dates_base_on_Pred__c;
+
+		if (!donotshiftdatesofSchedules){
 		System.debug('3rd method data in new list ==> ' + updatedProjectTasks);
 		// List<Project_Task__C> testSIList = new List<Project_Task__C>();
 		// testSIList = [Select Id, Name, buildertek__Start__c, buildertek__Finish__c, buildertek__Duration__c
@@ -423,9 +429,17 @@ public class ProjectTaskTriggerHandler{
 		}
 		System.debug('3rd method data at end of method new list ==> ' + updatedProjectTasks);
 	}
+	}
 
 	public void OnAfterUpdate(Project_Task__c[] oldProjectTasks, Project_Task__c[] updatedProjectTasks, Map<ID, Project_Task__c> ProjectTaskMap, Map<Id, Project_Task__c> oldProjectTaskMap){
 		System.debug('updatedProjectTasks in the beginning of method ==> ' + updatedProjectTasks);
+		buildertek__Admin_Interface_Node_Configuration__c adminInterfaceNodeConfigurations = [Select Id, buildertek__Do_not_Shift_Schedule_Dates_base_on_Pred__c
+		                                                                                      from buildertek__Admin_Interface_Node_Configuration__c
+		                                                                                      WHERE Name = :'Schedule Configuration'];
+		Boolean donotShiftdatesofSchedules = adminInterfaceNodeConfigurations.buildertek__Do_not_Shift_Schedule_Dates_base_on_Pred__c;
+
+		System.debug('donnotShiftdatesofSchedules:- ' + donotShiftdatesofSchedules);
+		if (donotshiftdatesofSchedules == false){
 
 		// this variable is used in processrecord method for get old map
 		oldMapValue = oldProjectTaskMap;
@@ -634,11 +648,19 @@ public class ProjectTaskTriggerHandler{
 		 Database.executeBatch(taskBatch, 1000);*/
 		// ProjectTaskBatch taskBatch = new ProjectTaskBatch(scheduleIds);
 		// Database.executeBatch(taskBatch, 1000);
+		}
 	}
 
 	//@future
 	public static void processRecords(Set<Id> scheduleIds, Id schId, Set<Id> TaskIds, Boolean isFromImportTask, String isAfterInsert){
 		system.debug(isFromImportTask);
+		buildertek__Admin_Interface_Node_Configuration__c adminInterfaceNodeConfigurations = [Select Id, buildertek__Do_not_Shift_Schedule_Dates_base_on_Pred__c
+		                                                                                      from buildertek__Admin_Interface_Node_Configuration__c
+		                                                                                      WHERE Name = :'Schedule Configuration'];
+		Boolean donotShiftdatesofSchedules = adminInterfaceNodeConfigurations.buildertek__Do_not_Shift_Schedule_Dates_base_on_Pred__c;
+
+		System.debug('donnotShiftdatesofSchedules:- ' + donotShiftdatesofSchedules);
+		if (donotshiftdatesofSchedules == false){
 
 		List<buildertek__Project_Task__c> previuosTasks = [Select Id, Name, buildertek__Start__c, buildertek__Finish__c, buildertek__Duration__c
 		                                                   FROM buildertek__Project_Task__c
@@ -1076,6 +1098,7 @@ public class ProjectTaskTriggerHandler{
 		// UpdateScheduleItemdatesbatchhelper.batchjobexcute(mapAllTask.keySet());
 
 		ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
+		}
 	}
 
 	public void insertUpdateMilestones(Project_Task__c[] ProjectTasks, Map<ID, Project_Task__c> ProjectTaskMap){
@@ -1184,6 +1207,14 @@ public class ProjectTaskTriggerHandler{
 	}
 
 	public void updateChildDatesWithPredecessor(Project_Task__c[] ProjectTasks, Map<ID, Project_Task__c> ProjectTaskMap){
+
+		buildertek__Admin_Interface_Node_Configuration__c adminInterfaceNodeConfigurations = [Select Id, buildertek__Do_not_Shift_Schedule_Dates_base_on_Pred__c
+		                                                                                      from buildertek__Admin_Interface_Node_Configuration__c
+		                                                                                      WHERE Name = :'Schedule Configuration'];
+		Boolean donotShiftdatesofSchedules = adminInterfaceNodeConfigurations.buildertek__Do_not_Shift_Schedule_Dates_base_on_Pred__c;
+
+		System.debug('donnotShiftdatesofSchedules:- ' + donotShiftdatesofSchedules);
+		if (donotshiftdatesofSchedules == false){
 		// List<Project_Task__c> tempList = new List<Project_Task__c>();
 		// tempList = [select Id, Name, buildertek__Start__c, buildertek__Finish__c, buildertek__Duration__c, buildertek__Dependency__c, buildertek__Dependency__r.buildertek__Schedule_Item_Dependency_Path__c, buildertek__Schedule_Item_Dependency_Path__c, buildertek__Schedule__c, buildertek__Milestone__c, buildertek__Phase__c
 		//             from buildertek__Project_Task__c
@@ -1336,6 +1367,7 @@ public class ProjectTaskTriggerHandler{
 		}
 		ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
 		ProjectTaskTriggerHandler.isFromImport = false;
+		}
 	}
 
 	public static void checkDependency(List<buildertek__Project_Task__c> scheduleItemId){
