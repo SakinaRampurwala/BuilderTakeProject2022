@@ -13,7 +13,7 @@
     </header>
     
     <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
-        <lightning:input  type="text" name="input1" label="Enter some text" value="{!v.fileName}" onchange="{!c.changeFileName}" />
+        <lightning:input  type="text" name="input1" label="Enter Budget Export Name" value="{!v.fileName}" onchange="{!c.changeFileName}" />
     </div>
 
     <footer class="slds-modal__footer">

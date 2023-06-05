@@ -38,7 +38,7 @@ public without sharing class CreateScheduleFromQuoteController {
             }
 
             if(sobjName == 'buildertek__Budget__c'){
-                budgetLineList=[Select Id , Name , buildertek__Contractor__c, buildertek__Budget_Line_Group__r.Name , buildertek__Budget_Line_Group__c, buildertek__Budget__c From buildertek__Budget_Item__c where buildertek__Budget__c=:recId];
+                budgetLineList=[Select Id , Name , buildertek__Contractor__c, buildertek__Group__r.Name , buildertek__Group__c, buildertek__Budget__c From buildertek__Budget_Item__c where buildertek__Budget__c=:recId];
                 if(budgetLineList.size() > 0){
                     for(buildertek__Budget_Item__c budgetLineRec:budgetLineList){
                         buildertek__Project_Task__c scheduleLineRec = new buildertek__Project_Task__c();
@@ -47,7 +47,7 @@ public without sharing class CreateScheduleFromQuoteController {
                         scheduleLineRec.buildertek__Start__c=scheduleList.buildertek__Initial_Start_Date__c;
                         scheduleLineRec.buildertek__Duration__c=1;
     
-                        scheduleLineRec.buildertek__Phase__c=budgetLineRec.buildertek__Budget_Line_Group__r.Name;
+                        scheduleLineRec.buildertek__Phase__c=budgetLineRec.buildertek__Group__r.Name;
                         scheduleLineRec.buildertek__Contractor__c=budgetLineRec.buildertek__Contractor__c;
     
                         scheduleLineList.add(scheduleLineRec);
