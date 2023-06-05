@@ -29,11 +29,13 @@
                 mode: 'dismissible'
             });
         toastEvent.fire();
+        console.log('sObjectName'+ component.get('v.sObjectName'));
 
         var action=component.get("c.createScheduleLine");
         action.setParams({
             scheduleId:component.get('v.scheduleId'),
-            quoteId:component.get('v.recordId')
+            recId:component.get('v.recordId'),
+            sobjName:component.get('v.sObjectName')
         });
         action.setCallback(this, function (response){
             console.log(response.getState());
