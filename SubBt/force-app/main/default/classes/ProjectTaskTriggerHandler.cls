@@ -100,7 +100,7 @@ public class ProjectTaskTriggerHandler{
 			if (newProjectTask.buildertek__Completed__c == true){
 				newProjectTask.buildertek__Actual_Completion_date__c = system.today();
 				newProjectTask.buildertek__Completion__c = 100;
-			} 
+			}
 
 			//Calculate Start Date And End Date with Weekends.
 			if (newProjectTask.buildertek__Start__c != null){
@@ -157,7 +157,7 @@ public class ProjectTaskTriggerHandler{
 			//Calculate Start Date And End Date with Weekends.
 			//system.debug(updatedProjectTask.buildertek__Start__c);
 
-			
+
 			//Actual Completion date
 			if (updatedProjectTask.buildertek__Completion__c == 100){
 				updatedProjectTask.buildertek__Actual_Completion_date__c = system.today();
@@ -176,7 +176,7 @@ public class ProjectTaskTriggerHandler{
 			if (updatedProjectTask.buildertek__Completed__c == true){
 				updatedProjectTask.buildertek__Actual_Completion_date__c = system.today();
 				updatedProjectTask.buildertek__Completion__c = 100;
-			} 
+			}
 
 
 			if (updatedProjectTask.buildertek__Completion__c > 0 && updatedProjectTask.buildertek__Completion_updated__c == false){
@@ -403,10 +403,14 @@ public class ProjectTaskTriggerHandler{
 	}
 
 	public void OnAfterUpdateOriginalstartandEndDates(Project_Task__c[] oldProjectTasks, Project_Task__c[] updatedProjectTasks, Map<ID, Project_Task__c> ProjectTaskMap, Map<Id, Project_Task__c> oldProjectTaskMap){
-		buildertek__Admin_Interface_Node_Configuration__c adminInterfaceNodeConfigurations = [Select Id, buildertek__Do_not_Shift_Schedule_Dates_base_on_Pred__c
-		                                                                                      from buildertek__Admin_Interface_Node_Configuration__c
-		                                                                                      WHERE Name = :'Schedule Configuration'];
-		Boolean donotShiftdatesofSchedules = adminInterfaceNodeConfigurations.buildertek__Do_not_Shift_Schedule_Dates_base_on_Pred__c;
+		List<buildertek__Admin_Interface_Node_Configuration__c> adminInterfaceNodeConfigurations = [Select Id, buildertek__Do_not_Shift_Schedule_Dates_base_on_Pred__c
+                                                                                              from buildertek__Admin_Interface_Node_Configuration__c
+                                                                                              WHERE Name = :'Schedule Configuration' LIMIT 1];
+
+        Boolean donotShiftdatesofSchedules = false;
+        if (adminInterfaceNodeConfigurations.size() > 0) {
+            donotShiftdatesofSchedules = adminInterfaceNodeConfigurations[0].buildertek__Do_not_Shift_Schedule_Dates_base_on_Pred__c;
+        }
 
 		if (!donotshiftdatesofSchedules){
 		System.debug('3rd method data in new list ==> ' + updatedProjectTasks);
@@ -432,11 +436,14 @@ public class ProjectTaskTriggerHandler{
 	}
 
 	public void OnAfterUpdate(Project_Task__c[] oldProjectTasks, Project_Task__c[] updatedProjectTasks, Map<ID, Project_Task__c> ProjectTaskMap, Map<Id, Project_Task__c> oldProjectTaskMap){
-		System.debug('updatedProjectTasks in the beginning of method ==> ' + updatedProjectTasks);
-		buildertek__Admin_Interface_Node_Configuration__c adminInterfaceNodeConfigurations = [Select Id, buildertek__Do_not_Shift_Schedule_Dates_base_on_Pred__c
-		                                                                                      from buildertek__Admin_Interface_Node_Configuration__c
-		                                                                                      WHERE Name = :'Schedule Configuration'];
-		Boolean donotShiftdatesofSchedules = adminInterfaceNodeConfigurations.buildertek__Do_not_Shift_Schedule_Dates_base_on_Pred__c;
+		List<buildertek__Admin_Interface_Node_Configuration__c> adminInterfaceNodeConfigurations = [Select Id, buildertek__Do_not_Shift_Schedule_Dates_base_on_Pred__c
+                                                                                              from buildertek__Admin_Interface_Node_Configuration__c
+                                                                                              WHERE Name = :'Schedule Configuration' LIMIT 1];
+
+        Boolean donotShiftdatesofSchedules = false;
+        if (adminInterfaceNodeConfigurations.size() > 0) {
+            donotShiftdatesofSchedules = adminInterfaceNodeConfigurations[0].buildertek__Do_not_Shift_Schedule_Dates_base_on_Pred__c;
+        }
 
 		System.debug('donnotShiftdatesofSchedules:- ' + donotShiftdatesofSchedules);
 		if (donotshiftdatesofSchedules == false){
@@ -654,10 +661,14 @@ public class ProjectTaskTriggerHandler{
 	//@future
 	public static void processRecords(Set<Id> scheduleIds, Id schId, Set<Id> TaskIds, Boolean isFromImportTask, String isAfterInsert){
 		system.debug(isFromImportTask);
-		buildertek__Admin_Interface_Node_Configuration__c adminInterfaceNodeConfigurations = [Select Id, buildertek__Do_not_Shift_Schedule_Dates_base_on_Pred__c
-		                                                                                      from buildertek__Admin_Interface_Node_Configuration__c
-		                                                                                      WHERE Name = :'Schedule Configuration'];
-		Boolean donotShiftdatesofSchedules = adminInterfaceNodeConfigurations.buildertek__Do_not_Shift_Schedule_Dates_base_on_Pred__c;
+		List<buildertek__Admin_Interface_Node_Configuration__c> adminInterfaceNodeConfigurations = [Select Id, buildertek__Do_not_Shift_Schedule_Dates_base_on_Pred__c
+                                                                                              from buildertek__Admin_Interface_Node_Configuration__c
+                                                                                              WHERE Name = :'Schedule Configuration' LIMIT 1];
+
+        Boolean donotShiftdatesofSchedules = false;
+        if (adminInterfaceNodeConfigurations.size() > 0) {
+            donotShiftdatesofSchedules = adminInterfaceNodeConfigurations[0].buildertek__Do_not_Shift_Schedule_Dates_base_on_Pred__c;
+        }
 
 		System.debug('donnotShiftdatesofSchedules:- ' + donotShiftdatesofSchedules);
 		if (donotshiftdatesofSchedules == false){
@@ -1208,10 +1219,14 @@ public class ProjectTaskTriggerHandler{
 
 	public void updateChildDatesWithPredecessor(Project_Task__c[] ProjectTasks, Map<ID, Project_Task__c> ProjectTaskMap){
 
-		buildertek__Admin_Interface_Node_Configuration__c adminInterfaceNodeConfigurations = [Select Id, buildertek__Do_not_Shift_Schedule_Dates_base_on_Pred__c
-		                                                                                      from buildertek__Admin_Interface_Node_Configuration__c
-		                                                                                      WHERE Name = :'Schedule Configuration'];
-		Boolean donotShiftdatesofSchedules = adminInterfaceNodeConfigurations.buildertek__Do_not_Shift_Schedule_Dates_base_on_Pred__c;
+		List<buildertek__Admin_Interface_Node_Configuration__c> adminInterfaceNodeConfigurations = [Select Id, buildertek__Do_not_Shift_Schedule_Dates_base_on_Pred__c
+                                                                                              from buildertek__Admin_Interface_Node_Configuration__c
+                                                                                              WHERE Name = :'Schedule Configuration' LIMIT 1];
+
+        Boolean donotShiftdatesofSchedules = false;
+        if (adminInterfaceNodeConfigurations.size() > 0) {
+            donotShiftdatesofSchedules = adminInterfaceNodeConfigurations[0].buildertek__Do_not_Shift_Schedule_Dates_base_on_Pred__c;
+        }
 
 		System.debug('donnotShiftdatesofSchedules:- ' + donotShiftdatesofSchedules);
 		if (donotshiftdatesofSchedules == false){

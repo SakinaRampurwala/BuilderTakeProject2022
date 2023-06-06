@@ -341,7 +341,7 @@ export default base => class GanttToolbar extends base {
                             onAction : 'up.onExportToCSV'
                         }
                     ]
-                } 
+                }
 
             ]
         };

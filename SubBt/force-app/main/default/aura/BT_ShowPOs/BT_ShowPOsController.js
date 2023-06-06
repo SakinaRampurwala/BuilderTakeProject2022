@@ -9,7 +9,9 @@
             var state = response.getState();
             if(state === "SUCCESS"){
                  component.set("v.projectName", response.getReturnValue());
-            }else{
+            }
+            else{
+                component.set("v.Spinner", false);
                 var toastEvent = $A.get("e.force:showToast");
                 toastEvent.setParams({
                 "type": 'error',
@@ -22,6 +24,7 @@
          $A.enqueueAction(action);
         helper.getPoList(component, event, helper);
         helper.setColumns(component);
+        console.log("hello init is called");
     },
     doRfqSearch : function(component, event, helper) {
         //var pageNumber = component.get("v.PageNumber");

@@ -3,7 +3,7 @@
 	    $A.get("e.force:closeQuickAction").fire();    
 	},
     getPoList : function(component, event, helper){
-    	// component.set("v.Spinner", true);
+    	component.set("v.Spinner", true);
         var vendorValue = component.get("v.searchRfqVendorFilter");
         var statusValue = component.get("v.searchRfqStatusFilter");
         var descriptionValue = component.get("v.searchRfqDesFilter");
@@ -21,24 +21,34 @@
                 var pageSize = component.get("v.pageSize");
                 var result = response.getReturnValue();
                 component.set("v.masterBudgetsList", result);
-               
                 var resultData = [];
                 result.forEach(function(item,index){
                     resultData.push(item.purchaseOrderRecord);
                 });
                 var rows = resultData;
+                console.log("data 0" , rows);
+                debugger;
                 for (var i = 0; i < rows.length; i++) {
                     var row = rows[i];
                     if (row.buildertek__Vendor__c){
-                       row.Vendorname = row.buildertek__Vendor__r.Name; 
+                        row.Vendorname = row.buildertek__Vendor__r.Name; 
                     }
                     if (row.buildertek__Schedule_Item__c){
-                       row.ScheduleItem = row.buildertek__Schedule_Item__r.Name; 
+                        try{
+                            row.ScheduleItem = row.buildertek__Schedule_Item__r.Name; 
+                        }catch(error){
+                            console.log(error);
+                        }
+                    //    console.log("data 1" , row.ScheduleItem);
                     }
                     if(row.Name){
                         row.linkName = '/'+row.Id;
+                        // console.log("data 2" , row.linkName );
                     }
+                    console.log('14');
                 }
+                console.log("data" , rows);
+                debugger;
                 component.set("v.orgData",rows);
                 component.set("v.data",rows);
                 var groupByData = component.get("v.orgData");
