@@ -54,7 +54,7 @@ public with sharing class PurchaseOrderController {
         
         
         if(vendorName != '' || status != '' || description != ''){
-             String queryList = 'Select Id,Name,buildertek__Vendor__c,buildertek__Vendor__r.Name,buildertek__Status__c,buildertek__Date_Created__c,buildertek__Description__c, buildertek__PO_Total__c,buildertek__PO_Balance__c,buildertek__Paid_Amount__c,buildertek__Schedule_Item__c,buildertek__Project__r.Name from buildertek__Purchase_Order__c ';
+             String queryList = 'Select Id,Name,buildertek__Vendor__c,buildertek__Vendor__r.Name,buildertek__Status__c,buildertek__Date_Created__c,buildertek__Description__c, buildertek__PO_Total__c,buildertek__PO_Balance__c,buildertek__Paid_Amount__c,buildertek__Schedule_Item__c, buildertek__Schedule_Item__r, buildertek__Project__r.Name from buildertek__Purchase_Order__c ';
              queryList = queryList +  ' where buildertek__Project__c =: recordId ';
              if(description != '' && description != null){
                  queryList = queryList+ 'AND (buildertek__Description__c LIKE \'%'+description+'%\')'; //String.escapeSingleQuotes(description)
@@ -72,7 +72,7 @@ public with sharing class PurchaseOrderController {
              
          }else{
              PurchaseOrderList = [Select Id,Name,buildertek__Vendor__c,buildertek__Vendor__r.Name,buildertek__Status__c,buildertek__Date_Created__c, buildertek__Project__r.Name,
-                                  buildertek__Description__c, buildertek__PO_Total__c,buildertek__PO_Balance__c,buildertek__Paid_Amount__c,buildertek__Schedule_Item__c
+                                  buildertek__Description__c, buildertek__PO_Total__c,buildertek__PO_Balance__c,buildertek__Paid_Amount__c,buildertek__Schedule_Item__c, buildertek__Schedule_Item__r.Name
                                   from buildertek__Purchase_Order__c  where buildertek__Project__c =: recordId ORDER BY Name DESC
                  				];
          }

@@ -33,13 +33,8 @@
                     if (row.buildertek__Vendor__c){
                         row.Vendorname = row.buildertek__Vendor__r.Name; 
                     }
-                    if (row.buildertek__Schedule_Item__c){
-                        try{
-                            row.ScheduleItem = row.buildertek__Schedule_Item__r.Name; 
-                        }catch(error){
-                            console.log(error);
-                        }
-                    //    console.log("data 1" , row.ScheduleItem);
+                    if (row.buildertek__Schedule_Item__c && row.buildertek__Schedule_Item__r.Name != undefined ){
+                        row.ScheduleItem = row.buildertek__Schedule_Item__r.Name; 
                     }
                     if(row.Name){
                         row.linkName = '/'+row.Id;
