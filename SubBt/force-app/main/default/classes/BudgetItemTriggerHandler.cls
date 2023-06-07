@@ -88,16 +88,19 @@ public with sharing class BudgetItemTriggerHandler {
 		}
 
 		//* for change order
-		List<buildertek__Change_Order__c> changeOrderList = [SELECT Id, Name, buildertek__Budget__c, buildertek__Budget_Line__c FROM buildertek__Change_Order__c WHERE buildertek__Budget_Line__c IN: budgetLineIds];
-		for (buildertek__Change_Order__c changeOrder : changeOrderList) {
-			changeOrder.buildertek__Budget__c = null;
-			changeOrder.buildertek__Budget_Line__c = null;
-		}
-		if (changeOrderList.size() > 0) {
-			ChangeOrderTriggerHandler.blnSkipChangeOrderUpdateTrigger = true;
-			update changeOrderList;
-			ChangeOrderTriggerHandler.blnSkipChangeOrderUpdateTrigger = false;
-		}
+		// List<buildertek__Change_Order__c> changeOrderList = [SELECT Id, Name, buildertek__Budget__c, buildertek__Budget_Line__c FROM buildertek__Change_Order__c WHERE buildertek__Budget_Line__c IN: budgetLineIds];
+		// for (buildertek__Change_Order__c changeOrder : changeOrderList) {
+		// 	if(changeOrder.buildertek__Budget_Line__c == null){
+
+		// 	}
+		// 	changeOrder.buildertek__Budget__c = null;
+		// 	// changeOrder.buildertek__Budget_Line__c = null;
+		// }
+		// if (changeOrderList.size() > 0) {
+		// 	ChangeOrderTriggerHandler.blnSkipChangeOrderUpdateTrigger = true;
+		// 	update changeOrderList;
+		// 	ChangeOrderTriggerHandler.blnSkipChangeOrderUpdateTrigger = false;
+		// }
 
 
  	}

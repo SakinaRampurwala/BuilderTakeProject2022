@@ -2582,7 +2582,7 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
 
                 budgetGroupId = budgetGroup.Id;
             }
-            List<buildertek__Budget_Item__c> budgetItemList = [SELECT Id, Name,buildertek__Sales_Price__c, buildertek__Total_Costs__c, buildertek__Budget__c FROM buildertek__Budget_Item__c WHERE Id IN :strList];
+            List<buildertek__Budget_Item__c> budgetItemList = [SELECT Id, Name,buildertek__Sales_Price__c, buildertek__Unit_Price__c, buildertek__Total_Costs__c, buildertek__Budget__c FROM buildertek__Budget_Item__c WHERE Id IN :strList];
     
             List<buildertek__CO_Item_To_Budget_Item_Link__c> BudgetCoLinkList = new List<buildertek__CO_Item_To_Budget_Item_Link__c>();
 
@@ -2607,8 +2607,7 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
                         COItemToBudgetItemLinks.add(COItemToBudgetItemLink);
                     }
                 }
-                budgetItem.buildertek__Unit_Price__c=co.buildertek__Total_Costs__c;
-                // budgetItem.buildertek__Labor__c=co.buildertek__Total_Amount_Tax__c	;
+                budgetItem.buildertek__Unit_Price__c=budgetItem.buildertek__Unit_Price__c + co.buildertek__Total_Costs__c;
             }
             update budgetItemList;
             insert COItemToBudgetItemLinks;
