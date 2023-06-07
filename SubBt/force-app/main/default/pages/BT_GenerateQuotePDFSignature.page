@@ -1,4 +1,4 @@
-<apex:page controller="BT_GenerateQuotePDF"  standardStylesheets="false" applyHtmlTag="false" applyBodyTag="false" showHeader="false" renderAs="pdf"  action="{!createPDF}" >
+<apex:page controller="BT_GenerateQuotePDFSignature"  standardStylesheets="false" applyHtmlTag="false" applyBodyTag="false" showHeader="false" renderAs="pdf"  action="{!createPDF}" >
 <!--<script>
         window.onload = onload;
         function onload{
@@ -13,10 +13,12 @@
 <apex:outputPanel rendered="{!filerecid != null}" >
 <div >
 Signature
-<div style="border:1px solid black;">   
-  <!-- <apex:outputText value="{!filerecid}" escape="false"/> -->
-
- <apex:image url="/sfc/servlet.shepherd/version/download/{!filerecid}"/> 
+<div style="border:1px solid black;">
+    <!-- <div>
+        {!base64}
+    </div>    -->
+    <!-- <apex:outputText value="{!base64}" escape="false"/> -->
+ <!-- <apex:image url="/sfc/servlet.shepherd/version/download/{!filerecid}"/>  -->
    <!-- <apex:image url="https://btservice360-dev-ed.lightning.force.com/sfc/servlet.shepherd/version/download/0681K00000avraSQAQ" /> -->
     
 </div> <br/>

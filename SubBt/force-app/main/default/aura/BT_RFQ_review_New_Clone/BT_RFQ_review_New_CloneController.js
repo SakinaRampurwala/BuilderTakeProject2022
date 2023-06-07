@@ -149,7 +149,7 @@
             }
         });
         var uniqueSet = new Set(vendorList);
-        var uniqueList = Array.from(uniqueSet);    
+        var uniqueList = Array.from(uniqueSet);
         component.set("v.selectedVendorList" , uniqueList);
         console.log(component.get("v.selectedVendorList" ));
         // === End of BUIL-3031 ====
@@ -1407,6 +1407,15 @@ $A.enqueueAction(action);*/
                 dynamicClass = '';
                 dynamicStyle = 'margin:1px;';
             }
+
+            //* slice Name of vendor items to render properly in table
+            selectedVendor.forEach(element => {
+                element.buildertek__Vendor_Items__r.forEach(ele => {
+                    if(ele.Name.length > 35){
+                        ele.Name = ele.Name.slice(0,35)+'...';
+                    }
+                });
+            });
             component.set('v.dynamicStyle', dynamicStyle);
             component.set('v.dynamicClass', dynamicClass);
             component.set("v.isComparePopupOpen", true);

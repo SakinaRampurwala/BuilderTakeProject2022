@@ -306,11 +306,23 @@ public without sharing class PreviewQuoteController{
             Messaging.Emailfileattachment efa = new Messaging.Emailfileattachment();
             // efa.setFileName('Quote.pdf');
             efa.setFileName(quoterecbody[0].Name+'.pdf');
+            Blob b = setAttachmentBody(recordId, templateId, fileid);
+            system.debug('Blob ---> ' + b);
 
+            // ContentVersion conVer = new ContentVersion();
+            // conVer.PathOnClient = 'Quote.pdf'; // The files name, extension is very important here which will help the file in preview.
+            // conVer.Title = quoterecbody[0].Name; // Display name of the files
+            // conVer.VersionData = b; // converting your binary string to Blog
+            // insert conVer;    //Insert ContentVersion
 
+            // ContentDocumentLink conDocLink = New ContentDocumentLink();
+            // conDocLink.LinkedEntityId = recordId; // Specify RECORD ID here i.e Any Object ID (Standard Object/Custom Object)
+            // conDocLink.ContentDocumentId = [SELECT ContentDocumentId FROM ContentVersion WHERE Id =:conVer.Id].ContentDocumentId;  //ContentDocumentId Id from ContentVersion
+            // conDocLink.Visibility = 'AllUsers';
+            // insert conDocLink;
 
-            system.debug('Blob ---> ' + setAttachmentBody(recordId, templateId, fileid));
-            efa.setBody(setAttachmentBody(recordId, templateId, fileid));
+            
+            efa.setBody(b);
             fileAttachments.add(efa);
             mail.setFileAttachments(fileAttachments);
             mails.add(mail);
@@ -532,6 +544,21 @@ public without sharing class PreviewQuoteController{
             }
             //system.debug('Blob ---> ' + setAttachmentBody(recordId, templateId, fileid));
             system.debug('templateId'+templateId);
+
+            Blob b = setAttachmentBody(recordId, templateId, fileid);
+            system.debug('Blob ---> ' + b);
+
+            ContentVersion conVer = new ContentVersion();
+            conVer.PathOnClient = 'Quote.pdf'; // The files name, extension is very important here which will help the file in preview.
+            conVer.VersionData = b; // converting your binary string to Blog
+            insert conVer;    //Insert ContentVersion
+
+            ContentDocumentLink conDocLink = New ContentDocumentLink();
+            conDocLink.LinkedEntityId = recordId; // Specify RECORD ID here i.e Any Object ID (Standard Object/Custom Object)
+            conDocLink.ContentDocumentId = [SELECT ContentDocumentId FROM ContentVersion WHERE Id =:conVer.Id].ContentDocumentId;  //ContentDocumentId Id from ContentVersion
+            conDocLink.Visibility = 'AllUsers';
+            insert conDocLink;
+
             efa.setBody(setAttachmentBody(recordId, templateId, fileid));
             fileAttachments.add(efa);
             mail.setFileAttachments(fileAttachments);

@@ -270,6 +270,9 @@ public without sharing class ConfirmationController{
             conDocLink.ContentDocumentId = conDoc;  //ContentDocumentId Id from ContentVersion
             conDocLink.shareType = 'I';
             insert conDocLink;
+
+            
+
             system.debug('objectAPIName-----' + objectAPIName);
             if (objectAPIName.contains('buildertek__Contract__c')){
                 buildertek__Contract__c contractrec = [select id, Name, buildertek__Status__c, buildertek__Customer_Accepted_Date__c, buildertek__Project__c, buildertek__Signed_Contract_Date__c
@@ -630,6 +633,25 @@ Messaging.sendEmail(new Messaging.SingleEmailMessage[] { email });  */
                 quoterec.buildertek__Date_Sent_To_Customer__c = System.today();
                 update quoterec;
 
+                templateId = apexpages.currentPage().getParameters().get('templateId');
+                
+                System.debug('imageContent: ' + imageContent);
+
+                Blob b = setAttachmentBody(recordId, templateId, ConVer.Id );
+                system.debug('Blob ---> ' + b);
+
+                ContentVersion conVer1 = new ContentVersion();
+                conVer1.PathOnClient = 'Quote.pdf'; // The files name, extension is very important here which will help the file in preview.
+                conVer1.VersionData = b; // converting your binary string to Blog
+                insert conVer1;    //Insert ContentVersion
+
+                ContentDocumentLink conDocLink1 = New ContentDocumentLink();
+                conDocLink1.LinkedEntityId = recordId; // Specify RECORD ID here i.e Any Object ID (Standard Object/Custom Object)
+                conDocLink1.ContentDocumentId = [SELECT ContentDocumentId FROM ContentVersion WHERE Id =:conVer1.Id].ContentDocumentId;  //ContentDocumentId Id from ContentVersion
+                conDocLink1.Visibility = 'AllUsers';
+                insert conDocLink1; 
+
+                
                 /*if(quoterec.buildertek__Status__c == 'Customer Accepted' && Checkcustomerview == null){
                  string theTemplate;
                  if (templateId != null){
@@ -728,5 +750,26 @@ Messaging.sendEmail(new Messaging.SingleEmailMessage[] { email });  */
         public Boolean isApproved{ get; set; }
 
         public Boolean isRejected{ get; set; }
+    }
+
+    private static Blob setAttachmentBody(String recordId, String templateId, String fileid){
+        System.debug(recordId);
+        System.debug(templateId);
+        System.debug(fileid);
+
+
+
+
+        pagereference pdf;
+        pdf = Page.buildertek__BT_GenerateQuotePDFSignature;
+        system.debug('*********'+pdf);
+        pdf.getParameters().put('recordId', recordId);
+        pdf.getParameters().put('templateId', templateId);
+        // pdf.getParameters().put('fileId', 'background-image:url("data:image/png;base64,'+fileid+'");');
+        pdf.getParameters().put('fileId',fileid);
+        pdf.setRedirect(true);
+
+        Blob blobbody = !Test.isRunningTest() ? pdf.getContent() : Blob.ValueOf('dummy text');
+        return blobbody;
     }
 }

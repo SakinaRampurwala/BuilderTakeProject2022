@@ -1,5 +1,5 @@
 <apex:component controller="QuotelineGroupingController" access="global">
-    <apex:attribute type="id" name="relatedTo_id" assignTo="{!relatedToId}" description="RelatedTo" />
+    <apex:attribute type="id" name="relatedTo_id" assignTo="{!relatedToId}" description="RelatedTo" access="global" />
 
     <!-- <div class="wrapper-box" style="margin: 0 auto;background: #fcfcfc;">  -->
 

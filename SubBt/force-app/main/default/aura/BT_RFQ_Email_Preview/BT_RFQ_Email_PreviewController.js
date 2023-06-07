@@ -11,6 +11,7 @@
 	},
 	send : function(component, event, helper) {
 		var onSuccess = component.get("v.onSuccess");
+		component.set('v.IsSpinner' , true);
     	if (!$A.util.isUndefinedOrNull(onSuccess)) {
     		onSuccess(component.get("v.emailSubject"), component.get("v.contactId"));
     	}
