@@ -1,7 +1,7 @@
 public class BT_NewGanttChartCls{
 
     //* getting settings from admin object for hidding column
-    @AuraEnabled
+    @AuraEnabled (cacheable=true)
     public static List<Boolean> getColumnSettings(){
         List<buildertek__Admin_Interface_Node_Configuration__c> adminSettings = new List<buildertek__Admin_Interface_Node_Configuration__c>();
         List<Boolean> BoolList = new List<Boolean>{true,true,true,true};

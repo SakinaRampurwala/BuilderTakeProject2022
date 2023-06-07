@@ -15,51 +15,62 @@
     onRecordSuccess: function (component, event, helper) {
         console.log('onRecordSuccess:::');
         console.log(event.getParams().response);
-        component.set('v.isLoading' , false);
         var record = event.getParams().response; 
         console.log(record.id);
-        component.set('v.scheduleId' ,record.id);
-        var toastEvent = $A.get("e.force:showToast");
-            toastEvent.setParams({
-                mode: 'sticky',
-                message: 'Schedule created successfully',
-                messageTemplate: "Schedule created successfully.",
-                type: 'success',
-                duration: '10000',
-                mode: 'dismissible'
-            });
-        toastEvent.fire();
-        console.log('sObjectName'+ component.get('v.sObjectName'));
 
-        var action=component.get("c.createScheduleLine");
-        action.setParams({
-            scheduleId:component.get('v.scheduleId'),
-            recId:component.get('v.recordId'),
-            sobjName:component.get('v.sObjectName')
-        });
-        action.setCallback(this, function (response){
-            console.log(response.getState());
-            console.log(response.getError());
+        window.setTimeout(
+            $A.getCallback(function() {
+                component.set('v.isLoading' , false);
+                component.set('v.scheduleId' ,record.id);
+                var toastEvent = $A.get("e.force:showToast");
+                    toastEvent.setParams({
+                        mode: 'sticky',
+                        message: 'Schedule created successfully',
+                        messageTemplate: "Schedule created successfully.",
+                        type: 'success',
+                        duration: '10000',
+                        mode: 'dismissible'
+                    });
+                toastEvent.fire();
+                console.log('sObjectName'+ component.get('v.sObjectName'));
+
+                var action=component.get("c.createScheduleLine");
+                action.setParams({
+                    scheduleId:component.get('v.scheduleId'),
+                    recId:component.get('v.recordId'),
+                    sobjName:component.get('v.sObjectName')
+                });
+                action.setCallback(this, function (response){
+                    console.log(response.getState());
+                    console.log(response.getError());
 
 
-        });
-        $A.enqueueAction(action); 
+                });
+                $A.enqueueAction(action); 
 
-        $A.get("e.force:closeQuickAction").fire();
+                $A.get("e.force:closeQuickAction").fire();
 
-        var navService = component.find("navService");        
-        var pageReference = {
-            "type": 'standard__recordPage',         
-            "attributes": {              
-                "recordId": record.id,
-                "actionName": "view",               
-                "objectApiName":"buildertek__Schedule__c"              
-            }        
-        };
-                
-        component.set("v.pageReference", pageReference);
-        var pageReference = component.get("v.pageReference");
-        navService.navigate(pageReference); 
+        
+
+                var navService = component.find("navService");        
+                var pageReference = {
+                    "type": 'standard__recordPage',         
+                    "attributes": {              
+                        "recordId": record.id,
+                        "actionName": "view",               
+                        "objectApiName":"buildertek__Schedule__c"              
+                    }        
+                };
+                        
+                component.set("v.pageReference", pageReference);
+                var pageReference = component.get("v.pageReference");
+                navService.navigate(pageReference); 
+
+            }), 3000
+        );
+
+
+        
     },
 
     handleError: function (component, event, helper) {

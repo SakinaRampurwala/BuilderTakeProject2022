@@ -26,8 +26,6 @@
                     resultData.push(item.purchaseOrderRecord);
                 });
                 var rows = resultData;
-                console.log("data 0" , rows);
-                debugger;
                 for (var i = 0; i < rows.length; i++) {
                     var row = rows[i];
                     if (row.buildertek__Vendor__c){
@@ -38,12 +36,8 @@
                     }
                     if(row.Name){
                         row.linkName = '/'+row.Id;
-                        // console.log("data 2" , row.linkName );
                     }
-                    console.log('14');
                 }
-                console.log("data" , rows);
-                debugger;
                 component.set("v.orgData",rows);
                 component.set("v.data",rows);
                 var groupByData = component.get("v.orgData");

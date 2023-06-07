@@ -1,6 +1,6 @@
 <!-- <aura:component implements="force:hasRecordId,force:lightningQuickActionWithoutHeader,lightning:actionOverride"
     access="global" controller="NewRecordCustomController"> -->
-<aura:component implements="force:hasRecordId,force:lightningQuickActionWithoutHeader,lightning:isUrlAddressable,lightning:actionOverride,force:hasSObjectName" controller="NewRecordCustomController" access="global">
+    <aura:component implements="force:hasRecordId,force:lightningQuickActionWithoutHeader,lightning:isUrlAddressable,lightning:actionOverride,force:hasSObjectName" controller="NewRecordCustomController" access="global">
 
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     <aura:handler name="change" value="{!v.pageReference}" action="{!c.reInit}" />
@@ -101,7 +101,7 @@
                         New Expense
                     </div>
                 </header>
-                <lightning:recordEditForm aura:id="recordViewForm" objectApiName="buildertek__Expense__c" onload="{!c.handleLoad}" onsubmit="{!c.handleSubmit}" onsuccess="{!c.onRecordSuccess}">
+                <lightning:recordEditForm aura:id="recordViewForm" objectApiName="buildertek__Expense__c" onload="{!c.handleLoad}" onsubmit="{!c.handleSubmit}" onsuccess="{!c.onRecordSuccess}" density="Compact">
                     <div class="" style="height:50vh;width:100%;overflow: auto;">
                         <div class="slds-p-around_medium" style="background-color:white;">
                             <lightning:layout multipleRows="true">
@@ -129,10 +129,9 @@
 
                                         <aura:if isTrue="{!field.name == 'buildertek__Budget__c'}">
                                             <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
-                                                <div style="position: relative" >
-                                                    
+                                                <div style="display: flex;align-items: center;justify-content: flex-start;" >
                                                     <label>Budget </label>
-                                                    <div class="slds-input-has-icon slds-input-has-icon--right"  >
+                                                    <div class="slds-input-has-icon slds-input-has-icon--right" style="margin-left: 6.5rem; width:80%;" >
                                                         <aura:if isTrue="{!v.selectedBudgetName == ''}">
                                                             <span class="slds-icon_container slds-combobox__input-entity-icon searchIcon" title="record">
                                                                 <lightning:icon class="slds-icon slds-icon slds-icon_small" iconName="utility:search" size="x-small" alternativeText="icon"/>
@@ -146,9 +145,8 @@
                                                             </aura:set>
                                                         </aura:if>
                                                         <lightning:input aura:id="budgetInput" class="budgetInput" autocomplete="off" type="search" placeholder="Search Budget..." variant="label-hidden" value="{!v.selectedBudgetName}"  onclick="{!c.searchBudgetData}" onkeyup="{!c.keyupBudgetData}" />
-                                                    </div>
-            
-                                                    <aura:if isTrue="{!v.displayBudget}" >
+
+                                                        <aura:if isTrue="{!v.displayBudget}" >
                                                         <div id="listbox-id-11" class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid searchResult" role="listbox" style="position: absolute;" >
                                                             <ul class="slds-listbox slds-listbox_vertical" role="presentation">
 
@@ -184,6 +182,9 @@
                                                             </ul>
                                                         </div>
                                                     </aura:if>
+                                                    </div>
+            
+                                                    
                                                 </div>
                                                 
                                             </lightning:layoutItem>
@@ -192,10 +193,10 @@
                                         <aura:if isTrue="{!field.name == 'buildertek__Budget_Line__c'}">
 
                                             <lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
-                                                <div style="position: relative" >
+                                                <div style="display: flex;align-items: center;justify-content: flex-start;" >
                                                     
                                                     <label>Budget Line</label>
-                                                    <div class="slds-input-has-icon slds-input-has-icon--right"  >
+                                                    <div class="slds-input-has-icon slds-input-has-icon--right" style="margin-left: 5.6rem; width:80%;" >
                                                         <aura:if isTrue="{!v.selectedBudgetLineName == ''}">
                                                             <span class="slds-icon_container slds-combobox__input-entity-icon searchIcon" title="record">
                                                                 <lightning:icon class="slds-icon slds-icon slds-icon_small" iconName="utility:search" size="x-small" alternativeText="icon"/>
@@ -209,9 +210,7 @@
                                                             </aura:set>
                                                         </aura:if>
                                                         <lightning:input id="budgetLineInput" class="budgetLineInput" autocomplete="off" type="search" placeholder="Search Budget Line..." variant="label-hidden" value="{!v.selectedBudgetLineName}" onclick="{!c.searchBudgetLineData}" onkeyup="{!c.keyupBudgetLineData}" />
-                                                    </div>
-            
-                                                    <aura:if isTrue="{!v.displayBudgetLine}" >
+                                                        <aura:if isTrue="{!v.displayBudgetLine}" >
                                                         <div id="listbox-id-11" class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid searchResult" role="listbox" style="position: absolute;" >
                                                             <ul class="slds-listbox slds-listbox_vertical" role="presentation">
                                                                 <aura:if isTrue="{!v.loaded }">
@@ -246,6 +245,9 @@
                                                             </ul>
                                                         </div>
                                                     </aura:if>
+                                                    </div>
+            
+                                                    
                                                 </div>
                                                 
                                             </lightning:layoutItem>

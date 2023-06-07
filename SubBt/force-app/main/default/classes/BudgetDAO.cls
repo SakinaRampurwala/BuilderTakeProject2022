@@ -2562,7 +2562,7 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
     public static String addCoToBudget(String budgeLineIds, string selectedCO, string RecId){
         List<String> strList = budgeLineIds.split(',');
 
-        buildertek__Change_Order__c co = [SELECT Id, Name, buildertek__Total_Amount_Tax__c FROM buildertek__Change_Order__c WHERE Id =: selectedCO];
+        buildertek__Change_Order__c co = [SELECT Id, Name, buildertek__Total_Amount_Tax__c, buildertek__Total_Amount__c	, buildertek__Total_Costs__c FROM buildertek__Change_Order__c WHERE Id =: selectedCO];
         List<buildertek__Change_Order_Item__c> coLineList = [SELECT Id, Name FROM buildertek__Change_Order_Item__c WHERE buildertek__Change_Order__c =: selectedCO];
 
         Set<Id> coLineIds = new Set<Id>();
@@ -2582,7 +2582,7 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
 
                 budgetGroupId = budgetGroup.Id;
             }
-            List<buildertek__Budget_Item__c> budgetItemList = [SELECT Id, Name,buildertek__Sales_Price__c, buildertek__Budget__c FROM buildertek__Budget_Item__c WHERE Id IN :strList];
+            List<buildertek__Budget_Item__c> budgetItemList = [SELECT Id, Name,buildertek__Sales_Price__c, buildertek__Total_Costs__c, buildertek__Budget__c FROM buildertek__Budget_Item__c WHERE Id IN :strList];
     
             List<buildertek__CO_Item_To_Budget_Item_Link__c> BudgetCoLinkList = new List<buildertek__CO_Item_To_Budget_Item_Link__c>();
 
@@ -2602,10 +2602,13 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
                         buildertek__CO_Item_To_Budget_Item_Link__c COItemToBudgetItemLink = new buildertek__CO_Item_To_Budget_Item_Link__c();
                         COItemToBudgetItemLink.CO_Item__c = coLine.Id;
                         COItemToBudgetItemLink.Budget_Item__c = budgetItem.Id;
+
+                        // COItemToBudgetItemLink.buildertek__Total_Approvals_CO__c=co.buildertek__Total_Amount_Tax__c;
                         COItemToBudgetItemLinks.add(COItemToBudgetItemLink);
                     }
                 }
-                // budgetItem.buildertek__Group__c = budgetGroupId;
+                budgetItem.buildertek__Unit_Price__c=co.buildertek__Total_Costs__c;
+                // budgetItem.buildertek__Labor__c=co.buildertek__Total_Amount_Tax__c	;
             }
             update budgetItemList;
             insert COItemToBudgetItemLinks;

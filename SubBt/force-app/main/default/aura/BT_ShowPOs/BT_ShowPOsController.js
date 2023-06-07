@@ -24,7 +24,6 @@
          $A.enqueueAction(action);
         helper.getPoList(component, event, helper);
         helper.setColumns(component);
-        console.log("hello init is called");
     },
     doRfqSearch : function(component, event, helper) {
         //var pageNumber = component.get("v.PageNumber");

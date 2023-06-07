@@ -219,13 +219,11 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
 
   errorCallback(error, stack) {}
 
-  adminSettings(){
-    AdminSettings()
-    .then(result => {
-      this.boolList = result;
-    })
-    .catch(error => {console.log('error ',error);})
-  }
+  @wire (AdminSettings)
+  relatedMedia({data,error}) {
+    console.log('data in wire ',data);
+    this.boolList = data;
+  };
 
   get acceptedFormats() {
     return [".pdf", ".png", ".jpg", ".jpeg", ".csv", ".docx", ".doc"];
@@ -1326,38 +1324,41 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
       isWorking: false,
     };
 
-    this.adminSettings();
     console.log("Connected Callback");
   }
 
   renderedCallback() {
-    if (this.bryntumInitialized) {
-      return;
-    }
-    this.bryntumInitialized = true;
 
-    Promise.all([
-      loadScript(this, GANTTModule), //GanttDup ,SchedulerPro GANTTModule,GANTT + "/gantt.lwc.module.js"
-      //loadStyle(this,  GANTT + "/gantt.stockholm.css")
-      //loadStyle(this,  GANTT + "/gantt.stockholm.css")
-      loadStyle(this, GanttStyle + "/gantt.stockholm.css"),
-      // loadScript(this, Papa.unparse()), // papaparse lib..
-      loadScript(this, PARSER + "/PapaParse/papaparse.js"),
-    ])
-      .then(() => {
-        console.log("*******LIBRARY LOADED SUCCESSFULLY******");
-        this.gettaskrecords();
-        this.loadedChart = true;
-      })
-      .catch((error) => {
-        this.dispatchEvent(
-          new ShowToastEvent({
-            title: "Error loading Gantt Chart",
-            message: error,
-            variant: "error",
-          })
-        );
-      });
+    let intervalID = setInterval(() => {
+
+      if (this.bryntumInitialized) {
+        return;
+      }
+      this.bryntumInitialized = true;
+
+      Promise.all([
+        loadScript(this, GANTTModule), //GanttDup ,SchedulerPro GANTTModule,GANTT + "/gantt.lwc.module.js"
+        //loadStyle(this,  GANTT + "/gantt.stockholm.css")
+        //loadStyle(this,  GANTT + "/gantt.stockholm.css")
+        loadStyle(this, GanttStyle + "/gantt.stockholm.css"),
+        // loadScript(this, Papa.unparse()), // papaparse lib..
+        loadScript(this, PARSER + "/PapaParse/papaparse.js"),
+      ])
+        .then(() => {
+          console.log("*******LIBRARY LOADED SUCCESSFULLY******");
+          this.gettaskrecords();
+          this.loadedChart = true;
+        })
+        .catch((error) => {
+          this.dispatchEvent(
+            new ShowToastEvent({
+              title: "Error loading Gantt Chart",
+              message: error,
+              variant: "error",
+            })
+          );
+        });
+      }, 1000);
   }
 
   //   disconnectedCallback() {
@@ -1721,8 +1722,8 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
         }
       }
       this.scheduleItemsDataList = scheduleDataList;
-      console.log('boolList:- '+ this.boolList);
-      console.log('manuallyScheduledList:- '+ this.boolList[3]);
+      console.log('boolList:- ', this.boolList);
+      console.log('manuallyScheduledList:- ', this.boolList[3]);
       var formatedSchData = formatData(
         this.scheduleData,
         this.scheduleItemsData,
