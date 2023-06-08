@@ -59,9 +59,11 @@ public without sharing class BT_GenerateQuotePDFSignature {
             }
             if(objectAPIName.contains('buildertek__Quote__c')){
                 filerecid = apexpages.currentPage().getParameters().get('fileId').escapeHtml4();
-                System.debug('fileId: ' + filerecid);
-             Blob b = [SELECT VersionData FROM ContentVersion WHERE Id =: filerecid][0].VersionData;
-             base64 = 'background-image:url("data:image/png;base64,'+EncodingUtil.base64Encode(b)+'");';
+                String Signature = [Select buildertek__Description__c from buildertek__Quote__c where id =: recordID].buildertek__Description__c;
+                base64 = Signature;
+            //     System.debug('fileId: ' + filerecid);
+            //  Blob b = [SELECT VersionData FROM ContentVersion WHERE Id =: filerecid][0].VersionData;
+            //  base64 = 'background-image:url("data:image/png;base64,'+EncodingUtil.base64Encode(b)+'");';
 
             CustomerAcceptedDate = system.today();
             }

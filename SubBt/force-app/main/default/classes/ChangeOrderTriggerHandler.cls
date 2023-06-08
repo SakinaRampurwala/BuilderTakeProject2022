@@ -405,12 +405,53 @@ public without sharing class ChangeOrderTriggerHandler {
             }      */                                                      
         
     }
+
+    public void updateBudgetLine(buildertek__Change_Order__c[] oldChangeOrder, buildertek__Change_Order__c[] updatedChangeOrder, Map<ID, buildertek__Change_Order__c> ChangeOrderMap, Map<Id, buildertek__Change_Order__c> oldChangeOrderMap){
+        
+        Map<String, Decimal> budgetLineMap = new Map<String, Decimal>();
+
+        for(buildertek__Change_Order__c oppRec : updatedChangeOrder){
+            // 3314
+            if(oldChangeOrderMap.get(oppRec.Id).buildertek__Budget_Line__c!=null && oppRec.buildertek__Budget_Line__c==null){
+
+                budgetLineMap.put(oldChangeOrderMap.get(oppRec.Id).buildertek__Budget_Line__c , oppRec.buildertek__Total_Costs__c);
+            }
+        }
+
+        System.debug('budgetLineMap'+budgetLineMap);
+        List<buildertek__Budget_Item__c> budgetLineList= [Select Id , Name , buildertek__Unit_Price__c FROM buildertek__Budget_Item__c WHERE Id=:budgetLineMap.keySet()];
+
+        List<buildertek__Budget_Item__c> budgetLineListtest= new  List<buildertek__Budget_Item__c>();
+        System.debug(budgetLineList);
+        if(budgetLineList.size() >0){
+            for(buildertek__Budget_Item__c budgetLine : budgetLineList){
+                for(string budgetLineId:budgetLineMap.keySet()){
+                    if(budgetLine.Id == budgetLineId)
+                        budgetLine.buildertek__Unit_Price__c=budgetLine.buildertek__Unit_Price__c-budgetLineMap.get(budgetLineId);
+                        budgetLineListtest.add(budgetLine);
+                }
+               
+           
+            }
+
+        }
+        if(budgetLineListtest.size() > 0){
+            update budgetLineListtest;
+        }
+        
+
+    }
+
+
     
     public void OnAfterUpdate(buildertek__Change_Order__c[] oldChangeOrder, buildertek__Change_Order__c[] updatedChangeOrder, Map<ID, buildertek__Change_Order__c> ChangeOrderMap, Map<Id, buildertek__Change_Order__c> oldChangeOrderMap){
         SET<Id> changeOrderIdSet = new SET<Id>();
         SET<Id> changeOrderContractIdSet = new SET<Id>();
         Set<Id> coIds = new Set<Id>();
         Set<Id> oldcoids = new Set<Id>();
+
+        Map<String, Decimal> budgetLineMap = new Map<String, Decimal>();
+
         for(buildertek__Change_Order__c oldCO : oldChangeOrder){
             if(BT_UTILS.hasStringFieldValueChanged(ChangeOrderMap.get(oldCO.Id), oldCO, 'buildertek__Status__c')){
                 coIds.add(oldCO.Id);
@@ -618,6 +659,14 @@ public without sharing class ChangeOrderTriggerHandler {
             if(oldChangeOrderMap.get(oppRec.Id).buildertek__Budget__c != oppRec.buildertek__Budget__c ){
                 budgetChangeOrderSet.add(oppRec.Id);    
             }
+
+            // 3314
+            if(oldChangeOrderMap.get(oppRec.Id).buildertek__Budget_Line__c!=null && oppRec.buildertek__Budget_Line__c==null){
+
+                budgetLineMap.put(oldChangeOrderMap.get(oppRec.Id).buildertek__Budget_Line__c , oppRec.buildertek__Total_Costs__c);
+            }
+
+        
             
             if(budgetChangeOrderSet.size()>0){
                 COItemListForBudget= [SELECT Id,
@@ -662,6 +711,31 @@ public without sharing class ChangeOrderTriggerHandler {
                 
             }
         }
+
+
+        System.debug('budgetLineMap'+budgetLineMap);
+        List<buildertek__Budget_Item__c> budgetLineList= [Select Id , Name , buildertek__Unit_Price__c FROM buildertek__Budget_Item__c WHERE Id=:budgetLineMap.keySet()];
+
+        System.debug(budgetLineList);
+        if(budgetLineList.size() >0){
+            for(buildertek__Budget_Item__c budgetLine : budgetLineList){
+                for(string budgetLineId:budgetLineMap.keySet()){
+                    if(budgetLine.Id == budgetLineId)
+                        budgetLine.buildertek__Unit_Price__c=budgetLine.buildertek__Unit_Price__c-budgetLineMap.get(budgetLineId);
+                        budgetLineList.add(budgetLine);
+                }
+               
+           
+            }
+
+        }
+        if(budgetLineList.size() > 0){
+            update budgetLineList;
+        }
+        
+
+        
+
         
         
         

@@ -631,13 +631,16 @@ Messaging.sendEmail(new Messaging.SingleEmailMessage[] { email });  */
                 quoterec.buildertek__Status__c = 'Customer Accepted';
                 quoterec.buildertek__Date_Accepted_by_Customer__c = system.now();
                 quoterec.buildertek__Date_Sent_To_Customer__c = System.today();
+                quoterec.buildertek__Description__c = imageContent;
                 update quoterec;
 
                 templateId = apexpages.currentPage().getParameters().get('templateId');
                 
                 System.debug('imageContent: ' + imageContent);
-
                 Blob b = setAttachmentBody(recordId, templateId, ConVer.Id );
+                // Blob b = setAttachmentBody('a081K00000ykCe5QAE','00X1K000000wkgwUAA', '0681K00000e3DMhQAM' );
+
+
                 system.debug('Blob ---> ' + b);
 
                 ContentVersion conVer1 = new ContentVersion();
@@ -650,6 +653,8 @@ Messaging.sendEmail(new Messaging.SingleEmailMessage[] { email });  */
                 conDocLink1.ContentDocumentId = [SELECT ContentDocumentId FROM ContentVersion WHERE Id =:conVer1.Id].ContentDocumentId;  //ContentDocumentId Id from ContentVersion
                 conDocLink1.Visibility = 'AllUsers';
                 insert conDocLink1; 
+
+                
 
                 
                 /*if(quoterec.buildertek__Status__c == 'Customer Accepted' && Checkcustomerview == null){
@@ -752,7 +757,7 @@ Messaging.sendEmail(new Messaging.SingleEmailMessage[] { email });  */
         public Boolean isRejected{ get; set; }
     }
 
-    private static Blob setAttachmentBody(String recordId, String templateId, String fileid){
+    public static Blob setAttachmentBody(String recordId, String templateId, String fileid){
         System.debug(recordId);
         System.debug(templateId);
         System.debug(fileid);
@@ -766,7 +771,7 @@ Messaging.sendEmail(new Messaging.SingleEmailMessage[] { email });  */
         pdf.getParameters().put('recordId', recordId);
         pdf.getParameters().put('templateId', templateId);
         // pdf.getParameters().put('fileId', 'background-image:url("data:image/png;base64,'+fileid+'");');
-        pdf.getParameters().put('fileId',fileid);
+        pdf.getParameters().put('fileId', fileid);
         pdf.setRedirect(true);
 
         Blob blobbody = !Test.isRunningTest() ? pdf.getContent() : Blob.ValueOf('dummy text');

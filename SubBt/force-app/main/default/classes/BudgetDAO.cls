@@ -23,7 +23,7 @@ public with sharing class BudgetDAO{
                 budgetIdByGroupId.put(bItem.Id, bItem.buildertek__Group__c);
             }
         }
-        
+
         if (!groupIds.isEmpty()){
             for (buildertek__Budget_Item__c bItem : budgetItems){
                 bItem.buildertek__Group__c = budgetIdByGroupId.get(bItem.Id);
@@ -44,17 +44,17 @@ public with sharing class BudgetDAO{
                 if (Schema.sObjectType.buildertek__Budget_Line_Group__c.fields.Name.isCreateable()){
                     budgetGroup.Name = 'No Grouping';
                 }
-                
+
                 insert budgetGroup;
                 for (buildertek__Budget_Item__c bItem : budgetItems){
                     bItem.buildertek__Group__c = budgetGroup.Id;
                 }
             }
-            
-            
+
+
         }
-        
-        
+
+
         // // create new group for quote
         // if(!newBudgetWithoutGroup.isEmpty()){
         //     Budget_Line_Group__c budGroup = [SELECT Id FROM Budget_Line_Group__c WHERE Name = 'No Grouping'];
@@ -65,9 +65,9 @@ public with sharing class BudgetDAO{
         //         defaultGroup.Budget__c = budgetId;
         //         budgetIdByGroupId.put(budgetId, defaultGroup);
         //     }
-        
+
         //     insert budgetIdByGroupId.values();*/
-        
+
         //     for(Budget_Item__c bItem:budgetItems){
         //         if(budgetIdByGroupId.containsKey(bItem.Budget__c)){
         //             //bItem.Group__c = budgetIdByGroupId.get(bItem.budget__c).Id;
@@ -84,7 +84,7 @@ public with sharing class BudgetDAO{
     public static Boolean getmulticurrency(){
        return UserInfo.isMultiCurrencyOrganization();
     }
-    
+
     @AuraEnabled
     public static String getBudgetLineRecords(String selectedBudgetId){
         try{
@@ -102,7 +102,7 @@ public with sharing class BudgetDAO{
         }
         return null;
     }
-    
+
     @AuraEnabled
     public static string updateBudgetItemFromExpenseItem(String expenseNote, String expenseAmount, String expenseRefNo, String expensePaymentMethod, String expenseCostCode, String expenseType, String expensebudgetId, String expenseDescription, String projectId, String budgetItemId){
         isCreateExpense = true;
@@ -113,7 +113,7 @@ public with sharing class BudgetDAO{
         if (projectId == null || expensebudgetId == null){
             return projectId ;
         }
-        
+
       //  system.debug(budgetItemId);
         try{
             buildertek__Expense__c expenseobj = new buildertek__Expense__c();
@@ -137,7 +137,7 @@ public with sharing class BudgetDAO{
         }
         return projectId;
     }
-    
+
     // method for create expense and budget item
     @AuraEnabled
     public static string createBudgetItemFromExpenseItem(String expenseNote, String expenseAmount, String expenseRefNo, String expensePaymentMethod, String expenseCostCode, String expenseType, String expensebudgetId, String expenseDescription, String projectId){
@@ -166,7 +166,7 @@ public with sharing class BudgetDAO{
             //budgetItem.buildertek__Expense_Amount__c = expenseAmount;
             budgetItem.buildertek__Notes__c = expenseNote;
             insert budgetItem;
-            
+
             buildertek__Expense__c expenseobj = new buildertek__Expense__c();
             expenseobj.buildertek__Description__c = expenseDescription;
             expenseobj.buildertek__Budget__c = expensebudgetId;
@@ -182,11 +182,11 @@ public with sharing class BudgetDAO{
             insert expenseobj;
         } catch (Exception ex){
           //  System.debug('The following exception has occurred: ' + ex.getMessage());
-        
+
         }
          return projectId;
     }
-    
+
     @AuraEnabled
     public static string duplicateExpense(String expenseAmount, String expenseType, String expensePaymentMethod, String expenseDescription){
         Decimal Amount = null;
@@ -203,7 +203,7 @@ public with sharing class BudgetDAO{
             return null;
         }
     }
-    
+
     //Contingency Budget Items
     @AuraEnabled
     public static String getContingencyBudgetItems(String recordId){
@@ -217,7 +217,7 @@ public with sharing class BudgetDAO{
                                                            buildertek__Base_Sq_Feet__c, buildertek__Projected_Budget__c, buildertek__Forecast_To_Complete__c,
                                                            buildertek__Estimated_Cost_To_Complete__c, buildertek__Profit_Loss__c, buildertek__Projected_Costs__c, buildertek__Amount_Out__c, buildertek__Amount_In__c,
                                                            buildertek__Budget_Modification__c, buildertek__Regional_Factor__c, buildertek__Auto_Number1__c, buildertek__Cost_Code_Name__c, buildertek__Contractor__c, buildertek__Trade_Type__c, buildertek__Notes__c, buildertek__Contingency__c, buildertek__Budget_Line_Group__c, buildertek__Cost_Type__c, buildertek__Total_Approvals_CO__c,buildertek__CO_Total__c,
-                                                           buildertek__Variance__c, buildertek__Expense_Amount__c, buildertek__Variance_Percentage__c, buildertek__Additional_Costs__c, 
+                                                           buildertek__Variance__c, buildertek__Expense_Amount__c, buildertek__Variance_Percentage__c, buildertek__Additional_Costs__c,
                                                            buildertek__Bought_Out__c, buildertek__Gross_Profit_Percemtage__c, buildertek__Upgrades__c, buildertek__Total_Cost__c, buildertek__Cost_P__c, buildertek__Discount__c, buildertek__Sales_Price__c, buildertek__Proj_Profit_Loss__c, buildertek__Projected_Gross_Profit__c, buildertek__Eligible_Contingency_Amount__c
                                                            From buildertek__Budget_Item__c
                                                            where (buildertek__Budget__c = :recordId and buildertek__Contingency__c = false)
@@ -235,7 +235,7 @@ System.debug('Error Line Number::' + e.getLineNumber());
 }*/
         return null;
     }
-    
+
     @AuraEnabled
     public static String transferAmount(Boolean isLeftToRight, String budgetId, String budgetLineId, String budgetAmount, String contingencyId, String contingencyAmount, String amount, String note){
         try{
@@ -246,7 +246,7 @@ System.debug('Error Line Number::' + e.getLineNumber());
                     budgetItem.buildertek__Amount_In__c = Decimal.valueOf(budgetAmount);
                     budgetItem.buildertek__Notes__c = note;
                     update budgetItem;
-                    
+
                     budgetItem = new buildertek__Budget_Item__c();
                     budgetItem.Id = contingencyId;
                     budgetItem.buildertek__Amount_Out_2__c = Decimal.valueOf(contingencyAmount);
@@ -258,7 +258,7 @@ System.debug('Error Line Number::' + e.getLineNumber());
                     budgetItem.buildertek__Amount_Out_2__c = Decimal.valueOf(budgetAmount);
                     budgetItem.buildertek__Notes__c = note;
                     update budgetItem;
-                    
+
                     budgetItem = new buildertek__Budget_Item__c();
                     budgetItem.Id = contingencyId;
                     budgetItem.buildertek__Amount_In__c = Decimal.valueOf(contingencyAmount);
@@ -276,33 +276,33 @@ System.debug('Error Line Number::' + e.getLineNumber());
         }
         return null;
     }
-    
+
     /*Method to used to set Product name in Budget item Name field*/
     public static void setProductNameToItemName(List<buildertek__Budget_Item__c> budgetItems){
-        
+
         Set<Id> productIds = new set<Id>();
         for (buildertek__Budget_Item__c bItem : budgetItems){
             if (bItem.buildertek__Product__c != null){
                 productIds.add(bItem.buildertek__Product__c);
             }
         }
-        
+
         Map<Id, Product2> productByIDs = new map<Id, Product2>([Select Id, Name
                                                                 from Product2
                                                                 where Id IN :productIds]);
-        
+
         for (buildertek__Budget_Item__c bItem : budgetItems){
             if (bItem.buildertek__Product__c != null && productByIDs.ContainsKey(bItem.buildertek__Product__c)){
                 bItem.Name = productByIDs.get(bItem.buildertek__Product__c).Name;
                 bItem.buildertek__Item_Name__c = productByIDs.get(bItem.buildertek__Product__c).Name;
-                
+
                 if (bItem.Name.length() > 80){
                     bItem.Name = bItem.Name.substring(0, 79);
                 }
             }
         }
     }
-    
+
     /**********************************************************************************************************************
 Purpose: This method is used to create a Budget Item from PO items
 Parameters: Map<Id, Id> purchaseOrderItemIdByBudgetItem
@@ -314,7 +314,7 @@ Throws [Exceptions]:
         for (buildertek__Budget_Modifications__c bdM : budgetModifications){
             toBudgetItemIds.add(bdm.buildertek__To__c);
         }
-        
+
         List<buildertek__Budget_Item__c> budgetItemsToUpdate = new List<buildertek__Budget_Item__c>();
         List<string> listrec = new List<string>();
         Map<string, decimal> MapLists = new Map<string, decimal>();
@@ -327,20 +327,20 @@ Throws [Exceptions]:
         }
         for (AggregateResult ar : groupedResults){
             // Budget_Item__c budgetItem = new Budget_Item__c();
-            
+
             //  budgetItem.Id = (Id)ar.get('buildertek__To__c');
             //  budgetItem.Amount_In__c = (Decimal)ar.get('expr0');
             //  budgetItemsToUpdate.add(budgetItem);
             listrec.add((Id)ar.get('buildertek__To__c'));
             MapLists.put((Id)ar.get('buildertek__To__c'), (Decimal)ar.get('expr0'));
-            
+
         }
         if (Schema.sObjectType.buildertek__Budget_Item__c.fields.Id.isAccessible() && Schema.sObjectType.buildertek__Budget_Item__c.fields.buildertek__Amount_In__c.isAccessible()){
             budgetItemsToUpdate = [select id, buildertek__Amount_In__c
                                    from buildertek__Budget_Item__c
                                    where id IN :listrec];
         }
-        
+
         for (buildertek__Budget_Item__c BD : budgetItemsToUpdate){
             Bd.buildertek__Amount_In__c = MapLists.get(Bd.Id);
         }
@@ -348,7 +348,7 @@ Throws [Exceptions]:
             update budgetItemsToUpdate;
         }
     }
-    
+
     /**********************************************************************************************************************
 Purpose: This method is used to create a Budget Item from PO items
 Parameters: Map<Id, Id> purchaseOrderItemIdByBudgetItem
@@ -365,40 +365,40 @@ Throws [Exceptions]:
                                                                                                       from buildertek__Purchase_Order__c
                                                                                                       Where Id IN :poIds]);
         Map<Integer, buildertek__Budget_Item__c> poItemIndexToBudgetItem = new Map<Integer, buildertek__Budget_Item__c>();
-        
+
         Integer index = 0;
         for (buildertek__Purchase_Order_Item__c poItem : poItems){
-            
+
             buildertek__Budget_Item__c budgetItem = new buildertek__Budget_Item__c();
-            
+
             budgetItem.buildertek__Budget__c = poIdToPO.get(poItem.buildertek__Purchase_Order__c).buildertek__Budget__c;
             budgetItem.Name = poItem.buildertek__Item_Name__c;
             budgetItem.buildertek__Item_Name__c = poItem.buildertek__Item_Name__c;
             budgetItem.buildertek__Description__c = poItem.buildertek__Description__c;
             budgetItem.buildertek__Cost_Code__c = poItem.buildertek__Cost_Code__c;
             budgetItem.buildertek__Notes__c = poItem.buildertek__Notes__c;
-            
+
             budgetItems.add(budgetItem);
-            
+
             poItemIndexToBudgetItem.put(index, budgetItem);
             index++;
         }
-        
+
         if (!BudgetItems.isEmpty()){
-            
+
             insert BudgetItems;
-            
+
         }
-        
+
         index = 0;
         for (buildertek__Purchase_Order_Item__c poItem : poItems){
             poItem.buildertek__budget_Item__c = poItemIndexToBudgetItem.get(index).id;
             index++;
         }
-        
+
         return poItems;
     }
-    
+
     /**********************************************************************************************************************
 Purpose: This method is used to create a New budgetline group
 Parameters: budgetlinegrouping data
@@ -421,10 +421,10 @@ Throws [Exceptions]:
             insert budgetlinegroupToInsert;
             nameexist = 'Success';
         }
-        
+
         return nameexist;
     }
-    
+
     @AuraEnabled
     public static string saveNewBudgetSubGroup(string budgetLineSubGroupName, string budgetLineSubGroupDescription){
         List<buildertek__Budget_Line_Sub_Group__c> budgetGroup = [SELECT Id
@@ -440,10 +440,10 @@ Throws [Exceptions]:
             insert budgetLineSubGroupToInsert;
             nameexist = 'Success';
         }
-        
+
         return nameexist;
     }
-    
+
     /**********************************************************************************************************************
 Purpose: This method is used to create a Budget Item from selected products
 Parameters: String budgetId, String groupId, List<String> selectedProductIds
@@ -472,7 +472,7 @@ Throws [Exceptions]:
                                                                   FROM buildertek__Budget_Line_Group__c
                                                                   WHERE Name = 'No Grouping'
                                                                   limit 1];
-            
+
             if (budGrouping.size() > 0){
                 budgrpid = budGrouping[0].Id;
             } else{
@@ -507,9 +507,9 @@ Throws [Exceptions]:
                     }
                 } else{
                     buildertek__Budget_Line_Group__c budGroup = new buildertek__Budget_Line_Group__c();
-                    
+
                     budGroup.Name = 'No Grouping';
-                    
+
                     insert budGroup;
                   //  system.debug('budGroup ----------> ' + budGroup);
                     for (buildertek__Budget_Item__c bItem : budgetItemsToInsert){
@@ -518,16 +518,16 @@ Throws [Exceptions]:
                     }
                 }
             }
-            
+
             insert budgetItemsToInsert;
-            
+
             return 'Success';
         } catch (Exception ex){
             return ex.getMessage();
         }
         return null;
     }
-    
+
     /**********************************************************************************************************************
 Purpose: This method is used to create a RFQ from selected budget itmes
 Parameters: Budget__c budget, RFQ__c rfq, string rfqItemsJson
@@ -536,7 +536,7 @@ Throws [Exceptions]:
 **********************************************************************************************************************/
     @AuraEnabled
     public static string createRFQFromBudget(buildertek__Budget__c budget, string rfqJson, string rfqItemsJson){
-        
+
         try{
             buildertek__RFQ__c rfqRec = new buildertek__RFQ__c();
             if (Schema.sObjectType.buildertek__RFQ__c.fields.buildertek__Budget__c.isCreateable() && Schema.sObjectType.buildertek__RFQ__c.fields.Project__c.isCreateable() && Schema.sObjectType.buildertek__RFQ__c.fields.RFQ_Workflow_Stage__c.isCreateable()){
@@ -546,28 +546,28 @@ Throws [Exceptions]:
                 rfqRec.buildertek__RFQ_Workflow_Stage__c = '3';
             }
             Database.insert(rfqRec, true);
-            
+
             List<buildertek__RFQ_Item__c> rfqItems = new List<buildertek__RFQ_Item__c>();
             rfqItems = (List<buildertek__RFQ_Item__c>)System.JSON.deserialize(rfqItemsJson, List<buildertek__RFQ_Item__c>.class);
             for (buildertek__RFQ_Item__c rfqItem : rfqItems){
                 rfqItem.buildertek__RFQ_Package__c = rfqRec.Id;
                 //rfqItems.add(rfqItem);
             }
-            
+
             if (rfqItems.size() > 0){
                 if (Schema.sObjectType.buildertek__RFQ_Item__c.isCreateable() && Schema.sObjectType.buildertek__RFQ_Item__c.fields.Name.isCreateable() && Schema.sObjectType.buildertek__RFQ_Item__c.fields.buildertek__Quantity__c.isCreateable() && Schema.sObjectType.buildertek__RFQ_Item__c.fields.buildertek__Unit_Price__c.isCreateable() && Schema.sObjectType.buildertek__RFQ_Item__c.fields.buildertek__RFQ_Package__c.isCreateable() && Schema.sObjectType.buildertek__RFQ_Item__c.fields.buildertek__Notes_Details__c.isCreateable() && Schema.sObjectType.buildertek__RFQ_Item__c.fields.buildertek__Description__c.isCreateable()){
                     insert rfqItems;
                 }
             }
             return 'Success';
-            
+
         } catch (Exception ex){
             throw new AuraHandledException(ex.getMessage());
         }
-        
+
         return null;
     }
-    
+
     /*for(List<RFQ_Item__c> rfqItems : [Select Id, Name ,RFQ_Package__c from RFQ_Item__c]){
 for(Integer i=0; i<rfqItems.size(); i++){ //data manipulation logic } update listOfMatches; }
 //   RFQ_Item__c rfqRef = new RFQ_Item__c();
@@ -591,7 +591,7 @@ Throws [Exceptions]:
 **********************************************************************************************************************/
     @AuraEnabled
     public static string createPOFromBudget(buildertek__Budget__c budget, string poJson, string poItemsJson){
-        
+
         try{
            Account accRec = [select id,Name from Account limit 1];
             buildertek__Purchase_Order__c PORec = new buildertek__Purchase_Order__c();
@@ -608,10 +608,10 @@ Throws [Exceptions]:
             }
             //insert po;
             Database.insert(PORec, true);
-            
+
             List<buildertek__Purchase_Order_Item__c> poItems = new List<buildertek__Purchase_Order_Item__c>();
             poItems = (List<buildertek__Purchase_Order_Item__c>)System.JSON.deserialize(poItemsJson, List<buildertek__Purchase_Order_Item__c>.class);
-            
+
             for (buildertek__Purchase_Order_Item__c poItem : poItems){
                 poItem.buildertek__Purchase_Order__c = PORec.Id;
                 //poItems.add(poItem);
@@ -620,14 +620,14 @@ Throws [Exceptions]:
                 insert poItems;
             }
             return 'Success';
-            
+
         } catch (Exception ex){
             throw new AuraHandledException(ex.getMessage());
         }
-        
+
         return null;
     }
-    
+
     /**********************************************************************************************************************
 Purpose: This method is used to create a CO from selected budget itmes
 Parameters: Budget__c budget, Change_Order__c co, string coItemsJson
@@ -636,7 +636,7 @@ Throws [Exceptions]:
 **********************************************************************************************************************/
     @AuraEnabled
     public static string createCOFromBudget(buildertek__Budget__c budget, string coJson, string coItemsJson){
-        
+
         try{
             buildertek__Change_Order__c coRec = new buildertek__Change_Order__c();
             if (Schema.sObjectType.buildertek__Change_Order__c.fields.buildertek__Budget__c.isCreateable() && Schema.sObjectType.buildertek__Change_Order__c.fields.buildertek__Project__c.isCreateable()){
@@ -646,7 +646,7 @@ Throws [Exceptions]:
                 //co.Vendor__r = null;
             }
             insert coRec;
-            
+
             List<buildertek__Change_Order_Item__c> coItems = new List<buildertek__Change_Order_Item__c>();
             coItems = (List<buildertek__Change_Order_Item__c>)System.JSON.deserialize(coItemsJson, List<buildertek__Change_Order_Item__c>.class);
             for (buildertek__Change_Order_Item__c coItem : coItems){
@@ -657,14 +657,14 @@ Throws [Exceptions]:
                 insert coItems;
             }
             return 'Success';
-            
+
         } catch (Exception ex){
             throw new AuraHandledException(ex.getMessage());
         }
-        
+
         return null;
     }
-    
+
     /**********************************************************************************************************************
 Purpose: This method is used to get price from the active pricebook for the selected product in inline add budget line item
 Parameters: ProductId
@@ -675,15 +675,15 @@ Throws [Exceptions]:
     public static list<PricebookEntry> getProductPrice(string productId, String pricebookId){
 
         list<PricebookEntry> pList;
-        
+
         pList = [select id, UnitPrice, buildertek__Unit_Cost__c, buildertek__Markup__c, buildertek__Discount__c
                 from PricebookEntry
                 where product2Id = :productId and pricebook2Id =: pricebookId];
-        
+
     //  system.debug('====pList' + pList);
         return pList;
     }
-        
+
     @AuraEnabled
     public static buildertek__Budget_Item__c saveBudgetLineItem(string budgetLineRecord, String recordId, String contractor){
      //   System.debug('---Budget Line Items' + budgetLineRecord);
@@ -691,7 +691,7 @@ Throws [Exceptions]:
         budgetRec = (buildertek__Budget_Item__c)System.JSON.deserialize(budgetLineRecord, buildertek__Budget_Item__c.class);
         System.debug('budgetRec------------------>'+budgetRec);
       //  system.debug('Budget Group ------------> ' + budgetRec.buildertek__Budget_Line_Group__c);
-        
+
         /*  if(budgetRec.buildertek__Budget_Line_Group__c == null){
 List<buildertek__Quote_Line_Group__c> budgetGroup = [select Id, Name from buildertek__Quote_Line_Group__c where Name = 'No Grouping'];
 if(budgetGroup.size() > 0){
@@ -721,7 +721,7 @@ budgetRec.buildertek__Budget_Line_Group__c = budGroup.Id;
                 budgetRec.buildertek__Group__c = budGroup.Id;
             }
         }
-        
+
        /* if (budgetRec.buildertek__Product__c != null){
             product2 prdctrec = [SELECT id, Name, buildertek__Cost_Code__c
                                  FROM product2
@@ -729,7 +729,7 @@ budgetRec.buildertek__Budget_Line_Group__c = budGroup.Id;
             budgetRec.buildertek__Cost_Code__c = prdctrec.buildertek__Cost_Code__c;
         }*/
         buildertek__Budget_Item__c BudgetLineToInsert = new buildertek__Budget_Item__c();
-        
+
      //   System.debug('p------>---Budget Line Items recordId --> ' + budgetRec.buildertek__Product__c);
         //System.debug('---Budget Line Items recordId --> '+recordId);
         BudgetLineToInsert.buildertek__Product__c = budgetRec.buildertek__Product__c;
@@ -757,18 +757,18 @@ budgetRec.buildertek__Budget_Line_Group__c = budGroup.Id;
       //  System.debug('---Budget Line Items recordId 321--> ' + BudgetLineToInsert);
         insert BudgetLineToInsert;
         System.debug('---------------BudgetLineToInsert------------------>>>>>'+BudgetLineToInsert);
-        
+
        // system.debug('Created budgetLineRecord: ' + BudgetLineToInsert);
-        
+
         return BudgetLineToInsert;
     }
-    
+
     @AuraEnabled
     public static Object retrieveGroups(string budgetId, Decimal pageNumber, Integer recordToDisply){
         try{
             Integer pageSize = recordToDisply;
             Integer offset = ((Integer)pageNumber - 1) * pageSize;
-            
+
             budgetDetails budgetDetail = new budgetDetails();
             budgetDetail.groups = getBudgetGroupDetails(budgetId, null, recordToDisply, offset);
             budgetDetail.subGroups = getBudgetSubGroupDetails(budgetId, null, recordToDisply, offset);
@@ -804,7 +804,7 @@ budgetRec.buildertek__Budget_Line_Group__c = budGroup.Id;
                    // system.debug('dtFieldscurrency'+dtFields);
                     fieldsList.add(dtFields.fieldName);
                 }
-                
+
                 if (dtFields.type == 'reference'){
                         allFields.add(dtFields.fieldName.replace('__c', '__r.Name'));
                 }
@@ -829,7 +829,7 @@ budgetRec.buildertek__Budget_Line_Group__c = budGroup.Id;
             fieldsType += '{"fieldName": "buildertek__Sub_Grouping__r.Name","fieldType": "Reference","isEditable": false},';
             fieldsType += '{"fieldName": "buildertek__CostCodeDivision__c","fieldType": "","isEditable": false},';
             fieldsType += '{"fieldName": "Id","fieldType": "","isEditable": false}]';
-            
+
             List<wrapperClass> wrapperList = new List<wrapperClass>();
             wrapperList = groupValues(budgetId, fieldsList, allFields, groupIds, recordToDisply, offset);
             TargetTable tarTable = new TargetTable();
@@ -853,7 +853,7 @@ budgetRec.buildertek__Budget_Line_Group__c = budGroup.Id;
             throw new AuraHandledException(e.getMessage()+''+  e.getLineNumber());
         }
     }
-    
+
     /*  @AuraEnabled
 public static quote_line_group__c updateBudgetLinFromDataTable(String budgetItems, String groupId, String budgetId){
 
@@ -871,14 +871,14 @@ return getBudgetGroupDetails(budgetId, groupId, 50, 50)[0];
         String fieldSetAPI = 'buildertek__BT_Related_List_View_Fields';
         String soql = 'SELECT Id, Name ';
         soql = soql + ', Group__c, buildertek__Budget_Line_Group__c, Description__c, Product__c ';
-        
+
         String namespacePrefix = BT_Utils.getNamespacePrefix();
         List<Schema.FieldSetMember> fieldSetMemberList = BT_Utils.getFieldSetMembers(fieldSetAPI, objectName);
         for (Schema.FieldSetMember fieldSetMemberObj : fieldSetMemberList){
             if (!soql.contains(fieldSetMemberObj.getFieldPath().replace(namespacePrefix, ''))){
                 soql = soql + ',' + fieldSetMemberObj.getFieldPath();
             }
-            
+
             if (String.ValueOf(fieldSetMemberObj.getType()).toUpperCase() == 'REFERENCE'){
                 if (!fieldSetMemberObj.getFieldPath().Contains('__c')){
                     soql = soql + ',' + fieldSetMemberObj.getFieldPath().replace('Id', '.Name');
@@ -888,33 +888,33 @@ return getBudgetGroupDetails(budgetId, groupId, 50, 50)[0];
             }
         }
         soql = soql + ' FROM buildertek__Budget_Item__c';
-        
+
         soql = soql + ' WHERE buildertek__budget__c =: budgetId ORDER BY buildertek__Group__r.Name ASC limit ' + recordToDisply + ' OFFSET ' + offset;
-        
+
         List<buildertek__Budget_Item__c> budgetItemList;
-        
+
         budgetItemList = Database.query(soql);
-        
+
        // system.debug('budgetItemList -----------> ' + budgetItemList);
         SET<Id> groupIdSet = new SET<Id>();
         for (buildertek__Budget_Item__c budgetItem : budgetItemList){
             groupIdSet.add(budgetItem.buildertek__Group__c);
         }
-        
+
         List<buildertek__Budget_Line_Group__c> budgetGroup;
     //     String query = 'SELECT Id, Name ';
     //     query = query + ', buildertek__Group__c,Budget_Line_Group__c, Description__c, Product__c ';
-        
+
     //     String namespacePrefix1 = BT_Utils.getNamespacePrefix();
     //     List<Schema.FieldSetMember> fieldSetMemberList1 = BT_Utils.getFieldSetMembers(fieldSetAPI, objectName);
     //    // system.debug('fieldSetMemberList -----> ' + fieldSetMemberList1);
     //     for (Schema.FieldSetMember fieldSetMemberObj : fieldSetMemberList1){
-            
+
     //         if (!query.contains(fieldSetMemberObj.getFieldPath())){
     //           //  system.debug('fieldSetMemberObj ********' + fieldSetMemberObj.getFieldPath());
     //             query = query + ',' + fieldSetMemberObj.getFieldPath();
     //         }
-            
+
     //         if (String.ValueOf(fieldSetMemberObj.getType()).toUpperCase() == 'REFERENCE'){
     //             if (!fieldSetMemberObj.getFieldPath().Contains('__c')){
     //                 query = query + ',' + fieldSetMemberObj.getFieldPath().replace('Id', '.Name');
@@ -924,31 +924,31 @@ return getBudgetGroupDetails(budgetId, groupId, 50, 50)[0];
     //         }
     //     }
     //     query = query + ' FROM Budget_Items__r';
-        
+
     //     if (budgetId != null){
     //         query = query + ' WHERE Id != null AND buildertek__budget__c =: budgetId ORDER BY Name ASC';
     //     } else{
     //         query = query + ' WHERE Id != null ORDER BY Name ASC';
     //     }
-        
+
         if (groupId != null){
-            
+
             budgetGroup = Database.query('Select Id, Name from buildertek__Budget_Line_Group__c where Id =: groupId ORDER BY Name ASC');
-            
+
         } else{
-            
+
             budgetGroup = Database.query('Select Id, Name from buildertek__Budget_Line_Group__c where Id IN: groupIdSet ORDER BY Name ASC');
-            
+
         }
-        
-        
+
+
         /*if(budgetId != null)
 budgetGroup = Database.query('Select Id, Name,('+soql+') from budget_line_group__c where budget__c =: budgetId ORDER BY Sort_id__c, Name ASC');
 else if(groupId != null)
 budgetGroup = Database.query('Select Id, Name,('+soql+') from budget_line_group__c where Id =: groupId ORDER BY Sort_id__c, Name ASC');*/
         return budgetGroup;
     }
-    
+
     public static List<buildertek__Budget_Line_Sub_Group__c> getBudgetSubGroupDetails(String budgetId, String groupId, Decimal recordToDisply, Integer offset){
         // Add selected field in soql from field set
         String objectName = 'buildertek__Budget_Item__c';
@@ -956,14 +956,14 @@ budgetGroup = Database.query('Select Id, Name,('+soql+') from budget_line_group_
         String fieldSetAPI = 'buildertek__BT_Related_List_View_Fields';
         String soql = 'SELECT Id, Name ';
         soql = soql + ', Group__c, buildertek__Sub_Grouping__c, Description__c, Product__c ';
-        
+
         String namespacePrefix = BT_Utils.getNamespacePrefix();
         List<Schema.FieldSetMember> fieldSetMemberList = BT_Utils.getFieldSetMembers(fieldSetAPI, objectName);
         for (Schema.FieldSetMember fieldSetMemberObj : fieldSetMemberList){
             if (!soql.contains(fieldSetMemberObj.getFieldPath().replace(namespacePrefix, ''))){
                 soql = soql + ',' + fieldSetMemberObj.getFieldPath();
             }
-            
+
             if (String.ValueOf(fieldSetMemberObj.getType()).toUpperCase() == 'REFERENCE'){
                 if (!fieldSetMemberObj.getFieldPath().Contains('__c')){
                     soql = soql + ',' + fieldSetMemberObj.getFieldPath().replace('Id', '.Name');
@@ -973,9 +973,9 @@ budgetGroup = Database.query('Select Id, Name,('+soql+') from budget_line_group_
             }
         }
         soql = soql + ' FROM buildertek__Budget_Item__c';
-        
+
         soql = soql + ' WHERE buildertek__budget__c =: budgetId ORDER BY buildertek__Sub_Grouping__r.Name ASC';
-        
+
         List<buildertek__Budget_Item__c> budgetItemList;
         budgetItemList = Database.query(soql);
         SET<Id> groupIdSet = new SET<Id>();
@@ -987,7 +987,7 @@ budgetGroup = Database.query('Select Id, Name,('+soql+') from budget_line_group_
         List<buildertek__Budget_Line_Sub_Group__c> budgetGroup;
         // String query = 'SELECT Id, Name ';
         // query = query + ', buildertek__Sub_Grouping__c,Budget_Line_Group__c, Description__c, Product__c ';
-        
+
         // String namespacePrefix1 = BT_Utils.getNamespacePrefix();
         // List<Schema.FieldSetMember> fieldSetMemberList1 = BT_Utils.getFieldSetMembers(fieldSetAPI, objectName);
         // for (Schema.FieldSetMember fieldSetMemberObj : fieldSetMemberList1){
@@ -1003,13 +1003,13 @@ budgetGroup = Database.query('Select Id, Name,('+soql+') from budget_line_group_
         //     }
         // }
         // query = query + ' FROM Budget_Items__r';
-        
+
         // if (budgetId != null){
         //     query = query + ' WHERE Id != null AND buildertek__budget__c =: budgetId ORDER BY Name ASC';
         // } else{
         //     query = query + ' WHERE Id != null ORDER BY Name ASC';
         // }
-        
+
         if (groupId != null){
             budgetGroup = Database.query('Select Id, Name from buildertek__Budget_Line_Sub_Group__c where Id =: groupId ORDER BY Name ASC');
         } else{
@@ -1017,26 +1017,26 @@ budgetGroup = Database.query('Select Id, Name,('+soql+') from budget_line_group_
         }
         return budgetGroup;
     }
-    
+
     @AuraEnabled
     public static List<fieldSet> getFieldSet(String fieldSetName, String objectName){
         String namespacePrefix = BT_Utils.getNamespacePrefix();
         List<fieldSet> fieldSet = new List<fieldSet>();
         Schema.DescribeFieldResult describeFieldResult;
-        
+
         List<Schema.FieldSetMember> fieldSetMembers = BT_Utils.getFieldSetMembers(BT_Utils.getNamespacePrefix()+fieldSetName, namespacePrefix + objectName);
         Map<String, Schema.SObjectField> sobjectFieldsByName = Schema.getGlobalDescribe().get(namespacePrefix + objectName).getDescribe().fields.getMap();
-        
+
         if (!fieldSetMembers.isEmpty()){
             for (Schema.FieldSetMember fieldSetMember : fieldSetMembers){
                 describeFieldResult = sobjectFieldsByName.get(fieldSetMember.getFieldPath()).getDescribe();
                 fieldSet.Add(new fieldSet(fieldSetMember.getLabel(), fieldSetMember.getFieldPath(), describeFieldResult.isHtmlFormatted(), fieldSetMember.getRequired()));
             }
         }
-        
+
         return fieldSet;
     }
-    
+
     @AuraEnabled
     public static void updateGroupsOrder(List<budget_line_group__c> groups){
         try{
@@ -1045,7 +1045,7 @@ budgetGroup = Database.query('Select Id, Name,('+soql+') from budget_line_group_
             throw new AuraHandledException(ex.getMessage());
         }
     }
-    
+
     @AuraEnabled
     public static void deleteGroups(List<budget_line_group__c> groups){
         try{
@@ -1054,7 +1054,7 @@ budgetGroup = Database.query('Select Id, Name,('+soql+') from budget_line_group_
             throw new AuraHandledException(ex.getMessage());
         }
     }
-    
+
     @AuraEnabled
     public static buildertek__Budget_Line_Group__c deleteBudgetItem(List<buildertek__Budget_Item__c> budgetItems, String groupId, String budgetId){
         try{
@@ -1065,26 +1065,26 @@ budgetGroup = Database.query('Select Id, Name,('+soql+') from budget_line_group_
         }
         return null;
     }
-    
+
     @AuraEnabled
     public static Budget_Item__c getBudgetItem(string budgetLineRecord){
         Budget_Item__c BudgetItem;
-        
-        
+
+
         BudgetItem = [select Id, Name, buildertek__Product_Name__c, buildertek__Product__c, buildertek__Budget__c, buildertek__Cost_Code__c, buildertek__Cost_Code__r.Name, buildertek__Budget_Line_Group__c, buildertek__Group__r.Name, buildertek__UOM__c, buildertek__Trade_Type__c, buildertek__Contractor__c, buildertek__Unit_Price__c, buildertek__Quantity__c
                       from buildertek__Budget_Item__c
                       where Id = :budgetLineRecord];
-        
+
         return BudgetItem;
     }
-    
+
     @AuraEnabled
     public static void updateBudgetLineItem(string budgetLineRecord){
         buildertek__Budget_Item__c BudgetLineToInsert = new buildertek__Budget_Item__c();
         BudgetLineToInsert = (buildertek__Budget_Item__c)System.JSON.deserialize(budgetLineRecord, buildertek__Budget_Item__c.class);
         update BudgetLineToInsert;
     }
-    
+
     @AuraEnabled
     public static string getpricebook(string BudgetId){
         list<buildertek__budget__c> budget;
@@ -1098,7 +1098,7 @@ budgetGroup = Database.query('Select Id, Name,('+soql+') from budget_line_group_
         }
         return null;
     }
-    
+
     @AuraEnabled
     //get Account Industry Picklist Values
     public static Map<String, String> getselect(){
@@ -1113,7 +1113,7 @@ budgetGroup = Database.query('Select Id, Name,('+soql+') from budget_line_group_
         }
         return options;
     }
-     
+
     @AuraEnabled
     //get Account Industry Picklist Values
     public static Map<String, String> getselectOptions(){
@@ -1128,7 +1128,7 @@ budgetGroup = Database.query('Select Id, Name,('+soql+') from budget_line_group_
         }
         return options;
     }
-    
+
     @AuraEnabled
     //get ProdcutFamily  Picklist Values
     public static Map<String, String> getselectOptionsforproductfamily(){
@@ -1144,8 +1144,8 @@ budgetGroup = Database.query('Select Id, Name,('+soql+') from budget_line_group_
       //  system.debug('options----' + options);
         return options;
     }
-    
-    
+
+
     //get Pricebook Values
     // public static Map<String, String> getpricebooks(){
     //     Map<String, String> options = new Map<String, String>();
@@ -1167,7 +1167,7 @@ budgetGroup = Database.query('Select Id, Name,('+soql+') from budget_line_group_
     @AuraEnabled
     public static List<pricebookWrapper> getpricebooks(string recordId){
         List<pricebookWrapper> priceWrapper = new List<pricebookWrapper>();
-        
+
         pricebookWrapper priceWrap = new pricebookWrapper();
         priceWrap.defaultValue= new pricebook2();
         priceWrap.priceWrapList = new List<pricebook2>();
@@ -1185,26 +1185,26 @@ budgetGroup = Database.query('Select Id, Name,('+soql+') from budget_line_group_
         return priceWrapper;
     }
 
-    
+
     @AuraEnabled
     public list<productfamilyClass> pfwrapperlst{ get; set; }
-    
+
     //get product family Values
     @AuraEnabled
     public static list<productfamilyClass> getProductfamilyRecords(String ObjectName, string parentId){
        // system.debug('ObjectName-->' + ObjectName);
         Map<String, String> options = new Map<String, String>();
         List<sObject> returnList = new List<sObject>();
-        
+
         list<string> ProdIds = new list<string>();
         if (ObjectName == 'Product2' && parentId != null){
-            
+
             list<pricebookEntry> PElist;
-            
+
             PElist = [select id, Product2Id
                       from pricebookEntry
                       where pricebook2Id = :parentId];
-            
+
             for (pricebookEntry PE : PElist){
                 ProdIds.add(PE.Product2Id);
             }
@@ -1225,7 +1225,7 @@ budgetGroup = Database.query('Select Id, Name,('+soql+') from budget_line_group_
         }
         return pfwrapperlst;
     }
-    
+
     @AuraEnabled
     public static list<Budget_Item__c> BudgetItemList(list<string> BudgetIds){
         list<Budget_Item__c> BudgetItemList;
@@ -1236,7 +1236,7 @@ budgetGroup = Database.query('Select Id, Name,('+soql+') from budget_line_group_
         //}
         return BudgetItemList;
     }
-    
+
     @AuraEnabled
     public static List<buildertek__Schedule__c> checkSchedulesRecords(String projectId){
       //  system.debug(projectId);
@@ -1244,7 +1244,7 @@ budgetGroup = Database.query('Select Id, Name,('+soql+') from budget_line_group_
       //  system.debug(scheduleRecords);//order by CreatedDate desc LIMIT 1
         return scheduleRecords;
     }
-    
+
     @AuraEnabled
     public static void deleteLineItems(list<string> budgetItemIds){
         try{
@@ -1253,7 +1253,7 @@ buildertek__Budget_Configurations__c s = buildertek__Budget_Configurations__c.ge
 s.Name = UserInfo.getUserID();
 s.buildertek__Disable_Validations__c = true;
 insert s;*/
-            
+
             list<buildertek__Budget_Item__c> budgetItemLists;
             if (Schema.sObjectType.buildertek__Budget_Item__c.fields.Id.isAccessible()){
                 budgetItemLists = [select id
@@ -1271,10 +1271,10 @@ insert s;*/
             //throw new AuraHandledException(ex.getMessage());
         }
     }
-    
+
     @AuraEnabled
     public static buildertek__Budget_Item__c deleteBudgetLineItem(String budgetId){
-        
+
         buildertek__Budget_Item__c budgetItem;
         if (Schema.sObjectType.buildertek__Budget_Item__c.fields.Id.isAccessible()){
             budgetItem = [SELECT Id
@@ -1286,10 +1286,10 @@ insert s;*/
         }
         return budgetItem;
     }
-    
+
     @AuraEnabled
     public static list<buildertek__Budget_Item__c> RemovegroupingBudgetLineItems(String groupingid, string budgetId){
-        
+
         list<buildertek__Budget_Item__c> budgetItem = new list<buildertek__Budget_Item__c>();
         budgetItem = [select id, name, buildertek__Group__c, buildertek__Group__r.name, buildertek__Budget__c
                       from buildertek__Budget_Item__c
@@ -1300,7 +1300,7 @@ insert s;*/
             List<buildertek__Budget_Line_Group__c> btGroup = [SELECT Id
                                                               FROM buildertek__Budget_Line_Group__c
                                                               WHERE Name = 'No Grouping'];
-            
+
             if (btGroup.size() > 0){
                 for (buildertek__Budget_Item__c bItem : budgetItem){
                     bItem.buildertek__Group__c = btGroup[0].Id;
@@ -1315,13 +1315,13 @@ insert s;*/
                 }
                 update budgetItem;
             }
-            
-            
+
+
         }
-        
+
         return budgetItem;
     }
-    
+
     @AuraEnabled
     public static void deleteSelectedItems(List<String> recordIds){
         list<buildertek__Budget_Item__c> budgetItemLists;
@@ -1337,7 +1337,7 @@ insert s;*/
             delete budgetItemLists;
         }
     }
-    
+
     @AuraEnabled
     public static List<wrapperClass> groupValues(String recordId, list<String> currencyFields, List<String> allFields, List<String> groupIds, Decimal recordToDisply, Integer offset){
         Map<string, string> mapForLabel = new Map<string, string>();
@@ -1365,12 +1365,12 @@ insert s;*/
       //  myquery = 'select buildertek__Group__c ' + queryFields + ' from buildertek__Budget_Item__c where buildertek__Budget__c =: recordId Order by buildertek__Group_Name__c DESC limit ' + recordToDisply + ' OFFSET ' + offset;
 
        // myquery = 'select buildertek__Cost_Code_Name__c ' + queryFields + ' from buildertek__Budget_Item__c where buildertek__Budget__c =: recordId Order by buildertek__Cost_Code_Name__c ASC limit ' + recordToDisply + ' OFFSET ' + offset;
-       
+
        System.debug('---------------------');
        System.debug('myquery ==> '+myquery);
-       
+
        BudgetItemList = database.query(myquery);
-        
+
         for (string sumOfFields : currencyFields){
             //sai
           //  system.debug(sumOfFields);
@@ -1380,21 +1380,21 @@ insert s;*/
         }
         myqueries = 'select buildertek__Group__c ' + aggregateFields + ' from buildertek__Budget_Item__c where Id IN: BudgetItemList Group By buildertek__Group__c';
         childObjGroup = database.query(myqueries);
-        
+
         string Childs = 'select Id, Name from buildertek__Budget_Line_Group__c where id IN: groupIds order by Name ASC';
         List<buildertek__Budget_Line_Group__c> childObjGroups;
         childObjGroups = database.query(Childs);
-        
+
         Map<string, string> GroupNameMap = new Map<String, string>();
         for (buildertek__Budget_Line_Group__c Grps : childObjGroups){
             GroupNameMap.put((String)Grps.get('Id'), (String)Grps.get('Name'));
         }
-        
+
         Map<String, Boolean> fieldTypeMap = new Map<String, Boolean>();
         for (string sumOfFields : currencyFields){
             fieldTypeMap.put(sumOfFields, true);
         }
-        
+
         List<wrapperClass> wrapperClassList = new List<wrapperClass>();
         for (AggregateResult objAgr : childObjGroup){
             integer j = 1;
@@ -1407,15 +1407,15 @@ insert s;*/
                 if (child >= 2){
                     if (fieldTypeMap.get(sumOfFields) == true){
                         //sai
-                       system.debug('test111'+new wrapperClass(GroupNameMap.get((String)objAgr.get('buildertek__Group__c')), (Decimal)objAgr.get('total' + j), 
-                                                                string.valueOf(mapForFieldType.get(sumOfFields.toLowercase().replace(' ', ''))), 
+                       system.debug('test111'+new wrapperClass(GroupNameMap.get((String)objAgr.get('buildertek__Group__c')), (Decimal)objAgr.get('total' + j),
+                                                                string.valueOf(mapForFieldType.get(sumOfFields.toLowercase().replace(' ', ''))),
                                                                 sumOfFields,(String)objAgr.get('buildertek__Group__c'),null,null));
-                        wrapperClassList.add(new wrapperClass(GroupNameMap.get((String)objAgr.get('buildertek__Group__c')), (Decimal)objAgr.get('total' + j), string.valueOf(mapForFieldType.get(sumOfFields.toLowercase().replace(' ', ''))), 
+                        wrapperClassList.add(new wrapperClass(GroupNameMap.get((String)objAgr.get('buildertek__Group__c')), (Decimal)objAgr.get('total' + j), string.valueOf(mapForFieldType.get(sumOfFields.toLowercase().replace(' ', ''))),
                                                               sumOfFields,(String)objAgr.get('buildertek__Group__c'),null,null));
                         j++;
                     } else{
                         //sai
-                       system.debug('test222'+new wrapperClass(GroupNameMap.get((String)objAgr.get('buildertek__Group__c')), null, 'false', sumOfFields, 
+                       system.debug('test222'+new wrapperClass(GroupNameMap.get((String)objAgr.get('buildertek__Group__c')), null, 'false', sumOfFields,
                                                                 (String)objAgr.get('buildertek__Group__c'),null,null));
                         wrapperClassList.add(new wrapperClass(GroupNameMap.get((String)objAgr.get('buildertek__Group__c')), null, 'false',
                                                               sumOfFields, (String)objAgr.get('buildertek__Group__c'),null,null));
@@ -1426,7 +1426,7 @@ insert s;*/
         }
         return wrapperClassList;
     }
-    
+
     @AuraEnabled
     public static TargetTable getBudgetItemData(String recordId, List<String> fieldsList, String fieldString, Decimal recordToDisply, Integer offset){
 
@@ -1456,14 +1456,14 @@ insert s;*/
       //  myqueries = 'select buildertek__Budget__c  ' + aggregateFields + ' from buildertek__Budget_Item__c where buildertek__Budget__c =: recordId Order By buildertek__Cost_Code_Name__c DESC limit ' + recordToDisply + ' OFFSET ' + offset;
         List<SObject> ListOfRecords;
         ListOfRecords = Database.query(myqueries);
-        
+
         Integer count = 0;
         for (Integer i = 0; i < ListOfRecords.size(); i++){
             IndividualMember = ListOfRecords[i];
             EachRecord Each_record_nested_List_Of_Fields = new EachRecord();
             List<object> temp = new List<object>();
             List<RecordsList> recList = new List<RecordsList>();
-           
+
             for (FieldClass field : fieldClassList){
                 if (field.fieldName == 'id'){
                     Each_record_nested_List_Of_Fields.recordId = (Id)IndividualMember.get(field.fieldName);
@@ -1528,7 +1528,7 @@ insert s;*/
                     Each_record_nested_List_Of_Fields.recordName = (String)IndividualMember.get(field.fieldName);
                 }
             }
-            
+
             Each_record_nested_List_Of_Fields.recordCount = count;
             Each_record_nested_List_Of_Fields.recordValue = temp;
             Each_record_nested_List_Of_Fields.recordList = recList;
@@ -1547,7 +1547,7 @@ insert s;*/
         //         allrecords.get(allListOfRecords[i].groupId).add(allListOfRecords[i]);
         //     }
         // }
-        
+
         // for(Integer i = 0;i<allListOfRecords.size();i++){
         //     List<EachRecord> recordListData = allrecords2.get(allListOfRecords[i].subGroupId);
         //     if(!allrecords2.containsKey(allListOfRecords[i].subGroupId)){
@@ -1561,7 +1561,7 @@ insert s;*/
         // Map<Id,List<EachRecord>> allrecords3 = new Map<Id,List<EachRecord>>();
         // for(Integer i = 0;i<allListOfRecords.size();i++){
         //     if(allrecords.containsKey(allListOfRecords[i].groupId) && allrecords2.containsKey(allListOfRecords[i].subGroupId)){
-        
+
         //     }
         // }
         TargetTable_inst.records = ListOfRecords;
@@ -1569,7 +1569,7 @@ insert s;*/
       //  system.debug('&&&&&&&&&&&'+TargetTable_inst);
         return TargetTable_inst;
     }
-    
+
     @AuraEnabled
     public static List<buildertek__Budget_Item__c> prepareString(String budgetString){
         List<buildertek__Budget_Item__c> budgetItemsToInsert = (List<buildertek__Budget_Item__c>)System.JSON.deserialize(budgetString, List<buildertek__Budget_Item__c>.class);
@@ -1577,7 +1577,7 @@ insert s;*/
         //update budgetItemsToInsert;
         return budgetItemsToInsert;
     }
-    
+
     @AuraEnabled
     public static void saveUpdatedValues(List<buildertek__Budget_Item__c> budgetItemList){
         Map<String, buildertek__Budget_Item__c> budgetItemIdMap = new Map<String, buildertek__Budget_Item__c>();
@@ -1585,7 +1585,7 @@ insert s;*/
         //for(buildertek__Budget_Item__c budItem : budgetItemList){
         budgetItemIdMap.putAll(budgetItemList);
         //}
-        
+
       //  system.debug('budgetItemIdMap key ----------> ' + budgetItemIdMap.keyset());
       //  system.debug('budgetItemIdMap ----------> ' + budgetItemIdMap);
       //  system.debug('budgetItemIdMap ----------> ' + budgetItemIdMap.values());
@@ -1593,9 +1593,9 @@ insert s;*/
             update budgetItemIdMap.values();
         }
     }
-    
+
     /* mass Functionality start*/
-   
+
     @AuraEnabled
     public static void massUpdateBudgetLineItem(string budgetLineRecords){
        // system.debug(budgetLineRecords);
@@ -1605,20 +1605,20 @@ insert s;*/
             update budgetitemRecs;
         }
     }
-    
+
     @AuraEnabled
     public static void massDuplicateBudgetLineItem(List<string> budgetLineRecords,List<string> recordid){
         List<String> budgetLineItemRecs = budgetLineRecords;
-        
+
         String query = '';
         String SobjectApiName = 'buildertek__Budget_Item__c';
         Map<String, Schema.SObjectType> schemaMap = Schema.getGlobalDescribe();
         Map<String, Schema.SObjectField> fieldMap = schemaMap.get(SobjectApiName).getDescribe().fields.getMap();
-        
-      
-        
+
+
+
         String strFields = '';
-        
+
         for (String fieldName : fieldMap.keyset()){
             if (strFields == null || strFields == ''){
                 strFields = fieldName;
@@ -1626,25 +1626,25 @@ insert s;*/
                 strFields = strFields + ',' + fieldName;
             }
         }
-        
+
         query = 'select ' + strFields + ' from ' + SobjectApiName + ' where id in :budgetLineItemRecs';
-        
+
         List<buildertek__Budget_Item__c> lstRecs;
-        
+
         lstRecs = Database.query(query);
-        
-        
+
+
         List<String> budgetLineItemRecs1 = budgetLineRecords;
-                
+
                 String query1 = '';
                 String SobjectApiName1 = 'buildertek__PO_Item_To_Budget_Item_Link__c';
                 Map<String, Schema.SObjectType> schemaMap1 = Schema.getGlobalDescribe();
                 Map<String, Schema.SObjectField> fieldMap1 = schemaMap1.get(SobjectApiName1).getDescribe().fields.getMap();
-                
-                
-                
+
+
+
                 String strFields1 = '';
-                
+
                 for (String fieldName1 : fieldMap1.keyset()){
                     if (strFields1 == null || strFields1 == ''){
                         strFields1 = fieldName1;
@@ -1652,32 +1652,32 @@ insert s;*/
                         strFields1 = strFields1 + ',' + fieldName1;
                     }
                 }
-                
+
                // system.debug('strfields1'+strFields1);
-                
+
         query1 = 'select ' + strFields1 + ' from ' + SobjectApiName1 + ' where buildertek__Budget_Item__c in :budgetLineItemRecs1';
-        
+
        // system.debug('Fields for child object'+query1);
-        
+
         List<buildertek__PO_Item_To_Budget_Item_Link__c> lstRecs1;
-        
+
         lstRecs1 = Database.query(query1);
-        
+
        // system.debug('child records'+lstRecs1);
-        
+
         Map<String,List<buildertek__PO_Item_To_Budget_Item_Link__c>> budgetToPoItemLinkMap = new Map<String,List<buildertek__PO_Item_To_Budget_Item_Link__c>>();
         for(buildertek__PO_Item_To_Budget_Item_Link__c PoitemLinkrec : lstRecs1){
             if(budgetToPoItemLinkMap.get(PoitemLinkrec.buildertek__Budget_Item__c)!=null){
                 list<buildertek__PO_Item_To_Budget_Item_Link__c> onboardingList = budgetToPoItemLinkMap.get(PoitemLinkrec.buildertek__Budget_Item__c);
-                onboardingList.add(PoitemLinkrec);    
-                budgetToPoItemLinkMap.put(PoitemLinkrec.buildertek__Budget_Item__c,onboardingList);                                        
+                onboardingList.add(PoitemLinkrec);
+                budgetToPoItemLinkMap.put(PoitemLinkrec.buildertek__Budget_Item__c,onboardingList);
             }else{
                 list<buildertek__PO_Item_To_Budget_Item_Link__c> onboardingrec = new list<buildertek__PO_Item_To_Budget_Item_Link__c>();
                 onboardingrec.add(PoitemLinkrec);
-                budgetToPoItemLinkMap.put(PoitemLinkrec.buildertek__Budget_Item__c,onboardingrec);                    
+                budgetToPoItemLinkMap.put(PoitemLinkrec.buildertek__Budget_Item__c,onboardingrec);
             }
         }
-        
+
       //  system.debug(budgetToPoItemLinkMap);
         Map<String,Id> purchaseorderMap = new Map<String,Id>();
          list<buildertek__Budget_Item__c> PurchaseordersList = new list<buildertek__Budget_Item__c>();
@@ -1697,8 +1697,8 @@ insert s;*/
            //  system.debug('PurchaseordersList-->'+PurchaseordersList);
             insert PurchaseordersList;
         }
-        
-        
+
+
         for(buildertek__Budget_Item__c purchaseordernewRec :PurchaseordersList){
                 purchaseorderMap.put(purchaseordernewRec.buildertek__Old_Budget_Line__c,purchaseordernewRec.id);
             }
@@ -1716,35 +1716,35 @@ insert s;*/
                 insert purchaseorderitemlist;
                // system.debug('----working in budget dao');
             }
-            
-            
-        
+
+
+
        // List<buildertek__Budget_Item__c> lstRecsClone = lstRecs.deepClone();
        // if (lstRecsClone.size() > 0){
-            
+
             //insert lstRecsClone;
-            
-           
-                    
+
+
+
                     /* List<buildertek__PO_Item_To_Budget_Item_Link__c> lstRecsClone1 = lstRecs1.deepClone();
         if (lstRecsClone1.size() > 0){
-        
-        system.debug('childs after insert'+lstRecsClone1);            
+
+        system.debug('childs after insert'+lstRecsClone1);
         insert lstRecsClone1;
-        
+
         }*/
-                    
-            
-            
+
+
+
         //}
-        
-        
-        
-         
-        
-        
+
+
+
+
+
+
     }
-    
+
     /* mass Functionality end*/
     public class FieldClass{
         @AuraEnabled
@@ -1754,7 +1754,7 @@ insert s;*/
         @AuraEnabled
         public Boolean isEditable;
     }
-    
+
     public class RecordsList{
         @AuraEnabled
         public List<RecordsList> subRecordList;
@@ -1766,7 +1766,7 @@ insert s;*/
         public String fieldName;
         @AuraEnabled
         public Object originalValue;
-        
+
         @AuraEnabled
         public String fieldType;
         @AuraEnabled
@@ -1780,7 +1780,7 @@ insert s;*/
             this.referenceValue = referenceValue;
         }
     }
-    
+
     public class subRecordList{
         public Boolean isEditable;
         @AuraEnabled
@@ -1805,7 +1805,7 @@ insert s;*/
             this.referenceValue = referenceValue;
         }
     }
-    
+
     public class EachRecord{
         @AuraEnabled
         public Integer recordCount;
@@ -1834,44 +1834,44 @@ insert s;*/
         @AuraEnabled
         public String subGroupName;
     }
-    
+
     public class TargetTable{
         @AuraEnabled
         public List<sObject> records; //actual list of records
         @AuraEnabled
         public List<EachRecord> ListOfEachRecord;
-        
+
         //all data will be saved as array of array values
     }
-    
+
     public class wrapperClass{
         @AuraEnabled
         public String vendorId{ get; set; }
-      
+
         @AuraEnabled
         public String vendorName{ get; set; }
-        
+
          @AuraEnabled
         public String costId{ get; set; }
-      
+
         @AuraEnabled
         public String costName{ get; set; }
-        
+
         @AuraEnabled
         public String groupName{ get; set; }
-        
+
         @AuraEnabled
         public Decimal totalValue{ get; set; }
-        
+
         @AuraEnabled
         public String fieldType{ get; set; }
-        
+
         @AuraEnabled
         public String fieldLabel{ get; set; }
-        
+
         @AuraEnabled
         public String groupID{ get; set; }
-        
+
         public wrapperClass(String groupName, Decimal totalValue, String fieldType, String fieldLabel,String groupID,string vendorName, string vendorId ){
             this.vendorName = vendorName;
             this.vendorId = vendorId;
@@ -1883,31 +1883,31 @@ insert s;*/
             this.groupID = groupID;
         }
     }
-    
+
     public Class BudgetClass{
         @AuraEnabled
         public String Id{ get; set; }
-        
+
         @AuraEnabled
         public String values{ get; set; }
     }
-    
+
     public class budgetDetails{
         @AuraEnabled
         public List<buildertek__Budget_Line_Group__c> groups{ get; set; }
-        
+
         @AuraEnabled
         public List<buildertek__Budget_Line_Sub_Group__c> subGroups{ get; set; }
-        
+
         @AuraEnabled
         public List<String> headerFields{ get; set; }
-        
+
         @AuraEnabled
         public List<BT_Lightning_Utils.dataTableFields> columns{ get; set; }
-        
+
         @AuraEnabled
         public string formulaFields{ get; set; }
-        
+
         public budgetDetails(){
             groups = new List<buildertek__Budget_Line_Group__c>();
             subGroups = new List<buildertek__Budget_Line_Sub_Group__c>();
@@ -1915,7 +1915,7 @@ insert s;*/
             columns = new List<BT_Lightning_Utils.dataTableFields>();
         }
     }
-    
+
     public class InnerClass{
         @AuraEnabled
         public String fieldName;
@@ -1923,22 +1923,22 @@ insert s;*/
         public String fieldValue;
         @AuraEnabled
         public String fieldType;
-        
+
     }
-    
+
     public class fieldSet{
         @AuraEnabled
         public String fieldLabel{ get; set; }
-        
+
         @AuraEnabled
         public String fieldName{ get; set; }
-        
+
         @AuraEnabled
         public Boolean isRequired{ get; set; }
-        
+
         @AuraEnabled
         public Boolean isHtmlFormatted{ get; set; }
-        
+
         public fieldSet(String fieldLabel, String fieldName, Boolean isHtmlFormatted, Boolean isRequired){
             this.fieldLabel = fieldLabel;
             this.fieldName = fieldName;
@@ -1946,7 +1946,7 @@ insert s;*/
             this.isRequired = isRequired;
         }
     }
-    
+
     public class finalWrapperClass{
         @AuraEnabled
         public TargetTable tarTable;
@@ -1954,31 +1954,31 @@ insert s;*/
         public List<wrapperClass> wrapperList;
         @AuraEnabled
         public List<BT_Lightning_Utils.dataTableFields> columns;
-        
+
         @AuraEnabled
         public List<buildertek__Budget_Line_Group__c> groups{ get; set; }
-        
+
         @AuraEnabled
         public List<buildertek__Budget_Line_Sub_Group__c> subGroups{ get; set; }
-        
+
         @AuraEnabled
         public Integer pageSize{ get; set; }
-        
+
         @AuraEnabled
         public Integer page{ get; set; }
-        
+
         @AuraEnabled
         public Integer total{ get; set; }
-        
+
         @AuraEnabled
         public String formulaFields{ get; set; }
     }
-    
+
     public class productfamilyClass{
         @AuraEnabled
         public string productfamilyvalues{ get; set; }
     }
-    
+
     @AuraEnabled
     public static List<buildertek__Budget_Item__c> fetchAccount(String searchKeyWord){
         String searchKey = searchKeyWord + '%';
@@ -1987,13 +1987,13 @@ insert s;*/
                                                          from buildertek__Budget_Item__c
                                                          where Name like :searchKey OR buildertek__Group__r.name like :searchKey
                                                          LIMIT 500];
-        
+
         for (buildertek__Budget_Item__c acc : lstOfAccount){
             returnList.add(acc);
         }
         return returnList;
     }
-    
+
     @AuraEnabled
     public static buildertek__Budget__c getBudgetDetails(String budgetRecordId){
         /*String SobjectApiName = 'buildertek__Budget__c';
@@ -2010,16 +2010,16 @@ strFields = strFields + ',' + fieldName;
 }
 query = 'select buildertek__Project__r.Name, CreatedBy.Name,buildertek__Project__r.Id, ' + strFields + ' from ' + SobjectApiName + ' where id = :budgetRecordId';
 buildertek__Budget__c budgetCopy = Database.query(query);*/
-        
+
         buildertek__Budget__c budget = [SELECT id, Name, buildertek__Approved_CO__c,buildertek__Budget_Cost_To_Complete__c, buildertek__Budget_Number__c, buildertek__Committed_Costs__c, buildertek__Estimated_Cost_To_Complete__c,
-                                        buildertek__Estimated_Gross_Profit__c, buildertek__Forecast_To_Complete__c, buildertek__Gross_Profit__c, buildertek__Original_Budget__c, buildertek__Profit_Loss__c, buildertek__Project_Sales_Price__c,   
+                                        buildertek__Estimated_Gross_Profit__c, buildertek__Forecast_To_Complete__c, buildertek__Gross_Profit__c, buildertek__Original_Budget__c, buildertek__Profit_Loss__c, buildertek__Project_Sales_Price__c,
                                         buildertek__Project__c, buildertek__Project__r.Name, buildertek__Project__r.Id, buildertek__Revised_Budgets__c, buildertek__Total_Costs__c,buildertek__Type__c, SystemModstamp,
                                         CreatedById, CreatedDate, CreatedBy.Name,LastModifiedById, LastModifiedDate, LastModifiedBy.Name FROM buildertek__Budget__c WHERE id =: budgetRecordId];
       //  system.debug(budget);
         return budget;
-        
+
     }
-    
+
     @AuraEnabled
     public static void searchbudgetFilter(List<Map<String,Object>> recordList){
      //   system.debug(recordList);
@@ -2045,7 +2045,7 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
         objDT.pageNumber = pageNumber;
         objDT.recordStart = offset + 1;
         objDT.recordEnd = totalRecords >= recordEnd ? recordEnd : totalRecords;
-        objDT.totalRecords = totalRecords; 
+        objDT.totalRecords = totalRecords;
         objDT.selectedPurchaseOrder = false;
         if(UserInfo.isMultiCurrencyOrganization()){
             string rfqrecords = 'SELECT Id, Name, buildertek__Project__c, buildertek__Project__r.Name,buildertek__PO_Type__c,buildertek__Description__c,'+
@@ -2061,7 +2061,7 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
                 //             ORDER BY Name
                 //             LIMIT :pageSize
                 //             OFFSET :offset];
-                
+
                 objDT.recordList = [SELECT Id, Name, buildertek__Project__c, buildertek__Project__r.Name,buildertek__PO_Type__c,buildertek__Description__c,
                                     buildertek__Vendor__c,buildertek__Vendor__r.Name,buildertek__PO_Total__c
                                     FROM buildertek__Purchase_Order__c
@@ -2098,7 +2098,7 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
         objDT.pageNumber = pageNumber;
         objDT.recordStart = offset + 1;
         objDT.recordEnd = totalRecords >= recordEnd ? recordEnd : totalRecords;
-        objDT.totalRecords = totalRecords; 
+        objDT.totalRecords = totalRecords;
         objDT.selectedTimeCards = false;
         System.debug('pageSize -> '+pageSize);
         System.debug('offset -> '+offset);
@@ -2141,7 +2141,7 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
         objDT.pageNumber = pageNumber;
         objDT.recordStart = offset + 1;
         objDT.recordEnd = totalRecords >= recordEnd ? recordEnd : totalRecords;
-        objDT.totalRecords = totalRecords; 
+        objDT.totalRecords = totalRecords;
         objDT.selectedTimeCards = false;
         System.debug('pageSize -> '+pageSize);
         System.debug('offset -> '+offset);
@@ -2183,7 +2183,7 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
                 List<buildertek__Time_Cards__c> updateTimeCard = new List<buildertek__Time_Cards__c>();
                 Decimal timeCardValue=0;
 
-               
+
                 if (budgetItemList.size() > 0) {
 
                     for(buildertek__Time_Cards__c timeCard : timeCardList){
@@ -2208,11 +2208,11 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
 
 
 
-                    
+
                 }
 
-               
-               
+
+
                 // if (budgetItemList.size() > 0) {
                 //     timeCard.buildertek__Budget__c = budgetItemList[0].buildertek__Budget__c;
                 //     timeCard.buildertek__Budget_Line__c = budgetItemList[0].Id;
@@ -2257,7 +2257,7 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
 
                         updateInvoiceAPList.add(invoiceAP);
 
-                        
+
                     }
                     update updateInvoiceAPList;
                     // budgetItem = [SELECT Id, Name, buildertek__Invoice_total__c, buildertek__Budget__c FROM buildertek__Budget_Item__c WHERE Id IN :strList LIMIT 1];
@@ -2292,16 +2292,16 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
     public class BudgetDataTableWrapper{
         @AuraEnabled
         public Integer pageSize{ get; set; }
-        
+
         @AuraEnabled
         public Integer pageNumber{ get; set; }
-        
+
         @AuraEnabled
         public Integer totalRecords{ get; set; }
-        
+
         @AuraEnabled
         public Integer recordStart{ get; set; }
-        
+
         @AuraEnabled
         public Integer recordEnd{ get; set; }
         @AuraEnabled
@@ -2312,16 +2312,16 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
     public class BudgetDataTableWrapperClone{
         @AuraEnabled
         public Integer pageSize{ get; set; }
-        
+
         @AuraEnabled
         public Integer pageNumber{ get; set; }
-        
+
         @AuraEnabled
         public Integer totalRecords{ get; set; }
-        
+
         @AuraEnabled
         public Integer recordStart{ get; set; }
-        
+
         @AuraEnabled
         public Integer recordEnd{ get; set; }
         @AuraEnabled
@@ -2332,16 +2332,16 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
     public class InvoiceWrapper{
         @AuraEnabled
         public Integer pageSize{ get; set; }
-        
+
         @AuraEnabled
         public Integer pageNumber{ get; set; }
-        
+
         @AuraEnabled
         public Integer totalRecords{ get; set; }
-        
+
         @AuraEnabled
         public Integer recordStart{ get; set; }
-        
+
         @AuraEnabled
         public Integer recordEnd{ get; set; }
         @AuraEnabled
@@ -2362,13 +2362,13 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
                       where Id = :productId];
         return productRec.QuantityUnitOfMeasure;
     }
-    
+
     @AuraEnabled
     public static string  getCOCustomerRecordType(){
         string CustomerRecordTypeId = Schema.SObjectType.buildertek__Change_Order__c.getRecordTypeInfosByName().get('Customer').getRecordTypeId();
         return CustomerRecordTypeId;
     }
-    
+
          @AuraEnabled
     public static string  getInvoiceCustomerRecordType(){
         string CustomerRecordTypeId = Schema.SObjectType.buildertek__Account_Payable__c.getRecordTypeInfosByName().get('Existing Payable').getRecordTypeId();
@@ -2376,7 +2376,7 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
     }
     @AuraEnabled
     public static String getRecords(String parentRecordId, String fieldNameJson,Integer pageNumber, Integer pageSize){
-        
+
         List<sObject> lstResult = new List<sObject>();
         String result = '[]';
         try{
@@ -2428,8 +2428,8 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
         }
         return null;
     }
-    
-    
+
+
     @AuraEnabled
     public static String updateMultipleBudgetLine(String recordId, String updatedRecords, String fieldSetName, Integer pageNumber, Integer pageSize, List<String> deleteLineitems){
         try{
@@ -2442,16 +2442,16 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
                                                                             from buildertek__Budget_Line_Group__c
                                                                             where Name = 'No Grouping'];
                     Id nogroupId;
-                    
+
                      Map<Id,product2> prdctrec = new Map<Id,product2>([SELECT id, Name, buildertek__Cost_Code__c
                                             FROM product2]);
- 
+
                     for(multipleBudgetLinesClass listItem : items){
                         buildertek__Budget_Item__c budgetRec = new buildertek__Budget_Item__c();
                         budgetRec  = listItem.newBudgetLine;
-                
+
                         if (budgetRec.buildertek__Group__c == null){
-                            
+
                             if (budgetGroup.size() > 0){
                                 budgetRec.buildertek__Group__c = budgetGroup[0].Id;
                             } else{
@@ -2465,13 +2465,13 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
                                 }
                             }
                         }
-                        
+
                         if (budgetRec.buildertek__Product__c != null){
                                                 budgetRec.buildertek__Cost_Code__c = prdctrec.get(budgetRec.buildertek__Product__c).buildertek__Cost_Code__c;
                         }
-                        
+
                         buildertek__Budget_Item__c BudgetLineToInsert = new buildertek__Budget_Item__c();
-                    
+
                         BudgetLineToInsert.buildertek__Product__c = budgetRec.buildertek__Product__c;
                         //BudgetLineToInsert.buildertek__Product__c = productId;
                         System.debug('budgetRec.Name '+budgetRec.Name);
@@ -2484,11 +2484,11 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
                         BudgetLineToInsert.buildertek__Budget__c = recordId;
                         BudgetLineToInsert.buildertek__Budget_Line_Group__c = budgetRec.buildertek__Budget_Line_Group__c;
                         BudgetLineToInsert.buildertek__UOM__c = listItem.UOMvalues;
-                    
+
                         if(listItem.Vendor != null){
                             BudgetLineToInsert.buildertek__Contractor__c = listItem.Vendor.Id;
                         }
-                    
+
                         // BudgetLineToInsert.buildertek__Trade_Type__c = tradeType;
                         BudgetLineToInsert.buildertek__Unit_Price__c = budgetRec.buildertek__Unit_Price__c;
                         BudgetLineToInsert.buildertek__Sales_Price__c = budgetRec.buildertek__Sales_Price__c;
@@ -2501,13 +2501,13 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
                         BudgetLineToInsert.buildertek__Notes__c=budgetRec.buildertek__Notes__c;
                         System.debug('---Budget Line Items recordId 321--> ' + BudgetLineToInsert);
                         budgetItemList.add(BudgetLineToInsert);
-                     
+
                     }
-                   
+
                  //  system.debug('budgetItemList --->'+ budgetItemList);
                    if(budgetItemList.Size()>0){
                        insert budgetItemList;
-                   }  
+                   }
                 }
             }
         } catch (Exception e){
@@ -2517,7 +2517,7 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
         }
         return null;
     }
-    
+
     @AuraEnabled
     public static List<COLineItemsClass> getProduct(String coItems){
         List<buildertek__Budget_Item__c> changeOrderList = (List<buildertek__Budget_Item__c>)JSON.deserialize(coItems, List<buildertek__Budget_Item__c>.class);
@@ -2535,26 +2535,26 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
     @AuraEnabled
     public static List<buildertek__Change_Order__c> getCoData(string RecId){
         buildertek__Budget__c budgetRec = [SELECT Id, Name, buildertek__Project__c FROM buildertek__Budget__c where Id = :RecId];
-        
+
         List<buildertek__Change_Order__c> changeOrderList = new List<buildertek__Change_Order__c>();
 
         changeOrderList = [SELECT Id, Name, buildertek__Project__c, buildertek__Description__c, buildertek__Vendor__c, buildertek__Vendor__r.Name,
                             buildertek__Total_Amount_Tax__c, buildertek__Total_Amount__c FROM buildertek__Change_Order__c
                             WHERE buildertek__Project__c =: budgetRec.buildertek__Project__c AND (buildertek__Status__c = 'Customer Approved' OR buildertek__Status__c = 'Approved') AND buildertek__Budget__c = null];
-                        
+
         return changeOrderList;
     }
 
     @AuraEnabled
     public static List<buildertek__Expense__c> getExpenseData(string RecId){
         buildertek__Budget__c budgetRec = [SELECT Id, Name, buildertek__Project__c FROM buildertek__Budget__c where Id = :RecId];
-        
+
         List<buildertek__Expense__c> ExpenseList = new List<buildertek__Expense__c>();
         ExpenseList = [SELECT Id, Name, buildertek__Project__c, buildertek__Description__c,buildertek__Budget_Line__c, buildertek__Vendor__c, buildertek__Vendor__r.Name, buildertek__Budget__c,
                             buildertek__Total_Expense__c FROM buildertek__Expense__c
                             WHERE buildertek__Budget_Line__c = null AND buildertek__Budget__c = null AND buildertek__Project__c=: budgetRec.buildertek__Project__c ORDER BY Name DESC];
         System.debug('ExpenseList======>>>>>>'+ExpenseList);
-                        
+
         return ExpenseList;
     }
 
@@ -2583,10 +2583,10 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
                 budgetGroupId = budgetGroup.Id;
             }
             List<buildertek__Budget_Item__c> budgetItemList = [SELECT Id, Name,buildertek__Sales_Price__c, buildertek__Unit_Price__c, buildertek__Total_Costs__c, buildertek__Budget__c FROM buildertek__Budget_Item__c WHERE Id IN :strList];
-    
+
             List<buildertek__CO_Item_To_Budget_Item_Link__c> BudgetCoLinkList = new List<buildertek__CO_Item_To_Budget_Item_Link__c>();
 
-            BudgetCoLinkList = [SELECT Id, Name, buildertek__Budget_Item__c, buildertek__CO_Item__c FROM buildertek__CO_Item_To_Budget_Item_Link__c 
+            BudgetCoLinkList = [SELECT Id, Name, buildertek__Budget_Item__c, buildertek__CO_Item__c FROM buildertek__CO_Item_To_Budget_Item_Link__c
                                 WHERE buildertek__Budget_Item__c IN: strList AND buildertek__CO_Item__c IN: coLineIds];
 
             List<CO_Item_To_Budget_Item_Link__c> COItemToBudgetItemLinks = new List<CO_Item_To_Budget_Item_Link__c>();
@@ -2607,7 +2607,10 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
                         COItemToBudgetItemLinks.add(COItemToBudgetItemLink);
                     }
                 }
+                System.debug('buildertek__Unit_Price__c in quoteDAO '+budgetItem.buildertek__Unit_Price__c);
+                System.debug('co.buildertek__Total_Costs__c in quoteDAO '+co.buildertek__Total_Costs__c);
                 budgetItem.buildertek__Unit_Price__c=budgetItem.buildertek__Unit_Price__c + co.buildertek__Total_Costs__c;
+                System.debug('after updating buildertek__Unit_Price__c in quoteDAO '+budgetItem.buildertek__Unit_Price__c);
             }
             update budgetItemList;
             insert COItemToBudgetItemLinks;
@@ -2637,7 +2640,7 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
         }
 
         update selectedExpenses;
-        
+
     }
 
     @AuraEnabled
@@ -2657,7 +2660,7 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
             buildertek__Budget_Line_Group__c budgetGroup = new buildertek__Budget_Line_Group__c();
             budgetGroup.Name = 'Expense';
             insert budgetGroup;
-            
+
             groupId = budgetGroup.Id;
         }
 
@@ -2701,7 +2704,7 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
             buildertek__Budget_Line_Group__c budgetGroup = new buildertek__Budget_Line_Group__c();
             budgetGroup.Name = 'Invoice (AP)';
             insert budgetGroup;
-            
+
             groupId = budgetGroup.Id;
         }
 
@@ -2749,7 +2752,7 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
             buildertek__Budget_Line_Group__c budgetGroup = new buildertek__Budget_Line_Group__c();
             budgetGroup.Name = 'Labor';
             insert budgetGroup;
-            
+
             groupId = budgetGroup.Id;
         }
 
@@ -2779,40 +2782,40 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
         // BudgetDAO.isCreateExpense = false;
     }
 
-    
+
     public class multipleBudgetLinesClass{
         @AuraEnabled
         public String pricebookName{ get; set; }
-        
+
         @AuraEnabled
         public String  productfamily{ get; set; }
-        
+
         @AuraEnabled
         public Product2 product{ get; set; }
-        
+
         @AuraEnabled
         public Integer index{ get; set; }
-        
+
         @AuraEnabled
         public buildertek__Budget_Item__c newBudgetLine{ get; set; }
-        
+
         @AuraEnabled
         public VendorClass Vendor{ get; set; }
-        
+
         @AuraEnabled
         public String  UOMvalues{ get; set; }
-        
-        
+
+
     }
-    
-    
+
+
     public class VendorClass {
         @AuraEnabled
          public Id Id{ get; set; }
           @AuraEnabled
          public String  Name{ get; set; }
     }
-    
+
     public class COLineItemsClass{
         @AuraEnabled
         public buildertek__Budget_Item__c changeOrderItem{ get; set; }
@@ -2840,15 +2843,15 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
         changeOrderList.add(new COLineItemsClass(COItem, false, count));
         return changeOrderList;
     }
-    
+
     @AuraEnabled
     public static buildertek__Admin_Interface_Node_Configuration__c getadminvalues(){
         buildertek__Admin_Interface_Node_Configuration__c adminInterfaceNodeConfigurations = [Select Id, buildertek__Budget_Grouping_Data__c
                                                                                               from buildertek__Admin_Interface_Node_Configuration__c
                                                                                               WHERE Name = :'Budget Configuration'];
         return adminInterfaceNodeConfigurations;
-    } 
-    
+    }
+
     @AuraEnabled
     public static List<buildertek__Budget_Item__c> checkforBidgetItem(list<string> BudgetIds){
         //convert string to id
@@ -2930,9 +2933,9 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
         System.debug('purchaseOrders -----------> ' + purchaseOrders);
         update purchaseOrders;
     }
-    
-    
-    
-    
-    
+
+
+
+
+
 }

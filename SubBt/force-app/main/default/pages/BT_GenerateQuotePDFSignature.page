@@ -18,7 +18,8 @@ Signature
         {!base64}
     </div>    -->
     <!-- <apex:outputText value="{!base64}" escape="false"/> -->
- <!-- <apex:image url="/sfc/servlet.shepherd/version/download/{!filerecid}"/>  -->
+ <apex:image url="{!base64}"/> 
+ <!-- <apex:image url="/sfc/servlet.shepherd/version/download/{!filerecid}"/> -->
    <!-- <apex:image url="https://btservice360-dev-ed.lightning.force.com/sfc/servlet.shepherd/version/download/0681K00000avraSQAQ" /> -->
     
 </div> <br/>

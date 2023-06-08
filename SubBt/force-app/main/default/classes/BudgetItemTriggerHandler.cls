@@ -88,19 +88,32 @@ public with sharing class BudgetItemTriggerHandler {
 		}
 
 		//* for change order
-		// List<buildertek__Change_Order__c> changeOrderList = [SELECT Id, Name, buildertek__Budget__c, buildertek__Budget_Line__c FROM buildertek__Change_Order__c WHERE buildertek__Budget_Line__c IN: budgetLineIds];
-		// for (buildertek__Change_Order__c changeOrder : changeOrderList) {
-		// 	if(changeOrder.buildertek__Budget_Line__c == null){
+		List<buildertek__Change_Order__c> changeOrderList = [SELECT Id, Name, buildertek__Budget__c, buildertek__Budget_Line__c FROM buildertek__Change_Order__c WHERE buildertek__Budget_Line__c IN: budgetLineIds];
+		for (buildertek__Change_Order__c changeOrder : changeOrderList) {
+			System.debug('changeOrder.buildertek__Budget__c'+ changeOrder.buildertek__Budget__c);
+			if(changeOrder.buildertek__Budget_Line__c!=null){
+				changeOrder.buildertek__Budget_Line__c = null;
+			}
+			if(changeOrder.buildertek__Budget__c != null){
+				changeOrder.buildertek__Budget__c = null;
+				
+			}
+		}
+		if (changeOrderList.size() > 0) {
+			System.debug('trigger'+ ChangeOrderTriggerHandler.blnSkipChangeOrderUpdateTrigger);
 
-		// 	}
-		// 	changeOrder.buildertek__Budget__c = null;
-		// 	// changeOrder.buildertek__Budget_Line__c = null;
-		// }
-		// if (changeOrderList.size() > 0) {
-		// 	ChangeOrderTriggerHandler.blnSkipChangeOrderUpdateTrigger = true;
-		// 	update changeOrderList;
-		// 	ChangeOrderTriggerHandler.blnSkipChangeOrderUpdateTrigger = false;
-		// }
+			ChangeOrderTriggerHandler.blnSkipChangeOrderUpdateTrigger = true;
+			try{
+				update changeOrderList;
+
+
+			}catch(Exception e){
+				System.debug(e.getMessage());
+				System.debug(e.getLineNumber());
+
+			}
+			ChangeOrderTriggerHandler.blnSkipChangeOrderUpdateTrigger = false;
+		}
 
 
  	}

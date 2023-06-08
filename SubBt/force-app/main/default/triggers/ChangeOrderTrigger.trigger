@@ -34,14 +34,16 @@ trigger ChangeOrderTrigger on Change_Order__c (after delete, after insert, after
         else if(Trigger.isUpdate && Trigger.isAfter){
             // handler.OnAfterUpdate(Trigger.old, Trigger.new, Trigger.newMap, trigger.oldMap);
             handler.UpdateProjectValueInChangeOrder(Trigger.new, trigger.oldMap); 
-            //handler.ManageBudgetLineOnInsert(Trigger.new);           
+            //handler.ManageBudgetLineOnInsert(Trigger.new);      
+            handler.updateBudgetLine(Trigger.old, Trigger.new, Trigger.newMap, trigger.oldMap);   
+              
         }
         
-        else if(Trigger.isDelete && Trigger.isBefore){
+        else if(Trigger.isDelete && Trigger.isBefore && ChangeOrderTriggerHandler.blnSkipChangeOrderUpdateTrigger== false){
            handler.OnBeforeDelete(Trigger.old, Trigger.oldMap); 
         }
         
-        else if(Trigger.isDelete && Trigger.isAfter){
+        else if(Trigger.isDelete && Trigger.isAfter ){
           //  handler.OnAfterDelete(Trigger.old); 
         }
     }
