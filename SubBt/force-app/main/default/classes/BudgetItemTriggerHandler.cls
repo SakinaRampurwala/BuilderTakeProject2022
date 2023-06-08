@@ -99,21 +99,11 @@ public with sharing class BudgetItemTriggerHandler {
 				
 			}
 		}
-		if (changeOrderList.size() > 0) {
-			System.debug('trigger'+ ChangeOrderTriggerHandler.blnSkipChangeOrderUpdateTrigger);
 
-			ChangeOrderTriggerHandler.blnSkipChangeOrderUpdateTrigger = true;
-			try{
-				update changeOrderList;
-
-
-			}catch(Exception e){
-				System.debug(e.getMessage());
-				System.debug(e.getLineNumber());
-
-			}
-			ChangeOrderTriggerHandler.blnSkipChangeOrderUpdateTrigger = false;
+		if(changeOrderList.size() > 0){
+			update changeOrderList;
 		}
+		
 
 
  	}

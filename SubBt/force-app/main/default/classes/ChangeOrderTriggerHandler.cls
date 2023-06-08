@@ -421,23 +421,24 @@ public without sharing class ChangeOrderTriggerHandler {
         System.debug('budgetLineMap'+budgetLineMap);
         List<buildertek__Budget_Item__c> budgetLineList= [Select Id , Name , buildertek__Unit_Price__c FROM buildertek__Budget_Item__c WHERE Id=:budgetLineMap.keySet()];
 
-        List<buildertek__Budget_Item__c> budgetLineListtest= new  List<buildertek__Budget_Item__c>();
         System.debug(budgetLineList);
         if(budgetLineList.size() >0){
             for(buildertek__Budget_Item__c budgetLine : budgetLineList){
                 for(string budgetLineId:budgetLineMap.keySet()){
                     if(budgetLine.Id == budgetLineId)
                         budgetLine.buildertek__Unit_Price__c=budgetLine.buildertek__Unit_Price__c-budgetLineMap.get(budgetLineId);
-                        budgetLineListtest.add(budgetLine);
                 }
                
            
             }
 
         }
-        if(budgetLineListtest.size() > 0){
-            update budgetLineListtest;
+        if(budgetLineList.size() > 0){
+            update budgetLineList;
         }
+
+
+        
         
 
     }

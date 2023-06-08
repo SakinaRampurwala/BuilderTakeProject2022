@@ -39,7 +39,7 @@ trigger ChangeOrderTrigger on Change_Order__c (after delete, after insert, after
               
         }
         
-        else if(Trigger.isDelete && Trigger.isBefore && ChangeOrderTriggerHandler.blnSkipChangeOrderUpdateTrigger== false){
+        else if(Trigger.isDelete && Trigger.isBefore){
            handler.OnBeforeDelete(Trigger.old, Trigger.oldMap); 
         }
         
