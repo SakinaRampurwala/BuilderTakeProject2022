@@ -74,7 +74,7 @@
                 {label: 'Grouping', fieldName: 'buildertek__Grouping__c', type: 'Lookup', editable:true},
                 {label: 'Quantity', fieldName: 'buildertek__Quantity__c', type: 'number', editable:true},
                 {label: 'Unit Price', fieldName: 'buildertek__Unit_Price__c', type: 'currency', cellAttributes: { alignment: 'left' }, editable:true},
-                {label: 'Mark up', fieldName: 'buildertek__Markup__c', type: 'Percent', editable:true}
+                {label: 'Markup', fieldName: 'buildertek__Markup__c', type: 'Percent', editable:true}
             ]);
 
             var quoteLines = [];

@@ -28,21 +28,33 @@
         console.log('**EXPORT DATA**');
         var fileName=component.get('v.fileName');
 
-        var columns= [ "Name" , "buildertek__Unit_Price__c", "buildertek__Product_Name__c", "buildertek__Quantity__c", "buildertek__Markup__c"," buildertek__Tax__c", "buildertek__Group_Name__c"];
+        var columns= ["buildertek__Product_Name__c", "Name" , "buildertek__Markup__c" ,"buildertek__Labor__c", "buildertek__Total_Approvals_CO__c",  "buildertek__Committed_Costs__c" , "buildertek__Additional_Costs__c", "buildertek__Invoice_total__c", "buildertek__Total_Costs__c", "buildertek__Unit_Price__c", "buildertek__Quantity__c", "buildertek__Markup__c"," buildertek__Tax__c", "buildertek__Group_Name__c"];
         var budggetLineList=component.get('v.budgetLineList');
         const jsonArray= budggetLineList.map(function(item){
             var obj={};
             columns.forEach(function(column){
+                console.log({column});
+                console.log(item.hasOwnProperty(column));
                 if(item.hasOwnProperty(column)){
                     if (typeof item[column] === 'string') {
                         obj[column]=item[column].replace(/[#,]/g , ';');
                     }else{
-
                         obj[column]=item[column];
                     }
 
                 }else{
-                    obj[column]=null;
+                    if(column== 'Name'){
+                        obj[column]=null;
+
+                    }else if(column=='buildertek__Group_Name__c'){
+                        obj[column]=null;
+
+                    }else if(column=='buildertek__Product_Name__c'){
+                        obj[column]=null;
+                        
+                    }else{
+                        obj[column]=0;
+                    }
                 }
             });
             return obj;
