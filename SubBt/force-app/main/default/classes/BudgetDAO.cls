@@ -2602,22 +2602,27 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
                         buildertek__CO_Item_To_Budget_Item_Link__c COItemToBudgetItemLink = new buildertek__CO_Item_To_Budget_Item_Link__c();
                         COItemToBudgetItemLink.CO_Item__c = coLine.Id;
                         COItemToBudgetItemLink.Budget_Item__c = budgetItem.Id;
-
-                        // COItemToBudgetItemLink.buildertek__Total_Approvals_CO__c=co.buildertek__Total_Amount_Tax__c;
                         COItemToBudgetItemLinks.add(COItemToBudgetItemLink);
+
+                        // coLine.buildertek__Budget_Item__c=budgetItem.Id;
+
                     }
                 }
                 System.debug('buildertek__Unit_Price__c in quoteDAO '+budgetItem.buildertek__Unit_Price__c);
                 System.debug('co.buildertek__Total_Costs__c in quoteDAO '+co.buildertek__Total_Costs__c);
-                budgetItem.buildertek__Unit_Price__c=budgetItem.buildertek__Unit_Price__c + co.buildertek__Total_Costs__c;
+                // budgetItem.buildertek__Unit_Price__c=budgetItem.buildertek__Unit_Price__c + co.buildertek__Total_Costs__c;
                 System.debug('after updating buildertek__Unit_Price__c in quoteDAO '+budgetItem.buildertek__Unit_Price__c);
             }
-            update budgetItemList;
+            // update budgetItemList;
             insert COItemToBudgetItemLinks;
 
             co.buildertek__Budget__c = RecId;
             co.buildertek__Budget_Line__c = strList[0];
             update co;
+
+            // if(coLineList.size() > 0){
+            //     update coLineList;
+            // }
 
             ChangeOrderDAO.RollUpChangeOrderItemAmount(coLineIds);
             return 'Success';

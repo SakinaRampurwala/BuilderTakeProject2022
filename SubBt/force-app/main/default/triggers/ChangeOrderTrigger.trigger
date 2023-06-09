@@ -35,7 +35,6 @@ trigger ChangeOrderTrigger on Change_Order__c (after delete, after insert, after
             // handler.OnAfterUpdate(Trigger.old, Trigger.new, Trigger.newMap, trigger.oldMap);
             handler.UpdateProjectValueInChangeOrder(Trigger.new, trigger.oldMap); 
             //handler.ManageBudgetLineOnInsert(Trigger.new);      
-            handler.updateBudgetLine(Trigger.old, Trigger.new, Trigger.newMap, trigger.oldMap);   
               
         }
         

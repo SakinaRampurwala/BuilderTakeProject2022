@@ -117,59 +117,28 @@
     },
 
 	save: function(component){
-		//  var quotes = component.get("v.quotes");
+		 var quotes = component.get("v.quotes");
 
-		//  var line, key, item, quoteLines = [];
-		//  for( key in quotes) {
-		//     if( !quotes.hasOwnProperty(key) ) continue;
-		//     item = quotes[key];
+		 var line, key, item, quoteLines = [];
+		 for( key in quotes) {
+		    if( !quotes.hasOwnProperty(key) ) continue;
+		    item = quotes[key];
 
-        //     console.log({item});
-		//     line = {  buildertek__RFQ__c: item.buildertek__RFQ__c,
-	    // 			  Name:item.Name,
-	    // 			  buildertek__Item_Name__c:item.buildertek__Item_Name__c,
-	    // 			  buildertek__Description__c:item.buildertek__Description__c,
-	    // 			  buildertek__Quantity__c:item.buildertek__Quantity__c,
-	    // 			  buildertek__Unit_Cost__c:item.buildertek__Unit_Price__c,
-	    // 			  buildertek__Markup__c:item.buildertek__Markup__c,
-	    // 			  buildertek__Quote__c:component.get("v.quotId"),
-	    // 			  buildertek__Grouping__c:item.buildertek__Grouping__c
-	    // 			};
-		//     quoteLines.push(line);
-		// }
+            console.log({item});
+		    line = {  buildertek__RFQ__c: item.buildertek__RFQ__c,
+	    			  Name:item.Name,
+	    			  buildertek__Item_Name__c:item.buildertek__Item_Name__c,
+	    			  buildertek__Description__c:item.buildertek__Description__c,
+	    			  buildertek__Quantity__c:item.buildertek__Quantity__c,
+	    			  buildertek__Unit_Cost__c:item.buildertek__Unit_Price__c,
+	    			  buildertek__Markup__c:item.buildertek__Markup__c,
+	    			  buildertek__Quote__c:component.get("v.quotId"),
+	    			  buildertek__Grouping__c:item.buildertek__Grouping__c
+	    			};
+		    quoteLines.push(line);
+		}
 
-		// component.get("v.saveCallback")(quoteLines);
-        component.set("v.Spinner", true);
-        $A.get("e.c:BT_SpinnerEvent").setParams({
-            "action": "SHOW"
-        }).fire();
-        var selectedRFQS = component.get("v.selectedRFQS");
-        var quoteId = component.get("v.quotId");
-        console.log('quoteId ==>',quoteId);
-        console.log(selectedRFQS);
-        var action = component.get("c.saveRFQs");
-        action.setParams({
-            "selectedRFQS": selectedRFQS,
-            "quoteId": quoteId
-        });
-        action.setCallback(this, function(response){
-            var state = response.getState();
-            if (state === "SUCCESS") {
-                console.log('response ==>',response.getReturnValue());
-                $A.get("e.c:BT_SpinnerEvent").setParams({
-                    "action": "HIDE"
-                }).fire(); 
-                component.set("v.Spinner", false);
-                component.get("v.saveCallback")(response.getReturnValue());               
-            }else{
-                console.log("Failed with state: "+ state);
-                $A.get("e.c:BT_SpinnerEvent").setParams({
-                    "action": "HIDE"
-                }).fire();
-            }
-        }
-        );
-        $A.enqueueAction(action);
+		component.get("v.saveCallback")(quoteLines);
 	},
 
 	getSelected: function(component,event){

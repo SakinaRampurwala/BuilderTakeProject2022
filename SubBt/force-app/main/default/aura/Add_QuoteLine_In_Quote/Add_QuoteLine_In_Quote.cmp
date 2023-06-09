@@ -96,10 +96,10 @@
                                     <div class="slds-truncate" title="Product Name">Product Name</div>
                                 </th>
                                 <th class="" scope="col">
-                                    <div class="slds-truncate" title="Prodcut Description">Prodcut Description</div>
+                                    <div class="slds-truncate" title="Product Description">Product Description</div>
                                 </th>
                                 <th class="" scope="col">
-                                    <div class="slds-truncate" title="Prodcut Code">Prodcut Code</div>
+                                    <div class="slds-truncate" title="Product Code">Product Code</div>
                                 </th>
                                 <th class="" scope="col">
                                     <div class="slds-truncate" title="List Price">List Price</div>
@@ -124,12 +124,12 @@
                                             {!product.Name}
                                         </div>
                                     </td>
-                                    <td data-label="Prodcut Description">
+                                    <td data-label="Product Description">
                                         <div class="slds-truncate" title='{!product.Description}'>
                                             {!product.Description}
                                         </div>
                                     </td>
-                                    <td data-label="Prodcut Code">
+                                    <td data-label="Product Code">
                                         <div class="slds-truncate" title='{!product.ProductCode}'>
                                             {!product.ProductCode}
                                         </div>

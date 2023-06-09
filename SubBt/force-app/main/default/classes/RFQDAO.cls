@@ -2794,7 +2794,7 @@ return vendor;
     }
 
     @AuraEnabled
-    public static string saveRFQs(List<buildertek__RFQ__c>selectedRFQS, Id quoteId){
+    public static string saveRFQs(List<buildertek__RFQ__c> selectedRFQS, Id quoteId){
         System.debug('selectedRFQS'+selectedRFQS);
         System.debug('quoteId'+quoteId);
         for(buildertek__RFQ__c rfq : selectedRFQS){

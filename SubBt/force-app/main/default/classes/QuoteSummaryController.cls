@@ -21,7 +21,7 @@ global with sharing class QuoteSummaryController {
 
         QuoteLineRecordList = new List<buildertek__Quote_Item__c>();
         if (quoteId != null) {
-            QuoteLineRecordList = [SELECT Id, Name, buildertek__BL_SERVICE_CATEGORY__c,buildertek__Description__c,buildertek__Quantity__c, buildertek__Unit_Cost__c, buildertek__Total_Cost__c  
+            QuoteLineRecordList = [SELECT Id, Name, buildertek__BL_SERVICE_CATEGORY__c,buildertek__Description__c,buildertek__Quantity__c, buildertek__Net_Unit__c, buildertek__Net_Total_Price__c  
                                     FROM buildertek__Quote_Item__c  WHERE buildertek__Quote__c =: quoteId];
         }        
     }

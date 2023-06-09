@@ -226,6 +226,28 @@ public without sharing class QuoteTriggerHandler {
                 //quoteIdsList.add(qutrec.id);
             }
 
+            // if(qutrec.buildertek__Status__c == 'Customer Accepted' && oldQuotesMap.get(qutrec.id).buildertek__Status__c != qutrec.buildertek__Status__c && qutrec.buildertek__Description__c != null){
+            //     String Description = qutrec.buildertek__Description__c;
+            //     Id TempalteId = Description.split('Jaimin')[0];
+            //     Blob ConverId = Description.split('Jaimin')[1];
+            //     System.debug('TemplateId: ' + TempalteId);
+            //     System.debug('ConverId: ' + ConverId);
+            //     ConfirmationController.setAttachmentBody(qutrec.id,TempalteId,ConverId);
+            //     // system.debug('Blob ---> ' + b);
+
+            //     // ContentVersion conVer1 = new ContentVersion();
+            //     // conVer1.PathOnClient = 'Quote.pdf'; // The files name, extension is very important here which will help the file in preview.
+            //     // conVer1.VersionData = b; // converting your binary string to Blog
+            //     // insert conVer1;    //Insert ContentVersion
+
+            //     // ContentDocumentLink conDocLink1 = New ContentDocumentLink();
+            //     // conDocLink1.LinkedEntityId = qutrec.id; // Specify RECORD ID here i.e Any Object ID (Standard Object/Custom Object)
+            //     // conDocLink1.ContentDocumentId = [SELECT ContentDocumentId FROM ContentVersion WHERE Id =:conVer1.Id].ContentDocumentId;  //ContentDocumentId Id from ContentVersion
+            //     // conDocLink1.Visibility = 'AllUsers';
+            //     // insert conDocLink1; 
+
+            // }
+
             // Commented this based on requirements in BUIL - 3264 
             // if(qutrec.buildertek__Status__c == 'Customer Accepted'){
             //     string email = qutrec.buildertek__Bill_To_Email_Address__c;

@@ -87,25 +87,6 @@ public with sharing class BudgetItemTriggerHandler {
 			InvoiceAPTriggerHandler.skipDeleteMethod = false;
 		}
 
-		//* for change order
-		List<buildertek__Change_Order__c> changeOrderList = [SELECT Id, Name, buildertek__Budget__c, buildertek__Budget_Line__c FROM buildertek__Change_Order__c WHERE buildertek__Budget_Line__c IN: budgetLineIds];
-		for (buildertek__Change_Order__c changeOrder : changeOrderList) {
-			System.debug('changeOrder.buildertek__Budget__c'+ changeOrder.buildertek__Budget__c);
-			if(changeOrder.buildertek__Budget_Line__c!=null){
-				changeOrder.buildertek__Budget_Line__c = null;
-			}
-			if(changeOrder.buildertek__Budget__c != null){
-				changeOrder.buildertek__Budget__c = null;
-				
-			}
-		}
-
-		if(changeOrderList.size() > 0){
-			update changeOrderList;
-		}
-		
-
-
  	}
      
  	public void OnAfterInsert(Budget_Item__c[] newBudgetItems, Map<ID, Budget_Item__c> newBudgetItemsMap){ 

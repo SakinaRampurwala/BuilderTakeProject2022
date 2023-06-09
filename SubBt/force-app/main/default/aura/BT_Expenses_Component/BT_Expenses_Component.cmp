@@ -162,13 +162,13 @@
                                                 <div class="slds-truncate" title="Product Name">Description</div>
                                             </th>
                                             <th class="" scope="col">
-                                                <div class="slds-truncate" title="Prodcut Code">Cost Code</div>
+                                                <div class="slds-truncate" title="Product Code">Cost Code</div>
                                             </th>
                                             <th class="" scope="col">
-                                                <div class="slds-truncate" title="Prodcut Description">Expense Total</div>
+                                                <div class="slds-truncate" title="Product Description">Expense Total</div>
                                             </th>
                                             <th class="" scope="col">
-                                                <div class="slds-truncate" title="Prodcut Code">Vendor</div>
+                                                <div class="slds-truncate" title="Product Code">Vendor</div>
                                             </th>
                                         </tr>
                                     </thead>
@@ -447,19 +447,19 @@
                                                     <div class="slds-truncate" title="Product Name">Description</div>
                                                 </th>
                                                 <th class="" scope="col">
-                                                    <div class="slds-truncate" title="Prodcut Code">Cost Code</div>
+                                                    <div class="slds-truncate" title="Product Code">Cost Code</div>
                                                 </th>
                                                 <th class="" scope="col">
-                                                    <div class="slds-truncate" title="Prodcut Description">Expense Total</div>
+                                                    <div class="slds-truncate" title="Product Description">Expense Total</div>
                                                 </th>
                                                 <th class="" scope="col">
-                                                    <div class="slds-truncate" title="Prodcut Code">Vendor</div>
+                                                    <div class="slds-truncate" title="Product Code">Vendor</div>
                                                 </th>
                                                 <!-- <th class="" scope="col">
-                                                    <div class="slds-truncate" title="Prodcut Code">Budget</div>
+                                                    <div class="slds-truncate" title="Product Code">Budget</div>
                                                 </th> -->
                                                 <th class="" scope="col">
-                                                    <div class="slds-truncate" title="Prodcut Code">Budget Line</div>
+                                                    <div class="slds-truncate" title="Product Code">Budget Line</div>
                                                 </th>
                                             </tr>
                                         </thead>
@@ -529,10 +529,10 @@
                                                     <div class="slds-truncate" title="Daily Expense">Daily Expense</div>
                                                 </th>
                                                 <!-- <th class="" scope="col">
-                                                    <div class="slds-truncate" title="Prodcut Code">Budget</div>
+                                                    <div class="slds-truncate" title="Product Code">Budget</div>
                                                 </th> -->
                                                 <th class="" scope="col">
-                                                    <div class="slds-truncate" title="Prodcut Code">Budget Line</div>
+                                                    <div class="slds-truncate" title="Product Code">Budget Line</div>
                                                 </th>
                                             </tr>
                                         </thead>
@@ -602,10 +602,10 @@
                                                     <div class="slds-truncate" title="Remaining Balance">Remaining Balance</div>
                                                 </th>
                                                 <!-- <th class="" scope="col">
-                                                    <div class="slds-truncate" title="Prodcut Code">Budget</div>
+                                                    <div class="slds-truncate" title="Product Code">Budget</div>
                                                 </th> -->
                                                 <th class="" scope="col">
-                                                    <div class="slds-truncate" title="Prodcut Code">Budget Line</div>
+                                                    <div class="slds-truncate" title="Product Code">Budget Line</div>
                                                 </th>
                                             </tr>
                                         </thead>
@@ -678,10 +678,10 @@
                                                     <div class="slds-truncate" title="PO Balance">PO Balance</div>
                                                 </th>
                                                 <!-- <th class="" scope="col">
-                                                    <div class="slds-truncate" title="Prodcut Code">Budget</div>
+                                                    <div class="slds-truncate" title="Product Code">Budget</div>
                                                 </th> -->
                                                 <th class="" scope="col">
-                                                    <div class="slds-truncate" title="Prodcut Code">Budget Line</div>
+                                                    <div class="slds-truncate" title="Product Code">Budget Line</div>
                                                 </th>
                                             </tr>
                                         </thead>

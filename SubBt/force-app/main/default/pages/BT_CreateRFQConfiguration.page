@@ -1,6 +1,10 @@
 <apex:page controller="BT_RFQConfiguration" sidebar="false" lightningStylesheets="true">
     <apex:slds />
     <apex:form >
+        <apex:pageBlock >
+            <apex:outputText escape="false" value="{!settingDescription}">
+            </apex:outputText>
+        </apex:pageBlock>
         <apex:pageBlock mode="maindetail">
             <apex:pageMessages />
             <apex:pageblocksection >

@@ -118,7 +118,7 @@
 					                "projectId":"",
 					                "quotId":component.get("v.recordId"),
 					                "saveCallback":function(Items){
-					                  console.log(Items);
+					                  console.log('TestSAKINA', Items);
 					                	 $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "SHOW" }).fire();
 					                	overlayLib.close();
 										var action = component.get("c.createQuoteItem");
