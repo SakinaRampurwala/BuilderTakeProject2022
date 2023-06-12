@@ -99,9 +99,11 @@ public without sharing class ChangeOrderTriggerHandler {
                 buildertek__Budget_Item__c budgetLine = new buildertek__Budget_Item__c();
                 budgetLine.Name = newCO.Name + ' budget line';
                 budgetLine.buildertek__Budget__c = newCO.buildertek__Budget__c;
-                budgetLine.buildertek__CO_Total__c = newCO.buildertek__Total_Amount_Tax__c;
-
-                
+                //3314 ticket changes
+                budgetLine.buildertek__CO_Total__c = newCO.buildertek__Total_Amount__c;
+                budgetLine.buildertek__Unit_Price__c = newCO.buildertek__Subtotal__c;
+                budgetLine.buildertek__Quantity__c = 1;
+                //3314 ticket changes
                 budgetLine.buildertek__Group__c = budgetLineGroupId;
                 budgetLineMap.put(newCO.Id, budgetLine);
             } 

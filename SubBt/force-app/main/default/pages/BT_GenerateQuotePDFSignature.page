@@ -12,40 +12,23 @@
 <apex:outputPanel rendered="{!filerecid != null}" >
 <div >
 Signature
-<!-- <div style="border:1px solid black;"> -->
-
-
-    <!-- <apex:includeLightning />
-    <div style="height: 250px; width: 300px" id="lwcContainer"></div>
-
+<div id="lightningvf" class="lwccmp" />
     <script>
         $Lightning.use("c:SignatureApp", function() {
-            var myVariable = "{!recordID}";
-
-            $Lightning.createComponent(
-                "c:Signature",
-                {
-                    recordId: myVariable
-                },
-                "lwcContainer",
-                function(cmp) {
-                    // Component creation callback
-                }
-            );
+          $Lightning.createComponent("c:signature",
+              { recordId : 'a081K00000ykD5pQAE' },
+              "lightningvf",
+              function(cmp) {
+                console.log("button was created");
+                // do some stuff
+              }
+          );
         });
-    </script> -->
-
-
-    <!-- <apex:outputText value="{!base64}" escape="false"/> -->
- <!-- <apex:image url="data:image/png;base64,{!base64}"/> -->
- <!-- <apex:image url="/sfc/servlet.shepherd/version/download/{!filerecid}"/> -->
-   <!-- <apex:image url="https://btservice360-dev-ed.lightning.force.com/sfc/servlet.shepherd/version/download/0681K00000avraSQAQ" /> -->
-    
-<!-- </div> -->
+    </script>
  <br/>
 Accepted Date :
-<apex:outputText value="{0,date,dd' 'MMMMM' 'yyyy}"> 
-                   <apex:param value="{!CustomerAcceptedDate}" /> 
+<apex:outputText value="{0,date,dd' 'MMMMM' 'yyyy}">
+                   <apex:param value="{!CustomerAcceptedDate}" />
 </apex:outputText>
 
 </div>

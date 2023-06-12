@@ -6,15 +6,16 @@ export default class Signature extends LightningElement {
     @api recordId;
 
     connectedCallback(){
-        console.log('in lwc component:'+this.recordId);    
+        
+        console.log('in lwc component:'+this.recordId);
         getbase64( { recordId : this.recordId })
-    .then((result) =>  { 
-        console.log('in lwc component:'+result);    
-        this.base64 = result;
-        this.template.querySelector('.signature').style = 'background-image:url("data:image/png;base64,'+this.base64;
-})
-.catch(error => {
-    
-});
+        .then((result) =>  {
+            console.log('in lwc component:'+result);
+            this.base64 = result;
+            this.template.querySelector('.signature').style = 'background-image:url("data:image/png;base64,'+this.base64;
+        })
+        .catch(error => {
+
+        });
     }
 }

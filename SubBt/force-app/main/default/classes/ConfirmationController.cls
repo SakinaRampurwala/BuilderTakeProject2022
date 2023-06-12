@@ -273,7 +273,7 @@ public without sharing class ConfirmationController{
             conDocLink.shareType = 'I';
             insert conDocLink;
 
-            
+
 
             system.debug('objectAPIName-----' + objectAPIName);
             if (objectAPIName.contains('buildertek__Contract__c')){
@@ -636,31 +636,31 @@ Messaging.sendEmail(new Messaging.SingleEmailMessage[] { email });  */
                 quoterec.buildertek__Status__c = 'Customer Accepted';
                 quoterec.buildertek__Date_Accepted_by_Customer__c = system.now();
                 quoterec.buildertek__Date_Sent_To_Customer__c = System.today();
-                quoterec.buildertek__Description__c = templateId+'Jaimin'+ConVer.Id;
+                quoterec.buildertek__Description__c = imageContent;
                 update quoterec;
 
-                
+
                 System.debug('imageContent: ' + imageContent);
-                // Blob b = setAttachmentBody(recordId, templateId, ConVer.Id );
+                Blob b = setAttachmentBody(recordId, templateId, ConVer.Id );
                 // Blob b = setAttachmentBody('a081K00000ykCe5QAE','00X1K000000wkgwUAA', '0681K00000e3DMhQAM' );
 
 
                 // system.debug('Blob ---> ' + b);
 
-                // ContentVersion conVer1 = new ContentVersion();
-                // conVer1.PathOnClient = 'Quote.pdf'; // The files name, extension is very important here which will help the file in preview.
-                // conVer1.VersionData = b; // converting your binary string to Blog
-                // insert conVer1;    //Insert ContentVersion
+                ContentVersion conVer1 = new ContentVersion();
+                conVer1.PathOnClient = 'Quote.pdf'; // The files name, extension is very important here which will help the file in preview.
+                conVer1.VersionData = b; // converting your binary string to Blog
+                insert conVer1;    //Insert ContentVersion
 
-                // ContentDocumentLink conDocLink1 = New ContentDocumentLink();
-                // conDocLink1.LinkedEntityId = recordId; // Specify RECORD ID here i.e Any Object ID (Standard Object/Custom Object)
-                // conDocLink1.ContentDocumentId = [SELECT ContentDocumentId FROM ContentVersion WHERE Id =:conVer1.Id].ContentDocumentId;  //ContentDocumentId Id from ContentVersion
-                // conDocLink1.Visibility = 'AllUsers';
-                // insert conDocLink1; 
+                ContentDocumentLink conDocLink1 = New ContentDocumentLink();
+                conDocLink1.LinkedEntityId = recordId; // Specify RECORD ID here i.e Any Object ID (Standard Object/Custom Object)
+                conDocLink1.ContentDocumentId = [SELECT ContentDocumentId FROM ContentVersion WHERE Id =:conVer1.Id].ContentDocumentId;  //ContentDocumentId Id from ContentVersion
+                conDocLink1.Visibility = 'AllUsers';
+                insert conDocLink1;
 
-                
 
-                
+
+
                 /*if(quoterec.buildertek__Status__c == 'Customer Accepted' && Checkcustomerview == null){
                  string theTemplate;
                  if (templateId != null){
@@ -706,8 +706,13 @@ Messaging.sendEmail(new Messaging.SingleEmailMessage[] { email });  */
 
         System.debug('strBody ==> '+MainData);
         System.debug('imageContent ==> '+imageContent);
+        // Convert HTML body to Blob
+        Blob blobBodys = Blob.valueOf(MainData);
 
-        String Data = MainData + imageContent;
+        // Convert Blob to base64 encoded string
+        String base64Body = EncodingUtil.base64Encode(blobBodys);
+        System.debug('bolbhtmlbody ==>' +base64Body);
+        String Data = base64Body + imageContent;
 
         System.debug('Data ==> '+Data);
 
@@ -719,13 +724,13 @@ Messaging.sendEmail(new Messaging.SingleEmailMessage[] { email });  */
         Messaging.Emailfileattachment efa = new Messaging.Emailfileattachment();
         efa.setFileName('Contract.png');
         efa.setBody(blobbody);
-        
+
         System.debug('efa ==> '+efa);
 
 
         //Apex Single email message
         Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
-        mail.setToAddresses(new String[] { 'krunal.l@mvclouds.com' });//Set To Email Address
+        mail.setToAddresses(new String[] { 'karsingh9377@gmail.com' });//Set To Email Address
         mail.setSubject('Test Email With Attachment');//Set Subject
         mail.setHtmlBody('Please find the attachment.');//Set HTML Body
         mail.setFileAttachments(new Messaging.EmailFileAttachment[] { efa });//Set File Attachment
