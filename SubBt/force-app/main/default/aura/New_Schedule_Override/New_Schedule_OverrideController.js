@@ -69,7 +69,7 @@
         $A.enqueueAction(action1);
         var action2 = component.get("c.getUser");
         action2.setCallback(this, function(response){
-            debugger;
+            // debugger;
             if(response.getState() === "SUCCESS"){
                 var result = response.getReturnValue();
                 var commUserId = result.Id;
@@ -182,6 +182,11 @@
     handleOnError : function(component, event, helper) {
         console.log('===handleOnError===');
         var record = event.getParams().response;
+        console.log({record});
+        console.log(event.getParams());
+        var errors = event.getParams();
+        console.log("response", JSON.stringify(errors));
+
         //alert(record.Id);
     },
     

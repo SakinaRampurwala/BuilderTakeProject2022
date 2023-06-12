@@ -47,7 +47,7 @@
       var ScheduleItems = response.getReturnValue();
       // alert(response.getState());
       console.log("check new ScheduleItems ==> ", { ScheduleItems });
-      debugger;
+      // debugger;
       if (response.getState() == "SUCCESS") {
         var workspaceAPI = component.find("workspace");
         var isSaveNew = component.get("v.isSaveAndNew");

@@ -31,6 +31,7 @@
         console.log('Preview email template');
 
         var selectedTemplate = component.get("v.selectedTemplate");
+        console.log(selectedTemplate);
         if (selectedTemplate != undefined) {
             component.set("v.isTemplateSelected", true);
             helper.getContact(component, event, helper);
