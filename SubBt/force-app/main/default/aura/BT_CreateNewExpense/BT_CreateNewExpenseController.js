@@ -5,6 +5,9 @@
         // helper.getName(component, event, helper);
         helper.getFields(component, event, helper);
         helper.getparentrecord(component, event, helper);
+        // setTimeout(helper.handleChangeProjectHelper(component, event, helper), 3000);
+
+
     },
     reInit: function (component, event, helper) {
         $A.get('e.force:refreshView').fire();

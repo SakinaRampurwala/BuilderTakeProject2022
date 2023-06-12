@@ -151,7 +151,7 @@
                                                             <ul class="slds-listbox slds-listbox_vertical" role="presentation">
 
                                                                 <aura:if isTrue="{!v.loaded }">
-                                                                    <lightning:spinner alternativeText="Loading"  />
+                                                                    <!-- <lightning:spinner alternativeText="Loading"  /> -->
 
                                                                     <aura:set attribute="else">
                                                                         <aura:iteration items="{!v.budgetList}" var="result">
@@ -214,7 +214,7 @@
                                                         <div id="listbox-id-11" class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid searchResult" role="listbox" style="position: absolute;" >
                                                             <ul class="slds-listbox slds-listbox_vertical" role="presentation">
                                                                 <aura:if isTrue="{!v.loaded }">
-                                                                    <lightning:spinner alternativeText="Loading"  />
+                                                                    <!-- <lightning:spinner alternativeText="Loading"  /> -->
                                                                     <aura:set attribute="else">
                                                                         <aura:iteration items="{!v.budgetLineList}" var="result">
                                                                             <li role="presentation" class="slds-listbox__item" data-value="{!result.Id}" onclick="{!c.clickHandlerBudgetLine}">

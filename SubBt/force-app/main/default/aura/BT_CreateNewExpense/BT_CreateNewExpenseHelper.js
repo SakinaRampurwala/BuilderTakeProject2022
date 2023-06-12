@@ -70,12 +70,19 @@
             parentrecordid: component.get("v.parentRecordId")
         });
         action.setCallback(this, function (response) {
+
             if (response.getState() === "SUCCESS") {
                 var response = response.getReturnValue();
                 var lookuprec = response.LookupRec;
                 var ObjName = response.ObjectName;
                 component.set('v.parentobjectName', ObjName);
-                component.set('v.isLoading' , false);
+                window.setTimeout(
+                    $A.getCallback(function() {
+                        helper.handleChangeProjectHelper(component, event, helper)
+                    }), 2000
+                );
+        
+                
             }else{
                 component.set('v.isLoading' , false);
 
@@ -145,8 +152,10 @@
 
     },
     handleChangeProjectHelper:function(component, event, helper) {
+        component.set('v.isLoading' , false);
 		console.log('change project ');
 		let getValue= component.find("projectlookupid").get("v.value")
+        console.log({getValue});
 
         if(getValue!= '' && getValue != undefined){
             var action = component.get("c.getBudget");
@@ -162,11 +171,13 @@
 
                     console.log({result});
                     component.set('v.budgetList' ,result);
+                    component.set('v.allBudgetRecords' ,result);
+                    console.log(result[0]);
+                    // 3329 - Sakina's Changes on 12th June 2023
+                    component.set('v.selectedBudgetName', result[0].Name);
+                    component.set("v.selectedBudgetId", result[0].Id);
                     component.set('v.loaded', false);
 
-                    component.set('v.allBudgetRecords' ,result);
-
-                    
                 }
             });
             $A.enqueueAction(action);
