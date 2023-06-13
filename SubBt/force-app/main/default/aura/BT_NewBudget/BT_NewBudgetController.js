@@ -134,5 +134,22 @@
         var fields = event.getParam("listOfFields");
         component.find('recordViewForm').submit(fields); // Submit form
         $A.get('e.force:refreshView').fire();
+    },
+    // BUIL-3329 Modified By: Poojan Gabani Date: 12-06-2023 (07:15 PM)
+    handleError: function (component , event , helper) {
+        console.log("Error" , JSON.stringify(Error));
+        toastEvent.setParams({
+            mode: 'sticky',
+            message: 'Error',
+            messageTemplate: "Something wrong.",
+            messageTemplateData: [{
+                url: baseURL + '/lightning/r/buildertek__Budget__c/' + escape(payload.id) + '/view',
+                label: payload.name,
+            }],
+            type: 'error',
+            duration: '10000',
+            mode: 'dismissible'
+        });
+        toastEvent.fire();
     }
 })

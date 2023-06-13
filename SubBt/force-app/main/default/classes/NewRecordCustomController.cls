@@ -16,12 +16,13 @@ public with sharing class NewRecordCustomController{
         }
         return null;
     }
-
+    
+    // Ticket: BUIL-3330 Modified By: Poojan Gabani Date:12-06-2023(2:10 PM)
     @AuraEnabled
     public static List<buildertek__Budget_Item__c> getBudgetline(String recordId) {
 
         System.debug(recordId);
-        List<buildertek__Budget_Item__c> budgetLineList = [SELECT Id , buildertek__Budget__c, Name FROM buildertek__Budget_Item__c WHERE buildertek__Budget__c =: recordId];
+        List<buildertek__Budget_Item__c> budgetLineList = [SELECT Id , buildertek__Budget__c, Name FROM buildertek__Budget_Item__c WHERE buildertek__Budget__c =: recordId ORDER BY Name ASC];
         System.debug(budgetLineList);
 
         // for(buildertek__Budget_Item__c getLine :  budgetLine){
@@ -30,11 +31,12 @@ public with sharing class NewRecordCustomController{
         // }
         return budgetLineList;
     }
+    // Ticket: BUIL-3330 Modified By: Poojan Gabani Date:12-06-2023(12:56 PM)
     @AuraEnabled
     public static List<buildertek__Budget__c> getBudget(string recordId) {
 
         System.debug(recordId);
-        List<buildertek__Budget__c> budgetList = [SELECT Id , buildertek__Project__c, Name FROM buildertek__Budget__c WHERE buildertek__Project__c =: recordId];
+        List<buildertek__Budget__c> budgetList = [SELECT Id , buildertek__Project__c, Name FROM buildertek__Budget__c WHERE buildertek__Project__c =: recordId ORDER BY Name ASC];
         System.debug(budgetList);
         return budgetList;
     }
@@ -53,7 +55,6 @@ public with sharing class NewRecordCustomController{
         }
         return budgetList;
     }
-
     @AuraEnabled
     public static List<buildertek__Budget_Item__c> getBudgetlineNew(String recordId,  String budgetLineNameStr) {
         List<buildertek__Budget_Item__c> budgetLineList;

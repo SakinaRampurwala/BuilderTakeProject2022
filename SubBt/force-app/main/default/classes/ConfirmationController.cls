@@ -730,7 +730,7 @@ Messaging.sendEmail(new Messaging.SingleEmailMessage[] { email });  */
 
         //Apex Single email message
         Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
-        mail.setToAddresses(new String[] { 'karsingh9377@gmail.com' });//Set To Email Address
+        mail.setToAddresses(new String[] { 'krunal.l@mvclouds.com' });//Set To Email Address
         mail.setSubject('Test Email With Attachment');//Set Subject
         mail.setHtmlBody('Please find the attachment.');//Set HTML Body
         mail.setFileAttachments(new Messaging.EmailFileAttachment[] { efa });//Set File Attachment

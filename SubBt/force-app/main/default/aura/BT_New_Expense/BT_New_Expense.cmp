@@ -9,7 +9,7 @@
     <aura:attribute name="listOfFields" type="List" default="[]"/>
     <aura:attribute name="budgetName" type="String"/>
     <aura:attribute name="budgetList" type="List"  />
-    <aura:attribute name="budgetLineName" type="String"/>
+    <aura:attribute name="budgetLineName" type="String"/>   
     <aura:attribute name="SaveNnew" type="Boolean" default="false" />
     <aura:attribute name="isDuplicate" type="Boolean" default="false" />
     <aura:attribute name="disableDuplicate" type="Boolean" default="false" />

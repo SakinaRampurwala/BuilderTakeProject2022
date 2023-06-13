@@ -1,5 +1,6 @@
 ({
     getParameterByName: function (component, event, name) {
+        console.log("Name" , name);
         name = name.replace(/[\[\]]/g, "\\$&");
         var url = window.location.href;
         console.log('url', url);
@@ -14,7 +15,9 @@
             }
         }
         var regex = new RegExp("[?&]" + name + "(=1\.([^&#]*)|&|#|$)");
+        console.log("regax" , regex);
         var results = regex.exec(url);
+        console.log("result" , results);
         if (!results) return null;
         if (!results[2]) return '';
         return decodeURIComponent(results[2].replace(/\+/g, " "));

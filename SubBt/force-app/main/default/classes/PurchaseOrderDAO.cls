@@ -5,7 +5,7 @@
  Developed By: Sagar
  Date: 19/09/2017
  */
-public with sharing class PurchaseOrderDAO{
+public without sharing class PurchaseOrderDAO{
     /**********************************************************************************************************************
      Purpose: This method is used to create a link between PO Item and Budget Item
      Parameters: List<Purchase_Order_Item__c> purchaseOrderItems
@@ -85,6 +85,7 @@ public with sharing class PurchaseOrderDAO{
             }
         }
 
+        System.debug('rfqToPurchaseorders.values() '+rfqToPurchaseorders.values());
         insert rfqToPurchaseorders.values();
 
         List<Purchase_Order_Item__c> poItems = new List<Purchase_Order_Item__c>();
@@ -105,23 +106,23 @@ public with sharing class PurchaseOrderDAO{
 
         PurchaseOrderTriggerHandler.blnSkipPurchaseOrderUpdateTrigger = true;
         insert poItems;
-        
+
     /*      List<buildertek__PO_Item_To_Budget_Item_Link__c> jncObj = new List<buildertek__PO_Item_To_Budget_Item_Link__c>();
-        
+
         for (buildertek__Purchase_Order_Item__c poItem : [SELECT Id, Name,buildertek__Budget_Item__c FROM buildertek__Purchase_Order_Item__c where Id IN:poItems ]) {
-            
+
             system.debug('poItem'+poItem);
-            
+
           buildertek__PO_Item_To_Budget_Item_Link__c jncOb = new buildertek__PO_Item_To_Budget_Item_Link__c();
-            
+
             jncOb.buildertek__Budget_Item__c = poItem.buildertek__Budget_Item__c;
             jncOb.buildertek__PO_Item__c = poItem.Id;
             jncObj.add(jncOb);
         }
-        
+
         insert jncObj; */
-        
-        
+
+
         PurchaseOrderTriggerHandler.blnSkipPurchaseOrderUpdateTrigger = false;
     }
 
@@ -201,7 +202,7 @@ public with sharing class PurchaseOrderDAO{
                     system.debug('working in purchaseorderdao');
                 }
             }
-            
+
             system.debug('poItems ---------> ' + poItems);
             res.isSuccess = true;
             res.strMessage = 'Success';
@@ -216,7 +217,7 @@ public with sharing class PurchaseOrderDAO{
             return res;
         }
     }
-    
+
     @AuraEnabled
     public static ResponseBase createLinesForExistedPO (String poRecordID, String poItemsJson, String budgetlineid, list<string>addbudgetlineids){
         ResponseBase res = new ResponseBase();
@@ -244,7 +245,7 @@ public with sharing class PurchaseOrderDAO{
             system.debug(productNameMap);
             for (buildertek__Purchase_Order_Item__c poItem : purchaseOrderItemList){
                 if(productNameMap.get(poItem.buildertek__Product__c) != null){
-                   poItem.Name = productNameMap.get(poItem.buildertek__Product__c); 
+                   poItem.Name = productNameMap.get(poItem.buildertek__Product__c);
                 }else{
                     poItem.Name = poItem.buildertek__Description__c;
                 }
@@ -264,7 +265,7 @@ public with sharing class PurchaseOrderDAO{
             buildertek__Purchase_Order__c purchaseRec = [select id,Name,buildertek__Description__c,buildertek__Project__c,buildertek__Budget__c,buildertek__Budget_Line__c,
                                                          buildertek__Vendor__c,buildertek__Status__c,buildertek__PO_Total__c from buildertek__Purchase_Order__c where id =:poRecordID];
             list<buildertek__Purchase_Order_Item__c> purchaseOrderItem = [Select id,Name,buildertek__Purchase_Order__c,buildertek__Budget_Item__c from buildertek__Purchase_Order_Item__c where buildertek__Purchase_Order__c =: poRecordID order by CreatedDate limit 1];
-        
+
                 approvedamount = purchaseRec.buildertek__PO_Total__c;
                 List<buildertek__PO_Item_To_Budget_Item_Link__c>  budgetItemLinkRecs= new List<buildertek__PO_Item_To_Budget_Item_Link__c>();
                if(purchaseOrderItem.size()>0){
@@ -273,12 +274,12 @@ public with sharing class PurchaseOrderDAO{
                             buildertek__PO_Item_To_Budget_Item_Link__c potobudgetRec = new buildertek__PO_Item_To_Budget_Item_Link__c();
                             potobudgetRec.buildertek__Budget_Item__c = budgetRec.id;
                             potobudgetRec.buildertek__PO_Item__c = poitemRec.id;
-                            // potobudgetRec.buildertek__Approved_PO__c = poitemRec.buildertek__Purchase_Order__r.buildertek__PO_Total__c; 
+                            // potobudgetRec.buildertek__Approved_PO__c = poitemRec.buildertek__Purchase_Order__r.buildertek__PO_Total__c;
                            potobudgetRec.buildertek__Approved_PO__c = approvedamount;
                             budgetItemLinkRecs.add(potobudgetRec);
-                            
+
                             system.debug('working in purchase order dao');
-                        } 
+                        }
                     }
                 }
                 if(budgetItemLinkRecs.size()>0){
@@ -385,7 +386,7 @@ public with sharing class PurchaseOrderDAO{
          Schema.sObjectType.buildertek__Account_Payable_Item__c.fields.Purchase_Order_Item__c.isCreateable() &&
          Schema.sObjectType.buildertek__Account_Payable_Item__c.fields.Quantity__c.isCreateable() &&
          Schema.sObjectType.buildertek__Account_Payable_Item__c.fields.Unit_Price__c.isCreateable() &&
-         Schema.sObjectType.buildertek__Account_Payable_Item__c.fields.Tax__c.isCreateable()){    
+         Schema.sObjectType.buildertek__Account_Payable_Item__c.fields.Tax__c.isCreateable()){
         insert apItems;*/
         /*}*/
         //system.debug('apItems--->' + apItems);
@@ -433,7 +434,7 @@ public with sharing class PurchaseOrderDAO{
     public static List<pricebookWrapper> getpricebooks(Id recordId){
         System.debug('****getpricebooks******');
         List<pricebookWrapper> priceWrapper = new List<pricebookWrapper>();
-        
+
         pricebookWrapper priceWrap = new pricebookWrapper();
         priceWrap.defaultValue= new pricebook2();
         priceWrap.priceWrapList = new List<pricebook2>();
@@ -685,7 +686,7 @@ public with sharing class PurchaseOrderDAO{
         buildertek__Purchase_Order_Item__c newRecord = (buildertek__Purchase_Order_Item__c) JSON.deserialize(allData, buildertek__Purchase_Order_Item__c.class);
         System.debug(allData);
         insert newRecord;
-        return newRecord.Id; 
+        return newRecord.Id;
     }
     // @AuraEnabled
     // public static List<Product2> getProductDetails(Id PriceBookId  , string prodFamily){

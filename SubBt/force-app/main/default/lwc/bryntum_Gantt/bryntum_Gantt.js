@@ -173,7 +173,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
   @track contractorname;
   @track showOriginalDateModal = false;
   @track blankPredecessor = false;
-  @track boolList;
 
   //New Toast message
   @track showToast = true;
@@ -218,12 +217,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
   }
 
   errorCallback(error, stack) {}
-
-  @wire (AdminSettings)
-  relatedMedia({data,error}) {
-    console.log('data in wire ',data);
-    this.boolList = data;
-  };
 
   get acceptedFormats() {
     return [".pdf", ".png", ".jpg", ".jpeg", ".csv", ".docx", ".doc"];
@@ -1722,13 +1715,10 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
         }
       }
       this.scheduleItemsDataList = scheduleDataList;
-      console.log('boolList:- ', this.boolList);
-      console.log('manuallyScheduledList:- ', this.boolList[3]);
       var formatedSchData = formatData(
         this.scheduleData,
         this.scheduleItemsData,
-        this.scheduleItemsDataList,
-        this.boolList[3]
+        this.scheduleItemsDataList
       );
       console.log("=== formatedSchData ===");
       console.log({
@@ -1836,8 +1826,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
         calendarsData: holiday,
       });
       console.log("calendar rows to  ==>", Array.isArray(data.calendars.rows));
-      let hideInternalRes, hideContractor, hideContratorRes;
-      [hideInternalRes, hideContractor, hideContratorRes] = this.boolList;
       const gantt = new bryntum.gantt.Gantt({
         project,
         appendTo: this.template.querySelector(".container"),
@@ -2247,7 +2235,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
             text: "Internal Resource",
             width: 100,
             editor: false,
-            hidden: hideInternalRes,
             renderer: function (record) {
               if (
                 record.record._data.type == "Task" &&
@@ -2287,7 +2274,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
             text: "Contractor",
             width: 110,
             editor: false,
-            hidden: hideContractor,
             renderer: function (record) {
               if (
                 record.record._data.type == "Task" &&
@@ -2326,7 +2312,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
             text: "Contractor Resource",
             width: 110,
             editor: false,
-            hidden: hideContratorRes,
             renderer: function (record) {
               if (
                 record.record._data.type == "Task" &&
