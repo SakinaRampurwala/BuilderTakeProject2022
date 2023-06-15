@@ -714,4 +714,11 @@ public class OrderPOFromProjectController {
         return 'success';
     }
 
+    @AuraEnabled
+    public static void addEmail(String emailId, Id recordId){
+        Account acc = [SELECT Id, buildertek__Email_Address__c FROM Account WHERE Id = :recordId LIMIT 1];
+        acc.buildertek__Email_Address__c = emailId;
+        update acc;
+    }
+
 }

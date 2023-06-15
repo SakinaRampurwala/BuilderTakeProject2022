@@ -685,61 +685,61 @@ public with sharing class RFQTriggerHandler {
     }
     public void OnAfterUpdateforrejectedvendors(buildertek__RFQ__c[] oldRFQ, buildertek__RFQ__c[] updatedRFQ, Map<ID, buildertek__RFQ__c> RFQMap, Map<Id, buildertek__RFQ__c> oldRFQMap){
 
-        list<Id> RfqstatusId = new list<Id>();
-        for(buildertek__RFQ__c rf: updatedRFQ){
-            buildertek__RFQ__c oldRFqrec = oldRFQMap.get(rf.Id);
-            if(rf.buildertek__Status__c == 'Accepted'  && rf.buildertek__Status__c != oldRFqrec.buildertek__Status__c){
-                RfqstatusId.add(rf.Id);
-            }
-        }
-        string theTemplate;
-        list<OrgWideEmailAddress> owea = new list<OrgWideEmailAddress>();
-        list<buildertek__Admin_Interface_Node_Configuration__c> adminInterfaceNodeConfigurations = [Select Id,buildertek__Email_Address__c
-                                                                                                    from buildertek__Admin_Interface_Node_Configuration__c
-                                                                                                    WHERE Name = :'Email Configuration'];
-        if (adminInterfaceNodeConfigurations.size() > 0){
-            owea = [select Id from OrgWideEmailAddress where Address =: adminInterfaceNodeConfigurations[0].buildertek__Email_Address__c];
-        }
-
-
-        RFQTriggerHandler.blnSkipemaileTrigger = false;
-        theTemplate = [SELECT Id FROM EmailTemplate WHERE Name  = : 'RFQ To Vendor Rejected Email'].id;
-        List<Messaging.SingleEmailMessage> messageList = new List<Messaging.SingleEmailMessage>();
-        List<RFQ_To_Vendor__c> updaterfqVendorList = new List<RFQ_To_Vendor__c>();
-        List<RFQ_To_Vendor__c> rfqVendorList;
-        rfqVendorList = [select Id,buildertek__Send_Invitation__c,buildertek__Status__c,buildertek__Contact__c,buildertek__Contact__r.Email,
-                         buildertek__RFQ__c,buildertek__RFQ__r.buildertek__Vendor__c from
-                         buildertek__RFQ_To_Vendor__c where buildertek__RFQ__c IN: RfqstatusId And buildertek__Status__c != 'Accepted'];
-        if(rfqVendorList.size () > 0){
-            for(RFQ_To_Vendor__c vendorRec: rfqVendorList){
-            if(vendorRec.buildertek__RFQ__r.buildertek__Vendor__c != null /*&& vendorRec.buildertek__RFQ__r.buildertek__Vendor__c != vendorRec.id*/){
-                // vendorRec.buildertek__Status__c = 'Rejected';
-                updaterfqVendorList.add(vendorRec);
-                Messaging.SingleEmailMessage message = new Messaging.SingleEmailMessage();
-                string toemailadd = vendorRec.buildertek__Contact__r.Email;
-                message.toAddresses = new String[] { toemailadd};
-                    system.debug('&&&'+toemailadd);
-                if ( owea.size() > 0 ) {
-                    message.setOrgWideEmailAddressId(owea.get(0).Id);
-                }
-                message.setTemplateID(theTemplate);
-                message.setSaveAsActivity(false);
-                message.setWhatId(vendorRec.Id);
-                message.setTargetObjectId(vendorRec.buildertek__Contact__c);
-                messageList.add(message);
-            }
-        }
-        // if(updaterfqVendorList.size()>0){
-        //  update updaterfqVendorList;
+        // list<Id> RfqstatusId = new list<Id>();
+        // for(buildertek__RFQ__c rf: updatedRFQ){
+        //     buildertek__RFQ__c oldRFqrec = oldRFQMap.get(rf.Id);
+        //     if(rf.buildertek__Status__c == 'Accepted'  && rf.buildertek__Status__c != oldRFqrec.buildertek__Status__c){
+        //         RfqstatusId.add(rf.Id);
+        //     }
         // }
-        if(messageList.size()>0){
-             RFQTriggerHandler.blnSkipemaileTrigger = false;
-                 Messaging.sendEmail(messageList);
-                RFQTriggerHandler.blnSkipemaileTrigger = true;
+        // string theTemplate;
+        // list<OrgWideEmailAddress> owea = new list<OrgWideEmailAddress>();
+        // list<buildertek__Admin_Interface_Node_Configuration__c> adminInterfaceNodeConfigurations = [Select Id,buildertek__Email_Address__c
+        //                                                                                             from buildertek__Admin_Interface_Node_Configuration__c
+        //                                                                                             WHERE Name = :'Email Configuration'];
+        // if (adminInterfaceNodeConfigurations.size() > 0){
+        //     owea = [select Id from OrgWideEmailAddress where Address =: adminInterfaceNodeConfigurations[0].buildertek__Email_Address__c];
+        // }
 
-        }
-        }
-        RFQTriggerHandler.blnSkipemaileTrigger = true;
+
+        // RFQTriggerHandler.blnSkipemaileTrigger = false;
+        // theTemplate = [SELECT Id FROM EmailTemplate WHERE Name  = : 'RFQ To Vendor Rejected Email'].id;
+        // List<Messaging.SingleEmailMessage> messageList = new List<Messaging.SingleEmailMessage>();
+        // List<RFQ_To_Vendor__c> updaterfqVendorList = new List<RFQ_To_Vendor__c>();
+        // List<RFQ_To_Vendor__c> rfqVendorList;
+        // rfqVendorList = [select Id,buildertek__Send_Invitation__c,buildertek__Status__c,buildertek__Contact__c,buildertek__Contact__r.Email,
+        //                  buildertek__RFQ__c,buildertek__RFQ__r.buildertek__Vendor__c from
+        //                  buildertek__RFQ_To_Vendor__c where buildertek__RFQ__c IN: RfqstatusId And buildertek__Status__c != 'Accepted'];
+        // if(rfqVendorList.size () > 0){
+        //     for(RFQ_To_Vendor__c vendorRec: rfqVendorList){
+        //     if(vendorRec.buildertek__RFQ__r.buildertek__Vendor__c != null /*&& vendorRec.buildertek__RFQ__r.buildertek__Vendor__c != vendorRec.id*/){
+        //         // vendorRec.buildertek__Status__c = 'Rejected';
+        //         updaterfqVendorList.add(vendorRec);
+        //         Messaging.SingleEmailMessage message = new Messaging.SingleEmailMessage();
+        //         string toemailadd = vendorRec.buildertek__Contact__r.Email;
+        //         message.toAddresses = new String[] { toemailadd};
+        //             system.debug('&&&'+toemailadd);
+        //         if ( owea.size() > 0 ) {
+        //             message.setOrgWideEmailAddressId(owea.get(0).Id);
+        //         }
+        //         message.setTemplateID(theTemplate);
+        //         message.setSaveAsActivity(false);
+        //         message.setWhatId(vendorRec.Id);
+        //         message.setTargetObjectId(vendorRec.buildertek__Contact__c);
+        //         messageList.add(message);
+        //     }
+        // }
+        // // if(updaterfqVendorList.size()>0){
+        // //  update updaterfqVendorList;
+        // // }
+        // if(messageList.size()>0){
+        //      RFQTriggerHandler.blnSkipemaileTrigger = false;
+        //          Messaging.sendEmail(messageList);
+        //         RFQTriggerHandler.blnSkipemaileTrigger = true;
+
+        // }
+        // }
+        // RFQTriggerHandler.blnSkipemaileTrigger = true;
 
 
     }

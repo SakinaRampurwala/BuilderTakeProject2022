@@ -1410,11 +1410,15 @@ $A.enqueueAction(action);*/
 
             //* slice Name of vendor items to render properly in table
             selectedVendor.forEach(element => {
+                console.log('element ',element);
+                if (element.hasOwnProperty('buildertek_Vendor_Items_r')) {
                 element.buildertek__Vendor_Items__r.forEach(ele => {
                     if(ele.Name.length > 35){
                         ele.Name = ele.Name.slice(0,35)+'...';
                     }
+                    
                 });
+            }
             });
             component.set('v.dynamicStyle', dynamicStyle);
             component.set('v.dynamicClass', dynamicClass);

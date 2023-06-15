@@ -363,7 +363,7 @@
 
 	orderPO: function (component, event, helper) {
 		// debugger;
-
+        console.log('orderpo is called');
 		var record = component.get("v.recordId");
 		var select = component.get("v.selectedobjInfo");
 		var budgetsList = component.get("v.masterBudgetsList");
@@ -487,7 +487,8 @@
 
 		component.find("checkContractors").set("v.value", false);
 
-
+        var a = component.get('c.cancleadd');
+        $A.enqueueAction(a);
 
 
 	},
@@ -787,6 +788,112 @@
 		isExpanded = !isExpanded;
 		component.set("v.isExpanded", isExpanded);
 	},
+
+	onclicknun: function(component, event, helper) {
+		// component.set("v.emailnun", false);
+		// component.set("v.emailwrite", true);
+		var POId = event.currentTarget.dataset.index;
+		var vendorList = component.get("v.SelectedPurchaseOrders");
+		for (var i = 0; i < vendorList.length; i++) {
+			if (vendorList[i].Id === POId) {
+				component.set("v.emailnun", false);
+		        component.set("v.emailwrite", true);
+			}
+		}
+	},
+	
+	cancleadd: function(component, event, helper) {
+		component.set("v.emailnun", true);
+		component.set("v.emailwrite", false);
+		component.set("v.emailid", "");
+	},
+
+	addemail: function(component, event, helper) {
+		var email = component.get("v.emailid");
+		var POId = event.currentTarget.dataset.index;
+
+		var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+		if (emailPattern.test(email)) {
+			component.set("v.Spinner2", true);
+			component.set("v.errorMessage", "");
+
+			var action = component.get("c.addEmail");
+			action.setParams({
+				emailId: email,
+				recordId: POId
+			});
+	
+			action.setCallback(this, function(response) {
+				var state = response.getState();
+				if (state === "SUCCESS") {
+                    var a = component.get('c.orderPO');
+                    $A.enqueueAction(a);
+					component.set("v.selectedPOList", false);
+					component.set("v.emailnun", false);
+					component.set("v.emailwrite", false);
+					component.set("v.emailid", "");
+					// var a = component.get('c.orderPO');
+                    // $A.enqueueAction(a);
+                    var vendorList = component.get("v.SelectedPurchaseOrders");
+					for (var i = 0; i < vendorList.length; i++) {
+						if (vendorList[i].buildertek__Vendor__c === POId) {
+							vendorList[i].buildertek__Vendor__r.buildertek__Email_Address__c = email;
+						}
+					}
+					component.set("v.Spinner2", false);
+					
+					console.log("Email processed successfully");
+				} else if (state === "ERROR") {
+					component.set("v.Spinner2", false);
+					var errors = response.getError();
+					if (errors) {
+						for (var i = 0; i < errors.length; i++) {
+							console.error("Error: " + errors[i].message);
+						}
+					}
+				}
+			});
+	
+			$A.enqueueAction(action);
+	
+			// Clear any previous error message, if any
+			
+		} else {
+			console.log('in else condition');
+			// Display an error message for invalid email
+			component.set("v.errorMessage", "Invalid email format");
+		}
+	},
+	removePO: function(component, event, helper) {
+		var POId = event.currentTarget.dataset.index;
+		var vendorList = component.get("v.SelectedPurchaseOrders");
+		console.log('vendorList',vendorList);
+		var updatedVendorList = [];
+
+		for (var i = 0; i < vendorList.length; i++) {
+			if (vendorList[i].Id != POId) {
+				updatedVendorList.push(vendorList[i]);
+			}
+		}
+        component.set("v.SelectedPurchaseOrders", updatedVendorList);
+		var disableBtn = false;
+		updatedVendorList.forEach(element => {
+			console.log('element.buildertek__Vendor__c ==> '+element.buildertek__Vendor__c);
+			if (element.buildertek__Vendor__c != null && element.buildertek__Vendor__c != '') {
+				if (element.buildertek__Vendor__r.buildertek__Email_Address__c == null || element.buildertek__Vendor__r.buildertek__Email_Address__c == '') {
+					disableBtn = true;
+				}
+			} else{
+				disableBtn = true;
+			}
+		});
+
+		component.set("v.disableOrder", disableBtn);
+
+	},
+	
+	
 
 
 })

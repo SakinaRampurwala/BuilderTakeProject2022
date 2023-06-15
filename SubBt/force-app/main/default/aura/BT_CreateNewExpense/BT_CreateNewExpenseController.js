@@ -284,6 +284,10 @@
     changeProject:function(component, event, helper) {
         console.log('displayBudget');
         component.set('v.displayBudget', false);
+        component.set('v.selectedBudgetName' , '');
+        component.set('v.selectedBudgetId' , '');
+        helper.handleChangeProjectHelper(component, event, helper);
+
     },
     hideList:function(component, event, helper){
         

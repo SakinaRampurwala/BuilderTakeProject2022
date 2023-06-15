@@ -1210,7 +1210,7 @@ budgetGroup = Database.query('Select Id, Name,('+soql+') from budget_line_group_
             }
         }
         //list<Product2> productfamlylst = [select id, Name,family from Product2 where Id IN :ProdIds AND family != null order by family];
-        List<AggregateResult> productfamlylst = [SELECT family
+        List<AggregateResult> productfamlylst = [SELECT toLabel(family) family
                                                  FROM Product2
                                                  where (Id IN :ProdIds AND family != null)
                                                  group by family];

@@ -81,6 +81,11 @@
     <ltng:require styles="{!$Resource.MOdalPreviewWidth72}"/> 
     
     <aura:attribute name="isExpanded" type="Boolean" default = "false"/>
+    <aura:attribute name="emailnun" type="Boolean" default="true" />
+    <aura:attribute name="emailwrite" type="Boolean" default="false" />
+    <aura:attribute name="emailid" type="String" access="global" />
+    <aura:attribute name="errorMessage" type="String" access="global" />
+    
     
     <div style = "position : sticky; top:5.6rem; background : white; z-index : 1">
 
@@ -532,10 +537,27 @@
                                                 <aura:if isTrue="{!row.buildertek__Vendor__r.buildertek__Email_Address__c}">
                                                     <ui:outputText value="{!row.buildertek__Vendor__r.buildertek__Email_Address__c}" /> 
                                                     
-                                                    <aura:set attribute="else">
+                                                    <!-- <aura:set attribute="else">
                                                         <h1 style = "color:red;">
                                                             There is no Email for this Vendor                                                        
                                                         </h1>
+                                                    </aura:set> -->
+                                                    <aura:set attribute="else">
+                                                        <aura:if isTrue="{!v.emailnun}">
+                                                            <h1 style = "color:red;" onclick="{!c.onclicknun}" class="h1cls" data-index="{!row.Id}" id="{!row.Id}">
+                                                            There is no Email for this Vendor                                                        
+                                                        </h1>                                                          
+                                                        </aura:if>
+                                                        <aura:if isTrue="{!v.emailwrite}">
+                                                            <div class="rename_div" data-index="{!row.Id}" id="{!row.Id}">
+                                                                <lightning:input type="text" value="{!v.emailid}" class="rename_input" />
+                                                                <div class="right" onclick="{!c.addemail}" data-index = "{!row.buildertek__Vendor__c}" id="{!row.Id}"><img src="{!$Resource.right}" alt="" /></div>
+                                                                <div class="wrong" onclick="{!c.cancleadd}"><img src="{!$Resource.cross}" alt="" /></div>
+                                                            </div>
+                                                            <aura:if isTrue="{!not(empty(v.errorMessage))}">
+                                                                <div class="error" style = "color:red;">{!v.errorMessage}</div>
+                                                            </aura:if>
+                                                        </aura:if>
                                                     </aura:set>
                                                 </aura:if>
                                                 <aura:set attribute="else">
@@ -584,6 +606,19 @@
                                                 </aura:iteration>
                                             </div>
                                         </td> 
+
+                                        <td class="tdcls">
+                                            <aura:if isTrue="{!row.buildertek__Vendor__c}">
+                                                <aura:if isTrue="{!row.buildertek__Vendor__r.buildertek__Email_Address__c}">                                         
+                                                    <aura:set attribute="else">
+                                                            <div class="wrongs" data-index = "{!row.Id}"  onclick="{!c.removePO}"><img src="{!$Resource.cross}" alt="" style="padding-right: 1px;padding-top: 1px;"/></div>
+                                                    </aura:set>
+                                                </aura:if>
+                                                <aura:set attribute="else">
+                                                    <span></span>
+                                                </aura:set>
+                                            </aura:if>
+                                        </td>
                                     </tr>
                                 </aura:iteration>
                             </tbody>

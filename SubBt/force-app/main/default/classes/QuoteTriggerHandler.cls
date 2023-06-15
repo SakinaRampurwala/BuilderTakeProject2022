@@ -1,23 +1,23 @@
 /*
 Copyright (c) 2017-2018, BuilderTek.
-All rights reserved. 
+All rights reserved.
 
 Developed By: Sagar
 Date: 15/09/2017
 */
 public without sharing class QuoteTriggerHandler {
-    
+
     //Boolean variable to allow skipping execution of trigger in certain scenarios
     public static Boolean blnSkipQuoteUpdateTrigger = false;
-    
+
     private boolean m_isExecuting = false;
     private integer BatchSize = 0;
-    
+
     public QuoteTriggerHandler (boolean isExecuting, integer size){
         m_isExecuting = isExecuting;
         BatchSize = size;
     }
-    
+
     public void OnBeforeInsert(Quote__c[] newQuotes){
         set<Id> oppoids = new set<Id>();
         for(Quote__c quoterec : newQuotes){
@@ -70,20 +70,20 @@ public without sharing class QuoteTriggerHandler {
                                 quoterec.buildertek__Bill_To_Zip_Code__c = opp.Account.Billingpostalcode;
                             }
 
-                           
+
                         }
                     }
-                    
+
                 }
-                
+
             }
         }
         List<Quote__c> quList;
-        
-        quList = [Select Id, Auto_Number1__c,buildertek__Opportunity__c from Quote__c 
-                  where Project__c =:newQuotes[0].Project__c 
+
+        quList = [Select Id, Auto_Number1__c,buildertek__Opportunity__c from Quote__c
+                  where Project__c =:newQuotes[0].Project__c
                   ORDER BY CREATEDDATE DESC  LIMIT 1];
-        
+
         // if(!Test.isRunningTest()){
         BT_Utils.genrateAutoNumber(quList, newQuotes, 'Auto_Number1__c');
         // }
@@ -93,7 +93,7 @@ public without sharing class QuoteTriggerHandler {
         }
         system.debug('&&'+ProjectsIds);
         list<buildertek__Project__c> projectList;
-        
+
         projectList=[SELECT Name,buildertek__Address__c,buildertek__Customer__c,buildertek__City__c,buildertek__Customer__r.BillingCity,buildertek__Customer__r.Name,buildertek__Customer__r.BillingState,buildertek__Customer__r.BillingPostalCode,buildertek__Customer__r.BillingStreet, buildertek__Customer__r.BillingCountry, buildertek__State__c,buildertek__Zip__c,buildertek__Country__c, buildertek__County__c FROM buildertek__Project__c WHERE Id IN :ProjectsIds];
         system.debug('&&'+projectList);
         for(Quote__c Qts : newQuotes){
@@ -108,8 +108,8 @@ public without sharing class QuoteTriggerHandler {
                                 System.debug('---Second IF---');
                                 if(Qts.buildertek__Ship_To_City__c == null || Qts.buildertek__Ship_To_City__c == ''){
                                     System.debug('---In Qty---');
-                                    System.debug('Projs.buildertek__Customer__c---->>'+Projs.buildertek__Customer__c);      
-                                    Qts.buildertek__Ship_To_City__c = Projs.buildertek__Customer__r.BillingCity;  
+                                    System.debug('Projs.buildertek__Customer__c---->>'+Projs.buildertek__Customer__c);
+                                    Qts.buildertek__Ship_To_City__c = Projs.buildertek__Customer__r.BillingCity;
                                     Qts.buildertek__Bill_To_City__c = Projs.buildertek__Customer__r.BillingCity;
                                 }
                                 if(Qts.buildertek__Ship_To_Name__c == null || Qts.buildertek__Ship_To_Name__c == ''){
@@ -163,17 +163,17 @@ public without sharing class QuoteTriggerHandler {
                                 Qts.buildertek__Bill_To_County__c = Projs.buildertek__County__c;
                             }
                         }
-                    }    
+                    }
                 }
             }
         }
-        
+
     }
-    
+
     public void OnBeforeUpdate(Quote__c[] oldQuotes, Quote__c[] updatedQuotes, Map<ID, Quote__c> QuotesMap){
-        
+
     }
-    
+
     public void OnBeforeDelete(Quote__c[] QuotesToDelete, Map<ID, Quote__c> QuotesMap){
         for(buildertek__Quote__c qtemp : QuotesToDelete){
             if(qtemp.buildertek__Status__c=='Sent'){
@@ -184,8 +184,8 @@ public without sharing class QuoteTriggerHandler {
             }
         }
     }
-    
-    public void OnAfterInsert(Quote__c[] newQuotes, Map<ID, Quote__c> newQuotesMap){ 
+
+    public void OnAfterInsert(Quote__c[] newQuotes, Map<ID, Quote__c> newQuotesMap){
         set<Id> oppoids = new set<Id>();
         for(buildertek__Quote__c qutrec : newQuotes){
             if(qutrec.buildertek__Status__c == 'Customer Accepted' && qutrec.buildertek__Opportunity__c !=null){
@@ -201,30 +201,33 @@ public without sharing class QuoteTriggerHandler {
                     opprec.StageName = 'Closed Won';
                     opprecstagelst.add(opprec);
                 }
-                
+
             }
             if(opprecstagelst.size() > 0) {
                 update opprecstagelst;
             }
         }
     }
-    
+
     public void OnAfterUpdate(Quote__c[] oldQuotes, Quote__c[] updatedQuotes, Map<ID, Quote__c> QuotesMap, Map<Id, Quote__c> oldQuotesMap){
 
-        
-        //Create Project from Quote Acceptance on Opportunity 
+        list<buildertek__Admin_Interface_Node_Configuration__c> adminSetting = [Select Id, Name , buildertek__Send_customer_Quote_after_signature__c from buildertek__Admin_Interface_Node_Configuration__c WHERE Name=:'Quote Configuration' limit 1];
+
+        //Create Project from Quote Acceptance on Opportunity
         set<Id> quoteoppoids = new set<Id>();
         set<Id> quoteIdsList = new set<Id>();
         decimal totalamount = 0;
-        string quoteOwner = '';    
+        string quoteOwner = '';
+        Map<Id, List<Id>> quoteIdToUserIdsMap = new Map<Id, List<Id>>();
         for(buildertek__Quote__c qutrec : updatedQuotes){
             if(qutrec.buildertek__Status__c == 'Customer Accepted' && qutrec.buildertek__Opportunity__c !=null && oldQuotesMap.get(qutrec.id).buildertek__Status__c != qutrec.buildertek__Status__c){
                 quoteoppoids.add(qutrec.buildertek__Opportunity__c);
                 quoteOwner = qutrec.OwnerId;
-                system.debug('&&'+quoteoppoids); 
+                system.debug('&&'+quoteoppoids);
                 system.debug('&&'+quoteOwner);
                 //quoteIdsList.add(qutrec.id);
             }
+
 
             // if(qutrec.buildertek__Status__c == 'Customer Accepted' && oldQuotesMap.get(qutrec.id).buildertek__Status__c != qutrec.buildertek__Status__c && qutrec.buildertek__Description__c != null){
             //     String Description = qutrec.buildertek__Description__c;
@@ -244,11 +247,11 @@ public without sharing class QuoteTriggerHandler {
             //     // conDocLink1.LinkedEntityId = qutrec.id; // Specify RECORD ID here i.e Any Object ID (Standard Object/Custom Object)
             //     // conDocLink1.ContentDocumentId = [SELECT ContentDocumentId FROM ContentVersion WHERE Id =:conVer1.Id].ContentDocumentId;  //ContentDocumentId Id from ContentVersion
             //     // conDocLink1.Visibility = 'AllUsers';
-            //     // insert conDocLink1; 
+            //     // insert conDocLink1;
 
             // }
 
-            // Commented this based on requirements in BUIL - 3264 
+            // Commented this based on requirements in BUIL - 3264
             // if(qutrec.buildertek__Status__c == 'Customer Accepted'){
             //     string email = qutrec.buildertek__Bill_To_Email_Address__c;
             //     if(email != null && email != ''){
@@ -261,22 +264,114 @@ public without sharing class QuoteTriggerHandler {
             //         System.debug('Email sent to '+email);
             //     }
             // }
-             
-       
+
+            if(adminSetting.size() > 0 && adminSetting[0].buildertek__Send_customer_Quote_after_signature__c == true){
+                System.debug('Jaimin : Quote Id is '+qutrec.Id);
+                System.debug('Jaimin : Quote Owner is '+qutrec.OwnerId);
+
+                if(qutrec.buildertek__Status__c == 'Customer Accepted'  && oldQuotesMap.get(qutrec.id).buildertek__Status__c != qutrec.buildertek__Status__c){
+                    string emailbody = '<html><body><h3>  Your Quote has been Accepted </h3>'  + '<br/>';
+                    emailbody += 'Quote Name : '+qutrec.Name+'<br/>';
+                    if(qutrec.buildertek__Customer_Account__c != null){
+                        emailbody += 'Customer Name : '+qutrec.buildertek__Customer_Account__r.Name+'<br/>';
+                    }
+                    if(qutrec.buildertek__Grand_Total__c != null){
+                        emailbody += 'Quote Amount : '+qutrec.buildertek__Grand_Total__c+'<br/>';
+                    }
+                    if(qutrec.OwnerId != null){
+                        emailbody += 'Quote Owner : '+qutrec.Owner.Name+'<br/></body></html>';
+                    }
+
+                    string email = qutrec.OwnerId;
+                    User user = [SELECT Id, Email FROM User WHERE Id =:qutrec.OwnerId];
+                    //log user.email
+                    System.debug('Jaimin : Email is '+user.Email);
+                    System.debug('Jaimin : Owner is '+qutrec.OwnerId);
+                    if(email != null && email != ''){
+                        Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+                        mail.setToAddresses(new String[] {email});
+                        mail.setSenderDisplayName('Admin');
+                        mail.setSubject('Quote Accepted (Quote Id : '+qutrec.Id+')');
+                        mail.setHtmlBody(emailbody);
+                        Messaging.sendEmail(new Messaging.SingleEmailMessage[] {mail});
+                        System.debug('Email sent to '+email);
+                    }
+                }
+
+            }
+
+
+
+
+
+
         }
 
-       
+
+
+        // added by Jaimin for CHB-34
+        // Set<Id> ownerIdsSet = new Set<Id>();
+        // for(Id quoteId : quoteIdToUserIdsMap.keySet()){
+        //     List<Id> userIdsList = quoteIdToUserIdsMap.get(quoteId);
+        //     ownerIdsSet.add(userIdsList.get(1));
+        // }
+        // for (Id t : ownerIdsSet) {
+        //     System.debug('name of id '+t);
+        // }
+        // Set<Id> CustomerIdSet = new Set<Id>();
+        // for(Id quoteId : quoteIdToUserIdsMap.keySet()){
+        //     List<Id> userIdsList = quoteIdToUserIdsMap.get(quoteId);
+        //     CustomerIdSet.add(userIdsList.get(0));
+        // }
+        // for (Id t : CustomerIdSet) {
+        //     System.debug('name of id CustomerIdSet '+t);
+        // }
+        // Map<Id, User> ownerMap = new Map<Id, User>([SELECT Id, Name FROM User WHERE Id IN :ownerIdsSet]);
+        // Map<Id, Account> CustomerMap = new Map<Id, Account>([SELECT Id, Name FROM Account WHERE Id IN :CustomerIdSet]);
+        // for(buildertek__Quote__c qutrec : updatedQuotes){
+        //     if(adminSetting.size() > 0 && adminSetting[0].buildertek__Send_customer_Quote_after_signature__c == true){
+        //         if(qutrec.buildertek__Status__c == 'Customer Accepted'  && oldQuotesMap.get(qutrec.id).buildertek__Status__c != qutrec.buildertek__Status__c){
+        //             string emailbody = '<html><body><h3>  Your Quote has been Accepted </h3><br/>';
+        //             emailbody += 'Quote Name : '+qutrec.Name+'<br/>';
+        //             if(qutrec.buildertek__Customer_Account__c != null){
+        //                 // emailbody += 'Customer Name : '+qutrec.buildertek__Customer_Account__r.Name+'<br/>';
+        //                 emailbody += 'Customer Name : '+CustomerMap.get(qutrec.buildertek__Customer_Account__c).Name+'<br/>';
+        //             }
+        //             if(qutrec.buildertek__Grand_Total__c != null){
+        //                 emailbody += 'Quote Amount : '+qutrec.buildertek__Grand_Total__c+'<br/>';
+        //             }
+        //             if(qutrec.OwnerId != null){
+        //                 // emailbody += 'Quote Owner : '+qutrec.Owner.Name+'<br/></body></html>';
+        //                 emailbody += 'Quote Owner : '+ownerMap.get(qutrec.OwnerId).Name+'<br/></body></html>';
+        //             }
+
+        //             string email = qutrec.OwnerId;
+        //             if(email != null && email != ''){
+        //                 Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+        //                 mail.setToAddresses(new String[] {email});
+        //                 mail.setSenderDisplayName('Admin');
+        //                 mail.setSubject('Quote Accepted (Quote Id : '+qutrec.Id+')');
+        //                 mail.setHtmlBody(emailbody);
+        //                 Messaging.sendEmail(new Messaging.SingleEmailMessage[] {mail});
+        //                 System.debug('Email sent to '+email);
+        //             }
+        //         }
+
+        //     }
+        // }
+
+
         list<buildertek__Admin_Interface_Node_Configuration__c> adminInterfaceNodeConfigurations = [Select Id,
                                                                                                     buildertek__Quote_Configuration__c,buildertek__Update_the_Opp_Amount__c,
                                                                                                     buildertek__Default_Project_Owner__c,buildertek__Org_Base_URL__c
                                                                                                     from buildertek__Admin_Interface_Node_Configuration__c
                                                                                                     WHERE Name=:'Quote Configuration' and buildertek__Quote_Configuration__c !=false limit 1];
         if(quoteoppoids.size()>0){
-            
+
             if(adminInterfaceNodeConfigurations.size()>0 ){
                 if(adminInterfaceNodeConfigurations[0].buildertek__Quote_Configuration__c == true){
                     list<buildertek__Quote__c> oppquotereclist = [select id,name,buildertek__Is_Customer_Accepted__c,buildertek__Opportunity__r.Account.Billingstreet,buildertek__Opportunity__r.Account.Billingcountry,buildertek__Opportunity__r.Account.Billingstate,buildertek__Opportunity__r.Account.Billingcity,buildertek__Opportunity__r.Account.Billingpostalcode,buildertek__Grand_Total__c,buildertek__Total__c,buildertek__Status__c,buildertek__Opportunity__r.Name,buildertek__Opportunity__r.buildertek__Notes__c,buildertek__Opportunity__r.Account.Name,buildertek__Opportunity__c,buildertek__Opportunity__r.AccountId,buildertek__Opportunity__r.OwnerId from buildertek__Quote__c  where buildertek__Opportunity__c = :quoteoppoids and buildertek__Status__c = 'Customer Accepted'];
-                    list<buildertek__Quote__c> updateCustomerAcceptedQuoteList = new List<buildertek__Quote__c>();   
+                    list<buildertek__Quote__c> updateCustomerAcceptedQuoteList = new List<buildertek__Quote__c>();
                     decimal totalquoteamount = 0;
                     if(oppquotereclist.size() > 0){
                         //decimal totalquoteamount = 0;
@@ -284,7 +379,7 @@ public without sharing class QuoteTriggerHandler {
                             totalquoteamount += qutrec.buildertek__Grand_Total__c;
                             totalamount += qutrec.buildertek__Total__c;
                         }
-                        Set<Id> contactIds= new Set<Id>(); 
+                        Set<Id> contactIds= new Set<Id>();
                         contactIds.add(oppquotereclist[0].buildertek__Opportunity__c); //include all the contact ids for which you need to retrieve content note
                         system.debug(contactIds);
                         Set<Id> contentDocumentIds1 = new Set<Id>();
@@ -308,7 +403,7 @@ public without sharing class QuoteTriggerHandler {
                             // tmp2.add(c.TextPreview);
                             tmp.add(c.Title + ' : ' + c.TextPreview);
                         }
-                        
+
                         //  Title = string.join(tmp1 ,',' );
                         // TextPreview = string.join(tmp2,',');
                         TextPreview1 = string.join(tmp,'\n\n');
@@ -317,7 +412,7 @@ public without sharing class QuoteTriggerHandler {
                         list<buildertek__Project__c> projectlst = new list<buildertek__Project__c>();
                         buildertek__Project__c project = new buildertek__Project__c();
                        /* buildertek__Common_Files__c cf=new buildertek__Common_Files__c();
-                        cf.Name='Common File';   
+                        cf.Name='Common File';
                         insert cf; */
                         list<Opportunity> opplst = [Select Id, Name,AccountId,
                                                     Account.buildertek__Email_Address__c,
@@ -341,19 +436,19 @@ public without sharing class QuoteTriggerHandler {
                             project.buildertek__State__c =  oppquotereclist[0].buildertek__Opportunity__r.Account.Billingstate;
                             project.buildertek__Address__c =  oppquotereclist[0].buildertek__Opportunity__r.Account.Billingstreet;
                             project.buildertek__Zip__c =  oppquotereclist[0].buildertek__Opportunity__r.Account.Billingpostalcode;
-                            
+
                             /* Createing Common File Record */
-                            
+
                             // cf.Name= oppquotereclist[0].buildertek__Opportunity__r.Account.Name;
-                            
+
                             //System.debug('-----------------------------------CF Record----------------------------'+cf);
                             /*--------------END-------------*/
-                            
+
                         }else{
-                            
+
                             if(oppquotereclist[0].buildertek__Opportunity__r.Name !=null){
                                 project.Name = oppquotereclist[0].buildertek__Opportunity__r.Name;
-                                
+
                             }
                         }
                         if(totalquoteamount !=null){
@@ -364,16 +459,16 @@ public without sharing class QuoteTriggerHandler {
                             project.buildertek__Opportunity__c =  oppquotereclist[0].buildertek__Opportunity__c;
                         }
                         project.buildertek__Quote_Owner__c = quoteOwner;
-                        
+
                         //Checking selected opportunity owner active or not
                         List<User> opportunityOwnerList = [SELECT Id, Name, IsActive FROM User WHERE Id =: oppquotereclist[0].buildertek__Opportunity__r.OwnerId AND IsActive = True LIMIT 1];
-                        
+
                         //Checking selected User from configiration was active or not
                         List<User> configurationDefaultProjectOwnerUserList = New List<User>();
                         if(adminInterfaceNodeConfigurations[0].buildertek__Default_Project_Owner__c != null){
                             configurationDefaultProjectOwnerUserList = [SELECT Id, Name, IsActive FROM User WHERE Id =: adminInterfaceNodeConfigurations[0].buildertek__Default_Project_Owner__c AND IsActive = True LIMIT 1];
                         }
-                        
+
                         if(!opportunityOwnerList.isEmpty()){
                             project.OwnerId = oppquotereclist[0].buildertek__Opportunity__r.OwnerId;
                         }
@@ -383,31 +478,31 @@ public without sharing class QuoteTriggerHandler {
                         else{
                             project.OwnerId = UserInfo.getUserId();
                         }
-                        
+
                       //  System.debug('-----------------------------------CF Record----------------------------'+cf);
-                      //  project.buildertek__Project_File__c=cf.Id; 
+                      //  project.buildertek__Project_File__c=cf.Id;
                         if(adminInterfaceNodeConfigurations[0].buildertek__Org_Base_URL__c != null){
                         	project.buildertek__Pictures__c = adminInterfaceNodeConfigurations[0].buildertek__Org_Base_URL__c+'/lightning/r/buildertek__Quote__c/'+oppquotereclist[0].Id+'/related/AttachedContentDocuments/view';
                         }
-                        //project.buildertek__Pictures__c = 
+                        //project.buildertek__Pictures__c =
                         if(oppquotereclist[0].buildertek__Is_Customer_Accepted__c == false){
                             insert project;
-                            
+
                            // System.debug('-----------------------------------CF Record----------------------------'+cf);
-                            oppquotereclist[0].buildertek__Is_Customer_Accepted__c = true  ; 
+                            oppquotereclist[0].buildertek__Is_Customer_Accepted__c = true  ;
                             buildertek__Quote__c updateCustomerAcceptedQuote = new buildertek__Quote__c();
                             updateCustomerAcceptedQuote.buildertek__Is_Customer_Accepted__c = true;
                             updateCustomerAcceptedQuote.Id = oppquotereclist[0].Id;
                             updateCustomerAcceptedQuoteList.add(updateCustomerAcceptedQuote);
                         }
-                        
+
                         if(updateCustomerAcceptedQuoteList.size()>0){
                             QuoteTriggerHandler.blnSkipQuoteUpdateTrigger = true;
                             update updateCustomerAcceptedQuoteList;
                             QuoteTriggerHandler.blnSkipQuoteUpdateTrigger = true;
-                            
+
                         }
-                        
+
                         List<ContentNote> contentNoteslist = new List<ContentNote>();
                         for(ContentNote c : contentNotes){
                             ContentNote noteRec = new ContentNote();
@@ -416,10 +511,10 @@ public without sharing class QuoteTriggerHandler {
                             contentNoteslist.add(noteRec);
                         }
                       //  System.debug('Common File Record Id----------------------------'+cf.Id);
-                        System.debug('Common File Record Id----------------------------'+contentNoteslist.size());          
+                        System.debug('Common File Record Id----------------------------'+contentNoteslist.size());
                         if(contentNoteslist.size() > 0){
                            // System.debug('Common File Record Id----------------------------'+cf.Id);
-                            insert contentNoteslist; 
+                            insert contentNoteslist;
                             SET<Id> contentDocumentIds = new SET<Id>();
                             List<ContentNote> contentVersionList = [SELECT Id FROM ContentNote WHERE Id IN: contentNoteslist];
                             for(ContentNote cv : contentVersionList){
@@ -427,42 +522,42 @@ public without sharing class QuoteTriggerHandler {
                             }
                             List<ContentDocument> conDocList = [SELECT Id,Title FROM ContentDocument WHERE Id IN:contentDocumentIds];
                             List<ContentDocumentLink> cdlList = new List<ContentDocumentLink>();
-                            //create ContentDocumentLink  record to link with parentId 
+                            //create ContentDocumentLink  record to link with parentId
                             if(project.id != null){
                                 for(ContentDocument cd : conDocList){
                                     ContentDocumentLink objCntDocLink = new ContentDocumentLink();
-                                    objCntDocLink.LinkedEntityId = project.id; // Specify your parent Id 
+                                    objCntDocLink.LinkedEntityId = project.id; // Specify your parent Id
                                     objCntDocLink.ContentDocumentId = cd.Id;  //Content Note Id
-                                    objCntDocLink.shareType = 'V'; // Specify your sharing type 
+                                    objCntDocLink.shareType = 'V'; // Specify your sharing type
                                     cdlList.add(objCntDocLink);
                                 }
-                                insert cdlList; 
+                                insert cdlList;
                             }
                          //   System.debug('Common File Record Id----------------------------'+cf.Id);
                         }
-                        
-                        List<buildertek__Quote__c> quoteList = [SELECT Id, Name, buildertek__Description__c, buildertek__Quote_Amount__c, buildertek__Status__c, buildertek__Project__c, 
+
+                        List<buildertek__Quote__c> quoteList = [SELECT Id, Name, buildertek__Description__c, buildertek__Quote_Amount__c, buildertek__Status__c, buildertek__Project__c,
                                                                 buildertek__Auto_Number__c, buildertek__Primary__c, buildertek__Markup__c, buildertek__Shipping_and_Handling__c,
                                                                 buildertek__Profit_Margin__c, buildertek__Payment_Terms__c, buildertek__Discount__c, buildertek__Tax__c,
-                                                                buildertek__Expires_On__c, buildertek__Sales_Rep__c, buildertek__Primary_Contact__c, buildertek__Start_Date__c, 
-                                                                buildertek__Bill_To_Name__c, buildertek__Bill_To_Street__c, buildertek__Bill_To_City__c, buildertek__Bill_To_State__c, 
-                                                                buildertek__Bill_To_Country__c, buildertek__Ship_To_Name__c, buildertek__Ship_To_Street__c, buildertek__Ship_To_City__c, 
-                                                                buildertek__Ship_To_State__c, buildertek__Group_Line_Items__c,buildertek__OppToQuoteId__c, buildertek__Ship_To_Zip_Code__c, 
-                                                                buildertek__Email_Body__c, buildertek__Email_Subject__c, buildertek__Ship_To_Country__c, buildertek__Bill_To_Zip_Code__c,buildertek__Opportunity__c, 
+                                                                buildertek__Expires_On__c, buildertek__Sales_Rep__c, buildertek__Primary_Contact__c, buildertek__Start_Date__c,
+                                                                buildertek__Bill_To_Name__c, buildertek__Bill_To_Street__c, buildertek__Bill_To_City__c, buildertek__Bill_To_State__c,
+                                                                buildertek__Bill_To_Country__c, buildertek__Ship_To_Name__c, buildertek__Ship_To_Street__c, buildertek__Ship_To_City__c,
+                                                                buildertek__Ship_To_State__c, buildertek__Group_Line_Items__c,buildertek__OppToQuoteId__c, buildertek__Ship_To_Zip_Code__c,
+                                                                buildertek__Email_Body__c, buildertek__Email_Subject__c, buildertek__Ship_To_Country__c, buildertek__Bill_To_Zip_Code__c,buildertek__Opportunity__c,
                                                                 buildertek__SignatureBase64__c,buildertek__Bill_To_Cell_Phone__c,buildertek__Bill_To_Email_Address__c,buildertek__Customer_Accepted_Date__c,
                                                                 buildertek__Date_Accepted_by_Customer__c,buildertek__Date_Sent_To_Customer__c,buildertek__Type__c,buildertek__Notes__c
-                                                                from buildertek__Quote__c 
+                                                                from buildertek__Quote__c
                                                                 where buildertek__Opportunity__c =: quoteoppoids and (buildertek__Status__c = 'Approved' OR buildertek__Status__c = 'Customer Accepted')];
-                        
+
                         List<buildertek__Quote__c> quoteToUpdateList = new List<buildertek__Quote__c>();
                         for(buildertek__Quote__c quote: quoteList){
-                            quoteIdsList.add(quote.Id); 
-                            
-                            buildertek__Quote__c quoteToUpdate = new buildertek__Quote__c(); 
+                            quoteIdsList.add(quote.Id);
+
+                            buildertek__Quote__c quoteToUpdate = new buildertek__Quote__c();
                             //quoteToUpdate.Id = quote.Id;
                             quoteToUpdate.Name = quote.Name  ;
                             quoteToUpdate.buildertek__Description__c = quote.buildertek__Description__c  ;
-                            quoteToUpdate.buildertek__Status__c = quote.buildertek__Status__c ; 
+                            quoteToUpdate.buildertek__Status__c = quote.buildertek__Status__c ;
                             quoteToUpdate.buildertek__Project__c = project.Id;
                             quoteToUpdate.buildertek__OppToQuoteId__c = quote.Id;
                             quoteToUpdate.buildertek__Primary__c  = quote.buildertek__Primary__c;
@@ -507,48 +602,48 @@ public without sharing class QuoteTriggerHandler {
                         }
                         system.debug('quoteToUpdateList --------> '+quoteToUpdateList[0].buildertek__Quote_File__c);
                         if(quoteToUpdateList.size() > 0){
-                            insert quoteToUpdateList; 
+                            insert quoteToUpdateList;
                         }
-                        
-                        list<buildertek__Quote_Item__c> quoteItemList = [SELECT Id, 
-                                                                         Name, 
+
+                        list<buildertek__Quote_Item__c> quoteItemList = [SELECT Id,
+                                                                         Name,
                                                                          buildertek__Item_Name__c,
-                                                                         buildertek__Description__c, 
-                                                                         buildertek__Quantity__c, 
-                                                                         buildertek__Unit_Price__c, 
-                                                                         buildertek__Total_Cost__c, 
-                                                                         buildertek__Quote__c, 
+                                                                         buildertek__Description__c,
+                                                                         buildertek__Quantity__c,
+                                                                         buildertek__Unit_Price__c,
+                                                                         buildertek__Total_Cost__c,
+                                                                         buildertek__Quote__c,
                                                                          buildertek__Quote__r.buildertek__Opportunity__c,
-                                                                         buildertek__Cost_Code__c, 
-                                                                         buildertek__Auto_Number__c, 
-                                                                         buildertek__Product__c, 
-                                                                         buildertek__Grouping__c, 
-                                                                         buildertek__UOM__c, 
-                                                                         buildertek__Vendor__c, 
-                                                                         buildertek__Markup__c, 
-                                                                         buildertek__Unit_Cost__c, 
-                                                                         buildertek__List_Total__c, 
-                                                                         buildertek__Net_Unit__c, 
-                                                                         buildertek__Applied_Markup__c, 
-                                                                         buildertek__Net_Total__c, 
+                                                                         buildertek__Cost_Code__c,
+                                                                         buildertek__Auto_Number__c,
+                                                                         buildertek__Product__c,
+                                                                         buildertek__Grouping__c,
+                                                                         buildertek__UOM__c,
+                                                                         buildertek__Vendor__c,
+                                                                         buildertek__Markup__c,
+                                                                         buildertek__Unit_Cost__c,
+                                                                         buildertek__List_Total__c,
+                                                                         buildertek__Net_Unit__c,
+                                                                         buildertek__Applied_Markup__c,
+                                                                         buildertek__Net_Total__c,
                                                                          buildertek__MFG_Discount__c,
-                                                                         buildertek__List_Unit_Price__c, 
-                                                                         buildertek__Pricing_Method__c, 
-                                                                         buildertek__Discount__c, 
-                                                                         buildertek__Profit_Margin__c, 
-                                                                         buildertek__Net_Total_Price__c, 
+                                                                         buildertek__List_Unit_Price__c,
+                                                                         buildertek__Pricing_Method__c,
+                                                                         buildertek__Discount__c,
+                                                                         buildertek__Profit_Margin__c,
+                                                                         buildertek__Net_Total_Price__c,
                                                                          buildertek__Notes__c,
                                                                          buildertek__Additional_Discount__c,
-                                                                         buildertek__Purchase_Order__c 
+                                                                         buildertek__Purchase_Order__c
                                                                          FROM buildertek__Quote_Item__c
-                                                                         WHERE buildertek__Quote__c IN: quoteIdsList and 
+                                                                         WHERE buildertek__Quote__c IN: quoteIdsList and
                                                                          buildertek__Quote__r.buildertek__Opportunity__c =:quoteoppoids and
-                                                                         buildertek__Status__c = 'Accept']; 
-                        
+                                                                         buildertek__Status__c = 'Accept'];
+
                         system.debug('quoteToUpdateList --->'+quoteToUpdateList.size());
                         //insert quote items
                         if(quoteToUpdateList !=null){
-                            
+
                             list<buildertek__Quote_Item__c> quoteitemreclst = new list<buildertek__Quote_Item__c>();
                             for(buildertek__Quote_Item__c quoteitemrecs : quoteItemList){
                                 for(buildertek__Quote__c quoteid : quoteToUpdateList){
@@ -575,26 +670,26 @@ public without sharing class QuoteTriggerHandler {
                                         quoteitem.buildertek__Additional_Discount__c = quoteitemrecs.buildertek__Additional_Discount__c;
                                         quoteitemreclst.add(quoteitem) ;
                                     }
-                                }  
+                                }
                             }
                             system.debug('quoteitemreclst---size--'+quoteitemreclst.Size()+'quoteitemreclst--->'+quoteitemreclst);
                             if(quoteitemreclst.size() >0 ){
                                 insert quoteitemreclst;
-                            }      
+                            }
                         }
-                        list<buildertek__Proposal_Images__c> quoteImageList = [SELECT Id, 
+                        list<buildertek__Proposal_Images__c> quoteImageList = [SELECT Id,
                                                                                Name,buildertek__Base_URL__c,
                                                                                buildertek__Contact__c,buildertek__Contract__c,
                                                                                buildertek__Description__c,buildertek__Image__c,
                                                                                buildertek__Proposal__c
                                                                                FROM buildertek__Proposal_Images__c
-                                                                               WHERE buildertek__Proposal__c IN: quoteIdsList]; 
+                                                                               WHERE buildertek__Proposal__c IN: quoteIdsList];
                         if(quoteImageList !=null){
                             list<buildertek__Proposal_Images__c> contractImagereclst = new list<buildertek__Proposal_Images__c>();
                             for(buildertek__Proposal_Images__c quoteimagerecs : quoteImageList){
                                 for(buildertek__Quote__c quoteid : quoteToUpdateList){
                                     if(quoteid.buildertek__OppToQuoteId__c == quoteimagerecs.buildertek__Proposal__c){
-                                        
+
                                         buildertek__Proposal_Images__c quoteimage =  new buildertek__Proposal_Images__c();
                                         // quoteimage.Name = quoteimagerecs.Name;
                                         quoteimage.buildertek__Base_URL__c =quoteimagerecs.buildertek__Base_URL__c;
@@ -605,7 +700,7 @@ public without sharing class QuoteTriggerHandler {
                                         quoteimage.buildertek__Image__c =  quoteimagerecs.buildertek__Image__c ;
                                         contractImagereclst.add(quoteimage) ;
                                     }
-                                }  
+                                }
                             }
                             if(contractImagereclst.size() >0 ){
                                 insert contractImagereclst;
@@ -613,16 +708,16 @@ public without sharing class QuoteTriggerHandler {
                         }
                       /* transient set<Id> contentDocIDList = new set<Id>();
                         Map<Id, Id> contentdocMap = new Map<Id, Id>();
-                        list<ContentDocumentLink> ContentDocumentLinklist = [SELECT ContentDocumentId,Id,IsDeleted,LinkedEntityId,ShareType,SystemModstamp,Visibility 
+                        list<ContentDocumentLink> ContentDocumentLinklist = [SELECT ContentDocumentId,Id,IsDeleted,LinkedEntityId,ShareType,SystemModstamp,Visibility
                                                                              FROM ContentDocumentLink WHERE LinkedEntityId IN: quoteIdsList];
                         for(ContentDocumentLink conDocLink : ContentDocumentLinklist){
                             contentDocIDList.add(conDocLink.ContentDocumentId);
-                            contentdocMap.put(conDocLink.ContentDocumentId,conDocLink.LinkedEntityId);                                                   
-                            system.debug('contentDocIDList'+contentDocIDList);                                       
+                            contentdocMap.put(conDocLink.ContentDocumentId,conDocLink.LinkedEntityId);
+                            system.debug('contentDocIDList'+contentDocIDList);
                         }
                         transient List<ContentVersion> VersionList = new List<ContentVersion>();
                         transient List<ContentVersion> attachlist = new List<ContentVersion>();
-                        attachlist = [select Title, Description, FileType,Owner.Name, VersionNumber,VersionData,CreatedDate,PathOnClient,FileExtension,ContentDocumentId from ContentVersion 
+                        attachlist = [select Title, Description, FileType,Owner.Name, VersionNumber,VersionData,CreatedDate,PathOnClient,FileExtension,ContentDocumentId from ContentVersion
                                       where ContentDocumentId in :contentDocIDList AND IsLatest = true];
                         List<ContentVersion> contentVersionToInsert = new List<ContentVersion>();
                         SET<Id> quoteIds = new SET<Id>();
@@ -634,13 +729,13 @@ public without sharing class QuoteTriggerHandler {
                                 if(contentdocMap.containsKey(objIndividualAttachment.ContentDocumentId)){
                                     if(quoteRec.buildertek__OppToQuoteId__c == contentdocMap.get(objIndividualAttachment.ContentDocumentId) ){
                                         ContentVersion con= new contentversion();
-                                        con.ContentLocation = 'S'; 
-                                        con.PathOnClient = objIndividualAttachment.PathOnClient; 
+                                        con.ContentLocation = 'S';
+                                        con.PathOnClient = objIndividualAttachment.PathOnClient;
                                         //con.VersionData = blob.valueOf('/services/data/v53.0/sobjects/ContentVersion/'+objIndividualAttachment.Id+'/VersionData');//objIndividualAttachment.VersionData;
                                         con.VersionData = objIndividualAttachment.VersionData;
                                         con.Title = objIndividualAttachment.Title;
                                         contentVersionToInsert.add(con);
-                                        
+
                                     }
                                 }
                             }
@@ -654,13 +749,13 @@ public without sharing class QuoteTriggerHandler {
                             for(ContentVersion cv : contentVersionList){
                                 contentDocumentIds.add(cv.ContentDocumentId);
                             }
-                            
+
                             map<Id,Id> lstContentDocumentlinkmap = new map<Id,Id>();
-                            List<ContentDocumentLink> lstContentDocumentlink = [SELECT ContentDocumentId, LINKEDENTITYID 
+                            List<ContentDocumentLink> lstContentDocumentlink = [SELECT ContentDocumentId, LINKEDENTITYID
                                                                                 FROM ContentDocumentLink WHERE ContentDocumentId IN:contentDocumentIds];
-                            
+
                             for(ContentDocumentLink cdlnk : lstContentDocumentlink){
-                                lstContentDocumentlinkmap.put(cdlnk.LINKEDENTITYID, cdlnk.LINKEDENTITYID);                                
+                                lstContentDocumentlinkmap.put(cdlnk.LINKEDENTITYID, cdlnk.LINKEDENTITYID);
                             }
                             List<ContentDocument> conDocList = [SELECT Id,Title FROM ContentDocument WHERE Id IN:contentDocumentIds];
                             List<ContentDocumentLink> cdlList = new List<ContentDocumentLink>();
@@ -668,27 +763,27 @@ public without sharing class QuoteTriggerHandler {
                             //system.debug('quoteId ------> '+quoteId);
                             for(ContentDocument cd : conDocList){
                                 system.debug('cf.Id --------> '+lstContentDocumentlinkmap.get(cf.Id));
-                                if(lstContentDocumentlinkmap.get(cf.Id) == null){ 
+                                if(lstContentDocumentlinkmap.get(cf.Id) == null){
                                     ContentDocumentLink CDL = new ContentDocumentLink();
                                     CDL .ContentDocumentId = cd.Id;
-                                    CDL .LinkedEntityId = cf.Id; 
-                                    CDL .ShareType = 'I'; 
+                                    CDL .LinkedEntityId = cf.Id;
+                                    CDL .ShareType = 'I';
                                     CDL .Visibility = 'AllUsers';
-                                    cdlList.add(CDL); 
+                                    cdlList.add(CDL);
                                 }
-                                
-                            }          
+
+                            }
                             //}
                             if(cdlList.size() > 0){
                                 insert cdlList;
                                 system.debug('cdlList size -------> '+cdlList.size());
                                 system.debug('cdlList -------> '+cdlList);
                             }
-                            
-                            
+
+
                         }*/
                         Boolean isCreateContract = false;
-                        Boolean isCreateBudget = false;            
+                        Boolean isCreateBudget = false;
                         List<Id> createdContractCustomerToAccess = new List<Id>();
                         List<Id> createdBudgetCustomerToAccess = new List<Id>();
                         List<buildertek__Admin_Interface_Node_Configuration__c> adminInterfaceNodeCon = [Select Id,buildertek__Change_Order_Configuration__c from buildertek__Admin_Interface_Node_Configuration__c WHERE Name=:'Create Contract on Quote Acceptance' LIMIT 1];
@@ -699,11 +794,11 @@ public without sharing class QuoteTriggerHandler {
                             if(isCreateContract && newquote.Status__c == 'Customer Accepted'){
                                 createdContractCustomerToAccess.add(newquote.Id);
                             }
-                        } 
+                        }
                         if(!createdContractCustomerToAccess.isEmpty()) {
-                            futureContoller.createContractsFromQuote(createdContractCustomerToAccess); 
-                            //BudgetContractCreateHelper.createContractsFromQuote(createdContractCustomerToAccess); 
-                        } 
+                            futureContoller.createContractsFromQuote(createdContractCustomerToAccess);
+                            //BudgetContractCreateHelper.createContractsFromQuote(createdContractCustomerToAccess);
+                        }
                         List<buildertek__Admin_Interface_Node_Configuration__c> adminInterfaceNodebudgetConfiguration = [Select Id,buildertek__Create_Budget_on_Quote_Acceptance__c from buildertek__Admin_Interface_Node_Configuration__c WHERE Name=:'Budget Configuration' LIMIT 1];
                         system.debug('&***'+adminInterfaceNodebudgetConfiguration);
                         if(adminInterfaceNodebudgetConfiguration.size()>0){
@@ -714,11 +809,11 @@ public without sharing class QuoteTriggerHandler {
                             if(isCreateBudget && newqte.Status__c == 'Customer Accepted'){
                                 createdBudgetCustomerToAccess.add(newqte.Id);
                             }
-                        } 
+                        }
                         if(!createdBudgetCustomerToAccess.isEmpty()) {
-                            futureContoller.createBudgetFromQuote(createdBudgetCustomerToAccess); 
-                            //BudgetContractCreateHelper.createBudgetFromQuote(createdBudgetCustomerToAccess); 
-                        } 
+                            futureContoller.createBudgetFromQuote(createdBudgetCustomerToAccess);
+                            //BudgetContractCreateHelper.createBudgetFromQuote(createdBudgetCustomerToAccess);
+                        }
                     }
                 }
             }
@@ -752,10 +847,10 @@ public without sharing class QuoteTriggerHandler {
                                 }
                             }
                         }
-                        
+
                         opprecstagelst.add(opprec);
                     }
-                    
+
                 }
             }
             if(opprecstagelst.size() > 0) {
@@ -763,14 +858,14 @@ public without sharing class QuoteTriggerHandler {
             }
         }
         //--------------------------end--------------------------------
-        
+
     }
-    
+
     public void OnBeforeUpdate(Quote__c[] newQuotes, Map<ID, Quote__c> newQuotesMap){
-        
+
     }
-    
-    public void OnAfterDelete(Quote__c[] oldQuotes){       
+
+    public void OnAfterDelete(Quote__c[] oldQuotes){
     }
-    
+
 }

@@ -2292,6 +2292,7 @@
 
         var action = component.get("c.getProductfamilyRecords");
         var pribooknames = component.get("v.pricebookName");
+        console.log('pribooknames',pribooknames);
         // set param to method  
         action.setParams({
             'ObjectName': "Product2",

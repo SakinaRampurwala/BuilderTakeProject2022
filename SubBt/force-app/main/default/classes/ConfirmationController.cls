@@ -61,8 +61,6 @@ public without sharing class ConfirmationController{
     public String Result{ get; set; }
     public String RejectResult{ get; set; }
 
-    public String MainData{get; set;}
-
     //public ApexPages.StandardController std;
     public transient string imageContent{ get; set; }
      public string imageContentforReject{ get; set; }
@@ -272,9 +270,6 @@ public without sharing class ConfirmationController{
             conDocLink.ContentDocumentId = conDoc;  //ContentDocumentId Id from ContentVersion
             conDocLink.shareType = 'I';
             insert conDocLink;
-
-
-
             system.debug('objectAPIName-----' + objectAPIName);
             if (objectAPIName.contains('buildertek__Contract__c')){
                 buildertek__Contract__c contractrec = [select id, Name, buildertek__Status__c, buildertek__Customer_Accepted_Date__c, buildertek__Project__c, buildertek__Signed_Contract_Date__c
@@ -533,7 +528,6 @@ Messaging.sendEmail(new Messaging.SingleEmailMessage[] { email });  */
         system.debug('templateBody 2 ----------> ' + templateBody2);
         templateBody = templateBody1 + templateBody2;
         strBody = templateBody;
-        MainData = strBody;
         system.debug('strBody -----> ' + strBody);
 
         try{
@@ -546,7 +540,6 @@ Messaging.sendEmail(new Messaging.SingleEmailMessage[] { email });  */
             string imageid = doc.id;
             imageid = imageid.substring(0, 15);
             strBody = strBody.replace('###############', imageid);
-            MainData = strBody;
         } catch (exception ex){
             System.debug('Error Mesage::' + ex.getMessage());
             System.debug('Error Line::' + ex.getLineNumber());
@@ -557,6 +550,25 @@ Messaging.sendEmail(new Messaging.SingleEmailMessage[] { email });  */
     }
 
     public PageReference uploadSignature(){
+
+        // List<String> too = new List<String>();
+        // // to.add(quoterec.OwnerId);
+        // too.add('jaimin.s@mvclouds.com');
+        // Messaging.SingleEmailMessage e = new Messaging.SingleEmailMessage();
+        // e.setSubject('Quote Accepted by Customer');
+        // e.setToAddresses(too);
+        // e.setHtmlBody('Quote Accepted by Customer');
+        // Messaging.sendEmail(new Messaging.SingleEmailMessage[] { e });
+        // System.debug('Jaimin: Check Debug log ==> ' + e);
+
+        Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+        mail.setToAddresses(new String[]{ 'krunal.l@mvclouds.com' });//Set To Email Address
+        mail.setSubject('Test Email With Attachment');//Set Subject
+        mail.setHtmlBody('Please find the attachment.');//Set HTML Body
+        Messaging.sendEmail(new Messaging.SingleEmailMessage[]{ mail });//Send Email
+
+
+
 
         transient Date nowDT = Date.today();
         System.debug('Check Debug log ==> '+nowDT);
@@ -630,36 +642,22 @@ Messaging.sendEmail(new Messaging.SingleEmailMessage[] { email });  */
                         from buildertek__Quote__c
                         where Id = :recordId
                         limit 1];
-                        templateId = apexpages.currentPage().getParameters().get('templateId');
             if (quoterec != null){
                 quoterec.buildertek__Customer_Accepted_Date__c = nowDT;
                 quoterec.buildertek__Status__c = 'Customer Accepted';
                 quoterec.buildertek__Date_Accepted_by_Customer__c = system.now();
                 quoterec.buildertek__Date_Sent_To_Customer__c = System.today();
-                quoterec.buildertek__Description__c = imageContent;
                 update quoterec;
 
-
-                System.debug('imageContent: ' + imageContent);
-                Blob b = setAttachmentBody(recordId, templateId, ConVer.Id );
-                // Blob b = setAttachmentBody('a081K00000ykCe5QAE','00X1K000000wkgwUAA', '0681K00000e3DMhQAM' );
-
-
-                // system.debug('Blob ---> ' + b);
-
-                ContentVersion conVer1 = new ContentVersion();
-                conVer1.PathOnClient = 'Quote.pdf'; // The files name, extension is very important here which will help the file in preview.
-                conVer1.VersionData = b; // converting your binary string to Blog
-                insert conVer1;    //Insert ContentVersion
-
-                ContentDocumentLink conDocLink1 = New ContentDocumentLink();
-                conDocLink1.LinkedEntityId = recordId; // Specify RECORD ID here i.e Any Object ID (Standard Object/Custom Object)
-                conDocLink1.ContentDocumentId = [SELECT ContentDocumentId FROM ContentVersion WHERE Id =:conVer1.Id].ContentDocumentId;  //ContentDocumentId Id from ContentVersion
-                conDocLink1.Visibility = 'AllUsers';
-                insert conDocLink1;
-
-
-
+                // List<String> to = new List<String>();
+                // // to.add(quoterec.OwnerId);
+                // to.add('jaimin.s@mvclouds.com');
+                // Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
+                // email.setSubject('Quote Accepted by Customer');
+                // email.setToAddresses(to);
+                // email.setHtmlBody('Quote Accepted by Customer');
+                // Messaging.sendEmail(new Messaging.SingleEmailMessage[] { email });
+                // System.debug('Jaimin: Check Debug log ==> ' + email);
 
                 /*if(quoterec.buildertek__Status__c == 'Customer Accepted' && Checkcustomerview == null){
                  string theTemplate;
@@ -702,40 +700,6 @@ Messaging.sendEmail(new Messaging.SingleEmailMessage[] { email });  */
             }
         }
         customSignature = true;
-
-
-        System.debug('strBody ==> '+MainData);
-        System.debug('imageContent ==> '+imageContent);
-        // Convert HTML body to Blob
-        Blob blobBodys = Blob.valueOf(MainData);
-
-        // Convert Blob to base64 encoded string
-        String base64Body = EncodingUtil.base64Encode(blobBodys);
-        System.debug('bolbhtmlbody ==>' +base64Body);
-        String Data = base64Body + imageContent;
-
-        System.debug('Data ==> '+Data);
-
-        // Blob blobbody = Blob.valueof(Data);
-        Blob blobbody = EncodingUtil.base64Decode(imageContent);
-
-        System.debug('blobbody ==> '+blobbody);
-
-        Messaging.Emailfileattachment efa = new Messaging.Emailfileattachment();
-        efa.setFileName('Contract.png');
-        efa.setBody(blobbody);
-
-        System.debug('efa ==> '+efa);
-
-
-        //Apex Single email message
-        Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
-        mail.setToAddresses(new String[] { 'krunal.l@mvclouds.com' });//Set To Email Address
-        mail.setSubject('Test Email With Attachment');//Set Subject
-        mail.setHtmlBody('Please find the attachment.');//Set HTML Body
-        mail.setFileAttachments(new Messaging.EmailFileAttachment[] { efa });//Set File Attachment
-        Messaging.sendEmail(new Messaging.SingleEmailMessage[] { mail });//Send Email
-
         return null;
     }
 
@@ -793,26 +757,5 @@ Messaging.sendEmail(new Messaging.SingleEmailMessage[] { email });  */
         public Boolean isApproved{ get; set; }
 
         public Boolean isRejected{ get; set; }
-    }
-
-    public static Blob setAttachmentBody(String recordId, String templateId, String fileid){
-        System.debug(recordId);
-        System.debug(templateId);
-        System.debug(fileid);
-
-
-
-
-        pagereference pdf;
-        pdf = Page.buildertek__BT_GenerateQuotePDFSignature;
-        system.debug('*********'+pdf);
-        pdf.getParameters().put('recordId', recordId);
-        pdf.getParameters().put('templateId', templateId);
-        // pdf.getParameters().put('fileId', 'background-image:url("data:image/png;base64,'+fileid+'");');
-        pdf.getParameters().put('fileId', fileid);
-        pdf.setRedirect(true);
-
-        Blob blobbody = !Test.isRunningTest() ? pdf.getContent() : Blob.ValueOf('dummy text');
-        return blobbody;
     }
 }
