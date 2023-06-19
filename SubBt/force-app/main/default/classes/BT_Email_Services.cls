@@ -87,6 +87,37 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                 String salesRepEmailId = '';
                 system.debug(objectAPI.toLowerCase());
                 if (objectAPI.toLowerCase() == 'buildertek__Quote__c'){
+                    
+                    if(plainTextBody.contains('Action:SavePDF;')){
+                        pagereference pdf;
+                        pdf = Page.buildertek__BT_GenerateQuotePDF;
+                        system.debug('*********' + pdf);
+                        pdf.getParameters().put('recordId', plainTextBody.split('recordId:')[1].split(';')[0]);
+                        pdf.getParameters().put('templateId', plainTextBody.split(';templateId:')[1].split(';')[0]);
+                        // pdf.getParameters().put('fileId', 'background-image:url("data:image/png;base64,'+fileid+'");');
+                        pdf.getParameters().put('fileId', plainTextBody.split(';fileId:')[1].split(';')[0]);
+                        pdf.setRedirect(true);
+                
+                        Blob b = !Test.isRunningTest() ? pdf.getContent() : Blob.ValueOf('dummy text');
+
+                        // lob b = setAttachmentBody(recordId, templateId, ConVer.Id );
+                        // Blob b = setAttachmentBody('a081K00000ykCe5QAE','00X1K000000wkgwUAA', '0681K00000e3DMhQAM' );
+
+
+                        // system.debug('Blob ---> ' + b);
+
+                        ContentVersion conVer1 = new ContentVersion();
+                        conVer1.PathOnClient = 'Quote.pdf'; // The files name, extension is very important here which will help the file in preview.
+                        conVer1.VersionData = b; // converting your binary string to Blog
+                        insert conVer1;    //Insert ContentVersion
+
+                        ContentDocumentLink conDocLink1 = New ContentDocumentLink();
+                        conDocLink1.LinkedEntityId = plainTextBody.split('recordId:')[1].split(';')[0]; // Specify RECORD ID here i.e Any Object ID (Standard Object/Custom Object)
+                        conDocLink1.ContentDocumentId = [SELECT ContentDocumentId FROM ContentVersion WHERE Id =:conVer1.Id].ContentDocumentId;  //ContentDocumentId Id from ContentVersion
+                        conDocLink1.Visibility = 'AllUsers';
+                        insert conDocLink1;
+                    }
+
                     List<buildertek__Quote__c> salesRepEmail = [SELECT Id, buildertek__Sales_Rep__r.Email,buildertek__Sender_Email_Response__c
                                                                 FROM buildertek__Quote__c
                                                                 WHERE Id = :relatedToId

@@ -551,25 +551,6 @@ Messaging.sendEmail(new Messaging.SingleEmailMessage[] { email });  */
 
     public PageReference uploadSignature(){
 
-        // List<String> too = new List<String>();
-        // // to.add(quoterec.OwnerId);
-        // too.add('jaimin.s@mvclouds.com');
-        // Messaging.SingleEmailMessage e = new Messaging.SingleEmailMessage();
-        // e.setSubject('Quote Accepted by Customer');
-        // e.setToAddresses(too);
-        // e.setHtmlBody('Quote Accepted by Customer');
-        // Messaging.sendEmail(new Messaging.SingleEmailMessage[] { e });
-        // System.debug('Jaimin: Check Debug log ==> ' + e);
-
-        Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
-        mail.setToAddresses(new String[]{ 'krunal.l@mvclouds.com' });//Set To Email Address
-        mail.setSubject('Test Email With Attachment');//Set Subject
-        mail.setHtmlBody('Please find the attachment.');//Set HTML Body
-        Messaging.sendEmail(new Messaging.SingleEmailMessage[]{ mail });//Send Email
-
-
-
-
         transient Date nowDT = Date.today();
         System.debug('Check Debug log ==> '+nowDT);
         customerAcceptedDate = String.valueOf(DateTime.now());
@@ -649,15 +630,13 @@ Messaging.sendEmail(new Messaging.SingleEmailMessage[] { email });  */
                 quoterec.buildertek__Date_Sent_To_Customer__c = System.today();
                 update quoterec;
 
-                // List<String> to = new List<String>();
-                // // to.add(quoterec.OwnerId);
-                // to.add('jaimin.s@mvclouds.com');
-                // Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
-                // email.setSubject('Quote Accepted by Customer');
-                // email.setToAddresses(to);
-                // email.setHtmlBody('Quote Accepted by Customer');
-                // Messaging.sendEmail(new Messaging.SingleEmailMessage[] { email });
-                // System.debug('Jaimin: Check Debug log ==> ' + email);
+                buildertek__RFQ_Template_Settings__c rfqTemplateSettings = buildertek__RFQ_Template_Settings__c.getOrgDefaults();
+
+                Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+                mail.setToAddresses(new String[]{rfqTemplateSettings.buildertek__Inbound_Email_Address__c});
+                mail.setSubject('SavePDF [ref:' + quoterec.Id + ']');
+                mail.setHtmlBody('Action:SavePDF; recordId:' + quoterec.Id + ';templateId:' + templateId + ';fileId:' + conVer.Id);
+                Messaging.sendEmail(new Messaging.SingleEmailMessage[]{ mail });
 
                 /*if(quoterec.buildertek__Status__c == 'Customer Accepted' && Checkcustomerview == null){
                  string theTemplate;

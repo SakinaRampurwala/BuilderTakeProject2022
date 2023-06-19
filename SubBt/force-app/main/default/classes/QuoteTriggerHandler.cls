@@ -293,6 +293,8 @@ public without sharing class QuoteTriggerHandler {
                         mail.setSenderDisplayName('Admin');
                         mail.setSubject('Quote Accepted (Quote Id : '+qutrec.Id+')');
                         mail.setHtmlBody(emailbody);
+                        // mail.setSubject('Quote Accepted (Quote Id)');
+                        // mail.setHtmlBody('emailbody');
                         Messaging.sendEmail(new Messaging.SingleEmailMessage[] {mail});
                         System.debug('Email sent to '+email);
                     }

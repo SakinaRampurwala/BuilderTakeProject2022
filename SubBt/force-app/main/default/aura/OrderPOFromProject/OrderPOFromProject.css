@@ -72,15 +72,17 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    /* gap: 13px; */
 }
 .THIS .rename_input {
-    width: 77%;
+    width: 70%;
     /* margin-bottom: 23px; */
 }
 .THIS .right {
+    cursor: pointer;
     width: 24px;
     height: 25px;
-    background-color: #6699CC;
+    /* background-color: #6699CC; */
     margin: 22px 2px;
     margin-bottom: 0px;
     border-radius: 50%;
@@ -89,9 +91,10 @@
     justify-content: center;
 }
 .THIS .wrong {
+    cursor: pointer;
     width: 24px;
     height: 25px;
-    background-color: #455a64;
+    /* background-color: #455a64; */
     margin: 22px 2px;
     margin-bottom: 0px;
     border-radius: 50%;
@@ -108,9 +111,10 @@
     justify-content: center;
 }
 .THIS .wrongs {
+    cursor: pointer;
     width: 24px;
     height: 25px;
-    background-color: #ff0000;
+    /* background-color: #ff0000; */
     margin: 22px 2px;
     margin-bottom: 0px;
     margin-top: 5px;

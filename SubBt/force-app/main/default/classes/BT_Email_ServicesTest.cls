@@ -60,6 +60,8 @@ public class BT_Email_ServicesTest {
             buildertek__Change_Order__c co=new buildertek__Change_Order__c();
             co.name='test';
             insert co;
+
+            Test.startTest();
             
                buildertek__Purchase_Order__c po=new buildertek__Purchase_Order__c();
             //po.Name='test';
@@ -175,6 +177,8 @@ public class BT_Email_ServicesTest {
             
             System.debug('Current User: ' + UserInfo.getUserName());
             System.debug('Current Profile: ' + UserInfo.getProfileId());
+
+            Test.stopTest();  
         } 
         System.assertEquals('Test','Test');
     }

@@ -80,6 +80,7 @@
         helper.RFQStatus(component, event, helper);
         helper.getcurr(component, event, helper);
         helper.getmulticur(component, event, helper);
+        component.set('v.checkThis' , false);
     },
     scriptsLoaded: function(component, event, helper) {
 
