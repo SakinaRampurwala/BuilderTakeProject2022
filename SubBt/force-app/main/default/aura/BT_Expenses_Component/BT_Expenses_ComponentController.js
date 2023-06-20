@@ -14,7 +14,7 @@
             {label: '--None--', value: ''},
             {label: 'Expense', value: 'Expense'},
             {label: 'Invoice(AP)', value: 'Invoice(AP)'},
-            // {label: 'Purchase Order', value: 'Purchase Order'},
+            {label: 'Change Order', value: 'Change Order'},
             {label: 'Time Card', value: 'Time Card'}
         ]);   
         component.set("v.selectedTransactionType", '');  
@@ -24,6 +24,7 @@
         // component.set("v.selectedProjectId", '');
         component.set("v.tableDataList", []);
         var selectedTransactionType = component.find("selectedTransactionType").get("v.value");
+        console.log({selectedTransactionType});
         component.set("v.selectedTransactionType", selectedTransactionType);
         console.log('selectedTransactionType => '+selectedTransactionType);
         component.set("v.SelectExp", false);
@@ -31,6 +32,9 @@
         component.set("v.SelectPO", false);
         component.set("v.SelectInv", false);
         component.set("v.SelectNone", false);
+        component.set("v.SelectCO", false);
+
+        
 
         if(selectedTransactionType == 'Expense'){
             component.set("v.SelectExp", true);
@@ -40,6 +44,8 @@
             component.set("v.SelectPO", true);
         }else if(selectedTransactionType == 'Invoice(AP)'){
             component.set("v.SelectInv", true);
+        }else if(selectedTransactionType == 'Change Order'){
+            component.set("v.SelectCO", true);
         }else if(selectedTransactionType == 'None'){
             component.set("v.SelectNone", true);
         }
@@ -61,6 +67,8 @@
             component.set("v.SelectPO", false);
             component.set("v.SelectInv", false);
             component.set("v.SelectNone", false);
+            component.set("v.SelectCO", false);
+
         }
         console.log('projectId => '+component.get("v.projectId"));
         var selectedTransactionType = component.get("v.selectedTransactionType");
@@ -74,6 +82,8 @@
                 helper.getPurchaseOrders(component);
             }else if(selectedTransactionType == 'Invoice(AP)'){
                 helper.getInvoices(component);
+            }else if(selectedTransactionType == 'Change Order'){
+                helper.getChangeOrders(component);
             }else{
                 component.set("v.Spinner", false);
                 // var toastEvent = $A.get("e.force:showToast");
@@ -117,6 +127,8 @@
             helper.PurchaseOrdersPage2(component, event, helper);
         }else if(selectedTransactionType == 'Invoice(AP)'){
             helper.InvoicesPage2(component, event, helper);
+        }else if(selectedTransactionType == 'Change Order'){
+            helper.changeOrderPage2(component, event, helper);
         }else{
             var toastEvent = $A.get("e.force:showToast");
             toastEvent.setParams({
@@ -164,6 +176,8 @@
             helper.changeBudgetPurchaseOrders(component);
         }else if(selectedTransactionType == 'Invoice(AP)'){
             helper.changeBudgetInvoices(component);
+        }else if(selectedTransactionType == 'Change Order'){
+            helper.changeBudgetChangeOrder(component);
         }
     },
 
@@ -177,6 +191,8 @@
             helper.savePurchaseOrders(component);
         }else if(selectedTransactionType == 'Invoice(AP)'){
             helper.saveInvoices(component);
+        }else if(selectedTransactionType == 'Change Order'){
+            helper.saveChangeOrder(component);
         }
     },
 
@@ -192,6 +208,8 @@
             helper.PurchaseOrdersPage1(component, event, helper);
         }else if(selectedTransactionType == 'Invoice(AP)'){
             helper.InvoicesPage1(component, event, helper);
+        }else if(selectedTransactionType == 'Change Order'){
+            helper.changeOrderPage1(component, event, helper);
         }
     },
 

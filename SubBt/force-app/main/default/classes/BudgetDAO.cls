@@ -2538,7 +2538,7 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
 
         List<buildertek__Change_Order__c> changeOrderList = new List<buildertek__Change_Order__c>();
 
-        changeOrderList = [SELECT Id, Name, buildertek__Project__c, buildertek__Description__c, buildertek__Vendor__c, buildertek__Vendor__r.Name,
+        changeOrderList = [SELECT Id, Name, buildertek__Project__c, buildertek__Description__c, buildertek__Vendor__c, buildertek__Vendor__r.Name, buildertek__CO_Number__c, buildertek__Total_Costs__c,
                             buildertek__Total_Amount_Tax__c, buildertek__Total_Amount__c FROM buildertek__Change_Order__c
                             WHERE buildertek__Project__c =: budgetRec.buildertek__Project__c AND (buildertek__Status__c = 'Customer Approved' OR buildertek__Status__c = 'Approved') AND buildertek__Budget__c = null];
 
@@ -2629,6 +2629,103 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
         } else{
             return 'No Co Line Found On Co.';
         }
+
+    }
+
+    @AuraEnabled
+    public static String addChangeOrdertoBudgetonly(List<Change_Order__c> selectedCO, String recId){
+        System.debug('selectedCO' + selectedCO);
+        System.debug('recId' + recId);
+
+        List<Change_Order__c> coList = [SELECT Id, Name, Total_Amount_Tax__c, Total_Amount__c	, Total_Costs__c FROM Change_Order__c WHERE Id IN:selectedCO];
+        for(Change_Order__c co : coList){
+            co.buildertek__Budget__c = recId;
+        }
+        update coList;
+
+        return 'Success';
+    }
+
+    @AuraEnabled
+    public static String addChangeOrdertoBudget(List<String> selectedRecords, List<Change_Order__c> selectedCO, String recId){
+        System.debug('selectedRecords' + selectedRecords);
+        System.debug('selectedCO' + selectedCO);
+        System.debug('recId' + recId);
+        
+        List<Change_Order__c> coList = [SELECT Id, Name, Total_Amount_Tax__c, Total_Amount__c	, Total_Costs__c FROM Change_Order__c WHERE Id IN:selectedCO];
+        for(Change_Order__c co : coList){
+            co.buildertek__Budget__c = recId;
+            co.buildertek__Budget_Line__c = selectedRecords[0];
+        }
+        update coList;
+        
+        return 'Success';
+
+        // List<String> strList = budgeLineIds.split(',');
+
+        // buildertek__Change_Order__c co = [SELECT Id, Name, buildertek__Total_Amount_Tax__c, buildertek__Total_Amount__c	, buildertek__Total_Costs__c FROM buildertek__Change_Order__c WHERE Id IN:selectedCO];
+        // List<buildertek__Change_Order_Item__c> coLineList = [SELECT Id, Name FROM buildertek__Change_Order_Item__c WHERE buildertek__Change_Order__c IN: selectedCO];
+
+        // Set<Id> coLineIds = new Set<Id>();
+        // for (buildertek__Change_Order_Item__c coLine : coLineList) {
+        //     coLineIds.add(coLine.Id);
+        // }
+
+        // if (coLineIds.size() > 0) {
+        //     String budgetGroupId;
+        //     List<buildertek__Budget_Line_Group__c> budgetLineGroupList = [SELECT Id, Name FROM buildertek__Budget_Line_Group__c WHERE Name = 'Change Order' LIMIT 1];
+        //     if (budgetLineGroupList.size() > 0) {
+        //         budgetGroupId = budgetLineGroupList[0].Id;
+        //     } else{
+        //         buildertek__Budget_Line_Group__c budgetGroup = new buildertek__Budget_Line_Group__c();
+        //         budgetGroup.Name = 'Change Order';
+        //         insert budgetGroup;
+
+        //         budgetGroupId = budgetGroup.Id;
+        //     }
+        //     List<buildertek__Budget_Item__c> budgetItemList = [SELECT Id, Name,buildertek__Sales_Price__c, buildertek__Unit_Price__c, buildertek__Total_Costs__c, buildertek__Budget__c FROM buildertek__Budget_Item__c WHERE Id IN :selectedRecords];
+
+        //     List<buildertek__CO_Item_To_Budget_Item_Link__c> BudgetCoLinkList = new List<buildertek__CO_Item_To_Budget_Item_Link__c>();
+
+        //     BudgetCoLinkList = [SELECT Id, Name, buildertek__Budget_Item__c, buildertek__CO_Item__c FROM buildertek__CO_Item_To_Budget_Item_Link__c
+        //                         WHERE buildertek__Budget_Item__c IN: selectedRecords AND buildertek__CO_Item__c IN: coLineIds];
+
+        //     List<CO_Item_To_Budget_Item_Link__c> COItemToBudgetItemLinks = new List<CO_Item_To_Budget_Item_Link__c>();
+        //     for (buildertek__Budget_Item__c budgetItem : budgetItemList) {
+        //         for (buildertek__Change_Order_Item__c coLine : coLineList) {
+        //             Boolean recordAvail = false;
+        //             for (buildertek__CO_Item_To_Budget_Item_Link__c BudgetCoLink : BudgetCoLinkList) {
+        //                 if (BudgetCoLink.buildertek__Budget_Item__c == budgetItem.Id && BudgetCoLink.buildertek__CO_Item__c == coLine.Id) {
+        //                     recordAvail = true;
+        //                 }
+        //             }
+        //             if (!recordAvail) {
+        //                 buildertek__CO_Item_To_Budget_Item_Link__c COItemToBudgetItemLink = new buildertek__CO_Item_To_Budget_Item_Link__c();
+        //                 COItemToBudgetItemLink.CO_Item__c = coLine.Id;
+        //                 COItemToBudgetItemLink.Budget_Item__c = budgetItem.Id;
+        //                 COItemToBudgetItemLinks.add(COItemToBudgetItemLink);
+
+        //                 // coLine.buildertek__Budget_Item__c=budgetItem.Id;
+
+        //             }
+        //         }
+        //         System.debug('buildertek__Unit_Price__c in quoteDAO '+budgetItem.buildertek__Unit_Price__c);
+        //         System.debug('co.buildertek__Total_Costs__c in quoteDAO '+co.buildertek__Total_Costs__c);
+        //         // budgetItem.buildertek__Unit_Price__c=budgetItem.buildertek__Unit_Price__c + co.buildertek__Total_Costs__c;
+        //         System.debug('after updating buildertek__Unit_Price__c in quoteDAO '+budgetItem.buildertek__Unit_Price__c);
+        //     }
+        //     // update budgetItemList;
+        //     insert COItemToBudgetItemLinks;
+
+        //     co.buildertek__Budget__c = RecId;
+        //     co.buildertek__Budget_Line__c = selectedRecords[0];
+        //     update co;
+
+        //     // if(coLineList.size() > 0){
+        //     //     update coLineList;
+        //     // }
+
+        //     ChangeOrderDAO.RollUpChangeOrderItemAmount(coLineIds);
 
     }
 

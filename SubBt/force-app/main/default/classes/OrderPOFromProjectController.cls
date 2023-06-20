@@ -482,7 +482,7 @@ public class OrderPOFromProjectController {
 
 
     @AuraEnabled
-    public static MessageClass sendMail(List<String> budgetIds, string filedata){
+    public static MessageClass sendMail(List<String> budgetIds, string filedata, Map<Id, String> emailMap){
 
         system.debug('budgetIds--------->'+budgetIds);
 
@@ -527,8 +527,13 @@ public class OrderPOFromProjectController {
 
             Map<Id, List<ContentVersion>> conDocMap = new Map<Id, List<ContentVersion>>();
             List<ContentVersion> cvList = new List<ContentVersion>();
-
+            for (buildertek__Purchase_Order__c po : poList) {
+            if (po.buildertek__Vendor__r.buildertek__Email_Address__c == null) {
+                po.buildertek__Vendor__r.buildertek__Email_Address__c = emailMap.get(po.Id);
+            }
+        }
             for (buildertek__Purchase_Order__c myContact : poList) {
+                System.debug('poList' + poList);
                 if (myContact.buildertek__Vendor__c != null && myContact.buildertek__Vendor__r.buildertek__Email_Address__c != null) {
 
                     // Update Puechase Order Status To Ordered
@@ -714,11 +719,17 @@ public class OrderPOFromProjectController {
         return 'success';
     }
 
+    // @AuraEnabled
+    // public static void addEmail(String emailId, Id recordId){
+    //     Account acc = [SELECT Id, buildertek__Email_Address__c FROM Account WHERE Id = :recordId LIMIT 1];
+    //     acc.buildertek__Email_Address__c = emailId;
+    //     update acc;
+    // }
     @AuraEnabled
-    public static void addEmail(String emailId, Id recordId){
-        Account acc = [SELECT Id, buildertek__Email_Address__c FROM Account WHERE Id = :recordId LIMIT 1];
-        acc.buildertek__Email_Address__c = emailId;
-        update acc;
-    }
+        public static List<Contact> getContacts() {
+            List<Contact> contacts = [SELECT Name, Id, Email FROM Contact WHERE Email != null ORDER BY Name ASC];
+            return contacts;
+        }
+    
 
 }

@@ -157,6 +157,7 @@
         $A.enqueueAction(btadminaction);
 
     },
+
     checkToogle: function (component, event, helper) {
         event.preventDefault();
         var page = component.get("v.page") || 1;
@@ -3615,12 +3616,8 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
         if (selectedRecs.length > 0) {
             helper.getcoList(component, event, helper);
         } else {
-            component.find('notifLib').showNotice({
-                "variant": "error",
-                "header": "Please Select Budget Line!",
-                "message": "Please Select at least One Budget Line to Add CO.",
-                closeCallback: function () { }
-            });
+            //changes for BUIL-3336
+            helper.getcoList(component, event, helper);
         }
     },
 
@@ -3633,63 +3630,107 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
     addNewCO: function (component, event, helper) {
         var recId = component.get("v.recordId");
         var selectedRecords = component.get('v.selectedRecs');
-        selectedRecords = selectedRecords.toString();
+        var coRecordList = component.get("v.coRecordList");
+        let selectedCOlist =[];
+        coRecordList.forEach(function (element) {
+            if (element.Selected == true) {
+                selectedCOlist.push(element);
+            }
+        });
+        $A.get("e.c:BT_SpinnerEvent").setParams({
+            "action": "SHOW"
+        }).fire();
 
-        var selectedCO = component.get("v.selectedExistingCO");
-        console.log('selectedCO ==> ' + selectedCO);
-        if (selectedCO != '' && selectedCO != null) {
-            var action = component.get("c.addCoToBudget");
-            action.setParams({
-                budgeLineIds: selectedRecords,
-                selectedCO: selectedCO,
-                RecId: recId
-            });
-            action.setCallback(this, function (result) {
-                var state = result.getState();
-                if (state === "SUCCESS") {
-                    if (result.getReturnValue() == 'Success') {
-                        component.set('v.selectedRecs', []);
-                        var toastEvent = $A.get("e.force:showToast");
-                        toastEvent.setParams({
-                            type: 'SUCCESS',
-                            message: 'CO added Successfully',
-                            duration: '5000',
-                        });
-                        toastEvent.fire();
+        if(selectedCOlist.length > 0){
+            if(selectedRecords.length == 1){
+                console.log('selectedRecords --->' + selectedRecords);
+                console.log('selectedCOlist --->' , selectedCOlist);
+                var action = component.get("c.addChangeOrdertoBudget");
+                action.setParams({
+                    'selectedRecords': selectedRecords,
+                    'selectedCO': selectedCOlist,
+                    'recId': recId
+                });
+                action.setCallback(this, function (response) {
+                    var state = response.getState();
+                    console.log('state --->' + state);
+                    var error = response.getError();
+                    console.log('error --->' , error);
+                    if (state === "SUCCESS") {
+                        console.log('response.getReturnValue() --->' + response.getReturnValue());
+                        if (response.getReturnValue() == 'Success') {
+                            $A.get("e.c:BT_SpinnerEvent").setParams({
+                                "action": "HIDE"
+                            }).fire();
+                            component.set("v.addcosection", false);
+                            var toastEvent = $A.get("e.force:showToast");
+                            toastEvent.setParams({
+                                "title": "Success!",
+                                "type": "success",
+                                "message": "Change Order linked successfully."
+                            });
+                            toastEvent.fire();
+                            window.location.reload();
+                        }
+                    }
 
-                        var action1 = component.get("c.doInit");
-                        $A.enqueueAction(action1);
+                });
+                $A.enqueueAction(action);
+            }
+            else if(selectedRecords.length > 1){
+                component.find('notifLib').showNotice({
+                    "variant": "error",
+                    "header": " Select Budget Line",
+                    "message": "Please Select only One Budget Line to Create CO.",
+                    closeCallback: function () { }
+                });
+            }
+            else{
+                console.log('No budget line selected');
+                var action = component.get("c.addChangeOrdertoBudgetonly");
+                action.setParams({
+                    'selectedCO': selectedCOlist,
+                    'recId': recId
+                });
+                action.setCallback(this, function (response) {
+                    var state = response.getState();
+                    console.log('state --->' + state);
+                    var error = response.getError();
+                    console.log('error --->' , error);
+                    if (state === "SUCCESS") {
+                        console.log('response.getReturnValue() --->' + response.getReturnValue());
+                        if (response.getReturnValue() == 'Success') {
+                            $A.get("e.c:BT_SpinnerEvent").setParams({
+                                "action": "HIDE"
+                            }).fire();
+                            component.set("v.addcosection", false);
+                            //show toast message
+                            var toastEvent = $A.get("e.force:showToast");
+                            toastEvent.setParams({
+                                type: 'Success',
+                                message: 'Budget Line for CO Created Successfully',
+                                duration: '5000',
+                            });
+                            toastEvent.fire();
+                            window.location.reload();
+                        }
                     }
-                    else {
-                        var toastEvent = $A.get("e.force:showToast");
-                        toastEvent.setParams({
-                            type: 'Error',
-                            message: 'There Are No CO Line In Selected CO',
-                            duration: '5000',
-                        });
-                        toastEvent.fire();
-                    }
-                } else {
-                    var toastEvent = $A.get("e.force:showToast");
-                    toastEvent.setParams({
-                        type: 'ERROR',
-                        message: 'Something Went Wrong',
-                        duration: '5000',
-                    });
-                    toastEvent.fire();
+
                 }
-                component.set("v.addcosection", false);
-                var a = component.get('c.doCancel');
-                $A.enqueueAction(a);
-            });
-            $A.enqueueAction(action);
-        } else {
+                );
+                $A.enqueueAction(action);
+            }
+        }else{
+            $A.get("e.c:BT_SpinnerEvent").setParams({
+                "action": "HIDE"
+            }).fire();
             var toastEvent = $A.get("e.force:showToast");
             toastEvent.setParams({
                 type: 'Error',
                 message: 'Please Select CO First',
                 duration: '5000',
             });
+            toastEvent.fire();
         }
 
 
@@ -3829,6 +3870,18 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
         component.find("selectAllExpense").set("v.checked", checkedAll);
     },
 
+    checkChangeOrder: function (component, event, helper) {
+        var tableDataList = component.get("v.coRecordList");
+        console.log('tableDataList ==> ', tableDataList);
+        var checkedAll = true;
+        tableDataList.forEach(element => {
+            if (!element.Selected) {
+                checkedAll = false;
+            }
+        });
+        component.find("selectAllChangeOrder").set("v.checked", checkedAll);
+    },
+
     checkAllExpense: function (component, event, helper) {
         var value = event.getSource().get("v.checked");
         var tableDataList = component.get("v.ExpenseRecordList");
@@ -3842,6 +3895,22 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
         component.set("v.ExpenseRecordList", tableDataList);
 
     },
+
+    checkAllChangeOrder: function (component, event, helper) {
+        console.log('checkAllChangeOrder');
+        var value = event.getSource().get("v.checked");
+        var tableDataList = component.get("v.coRecordList");
+        let changeOrderIdList = [];
+        tableDataList.forEach(element => {
+            console.log({ element });
+            element.Selected = value;
+            changeOrderIdList.push(element.Id);
+
+        }
+        );
+        component.set("v.coRecordList", tableDataList);
+    },
+
     checkAllPO: function (component, event, helper) {
         var value = event.getSource().get("v.checked");
         console.log({ value });

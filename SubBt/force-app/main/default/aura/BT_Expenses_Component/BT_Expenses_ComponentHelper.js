@@ -424,6 +424,20 @@
         component.set("v.selectedInvoices", selectedInvoices);
         console.log('selectedInvoices => ',selectedInvoices);
     },
+    handleSelectedCO : function(component, event, helper) {
+        var changeOrder = component.get("v.changeOrder");
+        console.log('changeOrder => ',changeOrder);
+        var selectedCOs = [];
+        changeOrder.forEach(function(changeOrder){
+            if(changeOrder.selected){
+                selectedCOs.push(changeOrder);
+            }
+        }
+        );
+        component.set("v.selectedCOs", selectedCOs);
+        console.log('selectedCOs => ',selectedCOs);
+    },
+
 
     InvoicesPage2 : function(component, event, helper) {
         helper.handleSelectedInvoices(component);
@@ -438,6 +452,29 @@
             toastEvent.setParams({
                 title: 'Error',
                 message: 'Please select at least one Invoice.',
+                duration: ' 2000',
+                key: 'info_alt',
+                type: 'error',
+                mode: 'pester'
+            });
+            toastEvent.fire();
+        }
+    },
+    changeOrderPage2 : function(component, event, helper) {
+        console.log('co page 2');
+        helper.handleSelectedCO(component);
+        console.log(component.get('v.selectedCOs'));
+        if(component.get("v.selectedCOs").length > 0){
+            component.set("v.Page2", true);
+            component.set("v.SelectCO", false);
+            component.set("v.coPage2", true);
+            component.set("v.Page1", false);
+            helper.getBudegts(component);
+        }else{
+            var toastEvent = $A.get("e.force:showToast");
+            toastEvent.setParams({
+                title: 'Error',
+                message: 'Please select at least one Change Order.',
                 duration: ' 2000',
                 key: 'info_alt',
                 type: 'error',
@@ -471,11 +508,41 @@
             component.set("v.Spinner", false);
         }
     },
+    changeBudgetChangeOrder : function(component, event, helper) {
+        component.set("v.Spinner", true);
+        var selectedBudget = component.get("v.selectedBudgetId");
+        console.log('selectedBudget => '+selectedBudget);
+        if(selectedBudget){
+            component.set("v.selectedCOs", component.get("v.selectedCOs").map(function(changeOrder){
+                changeOrder.buildertek__Budget__c = selectedBudget;
+                return changeOrder;
+            }));
+            console.log('selectedCOs => '+JSON.stringify(component.get("v.selectedCOs")));
+            this.getBudgetLines(component);
+         }
+        else{
+            component.set("v.selectedBudgetName", '');
+            component.set("v.selectedCOs", component.get("v.selectedCOs").map(function(changeOrder){
+                changeOrder.buildertek__Budget__c = '';
+                return changeOrder;
+            }
+            ));
+            console.log('selectedCOs => '+JSON.stringify(component.get("v.selectedCOs")));
+            component.set("v.budgetLinesOptions", []);
+            component.set("v.Spinner", false);
+        }
+    },
 
     InvoicesPage1 : function(component, event, helper) {
         component.set("v.Page1", true);
         component.set("v.SelectInv", true);
         component.set("v.InvoiceP2", false);
+        component.set("v.Page2", false);
+    },
+    changeOrderPage1 : function(component, event, helper) {
+        component.set("v.Page1", true);
+        component.set("v.SelectCO", true);
+        component.set("v.coPage2", false);
         component.set("v.Page2", false);
     },
 
@@ -520,6 +587,64 @@
                     }
                 }
                 console.log('Invoices => '+JSON.stringify(Invoices));
+                component.set("v.Spinner", false);
+                $A.get("e.force:closeQuickAction").fire();
+            });
+            $A.enqueueAction(action);
+        }else{
+            var toastEvent = $A.get("e.force:showToast");
+            toastEvent.setParams({
+                title: 'Error',
+                message: 'Please select a Budget.',
+                duration: ' 2000',
+                key: 'info_alt',
+                type: 'error',
+                mode: 'pester'
+            });
+            toastEvent.fire();
+        }
+    },
+    saveChangeOrder : function(component, event, helper) {
+        component.set("v.selectedCOs", component.get("v.selectedCOs").map(function(changeOrder){
+            if(!changeOrder.buildertek__Budget_Line__c){
+                changeOrder.buildertek__Budget_Line__c = null;
+            }
+            return changeOrder;
+        }));
+        if(component.get("v.selectedBudgetId")){
+            component.set("v.Spinner", true);
+            var changeOrders = component.get("v.selectedCOs");
+
+            var selectedBudget = component.get("v.selectedBudgetId");
+            component.set("v.selectedBudgetName", component.get("v.budgetsOptions").find(function(budget){
+                return budget.Id == selectedBudget;
+            }).Name);
+            var budgetvalue = component.get("v.selectedBudgetName");
+            console.log('selectedBudgetName => '+component.get("v.selectedBudgetName"));
+
+            var action = component.get("c.saveChangeOrder");
+            action.setParams({
+                "changeOrderList": changeOrders
+            });
+            action.setCallback(this, function(response) {
+                var state = response.getState();
+                if (state === "SUCCESS") {
+                    var toastEvent = $A.get("e.force:showToast");
+                    toastEvent.setParams({
+                        title: 'Success',
+                        message: changeOrders.length+' Lines have been created for Budget '+budgetvalue,
+                        duration: ' 2000',
+                        key: 'info_alt',
+                        type: 'success',
+                        mode: 'pester'
+                    });
+                    toastEvent.fire();
+                    var recordId = component.get("v.recordId");
+                    if(recordId == null || recordId == ''){
+                        window.location.reload();
+                    }
+                }
+                console.log('changeOrders => '+JSON.stringify(changeOrders));
                 component.set("v.Spinner", false);
                 $A.get("e.force:closeQuickAction").fire();
             });
@@ -695,6 +820,34 @@
         }
     },
 
+
+    getChangeOrders : function(component, event, helper) {
+        component.set("v.Spinner", true);
+        var action = component.get("c.getChangeOrders");
+        action.setParams({
+            "projectId": component.get("v.projectId")
+        });
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                var changeOrder = response.getReturnValue();
+                console.log({changeOrder});
+                changeOrder = changeOrder.map(function(changeOrder){
+                    changeOrder.selected = false;
+                    changeOrder.buildertek__Budget__c = '';
+                    changeOrder.buildertek__Budget_Line__c = '';
+                    return changeOrder;
+                });
+                console.log('changeOrder => '+JSON.stringify(changeOrder));
+                component.set("v.changeOrder", changeOrder);
+                component.set("v.tableDataList", changeOrder);
+                component.set("v.Spinner", false);
+            }
+        });
+        $A.enqueueAction(action);
+    },
+
+
     getProjectData : function(component, event, helper) {
         var selectedTransactionType = component.get("v.selectedTransactionType");
         component.set("v.Spinner", true);
@@ -706,6 +859,8 @@
             helper.getPurchaseOrders(component);
         }else if(selectedTransactionType == 'Invoice(AP)'){
             helper.getInvoices(component);
+        }else if(selectedTransactionType == 'Change Order'){
+            helper.getChangeOrders(component);
         }else{
             component.set("v.Spinner", false);
             var toastEvent = $A.get("e.force:showToast");

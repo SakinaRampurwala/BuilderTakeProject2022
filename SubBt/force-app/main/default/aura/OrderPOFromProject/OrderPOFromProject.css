@@ -123,3 +123,10 @@
     align-items: center;
     justify-content: center;
 }
+.THIS .slds-select {
+    width: 100%;
+}
+
+.THIS .slds-input {
+    width: 100%;
+}

@@ -326,15 +326,15 @@
                                     <aura:set attribute="else">
                                         <lightning:button iconName="utility:edit" iconPosition="left" onclick="{!c.onClickMassUpdate}" label="Mass Update" class="sldsButtonGroup" />
                                         <!--  <lightning:button iconName="utility:copy" iconPosition="left"
-                                                          onclick="{!c.onClickMassDuplicate}" label="Duplicate Lines" class="sldsButtonGroup" />-->
-                                        <!--  <lightning:button onclick="{!c.newbudgetGroup}" label="Add Group" class="sldsButtonGroup" /> -->
-                                        <!-- <lightning:button onclick="{!c.newBudgetSubGroup}" label="Add Sub Group"
-                            class="sldsButtonGroup" /> -->
-                                        <!-- commented on 26thmay DFL <lightning:button iconName="utility:add" iconPosition="left" onclick="{!c.newGroup}" label="Add Group" class="sldsButtonGroup"/>-->
-                                        <!--<aura:if isTrue="{!v.groupListSize > 0}">-->
-                                        <lightning:button label="Add Expense" onclick="{!c.addExpense}" class="sldsButtonGroup" />
-                                        <lightning:button label="Add CO" onclick="{!c.addCO}" class="sldsButtonGroup" />
-                                        <lightning:button label="Add PO" onclick="{!c.addPO}" class="sldsButtonGroup" />
+                                            onclick="{!c.onClickMassDuplicate}" label="Duplicate Lines" class="sldsButtonGroup" />-->
+                                            <!--  <lightning:button onclick="{!c.newbudgetGroup}" label="Add Group" class="sldsButtonGroup" /> -->
+                                            <!-- <lightning:button onclick="{!c.newBudgetSubGroup}" label="Add Sub Group"
+                                                class="sldsButtonGroup" /> -->
+                                                <!-- commented on 26thmay DFL <lightning:button iconName="utility:add" iconPosition="left" onclick="{!c.newGroup}" label="Add Group" class="sldsButtonGroup"/>-->
+                                                <!--<aura:if isTrue="{!v.groupListSize > 0}">-->
+                                                    <lightning:button label="Add Expense" onclick="{!c.addExpense}" class="sldsButtonGroup" />
+                                                    <lightning:button label="Add PO" onclick="{!c.addPO}" class="sldsButtonGroup" />
+                                                    <lightning:button label="Add CO" onclick="{!c.addCO}" class="sldsButtonGroup" />
                                         <lightning:button label="Add Invoice" onclick="{!c.addInvoice}" class="sldsButtonGroup" />
                                         <lightning:button label="Add Labor" onclick="{!c.addTimeCard}" class="sldsButtonGroup" />
                                         <lightning:button iconPosition="left" onclick="{!c.onClickAddlines}" label="New Budget Lines" class="sldsButtonGroup" />
@@ -1782,9 +1782,16 @@
                                     <thead>
                                         <tr class="slds-text-title_caps">
                                             <th scope="col" class="slds-truncate">
+                                                <lightning:input aura:id="selectAllChangeOrder" type="checkbox" name="checkAll" onchange="{!c.checkAllChangeOrder}" />
+                                            </th>
+                                            <th scope="col">
+                                                <div class="slds-truncate">CO#</div>
                                             </th>
                                             <th scope="col">
                                                 <div class="slds-truncate">CO Name</div>
+                                            </th>
+                                            <th scope="col">
+                                                <div class="slds-truncate">CO Total Cost</div>
                                             </th>
                                             <th scope="col">
                                                 <div class="slds-truncate">CO Amount</div>
@@ -1798,12 +1805,18 @@
                                         <aura:iteration items="{!v.coRecordList}" var="item" indexVar="index">
                                             <tr>
                                                 <td style="padding-left: 0.5rem; width: 30px;">
-                                                    <ui:inputRadio aura:id="radio" name="coSelect" text="{!item.Id}" label="" change="{!c.saveSelectedCO}" />
+                                                    <lightning:input type="checkbox" name="input1" checked="{!item.Selected}" id="{!item.Id}" onchange="{!c.checkChangeOrder}" />
+                                                </td>
+                                                <td class="slds-truncate coFildData">
+                                                    {!item.buildertek__CO_Number__c}
                                                 </td>
                                                 <td class="slds-truncate coFildData">
                                                     {!item.Name}
                                                 </td>
-                                                <td class="coFildData">
+                                                <td>
+                                                    <lightning:formattedNumber value="{!item.buildertek__Total_Costs__c}" style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
+                                                </td>
+                                                <td>
                                                     <lightning:formattedNumber value="{!item.buildertek__Total_Amount__c}" style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
                                                 </td>
                                                 <td class="slds-truncate coFildData">
@@ -1813,7 +1826,7 @@
                                         </aura:iteration>
                                         <aura:if isTrue="{!empty(v.coRecordList)}">
                                             <td colspan="5" style="text-align: center; line-height: 10rem; font-size: 18px; ">
-                                                No Data Found
+                                                No Records Found
                                             </td>
                                         </aura:if>
                                     </tbody>

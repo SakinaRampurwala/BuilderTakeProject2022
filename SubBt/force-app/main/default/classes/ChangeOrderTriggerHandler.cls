@@ -99,11 +99,10 @@ public without sharing class ChangeOrderTriggerHandler {
                 buildertek__Budget_Item__c budgetLine = new buildertek__Budget_Item__c();
                 budgetLine.Name = newCO.Name + ' budget line';
                 budgetLine.buildertek__Budget__c = newCO.buildertek__Budget__c;
-                //3314 ticket changes
-                budgetLine.buildertek__CO_Total__c = newCO.buildertek__Total_Amount__c;
-                budgetLine.buildertek__Unit_Price__c = newCO.buildertek__Subtotal__c;
+                budgetLine.buildertek__Unit_Price__c = newCO.buildertek__Total_Costs__c;
+                // budgetLine.buildertek__Markup__c = (newCO.buildertek__Margin__c / (1 - newCO.buildertek__Margin__c));
+                budgetLine.buildertek__Markup__c = (newCO.buildertek__Calculated_Margin__c/100)/(1-(newCO.buildertek__Calculated_Margin__c/100))*100;
                 budgetLine.buildertek__Quantity__c = 1;
-                //3314 ticket changes
                 budgetLine.buildertek__Group__c = budgetLineGroupId;
                 budgetLineMap.put(newCO.Id, budgetLine);
             } 
@@ -984,6 +983,26 @@ public without sharing class ChangeOrderTriggerHandler {
             }
         }
 
+    }
+
+    public  void updateBudgetLineData(buildertek__Change_Order__c[] oldChangeOrder, buildertek__Change_Order__c[] updatedChangeOrder, Map<ID, buildertek__Change_Order__c> ChangeOrderMap, Map<Id, buildertek__Change_Order__c> oldChangeOrderMap){
+
+        List<buildertek__Budget_Item__c> budgetItemList= new List<buildertek__Budget_Item__c>();
+
+        for(buildertek__Change_Order__c changeOrder:updatedChangeOrder){
+            if(changeOrder.buildertek__Budget_Line__c!=null && oldChangeOrderMap.get(changeOrder.Id).buildertek__Budget_Line__c != changeOrder.buildertek__Budget_Line__c){
+
+                // budgetItemList.add(changeOrder.buildertek__Budget_Line__c);
+                changeOrder.buildertek__Budget_Line__r.buildertek__CO_Total__c=changeOrder.buildertek__Total_Amount__c;
+                changeOrder.buildertek__Budget_Line__r.buildertek__Unit_Price__c=changeOrder.buildertek__Total_Costs__c;
+                // budgetLine.buildertek__CO_Total__c = newCO.buildertek__Total_Amount__c;
+                // budgetLine.buildertek__Unit_Price__c = newCO.buildertek__Total_Costs__c;
+            }
+
+        }
+
+
+       
     }
 
     

@@ -271,6 +271,7 @@ public without sharing class QuoteTriggerHandler {
 
                 if(qutrec.buildertek__Status__c == 'Customer Accepted'  && oldQuotesMap.get(qutrec.id).buildertek__Status__c != qutrec.buildertek__Status__c){
                     string emailbody = '<html><body><h3>  Your Quote has been Accepted </h3>'  + '<br/>';
+                    User user = [SELECT Id, Email, Name FROM User WHERE Id =:qutrec.OwnerId];
                     emailbody += 'Quote Name : '+qutrec.Name+'<br/>';
                     if(qutrec.buildertek__Customer_Account__c != null){
                         emailbody += 'Customer Name : '+qutrec.buildertek__Customer_Account__r.Name+'<br/>';
@@ -279,18 +280,21 @@ public without sharing class QuoteTriggerHandler {
                         emailbody += 'Quote Amount : '+qutrec.buildertek__Grand_Total__c+'<br/>';
                     }
                     if(qutrec.OwnerId != null){
-                        emailbody += 'Quote Owner : '+qutrec.Owner.Name+'<br/></body></html>';
+                        emailbody += 'Quote Owner : '+user.Name+'<br/></body></html>';
                     }
 
                     string email = qutrec.OwnerId;
-                    User user = [SELECT Id, Email FROM User WHERE Id =:qutrec.OwnerId];
+                    OrgWideEmailAddress[] owea = [select Id from OrgWideEmailAddress LIMIT 1];
                     //log user.email
                     System.debug('Jaimin : Email is '+user.Email);
-                    System.debug('Jaimin : Owner is '+qutrec.OwnerId);
+                    System.debug('Jaimin : Owner is '+user.Name);
                     if(email != null && email != ''){
                         Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
                         mail.setToAddresses(new String[] {email});
-                        mail.setSenderDisplayName('Admin');
+                        // mail.setSenderDisplayName('Admin');
+                        if ( owea.size() > 0 ) {
+                            mail.setOrgWideEmailAddressId(owea.get(0).Id);
+                        }
                         mail.setSubject('Quote Accepted (Quote Id : '+qutrec.Id+')');
                         mail.setHtmlBody(emailbody);
                         // mail.setSubject('Quote Accepted (Quote Id)');

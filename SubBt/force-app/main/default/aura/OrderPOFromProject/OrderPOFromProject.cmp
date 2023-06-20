@@ -84,6 +84,11 @@
     <aura:attribute name="emailid" type="String" access="global" />
     <aura:attribute name="errorMessage" type="String" access="global" />
     <aura:attribute name="selectedRowId" type="String" access="global" />
+
+    <aura:attribute name="contacts" type="Contact[]" />
+
+    <aura:attribute name="selectRecordName" type="String"/>
+    <aura:attribute name="emailname" type="String"/>
     
     
     
@@ -550,8 +555,33 @@
                                                         </aura:if>
                                                         <aura:if isTrue="{!row.Id == v.selectedRowId}">
                                                             <div class="rename_div" data-index="{!row.Id}" id="{!row.Id}">
-                                                                <lightning:input type="text" value="{!v.emailid}" class="rename_input" />
-                                                                <div class="right" onclick="{!c.addemail}" data-index = "{!row.buildertek__Vendor__c}" id="{!row.Id}"><lightning:icon iconName="utility:success" alternativeText="Approved" size="small" title="Approved" /></div>
+                                                                <!-- <lightning:input type="text" value="{!v.emailid}" class="rename_input" /> -->
+                                                                <div onfocusout="{!c.closeDropDown}">         
+                                                                    <div class="slds-combobox_container slds-size--1-of-2 slds-p-horizontal_x-small" style="width: 100%; padding-left: 0px;">
+                                                                        <div class="slds-size--1-of-1 slds-p-horizontal_x-small slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click" aura:id="resultBox" aria-expanded="false" aria-haspopup="listbox" role="combobox" style="padding-left: 0px;">
+                                                                            <!-- below lightning:input is for user to type text -->
+                                                                            <div class="slds-form-element__control" role="none" onfocusout="{!c.closeDropDown}">                 
+                                                                                <lightning:input  aura:id="userinput" name="searchText" onchange="{!c.searchField}" onclick="{!c.getPickListValues}" value="{!v.selectRecordName}" type="search" class="leftspace" onfocusout="{!c.closeDropDown}"/>
+                                                                            </div>
+                                                                            <!-- below code is for showing picklist values based on the text-->
+                                                                            <div aura:id="listbox-id-1" class="slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid" role="listbox">
+                                                                                <ul class="slds-listbox slds-listbox_vertical" role="presentation" >
+                                                                                    <aura:iteration items="{!v.contacts}" var="contact" indexVar="hdtv">
+                                                                                        <li role="presentation" class="slds-listbox__item">
+                                                                                            <div data-name="{!contact.Name}" data-index="{!contact.Email}" onmousedown="{!c.setSelectedRecord}"  class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
+                                                                                                <span class="slds-media__body">
+                                                                                                    <span class="slds-listbox__option-text slds-listbox__option-text_entity">{!contact.Name}</span>
+                                                                                                </span>
+                                                                                            </div>
+                                                                                        </li>
+                                                                                    </aura:iteration>
+                                                                                </ul>
+                                                                            </div>
+                                                                            
+                                                                        </div>  
+                                                                    </div>
+                                                                </div> 
+                                                                <div class="right" onclick="{!c.addemail}" data-index="{!row.Id}" id="{!row.Id}" data-name="{!v.emailname}"><lightning:icon iconName="utility:success" alternativeText="Approved" size="small" title="Approved" /></div>
                                                                 <div class="wrong" onclick="{!c.cancleadd}"><lightning:icon iconName="utility:clear" alternativeText="Reject" size="small" title="Reject" /></div>
                                                             </div>
                                                             <aura:if isTrue="{!not(empty(v.errorMessage))}">

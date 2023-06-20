@@ -30,9 +30,9 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
         Id fromId;
         Id contactId;
         Id userId;
-        
-     /* if(email.subject.contains('PreQualification')){   
-       if(email.subject != null && email.subject != ''){ 
+
+     /* if(email.subject.contains('PreQualification')){
+       if(email.subject != null && email.subject != ''){
         string myRecordId = email.subject.split('-').get(2);
         //string objectName = myRecordId.getSObjectType().getDescribe().getName();
         Account acc = [SELECT id,buildertek__Qualification_Stage__c from Account Where id=:myRecordId];
@@ -40,7 +40,7 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
         update acc;
         }
         }*/
-        
+
        //  system.debug('reply to'+replyTo);
         try{
             fromId = [Select Id
@@ -52,13 +52,13 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
         } catch (exception ex){
             system.debug(ex);
         }
-        
+
         try{
             list<user> ulist  = [Select Id, Email from user where Email = :fromAddress limit 1];
             if(ulist.size()>0){
-                userId =  ulist[0].Id;  
+                userId =  ulist[0].Id;
             }
-           
+
 
         } catch (exception ex){
             system.debug(ex);
@@ -70,8 +70,8 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                                                                                               WHERE Name = :'Email Configuration'];
         if (adminInterfaceNodeConfigurations.size() > 0){
                     owea = [select Id from OrgWideEmailAddress where Address =: adminInterfaceNodeConfigurations[0].buildertek__Email_Address__c];
-         }
-        
+        }
+
         system.debug(fromId);
         system.debug(emailSubject.indexOf('[ref'));
         if (emailSubject.indexOf('[ref') != -1){
@@ -87,7 +87,7 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                 String salesRepEmailId = '';
                 system.debug(objectAPI.toLowerCase());
                 if (objectAPI.toLowerCase() == 'buildertek__Quote__c'){
-                    
+
                     if(plainTextBody.contains('Action:SavePDF;')){
                         pagereference pdf;
                         pdf = Page.buildertek__BT_GenerateQuotePDF;
@@ -97,7 +97,7 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                         // pdf.getParameters().put('fileId', 'background-image:url("data:image/png;base64,'+fileid+'");');
                         pdf.getParameters().put('fileId', plainTextBody.split(';fileId:')[1].split(';')[0]);
                         pdf.setRedirect(true);
-                
+
                         Blob b = !Test.isRunningTest() ? pdf.getContent() : Blob.ValueOf('dummy text');
 
                         // lob b = setAttachmentBody(recordId, templateId, ConVer.Id );
@@ -135,18 +135,18 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                             }
                             // message.fromAddresses = new String[]{invoiceAr.buildertek__Sender_Email_Response__c};
                             message.toAddresses = new String[]{salesRepEmail[0].buildertek__Sender_Email_Response__c}; //'sainadh.kuntsam@diligentforcelabs.com'
-                                message.subject = emailSubject;
+                                message.subject = emailSubject + ' sales rep 1st ';
                             message.plainTextBody = plainTextBody;
                             message.htmlBody = htmlBody;
                             Messaging.SingleEmailMessage[] messages = new List<Messaging.SingleEmailMessage>{message};
-                                Messaging.SendEmailResult[] results = Messaging.sendEmail(messages);
+                                // Messaging.SendEmailResult[] results = Messaging.sendEmail(messages);
                         }
                     }
                     if (salesRepEmailId != ''){
                         Messaging.SingleEmailMessage message = new Messaging.SingleEmailMessage();
                         message.toAddresses = new String[]{salesRepEmailId};
                         message.optOutPolicy = 'FILTER';
-                        message.subject = emailSubject;
+                        message.subject = emailSubject + ' sales rep 2nd ';
                         message.plainTextBody = plainTextBody;
                         message.htmlBody = htmlBody;
                         Messaging.SingleEmailMessage[] messages = new List<Messaging.SingleEmailMessage>{message};
@@ -169,10 +169,10 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                     }
                     string rfqId = rfqtovendor.buildertek__Rfq__c;
                     queryString = 'Select Id, OwnerId, Owner.email from buildertek__RFQ__c where id =: rfqId';
-                } 
-                
+                }
+
                 //added by sai start
-                 
+
                 else if (objectAPI.toLowerCase() == 'buildertek__account_payable__c'){
                     buildertek__Account_Payable__c invoiceAp = new buildertek__Account_Payable__c();
                     if (Schema.sObjectType.buildertek__Account_Payable__c.fields.id.isAccessible() && Schema.sObjectType.buildertek__Account_Payable__c.fields.buildertek__Purchase_Order__c.isAccessible()){
@@ -211,10 +211,10 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                     string CoId = invoiceAr.buildertek__Change_Order__c;
                     system.debug(CoId);
                     queryString = 'Select Id, OwnerId, Owner.email from buildertek__Change_Order__c where id =: CoId';
-                    
+
                 }*/
                 // added by sai end
-                else if (objectAPI.toLowerCase() == 'buildertek__RFI_Response__c'){                    
+                else if (objectAPI.toLowerCase() == 'buildertek__RFI_Response__c'){
                     queryString = 'select id,Name,buildertek__Responder__c,buildertek__Responder__r.Name,buildertek__Response__c,buildertek__Response_Date__c, '+
                                                               'buildertek__Answered__c,buildertek__RFI__c,CreatedById from buildertek__RFI_Response__c '+
                                                               'where Id =: relatedToId';
@@ -246,10 +246,10 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                             system.debug('hoil;');
                         }*/
                     }
-                    
-                }                
+
+                }
                 sObject obj;
-                
+
                 obj = database.query(queryString);
                 system.debug(obj);
                 String replyEmailSubject = emailSubject;
@@ -264,16 +264,16 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                 if(objectAPI.toLowerCase() == 'buildertek__account_payable__c'){
                    emsg = [SELECT Id, Subject, buildertek__Subject__c
                         FROM EmailMessage
-                        WHERE Subject = :replyEmailSubject AND relatedToId = :relatedToId]; 
+                        WHERE Subject = :replyEmailSubject AND relatedToId = :relatedToId];
                 }else{
                     emsg = [SELECT Id, Subject, buildertek__Subject__c
                         FROM EmailMessage
                         WHERE Subject = :replyEmailSubject AND relatedToId = :obj.Id];
                 }
-                
-                
-                
-                
+
+
+
+
                 system.debug(emsg.size());
                 EmailMessage EmailMsg = new EmailMessage();
                 if (emsg.size() > 0){
@@ -281,7 +281,7 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                     EmailMsg.FromName = fromname;
                     EmailMsg.FromAddress = fromAddress;
                     system.debug(fromAddress);
-                    
+
                     EmailMsg.buildertek__Is_Incoming_Email__c = true;
                     //EmailMsg.Headers
                     EmailMsg.HtmlBody = htmlBody;
@@ -291,8 +291,8 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                     EmailMsg.TextBody = plainTextBody;
                     //EmailMsg.ToAddress = toAddresses != null?toAddresses[0]:null;
                     //EmailMsg.ToAddress = (String)obj.getSObject('Owner').get('Email');
-                    if (objectAPI.toLowerCase() == 'buildertek__RFI_Response__c'){     
-                        EmailMsg.ToAddress = toAddresses[0];  
+                    if (objectAPI.toLowerCase() == 'buildertek__RFI_Response__c'){
+                        EmailMsg.ToAddress = toAddresses[0];
                     }else{
                         EmailMsg.ToAddress = (String)obj.getSObject('Owner').get('Email');
                     }
@@ -317,8 +317,8 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                     }else{
                         EmailMsg.relatedToId = (Id)obj.Id;
                     }
-                    
-                    
+
+
                     EmailMsg.MessageDate = system.now();
                     //EmailMsg.MessageSize
                     EmailMsg.Status = '5';
@@ -331,14 +331,14 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                     } else{
                         EmailMsg.buildertek__Email_Body__c = plainTextBody;
                     }
-                    
+
                     //EmailMsg.ToAddress = toAddresses != null?toAddresses[0]:null;
-                    if (objectAPI.toLowerCase() == 'buildertek__RFI_Response__c'){     
-                        EmailMsg.ToAddress = null;  
+                    if (objectAPI.toLowerCase() == 'buildertek__RFI_Response__c'){
+                        EmailMsg.ToAddress = null;
                     }else{
                         EmailMsg.ToAddress = (String)obj.getSObject('Owner').get('Email');
                     }
-                    
+
                     EmailMsg.CcAddress = ccAddresses != null ? ccAddresses[0] : null;
                     EmailMsg.Subject = emailSubject;
                     insert EmailMsg;
@@ -360,14 +360,14 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                     EmailMessageRelation emr = new EmailMessageRelation();
                     emr = new EmailMessageRelation();
                     emr.emailMessageId = EmailMsg.id;
-                    if (objectAPI.toLowerCase() == 'buildertek__RFI_Response__c'){  
+                    if (objectAPI.toLowerCase() == 'buildertek__RFI_Response__c'){
                         emr.relationId = null;
                     }else{
                         system.debug('(String)obj.getSObject%%%%%%%%%%%%%%');
-                        emr.relationId = String.valueOf(obj.get('OwnerId')); // user id / contact Id of the sender    
-                    }                                        
+                        emr.relationId = String.valueOf(obj.get('OwnerId')); // user id / contact Id of the sender
+                    }
                     emr.relationType = 'ToAddress';
-                    if (objectAPI.toLowerCase() == 'buildertek__RFI_Response__c'){   
+                    if (objectAPI.toLowerCase() == 'buildertek__RFI_Response__c'){
                         emr.relationAddress = toAddresses[0];
                     }else{
                         system.debug('(String)obj.getSObject'+(String)obj.getSObject('Owner').get('Email'));
@@ -407,9 +407,9 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                     if (email != null && email.binaryAttachments != null){
                         for (Messaging.InboundEmail.BinaryAttachment bAttachment : email.binaryAttachments){
                             ContentVersion con= new contentversion();
-                            con.ContentLocation = 'S'; 
-                            con.PathOnClient = bAttachment.filename; 
-                            con.VersionData = bAttachment.body; 
+                            con.ContentLocation = 'S';
+                            con.PathOnClient = bAttachment.filename;
+                            con.VersionData = bAttachment.body;
                             con.Title = bAttachment.filename;
                             contentVersionToInsert.add(con);
                             /*Attachment att = new Attachment();
@@ -430,11 +430,11 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                                 for(ContentDocument cd : conDocList){
                                     ContentDocumentLink CDL = new ContentDocumentLink();
                                     CDL .ContentDocumentId = cd.Id;
-                                    CDL .LinkedEntityId = relatedToId; 
-                                    CDL .ShareType = 'I'; 
+                                    CDL .LinkedEntityId = relatedToId;
+                                    CDL .ShareType = 'I';
                                     CDL .Visibility = 'AllUsers';
                                     cdlList.add(CDL);
-                                }          
+                                }
                             if(cdlList.size() > 0){
                                 insert cdlList;
                             }
@@ -483,9 +483,9 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                     if (email != null && email.binaryAttachments != null){
                         for (Messaging.InboundEmail.BinaryAttachment bAttachment : email.binaryAttachments){
                             ContentVersion con= new contentversion();
-                            con.ContentLocation = 'S'; 
-                            con.PathOnClient = bAttachment.filename; 
-                            con.VersionData = bAttachment.body; 
+                            con.ContentLocation = 'S';
+                            con.PathOnClient = bAttachment.filename;
+                            con.VersionData = bAttachment.body;
                             con.Title = bAttachment.filename;
                             contentVersionToInsert.add(con);
                             /*Attachment att = new Attachment();
@@ -506,11 +506,11 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                                 for(ContentDocument cd : conDocList){
                                     ContentDocumentLink CDL = new ContentDocumentLink();
                                     CDL .ContentDocumentId = cd.Id;
-                                    CDL .LinkedEntityId = relatedToId; 
-                                    CDL .ShareType = 'I'; 
+                                    CDL .LinkedEntityId = relatedToId;
+                                    CDL .ShareType = 'I';
                                     CDL .Visibility = 'AllUsers';
                                     cdlList.add(CDL);
-                                }          
+                                }
                             if(cdlList.size() > 0){
                                 insert cdlList;
                             }
@@ -544,9 +544,9 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                     if (email != null && email.binaryAttachments != null){
                         for (Messaging.InboundEmail.BinaryAttachment bAttachment : email.binaryAttachments){
                             ContentVersion con= new contentversion();
-                            con.ContentLocation = 'S'; 
-                            con.PathOnClient = bAttachment.filename; 
-                            con.VersionData = bAttachment.body; 
+                            con.ContentLocation = 'S';
+                            con.PathOnClient = bAttachment.filename;
+                            con.VersionData = bAttachment.body;
                             con.Title = bAttachment.filename;
                             contentVersionToInsert.add(con);
                             /*Attachment att = new Attachment();
@@ -567,11 +567,11 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                                 for(ContentDocument cd : conDocList){
                                     ContentDocumentLink CDL = new ContentDocumentLink();
                                     CDL .ContentDocumentId = cd.Id;
-                                    CDL .LinkedEntityId = relatedToId; 
-                                    CDL .ShareType = 'I'; 
+                                    CDL .LinkedEntityId = relatedToId;
+                                    CDL .ShareType = 'I';
                                     CDL .Visibility = 'AllUsers';
                                     cdlList.add(CDL);
-                                }          
+                                }
                             if(cdlList.size() > 0){
                                 insert cdlList;
                             }
@@ -654,7 +654,7 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                                 Messaging.SendEmailResult[] results = Messaging.sendEmail(messages);
                             }
                         }
-                        
+
                     }
 
                     /*if(objectAPI.toLowerCase() == 'buildertek__Quote__c') {
@@ -821,7 +821,7 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                         boolean isusingcommunities = false;
                         boolean isusingemail = false;
                           buildertek__RFI_Settings__c rfiSettings = new buildertek__RFI_Settings__c();
-                            List<buildertek__RFI_Settings__c> rfiSettingsList = [Select Id,Name, 
+                            List<buildertek__RFI_Settings__c> rfiSettingsList = [Select Id,Name,
                                                                                  buildertek__Using_Communities__c,
                                                                                  buildertek__Using_Email__c,
                                                                                  buildertek__New_RFI_Notification_Template__c
@@ -829,16 +829,16 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                                                                                  WHERE Name ='RFI Settings'];
                         system.debug('rfiSettingsList-------'+rfiSettingsList);
                         if(rfiSettingsList.size() > 0){
-                            rfiSettings = rfiSettingsList[0]; 
+                            rfiSettings = rfiSettingsList[0];
                             if(rfiSettings.buildertek__Using_Communities__c==true){
-                                 isusingcommunities = true; 
-                            }  
+                                 isusingcommunities = true;
+                            }
                             if(rfiSettings.buildertek__Using_Email__c==true){
-                                 isusingemail = true; 
-                            }  
-                            
+                                 isusingemail = true;
+                            }
+
                         }
-                        
+
                         System.debug('Emial Body---------------------------------'+plainTextBody);
                         if(isusingcommunities==true){
                             string textbody = '';
@@ -865,31 +865,31 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                                 textbody=res7[0];
                             }
                             //List<String> res = plainTextBody.split('On ', 2);
- 
-                            
+
+
                             buildertek__RFI__c rfirec =  [SELECT Id, Name, buildertek__RFI_Assigned_To__c,buildertek__Sender_Email_Response__c
                                                           FROM buildertek__RFI__c
-                                                          WHERE Id = :relatedToId];                                                                                       
+                                                          WHERE Id = :relatedToId];
 
                             //fromname
                             List<String> lsttest=fromname.split(' ');
                             system.debug('lsttest---'+lsttest);
                             list<buildertek__Users_Contacts__c> rficonslist = [SELECT Id,
                             Name,
-                            buildertek__User__c, 
+                            buildertek__User__c,
                             buildertek__User__r.Email,
-                            buildertek__Contact__c, 
+                            buildertek__Contact__c,
                             buildertek__Contact__r.Name,
                             buildertek__Contact__r.Email,
                             buildertek__User__r.Name,
-                            buildertek__RFI__c 
-                            FROM buildertek__Users_Contacts__c 
+                            buildertek__RFI__c
+                            FROM buildertek__Users_Contacts__c
                             where buildertek__RFI__c =:relatedToId
                             And buildertek__Contact__r.Email =:fromAddress];
                             system.debug('rficonslist---'+rficonslist);
                             if(rficonslist.size()>0){
                                 contactId = rficonslist[0].buildertek__Contact__c;
-                                userId = null; 
+                                userId = null;
                                 /*boolean check=false;
                                 for(buildertek__Users_Contacts__c cont : rficonslist){
                                     for(String s: lsttest){
@@ -901,21 +901,21 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                                             contactId  = cont.Id;
                                             break;
                                         }
-                                    }                                    
+                                    }
                                 }*/
-                                                            
+
                             }
 
                             list<buildertek__Users_Contacts__c> rfiusrslist = [SELECT Id,
                             Name,
-                            buildertek__User__c, 
+                            buildertek__User__c,
                             buildertek__User__r.Email,
-                            buildertek__Contact__c, 
+                            buildertek__Contact__c,
                             buildertek__Contact__r.Name,
                             buildertek__Contact__r.Email,
                             buildertek__User__r.Name,
-                            buildertek__RFI__c 
-                            FROM buildertek__Users_Contacts__c 
+                            buildertek__RFI__c
+                            FROM buildertek__Users_Contacts__c
                             where buildertek__RFI__c =:relatedToId
                             And buildertek__User__r.Email =:fromAddress];
                             system.debug('rfiusrslist---'+rfiusrslist);
@@ -933,13 +933,13 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                                             contactId = null;
                                             break;
                                         }
-                                    }                                    
+                                    }
                                 }*/
-                                
+
                             }
                             system.debug('rficonslist'+rficonslist);
                             system.debug('rfiusrslist'+rfiusrslist);
-                              
+
 
                             buildertek__RFI_Response__c rfiresponse = new buildertek__RFI_Response__c();
                             rfiresponse.buildertek__RFI__c = relatedToId;
@@ -947,7 +947,7 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                             rfiresponse.buildertek__Other_Responder__c  = contactId;
                             rfiresponse.buildertek__Response__c = textbody;
                             rfiresponse.buildertek__Response_Date__c = system.today();
-                            insert rfiresponse;   
+                            insert rfiresponse;
                             if(rfiRec != null){
                                 if(rfiRec.buildertek__Sender_Email_Response__c != null){
                                     Messaging.SingleEmailMessage message = new Messaging.SingleEmailMessage();
@@ -963,8 +963,8 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                                         Messaging.SendEmailResult[] results = Messaging.sendEmail(messages);
                                 }
                             }
-                            
-                            List<Attachment> attachmentList = new List<Attachment>();                         
+
+                            List<Attachment> attachmentList = new List<Attachment>();
                             List<Attachment> attachmetns = new List<Attachment>();
                             List<ContentVersion> contentVersionToInsert = new List<ContentVersion>();
                             List<ContentDocumentLink> cdlList = new List<ContentDocumentLink>();
@@ -973,9 +973,9 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                                 for (Messaging.Inboundemail.TextAttachment tAttachment : email.textAttachments){
                                     system.debug('RFI');
                                     ContentVersion con= new contentversion();
-                                    con.ContentLocation = 'S'; 
-                                    con.PathOnClient = tAttachment.filename; 
-                                    con.VersionData = Blob.valueOf(tAttachment.body); 
+                                    con.ContentLocation = 'S';
+                                    con.PathOnClient = tAttachment.filename;
+                                    con.VersionData = Blob.valueOf(tAttachment.body);
                                     con.Title = tAttachment.filename;
                                     contentVersionToInsert.add(con);
                                 }
@@ -990,22 +990,22 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                                     for(ContentDocument cd : conDocList){
                                         ContentDocumentLink CDL = new ContentDocumentLink();
                                         CDL .ContentDocumentId = cd.Id;
-                                        CDL .LinkedEntityId = rfiresponse.Id; 
-                                        CDL .ShareType = 'I'; 
+                                        CDL .LinkedEntityId = rfiresponse.Id;
+                                        CDL .ShareType = 'I';
                                         CDL .Visibility = 'AllUsers';
                                         cdlList.add(CDL);
-                                    }          
-                                    
+                                    }
+
                                 }
                             }
                             if (email.binaryAttachments != null){
-                                
+
                                 for (Messaging.Inboundemail.BinaryAttachment bAttachment : email.binaryAttachments){
                                     system.debug('RFIbAttachment');
                                     ContentVersion con= new contentversion();
-                                    con.ContentLocation = 'S'; 
-                                    con.PathOnClient = bAttachment.filename; 
-                                    con.VersionData = bAttachment.body; 
+                                    con.ContentLocation = 'S';
+                                    con.PathOnClient = bAttachment.filename;
+                                    con.VersionData = bAttachment.body;
                                     con.Title = bAttachment.filename;
                                     contentVersionToInsert.add(con);
                                 }
@@ -1020,21 +1020,21 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                                     for(ContentDocument cd : conDocList){
                                         ContentDocumentLink CDL = new ContentDocumentLink();
                                         CDL .ContentDocumentId = cd.Id;
-                                        CDL .LinkedEntityId = rfiresponse.Id; 
-                                        CDL .ShareType = 'I'; 
+                                        CDL .LinkedEntityId = rfiresponse.Id;
+                                        CDL .ShareType = 'I';
                                         CDL .Visibility = 'AllUsers';
                                         cdlList.add(CDL);
-                                    }          
-                                    
+                                    }
+
                                 }
                             }
                             if(cdlList.size() > 0){
                                 system.debug('cdlList');
                                 insert cdlList;
                             }
-    
-    
-                            
+
+
+
                         }
 
                          if(isusingemail==true){
@@ -1062,7 +1062,7 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                                 textbody=res7[0];
                             }
                             //List<String> res = plainTextBody.split('On ', 2);
- 
+
                             //check from address
                                 string replytoemailaddress='';
                             buildertek__RFI__c rfirec =  [SELECT Id, Name, buildertek__RFI_Assigned_To__c,
@@ -1070,26 +1070,26 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                                                           buildertek__Submitted_By2__c,buildertek__Submitted_By2__r.Email,
                                                           buildertek__Sender_Email_Response__c
                                                           FROM buildertek__RFI__c
-                                                          WHERE Id = :relatedToId]; 
+                                                          WHERE Id = :relatedToId];
                             system.debug('rfirec--->'+rfirec);
 
-                            
+
                             if(rfirec.buildertek__RFI_Assigned_To__c!=null){
                                 if(fromAddress==rfirec.buildertek__RFI_Assigned_To__r.Email){
                                     if(rfirec.buildertek__Submitted_By2__c!=null){
                                         replytoemailaddress=rfirec.buildertek__Submitted_By2__r.Email;
                                     }
-                                }                                
-                            }        
+                                }
+                            }
                             if(rfirec.buildertek__Submitted_By2__c!=null){
                                 if(fromAddress==rfirec.buildertek__Submitted_By2__r.Email){
                                     if(rfirec.buildertek__RFI_Assigned_To__r!=null){
                                         replytoemailaddress=rfirec.buildertek__RFI_Assigned_To__r.Email;
                                     }
-                                }  
-                            }                                                                             
+                                }
+                            }
                             system.debug('replytoemailaddress--->'+replytoemailaddress);
-           
+
                             buildertek__RFI_Response__c rfiresponse = new buildertek__RFI_Response__c();
                             rfiresponse.buildertek__RFI__c = relatedToId;
                             rfiresponse.buildertek__Responder__c = rfirec.buildertek__RFI_Assigned_To__c;
@@ -1098,23 +1098,23 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                             rfiresponse.buildertek__Show_In_Community__c=false;
                             if(rfirec.buildertek__RFI_Assigned_To__c!=null){
                                 if(fromAddress==rfirec.buildertek__RFI_Assigned_To__r.Email){
-                                }                                
-                            }        
+                                }
+                            }
                             if(rfirec.buildertek__Submitted_By2__c!=null){
                                 if(fromAddress==rfirec.buildertek__Submitted_By2__r.Email){
-                                     
-                                }  
-                            }   
-                                                        
-                             
-                            insert rfiresponse;   
+
+                                }
+                            }
+
+
+                            insert rfiresponse;
                             if(rfiRec != null){
 
                                 EmailServicesAddress eServices;
                                 eServices = [SELECT Id, AuthorizedSenders, EmailDomainName, IsActive, LocalPart
                                              FROM EmailServicesAddress
                                              where LocalPart = 'projects'];
-                                
+
                                 String setreplyto = eServices.LocalPart + '@' + eServices.EmailDomainName;
                                 system.debug('replytoemailaddress--->'+replytoemailaddress);
                                 Messaging.SingleEmailMessage message = new Messaging.SingleEmailMessage();
@@ -1126,8 +1126,8 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                                 Messaging.SingleEmailMessage[] messages = new List<Messaging.SingleEmailMessage>{message};
                                     Messaging.SendEmailResult[] results = Messaging.sendEmail(messages);
                             }
-                            
-                            List<Attachment> attachmentList = new List<Attachment>();                         
+
+                            List<Attachment> attachmentList = new List<Attachment>();
                             List<Attachment> attachmetns = new List<Attachment>();
                             List<ContentVersion> contentVersionToInsert = new List<ContentVersion>();
                             List<ContentDocumentLink> cdlList = new List<ContentDocumentLink>();
@@ -1136,9 +1136,9 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                                 for (Messaging.Inboundemail.TextAttachment tAttachment : email.textAttachments){
                                     system.debug('RFI');
                                     ContentVersion con= new contentversion();
-                                    con.ContentLocation = 'S'; 
-                                    con.PathOnClient = tAttachment.filename; 
-                                    con.VersionData = Blob.valueOf(tAttachment.body); 
+                                    con.ContentLocation = 'S';
+                                    con.PathOnClient = tAttachment.filename;
+                                    con.VersionData = Blob.valueOf(tAttachment.body);
                                     con.Title = tAttachment.filename;
                                     contentVersionToInsert.add(con);
                                 }
@@ -1153,22 +1153,22 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                                     for(ContentDocument cd : conDocList){
                                         ContentDocumentLink CDL = new ContentDocumentLink();
                                         CDL .ContentDocumentId = cd.Id;
-                                        CDL .LinkedEntityId = rfiresponse.Id; 
-                                        CDL .ShareType = 'I'; 
+                                        CDL .LinkedEntityId = rfiresponse.Id;
+                                        CDL .ShareType = 'I';
                                         CDL .Visibility = 'AllUsers';
                                         cdlList.add(CDL);
-                                    }          
-                                    
+                                    }
+
                                 }
                             }
                             if (email.binaryAttachments != null){
-                                
+
                                 for (Messaging.Inboundemail.BinaryAttachment bAttachment : email.binaryAttachments){
                                     system.debug('RFIbAttachment');
                                     ContentVersion con= new contentversion();
-                                    con.ContentLocation = 'S'; 
-                                    con.PathOnClient = bAttachment.filename; 
-                                    con.VersionData = bAttachment.body; 
+                                    con.ContentLocation = 'S';
+                                    con.PathOnClient = bAttachment.filename;
+                                    con.VersionData = bAttachment.body;
                                     con.Title = bAttachment.filename;
                                     contentVersionToInsert.add(con);
                                 }
@@ -1183,27 +1183,27 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                                     for(ContentDocument cd : conDocList){
                                         ContentDocumentLink CDL = new ContentDocumentLink();
                                         CDL .ContentDocumentId = cd.Id;
-                                        CDL .LinkedEntityId = rfiresponse.Id; 
-                                        CDL .ShareType = 'I'; 
+                                        CDL .LinkedEntityId = rfiresponse.Id;
+                                        CDL .ShareType = 'I';
                                         CDL .Visibility = 'AllUsers';
                                         cdlList.add(CDL);
-                                    }          
-                                    
+                                    }
+
                                 }
                             }
                             if(cdlList.size() > 0){
                                 system.debug('cdlList');
                                 insert cdlList;
                             }
-    
-    
 
 
 
-                            
+
+
+
                         }
                         else{
-                                     
+
                             List<Attachment> attachmentList = new List<Attachment>();
                             String RFIQuery = 'Select Id, Name, buildertek__Status__c from ' + objectAPI + ' where id =:relatedToId';
                             sObject rfi;
@@ -1224,9 +1224,9 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                                     attachment.ParentId = rfi.Id;
                                     attachmentList.add(attachment);*/
                                     ContentVersion con= new contentversion();
-                                    con.ContentLocation = 'S'; 
-                                    con.PathOnClient = tAttachment.filename; 
-                                    con.VersionData = Blob.valueOf(tAttachment.body); 
+                                    con.ContentLocation = 'S';
+                                    con.PathOnClient = tAttachment.filename;
+                                    con.VersionData = Blob.valueOf(tAttachment.body);
                                     con.Title = tAttachment.filename;
                                     contentVersionToInsert.add(con);
                                 }
@@ -1241,16 +1241,16 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                                     for(ContentDocument cd : conDocList){
                                         ContentDocumentLink CDL = new ContentDocumentLink();
                                         CDL .ContentDocumentId = cd.Id;
-                                        CDL .LinkedEntityId = relatedToId; 
-                                        CDL .ShareType = 'I'; 
+                                        CDL .LinkedEntityId = relatedToId;
+                                        CDL .ShareType = 'I';
                                         CDL .Visibility = 'AllUsers';
                                         cdlList.add(CDL);
-                                    }          
-                                    
+                                    }
+
                                 }
                             }
                             if (email.binaryAttachments != null){
-                                
+
                                 for (Messaging.Inboundemail.BinaryAttachment bAttachment : email.binaryAttachments){
                                     system.debug('RFIbAttachment');
                                     /*Attachment attachment = new Attachment();
@@ -1259,9 +1259,9 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                                     attachment.ParentId = rfi.Id;
                                     attachmentList.add(attachment);*/
                                     ContentVersion con= new contentversion();
-                                    con.ContentLocation = 'S'; 
-                                    con.PathOnClient = bAttachment.filename; 
-                                    con.VersionData = bAttachment.body; 
+                                    con.ContentLocation = 'S';
+                                    con.PathOnClient = bAttachment.filename;
+                                    con.VersionData = bAttachment.body;
                                     con.Title = bAttachment.filename;
                                     contentVersionToInsert.add(con);
                                 }
@@ -1276,24 +1276,24 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                                     for(ContentDocument cd : conDocList){
                                         ContentDocumentLink CDL = new ContentDocumentLink();
                                         CDL .ContentDocumentId = cd.Id;
-                                        CDL .LinkedEntityId = relatedToId; 
-                                        CDL .ShareType = 'I'; 
+                                        CDL .LinkedEntityId = relatedToId;
+                                        CDL .ShareType = 'I';
                                         CDL .Visibility = 'AllUsers';
                                         cdlList.add(CDL);
-                                    }          
-                                    
+                                    }
+
                                 }
                             }
                             if(cdlList.size() > 0){
                                 system.debug('cdlList');
                                 insert cdlList;
                             }
-                            
-                            
+
+
                         }
-                       
-                        
-                   
+
+
+
                        /* if (Schema.sObjectType.Attachment.fields.Name.isCreateable() && Schema.sObjectType.Attachment.fields.Body.isCreateable() && Schema.sObjectType.Attachment.fields.ParentId.isCreateable()){
 
                             insert attachmentList;
@@ -1302,13 +1302,13 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                 } catch (Exception exp){
 
                 }
-                
+
                  try{
                     if (objectAPI.toLowerCase() == 'buildertek__RFI_Response__c'){
                         system.debug('buildertek__RFI_Response__c');
                          boolean isusingcommunities = false;
                           buildertek__RFI_Settings__c rfiSettings = new buildertek__RFI_Settings__c();
-                            List<buildertek__RFI_Settings__c> rfiSettingsList = [Select Id,Name, 
+                            List<buildertek__RFI_Settings__c> rfiSettingsList = [Select Id,Name,
                                                                                  buildertek__Using_Communities__c,
                                                                                  buildertek__Using_Email__c,
                                                                                  buildertek__New_RFI_Notification_Template__c
@@ -1316,12 +1316,12 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                                                                                  WHERE Name ='RFI Settings'];
                         system.debug('rfiSettingsList-------'+rfiSettingsList);
                         if(rfiSettingsList.size() > 0){
-                            rfiSettings = rfiSettingsList[0]; 
+                            rfiSettings = rfiSettingsList[0];
                             if(rfiSettings.buildertek__Using_Communities__c==true){
-                                 isusingcommunities = true; 
-                            }  
+                                 isusingcommunities = true;
+                            }
                         }
-                        
+
                         System.debug('Emial Body---------------------------------'+plainTextBody);
                         if(isusingcommunities==true){
                             string textbody = '';
@@ -1350,7 +1350,7 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                             //List<String> res = plainTextBody.split('On ', 2);
 
                             buildertek__RFI_Response__c rfirespRec = [select id,Name,buildertek__Responder__c,buildertek__Responder__r.Name,buildertek__Response__c,buildertek__Response_Date__c,
-                            buildertek__Answered__c,buildertek__RFI__c,CreatedById from buildertek__RFI_Response__c 
+                            buildertek__Answered__c,buildertek__RFI__c,CreatedById from buildertek__RFI_Response__c
                             where Id =: relatedToId ];
 
                             //fromname
@@ -1358,20 +1358,20 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                             system.debug('lsttest---'+lsttest);
                             list<buildertek__Users_Contacts__c> rficonslist = [SELECT Id,
                             Name,
-                            buildertek__User__c, 
+                            buildertek__User__c,
                             buildertek__User__r.Email,
-                            buildertek__Contact__c, 
+                            buildertek__Contact__c,
                             buildertek__Contact__r.Name,
                             buildertek__Contact__r.Email,
                             buildertek__User__r.Name,
-                            buildertek__RFI__c 
-                            FROM buildertek__Users_Contacts__c 
+                            buildertek__RFI__c
+                            FROM buildertek__Users_Contacts__c
                             where buildertek__RFI__c =:rfirespRec.buildertek__RFI__c
                             And buildertek__Contact__r.Email =:fromAddress];
                             system.debug('rficonslist---'+rficonslist);
                             if(rficonslist.size()>0){
                                 contactId = rficonslist[0].buildertek__Contact__c;
-                                userId = null; 
+                                userId = null;
                                 /*boolean check=false;
                                 for(buildertek__Users_Contacts__c cont : rficonslist){
                                     for(String s: lsttest){
@@ -1383,21 +1383,21 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                                             contactId  = cont.Id;
                                                break;
                                         }
-                                    }                                    
+                                    }
                                 }*/
-                                                              
+
                             }
 
                             list<buildertek__Users_Contacts__c> rfiusrslist = [SELECT Id,
                             Name,
-                            buildertek__User__c, 
+                            buildertek__User__c,
                             buildertek__User__r.Email,
-                            buildertek__Contact__c, 
+                            buildertek__Contact__c,
                             buildertek__Contact__r.Name,
                             buildertek__Contact__r.Email,
                             buildertek__User__r.Name,
-                            buildertek__RFI__c 
-                            FROM buildertek__Users_Contacts__c 
+                            buildertek__RFI__c
+                            FROM buildertek__Users_Contacts__c
                             where buildertek__RFI__c =:rfirespRec.buildertek__RFI__c
                             And buildertek__User__r.Email =:fromAddress];
                             system.debug('rfiusrslist---'+rfiusrslist);
@@ -1416,17 +1416,17 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                                             contactId = null;
                                             break;
                                         }
-                                    }                                    
+                                    }
                                 }*/
-                               
+
                             }
                             system.debug('rficonslist'+rficonslist);
                             system.debug('rfiusrslist'+rfiusrslist);
 
-                            
+
                             buildertek__RFI__c rfirec =  [SELECT Id, Name, buildertek__RFI_Assigned_To__c
                                                           FROM buildertek__RFI__c
-                                                          WHERE Id = :rfirespRec.buildertek__RFI__c];                        
+                                                          WHERE Id = :rfirespRec.buildertek__RFI__c];
                             buildertek__RFI_Response__c rfiresponse = new buildertek__RFI_Response__c();
                             rfiresponse.buildertek__RFI__c = rfirespRec.buildertek__RFI__c;
                             rfiresponse.buildertek__Responder__c = userId;
@@ -1434,11 +1434,11 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                             rfiresponse.buildertek__Response__c = textbody;
                             rfiresponse.buildertek__Response_Date__c = system.today();
                             rfiresponse.buildertek__Parent__c = relatedToId;
-                            rfiresponse.buildertek__Show_In_Community__c = true; 
-                            insert rfiresponse;   
-                            
-                            
-                            List<Attachment> attachmentList = new List<Attachment>();                         
+                            rfiresponse.buildertek__Show_In_Community__c = true;
+                            insert rfiresponse;
+
+
+                            List<Attachment> attachmentList = new List<Attachment>();
                             List<Attachment> attachmetns = new List<Attachment>();
                             List<ContentVersion> contentVersionToInsert = new List<ContentVersion>();
                             List<ContentDocumentLink> cdlList = new List<ContentDocumentLink>();
@@ -1447,9 +1447,9 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                                 for (Messaging.Inboundemail.TextAttachment tAttachment : email.textAttachments){
                                     system.debug('RFI');
                                     ContentVersion con= new contentversion();
-                                    con.ContentLocation = 'S'; 
-                                    con.PathOnClient = tAttachment.filename; 
-                                    con.VersionData = Blob.valueOf(tAttachment.body); 
+                                    con.ContentLocation = 'S';
+                                    con.PathOnClient = tAttachment.filename;
+                                    con.VersionData = Blob.valueOf(tAttachment.body);
                                     con.Title = tAttachment.filename;
                                     contentVersionToInsert.add(con);
                                 }
@@ -1464,22 +1464,22 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                                     for(ContentDocument cd : conDocList){
                                         ContentDocumentLink CDL = new ContentDocumentLink();
                                         CDL .ContentDocumentId = cd.Id;
-                                        CDL .LinkedEntityId = rfiresponse.Id; 
-                                        CDL .ShareType = 'I'; 
+                                        CDL .LinkedEntityId = rfiresponse.Id;
+                                        CDL .ShareType = 'I';
                                         CDL .Visibility = 'AllUsers';
                                         cdlList.add(CDL);
-                                    }          
-                                    
+                                    }
+
                                 }
                             }
                             if (email.binaryAttachments != null){
-                                
+
                                 for (Messaging.Inboundemail.BinaryAttachment bAttachment : email.binaryAttachments){
                                     system.debug('RFIbAttachment');
                                     ContentVersion con= new contentversion();
-                                    con.ContentLocation = 'S'; 
-                                    con.PathOnClient = bAttachment.filename; 
-                                    con.VersionData = bAttachment.body; 
+                                    con.ContentLocation = 'S';
+                                    con.PathOnClient = bAttachment.filename;
+                                    con.VersionData = bAttachment.body;
                                     con.Title = bAttachment.filename;
                                     contentVersionToInsert.add(con);
                                 }
@@ -1494,26 +1494,26 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                                     for(ContentDocument cd : conDocList){
                                         ContentDocumentLink CDL = new ContentDocumentLink();
                                         CDL .ContentDocumentId = cd.Id;
-                                        CDL .LinkedEntityId = rfiresponse.Id; 
-                                        CDL .ShareType = 'I'; 
+                                        CDL .LinkedEntityId = rfiresponse.Id;
+                                        CDL .ShareType = 'I';
                                         CDL .Visibility = 'AllUsers';
                                         cdlList.add(CDL);
-                                    }          
-                                    
+                                    }
+
                                 }
                             }
                             if(cdlList.size() > 0){
                                 system.debug('cdlList');
                                 insert cdlList;
                             }
-    
-    
 
 
 
-                            
+
+
+
                         }else{
-                                     
+
                             List<Attachment> attachmentList = new List<Attachment>();
                             String RFIQuery = 'Select Id, Name, buildertek__Status__c from ' + objectAPI + ' where id =:relatedToId';
                             sObject rfi;
@@ -1534,9 +1534,9 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                                     attachment.ParentId = rfi.Id;
                                     attachmentList.add(attachment);*/
                                     ContentVersion con= new contentversion();
-                                    con.ContentLocation = 'S'; 
-                                    con.PathOnClient = tAttachment.filename; 
-                                    con.VersionData = Blob.valueOf(tAttachment.body); 
+                                    con.ContentLocation = 'S';
+                                    con.PathOnClient = tAttachment.filename;
+                                    con.VersionData = Blob.valueOf(tAttachment.body);
                                     con.Title = tAttachment.filename;
                                     contentVersionToInsert.add(con);
                                 }
@@ -1551,16 +1551,16 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                                     for(ContentDocument cd : conDocList){
                                         ContentDocumentLink CDL = new ContentDocumentLink();
                                         CDL .ContentDocumentId = cd.Id;
-                                        CDL .LinkedEntityId = relatedToId; 
-                                        CDL .ShareType = 'I'; 
+                                        CDL .LinkedEntityId = relatedToId;
+                                        CDL .ShareType = 'I';
                                         CDL .Visibility = 'AllUsers';
                                         cdlList.add(CDL);
-                                    }          
-                                    
+                                    }
+
                                 }
                             }
                             if (email.binaryAttachments != null){
-                                
+
                                 for (Messaging.Inboundemail.BinaryAttachment bAttachment : email.binaryAttachments){
                                     system.debug('RFIbAttachment');
                                     /*Attachment attachment = new Attachment();
@@ -1569,9 +1569,9 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                                     attachment.ParentId = rfi.Id;
                                     attachmentList.add(attachment);*/
                                     ContentVersion con= new contentversion();
-                                    con.ContentLocation = 'S'; 
-                                    con.PathOnClient = bAttachment.filename; 
-                                    con.VersionData = bAttachment.body; 
+                                    con.ContentLocation = 'S';
+                                    con.PathOnClient = bAttachment.filename;
+                                    con.VersionData = bAttachment.body;
                                     con.Title = bAttachment.filename;
                                     contentVersionToInsert.add(con);
                                 }
@@ -1586,24 +1586,24 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                                     for(ContentDocument cd : conDocList){
                                         ContentDocumentLink CDL = new ContentDocumentLink();
                                         CDL .ContentDocumentId = cd.Id;
-                                        CDL .LinkedEntityId = relatedToId; 
-                                        CDL .ShareType = 'I'; 
+                                        CDL .LinkedEntityId = relatedToId;
+                                        CDL .ShareType = 'I';
                                         CDL .Visibility = 'AllUsers';
                                         cdlList.add(CDL);
-                                    }          
-                                    
+                                    }
+
                                 }
                             }
                             if(cdlList.size() > 0){
                                 system.debug('cdlList');
                                 insert cdlList;
                             }
-                            
-                            
+
+
                         }
-                       
-                        
-                   
+
+
+
                        /* if (Schema.sObjectType.Attachment.fields.Name.isCreateable() && Schema.sObjectType.Attachment.fields.Body.isCreateable() && Schema.sObjectType.Attachment.fields.ParentId.isCreateable()){
 
                             insert attachmentList;
