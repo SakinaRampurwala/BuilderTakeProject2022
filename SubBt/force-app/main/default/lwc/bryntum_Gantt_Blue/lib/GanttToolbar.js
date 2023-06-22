@@ -459,22 +459,25 @@ export default base => class GanttToolbar extends base {
                     }
                 }
                 getChildren(taskData[0])
-                console.log(rowData)
+                console.log('RowData Before:- '+rowData)
                 var updateDataList = [];
                 var updateDataCloneList = [];
                 var insertData = [];
                 for(var i=0;i<rowData.length;i++){
+                    console.log('initial value of i:- ',i);
                     var updateData = {}
                     var updateDataClone = {}
                     var endDate
                     if(rowData[i]['name'] != 'Milestone Complete'){
                         endDate = new Date(rowData[i].endDate);
                         endDate.setDate(endDate.getDate() - 1)
+                        console.log('endDate in if condition ',endDate);
                     }else{
                         endDate= new Date(rowData[i].endDate);
                         //endDate.setDate(endDate.getDate() + 1)
                     }
-
+                    
+                    console.log('after 1st update value of i:- ',i);
                     rowData[i].endDate = endDate;
                     if(rowData[i]['id'].indexOf('_generate') == -1){
                     updateData['Id'] = rowData[i]['id']
@@ -496,6 +499,7 @@ export default base => class GanttToolbar extends base {
                     updateData['buildertek__Completion__c'] = rowData[i]['percentDone']
                     updateData['buildertek__Type__c'] = rowData[i]['customtype']
 
+                    console.log('before 2nd if condition:- ',i);
                     if(rowData[i]['cls']){
                         var check = rowData[i]['cls']
                         if(check.includes('milestoneCompleteColor')){
@@ -515,6 +519,7 @@ export default base => class GanttToolbar extends base {
                         }
                     }
 
+                    console.log('before taskbyid if condition:- ',i);
                     if(rowData[i]['id']){
                         var taskbyid = this.gantt.taskStore.getById(rowData[i]['id'])._data
                         // console.log(taskbyid)
@@ -523,6 +528,9 @@ export default base => class GanttToolbar extends base {
                         }
                     }
 
+                    console.log('updateData :- ',updateData);
+                    console.log('rowData :- ',rowData);
+                    console.log('dependenciesData :- ',dependenciesData);
                     var filledDependency = false
                     for(var j=0;j<dependenciesData.length;j++){
                         if(dependenciesData[j]['to'] == rowData[i]['id']){
@@ -538,7 +546,10 @@ export default base => class GanttToolbar extends base {
                         }
                     }
                     updateDataClone = Object.assign({},updateData);
-                    // console.log(updateDataClone);
+                    
+                    console.log('after dependenciesData :- ',dependenciesData);
+                    console.log('updateDataClone :- ',updateDataClone);
+                    console.log('resourceData :- ',resourceData);
                     for(var j=0;j<resourceData.length;j++){
                         if(resourceData[j]['event'] == rowData[i]['id']){
                             if(resourceData[j]['id'].indexOf('ContractorResource') >= 0){
@@ -556,6 +567,8 @@ export default base => class GanttToolbar extends base {
                             }
                         }
                     }
+                    console.log('after updateDataClone :- ',updateDataClone);
+                    console.log('after resourceData :- ',resourceData);
                     if(rowData[i]['id'].indexOf('_generate') == -1){
                         updateDataCloneList.push(updateDataClone)
                     }

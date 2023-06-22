@@ -1723,7 +1723,8 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
       }
       this.scheduleItemsDataList = scheduleDataList;
       console.log('boolList:- ', this.boolList);
-      var doNotShiftSchedule = this.boolList[3];
+      // var doNotShiftSchedule = this.boolList[3];
+      var doNotShiftSchedule = false;
       console.log('manuallyScheduledList:- ', doNotShiftSchedule);
       var formatedSchData = formatData(
         this.scheduleData,

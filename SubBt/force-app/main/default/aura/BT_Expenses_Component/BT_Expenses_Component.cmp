@@ -383,7 +383,8 @@
                                                 </td>
                                                 <td data-label="Date Approved">
                                                     <div class="slds-truncate" title='{!tc.buildertek__Date_Approved__c}'>
-                                                        {!tc.buildertek__Date_Approved__c}
+                                                        <!-- {!tc.buildertek__Date_Approved__c} -->
+                                                        <lightning:formattedDateTime value="{!tc.buildertek__Date_Approved__c}" year="numeric" month="numeric" day="numeric" hour="2-digit" minute="2-digit" />
                                                     </div>
                                                 </td>
                                                 <td data-label="Total Amount Tax">
@@ -762,7 +763,8 @@
                                                     </td>
                                                     <td data-label="Description">
                                                         <div class="slds-truncate" title='{!tc.buildertek__Date_Approved__c}'>
-                                                            {!tc.buildertek__Date_Approved__c}
+                                                            <!-- {!tc.buildertek__Date_Approved__c} -->
+                                                            <lightning:formattedDateTime value="{!tc.buildertek__Date_Approved__c}" year="numeric" month="numeric" day="numeric" hour="2-digit" minute="2-digit" />
                                                         </div>
                                                     </td>
                                                     <td data-label="Total Cost">

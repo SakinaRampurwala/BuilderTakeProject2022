@@ -83,6 +83,7 @@
         console.log('fields: ' + JSON.stringify(fields));
         var data = JSON.stringify(fields);
         console.log('data-->>',{data});
+        debugger;
         var action = component.get("c.saveRecord");
         action.setParams({
             "data": data

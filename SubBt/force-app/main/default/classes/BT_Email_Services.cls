@@ -150,13 +150,13 @@ global with sharing class BT_Email_Services implements Messaging.InboundEmailHan
                         message.plainTextBody = plainTextBody;
                         message.htmlBody = htmlBody;
                         Messaging.SingleEmailMessage[] messages = new List<Messaging.SingleEmailMessage>{message};
-                        Messaging.SendEmailResult[] results = Messaging.sendEmail(messages);
+                        // Messaging.SendEmailResult[] results = Messaging.sendEmail(messages);
 
-                        if (results[0].success){
-                            System.debug('The email was sent successfully.');
-                        } else{
-                            System.debug('The email failed to send: ' + results[0].errors[0].message);
-                        }
+                        // if (results[0].success){
+                        //     System.debug('The email was sent successfully.');
+                        // } else{
+                        //     System.debug('The email failed to send: ' + results[0].errors[0].message);
+                        // }
                     }
                 }
 

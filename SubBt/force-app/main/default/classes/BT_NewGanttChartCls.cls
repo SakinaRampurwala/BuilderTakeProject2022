@@ -611,43 +611,27 @@ public class BT_NewGanttChartCls{
     public static void insertUpdateTaskList(String taskJSON, Boolean isUpdate){
 
         List<buildertek__Project_Task__c> updatedprojecttaskList = (List<buildertek__Project_Task__c>)System.JSON.deserialize(taskJSON, List<buildertek__Project_Task__c>.class);
-        List<buildertek__Project_Task__c> newUpdateList = new List<buildertek__Project_Task__c>();
-        Integer i = 0;
-        /* for(buildertek__Project_Task__c task: updatedprojecttaskList){
-         system.debug(task.Id);
-         system.debug(task.buildertek__Dependency__c);
-         buildertek__Project_Task__c newTask =  new buildertek__Project_Task__c();
-         newTask.Id = task.Id;
-         newTask.buildertek__Order__c = i;
-         newUpdateList.add(newTask);
-         //system.debug(task.buildertek__Dependency__c)
-         } */
-        /* List<buildertek__Project_Task__c> updatenewList = new List<buildertek__Project_Task__c>();
-         system.debug(updatedprojecttaskList[0].buildertek__Start__c);
-         for(buildertek__Project_Task__c task: updatedprojecttaskList){
-         buildertek__Project_Task__c newTask =  new buildertek__Project_Task__c();
-         newTask.Id = task.Id;
-         newTask.Name = task.Name;
-         newTask.buildertek__Start__c = task.buildertek__Start__c;
-         newTask.buildertek__Finish__c = task.buildertek__Finish__c;
-         newTask.buildertek__Duration__c = task.buildertek__Duration__c;
-         newTask.buildertek__Completion__c = task.buildertek__Completion__c;
-         updatenewList.add(newTask);
-         } */
-        if (isUpdate){
-            //ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
-            //update newUpdateList;
+        // List<buildertek__Project_Task__c> newUpdateList = new List<buildertek__Project_Task__c>();
+        // Map<Id, buildertek__Project_Task__c> projectTaskMap = new Map<Id, buildertek__Project_Task__c>();
+        // for (buildertek__Project_Task__c pt : updatedprojecttaskList) {
+        //     System.debug('Old check project task in save changes + '+pt);
+        //     projectTaskMap.put(pt.Id, pt);
+        // }
 
+        // for (buildertek__Project_Task__c pt : updatedprojecttaskList) {
+        //     if (pt.buildertek__Dependency__c != null) {     
+        //         pt.buildertek__Lag__c = ProjectTaskTriggerHandler.calculateDuration(projectTaskMap.get(pt.buildertek__Dependency__c).buildertek__Finish__c, pt.buildertek__Start__c)-1;
+        //     }
+        // }
 
-            upsert updatedprojecttaskList;
+        // for (buildertek__Project_Task__c pt : updatedprojecttaskList) {
+        //     System.debug('New check project task in save changes + '+pt);
+        // }
 
-
-            //update updatedprojecttaskList;
-
-            //ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
-
-        }
-        System.debug(taskJSON);
+        // if (isUpdate){
+        //     upsert updatedprojecttaskList;
+        // }
+        // System.debug(taskJSON);
     }
 
     @AuraEnabled
