@@ -129,8 +129,12 @@ public without sharing class RFQAccepted{
                         rfqToVendorListDup[0].buildertek__Awarded_Date__c = null;
                    }
 
+                   System.debug('Jaimin has set debug point : 1');
                    update rfqrec;
+                   System.debug('rfqrec--->'+rfqrec);
                    update rfqToVendorListDup;
+                   System.debug('rfqToVendorListDup--->'+rfqToVendorListDup);
+                   System.debug('Jaimin has set debug point : 2');
 
                    if ( owea.size() > 0 ) {
                        message.setOrgWideEmailAddressId(owea.get(0).Id);

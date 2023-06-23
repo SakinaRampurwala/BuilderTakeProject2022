@@ -6,7 +6,7 @@ Developed By: Sagar
 Date: 15/09/2017
 */
 
-public with sharing class ContractDAO {
+public without sharing class ContractDAO {
     
     
     

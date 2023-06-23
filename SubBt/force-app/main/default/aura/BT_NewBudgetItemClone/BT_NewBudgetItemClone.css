@@ -186,3 +186,60 @@
 .THIS .tableRow {
     background-color: #F3F3F3;
 }
+
+.THIS .divcont{
+    max-height: 43vh;
+    overflow: auto;
+}
+
+@media only screen and (max-width: 1369px) and (min-width: 1280px){
+.THIS .divcont {
+    max-height: 27vh;
+    }
+}
+
+@media only screen and (max-width: 1579px) and (min-width: 1370px){
+.THIS .divcont {
+    max-height: 33vh;
+    }
+}
+@media only screen and (max-width: 1579px) and (min-width: 1370px){
+.THIS .divcont {
+    max-height: 35vh;
+    }
+}
+
+@media only screen and (max-width: 1779px) and (min-width: 1580px){
+.THIS .divcont {
+    max-height: 37vh;
+    }
+}
+
+@media only screen and (max-width: 1779px) and (min-width: 1580px){
+.THIS .divcont {
+    max-height: 40vh;
+    }
+}
+
+@media only screen and (max-width: 1980px) and (min-width: 1780px){
+.THIS .divcont {
+    max-height: 43vh;
+    overflow: auto;
+    } 
+}
+
+@media only screen and (max-width: 1980px) and (min-width: 1780px){
+.THIS .divcont {
+    max-height: 43vh;
+    overflow: auto;
+    }
+}   
+.THIS .divcont::-webkit-scrollbar {
+    width: 10px; /* Set the width of the scroll bar */
+}
+.THIS .divcont::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Set the background color of the track */
+}
+.THIS .divcont::-webkit-scrollbar-thumb {
+    background: #888; /* Set the color of the scroll bar handle */
+}

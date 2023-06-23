@@ -253,6 +253,7 @@ public Boolean displayPopup1 {get;set;}
                         update rfqToVendor;
                         update rfqToVendor.Vendor_Items__r;
                         insert RecordsToBeInserted;
+                        System.debug('Jaimin : rfqToVendor'+rfqToVendor);
 
                         refreshFiles();
                         wrapList = new List<WrapperVerdorLineList>();

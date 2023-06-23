@@ -107,7 +107,7 @@ public class  editResourcesController{
 
 
     @AuraEnabled
-    public static RfqDataTableWrapper getContactsDup(Integer pageNumber, Integer pageSize,String selected,String searchname,String searchaccount){
+    public static RfqDataTableWrapper getContactsDup(String taskid, Integer pageNumber, Integer pageSize,String selected,String searchname,String searchaccount){
         List<Contact> ConList = new List<Contact>();
         
         Integer offset = (pageNumber - 1) * pageSize;
@@ -151,6 +151,9 @@ public class  editResourcesController{
         objDT.totalRecords = totalRecords;
         if(searchaccount != '' || searchname != ''){
             String queryList2 = '';
+            buildertek__Project_Task__c tsk = [SELECT Id, buildertek__Contractor__c FROM buildertek__Project_Task__c WHERE Id = :taskid];
+            System.debug('tsk---> '+tsk);
+            System.debug('tsk account id ---> '+tsk.buildertek__Contractor__c);
             String queryList = 'Select Id,Name,AccountId,Account.Name FROM Contact WHERE id!=NULL ';
             if(searchname != '' && searchname != null){
                 queryList = queryList+ ' AND (Name LIKE \'%'+searchname+'%\')'; //String.escapeSingleQuotes(description)
@@ -167,8 +170,12 @@ public class  editResourcesController{
              system.debug(objDT.recordList);
         }
         else{
+            System.debug('task id :--> '+taskid);
+            buildertek__Project_Task__c tsk = [SELECT Id, buildertek__Contractor__c FROM buildertek__Project_Task__c WHERE Id = :taskid];
+            System.debug('tsk---> '+tsk);
+            System.debug('tsk account id ---> '+tsk.buildertek__Contractor__c);
             objDT.recordList = [Select Id,Name,AccountId,Account.Name
-                                FROM Contact  ORDER BY Name 
+                                FROM Contact where AccountId = :tsk.buildertek__Contractor__c ORDER BY Name 
                                 LIMIT :pageSize
                                 OFFSET :offset];
         }
