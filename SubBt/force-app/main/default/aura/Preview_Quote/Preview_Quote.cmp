@@ -24,7 +24,7 @@
 
 
     <aura:handler name="init" value="{!this}" action="{!c.init}" />
-    <force:recordData aura:id="forceRecordCmp" recordId="{!v.recordId}" fields="Name, buildertek__Project__r.Name, buildertek__Primary_Contact__c, buildertek__Auto_Number__c, buildertek__Quote_Amount__c" targetRecord="{!v.record}" targetFields="{!v.quote}"
+    <force:recordData aura:id="forceRecordCmp" recordId="{!v.recordId}" fields="Name, buildertek__Primary__c , buildertek__Project__r.Name, buildertek__Primary_Contact__c, buildertek__Auto_Number__c, buildertek__Quote_Amount__c" targetRecord="{!v.record}" targetFields="{!v.quote}"
         targetError="{!v.error}" />
 
     <ltng:require styles="{!$Resource.ModalPreviewCSS}" />

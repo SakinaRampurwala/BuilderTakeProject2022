@@ -30,9 +30,15 @@
                 //alert('result ---------> '+result);
                 var selectedContact = component.get("v.selectedToContact");
                 if (result != undefined) {
-                    selectedContact.push(result);
+                    result.forEach(function(elem){
+                        console.log(elem.buildertek__Primary_Contact__c);
+                        if(elem.buildertek__Primary_Contact__c){
+                            selectedContact.push(elem);
+                        }
+                    })
                 }
                 component.set("v.selectedToContact", selectedContact);
+                console.log(component.get("v.selectedToContact"));
             }
         });
         $A.enqueueAction(action);

@@ -12,21 +12,34 @@ public without sharing class PreviewQuoteController{
     }
 
     @AuraEnabled
-    public static Contact getObjectContact(String recordId){
-        Contact con;
+    public static List<Contact> getObjectContact(String recordId){
+        List<Contact> con;
         buildertek__Quote__c qut;
-        if (Schema.sObjectType.buildertek__Quote__c.fields.Id.isAccessible() && Schema.sObjectType.buildertek__Quote__c.fields.buildertek__Primary_Contact__c.isAccessible()){
+        Set<Id> projectAccId= new Set<Id>();
+        // if (Schema.sObjectType.buildertek__Quote__c.fields.Id.isAccessible() && Schema.sObjectType.buildertek__Quote__c.fields.buildertek__Primary_Contact__c.isAccessible()){
 
-            qut = [SELECT Id, buildertek__Primary_Contact__c
-                   FROM buildertek__Quote__c
-                   WHERE Id = :recordId];
+        //     qut = [SELECT Id, buildertek__Primary_Contact__c FROM buildertek__Quote__c WHERE Id = :recordId];
+        // }
+
+
+        // if (qut.buildertek__Primary_Contact__c != null){
+        //     con = [SELECT Id, Name, Email FROM Contact   WHERE Id = :qut.buildertek__Primary_Contact__c];
+        // }
+        qut = [SELECT Id, Name, buildertek__Project__c , buildertek__Project__r.buildertek__Customer__c FROM buildertek__Quote__c WHERE Id = :recordId];
+
+        System.debug('qut.buildertek__Project__c' + qut.buildertek__Project__c);
+        System.debug('qut.buildertek__Project__c' + qut.buildertek__Project__r.buildertek__Customer__c);
+
+        if (qut.buildertek__Project__c != null && qut.buildertek__Project__r.buildertek__Customer__c != null){
+            if(qut.buildertek__Project__r.buildertek__Customer__c != null){
+                projectAccId.add(qut.buildertek__Project__r.buildertek__Customer__c);
+            }
+            
         }
 
-
-        if (qut.buildertek__Primary_Contact__c != null){
-            con = [SELECT Id, Name, Email
-                   FROM Contact
-                   WHERE Id = :qut.buildertek__Primary_Contact__c];
+        System.debug('projectAccId' + projectAccId);
+        if(!projectAccId.isEmpty()){
+            con = [SELECT Id, Name, Email , buildertek__Primary_Contact__c, AccountId FROM Contact WHERE AccountId IN: projectAccId];
         }
         return con;
     }
