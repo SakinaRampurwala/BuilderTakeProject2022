@@ -7,7 +7,7 @@
         })
         action.setCallback(this, function(response){
             var result = response.getReturnValue();
-            console.log(component.get('v.getPhase') , 'getPhase::::::;');
+            // console.log(component.get('v.getPhase') , 'getPhase::::::;');
             let projectHavePricebook=result[0].defaultValue;
             console.log(Object.keys(projectHavePricebook).length);
             var pricebookOptions = [];
@@ -34,7 +34,6 @@
                 helper.changePricebookHelper(component, event, helper , selectedPricebook);
             }else{
                  component.set('v.Spinner', false);    
-
             }
             component.set("v.pricebookoptions", pricebookOptions);
             // component.set('v.Spinner', false);    
@@ -102,6 +101,29 @@
                             value: value
                         });
                     });
+                    console.log(component.get('v.getPhase') , 'getPhase::::::;');
+                    if(component.get('v.getPhase') != undefined){
+                        var quotelineGroupOptions = component.get("v.quoteLineGroupOptions");
+                        console.log('quoteLineGroupOptions ==>', component.get("v.quoteLineGroupOptions"));
+                        var name = '';
+                        quotelineGroupOptions.forEach(function(element){
+                            if(element.value == component.get('v.getPhase')){
+                                name = element.key;
+                            }
+                        });
+                        var productFamily = '';
+                        productFamilyList.forEach(function(element){
+                            if(element.key == name){
+                                productFamily = element.value;
+                            }
+                        });
+                        console.log('productFamily from phase ==> ',{productFamily});
+                        if(productFamily != ''){
+                            console.log('inside if');
+                            component.set("v.sProductFamily", productFamily);
+                            helper.searchInDatatableHelper(component, event, helper);
+                        }
+                    }
                     console.log('productFamilyList ==> ',{productFamilyList});
                     component.set("v.productFamilyOptions", productFamilyList);
                 }

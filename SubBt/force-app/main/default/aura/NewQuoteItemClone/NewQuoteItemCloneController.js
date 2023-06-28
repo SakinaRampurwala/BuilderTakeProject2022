@@ -665,6 +665,7 @@
         }).fire();
         var quoteObject = component.get("v.newQuote");
         quoteObject.buildertek__Product_Family__c = component.get("v.productfamily");
+        var getDescription=component.get('v.newQuote.Name');
 
 
         var jsonString =JSON.stringify(quoteObject);
@@ -688,55 +689,72 @@
         component.set("v.newQuote.buildertek__Markup__c", markup);
 
 
-        var action = component.get("c.saveQuoteLineItem");
-        action.setParams({
-            "quoteLineRecord": JSON.stringify(quoteObject)
-        });
-        action.setCallback(this, function(respo) {
-            var returnValue = respo.getReturnValue();
-            console.log('returnValue ===> ', { returnValue });
-            if (component.isValid() && respo.getState() === "SUCCESS") {
-                var group = component.find('groupId');
-                group.set("v._text_value", '');
-                var product = component.get('v.selectedLookUpRecord');
-                var compEvent = $A.get('e.c:BT_CLearLightningLookupEvent');
-                compEvent.setParams({
-                    "recordByEvent": product
-                });
-                compEvent.fire();
-                component.set('v.newQuote.Name', '');
-                component.set('v.newQuote.buildertek__Description__c', '');
-                component.set('v.newQuote.buildertek__Grouping__c', null);
-                component.set('v.newQuote.buildertek__UOM__c', '');
-                component.set('v.newQuote.buildertek__Unit_Cost__c', '');
-                component.set('v.newQuote.buildertek__Notes__c', '');
-                component.set('v.newQuote.buildertek__Quantity__c', 1);
-                component.set('v.newQuote.buildertek__Margin__c', '');
-                component.set('v.newQuote.buildertek__Markup__c', '');
-                component.set('v.newQuote.buildertek__Product__c', '');
-                component.set("v.listofproductfamily", '');
-                $A.get('e.force:refreshView').fire();
-                window.setTimeout(
-                    $A.getCallback(function() {
-                        var toastEvent = $A.get("e.force:showToast");
-                        toastEvent.setParams({
-                            mode: 'sticky',
-                            message: 'Quote Line created successfully',
-                            type: 'success',
-                            duration: '10000',
-                            mode: 'dismissible'
-                        });
-                        toastEvent.fire();
-                    }), 3000
-                );
+        if(getDescription!= undefined && getDescription!= ''){
 
-                var page = component.get("v.page") || 1
-                helper.getGroups(component, event, helper, page);
-                helper.fetchpricebooks(component, event, helper);
-                helper.fetchPickListVal(component, event, helper);
-            }
-        });
-        $A.enqueueAction(action);
+            var action = component.get("c.saveQuoteLineItem");
+            action.setParams({
+                "quoteLineRecord": JSON.stringify(quoteObject)
+            });
+            action.setCallback(this, function(respo) {
+                var returnValue = respo.getReturnValue();
+                console.log('returnValue ===> ', { returnValue });
+                if (component.isValid() && respo.getState() === "SUCCESS") {
+                    var group = component.find('groupId');
+                    group.set("v._text_value", '');
+                    var product = component.get('v.selectedLookUpRecord');
+                    var compEvent = $A.get('e.c:BT_CLearLightningLookupEvent');
+                    compEvent.setParams({
+                        "recordByEvent": product
+                    });
+                    compEvent.fire();
+                    component.set('v.newQuote.Name', '');
+                    component.set('v.newQuote.buildertek__Description__c', '');
+                    component.set('v.newQuote.buildertek__Grouping__c', null);
+                    component.set('v.newQuote.buildertek__UOM__c', '');
+                    component.set('v.newQuote.buildertek__Unit_Cost__c', '');
+                    component.set('v.newQuote.buildertek__Notes__c', '');
+                    component.set('v.newQuote.buildertek__Quantity__c', 1);
+                    component.set('v.newQuote.buildertek__Margin__c', '');
+                    component.set('v.newQuote.buildertek__Markup__c', '');
+                    component.set('v.newQuote.buildertek__Product__c', '');
+                    component.set("v.listofproductfamily", '');
+                    $A.get('e.force:refreshView').fire();
+                    window.setTimeout(
+                        $A.getCallback(function() {
+                            var toastEvent = $A.get("e.force:showToast");
+                            toastEvent.setParams({
+                                mode: 'sticky',
+                                message: 'Quote Line created successfully',
+                                type: 'success',
+                                duration: '10000',
+                                mode: 'dismissible'
+                            });
+                            toastEvent.fire();
+                        }), 3000
+                    );
+    
+                    var page = component.get("v.page") || 1
+                    helper.getGroups(component, event, helper, page);
+                    helper.fetchpricebooks(component, event, helper);
+                    helper.fetchPickListVal(component, event, helper);
+                }
+            });
+            $A.enqueueAction(action);
+        }else{
+            $A.get("e.c:BT_SpinnerEvent").setParams({
+                "action": "HIDE"
+            }).fire();
+
+            var toastEvent = $A.get("e.force:showToast");
+            toastEvent.setParams({
+                mode: 'sticky',
+                message: 'Please Enter Description',
+                type: 'error',
+                duration: '10000',
+                mode: 'dismissible'
+            });
+            toastEvent.fire();
+        }
 
     },
 

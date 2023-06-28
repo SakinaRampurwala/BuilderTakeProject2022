@@ -3,7 +3,7 @@
 }
 
 .THIS .sv-btn {
-    background: #272735 !important;
+    background: rgb(1, 118, 211) !important;
     border-radius: 6px !important;
     font-family: 'Verdana';
     font-style: normal;
@@ -18,23 +18,27 @@
 .THIS .clc-btn {
     width: 86px !important;
     height: 32px !important;
-    color: #272735 !important;
+    color: rgb(1, 118, 211) !important;
     font-size: 14px;
     border: 1px solid rgba(0, 0, 0, 0.5) !important;
     border-radius: 6px !important;
 }
+
+/* .THIS hr{
+    margin: 0px !important;
+} */
 
 .THIS .sv-new-btn {
     min-width: 119px !important;
     font-size: 14px;
     height: 32px !important;
-    color: #272735 !important;
+    color: rgb(1, 118, 211) !important;
     border: 1px solid rgba(0, 0, 0, 0.5) !important;
     border-radius: 6px !important;
 }
 
 .THIS .md-header {
-    background: #272735 !important;
+    background: rgb(1, 118, 211) !important;
     /* border-radius: 17px 17px 0px 0px; */
     color: #FFFFFF !important;
     font-family: 'Verdana' !important;

@@ -15,7 +15,7 @@
 }
 
 .THIS .tbl-header {
-    background: #272735;
+    /* background: rgb(255, 255, 255); */
     border-radius: 8px 8px 0px 0px;
     /* height: 50px; */
     height: 40px;
@@ -27,7 +27,7 @@
 }
 
 .THIS .tbl-hd-th {
-    color: #FFFFFF;
+    /* color: rgb(255, 255, 255); */
     font-weight: 600;
     /* font-size: 15px; */
     font-size: 16px;
@@ -181,8 +181,8 @@
 }
 
 .THIS .pagintaion-num-div {
-    background: #272735;
-    color: #ffffff;
+    /* background: #272735;
+    color: #ffffff; */
     /* font-family: Verdana; */
     height: 38px;
     padding: 10px;
@@ -343,13 +343,13 @@
 }
 
 .THIS .active-btn {
-    background: #272735;
-    color: #FFFFFF;
+    /* background: #272735;
+    color: #FFFFFF; */
 }
 
 .THIS .active-btn:disabled {
-    background: rgba(39, 39, 53, 0.2) !important;
-    color: #000000 !important;
+    /* background: rgba(39, 39, 53, 0.2) !important;
+    color: #000000 !important; */
     cursor: not-allowed !important;
 }
 
@@ -365,8 +365,8 @@
 } */
 
 .THIS .slds-button.slds-button--neutral:disabled {
-    background: rgba(39, 39, 53, 0.2);
-    color: #000000;
+    /* background: rgba(39, 39, 53, 0.2); */
+    /* color: #000000; */
     cursor: not-allowed;
 }
 

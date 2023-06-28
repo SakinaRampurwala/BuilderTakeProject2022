@@ -147,6 +147,8 @@ public class ProjectTaskTriggerHandler{
 
 	public void OnBeforeUpdate(Project_Task__c[] oldProjectTasks, Project_Task__c[] updatedProjectTasks, Map<ID, Project_Task__c> ProjectTaskMap, Map<Id, Project_Task__c> oldProjectTaskMap){
 		Set<Id> accountIds = new Set<Id>();
+		system.debug('updatedprojecttasks:- '+updatedProjectTasks);
+		system.debug('oldprojecttasks:- '+oldProjectTasks);
 		for (Project_Task__c updatedProjectTask : updatedProjectTasks){
 			accountIds.add(updatedProjectTask.buildertek__Contractor__c);
 		}

@@ -109,7 +109,7 @@ public class ImportProductsOnRfqLines {
         if(productFamily != '' || tradeType != '' || productType != '' || Product  != '' || category != '' || priceBook != '' || vendor != ''){
             String query = 'Select COUNT() FROM Product2 WHERE id!=NULL';
             if(productFamily != '' && productFamily != null){
-                query = query+ ' AND Family LIKE \'%'+String.escapeSingleQuotes(productFamily)+'%\'';
+                query = query+ ' AND toLabel(Family) LIKE \'%'+String.escapeSingleQuotes(productFamily)+'%\'';
             }
             if(tradeType != '' && tradeType != null){
                 query = query+ ' AND buildertek__Trade_Type__r.Name LIKE \'%'+String.escapeSingleQuotes(tradeType)+'%\'';
@@ -142,9 +142,9 @@ public class ImportProductsOnRfqLines {
         RfqDataTableWrapper objDT = new RfqDataTableWrapper();
         if(productFamily != '' || tradeType != '' || productType != '' || Product  != '' || category != '' || priceBook != '' || vendor != ''){
             String queryList2 = '';
-            String queryList = 'Select Id,Name,Family,buildertek__Product_Type__r.Name,buildertek__Category__r.Name,buildertek__Trade_Type__r.Name,buildertek__Vendor__r.Name,StockKeepingUnit FROM Product2 WHERE id!=NULL ';
+            String queryList = 'Select Id,Name,toLabel(Family),buildertek__Product_Type__r.Name,buildertek__Category__r.Name,buildertek__Trade_Type__r.Name,buildertek__Vendor__r.Name,StockKeepingUnit FROM Product2 WHERE id!=NULL ';
             if(productFamily != '' && productFamily != null){
-                queryList = queryList+ ' AND (Family LIKE \'%'+productFamily+'%\')'; //String.escapeSingleQuotes(description)
+                queryList = queryList+ ' AND (toLabel(Family) LIKE \'%'+productFamily+'%\')'; //String.escapeSingleQuotes(description)
             }
             if(tradeType != '' && tradeType != null){
                 queryList = queryList+ ' AND (buildertek__Trade_Type__r.Name LIKE \'%'+tradeType+'%\')';
@@ -253,7 +253,7 @@ public class ImportProductsOnRfqLines {
         }
         else{
             System.debug('=====IN ELSE CONDITION=====');
-            List<Product2> productList = [Select Id,Name,Family,buildertek__Product_Type__r.Name,buildertek__Trade_Type__r.Name,buildertek__Vendor__r.Name,buildertek__Category__r.Name,StockKeepingUnit FROM Product2  ORDER BY Name];
+            List<Product2> productList = [Select Id,Name, toLabel(Family),buildertek__Product_Type__r.Name,buildertek__Trade_Type__r.Name,buildertek__Vendor__r.Name,buildertek__Category__r.Name,StockKeepingUnit FROM Product2  ORDER BY Name];
             objDT.recordList = new List<ProductWrapper>();
             System.debug(productList);
             for (Product2 prod : productList) {

@@ -67,12 +67,10 @@ public without sharing class RFQToVendorTriggerHandler {
         Set<Id> vendorIdSet = new Set<Id>();
         list<id> productvendors = new list<id>();
         list<id> vendorrfqid = new list<id>();
-        Set<Id> acceptedRfqIds = new Set<Id>();
         for(RFQ_To_Vendor__c tempVendor : updatedRFQToVendors ){
             if(tempVendor.buildertek__Status__c=='Accepted' && BT_UTILS.hasStringFieldValueChanged( tempVendor,oldRFQToVendorsMap.get(tempVendor.Id), 'buildertek__Status__c')){
                 vendorIdSet.add(tempVendor.Id);
                 productvendors.add(tempVendor.buildertek__Vendor__c);
-                acceptedRfqIds.add(tempVendor.buildertek__RFQ__c);
             } 
             
             if(tempVendor.buildertek__Status__c =='Rejected' && BT_UTILS.hasStringFieldValueChanged( tempVendor,oldRFQToVendorsMap.get(tempVendor.Id), 'buildertek__Status__c')){
@@ -88,11 +86,6 @@ public without sharing class RFQToVendorTriggerHandler {
                }
             } 
         }
-
-        if (acceptedRfqIds.size() > 0) {
-            sendAcceptVendormail(acceptedRfqIds);
-        }
-
         list<buildertek__RFQ__c> rflist = new list<buildertek__RFQ__c>();
         list<buildertek__RFQ__c> rfqlist = [SELECT Id, Name, buildertek__Project__c, buildertek__Status__c, buildertek__Quote__c, 
             buildertek__Vendor__c, buildertek__Accepted_Date__c,buildertek__Start_Date__c, buildertek__Vendor_Rating__c, buildertek__Awarded_Date__c, buildertek__RFQ_s_Sent__c, 
@@ -343,49 +336,5 @@ public without sharing class RFQToVendorTriggerHandler {
     
     public void OnAfterDelete(RFQ_To_Vendor__c[] oldRFQToVendors){
         
-    }
-
-    // *** Mehtod create by krunal 
-    // *** Use: If vendor rfq is accepted then other vendor rfq get mail about that
-    public static void sendAcceptVendormail(Set<Id> acceptedRfqIds){
-        
-        string theTemplate;
-        list<OrgWideEmailAddress> owea = new list<OrgWideEmailAddress>();
-        list<buildertek__Admin_Interface_Node_Configuration__c> adminInterfaceNodeConfigurations = [SELECT Id,buildertek__Email_Address__c
-                                                                                                    FROM buildertek__Admin_Interface_Node_Configuration__c
-                                                                                                    WHERE Name = :'Email Configuration'];
-        if (adminInterfaceNodeConfigurations.size() > 0){
-            owea = [select Id from OrgWideEmailAddress where Address =: adminInterfaceNodeConfigurations[0].buildertek__Email_Address__c];
-        }
-
-        RFQTriggerHandler.blnSkipemaileTrigger = false;
-        theTemplate = [SELECT Id FROM EmailTemplate WHERE Name  = : 'RFQ To Vendor Rejected Email' LIMIT 1].id;
-        List<Messaging.SingleEmailMessage> messageList = new List<Messaging.SingleEmailMessage>();
-        List<RFQ_To_Vendor__c> rfqVendorList = [SELECT Id,buildertek__Send_Invitation__c,buildertek__Status__c,buildertek__Contact__c,buildertek__Contact__r.Email,
-                         buildertek__RFQ__c,buildertek__RFQ__r.buildertek__Vendor__c FROM buildertek__RFQ_To_Vendor__c WHERE buildertek__RFQ__c IN: acceptedRfqIds And buildertek__Status__c != 'Accepted'];
-        if(rfqVendorList.size () > 0){
-            for(RFQ_To_Vendor__c vendorRec: rfqVendorList){
-                if(vendorRec.buildertek__RFQ__r.buildertek__Vendor__c != null){
-                    Messaging.SingleEmailMessage message = new Messaging.SingleEmailMessage();
-                    string toemailadd = vendorRec.buildertek__Contact__r.Email;
-                    message.toAddresses = new String[] { toemailadd};
-                    if ( owea.size() > 0 ) {
-                        message.setOrgWideEmailAddressId(owea.get(0).Id);
-                    }
-                    message.setTemplateID(theTemplate);
-                    message.setSaveAsActivity(false);
-                    message.setWhatId(vendorRec.Id);
-                    message.setTargetObjectId(vendorRec.buildertek__Contact__c);
-                    messageList.add(message);
-                }
-            }
-            if(messageList.size()>0){
-                RFQTriggerHandler.blnSkipemaileTrigger = false;
-                Messaging.sendEmail(messageList);
-                RFQTriggerHandler.blnSkipemaileTrigger = true;
-            }
-        }
-        RFQTriggerHandler.blnSkipemaileTrigger = true;
-
     }
 }

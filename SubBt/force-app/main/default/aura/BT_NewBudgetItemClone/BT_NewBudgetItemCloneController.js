@@ -1964,6 +1964,10 @@ helper.getProductDetails(component,event,helper);
         $A.get("e.c:BT_SpinnerEvent").setParams({
             "action": "SHOW"
         }).fire();
+        console.log(component.get('v.newBudgetLine.name'));
+        console.log(component.find('budgetLineID').get('v.value'));
+        var getDescriptionValue=component.find('budgetLineID').get('v.value');
+        
         var recordId = component.get("v.recordId");
         component.set("v.newBudgetLine.buildertek__Budget__c", recordId);
         //alert('Budget --> '+component.get("v.newBudgetLine.buildertek__Product__c"));
@@ -1997,69 +2001,85 @@ helper.getProductDetails(component,event,helper);
         }*/
 
         // If we want tarade type value we have to pass parameter like "tradeType:tradeType"
-        var action = component.get("c.saveBudgetLineItem");
-        action.setParams({
-            "budgetLineRecord": JSON.stringify(budgetLineObject),
-            recordId: recordId,
-            contractor: contractor,
+        if(getDescriptionValue != '' && getDescriptionValue != undefined){
+            var action = component.get("c.saveBudgetLineItem");
+            action.setParams({
+                "budgetLineRecord": JSON.stringify(budgetLineObject),
+                recordId: recordId,
+                contractor: contractor,
+    
+            });
+            action.setCallback(this, function (respo) {
+                if (component.isValid() && respo.getState() === "SUCCESS") {
+                    //  alert(JSON.stringify(respo));
+                    var url = location.href;
+                    var baseURL = url.substring(0, url.indexOf('/', 14));
+                    var result = respo.getReturnValue();
+                    var group = component.find('costCodeId');
+                    group.set("v._text_value", '');
+                    var costCode = component.find('groupId');
+                    costCode.set("v._text_value", '');
+                    var product = component.get('v.selectedLookUpRecord');
+                    var compEvent = $A.get('e.c:BT_CLearLightningLookupEvent');
+                    compEvent.setParams({
+                        "recordByEvent": product
+                    });
+                    compEvent.fire();
+                    component.set('v.newBudgetLine.Name', '');
+                    //component.set('v.selectedContractor', null);
+                    component.set('v.selectedContractor', null);
+                    component.set('v.newBudgetLine.buildertek__Group__c', '');
+                    component.set('v.newBudgetLine.buildertek__Sub_Grouping__c', null);
+                    component.set('v.newBudgetLine.buildertek__UOM__c', '');
+                    component.set('v.newBudgetLine.buildertek__Notes__c', '');
+                    component.set('v.newBudgetLine.buildertek__Unit_Price__c', '');
+                    component.set('v.newBudgetLine.buildertek__Quantity__c', '1');
+                    component.set('v.newBudgetLine.buildertek__Sales_Price__c', '');
+                    component.set('v.newBudgetLine.buildertek__Cost_Code__c', '');
+                    component.set('v.UOMvalues', '');
+                    //  component.set('v.Notevalues', '');
+    
+                    $A.enqueueAction(component.get("c.clearLookupValue"));
+                    $A.get("e.c:BT_SpinnerEvent").setParams({
+                        "action": "HIDE"
+                    }).fire();
+    
+                    /*$A.get('e.force:refreshView').fire();
+                    alert('TS');*/
+                    window.setTimeout(
+                        $A.getCallback(function () {
+                            var toastEvent = $A.get("e.force:showToast");
+                            toastEvent.setParams({
+                                mode: 'sticky',
+                                message: 'Budget Line created successfully',
+                                type: 'success',
+                                duration: '10000',
+                                mode: 'dismissible'
+                            });
+                            toastEvent.fire();
+                        }), 3000
+                    );
+                    //$A.get('e.force:refreshView').fire();
+                    component.refreshData();
+                }
+            });
+            $A.enqueueAction(action);
+        }else{
+            $A.get("e.c:BT_SpinnerEvent").setParams({
+                "action": "HIDE"
+            }).fire();
 
-        });
-        action.setCallback(this, function (respo) {
-            if (component.isValid() && respo.getState() === "SUCCESS") {
-                //  alert(JSON.stringify(respo));
-                var url = location.href;
-                var baseURL = url.substring(0, url.indexOf('/', 14));
-                var result = respo.getReturnValue();
-                var group = component.find('costCodeId');
-                group.set("v._text_value", '');
-                var costCode = component.find('groupId');
-                costCode.set("v._text_value", '');
-                var product = component.get('v.selectedLookUpRecord');
-                var compEvent = $A.get('e.c:BT_CLearLightningLookupEvent');
-                compEvent.setParams({
-                    "recordByEvent": product
-                });
-                compEvent.fire();
-                component.set('v.newBudgetLine.Name', '');
-                //component.set('v.selectedContractor', null);
-                component.set('v.selectedContractor', null);
-                component.set('v.newBudgetLine.buildertek__Group__c', '');
-                component.set('v.newBudgetLine.buildertek__Sub_Grouping__c', null);
-                component.set('v.newBudgetLine.buildertek__UOM__c', '');
-                component.set('v.newBudgetLine.buildertek__Notes__c', '');
-                component.set('v.newBudgetLine.buildertek__Unit_Price__c', '');
-                component.set('v.newBudgetLine.buildertek__Quantity__c', '1');
-                component.set('v.newBudgetLine.buildertek__Sales_Price__c', '');
-                component.set('v.newBudgetLine.buildertek__Cost_Code__c', '');
-                component.set('v.UOMvalues', '');
-                //  component.set('v.Notevalues', '');
-
-                $A.enqueueAction(component.get("c.clearLookupValue"));
-                $A.get("e.c:BT_SpinnerEvent").setParams({
-                    "action": "HIDE"
-                }).fire();
-
-                /*$A.get('e.force:refreshView').fire();
-                alert('TS');*/
-                window.setTimeout(
-                    $A.getCallback(function () {
-                        var toastEvent = $A.get("e.force:showToast");
-                        toastEvent.setParams({
-                            mode: 'sticky',
-                            message: 'Budget Line created successfully',
-                            type: 'success',
-                            duration: '10000',
-                            mode: 'dismissible'
-                        });
-                        toastEvent.fire();
-                    }), 3000
-                );
-                //$A.get('e.force:refreshView').fire();
-                component.refreshData();
-            }
-        });
-        $A.enqueueAction(action);
-
+            var toastEvent = $A.get("e.force:showToast");
+            toastEvent.setParams({
+                mode: 'sticky',
+                message: 'Please Enter Description',
+                type: 'error',
+                duration: '10000',
+                mode: 'dismissible'
+            });
+            toastEvent.fire();
+        }
+       
     },
     clearLookupValue: function (component, event, helper) {
         var childCmp = component.find("tradeTypeId");

@@ -134,6 +134,8 @@
             allSelectedIds = currentSelectedIds;
         }
         component.set("v.allSelectedIds", currentSelectedIds);
+        console.log('sakina test');
+        console.log({productFamilyValue});
 
         var action = component.get("c.getProducts");
         var tradetype = component.get("v.rfqtradeType");

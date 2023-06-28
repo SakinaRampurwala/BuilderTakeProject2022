@@ -654,6 +654,18 @@ public without sharing class PreviewQuoteController{
 
                     insert caseEmailMessage;
 
+                    ContentVersion conVer1 = new ContentVersion();
+                    conVer1.PathOnClient = 'Quote.pdf'; // The files name, extension is very important here which will help the file in preview.
+                    conver1.Title = 'Quote.pdf';
+                    conVer1.VersionData = b; // converting your binary string to Blog
+                    insert conVer1;    //Insert ContentVersion
+
+                    ContentDocumentLink conDocLink1 = New ContentDocumentLink();
+                    conDocLink1.LinkedEntityId = caseEmailMessage.Id; // Specify RECORD ID here i.e Any Object ID (Standard Object/Custom Object)
+                    conDocLink1.ContentDocumentId = [SELECT ContentDocumentId FROM ContentVersion WHERE Id =:conVer1.Id].ContentDocumentId;  //ContentDocumentId Id from ContentVersion
+                    conDocLink1.Visibility = 'AllUsers';
+                    insert conDocLink1;
+
 
                     EmailMessageRelation emr = new EmailMessageRelation();
                     emr.emailMessageId = caseEmailMessage.id;

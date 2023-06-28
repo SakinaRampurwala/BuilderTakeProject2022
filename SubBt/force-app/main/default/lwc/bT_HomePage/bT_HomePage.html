@@ -1,0 +1,566 @@
+<template>
+    <template if:true={spinnerdatatable}>
+        <div data-id="spinnerId" class="slds-spinner_container" style="overflow: hidden;">
+            <div class="spinner-main-div">
+                <div class="loader--ripple">
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <div class="main">
+        <div class="slds-size_1-of-1 sizebox s-item-1">
+            <!-- <div class="slds-grid gridbox"> -->
+                <!-- <div class="slds-size_4-of-4 s-item-1"> -->
+                    <div class="tab-container ">
+                        <div class="tab-menu">
+                            <ul>
+                                <li><a class="active-tab" data-tab-id="tab1">Release Notes</a></li>
+                                <li><a data-tab-id="tab2">User Configuration</a></li>
+                                <li><a data-tab-id="tab3">FAQ/Support</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="tab active-tab-content" data-id="tab1">
+                            <div class="pdfcont">
+                            <div class="pdf-container">
+                                <iframe src={pdfUrl} class="pdf-iframe"></iframe>
+                            </div>
+                        </div>
+                        </div>
+
+                        <div class="tab" data-id="tab2">
+                            <div class="slds-p-top_medium slds-p-left_large slds-p-bottom_large slds-p-right_large">
+                                <div class="slds-text-heading_small slds-p-around_medium UserConfigDetails">
+                                    <p>
+                                        <b>1. BOX Settings </b>
+                                    </p>
+                                    <p class="slds-m-top_small slds-m-left_large">
+                                       Used in MSAForm
+                                        <br />
+                                    </p> <br />
+                                    <p>
+                                        <b>2. BT Schedule Configuration </b>
+                                    </p>
+                                    <p class="slds-m-top_small slds-m-left_large">
+                                        Hide Internal Resource(This option will hide Internal Resource Column in Gantt chart).<br />
+                                        Hide Contractor(This option will hide Contractor Column in Gantt chart). <br />
+                                        Hide Contractor Resource(This option will hide Contractor Resource Column in Gantt chart). <br />
+                                        Do not Shift Schedule Dates base on Predecessors(This option will enable feature in Gantt chart in which after changing the dates of predecessor task it will not going to affect child task’s date). <br /> 
+                                    </p> <br />
+                                    <p>
+                                        <b>3. BOX Settings </b>
+                                    </p>
+                                    <p class="slds-m-top_small slds-m-left_large">
+                                        When the project is inserted or the project address is updated at that time trigger gets the project location photo from Google Maps and it will add that photo under the project. If the Retrieve Aerial Photo of the project is checked.
+                                        <br />
+                                    </p> <br />
+                                    <p>
+                                        <b>4. BT RFQ Configuration </b>
+                                    </p>
+                                    <p class="slds-m-top_small slds-m-left_large">
+                                        Email Subject
+                                    </p>
+                                        <p class="slds-m-top_small slds-m-left_x-large">
+                                        When the user sends an email under RFQ then the email subject is automatically set from this setting.
+                                    </p>
+                                    <p class="slds-m-top_small slds-m-left_large">
+                                        Update Price Book
+                                    </p>
+                                    <p class="slds-m-top_small slds-m-left_x-large">
+                                        If this option is checked and RFQ to Vendor status is changed to ‘Accepted’ then it creates a new product and pricebook entry from the old product and pricebook entry.
+                                    </p>    
+                                    <p class="slds-m-top_small slds-m-left_large">
+                                        Create PO On Vendor Acceptance
+                                    </p>
+                                        <p class="slds-m-top_small slds-m-left_x-large">    
+                                        If this option is checked and the RFQ status is changed to ‘Accepted’ then it creates a purchase order record from RFQ.
+                                        </p>
+                                        <p class="slds-m-top_small slds-m-left_large">   
+                                        Using Communities
+                                        </p>
+                                        <p class="slds-m-top_small slds-m-left_x-large">
+                                        There is no use of this setting at this time.
+                                    </p>
+                                        <p class="slds-m-top_small slds-m-left_large">
+                                        Is Pre Qualified
+                                    </p>
+                                        <p class="slds-m-top_small slds-m-left_x-large">
+                                        This admin setting is related to the add vendor button on review on RFQ.<br/>
+                                        If this option is checked then on add vendors button (On RFQ Component) only ‘Pre Qualified’ account record is visible.
+                                    </p>
+                                    <p class="slds-m-top_small slds-m-left_large">
+                                        Only RFQ Portal Users
+                                    </p>
+                                        <p class="slds-m-top_small slds-m-left_x-large">
+                                        This admin setting is related to the add vendor button on review on RFQ.<br/>
+                                        If this option is checked then on the Email Vendors button (On RFQ Component) it checks for the selected contact is a community user or not. If it’s a community user then it’s sending email. Otherwise, it’s not sending an email.
+                                        </p>
+                                    <p class="slds-m-top_small slds-m-left_large">
+                                        Using Product
+                                    </p>
+                                        <p class="slds-m-top_small slds-m-left_x-large">
+                                        This admin setting is related to the New button on the RFQ Lines tab.<br/>
+                                        If this option is checked and the user clicks on the new button then the user can able to add Pricebook, Product Family, and Product data on the new RFQ line.
+                                    </p>
+                                        <br />
+                                    </p> <br />
+
+                                    <p>
+                                        <b>5. BT Contract Configuration </b>
+                                    </p>
+                                    <p class="slds-m-top_small slds-m-left_large">
+                                        Create a Contract on Quote Acceptance
+                                    </p>
+                                        <p class="slds-m-top_small slds-m-left_x-large">
+                                        If this option is checked and the quote is ‘Customer Accepted’ and if the project is created (1st option in BT Quote Configuration) then it creates a new contract from the quote.
+                                    </p>
+                                    <p class="slds-m-top_small slds-m-left_large">
+                                        Automatically Create Invoice from Contract Signing
+                                    </p>
+                                    <p class="slds-m-top_small slds-m-left_x-large">
+                                        While creating a contract from a quote if this option is checked then it creates an invoice record. 
+                                    </p>    
+                                    <p class="slds-m-top_small slds-m-left_large">
+                                        Email Subject
+                                    </p>
+                                        <p class="slds-m-top_small slds-m-left_x-large">    
+                                        When the user sends an email under Contract then the email subject is automatically set from this setting.
+                                        </p>
+                                        <br />
+                                    </p> <br />
+                                    <p>
+                                        <b>6. BT Quote Configuration </b>
+                                    </p>
+                                    <p class="slds-m-top_small slds-m-left_large">
+                                        Create Project from Quote Acceptance on Opportunity
+                                    </p>
+                                        <p class="slds-m-top_small slds-m-left_x-large">
+                                        If this option is checked and the Quote status is changed to ‘Customer Accepted’ and the quote is related to the opportunity then the project is created from quote data.
+                                    </p>
+                                        <p class="slds-m-top_small slds-m-left_large">
+                                        Send customer Quote after signature
+                                        </p>
+                                        <p class="slds-m-top_small slds-m-left_x-large">
+                                        If this option is checked and the user changes the quote status to ‘Customer Accepted’ then trigger send email to the quote Owner. 
+                                    </p>
+                                        <p class="slds-m-top_small slds-m-left_large">
+                                        Email Subject
+                                    </p>
+                                        <p class="slds-m-top_small slds-m-left_x-large">
+                                        When the user sends an email under Quote then the email subject is automatically set from this setting.
+                                    </p>
+                                        <p class="slds-m-top_small slds-m-left_large">
+                                        Create Project on Opportunity Closed Won
+                                    </p>
+                                        <p class="slds-m-top_small slds-m-left_x-large">
+                                        If this option is checked and the opportunity stage is changed to ‘Closed Won’ and there are ‘Customer Accepted’ quotes related to the opportunity then it creates a project from related quote data.
+                                    </p>
+                                        <p class="slds-m-top_small slds-m-left_large">
+                                        Update the Opp Amount
+                                    </p>
+                                        <p class="slds-m-top_small slds-m-left_x-large">
+                                        If this option is checked and the quote status is ‘Customer Accepted’ and the quote is related to any opportunity and the opportunity is not Closed Won then the Opportunity Amount is updated as per the total amount of the Quote.
+                                    </p>
+                                        <p class="slds-m-top_small slds-m-left_large">
+                                        Default Project Owner
+                                    </p>
+                                        <p class="slds-m-top_small slds-m-left_x-large">
+                                        While creating a project from the quote trigger at that time it takes this user as the project owner.
+                                    </p>
+                                        <p class="slds-m-top_small slds-m-left_large">
+                                        Org URL
+                                    </p>
+                                        <p class="slds-m-top_small slds-m-left_x-large">
+                                        There is no use of the org URL in this setting it is filled automatically.
+                                    </p>
+                                        <p class="slds-m-top_small slds-m-left_large">
+                                        Remove Single Quote Line Option
+                                    </p>
+                                        <p class="slds-m-top_small slds-m-left_x-large">
+                                        There is no use of this setting at this time.
+                                    </p>
+                                        <p class="slds-m-top_small slds-m-left_large">
+                                        Hide Global Margin
+                                    </p>
+                                        <p class="slds-m-top_small slds-m-left_x-large">
+                                        This setting is used to hide Global Margin input from the quote component.
+                                    </p>
+                                        <p class="slds-m-top_small slds-m-left_large">
+                                        Hide Global Markup
+                                    </p>
+                                        <p class="slds-m-top_small slds-m-left_x-large">
+                                        This setting is used to hide Global Markup input from the quote component.
+                                    </p>
+                                        <p class="slds-m-top_small slds-m-left_large">
+                                        Reject all or accept all
+                                    </p>
+                                        <p class="slds-m-top_small slds-m-left_x-large">
+                                        This setting is used to hide the accept button from the preview quote page if any quote line is rejected and also to find the button for rejecting single quote lines.
+                                    </p><br />
+
+                                    <p>
+                                        <b>7. BT Budget Configuration </b>
+                                    </p>
+                                    <p class="slds-m-top_small slds-m-left_large">
+                                    Create a Budget on Quote Acceptance
+                                </p>
+                                    <p class="slds-m-top_small slds-m-left_x-large">
+                                    If this option is checked and the quote is ‘Customer Accepted’ and if the project is created (1st option in BT Quote Configuration) then it creates a new budget from the quote.
+                                </p>
+                                    <p class="slds-m-top_small slds-m-left_large">
+                                    Automatically add Expenses to Budget
+                                </p>
+                                    <p class="slds-m-top_small slds-m-left_x-large">
+                                    If this option is checked then it automatically creates a budget line when we link Expense to the budget.
+                                </p>
+                                    <p class="slds-m-top_small slds-m-left_large">
+                                    Automatically add Time Card to Budget
+                                </p>
+                                    <p class="slds-m-top_small slds-m-left_x-large">
+                                    If this option is checked then it automatically creates a budget line when we link Time Card to the budget.
+                                </p>
+                                    <p class="slds-m-top_small slds-m-left_large">
+                                    Budget Group By
+                                </p>
+                                    <p class="slds-m-top_small slds-m-left_x-large">
+                                    This admin setting is related to the budget component.<br/>
+                                    Our selected group is visible on the budget component.
+                                </p><br/>
+
+                                <p>
+                                    <b>8. BT Purchase Order Configuration</b>
+                                </p>
+                                <p class="slds-m-top_small slds-m-left_large">
+                                    Send Vendor Lien Release On Approval
+                                </p>
+                                <p class="slds-m-top_small slds-m-left_x-large">
+                                    If this option is checked and the Purchase Order status is changed to ‘Approved’ then trigger send email to the vendor of that purchase order for review  Purchase Lien Release.
+                                </p>
+                                    <p class="slds-m-top_small slds-m-left_large">
+                                    Send PO On Approval
+                                    </p>
+                                    <p class="slds-m-top_small slds-m-left_x-large">
+                                    If this option is checked and the Purchase Order status is changed to ‘Approved’ then trigger send email to the project manager of that purchase order.
+                                </p>
+                                    <p class="slds-m-top_small slds-m-left_large">
+                                    Email Subject
+                                    </p>
+                                    <p class="slds-m-top_small slds-m-left_x-large">
+                                    When the user sends an email under Purchase Order then the email subject is automatically set from this setting.
+                                </p>
+                                    <p class="slds-m-top_small slds-m-left_large">
+                                    Create Invoice on Approval
+                                </p>
+                                <p class="slds-m-top_small slds-m-left_x-large">
+                                    If this option is checked and the Purchase Order status is changed to ‘Approved’ then it creates Invoice AP and Invoice AP Lines.
+                                </p> 
+                                    <p class="slds-m-top_small slds-m-left_large">
+                                    Custom New Button
+                                </p>
+                                <p class="slds-m-top_small slds-m-left_x-large">
+                                    This admin setting is related to the new Purchase Order button. <br/>
+                                    If this option is checked then the user can see a custom new Purchase Order modal, where the user is able to add Purchase Order Lines also.
+                                </p><br/>
+
+                                    <p>
+                                    <b>9. BT Change Order Configuration</b>
+                                </p>
+                                <p class="slds-m-top_small slds-m-left_large">
+                                    Change Order Configuration
+                                </p>
+                                    <p class="slds-m-top_small slds-m-left_x-large">
+                                    Create a Change Order on Overage
+                                </p>
+                                    <p class="slds-m-top_small slds-m-left_x-large">
+                                    Email Subject
+                                </p>
+                                <p class="slds-m-top_small slds-m-left_xx-large">
+                                    When the user sends an email under Change Order then the email subject is automatically set from this setting.
+                                </p>
+                                    <p class="slds-m-top_small slds-m-left_x-large">
+                                    Are you using products?
+                                </p>
+                                <p class="slds-m-top_small slds-m-left_xx-large">
+                                    This admin setting is related to the new Change Order Line button.<br/> 
+                                    If this option is checked and the user clicks on the new button then the user can able to add Pricebook, Product Family, and Product data on the new CO line.
+                                </p>
+                                    <p class="slds-m-top_small slds-m-left_x-large">
+                                    Custom New Button
+                                </p>
+                                <p class="slds-m-top_small slds-m-left_xx-large">
+                                    This admin setting is related to the new Change Order button. <br/>
+                                    If this option is checked then the user can see a custom new Change Order modal, where the user is able to add Change Order Lines also.
+                                </p>
+                                    <p class="slds-m-top_small slds-m-left_large">
+                                    Turn off Cost Option Allowance Check
+                                </p><br/>
+
+                                <p>
+                                    <b>10. Email Files to Users</b>
+                                </p>
+                                <p class="slds-m-top_small slds-m-left_large">
+                                This BT Setting is used for sending emails to any user or contact from the salesforce. 
+                            </p><br/>
+
+                            <p>
+                                <b>11. BT Document Configuration</b>
+                            </p>
+                            <p class="slds-m-top_small slds-m-left_large">
+                                System Configuration
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_x-large">
+                                Use all AWS data in AWS integration to update and download files from AWS.
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_large">
+                                File Explorer Page Configuration
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_large">
+                                File Upload Page Configuration
+                            </p><br/>
+
+                            <p>
+                                <b>12. BT Account Payable Configuration</b>
+                            </p>
+                            <p class="slds-m-top_small slds-m-left_large">
+                                Configuration options are not available
+                            </p><br/>
+
+                                <p>
+                                    <b>13. BT Training</b>
+                                </p>
+                                <p class="slds-m-top_small slds-m-left_large">
+                                It just displays photos about how to create a user, account, and contact in Salesforce
+                            </p><br/>
+
+                            <p>
+                                <b>14. BT Pre Qualification Configuration</b>
+                            </p>
+                            <p class="slds-m-top_small slds-m-left_large">
+                                Change PreQual Type
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_x-large">
+                                If we update Change PreQual Type, then update the ‘Is Multiple PreQual’ as per this setting, and If ‘Is Multiple PreQual’ is true then generate the link for the site Url.
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_large">
+                                Save Files in Box
+                                </p>
+                                <p class="slds-m-top_small slds-m-left_x-large">
+                                If we update the Save Files in Box, then update the Enable Box of the PreQual Setting.
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_large">
+                                Template Name
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_x-large">
+                                These email templates are visible when the user sends a Pre-Qual email.
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_large">
+                                Select Logo
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_x-large">
+                                This logo is used in the Pre-Qual email templates preview.
+                            </p><br/>
+
+                            <p>
+                                <b>15. BT RFI Configuration</b>
+                            </p>
+                            <p class="slds-m-top_small slds-m-left_large"></p>
+                                Using Communities
+                                <p class="slds-m-top_small slds-m-left_large">
+                                Using Email
+                                </p>
+                                <p class="slds-m-top_small slds-m-left_large">
+                                RFI Default Queue 
+                                </p>
+                                <p class="slds-m-top_small slds-m-left_x-large">
+                                When the user submits RFI, at that time RFI is Assigned to the quote user.
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_large"></p>
+                                RFI Default Owner
+                                <p class="slds-m-top_small slds-m-left_x-large">
+                                While creating the RFQ set the default value of buildertek__RFI_Owner__c field.
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_large">
+                                New RFI Notification Template
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_x-large">
+                                When the user sends RFI to the vendor at that time this template is used.
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_large">
+                                Vendor Notification Template
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_x-large">
+                                This template is used when the user update RFI and sends a notification to the vendor.
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_large">
+                                Recipient Notification Template
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_x-large">
+                                This template is used when the user sends an RFI notification to the vendor.
+                            </p><br/>
+
+                            <p>
+                                <b>16. MSA Configuration</b>
+                            </p>
+                            <p class="slds-m-top_small slds-m-left_large">
+                                This MSA Data is used in BT Pre-Qual and MSA.
+                            </p><br/>
+                                <p>
+                                    <b>17. Stripe Settings</b>
+                                </p>
+                                <p class="slds-m-top_small slds-m-left_large">
+                                This admin setting data is used for Stripe Component
+                            </p><br/>
+
+                            <p>
+                                <b>18. BOM Settings</b>
+                            </p>
+                            <p class="slds-m-top_small slds-m-left_large">
+                                Update Quantity
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_x-large">
+                                There is no use of this setting at this time.
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_large">
+                                Show Fabrication Taxes
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_x-large">
+                                If this option is checked then it displays Gross Cost on manage po lines.
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_large">
+                                Field Section and Filter Section
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_x-large">
+                                Both options and all multi-select picklists are used for displaying fields and applying a different filter on BOM.
+                            </p><br/>
+
+                            <p>
+                                <b>19. Training Settings</b>
+                            </p>
+                            <p class="slds-m-top_small slds-m-left_large">
+                                Contact Info 
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_x-large">
+                                When creating the new Training Setting record add the Contact Info by this setting.
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_large">
+                                Registration Email Template
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_x-large">
+                                When Training Setting is created set the template of Registration Emal Template.
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_large">
+
+                                Registration Completed Email Template
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_x-large">
+                                This template is used when sending the registration completed Email.
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_large">
+                                Course Completed Email Template
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_x-large">
+                                When sending the course completed related Email at that time used this email template.
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_large">
+                                Site URL
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_large">
+                                Logo
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_x-large">
+                                This logo is used in the Training email templates.
+                            </p><br/>
+
+                            <p>
+                                <b>20. BOM Line Settings</b>
+                            </p>
+                            <p class="slds-m-top_small slds-m-left_large">
+                                Field Section (BOM Line Fields)
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_x-large">
+                                This section enables you to add/remove extra fields into the table in the cost adjustment table component. 
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_large">
+                                Filter Section (BOM Line Filters)
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_x-large">
+                                This section enables you to add/remove extra filters above the table in the cost adjustment table component.
+                            </p><br/>
+
+                            <p>
+                                <b>21. BT SOV Configuration</b>
+                            </p>
+                            <p class="slds-m-top_small slds-m-left_large">
+                                Default Account for SOV
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_x-large">
+                                Users can select the Account for SOV Configuration.
+                            </p><br/>
+
+                            <p>
+                                <b>22. BT Payment Application Configuration</b>
+                            </p>
+                            <p class="slds-m-top_small slds-m-left_large">
+                                Require Vendor to Sign Lien Release?
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_x-large">
+                                If Require Vendor to Sign Lien Release is checked then at that time click on submit Continuation Sheet Details it displays the required to send a signed Lien Release with this Payment Application.
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_large">
+                                Enable Change Orders
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_large">
+                                Default Account for PA
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_x-large">
+                                Users can select the Account for PA Configuration.
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_large">
+                                New Payment Application
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_x-large">
+                                When creating a Payment Application record at that time, if New Payment Application is checked, the record type of the New Payment Application name will be displayed.
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_large">
+                                Import Company Accepted Vendor Payment Apps
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_x-large">
+                                When creating a Payment Application record at that time, if New Payment Application is checked, the record type of the New Payment Application name will be displayed.
+                            </p>
+                                <p class="slds-m-top_small slds-m-left_large">
+                                Import Company Approved/Import Customer Approved SOV’s
+                                </p>
+                                <p class="slds-m-top_small slds-m-left_x-large">
+                                When creating a Payment Application record at that time, if New Payment Application is checked, the record type of the New Payment Application name will be displayed.
+                            </p><br/>
+
+                            <p>
+                                <b>23. BT QuickBooks Configuration</b>
+                            </p>
+                            <p class="slds-m-top_small slds-m-left_large">
+                                Use for Authorize QuickBooks integration from our class and make HTTP callout.
+                            </p><br/>
+                            <p style="margin-top: 25px;">
+                                <span class="spanclass"><b>Note: </b> RFQ/RFQ Vendor : When give award to the vendor it will always send an email to the owner of the record as well.</span><br /><br />
+                            </p>
+
+
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab" data-id="tab3">
+                          
+                        </div>
+                    </div>
+                <!-- </div> -->
+                
+            <!-- </div> -->
+        </div>
+    </div>
+
+</template>

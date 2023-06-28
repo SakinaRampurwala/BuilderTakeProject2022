@@ -270,17 +270,27 @@ public without sharing class QuoteTriggerHandler {
                 System.debug('Jaimin : Quote Owner is '+qutrec.OwnerId);
 
                 if(qutrec.buildertek__Status__c == 'Customer Accepted'  && oldQuotesMap.get(qutrec.id).buildertek__Status__c != qutrec.buildertek__Status__c){
-                    string emailbody = '<html><body><h3>  Your Quote has been Accepted </h3>'  + '<br/>';
+                    // string emailbody = '<html><body><h3>  Your Quote has been Accepted </h3>'  + '<br/>';
                     User user = [SELECT Id, Email, Name FROM User WHERE Id =:qutrec.OwnerId];
-                    emailbody += 'Quote Name : '+qutrec.Name+'<br/>';
-                    if(qutrec.buildertek__Customer_Account__c != null){
-                        emailbody += 'Customer Name : '+qutrec.buildertek__Customer_Account__r.Name+'<br/>';
+                    List<EmailTemplate> templates = [SELECT Id, DeveloperName FROM EmailTemplate WHERE DeveloperName = 'QuoteAccepted'];
+                    // emailbody += 'Quote Name : '+qutrec.Name+'<br/>';
+                    // if(qutrec.buildertek__Customer_Account__c != null){
+                    //     emailbody += 'Customer Name : '+qutrec.buildertek__Customer_Account__r.Name+'<br/>';
+                    // }
+                    // if(qutrec.buildertek__Grand_Total__c != null){
+                    //     emailbody += 'Quote Amount : '+qutrec.buildertek__Grand_Total__c+'<br/>';
+                    // }
+                    // if(qutrec.OwnerId != null){
+                    //     emailbody += 'Quote Owner : '+user.Name+'<br/></body></html>';
+                    // }
+                    Id tempID = null;
+                    if (!templates.isEmpty()) {
+                        tempID = templates[0].Id;
                     }
-                    if(qutrec.buildertek__Grand_Total__c != null){
-                        emailbody += 'Quote Amount : '+qutrec.buildertek__Grand_Total__c+'<br/>';
-                    }
-                    if(qutrec.OwnerId != null){
-                        emailbody += 'Quote Owner : '+user.Name+'<br/></body></html>';
+                
+                    if (tempID == null) {
+                        System.debug('Email template not found');
+                        return;
                     }
 
                     string email = qutrec.OwnerId;
@@ -291,16 +301,19 @@ public without sharing class QuoteTriggerHandler {
                     if(email != null && email != ''){
                         Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
                         mail.setToAddresses(new String[] {email});
-                        // mail.setSenderDisplayName('Admin');
-                        if ( owea.size() > 0 ) {
+                        if (owea.size() > 0) {
                             mail.setOrgWideEmailAddressId(owea.get(0).Id);
                         }
-                        mail.setSubject('Quote Accepted (Quote Id : '+qutrec.Id+')');
-                        mail.setHtmlBody(emailbody);
-                        // mail.setSubject('Quote Accepted (Quote Id)');
-                        // mail.setHtmlBody('emailbody');
-                        Messaging.sendEmail(new Messaging.SingleEmailMessage[] {mail});
-                        System.debug('Email sent to '+email);
+                        // mail.setSubject('Quote Accepted (Quote Id : '+qutrec.Id+')');
+                        // mail.setHtmlBody(emailbody);
+                        mail.setTemplateId(tempID);
+                        mail.setSaveAsActivity(false);
+                        // Set the related record ID
+                        mail.setWhatId(qutrec.Id);
+                        mail.setTargetObjectId(qutrec.OwnerId);
+                        System.debug('mail-->' + mail);
+                        Messaging.sendEmail(new Messaging.SingleEmailMessage[] { mail });
+                        System.debug('Email sent to ' + email);
                     }
                 }
 

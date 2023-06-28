@@ -646,6 +646,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
   droprow(e) {
     var taskIdList = this.scheduleItemIdsList;
     var taskList = this.scheduleItemsDataList;
+    console.log('takslist droprow:-'+taskList);
     var data = e.dataTransfer.getData("text");
     // Find the record ID by crawling up the DOM hierarchy
 
@@ -1714,6 +1715,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
           }
         }
       }
+      console.log('scheduleDataList after logic changed ',{scheduleDataList});
       this.scheduleItemsDataList = scheduleDataList;
       var formatedSchData = formatData(
         this.scheduleData,
@@ -1810,7 +1812,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
           ],
         },
       ];
-
       const project = new bryntum.gantt.ProjectModel({
         //enableProgressNotifications : true,
         calendar: data.project.calendar,
@@ -2007,6 +2008,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
                   );
                 }
               } else {
+                console.log('record.record.startDate ',record.record.startDate);
                 var sdate = new Date(record.record.startDate);
                 return (
                   months[sdate.getMonth()] +
@@ -2048,17 +2050,36 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
                 // console.log('Record of endDate =>',{record});
                 // console.log('duration>>>', record.record._data.duration);
                 // console.log('type>>>', record.record._data.type);
-                // console.log('name>>>', record.record._data.name);
                 if (
                   record.record._data.duration >= 1 &&
                   record.record._data.type == "Task" &&
                   record.record._data.name != "Milestone Complete"
-                ) {
-                  // console.log('In if conditon for enddate');
-                  var start;
-                  var endDate = new Date(record.value);
+                  ) {
+                    // console.log('In if conditon for enddate');
+                    var start;
+                    var endDate = new Date(record.value);
+                  console.log('record>>>', record.record);
+                  console.log('name>>>', record.record._data.name);
+                  console.log('ennDate ',endDate);
                   var start = new Date(record.record.startDate.getTime());
+
+                  let inputDate = record.record.originalData.startDate;
+                  console.log('inputDate ',inputDate);
+                  let parts = inputDate.split("-"); // Split the input date into year, month, and day parts
+
+                  let year = parts[0];
+                  let month = parseInt(parts[1]) - 1; // Months in JavaScript are zero-based, so subtract 1
+                  let day = parts[2];
+
+                  var formate = new Date(year, month, day).toString();
+                  console.log('formate ',formate);
+
+
+                  console.log('start ',start);
+                  console.log('startDate ',record.record.startDate);
+                  console.log('startDate ',record.record.originalData.startDate);
                   var duration = record.record.duration;
+                  console.log('duration ',duration);
                   var eDate = new Date(start);
                   var eDatebefore = endDate;
                   // newly added
@@ -3278,9 +3299,27 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
       }, 5000);
     }
   }
-  // saveWbsData(wbsValue){
-  //   console.log({wbsValue});
 
-  // }
+  onDrop({ context }) {
+    const
+        { gantt, grid }                                        = this,
+        { valid, highlightRow, parent, insertBefore, grabbed } = context;
+
+    // If drop was done in a valid location, add the task to Gantt's task store
+    if (valid) {
+        const unplannedTask = grid.getRecordFromElement(grabbed);
+
+        // Remove unplanned task from its current store
+        grid.store.remove(unplannedTask);
+
+        // Insert it to Gantt's task store
+        parent.insertChild(unplannedTask, insertBefore);
+    }
+
+    gantt.disableScrollingCloseToEdges(gantt.timeAxisSubGrid);
+
+    highlightRow?.removeCls('drag-from-grid-target-task-before');
+    gantt.features.taskTooltip.disabled = false;
+}
 
 }

@@ -919,7 +919,7 @@
 
                         <!-- <div class="slds mainTablediv"> -->
                         <div class="slds-scrollable">
-                            <div>
+                            <div class="divcont">
                                 <!--<div class="slds-scrollable" style="width:100%;height: 35rem;">-->
 
                                 <table

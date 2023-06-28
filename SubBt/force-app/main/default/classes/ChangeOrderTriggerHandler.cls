@@ -101,7 +101,9 @@ public without sharing class ChangeOrderTriggerHandler {
                 budgetLine.buildertek__Budget__c = newCO.buildertek__Budget__c;
                 budgetLine.buildertek__Unit_Price__c = newCO.buildertek__Total_Costs__c;
                 // budgetLine.buildertek__Markup__c = (newCO.buildertek__Margin__c / (1 - newCO.buildertek__Margin__c));
-                budgetLine.buildertek__Markup__c = (newCO.buildertek__Calculated_Margin__c/100)/(1-(newCO.buildertek__Calculated_Margin__c/100))*100;
+                if(newCO.buildertek__Calculated_Margin__c != null){
+                    budgetLine.buildertek__Markup__c = (newCO.buildertek__Calculated_Margin__c/100)/(1-(newCO.buildertek__Calculated_Margin__c/100))*100;
+                }
                 budgetLine.buildertek__Quantity__c = 1;
                 budgetLine.buildertek__Group__c = budgetLineGroupId;
                 budgetLineMap.put(newCO.Id, budgetLine);

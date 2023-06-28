@@ -611,12 +611,12 @@ public class BT_NewGanttChartCls{
     public static void insertUpdateTaskList(String taskJSON, Boolean isUpdate){
 
         List<buildertek__Project_Task__c> updatedprojecttaskList = (List<buildertek__Project_Task__c>)System.JSON.deserialize(taskJSON, List<buildertek__Project_Task__c>.class);
-        // List<buildertek__Project_Task__c> newUpdateList = new List<buildertek__Project_Task__c>();
-        // Map<Id, buildertek__Project_Task__c> projectTaskMap = new Map<Id, buildertek__Project_Task__c>();
-        // for (buildertek__Project_Task__c pt : updatedprojecttaskList) {
-        //     System.debug('Old check project task in save changes + '+pt);
-        //     projectTaskMap.put(pt.Id, pt);
-        // }
+        List<buildertek__Project_Task__c> newUpdateList = new List<buildertek__Project_Task__c>();
+        Map<Id, buildertek__Project_Task__c> projectTaskMap = new Map<Id, buildertek__Project_Task__c>();
+        for (buildertek__Project_Task__c pt : updatedprojecttaskList) {
+            System.debug('Old check project task in save changes + '+pt);
+            projectTaskMap.put(pt.Id, pt);
+        }
 
         // for (buildertek__Project_Task__c pt : updatedprojecttaskList) {
         //     if (pt.buildertek__Dependency__c != null) {     
@@ -624,14 +624,14 @@ public class BT_NewGanttChartCls{
         //     }
         // }
 
-        // for (buildertek__Project_Task__c pt : updatedprojecttaskList) {
-        //     System.debug('New check project task in save changes + '+pt);
-        // }
+        for (buildertek__Project_Task__c pt : updatedprojecttaskList) {
+            System.debug('New check project task in save changes + '+pt);
+        }
 
-        // if (isUpdate){
-        //     upsert updatedprojecttaskList;
-        // }
-        // System.debug(taskJSON);
+        if (isUpdate){
+            upsert updatedprojecttaskList;
+        }
+        System.debug(taskJSON);
     }
 
     @AuraEnabled

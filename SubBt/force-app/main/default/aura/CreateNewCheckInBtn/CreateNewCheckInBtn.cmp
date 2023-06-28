@@ -41,9 +41,9 @@
         }
 
         .slds-modal__header {
-            background: #272735 !important;
+            background: rgb(255, 255, 255) !important;
             /* border-radius: 17px 17px 0px 0px; */
-            color: #FFFFFF !important;
+            color: rgb(0, 0, 0) !important;
             font-family: 'Verdana' !important;
             border: none !important;
             font-weight: 400 !important;
@@ -52,7 +52,7 @@
         }
 
         .slds-input {
-            border: 1px solid #D1D1D1;
+            border: 1px solid #D1D1D1 !important;
             border-radius: 8px;
             font-family: 'Verdana' !important;
             font-size: 14px;
@@ -95,6 +95,20 @@
             padding:0px;
         }
 
+        .slds-textarea{
+            border: 1px solid #D1D1D1 !important;
+            border-radius: 8px;
+            <!-- font-family: 'Verdana' !important;
+            font-size: 14px;
+            color: #6F6F6F;
+            height: 36px; -->
+        }
+
+        .slds-combobox__input{
+            border: 1px solid #D1D1D1 !important;
+            border-radius: 8px;
+        }
+
     </aura:html>
 
     <aura:if isTrue="{!v.Spinner}">
@@ -111,6 +125,7 @@
     <div class="slds-modal__header md-header" style="font-size:17px;">
         New Check-In
     </div>
+    <hr style="margin: 0px !important;"></hr>
 
     <div class="slds-modal__content slds-p-around--large">
         <lightning:recordEditForm aura:id="recordViewForm" objectApiName="buildertek__Check_In__c">
@@ -128,7 +143,7 @@
                     <lightning:inputField aura:id="checkInNotes" fieldName="buildertek__Notes__c" value="{!v.checkInRec.buildertek__Notes__c}" variant="label-hidden" />
                     
                     <label for="checkInDaysLost" class="lbl-tx">Days Lost</label>
-                    <lightning:inputField aura:id="checkInDaysLost" fieldName="buildertek__Days_Lost__c" value="{!v.checkInRec.buildertek__Days_Lost__c}" variant="label-hidden" />
+                    <lightning:inputField  aura:id="checkInDaysLost" fieldName="buildertek__Days_Lost__c" value="{!v.checkInRec.buildertek__Days_Lost__c}" variant="label-hidden" />
                 </div>
                 <div class="slds-col slds-size_1-of-2">
                     <label for="checkInProject" class="lbl-tx"><span class="cross">*</span> &nbsp;Project</label>

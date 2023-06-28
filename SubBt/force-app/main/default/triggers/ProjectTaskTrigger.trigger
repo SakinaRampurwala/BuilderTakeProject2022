@@ -59,7 +59,7 @@ trigger ProjectTaskTrigger on buildertek__Project_Task__c(after insert, after up
             // }
             System.debug('In the update trigger');
             if (Trigger.isAfter){
-                handler.updateChildDatesWithPredecessor(Trigger.new, Trigger.newMap);
+                // handler.updateChildDatesWithPredecessor(Trigger.new, Trigger.newMap);
                 handler.OnAfterUpdate(Trigger.old, Trigger.new, Trigger.newMap, Trigger.oldMap);
                 handler.OnAfterUpdateOriginalstartandEndDates(Trigger.old, Trigger.new, Trigger.newMap, trigger.oldMap);
                 handler.insertUpdateMilestones(Trigger.new, Trigger.newMap);
