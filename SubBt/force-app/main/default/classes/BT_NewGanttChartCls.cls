@@ -430,7 +430,7 @@ public class BT_NewGanttChartCls{
             newTask.buildertek__Schedule__c = scheduleId;
             newTask.buildertek__Duration__c = updatedprojecttask.buildertek__Duration__c;
             newTask.buildertek__Phase__c = updatedprojecttask.buildertek__Phase__c;
-            // newTask.buildertek__Lag__c = updatedprojecttask.buildertek__Lag__c;
+            newTask.buildertek__Lag__c = updatedprojecttask.buildertek__Lag__c;
             newTask.buildertek__Type__c = updatedprojecttask.buildertek__Type__c;
             newTask.buildertek__Indent_Task__c = updatedprojecttask.buildertek__Indent_Task__c;
             if (updatedprojecttask.buildertek__Order__c != null){
@@ -618,11 +618,11 @@ public class BT_NewGanttChartCls{
             projectTaskMap.put(pt.Id, pt);
         }
 
-        // for (buildertek__Project_Task__c pt : updatedprojecttaskList) {
-        //     if (pt.buildertek__Dependency__c != null) {     
-        //         pt.buildertek__Lag__c = ProjectTaskTriggerHandler.calculateDuration(projectTaskMap.get(pt.buildertek__Dependency__c).buildertek__Finish__c, pt.buildertek__Start__c)-1;
-        //     }
-        // }
+        for (buildertek__Project_Task__c pt : updatedprojecttaskList) {
+            if (pt.buildertek__Dependency__c != null) {     
+                pt.buildertek__Lag__c = ProjectTaskTriggerHandler.calculateDuration(projectTaskMap.get(pt.buildertek__Dependency__c).buildertek__Finish__c, pt.buildertek__Start__c)-2;
+            }
+        }
 
         for (buildertek__Project_Task__c pt : updatedprojecttaskList) {
             System.debug('New check project task in save changes + '+pt);

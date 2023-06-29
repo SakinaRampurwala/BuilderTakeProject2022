@@ -213,7 +213,34 @@
                 quotelineList.push(quoteLineWrapperList[i].QuoteLine);                
             }
         }
-        // console.log('quotelinelist',quotelineList);
+        console.log('quotelinelist',quotelineList);
+        
+        debugger;
+
+        //iterate over quotelineList and check if Name is blank then show error
+        var isNameBlank = false;
+        for(var i=0;i<quotelineList.length;i++){
+            if(quotelineList[i].Name == ''){
+                isNameBlank = true;
+                break;
+            }
+        }
+        if(isNameBlank){
+            var toastEvent = $A.get("e.force:showToast");
+            toastEvent.setParams({
+                title: 'Error',
+                message: 'Please enter Description for all Quote Lines.',
+                duration: ' 3000',
+                key: 'info_alt',
+                type: 'error',
+                mode: 'pester'
+            });
+            toastEvent.fire();
+            // helper.createQuoteLineWrapperList(component, event, helper);
+            component.set('v.loading', false);
+            return;
+        }
+
         if(quotelineList.length > 0){
             helper.saveQuoteLine(component, event, helper, quotelineList);
         }else{

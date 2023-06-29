@@ -4,13 +4,13 @@
    
      
     <a href="{!guestUserSite}/buildertek__RFQAccepted?id={!recordId}&status=true" style="text-decoration: none;">
-        <button type="button" style="background:#cbf195; color:#12181c;font-size: 14px; padding: 11px 25px;border-radius: 32px; text-decoration: none;"> 
+        <button type="button" style="border-radius:17px; background:#6699CC; color:white; font-size: 14px; padding: 7px 40px; text-decoration: none;"> 
             Accept 
         </button>
     </a>
     &nbsp;&nbsp;
     <a href="{!guestUserSite}/buildertek__RFQAccepted?id={!recordId}&status=false"  > <!-- &rfqTovendorStatus={!rfqToVendorStatus} -->
-    <button type="button" style="background:#f1959d; color:#12181c;font-size: 14px; padding: 11px 25px;border-radius: 32px; text-decoration: none;">
+    <button type="button" style="border-radius:17px; background:#6699CC; color:white; font-size: 14px; padding: 7px 40px; text-decoration: none;">
         Decline
     </button>
     </a>

@@ -1,15 +1,51 @@
-import { LightningElement, track } from 'lwc';
+import { LightningElement, track, wire } from 'lwc';
 import { loadStyle, loadScript } from 'lightning/platformResourceLoader';
 import PDF_Resource from '@salesforce/resourceUrl/Releasenote';
+import convertBlobToHTML from '@salesforce/apex/PDFController.convertBlobToHTML';
 
 export default class Qf_guide2 extends LightningElement {
   @track spinnerdatatable = false;
   error_toast = true;
   pdfUrl;
+  pdfUrls;
+  pdfBlob;
+  htmlBody;
 
-    connectedCallback() {
-        this.pdfUrl = PDF_Resource;
+  connectedCallback() {
+    document.title = 'BT Admin Configuration';
+  }
+
+  // loadPdf() {
+  //   fetch(PDF_Resource)
+  //     .then(response => response.blob())
+  //     .then(blob => {
+  //       this.pdfBlob = blob;
+  //       console.log("log" , this.pdfBlob);
+  //       // this.convertBlobToHTML();
+  //     })
+  //     .catch(error => {
+  //       console.error('Error loading PDF:', error);
+  //     });
+  // }
+  @wire(convertBlobToHTML)
+  wiredConvertBlobToHTML({ error, data }) {
+    if (data) {
+      this.pdfUrl = data;
+      console.log("HTML Body:", this.pdfUrl);
+      // this.createPdfUrl();
+      // Perform any additional operations with the HTML body
+    } else if (error) {
+      console.error('Error converting Blob to HTML:', error);
     }
+  }
+
+  createPdfUrl() {
+    if (this.pdfUrls) {
+      const base64data = btoa(String.fromCharCode(...new Uint8Array(this.pdfUrls)));
+      this.pdfUrl = `data:application/pdf;base64,${this.pdfUrls}`;
+      console.log("PDF URL:", this.pdfUrl);
+    }
+  }
 
   renderedCallback() {
     this.template.querySelectorAll("a").forEach(element => {
@@ -31,7 +67,6 @@ export default class Qf_guide2 extends LightningElement {
     });
   }
 
-
   tabing() {
     const target = "tab1";
     this.template.querySelectorAll("a").forEach(tabel => {
@@ -43,6 +78,4 @@ export default class Qf_guide2 extends LightningElement {
     this.template.querySelector('[data-tab-id="' + target + '"]').classList.add("active-tab");
     this.template.querySelector('[data-id="' + target + '"]').classList.add("active-tab-content");
   }
-
-  
 }
