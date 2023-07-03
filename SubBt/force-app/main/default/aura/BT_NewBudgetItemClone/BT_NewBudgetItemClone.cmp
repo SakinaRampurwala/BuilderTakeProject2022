@@ -1,5 +1,6 @@
 <aura:component implements="flexipage:availableForRecordHome,forceCommunity:availableForAllPageTypes,force:hasRecordId,force:lightningQuickAction,lightning:isUrlAddressable" access="global" controller="BudgetDAO">
     <aura:attribute name="isBudgetlinedelete" type="Boolean" default="false" />
+    
     <aura:attribute name="pendingLabel" type="String" default="Pending Po's" access="global" />
     <aura:attribute name="BudgetlinePopupHeader" type="String" default="" />
     <aura:attribute name="budgetItemId" type="String" default="" />
@@ -248,6 +249,8 @@
 
 
 
+
+
     <!-- Pagination End -->
 
 
@@ -270,7 +273,7 @@
     <c:BT_Spinner />
     <div style="background: white;border-radius: 5px;height: 100%;" class="slds-scrollable">
         <aura:if isTrue="{!v.isbudget}">
-            <div class="slds-modal__header" style="font-size:17px;">
+            <div class="slds-modal__header" style="font-size:17px; text-align: left;">
                 <a href="{!'/'+v.budgetId}" onclick="{!c.closetab}">{!v.budgetName} </a>
             </div>
         </aura:if>
@@ -753,7 +756,7 @@
 
 
                             <div class="slds-scrollable" style="height:100%; padding:0px !important;">
-                                <div class="divcont">
+                                <div class="divcont" aura:id="headerDiv">
                                     <!--height:30rem class="slds-scrollable"-->
                                     <table class="slds-table slds-table--bordered slds-max-medium-table--stacked-horizontal slds-m-right_small" aura:id="budgetLineItemTable">
                                         <thead></thead>

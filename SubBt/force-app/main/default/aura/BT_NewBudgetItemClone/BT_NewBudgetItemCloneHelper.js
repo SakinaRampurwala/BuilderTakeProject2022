@@ -1213,6 +1213,7 @@
     },
 
     fetchpricebooks: function (component, event, helper) {
+        console.log('FETCH Pricebook');
         var actions = component.get("c.getpricebooks");
         actions.setParams({
             recordId: component.get("v.recordId"),
@@ -1225,32 +1226,13 @@
                 let projectHavePricebook=result[0].defaultValue;
                 var pricebookOptions = [];
                 if(Object.keys(projectHavePricebook).length !=0){
-                    pricebookOptions.push({ key: projectHavePricebook.Name, value: projectHavePricebook.Id });
-                    result[0].priceWrapList.forEach(function(element){
-                        if(projectHavePricebook.Id !== element.Id){
-                            pricebookOptions.push({ key: element.Name, value: element.Id });
-                        }else{
-                            pricebookOptions.push({ key: "None", value: "" });
-
-                        }
-                    });
                     component.set('v.pricebookName' , projectHavePricebook.Id);
-
-                }else{
-                    pricebookOptions.push({ key: "None", value: "" });
-                    result[0].priceWrapList.forEach(function(element){
-                        pricebookOptions.push({ key: element.Name, value: element.Id });
-                    });
-                    component.set("v.pricebookName", pricebookOptions[0].value);                
-
                 }
-
-                if(component.get('v.pricebookName')!= undefined || component.get('v.pricebookName')!=null){
-                    helper.changeEventHelper(component, event, helper);
-                }
-
-
                 
+                pricebookOptions.push({ key: "None", value: "" });
+                result[0].priceWrapList.forEach(function(element){
+                    pricebookOptions.push({ key: element.Name, value: element.Id });
+                });  
                 component.set("v.pricebookoptions", pricebookOptions);
             }
         });
@@ -2325,5 +2307,22 @@
         // enqueue the Action  
         $A.enqueueAction(action);
     },
+    
+    applyCSSBasedOnURL: function(component) {
+        var isBudget = component.get("v.isbudget");
+        console.log('isBudget',isBudget);
+        var headerDiv = component.find("headerDiv");
+        console.log('headerDiv',headerDiv);
+        
+        // Check if the current URL contains a specific keyword or phrase
+        if (isBudget) {
+            console.log('in if');
+            $A.util.addClass(headerDiv, "divconts");
+        } else {
+            console.log('in else');
+            $A.util.removeClass(headerDiv, "divconts");
+        }
+    },
+    
     
 })

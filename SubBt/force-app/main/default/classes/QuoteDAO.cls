@@ -468,60 +468,52 @@ public with sharing class QuoteDAO{
     /** Developer Name : Sachin Dond
      Date : 24/7/2018
      **/
-    @AuraEnabled
-    public static List<sObject> getProductRecords(String searchKeyWord, String ObjectName, String filter, string parentId, string prodctfamly){
-        system.debug('ObjectName-->' + ObjectName);
-        String searchKey = '%'+ searchKeyWord + '%';
-        List<sObject> returnList = new List<sObject>();
-        // Create a Dynamic SOQL Query For Fetch Record List with LIMIT 5
-        String sQuery;
+    // @AuraEnabled
+    // public static List<sObject> getProductRecords(String searchKeyWord, String ObjectName, String filter, string parentId, string prodctfamly){
+    //     system.debug('ObjectName-->' + ObjectName);
+    //     String searchKey = '%'+ searchKeyWord + '%';
+    //     List<sObject> returnList = new List<sObject>();
+    //     String sQuery;
 
-        if (ObjectName == 'Product2' && parentId != null){
-            list<string> ProdIds = new list<string>();
-            list<pricebookEntry> PElist;
-            system.debug('prodctfamly---->' + prodctfamly);
-            if (prodctfamly != null){
-                PElist = [select id, Product2Id, product2.family
-                          from pricebookEntry
-                          where pricebook2Id = :parentId AND toLabel(product2.family) = :prodctfamly];
-            } else{
-                PElist = [select id, Product2Id, product2.family
-                          from pricebookEntry
-                          where pricebook2Id = :parentId];
-            }
-            System.debug('PElist'+ PElist);
-            for (pricebookEntry PE : PElist){
-                ProdIds.add(PE.Product2Id);
-            }
-            if (filter != null){
-                filter = filter + ' AND Id IN: ProdIds';
-            } else{
-                filter = 'Id IN: ProdIds';
-            }
-        }
-        if (filter != null){
-            sQuery = 'select id, Name from ' + ObjectName + ' where Name LIKE: searchKey AND ' + filter + ' order by Name ASC limit 5';
-        } else{
-            System.debug('Inisde 2nd one');
-            sQuery = 'select id, Name from ' + ObjectName + ' where Name LIKE: searchKey order by Name ASC limit 5';
-        }
-        system.debug('searchKey --------> ' + searchKey);
-        system.debug('sQuery --------> ' + sQuery);
-        List<sObject> lstOfRecords;
-        /*if(ObjectName == 'Product2'){
-         if(Schema.sObjectType.Product2.fields.Id.isAccessible() &&
-         Schema.sObjectType.Product2.fields.Name.isAccessible() ){
-
-         lstOfRecords = Database.query(String.escapeSingleQuotes(sQuery));
-         }
-         }else{*/
-        lstOfRecords = Database.query(sQuery);
-        /*}*/
-        for (sObject obj : lstOfRecords){
-            returnList.add(obj);
-        }
-        return returnList;
-    }
+    //     if (ObjectName == 'Product2' && parentId != null){
+    //         list<string> ProdIds = new list<string>();
+    //         list<pricebookEntry> PElist;
+    //         system.debug('prodctfamly---->' + prodctfamly);
+    //         if (prodctfamly != '--None--'){
+    //             PElist = [select id, Product2Id, product2.family
+    //                       from pricebookEntry
+    //                       where pricebook2Id = :parentId AND toLabel(product2.family) = :prodctfamly];
+    //         } else{
+    //             PElist = [select id, Product2Id, product2.family
+    //                       from pricebookEntry
+    //                       where pricebook2Id = :parentId AND toLabel(product2.family) = :null];
+    //         }
+    //         System.debug('PElist'+ PElist);
+    //         for (pricebookEntry PE : PElist){
+    //             ProdIds.add(PE.Product2Id);
+    //         }
+    //         if (filter != null){
+    //             filter = filter + ' AND Id IN: ProdIds';
+    //         }
+    //          else{
+    //             filter = 'Id IN: ProdIds';
+    //         }
+    //     }
+    //     if (filter != null){
+    //         sQuery = 'select id, Name from ' + ObjectName + ' where Name LIKE: searchKey AND ' + filter + ' order by Name ASC limit 5';
+    //     } else{
+    //         System.debug('Inisde 2nd one');
+    //         sQuery = 'select id, Name from ' + ObjectName + ' where Name LIKE: searchKey order by Name ASC limit 5';
+    //     }
+    //     system.debug('searchKey --------> ' + searchKey);
+    //     system.debug('sQuery --------> ' + sQuery);
+    //     List<sObject> lstOfRecords;
+    //     lstOfRecords = Database.query(sQuery);
+    //     for (sObject obj : lstOfRecords){
+    //         returnList.add(obj);
+    //     }
+    //     return returnList;
+    // }
     
     @AuraEnabled
     public static List<sObject> getTasksInSchedule(String searchKeyWord, String ObjectName, String filter, string parentId){
@@ -2458,6 +2450,68 @@ public with sharing class QuoteDAO{
 
         @AuraEnabled
         public Decimal Discount;
+    }
+
+    @AuraEnabled
+    public static List<sObject> getProductRecords(String searchKeyWord, String ObjectName, String filter, string parentId, string prodctfamly){
+        system.debug('ObjectName-->' + ObjectName);
+        String searchKey = '%'+ searchKeyWord + '%';
+        List<sObject> returnList = new List<sObject>();
+        String sQuery;
+        list<string> ProdIds = new list<string>();
+        list<pricebookEntry> PElist;
+        System.debug('parentId'+parentId);
+        System.debug(parentId != '');
+        System.debug(parentId != null);
+
+
+        if (ObjectName == 'Product2' && parentId != null && parentId != ''){
+            if(prodctfamly == '--None--'){
+                PElist = [select id, Product2Id, product2.family from pricebookEntry  where pricebook2Id = :parentId AND toLabel(product2.family) = :null];
+            }else{
+
+                PElist = [select id, Product2Id, product2.family from pricebookEntry  where pricebook2Id = :parentId AND toLabel(product2.family) = :prodctfamly];
+            }
+            for (pricebookEntry PE : PElist){
+                ProdIds.add(PE.Product2Id);
+            }
+            if (filter != null){
+                filter = filter + ' AND Id IN: ProdIds';
+            }else{
+                filter = 'Id IN: ProdIds';
+            }
+            
+        // }else if(ObjectName == 'Product2' && prodctfamly == '--None--' && parentId == null){
+
+        //     PElist = [select id, Product2Id, product2.family from pricebookEntry where product2.family = null];   
+        //     for (pricebookEntry PE : PElist){
+        //         ProdIds.add(PE.Product2Id);
+        //     }   
+        //     if (filter != null){
+        //         filter = filter + ' AND Id NOT IN: ProdIds';
+        //     }else{
+        //         filter = 'Id NOT IN: ProdIds';
+        //     }      
+        }else if(ObjectName == 'Product2' && (parentId == null || parentId == '')){
+
+            PElist = [select id, Product2Id, product2.family from pricebookEntry];   
+            for (pricebookEntry PE : PElist){
+                ProdIds.add(PE.Product2Id);
+            }   
+            if (filter != null){
+                filter = filter + ' AND Id NOT IN: ProdIds';
+            }else{
+                filter = 'Id NOT IN: ProdIds';
+            }      
+        }
+
+        sQuery = 'select id, Name from ' + ObjectName + ' where Name LIKE: searchKey AND ' + filter + ' order by Name ASC limit 5';
+        List<sObject> lstOfRecords = Database.query(sQuery);
+        for (sObject obj : lstOfRecords){
+            returnList.add(obj);
+        }
+        System.debug('returnList'+ returnList);
+        return returnList;
     }
 
     

@@ -10,6 +10,7 @@
             component.set("v.additionalUrl", additionalUrl);
         }
 
+        console.log({additionalUrl});
 
         var workspaceAPI = component.find("workspace");
         workspaceAPI.getEnclosingTabId().then((response) => {
@@ -155,6 +156,7 @@
 
         });
         $A.enqueueAction(btadminaction);
+        helper.applyCSSBasedOnURL(component);
 
     },
 
@@ -250,6 +252,7 @@
             .catch(function (error) {
                 console.log(error);
             });
+       
     },
 
 
