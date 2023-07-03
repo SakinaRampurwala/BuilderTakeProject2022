@@ -98,6 +98,7 @@
             compEvent.setParams({"recordByEvent" : {},"recordByEventstring": component.get("v.objectAPIName") });  
             compEvent.fire();
         }
+        component.set('v.childValue' , '');
          
         
     },

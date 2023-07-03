@@ -471,7 +471,7 @@ public with sharing class QuoteDAO{
     @AuraEnabled
     public static List<sObject> getProductRecords(String searchKeyWord, String ObjectName, String filter, string parentId, string prodctfamly){
         system.debug('ObjectName-->' + ObjectName);
-        String searchKey = searchKeyWord + '%';
+        String searchKey = '%'+ searchKeyWord + '%';
         List<sObject> returnList = new List<sObject>();
         // Create a Dynamic SOQL Query For Fetch Record List with LIMIT 5
         String sQuery;
@@ -489,6 +489,7 @@ public with sharing class QuoteDAO{
                           from pricebookEntry
                           where pricebook2Id = :parentId];
             }
+            System.debug('PElist'+ PElist);
             for (pricebookEntry PE : PElist){
                 ProdIds.add(PE.Product2Id);
             }
@@ -501,6 +502,7 @@ public with sharing class QuoteDAO{
         if (filter != null){
             sQuery = 'select id, Name from ' + ObjectName + ' where Name LIKE: searchKey AND ' + filter + ' order by Name ASC limit 5';
         } else{
+            System.debug('Inisde 2nd one');
             sQuery = 'select id, Name from ' + ObjectName + ' where Name LIKE: searchKey order by Name ASC limit 5';
         }
         system.debug('searchKey --------> ' + searchKey);

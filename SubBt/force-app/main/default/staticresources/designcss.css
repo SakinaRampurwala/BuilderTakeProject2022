@@ -3,3 +3,6 @@ lightning-accordion-section .slds-accordion__summary-action {
     font-family: sans-serif !important;
     font-weight: 500 !important;
 }
+input {
+    line-height: 40px !important;
+}

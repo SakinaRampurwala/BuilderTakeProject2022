@@ -27,7 +27,7 @@
                     helper.showToast("Error", "Error", result[1], "5000");
                 }
             } else {
-                helper.showToast("Success", "Success", "New PO Line Created.", "5000");
+                helper.showToast("Success", "Success", "New PO Created.", "5000");
                 var navEvent = $A.get("e.force:navigateToSObject");
                 navEvent.setParams({
                     "recordId": result[1],

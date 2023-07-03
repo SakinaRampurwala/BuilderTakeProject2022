@@ -19,7 +19,7 @@ public with sharing class PreviewBillingsController{
         }
         return temrec;
     }
-    
+
     @AuraEnabled
     public static string getInvoiceLines(String recordId, String templateId){
         string templateBody = '';
@@ -41,7 +41,7 @@ public with sharing class PreviewBillingsController{
         list<Messaging.SingleEmailMessage> msgList1 = new List<Messaging.SingleEmailMessage>();
         List<String> templateList = new List<String>();
         Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
-        
+
         string theTemplate = [SELECT Id
                               FROM EmailTemplate
                               WHERE Id = :templateId].Id;
@@ -60,15 +60,15 @@ public with sharing class PreviewBillingsController{
         msgList.add(email);
 
         System.debug('msgList=='+msgList);
-        
+
         Messaging.SendEmailResult[] r = Messaging.sendEmail(new Messaging.SingleEmailMessage[]{email});
         System.debug('Email Results isSuccess = ' + r[0].IsSuccess());
         Database.rollback(sp);
         for (Messaging.SingleEmailMessage emailNew : msgList){
             templateBody1 = emailNew.getHTMLBody();
         }
-        
-        
+
+
         /*Messaging.SingleEmailMessage email1 = new Messaging.SingleEmailMessage();
         string theTemplate1 = [SELECT Id FROM EmailTemplate WHERE Name = 'BT Proposal Images'].Id;
         email1.setTemplateId(theTemplate1);
@@ -88,7 +88,7 @@ public with sharing class PreviewBillingsController{
         system.debug('Final templateBody ----------> ' + templateBody);
         return templateBody;
     }
-    
+
     @AuraEnabled
     public static void updateMemo(String recordId, String memoValue){
         if(String.isNotBlank(recordId)){
@@ -109,7 +109,7 @@ public with sharing class PreviewBillingsController{
             }
         }
     }
-    
+
     /*   @AuraEnabled
         public static String sendProposal(String htmlBody, String recordId, String templateId, List<String> to, List<String> cc){
         try{
@@ -138,7 +138,7 @@ public with sharing class PreviewBillingsController{
         for (Contact con : ccConList){
         strCC.add(con.email);
         }
-        } 
+        }
         List<Messaging.SingleEmailMessage> mails = new List<Messaging.SingleEmailMessage>();
         Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
         system.debug('strTO ---------> ' + strTO);
@@ -218,13 +218,13 @@ public with sharing class PreviewBillingsController{
         return message;
         }
         } */
-    
+
     @AuraEnabled
     public static String sendProposal(String htmlBody, String recordId, String templateId, List<String> to, List<String> cc){
         try{
-            
+
             List<Contact> conList =  [Select Id,Name,email from Contact where Id IN :to and email != null];
-            
+
             String subject = 'Invoice';
             String body;
             List<Messaging.SingleEmailMessage> mails = new List<Messaging.SingleEmailMessage>();
@@ -233,11 +233,11 @@ public with sharing class PreviewBillingsController{
             for(Contact myContact : conList)
             {
                 Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
-                
-                
+
+
                 sendTo.add(myContact.Email);
                 mail.setToAddresses(sendTo);
-                
+
                 EmailServicesAddress eServices;
                 if (Schema.sObjectType.EmailServicesAddress.fields.Id.isAccessible() && Schema.sObjectType.EmailServicesAddress.fields.AuthorizedSenders.isAccessible() && Schema.sObjectType.EmailServicesAddress.fields.EmailDomainName.isAccessible() && Schema.sObjectType.EmailServicesAddress.fields.LocalPart.isAccessible() && Schema.sObjectType.EmailServicesAddress.fields.IsActive.isAccessible()){
                     eServices = [SELECT Id, AuthorizedSenders, EmailDomainName, IsActive, LocalPart
@@ -246,18 +246,18 @@ public with sharing class PreviewBillingsController{
                 }
                 string fromAddress = eServices.LocalPart + '@' + eServices.EmailDomainName;
                 mail.setReplyTo(fromAddress);
-                
-                
+
+
                 for(Contact myccContact : [Select Id, email from Contact where Id IN :cc and email != null]){
-                    
+
                     ccTo.add(myccContact.email);
-                    
+
                 }
-                
+
                 mail.setCcAddresses(ccTo);
                 subject = subject + '[ref:' + recordId + ']';
                 mail.setSubject(subject);
-                
+
                 body = '<html><body>Hello '+myContact.Name+',<br/><br/>Please review your attached Invoice.</body>  </html>';
                 mail.setHtmlBody(body);
                 List<Messaging.Emailfileattachment> fileAttachments = new List<Messaging.Emailfileattachment>();
@@ -269,7 +269,7 @@ public with sharing class PreviewBillingsController{
                 mails.add(mail);
             }
             Messaging.SendEmailResult[] results = Messaging.sendEmail(mails);
-            
+
             String message = 'Success';
             if (results.size() > 0){
                 if (results[0].isSuccess()){
@@ -289,7 +289,7 @@ public with sharing class PreviewBillingsController{
                             CCaddresses += ';';
                         }
                         i++;
-                    } 
+                    }
                     EmailMessage caseEmailMessage = new EmailMessage();
                     caseEmailMessage.fromAddress = UserInfo.getUserEmail();
                     caseEmailMessage.ToAddress = Toaddresses;
@@ -304,37 +304,37 @@ public with sharing class PreviewBillingsController{
                     caseEmailMessage.status = '5';
                     caseEmailMessage.RelatedToId = recordId;
                     caseEmailMessage.buildertek__Subject__c = 'Re: ' + subject;
-                    insert caseEmailMessage; 
-                    
+                    insert caseEmailMessage;
+
                     EmailMessageRelation emr = new EmailMessageRelation();
                     emr.emailMessageId = caseEmailMessage.id;
                     emr.relationId = UserInfo.getUserId(); // user id / contact Id of the sender
                     emr.relationType = 'FromAddress';
                     emr.relationAddress = caseEmailMessage.fromAddress;
-                    insert emr; 
+                    insert emr;
                 }
             }
-            
+
             return message;
         }
-        
-        
-        
-        
+
+
+
+
         catch (Exception exp){
             system.debug('Error Message --------> ' + exp);
             String message = exp.getMessage();
             return message;
         }
     }
-    
+
     private static Blob setAttachmentBody(String recordId, String templateId){
         pagereference pdf;
         pdf = Page.buildertek__BT_GeneratePdf;
         pdf.getParameters().put('recordId', recordId);
         pdf.getParameters().put('templateId', templateId);
         pdf.setRedirect(true);
-        
+
         Blob blobbody = !Test.isRunningTest() ? pdf.getContent() : Blob.ValueOf('dummy text');
         return blobbody;
     }

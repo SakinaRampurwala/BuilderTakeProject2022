@@ -41,7 +41,7 @@ public with sharing class Create_PO_From_Option {
                         update option;
     
                         output.add('Success');
-                        output.add(poLine.Id);
+                        output.add(option.buildertek__Purchase_Order__c);
                         return output;
                     } else{
                         output.add('Error');

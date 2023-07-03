@@ -1,52 +1,62 @@
 import { LightningElement, track, wire } from 'lwc';
 import { loadStyle, loadScript } from 'lightning/platformResourceLoader';
 import PDF_Resource from '@salesforce/resourceUrl/Releasenote';
-import convertBlobToHTML from '@salesforce/apex/PDFController.convertBlobToHTML';
+import Resource from '@salesforce/resourceUrl/Release';
+import getStaticResourceDescription from '@salesforce/apex/PDFController.getStaticResourceDescription';
+import designcss from '@salesforce/resourceUrl/designcss';
+import sendemail from '@salesforce/apex/PDFController.sendemail';
+import createCase from '@salesforce/apex/PDFController.createCase';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import { NavigationMixin } from 'lightning/navigation';
 
-export default class Qf_guide2 extends LightningElement {
+
+export default class Qf_guide2 extends NavigationMixin(LightningElement) {
   @track spinnerdatatable = false;
   error_toast = true;
   pdfUrl;
-  pdfUrls;
-  pdfBlob;
-  htmlBody;
+  img;
+  descriptionValue;
+  activeSections = ['A'];
+  activeSectionsMessage = '';
+  supportname;
+  email;
+  subject;
+  message;
+  name_msg = true;
+  email_msg = true;
+  Message_msg = true;
+  subject_msg = true;
+
 
   connectedCallback() {
-    document.title = 'BT Admin Configuration';
+    this.img = Resource;
+    this.pdfUrl = PDF_Resource;
+    document.title = 'BT Home Page';
+    loadStyle(this, designcss);
   }
+  openPDF() {
+    window.open(this.pdfUrl);
+  }
+  handleSectionToggle(event) {
+    const openSections = event.detail.openSections;
 
-  // loadPdf() {
-  //   fetch(PDF_Resource)
-  //     .then(response => response.blob())
-  //     .then(blob => {
-  //       this.pdfBlob = blob;
-  //       console.log("log" , this.pdfBlob);
-  //       // this.convertBlobToHTML();
-  //     })
-  //     .catch(error => {
-  //       console.error('Error loading PDF:', error);
-  //     });
-  // }
-  @wire(convertBlobToHTML)
-  wiredConvertBlobToHTML({ error, data }) {
-    if (data) {
-      this.pdfUrl = data;
-      console.log("HTML Body:", this.pdfUrl);
-      // this.createPdfUrl();
-      // Perform any additional operations with the HTML body
-    } else if (error) {
-      console.error('Error converting Blob to HTML:', error);
+    if (openSections.length === 0) {
+      this.activeSectionsMessage = 'All sections are closed';
+    } else {
+      this.activeSectionsMessage =
+        'Open sections: ' + openSections.join(', ');
     }
   }
-
-  createPdfUrl() {
-    if (this.pdfUrls) {
-      const base64data = btoa(String.fromCharCode(...new Uint8Array(this.pdfUrls)));
-      this.pdfUrl = `data:application/pdf;base64,${this.pdfUrls}`;
-      console.log("PDF URL:", this.pdfUrl);
-    }
+  
+  @wire(getStaticResourceDescription)
+  wiredDescription({ error, data }) {
+      if (data) {
+          this.descriptionValue = data;
+          console.log(this.descriptionValue);
+      } else if (error) {
+          console.error('Error fetching static resource description:', error);
+      }
   }
-
   renderedCallback() {
     this.template.querySelectorAll("a").forEach(element => {
       element.addEventListener("click", evt => {
@@ -67,6 +77,7 @@ export default class Qf_guide2 extends LightningElement {
     });
   }
 
+
   tabing() {
     const target = "tab1";
     this.template.querySelectorAll("a").forEach(tabel => {
@@ -78,4 +89,104 @@ export default class Qf_guide2 extends LightningElement {
     this.template.querySelector('[data-tab-id="' + target + '"]').classList.add("active-tab");
     this.template.querySelector('[data-id="' + target + '"]').classList.add("active-tab-content");
   }
+
+  Support_name(event) {
+    this.supportname = event.target.value;
+    this.name_msg = true;
+  }
+
+  Support_email(event) {
+    this.email = event.target.value;
+    this.email_msg = true;
+  }
+  Support_message(event) {
+    this.message = event.target.value;
+    this.Message_msg = true;
+
+  }
+  Support_subject(event) {
+    this.subject = event.target.value;
+    this.subject_msg = true;
+
+  }
+  onSubmit() {
+    var pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    var validation1 = pattern.test(this.email);
+    this.supportname = this.supportname.trim();
+    this.subject = this.subject.trim();
+    this.message = this.message.trim();
+    if ((this.supportname == undefined) || (this.supportname == '')) {
+      this.name_msg = false;
+    } else if (validation1 == false) {
+      this.email_msg = false;
+    } else if (this.subject == undefined || (this.subject == '')) {
+      this.subject_msg = false;
+    } else if (this.message == undefined || (this.message == '')) {
+      this.Message_msg = false;
+    } else {
+      this.email_msg = true;
+      sendemail({
+        name: this.supportname,
+        email: this.email,
+        subject: this.subject,
+        body: this.message
+      })
+        .then(result => {
+          if (result == 'success') {
+            createCase({ subject: this.subject, body: this.message })
+            .then(result => {
+              // Get the newly created record's Id
+              const recordId = result;
+              console.log('recordId',recordId);
+              // Navigate to the newly created record
+              this[NavigationMixin.Navigate]({
+                type: 'standard__recordPage',
+                attributes: {
+                    recordId: recordId,
+                    objectApiName: 'Case',
+                    actionName: 'view'
+                }
+            });
+            })
+            .catch(error => {
+              console.log('error',error);
+            });
+            this.supportname = '';
+            this.email = '';
+            this.message = '';
+            this.subject = '';
+            // const event = new ShowToastEvent({
+            //   title: 'Success',
+            //   message: 'Action was successful!',
+            //   variant: 'success',
+            // });
+            // this.dispatchEvent(event);
+
+
+          } else {
+            const event = new ShowToastEvent({
+              title: 'Error',
+              message: 'An error occurred.',
+              variant: 'error',
+            });
+            this.dispatchEvent(event);
+          }
+        })
+
+
+    }
+
+  }
+  onClear() {
+    this.supportname = '';
+    this.email = '';
+    this.message = '';
+    this.subject = '';
+    this.name_msg = true;
+    this.email_msg = true;
+    this.subject_msg = true;
+    this.Message_msg = true;
+  }
+
+
 }

@@ -2,6 +2,12 @@
 	searchHelper : function(component,event,getInputkeyWord) {
 	  // call the apex class method 
 	 
+    var productfamily=component.get("v.prodctfamly");
+    if(productfamily == '--None--'){
+      productfamily = productfamily.replace(/--/g, '');
+      console.log({productfamily});
+
+    }
      var action = component.get("c.getProductRecords");
      action.setStorable();
       // set param to method  
@@ -10,9 +16,14 @@
             'ObjectName' : component.get("v.objectAPIName"),
             'filter' : component.get("v.filter"),
             'parentId' : component.get("v.parentId"),
-            'prodctfamly' : component.get("v.prodctfamly")
+            'prodctfamly' : productfamily
           });
-      // set a callBack    
+      // set a callBack  
+      console.log( component.get("v.filter"));  
+      console.log( component.get("v.prodctfamly"));
+
+     
+
         action.setCallback(this, function(response) {
           $A.util.removeClass(component.find("mySpinner"), "slds-show");
             var state = response.getState();

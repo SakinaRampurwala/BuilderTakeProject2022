@@ -215,6 +215,8 @@
     <aura:handler name="change" value="{!v.groupLoaded}" action="{!c.groupLoaded}" />
     <aura:attribute name="parentAttribute" type="Boolean" default="false" />
     <c:BT_Spinner />
+    <aura:attribute name="parentValue" type="String" />
+
 
 
 
@@ -222,19 +224,26 @@
 
 
 
-        <div class="slds-modal__header" style="font-size:17px;">
-            <aura:if isTrue="{!v.isproject}">
+        <div class="slds-modal__header" style="font-size:17px; display:none;">
+            <!-- <aura:if isTrue="{!v.isproject}">
                 <a href="{!'/'+v.quoteId}" onclick="{!c.closetab}">{!v.quoteName}</a>
                 <span style="float:right; font-size: small;">
                     <lightning:button variant="neutral" label="Cancel" title="Cancel" onclick="{!c.closetab}"
                         iconPosition="right" />
                 </span>
 
-            </aura:if>
+            </aura:if> -->
         </div>
 
         <div style="margin: -8px 0px;">
             <div style="display:block">
+                <aura:if isTrue="{!v.isproject}">
+                    <a href="{!'/'+v.quoteId}" onclick="{!c.closetab}">{!v.quoteName}</a>
+                    <span style="float:right; font-size: small;">
+                        <lightning:button variant="neutral" label="Cancel" title="Cancel" onclick="{!c.closetab}"
+                            iconPosition="right" />
+                    </span>
+                </aura:if>
                 <aura:if isTrue="{!!v.displayGrouping}">
                     <div id='collapseBtn' class="slds-float_left" style="margin-top: 5px;">
                         <span style="display:none;margin-left:1.6rem" class="{!'expandAllBtn_'+v.quoteId}"
@@ -470,7 +479,7 @@
                                             recordId="{!v.newQuote.buildertek__Grouping__c}" />
                                     </div>
                                 </div>
-                                
+
                                 <div class="slds-grid slds-gutters">
 
                                     <div class="slds-col slds-size_6-of-12">
@@ -554,7 +563,7 @@
                         <lightning:button variant="brand" label="Add" title="Add"
                             onclick="{!c.addProductFromGroup}" />
                     </div>
-                </div>          
+                </div>
             </div>-->
                             <footer class="slds-modal__footer">
                                 <lightning:button variant="neutral" label="Cancel" title="Cancel"
@@ -573,8 +582,8 @@
                             onclick="{!c.saveAndNew}" />
                         <lightning:button variant="brand" label="Add" title="Add"
                             onclick="{!c.addProductFromGroup}" />
-                        
-                        
+
+
                     </div>-->
 
                         </div>
@@ -733,14 +742,19 @@
                                                 <c:BT_LightningLookup objectAPIName="Product2"
                                                     IconName="standard:product"
                                                     selectedRecord="{!v.selectedLookUpRecord}" aura:id="productId"
-                                                    parentId="{! v.pricebookName }" prodctfamly="{!v.productfamily}" />
+                                                    parentId="{! v.pricebookName }" prodctfamly="{!v.productfamily}" childValue="{!v.newQuote.Name}"  />
                                             </td>
                                             <!-- <td>
                                             <ui:inputText value="{!v.newQuote.Name}" aura:id="quoteLineID" />
                                         </td> -->
                                             <td>
-                                                <!-- <aura:if isTrue="{!v.newQuote.Name != ''}"> -->
-                                                <ui:inputText value="{!v.newQuote.Name}" aura:id="quoteLineID1" />
+                                                <!-- <aura:if isTrue="{!v.parentValue != 'haveValue'}"> -->
+                                                    <ui:inputText value="{!v.newQuote.Name}" aura:id="quoteLineID1" />
+                                                    <!-- <aura:set attribute="else">
+                                                    <ui:inputText value="{!v.newQuote.Name}" aura:id="quoteLineID1" /> -->
+
+                                                    <!-- </aura:set> -->
+                                                <!-- </aura:if> -->
 
                                             </td>
                                             <td>
@@ -791,7 +805,7 @@
                                                 <lightning:input type="number" name="input6" label="" value="{!v.newQuote.buildertek__Markup__c}"  aura:id="markUpId"  formatter="percent-fixed" step="0.01" />
                                             </td>
                                             </aura:if>
-                                            
+
 
                                             <td>
                                                 <lightning:buttonIcon iconName="utility:save" alternativeText="save"
@@ -1003,7 +1017,7 @@
                                             </div> -->
 
                                                 </td>
-                                                
+
                                             </tr>
                                             <tr class="slds-text-heading--label" style="line-height: 2;font-size: 12px;">
                                                 <th></th>
@@ -1155,7 +1169,7 @@
                                                                                                         or(
                                                                                                             or(
                                                                                                                 value.fieldName == 'buildertek__Unit_Price__c',
-                                                                                                                
+
                                                                                                                 or(
                                                                                                                     value.fieldName == 'buildertek__Priority__c' ,
                                                                                                                     or(
@@ -1179,7 +1193,7 @@
                                                                                 ),
                                                                                 value.fieldName == 'buildertek__Margin__c'
                                                                             ),
-                                                                            value.fieldName=='buildertek__Notes__c' 
+                                                                            value.fieldName=='buildertek__Notes__c'
                                                                         )
                                                                     )
                                                                 }">
@@ -1324,7 +1338,7 @@
                                                     <aura:if isTrue="{!group.Name == rec.groupName &amp;&amp; rec.fieldType != 'false'}">
                                                         <aura:if isTrue="{!rec.fieldType == 'CURRENCY'}">
                                                             <td>
-                                                                
+
                                                                 <aura:if isTrue="{!rec.totalValue != null}">
                                                                     <span style="font-weight: bold;">
                                                                         <lightning:formattedNumber value="{!rec.totalValue}" style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
@@ -1343,7 +1357,7 @@
 
                                                         <aura:if isTrue="{! and(rec.fieldType == 'DOUBLE', rec.fieldLabel == 'buildertek__Quantity__c')}">
                                                             <td>
-                                                                
+
                                                                 <aura:if isTrue="{!rec.totalValue != null}">
                                                                     <span style="font-weight: bold;">
                                                                         <lightning:formattedNumber value="{!rec.totalValue}" />
@@ -1352,22 +1366,22 @@
                                                                         </aura:set>
                                                                     </span>
                                                                 </aura:if>
-                                                                
+
                                                             </td>
                                                         </aura:if>
 
 
-                                                       
+
                                                     </aura:if>
 
                                                     <!-- <aura:if isTrue="{rec.fieldLabel == 'buildertek__Tax__c'}">
-                                                        
+
                                                         <td style="text-align:left">
                                                         </td>
                                                      </aura:if> -->
 
                                                     <aura:if isTrue="{!group.Name == rec.groupName &amp;&amp; rec.fieldType == 'false' &amp;&amp; rec.fieldLabel != 'Id' &amp;&amp; rec.fieldLabel != 'buildertek__Grouping__c'}">
-                                                        
+
                                                             <td style="text-align:left">
                                                             </td>
                                                     </aura:if>
@@ -1448,7 +1462,7 @@
                                                     <th class="tableHeaderDiv blankDiv"></th>
 
                                                     <aura:iteration items="{!v.QuoteLineWrapper.columns}" var="col">
-                                        
+
                                                         <th class="tableHeaderDiv">
                                                             {!col.label}
                                                         </th>
@@ -1485,7 +1499,7 @@
                                                         </td>
                                                         <aura:iteration items="{!quoteItem.FieldDataList}" var="fildData">
                                                             <td>
-                                                                <aura:if isTrue="{! (fildData.fieldType == 'number' || fildData.fieldType == 'currency' || fildData.fieldName == 'Name' || fildData.fieldName == 'buildertek__Markup__c' 
+                                                                <aura:if isTrue="{! (fildData.fieldType == 'number' || fildData.fieldType == 'currency' || fildData.fieldName == 'Name' || fildData.fieldName == 'buildertek__Markup__c'
                                                                                     || fildData.fieldName == 'buildertek__Margin__c' || fildData.fieldName == 'buildertek__Additional_Discount__c' || fildData.fieldName == 'buildertek__Profit_Margin__c' )}">
 
                                                                     <aura:if isTrue="{!fildData.fieldName == 'Name'}">
@@ -1510,7 +1524,7 @@
                                                                         </aura:if>
                                                                     </aura:if>
 
-                                                                    <aura:if isTrue="{! (fildData.fieldName == 'buildertek__Markup__c' || fildData.fieldName == 'buildertek__Margin__c' || 
+                                                                    <aura:if isTrue="{! (fildData.fieldName == 'buildertek__Markup__c' || fildData.fieldName == 'buildertek__Margin__c' ||
                                                                                     fildData.fieldName == 'buildertek__Additional_Discount__c' || fildData.fieldName == 'buildertek__Profit_Margin__c' )}">
 
                                                                         <aura:if isTrue="{!fildData.fieldValue != null}">
@@ -1559,7 +1573,7 @@
                                                             {!group1.groupName}
                                                             <aura:set attribute="else">
                                                                 No Grouping
-                                                            
+
                                                             </aura:set>
                                                         </aura:if>
                                                     </td>
@@ -1579,7 +1593,7 @@
                                                         </td>
                                                     </aura:iteration>
                                                 </tr>
-                                                
+
                                                 <aura:iteration items="{!group1.quoteLineList}" var="group2">
                                                     <tr>
                                                         <td class="groupHeaderIcon">
@@ -1651,10 +1665,10 @@
                                                                         <lightning:icon iconName="utility:delete" size="xx-small" />
                                                                     </span>
                                                                 </div>
-                                                            </td>  
+                                                            </td>
                                                             <aura:iteration items="{!quoteItem.FieldDataList}" var="fildData">
                                                                 <td>
-                                                                    <aura:if isTrue="{! (fildData.fieldType == 'number' || fildData.fieldType == 'currency' || fildData.fieldName == 'Name' || fildData.fieldName == 'buildertek__Markup__c' 
+                                                                    <aura:if isTrue="{! (fildData.fieldType == 'number' || fildData.fieldType == 'currency' || fildData.fieldName == 'Name' || fildData.fieldName == 'buildertek__Markup__c'
                                                                                         || fildData.fieldName == 'buildertek__Margin__c' || fildData.fieldName == 'buildertek__Additional_Discount__c' || fildData.fieldName == 'buildertek__Profit_Margin__c' )}">
 
                                                                         <aura:if isTrue="{!fildData.fieldName == 'Name'}">
@@ -1680,7 +1694,7 @@
                                                                             </aura:if>
                                                                         </aura:if>
 
-                                                                        <aura:if isTrue="{! (fildData.fieldName == 'buildertek__Markup__c' || fildData.fieldName == 'buildertek__Margin__c' || 
+                                                                        <aura:if isTrue="{! (fildData.fieldName == 'buildertek__Markup__c' || fildData.fieldName == 'buildertek__Margin__c' ||
                                                                                         fildData.fieldName == 'buildertek__Additional_Discount__c' || fildData.fieldName == 'buildertek__Profit_Margin__c' )}">
 
                                                                             <aura:if
@@ -1720,7 +1734,7 @@
                                                     </tr>
                                                     <br/>
                                                 </aura:iteration>
-                                                
+
                                             </aura:iteration>
                                         </aura:if>
 
@@ -1814,7 +1828,7 @@
                                                                         </label>
                                                                     </div>
                                                                 </div>
-                                                            </th>                                                            
+                                                            </th>
                                                             <th class="tableHeaderDiv blankDiv"></th>
                                                             <aura:iteration items="{!v.QuoteLineWrapper.columns}"
                                                                 var="col">
@@ -1836,7 +1850,7 @@
                                                                             </label>
                                                                         </div>
                                                                     </div>
-                                                                </td>                                                              
+                                                                </td>
                                                                  <td style="text-align:left;">
                                                                 <div class="slds-truncate">
                                                                     <span data-id="{!quoteItem.Id}"  onclick="{!c.onclickDuplicate}">
@@ -1851,10 +1865,10 @@
                                                                         <lightning:icon iconName="utility:delete" size="xx-small" />
                                                                     </span>
                                                                 </div>
-                                                                </td>           
+                                                                </td>
                                                                 <aura:iteration items="{!quoteItem.FieldDataList}" var="fildData">
                                                                     <td>
-                                                                        <aura:if isTrue="{! (fildData.fieldType == 'number' || fildData.fieldType == 'currency' || fildData.fieldName == 'Name' || fildData.fieldName == 'buildertek__Markup__c' 
+                                                                        <aura:if isTrue="{! (fildData.fieldType == 'number' || fildData.fieldType == 'currency' || fildData.fieldName == 'Name' || fildData.fieldName == 'buildertek__Markup__c'
                                                                                             || fildData.fieldName == 'buildertek__Margin__c' || fildData.fieldName == 'buildertek__Additional_Discount__c' || fildData.fieldName == 'buildertek__Profit_Margin__c' )}">
 
                                                                             <aura:if isTrue="{!fildData.fieldName == 'Name'}">
@@ -1879,7 +1893,7 @@
                                                                                 </aura:if>
                                                                             </aura:if>
 
-                                                                            <aura:if isTrue="{! (fildData.fieldName == 'buildertek__Markup__c' || fildData.fieldName == 'buildertek__Margin__c' || 
+                                                                            <aura:if isTrue="{! (fildData.fieldName == 'buildertek__Markup__c' || fildData.fieldName == 'buildertek__Margin__c' ||
                                                                                             fildData.fieldName == 'buildertek__Additional_Discount__c' || fildData.fieldName == 'buildertek__Profit_Margin__c' )}">
 
                                                                                 <aura:if isTrue="{!fildData.fieldValue != null}">
@@ -1918,9 +1932,9 @@
                                                         </tr>
                                                         <br/>
                                                     </aura:iteration>
-                                                    
+
                                                 </aura:iteration>
-                                               
+
                                             </aura:iteration>
                                         </aura:if>
 
@@ -1962,7 +1976,7 @@
                                                                 </aura:set>
                                                             </aura:if>
                                                         </td>
-                                                        
+
                                                         <aura:iteration items="{!group2.fieldTotals.fieldTotalList}" var="total">
                                                             <td class="groupHeaderTotal">
                                                                 <aura:if isTrue="{!total.fieldName == 'Total'}">
@@ -2036,7 +2050,7 @@
                                                                 <th class="tableHeaderDiv blankDiv"></th>
                                                                 <th class="tableHeaderDiv blankDiv"></th>
                                                                 <th class="tableHeaderDiv blankDiv"></th>
-                                                                
+
 
                                                                 <th class="tableHeaderDiv slds-is-sortable tabletitle" scope="col" width="5px">
                                                                     <div class="slds-form-element">
@@ -2048,10 +2062,10 @@
                                                                             </label>
                                                                         </div>
                                                                     </div>
-                                                                </th>                                                              
+                                                                </th>
                                                                 <th class="tableHeaderDiv blankDiv"></th>
                                                                 <th class="tableHeaderDiv blankDiv"></th>
-                                                                
+
                                                                 <aura:iteration items="{!v.QuoteLineWrapper.columns}" var="col">
                                                                     <th class="tableHeaderDiv">
                                                                         {!col.label}
@@ -2071,7 +2085,7 @@
                                                                                 </label>
                                                                             </div>
                                                                         </div>
-                                                                    </td>                                                                   
+                                                                    </td>
                                                                      <td class="blankDiv" > </td>
                                                                     <td style="text-align:left;">
                                                                         <div class="slds-truncate">
@@ -2087,10 +2101,10 @@
                                                                                 <lightning:icon iconName="utility:delete" size="xx-small" />
                                                                             </span>
                                                                         </div>
-                                                                    </td>                                                                    
+                                                                    </td>
                                                                     <aura:iteration items="{!quoteItem.FieldDataList}" var="fildData">
                                                                         <td>
-                                                                            <aura:if isTrue="{! (fildData.fieldType == 'number' || fildData.fieldType == 'currency' || fildData.fieldName == 'Name' || fildData.fieldName == 'buildertek__Markup__c' 
+                                                                            <aura:if isTrue="{! (fildData.fieldType == 'number' || fildData.fieldType == 'currency' || fildData.fieldName == 'Name' || fildData.fieldName == 'buildertek__Markup__c'
                                                                                                 || fildData.fieldName == 'buildertek__Margin__c' || fildData.fieldName == 'buildertek__Additional_Discount__c' || fildData.fieldName == 'buildertek__Profit_Margin__c' )}">
 
                                                                                 <aura:if isTrue="{!fildData.fieldName == 'Name'}">
@@ -2116,7 +2130,7 @@
                                                                                     </aura:if>
                                                                                 </aura:if>
 
-                                                                                <aura:if isTrue="{! (fildData.fieldName == 'buildertek__Markup__c' || fildData.fieldName == 'buildertek__Margin__c' || 
+                                                                                <aura:if isTrue="{! (fildData.fieldName == 'buildertek__Markup__c' || fildData.fieldName == 'buildertek__Margin__c' ||
                                                                                                 fildData.fieldName == 'buildertek__Additional_Discount__c' || fildData.fieldName == 'buildertek__Profit_Margin__c' )}">
 
                                                                                     <aura:if isTrue="{!fildData.fieldValue != null}">
@@ -2161,11 +2175,11 @@
                                                             </tr>
                                                             <br/>
                                                         </aura:iteration>
-                                                        
+
                                                     </aura:iteration>
-                                                    
+
                                                 </aura:iteration>
-                                               
+
                                             </aura:iteration>
                                         </aura:if>
 
@@ -2219,12 +2233,12 @@
                     </aura:if>
                     <aura:if isTrue="{!v.openProductBox}">
                         <aura:html tag="style">
-                        
+
                             .slds-modal__container{
                             width: 80% !important;
                             }
-                            
-                        </aura:html>                       
+
+                        </aura:html>
                             <c:Add_QuoteLine_In_Quote getPhase="{!v.phaseName}" quoteId="{!v.recordId}" openProductBox="{!v.openProductBox}" />
 
                     </aura:if>
@@ -2248,7 +2262,7 @@
                                             <tr>
 
                                                 <!--      <th style = "width: 68px; padding-left: 5px; border-radius: 3px;">
-                                                
+
                                                 <label class="slds-checkbox" width="10px">
                                                     <ui:inputCheckbox value=""
                                                                     name="" change="{!c.selectAll}"

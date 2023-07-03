@@ -23,6 +23,8 @@
     
      <aura:handler  event="c:BT_BudgetItemLookupEvent"  action="{!c.handleChildBudgetLineLookupEvent}"/>
     <aura:attribute name="massBudgetLineIndex" type="Integer" />
+    <aura:attribute name="childValue" type="String" default="haveValue" />
+
     
     <!-- https://www.lightningdesignsystem.com/components/lookups/ --> 
     
