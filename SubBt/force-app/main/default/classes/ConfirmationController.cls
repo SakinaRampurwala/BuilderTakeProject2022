@@ -641,6 +641,7 @@ Messaging.sendEmail(new Messaging.SingleEmailMessage[] { email });  */
                     mail.setOrgWideEmailAddressId(owea.get(0).Id);
                 }
                 mail.setSubject('SavePDF [ref:' + quoterec.Id + ']');
+                mail.setSaveAsActivity(false);
                 mail.setHtmlBody('Action:SavePDF; recordId:' + quoterec.Id + ';templateId:' + templateId + ';fileId:' + conVer.Id+'; Confirmation Controller');
                 Messaging.sendEmail(new Messaging.SingleEmailMessage[]{ mail });
 

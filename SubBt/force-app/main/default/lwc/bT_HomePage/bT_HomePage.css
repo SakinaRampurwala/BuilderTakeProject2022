@@ -300,6 +300,10 @@ lightning-input {
     width: 50%;
     min-height: 70vh;
     margin-top: 15px;
+    overflow: auto;
+}
+.Wel_message::-webkit-scrollbar {
+    display: none;
 }
 
 .Wel_message p {
@@ -359,3 +363,11 @@ lightning-input {
     justify-content: center;
     gap: 140px;
 }
+@media (max-width: 1400px) {
+    .supportcls{
+        height: 80%;
+    }
+    .UserConfigDetails{
+        height: 75%;
+    }
+  }

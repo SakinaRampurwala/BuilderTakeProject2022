@@ -21,6 +21,7 @@ public without sharing class CreateInvoiceFromContract {
                                                  buildertek__Change_Order__c,
                                                  buildertek__Change_Order__r.Name,
                                                  buildertek__Change_Order__r.Tax_Rate__c,
+                                                 buildertek__Tax_Rate__c,
                                                  buildertek__Status__c,buildertek__Vendor__c,RecordTypeId,recordType.Name
                                                  from buildertek__Contract__c 
                                                  where Id =: ContractId];
@@ -40,6 +41,7 @@ public without sharing class CreateInvoiceFromContract {
             AR.Change_order__c = co.buildertek__Change_Order__c;
             AR.Tax_Rate__c = co.buildertek__Change_Order__r.Tax_Rate__c;
             AR.buildertek__Approved_CO__c = co.buildertek__Change_Order_Amount__c;
+            AR.buildertek__Tax_Rate__c = co.buildertek__Tax_Rate__c;
             Ar.Name = co.Name;
             Ar.Contract__c = co.Id;
             /*if(Schema.sObjectType.Billings__c.isCreateable() &&
@@ -73,7 +75,8 @@ public without sharing class CreateInvoiceFromContract {
                                          Product__c,
                                          Quantity__c,
                                          Unit_Price__c,
-                                         Notes__c 
+                                         Notes__c ,
+                                         buildertek__Tax__c
                                          from buildertek__Contract_Item__c 
                                          where buildertek__Contract__c =:co.Id];   
             //}
@@ -90,6 +93,8 @@ public without sharing class CreateInvoiceFromContract {
                 arItem.Quantity__c = coItem.Quantity__c;
                 arItem.Notes__c = coItem.Notes__c;
                 arItem.Contract_Line__c = coItem.Id;
+                arItem.buildertek__Tax_Rate__c = coItem.buildertek__Tax__c;
+
                 arLines.add(arItem);
             }
            /*  if(Schema.sObjectType.Billable_Lines__c.isCreateable() &&

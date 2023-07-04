@@ -6,3 +6,11 @@ lightning-accordion-section .slds-accordion__summary-action {
 input {
     line-height: 40px !important;
 }
+@media (max-width: 1400px) {
+    input {
+        line-height: 10px !important;
+    }
+    .slds-textarea {
+        min-height: 100px;
+    }
+  }

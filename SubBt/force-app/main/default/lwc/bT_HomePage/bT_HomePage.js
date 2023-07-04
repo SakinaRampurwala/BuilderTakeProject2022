@@ -10,7 +10,7 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { NavigationMixin } from 'lightning/navigation';
 
 
-export default class Qf_guide2 extends NavigationMixin(LightningElement) {
+export default class Bt_HomePage extends NavigationMixin(LightningElement) {
   @track spinnerdatatable = false;
   error_toast = true;
   pdfUrl;
@@ -125,15 +125,7 @@ export default class Qf_guide2 extends NavigationMixin(LightningElement) {
       this.Message_msg = false;
     } else {
       this.email_msg = true;
-      sendemail({
-        name: this.supportname,
-        email: this.email,
-        subject: this.subject,
-        body: this.message
-      })
-        .then(result => {
-          if (result == 'success') {
-            createCase({ subject: this.subject, body: this.message })
+      createCase({ subject: this.subject, body: this.message })
             .then(result => {
               // Get the newly created record's Id
               const recordId = result;
@@ -151,22 +143,28 @@ export default class Qf_guide2 extends NavigationMixin(LightningElement) {
             .catch(error => {
               console.log('error',error);
             });
+      sendemail({
+        name: this.supportname,
+        email: this.email,
+        subject: this.subject,
+        body: this.message
+      })
+        .then(result => {
+          if (result == 'success') {
             this.supportname = '';
             this.email = '';
             this.message = '';
             this.subject = '';
-            // const event = new ShowToastEvent({
-            //   title: 'Success',
-            //   message: 'Action was successful!',
-            //   variant: 'success',
-            // });
-            // this.dispatchEvent(event);
-
-
+            const event = new ShowToastEvent({
+              title: 'Success',
+              message: 'Email Sent Successfully.',
+              variant: 'success',
+            });
+            this.dispatchEvent(event);
           } else {
             const event = new ShowToastEvent({
               title: 'Error',
-              message: 'An error occurred.',
+              message: 'An error occurred while sending Email.',
               variant: 'error',
             });
             this.dispatchEvent(event);
