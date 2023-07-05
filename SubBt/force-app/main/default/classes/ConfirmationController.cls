@@ -642,6 +642,13 @@ Messaging.sendEmail(new Messaging.SingleEmailMessage[] { email });  */
                 }
                 mail.setSubject('SavePDF [ref:' + quoterec.Id + ']');
                 mail.setSaveAsActivity(false);
+                System.debug('templateId: ' + templateId);
+                if (templateId == null){
+                    templateId = [SELECT Id
+                                  FROM EmailTemplate
+                                  WHERE DeveloperName = :'Quote_Template_2'].Id;
+                }
+                System.debug('templateId: ' + templateId);
                 mail.setHtmlBody('Action:SavePDF; recordId:' + quoterec.Id + ';templateId:' + templateId + ';fileId:' + conVer.Id+'; Confirmation Controller');
                 Messaging.sendEmail(new Messaging.SingleEmailMessage[]{ mail });
 

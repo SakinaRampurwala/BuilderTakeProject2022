@@ -73,6 +73,8 @@ public class BT_NewGanttChartCls{
 
         String milestonequery = 'Select buildertek__Project__r.Name,buildertek__Schedule__r.Name, buildertek__Dependency__r.Finish__c,buildertek__Contractor_Resource__r.Name,buildertek__Contractor__r.Name,buildertek__Resource__r.Name, ' + BT_Utils.getQueryStringForObjectWithAllFields('Project_Task__c');
         milestonequery = milestonequery + ' From buildertek__Project_Task__c where buildertek__Schedule__c =:scheduleid AND buildertek__Milestone__c= true';
+        System.debug('BT_Utils.PMAM@# '+BT_Utils.getQueryStringForObjectWithAllFields('Project_Task__c'));
+        System.debug('milestonequery '+milestonequery);
         List<buildertek__Project_Task__c> milestoneTaskList = DataBase.query(milestonequery);
 
         Map<String, List<buildertek__Project_Task__c>> TaskWithPhaseMap = new Map<String, List<buildertek__Project_Task__c>>();
@@ -619,7 +621,7 @@ public class BT_NewGanttChartCls{
         }
 
         for (buildertek__Project_Task__c pt : updatedprojecttaskList) {
-            if (pt.buildertek__Dependency__c != null) {     
+            if (pt.buildertek__Dependency__c != null) {
                 pt.buildertek__Lag__c = ProjectTaskTriggerHandler.calculateDuration(projectTaskMap.get(pt.buildertek__Dependency__c).buildertek__Finish__c, pt.buildertek__Start__c)-2;
             }
         }

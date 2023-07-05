@@ -37,6 +37,10 @@
             bottom: auto !important;
             Display: block !important;
         }
+        .slds-modal__content .slds-m-around--medium{
+            margin:0px !important;
+
+        }
     </aura:html>
 
     <ltng:require styles="{!$Resource.MOdalPreviewWidth72}"/>

@@ -56,13 +56,25 @@ public with sharing class NewVendorController{
 		}
 		return pickListValuesList;
 	}
+
+	
     @AuraEnabled
-	public static string getNames(String RecordId){
-        buildertek__Purchase_Order__c purchaseRec = [select id,Name,buildertek__Vendor__c from buildertek__Purchase_Order__c where id =: RecordId];
-      // List<String> value = new List<String>();
-        
-        return purchaseRec.buildertek__Vendor__c;
+	public static Map<Id, String> getNames(String RecordId){
+		Map<Id, String> poNames= new Map<Id, String>();
+
+        buildertek__Purchase_Order__c purchaseRec = [select id,Name,buildertek__Vendor__c , buildertek__Project__c from buildertek__Purchase_Order__c where id =: RecordId];
+		poNames.put(purchaseRec.buildertek__Vendor__c , 'Vendor');
+		poNames.put(purchaseRec.buildertek__Project__c , 'Project');
+        return poNames;
     }
+	@AuraEnabled
+    public static String saveRecord(String vendorReviewData){
+        buildertek__Vendor_Review__c vendorReview = (buildertek__Vendor_Review__c)JSON.deserialize(vendorReviewData, buildertek__Vendor_Review__c.class);
+        insert vendorReview;
+        return vendorReview.Id;
+    }
+
+	
    /* @AuraEnabled
     public static  buildertek__Purchase_Order__c Name(buildertek__Purchase_Order__c field)
     { 

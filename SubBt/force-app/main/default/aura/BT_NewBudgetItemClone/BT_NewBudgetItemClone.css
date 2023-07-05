@@ -232,9 +232,9 @@
     max-height: 43vh;
     }
 }    */
-@media (min-width: 1900px) {
+@media only screen and (max-height: 1080px) {
     .THIS .divcont{
-        max-height: 38vh;
+        max-height: 37vh;
         overflow: auto;
     }
   }

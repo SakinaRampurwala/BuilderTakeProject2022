@@ -1,6 +1,7 @@
 global with sharing class EmailConversationCntl{
     @AuraEnabled
     public static List<FinalWrapperClass> getEmailMessages(String RecId){
+        System.debug('RecId'+ RecId);
         Map<String, List<EmailMessage>> emailMessageMap = new Map<String, List<EmailMessage>>();
         Map<String, String> yearMap = new Map<String, String>();
         Id RecsId = RecId;

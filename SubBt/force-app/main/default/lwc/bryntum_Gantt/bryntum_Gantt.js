@@ -3281,6 +3281,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
     }
   }
 
- 
+
 
 }

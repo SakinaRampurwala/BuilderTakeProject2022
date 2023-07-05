@@ -293,3 +293,12 @@
     max-height: 43vh;
     }
 }    */
+@media only screen and (max-height: 1080px) {
+    .THIS .divcont{
+        max-height: 37vh;
+        overflow: auto;
+    }
+    /* .THIS .av{
+        min-height: auto !important;
+    } */
+  }

@@ -222,7 +222,7 @@ public with sharing class PreviewBillingsController{
     @AuraEnabled
     public static String sendProposal(String htmlBody, String recordId, String templateId, List<String> to, List<String> cc){
         try{
-
+            Blob tempblob;
             List<Contact> conList =  [Select Id,Name,email from Contact where Id IN :to and email != null];
 
             String subject = 'Invoice';
@@ -266,6 +266,9 @@ public with sharing class PreviewBillingsController{
                 efa.setBody(setAttachmentBody(recordId, templateId));
                 fileAttachments.add(efa);
                 mail.setFileAttachments(fileAttachments);
+                tempblob = setAttachmentBody(recordId, templateId);
+                system.debug('Blob ---> ' + tempblob);
+                mail.setSaveAsActivity(false);
                 mails.add(mail);
             }
             Messaging.SendEmailResult[] results = Messaging.sendEmail(mails);
@@ -305,6 +308,18 @@ public with sharing class PreviewBillingsController{
                     caseEmailMessage.RelatedToId = recordId;
                     caseEmailMessage.buildertek__Subject__c = 'Re: ' + subject;
                     insert caseEmailMessage;
+
+                    ContentVersion conVer = new ContentVersion();
+                    conVer.PathOnClient = 'Invoice.pdf'; // The files name, extension is very important here which will help the file in preview.
+                    conVer.Title = 'Invoice.pdf'; // Display name of the files
+                    conVer.VersionData = tempblob; // converting your binary string to Blog
+                    insert conVer;    //Insert ContentVersion
+                    
+                    ContentDocumentLink conDocLink = New ContentDocumentLink();
+                    conDocLink.LinkedEntityId = caseEmailMessage.Id; // Specify RECORD ID here i.e Any Object ID (Standard Object/Custom Object)
+                    conDocLink.ContentDocumentId = [SELECT ContentDocumentId FROM ContentVersion WHERE Id =:conVer.Id].ContentDocumentId;  //ContentDocumentId Id from ContentVersion
+                    conDocLink.Visibility = 'AllUsers';
+                    insert conDocLink;
 
                     EmailMessageRelation emr = new EmailMessageRelation();
                     emr.emailMessageId = caseEmailMessage.id;

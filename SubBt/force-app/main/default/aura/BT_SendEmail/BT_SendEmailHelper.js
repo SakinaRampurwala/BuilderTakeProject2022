@@ -328,7 +328,8 @@
                 // then show a alert msg to user,hide the loading spinner and return from function 
                 if (file.size > self.MAX_FILE_SIZE) {
                     component.set("v.fileName", 'Alert : File size cannot exceed ' + self.MAX_FILE_SIZE + ' bytes.\n' + ' Selected file size: ' + file.size);
-                    this.showMessage('Alert : File size cannot exceed ' + self.MAX_FILE_SIZE + ' bytes.\n' + ' Selected file size: ' + file.size,false);
+                    this.showMessages('Alert : File size cannot exceed ' + self.MAX_FILE_SIZE + ' bytes.\n' + ' Selected file size: ' + file.size,false);
+                    $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
                     return;
                 }
                 self.uploadFile(component, file,recid,helper); 
@@ -353,6 +354,7 @@
             var base64 = 'base64,';
             var dataStart = fileContents.indexOf(base64) + base64.length;
             fileContents = fileContents.substring(dataStart);
+            console.log('fileContents',fileContents);
             // call the uploadProcess method 
             self.uploadProcess(component, file, fileContents,recid,helper);
         });
@@ -480,6 +482,17 @@
             "type":isSuccess?"success":"error",
             "message": message,
             'duration': '10000',
+            'mode': 'dismissible'
+        });
+        toastEvent.fire();
+    },
+    showMessages : function(message,isSuccess) {
+        var toastEvent = $A.get("e.force:showToast");
+        toastEvent.setParams({
+            "title": isSuccess?"Success!":"Error!",
+            "type":isSuccess?"success":"error",
+            "message": message,
+            'duration': '3000',
             'mode': 'dismissible'
         });
         toastEvent.fire();

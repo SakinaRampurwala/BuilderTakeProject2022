@@ -80,8 +80,8 @@
                         <footer class="slds-modal__footer">
                             <center>
                             <lightning:button variant="neutral" title="Cancel" label="Cancel" onclick="{! c.closeModel }" />
-                            <lightning:button variant="neutral" title="Save &amp; New" label="Save &amp; New"
-                                              onclick="{!c.saveAndNew}" />
+                            <!-- <lightning:button variant="neutral" title="Save &amp; New" label="Save &amp; New"
+                                              onclick="{!c.saveAndNew}" /> -->
                             
                             <lightning:button variant="brand" type="submit" name="save" label="Save" />
                             </center>

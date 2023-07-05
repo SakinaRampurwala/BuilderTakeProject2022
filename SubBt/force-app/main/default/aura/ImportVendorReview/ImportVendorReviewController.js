@@ -3,13 +3,17 @@
         component.set("v.Spinner", true);
          
         var myPageRef = component.get("v.pageReference");
-        var recordId = myPageRef.state.buildertek__parentId;
+        var recordId = component.get("v.recordId");
+        // var recordId = myPageRef.state.buildertek__parentId;
         //alert('recordId in doinit'+recordId);
         var action = component.get("c.getMasterVendorReviews");
         action.setParams({
             recordId : recordId //component.get("v.recordId")    
         });
         action.setCallback(this, function(response){
+            console.log(response.getError());
+            console.log({state});
+
             var state = response.getState();
             if(state === "SUCCESS"){
                 //  alert(state);
@@ -107,7 +111,7 @@
         component.set("v.Spinner", true);
         component.set("v.showMessage", true);
         var budgetsList = component.get("v.masterVendorReviewList");
-        console.log('quotesList ---------> '+JSON.stringify(budgetsList));
+        console.log('masterVendorReviewList ---------> '+JSON.stringify(budgetsList));
         var budgetIds = [];
         for(var i=0 ; i < budgetsList.length;i++){
             if(budgetsList[i].budgetCheck == true){
@@ -118,10 +122,12 @@
                 }
             }
         }
+        console.log("budget IDs",budgetIds);
         if(budgetIds.length > 0){
             var action = component.get("c.importMasterVenderReviewLines"); 
             var myPageRef = component.get("v.pageReference");
-            var recordId = myPageRef.state.buildertek__parentId;
+            var recordId = component.get("v.recordId");
+            console.log("record Id" , recordId);
             action.setParams({
                 budgetIds : budgetIds,
                 recordId : recordId
@@ -130,15 +136,15 @@
             action.setCallback(this, function(response){
                 var state = response.getState();
                 if(state === "SUCCESS"){
-                    var workspaceAPI = component.find("workspace");
-                    workspaceAPI.getFocusedTabInfo().then(function (response) {
-                        var focusedTabId = response.tabId;
-                        workspaceAPI.closeTab({
-                            tabId: focusedTabId
-                        });
-                    }).catch(function (error) {
-                        console.log('Error', JSON.stringify(error));
-                    }); 
+                    // var workspaceAPI = component.find("workspace");
+                    // workspaceAPI.getFocusedTabInfo().then(function (response) {
+                    //     var focusedTabId = response.tabId;
+                    //     workspaceAPI.closeTab({
+                    //         tabId: focusedTabId
+                    //     });
+                    // }).catch(function (error) {
+                    //     console.log('Error', JSON.stringify(error));
+                    // }); 
                     var result = response.getReturnValue(); 
                     if(result.Status === 'Success'){
                         setTimeout(function () {
@@ -153,6 +159,8 @@
                                 "url": '/lightning/r/buildertek__Vendor_Review__c/'+recordId+'/related/buildertek__Vendor_Scorecards__r/view'
                             });
                             urlEvent.fire();
+                            $A.get("e.force:refreshView").fire();
+                    
                         }
                         var toastEvent = $A.get("e.force:showToast");
                         toastEvent.setParams({
@@ -234,20 +242,20 @@
         component.set('v.PaginationList', Paginationlist);
     },
     closeModel : function(component, event, helper){
-        var workspaceAPI = component.find("workspace");
-        workspaceAPI.getFocusedTabInfo().then(function(response) {
-            var focusedTabId = response.tabId;
-            workspaceAPI.closeTab({tabId: focusedTabId});
-        })
+        // var workspaceAPI = component.find("workspace");
+        // workspaceAPI.getFocusedTabInfo().then(function(response) {
+        //     var focusedTabId = response.tabId;
+        //     workspaceAPI.closeTab({tabId: focusedTabId});
+        // })
         
-        .catch(function(error) {
-            console.log(error);
-        });
+        // .catch(function(error) {
+        //     console.log(error);
+        // });
         $A.get("e.force:closeQuickAction").fire();
-        window.setTimeout(
-            $A.getCallback(function () {
-                $A.get('e.force:refreshView').fire();
-            }), 1000
-        );
+        // window.setTimeout(
+        //     $A.getCallback(function () {
+        //         $A.get('e.force:refreshView').fire();
+        //     }), 1000
+        // );
     },
 })

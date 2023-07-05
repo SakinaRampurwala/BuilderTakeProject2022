@@ -353,7 +353,8 @@
                                         </td>
                                         <td colspan="6">
                                         </td>
-                                        <td></td>
+                                        <td colspan="4"></td>
+                                        <!-- <td></td> -->
                                     </tr>
                                     <tr class="slds-text-heading--label" style="line-height: 2;font-size: 12px;">
                                             <th></th>
@@ -397,6 +398,7 @@
                                         </aura:iteration>
                                         <th>
                                         </th>
+                                        <th></th>
                                     </tr>
                                     <aura:iteration items="{!v.TotalRecords.tarTable.ListOfEachRecord}" var="tar" indexVar="quoteIndex">
                                         <tr style="line-height: 2.5;display:table-row;" class="{!v.quoteId+' slds-hint-parent groupRows_'+groupIndex}">
@@ -558,6 +560,7 @@
                                                
                                                 <td>
                                                 </td>
+                                                <td></td>
                                             </aura:if>
                                         </tr>
                                     </aura:iteration>
@@ -568,6 +571,7 @@
                                         </td>
                                         <td>
                                         </td>
+                                        <td></td>
                                         <aura:iteration items="{!v.TotalRecords.wrapperList}" var="rec" indexVar="totalRecordsIndex">
                                             <aura:if isTrue="{!group.Name == rec.groupName &amp;&amp; rec.fieldType != 'false'}">
                                                 <aura:if isTrue="{!rec.fieldType == 'CURRENCY'}">
