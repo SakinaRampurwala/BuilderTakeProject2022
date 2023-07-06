@@ -406,7 +406,7 @@
                                         </apex:outputPanel>
                                         <apex:outputPanel rendered="{!IF(orderRejected==true, true, false)}">
                                             <center>
-                                                <h1 class="slds-text-heading--medium" style="font-size: 18px;text-align:center;background-color: #c23934;color: white;">Your order has been rejected</h1>
+                                                <h1 class="slds-text-heading--medium" style="font-size: 18px;text-align:center;background-color: #c23934;color: white;">You have rejected this Quote.</h1>
                                             </center>
                                         </apex:outputPanel>
                                     </div>

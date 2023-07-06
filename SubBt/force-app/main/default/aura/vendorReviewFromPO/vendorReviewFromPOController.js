@@ -72,7 +72,6 @@
             console.log('state =>', { state });
             if (state === "SUCCESS") {
                 component.set('v.Spinner', false);
-
                 console.log('success');
                 console.log(response.getReturnValue());
                 var recordId = response.getReturnValue();
@@ -92,13 +91,18 @@
 
                 if (saveNnew) {
                     console.log('saveNnew ==>',saveNnew);
-                    console.log( component.find('inputFields'));
+                    // component.find('inputFields').set('v.value' , ''); 
+                    $A.get('e.force:refreshView').fire();
+
                     component.find('inputFields').forEach(function(f) {
                         f.reset();
                     });
+
+                    component.find('Name').set('v.value' ,'');
                     component.set("v.saveAndNew" , false);
                 }
                 else {
+                    $A.get("e.force:closeQuickAction").fire();
                     console.log('---Else---');
                     console.log('saveAndClose');
                     var navEvt = $A.get("e.force:navigateToSObject");
