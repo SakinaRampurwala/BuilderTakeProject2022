@@ -19,11 +19,6 @@
     margin-top: 15px;
 }
 
-.pdf-iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-}
 /* ---for release note */
 .tab-menu ul {
     margin: 0;
@@ -192,17 +187,9 @@ lightning-input {
     height: 80%;
     position: absolute;
     overflow: auto;
+    width: 60%;
 }
 .UserConfigDetails::-webkit-scrollbar {
-    display: none;
-}
-.pdfcont{
-    height: 80%;
-    width: 94%;
-    position: absolute;
-    overflow: auto;
-}
-.pdfcont::-webkit-scrollbar {
     display: none;
 }
 .button-3d {
@@ -213,7 +200,7 @@ lightning-input {
     padding: 1.25em 1.5em;
     border-radius: 32px;
     font-size: 17px;
-    color: #e1ecff;
+    color: #ffffff;
     font-weight: 700;
     transform-style: preserve-3d;
     transition: transform 0.3s cubic-bezier(0,0,0.58,1),
@@ -326,7 +313,7 @@ lightning-input {
 }
 @media screen and (max-width:1400px) {
 
-    .quickbot_message {
+    .quick_message {
         width: 100%;
         --sds-c-textarea-sizing-min-height: 0vh !important;
     }
@@ -349,11 +336,12 @@ lightning-input {
 }
 .supportcls{
     display: flex;
-    justify-content: center;
+    /* justify-content: center; */
     height: 85%;
     overflow: auto;
     position: absolute;
     width: -webkit-fill-available;
+    margin-left: 175px;
 }
 .supportcls::-webkit-scrollbar {
     display: none;
@@ -371,3 +359,148 @@ lightning-input {
         height: 75%;
     }
   }
+  .container{
+    display: flex;
+    flex-wrap: wrap;
+}
+.box1 {
+    width: 78%;
+    padding: 5px;
+    box-sizing: border-box;
+    flex-direction: column;
+}
+
+.box1 p{
+    width: 100%;
+    white-space: normal;
+}
+.removeImage {
+    border-radius: 50%;
+    height: 0%;
+    padding: 0px 4px;
+    margin: 8px 2px 8px 8px;
+    color: #fff;
+    background-color: #2596be;
+    cursor: pointer;
+}
+
+.removeImage p{
+    margin-bottom: 3px;
+}
+.cross_img_file{
+    height: 12px;
+    width: 12px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    cursor: pointer;
+}
+.k23{
+    height: 80%;
+    position: absolute;
+    overflow: hidden;
+    width: 60%;
+}
+
+
+
+
+
+
+
+
+
+
+.tab-container {
+    height: 100%;
+    width: auto;
+    margin: auto 5% auto 0%;
+    padding: 3%;
+    padding-bottom: 0;
+    border-radius: 28px;
+    overflow: overlay;
+}
+
+.gridbox {
+    height: 100% !important;
+}
+
+/* .s-item-1 {
+    background-image: url("/resource/bg");
+    background-size: contain;
+    border-radius: 28px !important;
+} */
+
+.resourcediv {
+    /* border-left: 1px solid gray;
+    background-color: #3E77AE; */
+    border-radius: 28px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    right: 20px;
+    position: relative;
+    overflow-x: hidden !important;
+    overflow-y: hidden !important;
+}
+
+@media all and (min-width : 768px) and (max-width:1024px) {
+
+    .main {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+    }
+
+    .sizebox {
+        width: 100% !important;
+        background-color: white;
+        border-radius: 15px !important;
+    }
+
+}
+
+@media all and (min-width : 1030px) and (max-width : 1400px) {
+    .main {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+    }
+
+    .tab {
+        padding-top: 0px;
+        height: 100%;
+    }
+
+    .slds-p-right_large {
+        height: 100%;
+    }
+
+    .sizebox {
+        width: 100%;
+        background-color: white;
+        overflow: hidden !important;
+        overflow-y: hidden !important;
+        border-radius: 15px !important;
+    }
+
+}
+
+@media all and (min-width : 1440px) and (max-width : 1580px) {
+    .main {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+    }
+
+    .tab {
+        padding-top: 0px;
+        height: 95%;
+    }
+
+    .sizebox {
+        width: 100%;
+        background-color: white;
+        overflow: hidden !important;
+        overflow-y: hidden !important;
+        border-radius: 15px !important;
+    }
+}

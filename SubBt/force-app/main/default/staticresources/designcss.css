@@ -14,3 +14,9 @@ input {
         min-height: 100px;
     }
   }
+  .slds-size_3-of-4{
+    width: 65% !important;
+  }
+  .slds-size_1-of-4 {
+    width: 35% !important;
+}

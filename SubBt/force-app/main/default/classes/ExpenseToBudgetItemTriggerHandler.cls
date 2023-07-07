@@ -98,7 +98,7 @@ public class ExpenseToBudgetItemTriggerHandler {
                         projectids.add(projRec.id);
                     }
                     system.debug('projectids'+projectids); */
-                    list<buildertek__Budget__c> budgetist = [select id,Name from buildertek__Budget__c where buildertek__Project__c =: expenseprojectids ORDER BY CreatedDate ASC limit 1];
+                    list<buildertek__Budget__c> budgetist = [select id,Name from buildertek__Budget__c where buildertek__Project__c =: expenseprojectids ORDER BY Name ASC limit 1];
                    // system.debug('budgetlist'+budgetist);
                     list<buildertek__Expense__c> expList = [select id,Name from buildertek__Expense__c Where ID IN: expenseids];
                     for(buildertek__Budget__c budgetRec : budgetist){

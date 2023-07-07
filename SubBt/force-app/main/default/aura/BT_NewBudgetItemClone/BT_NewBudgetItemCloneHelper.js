@@ -339,8 +339,7 @@
                         if (toggleVal) {
                             if (result.tarTable != undefined && result.tarTable.ListOfEachRecord != undefined) {
                                 var records = result.tarTable.ListOfEachRecord;
-                                result.groupHierarchy = groupRecords(records);
-
+                                result.groupHierarchy = Object.values(groupRecords(records)).sort((a, b) => a.groupName.localeCompare(b.groupName));
                                 function groupRecords(data) {
                                     var listOfRecords = [];
                                     let recordsMap = new Map();
@@ -456,7 +455,8 @@
                                 if (toggleVal2) {
                                     if (result.tarTable != undefined && result.tarTable.ListOfEachRecord != undefined) {
                                         var records = result.tarTable.ListOfEachRecord;
-                                        result.groupHierarchy = groupRecords(records);
+                                        result.groupHierarchy = Object.values(groupRecords(records)).sort((a, b) => a.groupName.localeCompare(b.groupName));
+                                        console.log("Group Name By ASC" , result.groupHierarchy);
                                         // alert(JSON.stringify(records)); 
                                         function groupRecords(data) {
                                             var listOfRecords = [];
@@ -631,7 +631,7 @@
                                 if (toggleVal1) {
                                     if (result.tarTable != undefined && result.tarTable.ListOfEachRecord != undefined) {
                                         var records = result.tarTable.ListOfEachRecord;
-                                        result.groupHierarchy = groupRecords(records);
+                                        result.groupHierarchy = Object.values(groupRecords(records)).sort((a, b) => a.groupName.localeCompare(b.groupName));
                                         // alert(JSON.stringify(records)); 
                                         function groupRecords(data) {
                                             var listOfRecords = [];

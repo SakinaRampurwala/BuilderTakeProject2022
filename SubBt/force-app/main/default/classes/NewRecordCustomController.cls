@@ -273,7 +273,7 @@ public with sharing class NewRecordCustomController{
         System.debug('expenseData ==> '+expenseData);
         System.debug('expenseData.buildertek__Budget_Line__c =>'+expenseData.buildertek__Budget_Line__c);
 
-        BudgetDAO.isCreateExpense = true;
+        BudgetDAO.isCreateExpense = false;
 
         String budgetLine = expenseData.buildertek__Budget_Line__c;
         if (expenseData.buildertek__Budget_Line__c != null && budgetLine != '') {
@@ -311,7 +311,7 @@ public with sharing class NewRecordCustomController{
             }
         }
 
-        BudgetDAO.isCreateExpense = false;
+        BudgetDAO.isCreateExpense = true;
 
         return expenseData.Id;
     }

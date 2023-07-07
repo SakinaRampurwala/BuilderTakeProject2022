@@ -2049,6 +2049,8 @@ helper.getProductDetails(component,event,helper);
                     component.set('v.newBudgetLine.buildertek__Sales_Price__c', '');
                     component.set('v.newBudgetLine.buildertek__Cost_Code__c', '');
                     component.set('v.UOMvalues', '');
+                    component.set('v.pricebookName', '');
+
                     //  component.set('v.Notevalues', '');
     
                     $A.enqueueAction(component.get("c.clearLookupValue"));
