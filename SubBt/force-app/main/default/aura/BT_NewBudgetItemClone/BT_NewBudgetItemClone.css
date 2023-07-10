@@ -234,12 +234,12 @@
 }    */
 @media only screen and (max-height: 1080px) {
     .THIS .divcont{
-        max-height: 37vh;
+        max-height: 40vh;
         overflow: auto;
     }
   }
   .THIS .divconts{
-    max-height: 52vh;
+    max-height: 50vh;
     overflow: auto;
 }
 /* .THIS .maincont{

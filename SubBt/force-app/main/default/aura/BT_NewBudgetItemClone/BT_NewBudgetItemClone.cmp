@@ -295,6 +295,18 @@
                                              onkeyup="{!c.doSearch}" 
                                              />
                         </div> -->
+                        <div class="slds-float_left" style="margin-left:1.6rem">
+                            <span style="display:none;" class="{!v.currentTab+' expandAllBtn_'+v.budgetId}" data-iconattr="{!'expandAllBtn_'+v.budgetId}" data-iconname="Expand All" onclick="{!c.expandCollapeAll}">
+                                <lightning:buttonIcon aura:id="expandCollapeseAllBtn" iconName="utility:add"
+                                    variant="border-filled" iconClass="dark" alternativeText="Expand All"
+                                    title="Expand All" class="pointer1" />
+                            </span>
+                            <span style="display:inline-block;" class="{!v.currentTab+' CollapeseAllBtn_'+v.budgetId}" data-iconattr="{!'CollapeseAllBtn_'+v.budgetId}" data-iconname="Collapse All" onclick="{!c.expandCollapeAll}">
+                                <lightning:buttonIcon aura:id="expandCollapeseAllBtn2" iconName="utility:dash"
+                                    variant="border-filled" iconClass="dark" alternativeText="Collapse All"
+                                    title="Collapse All" class="pointer1" />
+                            </span>
+                        </div>
                     <div style="display:flex;justify-content:end;" class="slds-m-top_medium slds-m-bottom_medium slds-m-right_small">
                         <!-- <div style="display:flex;">
                             <div style="width: fit-content;">
@@ -315,6 +327,18 @@
                                 <lightning:input label="Group By Cost Code" type="toggle" checked="{!v.groupByCostCode}" onchange="{!c.toggleByCost}"/>
                             </div>
                             
+                        </div> -->
+                        <!-- <div class="slds-float_left" style="margin-right:10.6rem;">
+                            <span style="display:none;" class="{!v.currentTab+' expandAllBtn_'+v.budgetId}" data-iconattr="{!'expandAllBtn_'+v.budgetId}" data-iconname="Expand All" onclick="{!c.expandCollapeAll}">
+                                <lightning:buttonIcon aura:id="expandCollapeseAllBtn" iconName="utility:add"
+                                    variant="border-filled" iconClass="dark" alternativeText="Expand All"
+                                    title="Expand All" class="pointer1" />
+                            </span>
+                            <span style="display:inline-block;" class="{!v.currentTab+' CollapeseAllBtn_'+v.budgetId}" data-iconattr="{!'CollapeseAllBtn_'+v.budgetId}" data-iconname="Collapse All" onclick="{!c.expandCollapeAll}">
+                                <lightning:buttonIcon aura:id="expandCollapeseAllBtn2" iconName="utility:dash"
+                                    variant="border-filled" iconClass="dark" alternativeText="Collapse All"
+                                    title="Collapse All" class="pointer1" />
+                            </span>
                         </div> -->
 
                         <div>
@@ -539,7 +563,7 @@
                                 </div>
 
                                 <!-- expand/collapse buttons -->
-                                <div class="slds-float_none" style="margin-bottom:15px;">
+                                <!-- <div class="slds-float_none" style="margin-bottom:15px;">
                                     <span style="display:none;" class="{!v.currentTab+' expandAllBtn_'+v.budgetId}" data-iconattr="{!'expandAllBtn_'+v.budgetId}" data-iconname="Expand All" onclick="{!c.expandCollapeAll}">
                                         <lightning:buttonIcon aura:id="expandCollapeseAllBtn" iconName="utility:add"
                                             variant="border-filled" iconClass="dark" alternativeText="Expand All"
@@ -550,8 +574,8 @@
                                             variant="border-filled" iconClass="dark" alternativeText="Collapse All"
                                             title="Collapse All" class="pointer1" />
                                     </span>
-                                    <!-- <lightning:button aura:id="expandCollapeseAllBtn" variant="neutral" label="" title="Expand All"  iconName="utility:add" iconPosition="left" onclick="{!c.expandCollapeAll}"/> -->
-                                </div>
+                                    <! <lightning:button aura:id="expandCollapeseAllBtn" variant="neutral" label="" title="Expand All"  iconName="utility:add" iconPosition="left" onclick="{!c.expandCollapeAll}"/> -->
+                                <!-- </div> --> 
 
                                 <aura:if isTrue="{!v.total > 60}">
                                     <div class="slds-align_absolute-center">

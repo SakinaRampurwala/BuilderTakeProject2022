@@ -401,12 +401,12 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
   }
   saveSelectedContact() {
     var that = this;
-    console.log("checking method*&");
+    // console.log("checking method*&");
     if (!this.taskRecordId.includes("_generated")) {
-      console.log("^ other side condition ^");
+      // console.log("^ other side condition ^");
       //Added for contractor ****Start****
       if (this.contracFieldApiName === "buildertek__Contractor__c") {
-        console.log("^ In If ^");
+        // console.log("^ In If ^");
         that.showContractor = false; //Added for contractor
         this.isLoaded = true;
 
@@ -428,7 +428,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
       }
       //Added for contractor ****End****
       else {
-        console.log("^ In else ^");
+        // console.log("^ In else ^");
         that.showEditResourcePopup = false;
         this.isLoaded = true;
 
@@ -646,7 +646,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
   droprow(e) {
     var taskIdList = this.scheduleItemIdsList;
     var taskList = this.scheduleItemsDataList;
-    console.log('takslist droprow:-'+taskList);
+    // console.log('takslist droprow:-'+taskList);
     var data = e.dataTransfer.getData("text");
     // Find the record ID by crawling up the DOM hierarchy
 
@@ -874,9 +874,9 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
     Object.assign(this.newTaskRecordCreate, this.newTaskRecordClone);
 
     if (record) {
-      console.log({
-        record,
-      });
+      // console.log({
+      //   record,
+      // });
       if (record._data.type == "Task") {
         this.newTaskRecordCreate["buildertek__Dependency__c"] = record._data.id;
         this.newTaskRecordCreate["buildertek__Order__c"] = record._data.order;
@@ -971,7 +971,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
   refreshGantt() {
     // this.phaseFunction();
 
-    console.log("refreshGantt");
+    // console.log("refreshGantt");
 
     var that = this;
     getScheduleItemRecords({
@@ -979,9 +979,9 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
       scheduleid: this.recordId,
     })
       .then((response) => {
-        console.log({
-          response,
-        });
+        // console.log({
+        //   response,
+        // });
         var records = response;
         var data = response.lstOfSObjs;
         this.scheduleItemsDataList = response.lstOfSObjs;
@@ -2008,7 +2008,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
                   );
                 }
               } else {
-                console.log('record.record.startDate ',record.record.startDate);
+                // console.log('record.record.startDate ',record.record.startDate);
                 var sdate = new Date(record.record.startDate);
                 return (
                   months[sdate.getMonth()] +

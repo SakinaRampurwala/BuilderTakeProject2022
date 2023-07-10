@@ -621,8 +621,8 @@ public class BT_NewGanttChartCls{
         }
 
         for (buildertek__Project_Task__c pt : updatedprojecttaskList) {
-            if (pt.buildertek__Dependency__c != null) {
-                pt.buildertek__Lag__c = ProjectTaskTriggerHandler.calculateDuration(projectTaskMap.get(pt.buildertek__Dependency__c).buildertek__Finish__c, pt.buildertek__Start__c)-2;
+            if (pt.buildertek__Dependency__c != null) {     
+                pt.buildertek__Lag__c = ProjectTaskTriggerHandler.calculateDuration(projectTaskMap.get(pt.buildertek__Dependency__c).buildertek__Finish__c, pt.buildertek__Start__c)-1;
             }
         }
 

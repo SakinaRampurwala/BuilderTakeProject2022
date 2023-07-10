@@ -98,7 +98,7 @@
                         <div class="slds-m-top_medium">    
                             <div class="slds-docked-form-footer slds-modal__footer customFooter" style="height:55px;">
                                 <div style="float:right !important;">
-                                    <lightning:button label="Cancel" title="Cancel" onclick="{!c.Cancel}" class="myBtn"/>
+                                    <lightning:button label="Cancel" title="Cancel" onclick="{!c.closeModel}" class="myBtn"/>
                                     <lightning:button variant="neutral" type="submit" title="Save &amp; New" label="Save &amp; New" onclick="{!c.handlesaveNnew}" />
                                     <lightning:button variant="brand" label="Save" title="Save"  type="submit" class="myBtn2"/>
                                 </div>

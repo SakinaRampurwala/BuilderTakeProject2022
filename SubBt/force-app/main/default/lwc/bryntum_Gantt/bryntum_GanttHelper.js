@@ -15,7 +15,7 @@ function formatData(scheduleData, scheduleItemsData, scheduleItemsDataList) {
 
     var taskListForPhase = scheduleItemsDataList;
     var firstRowDup = {};
-    console.log('taskListForPhase :- ' + JSON.stringify(taskListForPhase));
+    // console.log('taskListForPhase :- ' + JSON.stringify(taskListForPhase));
     firstRowDup["id"] = scheduleData.Id;
     firstRowDup["name"] = scheduleData.Name
     firstRowDup["startDate"] = ""
@@ -566,10 +566,10 @@ function formatData(scheduleData, scheduleItemsData, scheduleItemsDataList) {
     formattedData['resourceRowData'] = resourceRowData;
     formattedData['assignmentRowData'] = assignmentRowData
     formattedData['taskDependencyData'] = taskDependencyData;
-    console.log('rows ==> ',rows);
-    console.log('resourceRowData ==> ',resourceRowData);
-    console.log('assignmentRowData ==> ',assignmentRowData);
-    console.log('taskDependencyData ==> ',taskDependencyData);
+    // console.log('rows ==> ',rows);
+    // console.log('resourceRowData ==> ',resourceRowData);
+    // console.log('assignmentRowData ==> ',assignmentRowData);
+    // console.log('taskDependencyData ==> ',taskDependencyData);
     return formattedData;
 }
 
@@ -586,7 +586,7 @@ function saveeditRecordMethod(event,thisVal){
     if(thisVal.scheduleData.Id){
         schId = thisVal.scheduleData.Id
     }
-    console.log('id for record ',thisVal.taskRecordId);
+    // console.log('id for record ',thisVal.taskRecordId);
     if(thisVal.taskRecordId){
         thisVal.newTaskRecordCreate.Id = thisVal.taskRecordId
         isNotInsert = true
@@ -925,13 +925,13 @@ function saveeditRecordMethod(event,thisVal){
                     Object.assign(that.newTaskRecordCreate , that.newTaskRecordClone);
                 }
             },500);
-            console.log(addedTaskFromPlusIcon);
+            // console.log(addedTaskFromPlusIcon);
         }
         let temp = thisVal.newTaskRecordCreate;
-        console.log('temp var here ==> ',{temp});
+        // console.log('temp var here ==> ',{temp});
         insertUpdateTask({taskFields: JSON.stringify(thisVal.newTaskRecordCreate),isUpdate: isNotInsert,scheduleId : schId}).then(response => {
-            console.log('RESPONSE');
-            console.log({response})
+            // console.log('RESPONSE');
+            // console.log({response})
             const filterChangeEvent = new CustomEvent('filterchange', {
                 detail: { 'message' :'refresh page' },
             });
