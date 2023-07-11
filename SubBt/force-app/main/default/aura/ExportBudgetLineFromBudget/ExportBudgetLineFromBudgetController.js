@@ -72,6 +72,7 @@
             // Iterating over each object and extracting values
             jsonArray.forEach(function(obj) {
             var row = Object.values(obj).join(",");
+            console.log({row});
             csvContent += row + "\n";
             });
             console.log({csvContent});

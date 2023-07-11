@@ -703,7 +703,7 @@ public with sharing class RFQTriggerHandler {
 
 
         RFQTriggerHandler.blnSkipemaileTrigger = false;
-        theTemplate = [SELECT Id FROM EmailTemplate WHERE Name  = : 'RFQ To Vendor Rejected Email'].id;
+        theTemplate = [SELECT Id FROM EmailTemplate WHERE Name  = : 'RFQ To Vendor Rejected Email' LIMIT 1].id;
         List<Messaging.SingleEmailMessage> messageList = new List<Messaging.SingleEmailMessage>();
         List<RFQ_To_Vendor__c> updaterfqVendorList = new List<RFQ_To_Vendor__c>();
         List<RFQ_To_Vendor__c> rfqVendorList;

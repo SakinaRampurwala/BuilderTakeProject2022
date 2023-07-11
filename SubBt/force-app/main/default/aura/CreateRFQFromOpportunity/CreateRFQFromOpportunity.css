@@ -18,3 +18,6 @@
     height: 400px; 
     overflow-y:auto; 
 }
+.THIS .forceChatterBasePublisher :not(.PHONE) .cuf-content {
+    padding: 0 0 !important;
+}

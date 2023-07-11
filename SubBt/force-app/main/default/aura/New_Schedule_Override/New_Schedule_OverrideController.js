@@ -27,12 +27,12 @@
                 var stringList = relatedList.split("/");
                 parentRecordId = stringList[4];
             }
-            
+
                 else {
                     parentRecordId = '';
                 }
-            
-            
+
+
             component.set("v.parentRecordId", parentRecordId);
         }
         console.log('check parent Id '+ component.get("v.parentRecordId"));
@@ -51,10 +51,10 @@
                         }
 
                     }
-                } 
+                }
             });
             $A.enqueueAction(action);
-              
+
         }
         helper.getFields(component, event, helper);
         var action1 = component.get("c.fetchScheduleList");
@@ -87,10 +87,12 @@
         component.set("v.showMessage",true);
         event.preventDefault(); // stop form submission
         var eventFields = event.getParam("fields");
+        console.log('eventFields ',JSON.parse(JSON.stringify(eventFields)));
+        debugger
         // alert(JSON.stringify(eventFields));
         component.find('recordEditForm').submit(eventFields);
-        
-        
+
+
         /*  var action = component.get("c.CreateScheduleItems");
         action.setParams({
             masterScheduleItems : component.get("v.scheduleLineItems")
@@ -101,9 +103,9 @@
             component.set("v.scheduleLineItems", ScheduleItems);
         });*/
         //$A.enqueueAction(action);
-        
+
     },
-    
+
     handleOnSuccess : function(component, event, helper) {
         console.log('===handleOnSuccess===');
         var record = event.getParams().response;
@@ -120,12 +122,12 @@
         }).catch(function (error) {
             console.log('Error', JSON.stringify(error));
         });*/
-        
-        
-        
+
+
+
     },
-    
-    
+
+
     closeModel: function (component, event, helper) {
         console.log('===closeModel===');
         var workspaceAPI = component.find("workspace");
@@ -160,7 +162,7 @@
         });
         $A.enqueueAction(action);
     },
-    
+
     /*gotoList : function (component, event, helper) {
     var action = component.get("c.getListViews");
     action.setCallback(this, function(response){
@@ -178,7 +180,7 @@
     });
     $A.enqueueAction(action);
 },*/
-    
+
     handleOnError : function(component, event, helper) {
         console.log('===handleOnError===');
         var record = event.getParams().response;
@@ -189,22 +191,22 @@
 
         //alert(record.Id);
     },
-    
+
     radioGroup : function(component, event, helper) {
         console.log('===radioGroup===');
         var radioGrpValue = component.get("v.masterItem.Id");
         console.log('radioGrpValue',radioGrpValue);
     },
-    
-    
+
+
     handleClose : function(component, event, helper) {
         console.log('===handleClose===');
         // Close the action panel
         var dismissActionPanel = $A.get("e.force:closeQuickAction");
         // alert('cancel function called');
         dismissActionPanel.fire();
-        
-        
+
+
     },
     saveSelectedPO : function (component, event, helper) {
         console.log('===saveSelectedPO===');
@@ -221,7 +223,7 @@
         });
         $A.enqueueAction(action);
     },
-    
+
     onSaveandNew : function(component, event, helper) {
         console.log('===onSaveandNew===');
         //helper.savefunc(component, event, helper);
@@ -235,7 +237,7 @@
         component.set("v.isSaveAndNew",true);
         //component.find('recordEditForm').submit(fields); // Submit form
         // $A.get('e.force:refreshView').fire();
-        
+
     },
-    
+
 })

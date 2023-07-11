@@ -335,7 +335,10 @@ public without sharing class PurchaseOrderDAO{
             ap.Purchase_Order__c = po.id;
             ap.Project__c = po.Project__c;
             ap.Vendor__c = po.Vendor__c;
-            ap.Tax__c = po.Tax__c;
+
+            if(po.Tax__c != null){
+                ap.Tax__c = po.Tax__c;
+            }
             ap.buildertek__Description__c = po.buildertek__Description__c;
             PoIdbyAp.put(po.id, ap);
             posRecId = po.id;
@@ -372,8 +375,12 @@ public without sharing class PurchaseOrderDAO{
             apItem.Product__c = poItem.Product__c;
             apItem.Purchase_Order_Item__c = poItem.Id;
             apItem.Quantity__c = poItem.Quantity__c;
-            apItem.Unit_Price__c = poItem.Unit_Price__c;
-            apItem.Tax__c = poItem.Tax__c;
+            if(poItem.Unit_Price__c != null){
+                apItem.Unit_Price__c = poItem.Unit_Price__c;
+            }
+            if(poItem.Tax__c != null){
+                apItem.Tax__c = poItem.Tax__c;
+            }
             apItems.add(apItem);
         }
         /* if(Schema.sObjectType.buildertek__Account_Payable_Item__c.fields.Id.isCreateable() &&

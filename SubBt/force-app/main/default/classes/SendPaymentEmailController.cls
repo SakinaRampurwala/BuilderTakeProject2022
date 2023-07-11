@@ -7,7 +7,7 @@ public without sharing class SendPaymentEmailController {
     public static innerClass getSalesOrderDetails(String salesOrderId,String templateId){
         innerClass inner1 = new innerClass();
         System.debug(salesOrderId);
-        buildertek__Billings__c salesOrder = [SELECT Id, Name,buildertek__Customer_Account__c,buildertek__Customer_Account__r.buildertek__Email_Address__c,buildertek__Customer_Account__r.Name,buildertek__Total_Amount_Tax__c FROM buildertek__Billings__c WHERE Id =: salesOrderId];
+        buildertek__Billings__c salesOrder = [SELECT Id, Name,buildertek__Project__c , buildertek__Project__r.buildertek__Customer__c , buildertek__Project__r.buildertek__Customer__r.buildertek__Email_Address__c , buildertek__Customer_Account__c,buildertek__Customer_Account__r.buildertek__Email_Address__c,buildertek__Customer_Account__r.Name,buildertek__Total_Amount_Tax__c FROM buildertek__Billings__c WHERE Id =: salesOrderId];
         //buildertek__Billings__c salesOrder = [SELECT Id, Name,buildertek__Customer_Account__r.buildertek__Email_Address__c,buildertek__Customer_Account__r.Name FROM buildertek__Billings__c where id = 'a0t1K00000Tfe02QAB'];
         system.debug('salesOrder--'+salesOrder);
         inner1.order = salesOrder;
@@ -44,7 +44,7 @@ public without sharing class SendPaymentEmailController {
         tempName = stripeData.buildertek__Email_Template_Name__c;
         EmailTemplate emailTemplate1 = [Select Id,Subject,Description,HtmlValue,DeveloperName,Body from EmailTemplate where name =: tempName];
         TempId = emailTemplate1.Id;
-        buildertek__Billings__c salesOrder = [SELECT Id, Name,buildertek__invoice_number__c,buildertek__Customer_Account__r.buildertek__Email_Address__c,buildertek__Customer_Account__r.Name,LastModifiedById FROM buildertek__Billings__c where id =:ids ];
+        buildertek__Billings__c salesOrder = [SELECT Id, Name, buildertek__Project__r.buildertek__Customer__r.buildertek__Email_Address__c , buildertek__invoice_number__c,buildertek__Customer_Account__r.buildertek__Email_Address__c,buildertek__Customer_Account__r.Name,LastModifiedById FROM buildertek__Billings__c where id =:ids ];
         
         system.debug('salesOrderAcc ----------'+salesOrder.buildertek__Customer_Account__c );
         RecId = salesOrder.Id;
@@ -85,7 +85,7 @@ public without sharing class SendPaymentEmailController {
         message.setFileAttachments(fileAttachments);
     
         //message.setOrgWideEmailAddressId([SELECT Id FROM OrgWideEmailAddress  LIMIT 1].Id);
-        message.toAddresses = new String[] { salesOrder.buildertek__Customer_Account__r.buildertek__Email_Address__c};
+        message.toAddresses = new String[] { salesOrder.buildertek__Project__r.buildertek__Customer__r.buildertek__Email_Address__c};
         message.setTemplateID(emailTemplate1.Id);     
         message.setSaveAsActivity(false);
         message.setWhatId(salesOrder .Id);

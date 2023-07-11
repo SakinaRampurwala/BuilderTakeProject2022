@@ -60,17 +60,30 @@
             if(state === 'SUCCESS') {
                 //alert('State-----------'+state);
                 var res=response.getReturnValue();
+                console.log({res});
                 var validation = false;
-                debugger;
+                // debugger;
                 //alert('res--------'+JSON.stringify(res));
                 //alert('Amount----'+res.order.buildertek__Total_Amount_Tax__c); 
                 //alert('Accountt-------'+res.order.buildertek__Customer_Account__c);
-                if(res.order.buildertek__Customer_Account__c != undefined){
-                    if(res.order.buildertek__Customer_Account__r.buildertek__Email_Address__c != undefined){
-                		component.set("v.Emaillink", res.order.buildertek__Customer_Account__r.buildertek__Email_Address__c);
+                if(res.order.buildertek__Project__c != undefined){
+                    if(res.order.buildertek__Project__r.buildertek__Customer__c != undefined && res.order.buildertek__Project__r.buildertek__Customer__r.buildertek__Email_Address__c != undefined){
+                		component.set("v.Emaillink", res.order.buildertek__Project__r.buildertek__Customer__r.buildertek__Email_Address__c);
                     }
                 }
-                if(res.order.buildertek__Customer_Account__c == undefined){
+
+                if(res.order.buildertek__Project__c == undefined){
+                    validation = true;
+                    $A.get("e.force:closeQuickAction").fire();
+                   component.find('notifLib').showNotice({
+                       "variant": "error",
+                       "header": "Send payment validation!",
+                       "message": "Please select Project",
+                      
+                   });     
+                }
+
+                if(res.order.buildertek__Project__r.buildertek__Customer__c == undefined){
                     validation = true;
                      $A.get("e.force:closeQuickAction").fire();
                     component.find('notifLib').showNotice({
@@ -80,8 +93,8 @@
                        
                     });                    
                     
-                }else if(res.order.buildertek__Customer_Account__c != undefined){
-                    if(res.order.buildertek__Customer_Account__r.buildertek__Email_Address__c == undefined){
+                }else if(res.order.buildertek__Project__c != undefined && res.order.buildertek__Project__r.buildertek__Customer__c != undefined){
+                    if(res.order.buildertek__Project__r.buildertek__Customer__r.buildertek__Email_Address__c == undefined){
                         validation = true;
                         $A.get("e.force:closeQuickAction").fire();
                         component.find('notifLib').showNotice({
