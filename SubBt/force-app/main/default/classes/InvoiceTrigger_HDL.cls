@@ -38,26 +38,37 @@ public with sharing class InvoiceTrigger_HDL {
         } 
        
     }
-    public void onbeforeUpdate(buildertek__Billings__c[] updatedInvoiceList, Map<ID, buildertek__Billings__c> oldInvoiceMap){ 
-         for(buildertek__Billings__c inv : updatedInvoiceList){ 
-             if(inv.buildertek__Terms__c == 'Due on Receipt' && inv.buildertek__Due_Date__c != null){
-                inv.buildertek__Due_Date__c = Date.today();
-            }if(inv.buildertek__Invoiced_Date__c != null && oldInvoiceMap.get(inv.Id).buildertek__Invoiced_Date__c != inv.buildertek__Invoiced_Date__c && inv.buildertek__Terms__c != 'Due on Receipt'){
-                if(inv.buildertek__Terms__c == 'Net 10'){
-                    inv.buildertek__Due_Date__c = inv.buildertek__Invoiced_Date__c + 10;
-                }else if(inv.buildertek__Terms__c == 'Net 15'){
-                    inv.buildertek__Due_Date__c = inv.buildertek__Invoiced_Date__c + 15;
-                }else if(inv.buildertek__Terms__c == 'Net 30'){
-                    inv.buildertek__Due_Date__c = inv.buildertek__Invoiced_Date__c + 30;
-                }else if(inv.buildertek__Terms__c == 'Net 60'){
-                    inv.buildertek__Due_Date__c = inv.buildertek__Invoiced_Date__c + 60;
-                }
-            }
+    // public void onbeforeUpdate(buildertek__Billings__c[] updatedInvoiceList, Map<ID, buildertek__Billings__c> oldInvoiceMap){ 
+    //      for(buildertek__Billings__c inv : updatedInvoiceList){ 
+    //          if(inv.buildertek__Terms__c == 'Due on Receipt' && inv.buildertek__Due_Date__c != null){
+    //             inv.buildertek__Due_Date__c = Date.today();
+    //         }if(inv.buildertek__Invoiced_Date__c != null && oldInvoiceMap.get(inv.Id).buildertek__Invoiced_Date__c != inv.buildertek__Invoiced_Date__c && inv.buildertek__Terms__c != 'Due on Receipt'){
+    //             if(inv.buildertek__Terms__c == 'Net 10'){
+    //                 inv.buildertek__Due_Date__c = inv.buildertek__Invoiced_Date__c + 10;
+    //             }else if(inv.buildertek__Terms__c == 'Net 15'){
+    //                 inv.buildertek__Due_Date__c = inv.buildertek__Invoiced_Date__c + 15;
+    //             }else if(inv.buildertek__Terms__c == 'Net 30'){
+    //                 inv.buildertek__Due_Date__c = inv.buildertek__Invoiced_Date__c + 30;
+    //             }else if(inv.buildertek__Terms__c == 'Net 60'){
+    //                 inv.buildertek__Due_Date__c = inv.buildertek__Invoiced_Date__c + 60;
+    //             }
+    //         }
              
-         } 
+    //      } 
        
+    // }
+    public void onBeforeUpdate(buildertek__Billings__c[] oldInvoiceList, buildertek__Billings__c[] newInvoiceList, Map<ID, buildertek__Billings__c> oldInvoiceMap , Map<ID, buildertek__Billings__c> newInvoiceMap){ 
+      
+       List<buildertek__Receipt__c> ReceiptList= [Select Id, Name , buildertek__Billing__c From buildertek__Receipt__c WHERE buildertek__Billing__c=: newInvoiceMap.keySet()];
+       for(buildertek__Billings__c inv : newInvoiceList){ 
+           if(!ReceiptList.isEmpty()){
+                // if(inv.buildertek__Status__c != oldInvoiceMap.get(inv.Id).buildertek__Status__c || inv.buildertek__Tax_Rate__c != oldInvoiceMap.get(inv.Id).buildertek__Tax_Rate__c || inv.buildertek__Terms__c != oldInvoiceMap.get(inv.Id).buildertek__Terms__c || inv.buildertek__Due_Date__c != oldInvoiceMap.get(inv.Id).buildertek__Due_Date__c || inv.buildertek__Invoiced_Date__c != oldInvoiceMap.get(inv.Id).buildertek__Invoiced_Date__c ) {
+                    inv.addError('You cannot update this Sales Invoice because there is a Receipt associated with it.  If you would like to change this Sales Invoice, please remove the Receipt first.');
+                // }
+            }
+        }
+
     }
-    
     
     public void OnAfterUpdate(buildertek__Billings__c[] oldInvoiceList, buildertek__Billings__c[] updatedInvoiceList, Map<ID, buildertek__Billings__c> InvoiceMap, Map<Id, buildertek__Billings__c> oldInvoiceMap){
         SET<Id> changerOderIdSet = new SET<Id>();

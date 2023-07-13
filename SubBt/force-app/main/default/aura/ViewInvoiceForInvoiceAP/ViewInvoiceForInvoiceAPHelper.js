@@ -1,6 +1,6 @@
 ({
     getTemplateBody: function(component, event, helper) {
-		
+        
         var recordId = component.get("v.recordId");
         var action = component.get("c.getInvoiceLines");
         action.setParams({
@@ -14,9 +14,10 @@
                 console.log('get template body');
                 console.log({ result });
                 component.set("v.invoiceLines", result);
+                component.set("v.Spinner", false);
             }
         });
-        $A.enqueueAction(action);
+        $A.enqueueAction(action);     
     },
 
     getContact: function(component, event, helper) {

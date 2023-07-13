@@ -21,6 +21,10 @@ trigger invoiceTrigger on Billings__c (before insert, before update, before dele
                 BillingRecordList.add(BillingRec);
             }
             handler.OnBeforeInsert(Trigger.new);
+
+            if(Trigger.isUpdate){
+                handler.onBeforeUpdate(Trigger.old ,Trigger.new , Trigger.oldMap , Trigger.newMap);
+            }
         } 
         else if(Trigger.isDelete){
             system.debug('before Delete');

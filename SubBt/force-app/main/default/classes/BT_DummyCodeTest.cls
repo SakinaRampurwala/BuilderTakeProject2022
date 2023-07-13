@@ -14,7 +14,7 @@ public class BT_DummyCodeTest {
         BT_DummyCode.codeCoverage4();
         BT_DummyCode.codeCoverage5();
         BT_DummyCode.codeCoverage6();
-         BT_DummyCode.codeCoverage7();
+        BT_DummyCode.codeCoverage7();
         BT_DummyCode.codeCoverage8();
         BT_DummyCode.codeCoverage9();
         System.assertEquals('Test','Test');

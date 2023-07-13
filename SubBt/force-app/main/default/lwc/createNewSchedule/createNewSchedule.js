@@ -11,8 +11,8 @@ export default class CreateNewSchedule extends NavigationMixin(LightningElement)
     @track searchProjectName = '';
     @track suggestedProjectName = [];
     @track showProjectName = false;
-    @track projectId = '';
-    @track userId = '';
+    @track projectId;
+    @track userId;
     @track searchProjectManager = '';
     @track suggestedProjectManagerName = [];
     @track showProjectManagerName = false;
@@ -21,7 +21,8 @@ export default class CreateNewSchedule extends NavigationMixin(LightningElement)
     @track masterRec = '';
     @track listOfFields = [];
     @track scheduleLineItems = [];
-    @track initialStartDate = '';
+    @track initialStartDate;
+    @track isLoading = false;
     description = '';
     type = 'Standard';
 
@@ -151,6 +152,7 @@ export default class CreateNewSchedule extends NavigationMixin(LightningElement)
 
     createSchedule() {
         try {
+            this.isLoading = true;
             console.log(`description: ${this.description} projectId: ${this.projectId} formattedDate: ${this.initialStartDate} type: ${this.type} userId: ${this.userId} masterRec: ${this.masterRec}`);
             createNewSchedule({ description: this.description, project: this.projectId, initialStartDate: this.initialStartDate, type: this.type, user: this.userId, masterId: this.masterRec })
                 .then((result) => {
@@ -169,16 +171,39 @@ export default class CreateNewSchedule extends NavigationMixin(LightningElement)
                             url: "/one/one.app#" + encodedDef
                         }
                     });
-
+                    this.isLoading = false;
                 })
                 .catch((error) => {
                     console.log('error:', error);
+                    this.isLoading = false;
                 })
         } catch (error) {
             console.log('error', JSON.stringify(error));
         }
     }
-
+    onSaveandNew() {
+        try {
+            this.isLoading = true;
+            console.log(`description: ${this.description} projectId: ${this.projectId} formattedDate: ${this.initialStartDate} type: ${this.type} userId: ${this.userId} masterRec: ${this.masterRec}`);
+            createNewSchedule({ description: this.description, project: this.projectId, initialStartDate: this.initialStartDate, type: this.type, user: this.userId, masterId: this.masterRec })
+                .then((result) => {
+                    console.log('schId:', result);
+                    this.isLoading = false;
+                    this.description = '';
+                    this.initialStartDate = undefined;
+                    this.type = 'Standard';
+                    this.userId = undefined;
+                    this.masterRec = undefined;
+                    this.projectId = undefined;
+                })
+                .catch((error) => {
+                    console.log('error:', error);
+                    this.isLoading = false;
+                })
+        } catch (error) {
+            console.log('error', JSON.stringify(error));
+        }
+    }
     disconnectedCallback() {
         document.removeEventListener('click', this.handleDocumentEvent.bind(this));
     }

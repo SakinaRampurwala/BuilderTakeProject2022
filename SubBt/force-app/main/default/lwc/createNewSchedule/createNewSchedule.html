@@ -1,4 +1,10 @@
 <template>
+    <div class="spinner">
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" variant="brand" size="large">
+            </lightning-spinner>
+        </template>
+    </div>
     <div class="slds-m-around_large" style="background: white; margin: 1% 5%;">
         <header class="slds-modal__header">
             <lightning-button-icon icon-name="utility:close" onclick={closeModel} alternative-text="close"

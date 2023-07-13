@@ -32,6 +32,7 @@
         var selectedTemplate = component.get("v.selectedTemplate");
         if (selectedTemplate != undefined) {
             component.set("v.isTemplateSelected", true);
+            component.set("v.Spinner", true);
             helper.getContact(component, event, helper);
             helper.getTemplateBody(component, event, helper);
             // helper.getProposalImagesList(component, event, helper);

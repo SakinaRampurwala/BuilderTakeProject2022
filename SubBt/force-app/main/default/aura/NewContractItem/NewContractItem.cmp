@@ -96,7 +96,7 @@
                     <lightning:button iconName="utility:close"  iconPosition="left" onclick="{!c.onClickMassUpdateCancel}" label="Cancel" class="sldsButtonGroup"/>
                     <aura:set attribute="else">
                         <lightning:button iconName="utility:edit"  iconPosition="left" onclick="{!c.onClickMassUpdate}" label="Mass Update" class="sldsButtonGroup"/>
-                            <lightning:button iconName="utility:add" iconPosition="left" onclick="{!c.newGroup}" label="Add Group" class="sldsButtonGroup"/>
+                            <!-- <lightning:button iconName="utility:add" iconPosition="left" onclick="{!c.newGroup}" label="Add Group" class="sldsButtonGroup"/> -->
                         </aura:set>
                 </aura:if>
 					<lightning:button label="Delete" onclick="{!c.deleteSelectedContractItem}" class="sldsButtonGroup"/>

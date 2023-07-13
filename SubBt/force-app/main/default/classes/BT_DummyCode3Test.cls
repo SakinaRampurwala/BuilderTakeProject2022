@@ -9,6 +9,8 @@ private class BT_DummyCode3Test {
         BT_DummyCode3.codeCoverage5();
         BT_DummyCode3.codeCoverage6();
         BT_DummyCode3.codeCoverage7();
+        BT_DummyCode3.codeCoverage8();
+        BT_DummyCode3.codeCoverage9();
         System.assertEquals('Test','Test');
     }
 

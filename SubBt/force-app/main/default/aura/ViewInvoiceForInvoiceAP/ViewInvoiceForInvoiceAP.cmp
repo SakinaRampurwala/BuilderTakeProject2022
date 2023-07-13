@@ -95,6 +95,13 @@
                         .slds-p-around--medium {
                         padding: 0rem !important;
                         }
+                        footer.slds-docked-form-footer.fixedFooter{
+                            display: block;
+                            text-align: right;
+                            padding-right: 16px;
+                            bottom: 3.5rem !important;
+                            background: #FFFFFF;
+                        }
                     </aura:html>
                     <lightning:select name="templates" label="Select Template" aura:id="template"
                         value="{!v.selectedTemplate}" onchange="{!c.preiewEmailTemplate}">
@@ -105,6 +112,16 @@
                     </lightning:select>
                 </aura:if>
                 <aura:if isTrue="{!v.isTemplateSelected}">
+                    <aura:if isTrue="{!v.Spinner}">
+                    <div aura:id="spinnerId" class="slds-spinner_container">
+                        <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative"
+                            role="alert">
+                            <span class="slds-assistive-text">Loading</span>
+                            <div class="slds-spinner__dot-a"></div>
+                            <div class="slds-spinner__dot-b"></div>
+                        </div>
+                    </div>
+                </aura:if>
                     <aura:html tag="style">
                         .slds-modal__container {
                         width:70% !important;
@@ -122,7 +139,47 @@
                         .slds-p-around--medium {
                         padding: 0rem !important;
                         }
+                        .slds-scrollable_y, .slds-scrollable-y {
+                            -webkit-overflow-scrolling: touch;
+                            max-height: 100%;
+                            overflow: hidden;
+                            overflow-y: auto;
+                        }
+                        @media screen and (min-width: 1366px) and (min-height: 768px) {
+                            footer.slds-docked-form-footer.fixedFooter{
+                                display: block;
+                                text-align: right;
+                                padding-right: 16px;
+                                bottom: 4.7rem !important;
+                                background: #FFFFFF;
+                            }
 
+                            .slds-scrollable_y, .slds-scrollable--y {
+                                -webkit-overflow-scrolling: touch;
+                                max-height: 71vh !important;
+                                overflow: hidden;
+                                overflow-y: auto;
+                          }
+                        }
+                        @media screen and (min-width: 1920px) and (min-height: 1080px) {
+                            footer.slds-docked-form-footer.fixedFooter{
+                                display: block;
+                                text-align: right;
+                                padding-right: 16px;
+                                bottom: 1.7rem !important;
+                                background: #FFFFFF;
+                            }
+
+                            .slds-scrollable_y, .slds-scrollable--y {
+                                -webkit-overflow-scrolling: touch;
+                                max-height: 71vh !important;
+                                overflow: hidden;
+                                overflow-y: auto;
+                          } 
+                        }
+                        .slds-scrollable_y::-webkit-scrollbar {
+                            display: none;
+                        }
                     </aura:html>
                     <div class="slds-form-element slds-email-composer__combobox" style="padding-bottom: 10px;">
                         <label class="slds-form-element__label" for="recipients-to">To</label>
@@ -173,7 +230,7 @@
             </div>
         </div>
         <footer role="contentinfo" class="slds-docked-form-footer fixedFooter"
-        style="display:block;text-align:right;padding-right:16px;bottom:3.5rem;background:#FFFFFF">
+        style="display:block;text-align:right;padding-right:16px;bottom:1rem;background:#FFFFFF">
         <aura:if isTrue="{!v.isTemplateSelected}">
             <button class="slds-button slds-button--brand" onclick="{!c.sendEmail}">Send
                 Email</button>

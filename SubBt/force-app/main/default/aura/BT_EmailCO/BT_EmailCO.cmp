@@ -1,52 +1,107 @@
-<aura:component
-    implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction,lightning:isUrlAddressable"
-    access="global" controller="BT_EmailChangeOrderController">
+<aura:component controller="BT_SendEmailController" implements="force:hasRecordId,force:appHostable,flexipage:availableForAllPageTypes,force:hasSObjectName,force:lightningQuickActionWithoutHeader,forceCommunity:availableForAllPageTypes,flexipage:availableForRecordHome" access="global">
+	
+	
+	<aura:attribute name="onSuccess" type="Object"/>
+	<aura:attribute name="onCancel" type="Object"/>
+	<aura:attribute name="selectedToContact" type="sObject[]" default="[]"/>
+	<aura:attribute name="selectedCcContact" type="sObject[]" default="[]"/>
+	<aura:attribute name="selectedFiles" type="sObject[]" default="[]"/>
+    <aura:attribute name="selectedFillIds" type="sObject[]" default="[]"/>
 
-    <aura:attribute name="isOpen" type="boolean" default="false" />
-    <aura:attribute name="onSuccess" type="Object" />
-    <aura:attribute name="onCancel" type="Object" />
-    <aura:attribute name="selectedToContact" type="sObject[]" default="[]" />
-    <aura:attribute name="selectedCcContact" type="sObject[]" default="[]" />
-    <aura:attribute name="selectedFiles" type="sObject[]" default="[]" />
-    <aura:attribute name="selectedFillIds" type="sObject[]" default="[]" />
-    <aura:attribute name="parentRecordId" type="String" default="" />
+	
+	<aura:attribute name="pdfFileName" type="String"/>
+	<aura:attribute name="templatefolderName" type="String" />
+	<aura:attribute name="templates" type="List" default="[]"/>
+    <aura:attribute name="fileAttachments" type="List" default="[]"/>
+	<aura:attribute name="selectedTemplate" type="String" default=""/>
+	<aura:attribute name="documentsList" type="List" default="[]"/>
+	
+	<aura:attribute name="templateBody" type="String" default=""/>
+	<aura:attribute name="subject" type="String" default=""/>
+	<aura:attribute name="showTemplate" type="Boolean" default="true"/>
+	
+	<aura:attribute name="objectAPI" type="String" />
+	<aura:attribute name="recordId" type="String" />
+	<aura:attribute name="modalPromise" type="Aura.Action"/>
+	<aura:attribute name="fileOptsList" type="Object"/>
+	<aura:attribute name="fileName" type="String" default="No File Selected.." />
+    <aura:attribute name="selectedfilesFill" type="list"/>
+    <aura:attribute name="selectedfileslist" type="Object"/>
 
-    <aura:attribute name="pdfFileName" type="String" default="Change Order" />
-    <aura:attribute name="templatefolderName" type="String" default="BT CO" />
-    <aura:attribute name="templates" type="List" default="[]" />
-    <aura:attribute name="fileAttachments" type="List" default="[]" />
-    <aura:attribute name="selectedTemplate" type="String" default="" />
-    <aura:attribute name="documentsList" type="List" default="[]" />
-
-    <aura:attribute name="templateBody" type="String" default="" />
-    <aura:attribute name="subject" type="String" default="" />
-    <aura:attribute name="showTemplate" type="Boolean" default="true" />
-
-    <aura:attribute name="objectAPI" type="String" />
-    <aura:attribute name="records" type="List" />
-    <aura:attribute name="modalPromise" type="Aura.Action" />
-    <aura:attribute name="fileOptsList" type="Object" />
-    <aura:attribute name="fileName" type="String" default="No File Selected.." />
-    <aura:attribute name="selectedfilesFill" type="list" />
-    <aura:attribute name="selectedfileslist" type="Object" />
-
-    <aura:method name="refreshData" action="{!c.init}"></aura:method>
+	<aura:method name="refreshData" action="{!c.init}"></aura:method>
     <aura:attribute name="toEmail" type="String" />
     <aura:attribute name="emailIds" type="List" />
-    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
-
-    <aura:attribute name="showBodyTemplate" type="Boolean" default="false" />
-    <aura:attribute name="bodytemplatesList" type="List" default="[]" />
-    <aura:attribute name="selectedbodyTemplateItem" type="String" default="" />
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <aura:attribute name="showBodyTemplate" type="Boolean" default="false"/>
+    <aura:attribute name="bodytemplatesList" type="List" default="[]"/>
+	<aura:attribute name="selectedbodyTemplateItem" type="String" default=""/>
     <aura:attribute name="selectedInvoiceBodyContent" type="String" default="" />
-    <lightning:notificationsLibrary aura:id="notifLib" />
-    <aura:method name="closeModalPopup" action="{!c.closeModel}" description="">
-    </aura:method>
-    <lightning:workspaceAPI aura:id="workspace" />
-    <c:BT_Spinner />
-    <section role="dialog" tabindex="-1" aura:id="Modalbox" aria-labelledby="modal-heading-01" aria-modal="true"
-        aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
-        <div class="slds-box">
+	<aura:attribute name="sobjecttype" type="String" default="{!v.sObjectName}"/>
+	
+	<!-- <lightning:overlayLibrary aura:id="overlay"/>  -->
+	<c:BT_Spinner/>
+    
+    <!-- <ltng:require styles="{!$Resource.ModalPreviewCSS}"/> -->
+    
+    <aura:html tag="style">
+        .slds-modal__container {
+        width:65% !important;      
+        max-width: 65% !important;   
+        <!-- overflow: hidden !important; -->
+        
+        }
+        .slds-modal__content::-webkit-scrollbar {
+            display: none;
+          }
+        .slds-modal__content {
+        <!-- overflow: hidden !important; -->
+        }
+        .slds-modal__close{
+        display:block !important;    
+        }
+        <!-- .slds-docked-form-footer{
+            bottom: auto !important;
+        } -->
+        .slds-modal__header{
+            margin-bottom: 10px;
+        }
+        .cuf-content {
+            padding: 0 0rem !important;
+            }
+            .slds-p-around--medium {
+            padding: 0rem !important;
+            }       
+            .slds-modal__content{
+            overflow-y:hidden !important;
+            height:unset !important;
+            max-height:unset !important;
+            }
+            .slds-email-composer{
+                padding: 20px;
+                border: 1px solid #bcbcbc;
+                margin: 10px;
+                border-radius: 5px;
+            }
+    </aura:html>
+    <!-- <div class="Customcloseicon" style="width: 97%;text-align: right;position: absolute; margin-top: -50px;">
+        <lightning:buttonIcon iconName="utility:close"    variant="border-inverse" title="Close"  alternativeText="Close Window" onclick="{!c.closeModel}" />
+    </div> -->
+    
+    <div class="slds-modal__content ">
+        <div class="slds slds-scope">
+            <header class="slds-modal__header">
+                <lightning:buttonIcon iconName="utility:close" onclick="{! c.closeModel }" alternativeText="close"
+                                      variant="bare-inverse" class="slds-modal__close" />
+                
+                <aura:if isTrue="{!v.sObjectName == 'buildertek__Change_Order__c'}">
+                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Email Change Order</h2>
+            </aura:if>
+            <aura:if isTrue="{!v.sObjectName == 'buildertek__Project__c'}">
+                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Email Project</h2>
+            </aura:if>
+            </header>
+          <!--  <div class="slds-modal__content slds-p-around_medium slds-scrollable_y" id="modal-content-id-1" style="width:100%;height:100%;">-->
             <div class="slds-email-composer">
                 <div class="slds-form-element slds-email-composer__combobox" style="padding-bottom: 10px;">
                     <label class="slds-form-element__label" for="recipients-to">To</label>
@@ -162,13 +217,32 @@
                     
                 </div>
             </div>
-            <div class="slds-hide">
-                <div aura:id="footer">
-                     <lightning:button name="cancel" variant="Neutral" label="Cancel" onclick="{!c.cancel}"/>
-                     <lightning:button class="slds-float_right" name="Send" variant="brand" type="submit" label="Send" onclick="{!c.sendemail}"/>
-                 </div>
-            </div>
+            <!-- <footer role="contentinfo"  class="slds-docked-form-footer fixedFooter" style="display:block;text-align:right;padding-right:5px;">
+                <button class="slds-button slds-buttonneutral sldsbutton"
+                        onclick="{!c.closeWindow}">Cancel</button>
+                        <button class="slds-button slds-buttonbrand" onclick="{!c.sendemail}">Send
+                            Email</button>
+            </footer> -->
+           <!-- <footer class="slds-modal__footer" style = "padding-top: 10px">
+                <button class="slds-button slds-button-brand" style="margin-top: 10px;"  onclick="{!c.Acceptandclose}">Accept and Close</button>
+                <button class="slds-button slds-button-brand" style="margin-top: 10px;" onclick="{!c.AcceptandsendEmail}">Accept and Send Email</button>
+                <button class="slds-button slds-button-brand" style="margin-top: 10px;" onclick="{!c.sendEmail}">Send Email</button>
+                <button class="slds-button slds-button-neutral sldsbutton" style="margin-top: 10px;" onclick="{!c.closeModel}" >Cancel</button>
+                
+            </footer>-->
         </div>
-    </section>
-    <div class="slds-backdrop slds-backdrop_open"></div>
+        <!-- <div class="footercls">
+            <div aura:id="footer">
+                <button class="slds-button slds-buttonneutral sldsbutton"
+                        onclick="{!c.closeWindow}">Cancel</button>
+                        <button class="slds-button slds-buttonbrand" onclick="{!c.sendemail}">Send
+                            Email</button>
+            </div>
+        </div> -->
+        
+    </div>
+    <div class="modal-footer slds-modal__footer slds-size_1-of-1">
+        <lightning:button variant="Brand" class="slds-button" label="Send Email" onclick="{!c.sendemail}"/>
+        <lightning:button variant="Neutral" class="slds-button" label="Cancel" onclick="{!c.closeWindow}"/>
+    </div>
 </aura:component>
