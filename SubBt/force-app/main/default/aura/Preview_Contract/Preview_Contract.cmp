@@ -187,16 +187,20 @@
     </div> 
     </div>
     <footer role="contentinfo"  class="slds-docked-form-footer fixedFooter" style="display:block;text-align:right;padding-right:5px;">
-        <button class="slds-button slds-button--brand" style="margin-top: 0px; margin-bottom: 0px;" onclick="{!c.Acceptandclose}">Accept and Close</button>
-        <button class="slds-button slds-button--brand" style="margin-top: 0px; margin-bottom: 0px;" onclick="{!c.AcceptandsendEmail}">Accept and Send Email</button>
-    	<button class="slds-button slds-button--brand" style="margin-top: 0px; margin-bottom: 0px;" onclick="{!c.sendEmail}">Send Email</button>
+        <!-- <button class="slds-button slds-buttonbrand" style="margin-top: 0px; margin-bottom: 0px;" onclick="{!c.Acceptandclose}">Accept and Close</button>
+        <button class="slds-button slds-buttonbrand" style="margin-top: 0px; margin-bottom: 0px;" onclick="{!c.AcceptandsendEmail}">Accept and Send Email</button>
+    	<button class="slds-button slds-buttonbrand" style="margin-top: 0px; margin-bottom: 0px;" onclick="{!c.sendEmail}">Send Email</button> -->
         
     	<aura:if isTrue="{!v.isTemplateSelected}">
-            <button class="slds-button slds-button--neutral" style="margin-top: 0px; margin-bottom: 0px;" onclick="{!c.preview}" >Cancel</button>
-            <aura:set attribute="else">
-                <button class="slds-button slds-button--neutral" style="margin-top: 0px; margin-bottom: 0px;" onclick="{!c.closeModel}" >Cancel</button>
-            </aura:set>
+            <button class="slds-button slds-button--brand" style="margin-top: 0px; margin-bottom: 0px;" onclick="{!c.Acceptandclose}">Accept and Close</button>
+        <button class="slds-button slds-button--brand" style="margin-top: 0px; margin-bottom: 0px;" onclick="{!c.AcceptandsendEmail}">Accept and Send Email</button>
+    	<button class="slds-button slds-button--brand" style="margin-top: 0px; margin-bottom: 0px;" onclick="{!c.sendEmail}">Send Email</button>
+            <!-- <button class="slds-button slds-buttonneutral" style="margin-top: 0px; margin-bottom: 0px;" onclick="{!c.preview}" >Cancel</button> -->
+            <!-- <aura:set attribute="else"> -->
+                <!-- <button class="slds-button slds-buttonneutral" style="margin-top: 0px; margin-bottom: 0px;" onclick="{!c.closeModel}" >Cancel</button> -->
+            <!-- </aura:set> -->
         </aura:if>
+        <button class="slds-button slds-button--neutral" style="margin-top: 0px; margin-bottom: 0px;" onclick="{!c.closeModel}" >Cancel</button>
       </footer>
     </div>
     </div>

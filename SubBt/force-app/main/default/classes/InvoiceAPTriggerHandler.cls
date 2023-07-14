@@ -3,6 +3,7 @@ public class InvoiceAPTriggerHandler {
     public static Boolean isFirstTime = true;
     public static Boolean skipDeleteMethod = false;
 
+
     public void OnAfterInsert(buildertek__Account_Payable_Clone__c[] invoiceList, Map<Id, buildertek__Account_Payable_Clone__c> invoiceNewMap){
 
         Set<Id> invoiceIds = new Set<Id>();
@@ -110,6 +111,21 @@ public class InvoiceAPTriggerHandler {
             }
             update budgetItemList;
         } */
+
+    }
+
+    public void onBeforeUpdate(buildertek__Account_Payable_Clone__c[] invoiceList, Map<Id, buildertek__Account_Payable_Clone__c> invoiceNewMap, Map<Id, buildertek__Account_Payable_Clone__c> invoiceOldMap){
+
+        System.debug('onBeforeUpdate');
+
+        List<buildertek__BT_Payment__c> paymentList = [SELECT Id , Name , buildertek__Invoices_AP__c From buildertek__BT_Payment__c WHERE buildertek__Invoices_AP__c=:invoiceNewMap.keySet()];
+        System.debug(paymentList.size() + 'paymentList');
+        System.debug(!paymentList.isEmpty());
+        for(buildertek__Account_Payable_Clone__c invoice:invoiceList){
+            if(!paymentList.isEmpty()){
+                invoice.addError('You cannot update this Payable Invoice because there is a Payment associated with it.  If you would like to change this Payable Invoice, please remove the Payment first.');
+            }
+        }
 
     }
 

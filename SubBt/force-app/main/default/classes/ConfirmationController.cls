@@ -272,13 +272,14 @@ public without sharing class ConfirmationController{
             insert conDocLink;
             system.debug('objectAPIName-----' + objectAPIName);
             if (objectAPIName.contains('buildertek__Contract__c')){
-                buildertek__Contract__c contractrec = [select id, Name, buildertek__Status__c, buildertek__Customer_Accepted_Date__c, buildertek__Project__c, buildertek__Signed_Contract_Date__c
+                buildertek__Contract__c contractrec = [select id, Name, buildertek__Status__c, buildertek__Customer_Accepted_Date__c, buildertek__Project__c, buildertek__Signed_Contract_Date__c, buildertek__Contract_Rejection_Reason__c
                                                        from buildertek__Contract__c
                                                        where Id = :recordID
                                                        limit 1];
                 if (contractrec != null){
                     contractrec.buildertek__Customer_Accepted_Date__c = system.today();
-                    contractrec.buildertek__Status__c = 'Accepted';
+                    contractrec.buildertek__Status__c = 'Rejected';
+                    contractrec.buildertek__Contract_Rejection_Reason__c = rejectionReason;
                     update contractrec;
                 }
             }

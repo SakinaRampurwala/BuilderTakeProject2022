@@ -127,6 +127,12 @@ public class ExpenseToBudgetItemTriggerHandler {
         // If user change budget and expense is not linked with any budget line then it's create nee budget line under that budget
         Map<Id, buildertek__Budget_Item__c> newBudgetItemMap = new Map<Id, buildertek__Budget_Item__c>();
         for (buildertek__Expense__c expense : newExpenseList) {
+
+            if(oldExpenseMap.get(expense.Id).buildertek__Date_Posted__c !=null && newExpenseMap.get(expense.Id).buildertek__Date_Posted__c!= null){
+                expense.addError('You cannot update this Expense.  If you would like to update this Expense, please remove the date posted value  first.');
+
+            }
+
             if(oldExpenseMap.get(expense.Id).buildertek__Budget__c != expense.buildertek__Budget__c && expense.buildertek__Budget__c != null && expense.buildertek__Budget_Line__c == null){
                 buildertek__Budget_Item__c budgetItem = new buildertek__Budget_Item__c();
                 budgetItem.buildertek__Budget__c = expense.buildertek__Budget__c;

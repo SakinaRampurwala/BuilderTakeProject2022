@@ -161,6 +161,14 @@
                         "type": "error"
                     });
                     toastEvent.fire();
+                }else if (errors[0].pageErrors != undefined && (errors[0].pageErrors[0].statusCode.includes("FIELD_CUSTOM_VALIDATION_EXCEPTION") && errors[0].pageErrors[0].message.includes("You cannot update this Purchase Order because there is a Contract Invoice associated with it.  If you would like to change this Purchase Order, please remove the Contract Invoice first."))) {
+                    var toastEvent = $A.get("e.force:showToast");
+                    toastEvent.setParams({
+                        "title": "Error!",
+                        "message": "You cannot update this Purchase Order because there is a Contract Invoice associated with it",
+                        "type": "error"
+                    });
+                    toastEvent.fire();
                 } else{
                     var toastEvent = $A.get("e.force:showToast");
                     toastEvent.setParams({

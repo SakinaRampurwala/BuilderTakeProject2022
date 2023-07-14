@@ -193,7 +193,7 @@ public class BudgetDAOTest {
         BudgetDAO.getFieldSet('buildertek__BT_Related_List_View_Fields', 'buildertek__Budget_Item__c');
         
         BudgetDAO.getContingencyBudgetItems(budgetRecs.id);
-        BudgetDAO.setProductNameToItemName(budgetListRef);
+        // BudgetDAO.setProductNameToItemName(budgetListRef);
         //BudgetDAO.massDuplicateBudgetLineItem(budgetItemIds);
      //   BudgetDAO.createCOFromBudget(budgetRecs.id,'test','test');
         

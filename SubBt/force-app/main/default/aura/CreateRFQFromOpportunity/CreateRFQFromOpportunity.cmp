@@ -36,10 +36,10 @@
 						   </div>
 						</div>
 					</aura:if>
-					<lightning:recordEditForm aura:id="recordViewForm" objectApiName="buildertek__RFQ__c" density="Comfy">
+					<lightning:recordEditForm aura:id="recordViewForm" objectApiName="buildertek__RFQ__c" density="Compact">
 						<lightning:layout multipleRows="true">
 							<lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
-								<lightning:input type="text" aura:id="rfqDescription" value="{!v.newRFQ.Name}" label="RFQ Description" autocomplete="off"/>
+								<lightning:inputField aura:id="rfqDescription" value="{!v.newRFQ.Name}" label="RFQ Description" fieldName="Name" autocomplete="off"/>
 							</lightning:layoutItem>
 							
 							<lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
@@ -54,7 +54,7 @@
 							</lightning:layoutItem>
 							
 							<lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">
-								<lightning:input type="date" aura:id="dueDate" value="{!v.newRFQ.buildertek__Due_Date__c}" label="RFQ Due Date" autocomplete="off"/>
+								<lightning:inputField  aura:id="dueDate" fieldName="buildertek__Due_Date__c" value="{!v.newRFQ.buildertek__Due_Date__c}" label="RFQ Due Date" autocomplete="off"/>
 							</lightning:layoutItem>
 							
 							<lightning:layoutItem size="12" mediumDeviceSize="6" padding="around-small">

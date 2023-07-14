@@ -287,6 +287,9 @@ PurchaseOrderDAO.isUpdatePurchaseOrder = true;
         //* added this lines by Nishit (MV Clouds)
         Set<Id> scheduleItemId = new Set<Id>();
         System.debug('in before update method');
+
+        List<buildertek__Account_Payable__c> contractInvoiveList= [Select Id , Name  , buildertek__Purchase_Order__c From buildertek__Account_Payable__c WHERE buildertek__Purchase_Order__c=:newPurchaseOrdersMap.keySet()];
+
         for (buildertek__Purchase_Order__c po : newPurchaseOrders) {
             if (oldPurchaseOrdersMap.get(po.Id).buildertek__Schedule_Item__c != newPurchaseOrdersMap.get(po.Id).buildertek__Schedule_Item__c) {
                 if (po.buildertek__Schedule_Item__c != null) {
@@ -295,6 +298,9 @@ PurchaseOrderDAO.isUpdatePurchaseOrder = true;
                     po.buildertek__Start_Date__c = null;
                     po.buildertek__End_Date__c = null;
                 }
+            }
+            if(!contractInvoiveList.isEmpty()){
+                po.addError('You cannot update this Purchase Order because there is a Contract Invoice associated with it.  If you would like to change this Purchase Order, please remove the Contract Invoice first.');
             }
         }
         Map<Id, buildertek__Project_Task__c> taskMap = new Map<Id, buildertek__Project_Task__c>([SELECT Id, Name, buildertek__Start__c, buildertek__Finish__c FROM	buildertek__Project_Task__c WHERE Id IN: scheduleItemId]);
@@ -307,6 +313,8 @@ PurchaseOrderDAO.isUpdatePurchaseOrder = true;
                 }
             }
         }
+
+      
     }
 
     public void OnAfterDelete(Purchase_Order__c[] oldPurchaseOrders){

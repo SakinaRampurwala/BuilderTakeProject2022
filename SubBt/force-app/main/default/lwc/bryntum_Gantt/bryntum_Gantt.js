@@ -1510,12 +1510,16 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
   }
 
   populateIconsOnExpandCollapse(source) {
+    let id = source.record.id;
+    console.log('populateIconsOnExpandCollapse source ',{source});
+    console.log('id source ',id);
     var rowPhaseElement = this.template.querySelector(
       '[data-id="' + source.record.id + '"]'
     );
     if (rowPhaseElement && rowPhaseElement.innerHTML) {
       var iconElement = "";
       if (source.record.type == "Phase") {
+        console.log('in phase condition');
         iconElement = `<span class="slds-icon_container slds-icon-standard-task" >
                                     <svg aria-hidden="true" class="slds-icon slds-icon-text-default" style="fill: white !important;height:1.2rem;width:1.2rem;">
                                         <use xmlns:xlink=" http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/standard-sprite/svg/symbols.svg#task">
@@ -1527,12 +1531,14 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
         ) {
           if (rowPhaseElement.children.length) {
             if (rowPhaseElement.children[5].children.length) {
+              console.log('rowPhaseElement ',JSON.parse(JSON.stringify(rowPhaseElement.children[5])));
               rowPhaseElement.children[5].children[0].innerHTML =
                 iconElement + rowPhaseElement.children[5].children[0].innerHTML;
             }
           }
         }
       } else if (source.record.type == "Project") {
+        console.log('in project condition');
         iconElement = `<span class="slds-icon_container slds-icon-custom-custom70" >
                                     <svg aria-hidden="true" class="slds-icon slds-icon-text-default" style="fill: white !important;height:1.2rem;width:1.2rem;">
                                     <use xmlns:xlink=" http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/custom-sprite/svg/symbols.svg#custom70">
