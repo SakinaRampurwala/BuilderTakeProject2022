@@ -7,6 +7,7 @@
     <aura:attribute name="listOfFields" type="List" />
     <aura:attribute name="parentRecordId" type="String" default="" />
     <aura:attribute name="parentRecord" type="Payment_Request__c[]" />
+    <aura:attribute name="isSaveNew" type="boolean" default="false" />
 
 
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
@@ -51,7 +52,7 @@
                                     <div class="custom-box"> 
                                         <aura:if isTrue="{!or(field.name == 'buildertek__Payment_Amount__c', or(field.name == 'buildertek__Payment_Date__c', or(field.name == 'buildertek__Reference__c', or(field.name == 'buildertek__Payable__c',field.name == 'buildertek__Type__c'))))}">
                                             <aura:if isTrue="{!field.name == 'buildertek__Payment_Amount__c'}" >
-                                                <lightning:inputField fieldName="{!field.name}" value="{!value.buildertek__Amount__c}" aura:id="inputFields" />
+                                                <lightning:inputField fieldName="{!field.name}" value="{!value.buildertek__Amount__c}" type="decimal" aura:id="inputFields" class="myTest" />
                                             </aura:if>
                                             <aura:if isTrue="{!field.name == 'buildertek__Payment_Date__c'}" >
                                                 <lightning:inputField fieldName="{!field.name}" value="{!value.buildertek__Effective_Date__c}" type="date" aura:id="inputFields1" />
@@ -79,7 +80,7 @@
                         <div class="slds-col modal-footer slds-modal__footer slds-buttoncustom" >
                             <lightning:button label="Cancel" title="Cancel" onclick="{!c.closePopup}" class="myBtn"/>
                             <!-- <lightning:button label="Save &amp; New" title="Save &amp; New" onclick="{!c.handlesaveNnew}" type="submit" class="myBtn"/> -->
-                            <lightning:button variant="brand" label="Save" title="Save" onclick="{!c.createRecord}" type="submit" class="myBtn2"/>
+                            <lightning:button variant="brand" label="Save" title="Save" type="submit" class="myBtn2"/>
                         </div>
                     </div>
             </lightning:recordEditForm>
