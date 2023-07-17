@@ -86,6 +86,8 @@
         });
         action.setCallback(this, function(response){
             console.log(response.getState());
+            var errors = response.getError();
+
             if(response.getState() == 'SUCCESS') {            
                 var result = response.getReturnValue();
                 console.log({result});
@@ -120,6 +122,17 @@
                 });
                 toastEvent.fire();
                 component.set("v.isDisabled", false);
+            }else if (errors[0].pageErrors != undefined && (errors[0].pageErrors[0].statusCode.includes("FIELD_CUSTOM_VALIDATION_EXCEPTION"))) {
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    "title": "Error!",
+                    "message": "You cannot update this Payable Invoice because there is a Payment associated with it.",
+                    "type": "error"
+                });
+                toastEvent.fire();
+                component.set("v.isDisabled", false);
+                component.set("v.isLoading", false);
+
             }else{
                 var toastEvent = $A.get("e.force:showToast");
                 toastEvent.setParams({

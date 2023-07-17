@@ -114,7 +114,7 @@ public class InvoiceAPTriggerHandler {
 
     }
 
-    public void onBeforeUpdate(buildertek__Account_Payable_Clone__c[] invoiceList, Map<Id, buildertek__Account_Payable_Clone__c> invoiceNewMap, Map<Id, buildertek__Account_Payable_Clone__c> invoiceOldMap){
+    public void RestrictToUpdatePI(buildertek__Account_Payable_Clone__c[] invoiceList, Map<Id, buildertek__Account_Payable_Clone__c> invoiceNewMap, Map<Id, buildertek__Account_Payable_Clone__c> invoiceOldMap){
 
         System.debug('onBeforeUpdate');
 

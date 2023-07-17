@@ -49,6 +49,36 @@
             list-style: disc;
             margin-left: 2% !important;
         }
+        /*====SPINNER====*/
+        #main-spinner-container{
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px); /* Apply blur effect */
+            z-index: 9999; /* Ensure the spinner is above other content */
+            display: none;
+        }
+        
+        #main-spinner {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            animation: spin 1s linear infinite;
+            background-color: rgba(255, 255, 255, 0.8); /* Adjust background color and opacity */
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /*===SPINNER END==*/
 
     </style>
     <script>
@@ -129,6 +159,10 @@
     <script>
         document.getElementById('spinner').className += ' slds-hide';
     </script>
+
+    <div id="main-spinner-container">
+        <div id="main-spinner"></div>
+    </div>
 
     <apex:outputPanel rendered="{!isAccepted}" id="acceptquote">
         <div style='text-align: center;padding:20px;font-size:20px;'>
@@ -461,6 +495,7 @@
                     if (signaturePad.isEmpty()) {
                         document.getElementById('rejectId').style.display = "block";
                     } else {
+                        document.getElementById('main-spinner-container').style.display = "flex";
                         var image = canvas.toDataURL().split(',')[1];
                         document.getElementById('rejectId').style.display = "none";
                         callRejectPopup(image);
@@ -476,6 +511,7 @@
             function saveRejectPopup() {
                 var rejectionReason = document.getElementsByClassName("textareaStyleClass")[0].value;
                 if (rejectionReason) {
+                    document.getElementById('main-spinner-container').style.display = "flex";
                     saveRejectionReasonPopup();
                 } else {
                        alert('Please enter rejection reason');
@@ -503,9 +539,9 @@
             }
 
             function closeRejectPopup() {
+                window.location.reload()
                 closeRejectReasonPopup();
             }
-
 
             function saveImage() {
              const x ='{!Result}';
@@ -515,6 +551,7 @@
                 if (signaturePad.isEmpty()) {
                     document.getElementById('signid').style.display = "block";
                 } else {
+                    document.getElementById('main-spinner-container').style.display = "flex";
                     var image = canvas.toDataURL().split(',')[1];
                     document.getElementById('signid').style.display = "none";
                     callSaveSigMethod(image);
@@ -525,7 +562,11 @@
             }
 
             function createAttachment() {
+                document.getElementById('main-spinner-container').style.display = "none";
                 insertAttachment();
+            }
+            function hideSpinner(){
+                document.getElementById('main-spinner-container').style.display = "none";
             }
 
 
@@ -536,10 +577,10 @@
         <apex:actionFunction name="insertAttachment" action="{!insertAttachment}" rerender="frmid">
         </apex:actionFunction>
 
-        <apex:actionFunction name="callRejectPopup" action="{!showRejectReasonPopup}" rerender="frmid,rejectionPopup">
+        <apex:actionFunction name="callRejectPopup" action="{!showRejectReasonPopup}" rerender="frmid,rejectionPopup" oncomplete="hideSpinner()">
             <apex:param name="imageValue" assignTo="{!imageContentforReject}" value="" />
         </apex:actionFunction>
-        <apex:actionFunction name="saveRejectionReasonPopup" action="{!saveRejectionReason}" rerender="frmid,rejectionPopup">
+        <apex:actionFunction name="saveRejectionReasonPopup" action="{!saveRejectionReason}" rerender="frmid,rejectionPopup" oncomplete="hideSpinner()">
         </apex:actionFunction>
         <apex:actionFunction name="saveacceptandRejectlines" action="{!updateQuotelinestatus}" rerender="frmid">
         </apex:actionFunction>

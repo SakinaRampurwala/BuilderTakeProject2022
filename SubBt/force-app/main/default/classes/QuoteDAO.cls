@@ -650,7 +650,7 @@ public with sharing class QuoteDAO{
         System.debug('########pricebook' + productId);
         list<PricebookEntry> pList = new list<PricebookEntry>();
 
-        pList = [select id, UnitPrice, buildertek__Unit_Cost__c, buildertek__Markup__c, buildertek__Discount__c, Product2Id, Product2.buildertek__Quote_Group__r.Name
+        pList = [select id, UnitPrice, buildertek__Unit_Cost__c, buildertek__Markup__c, buildertek__Discount__c, Product2Id, Product2.buildertek__Quote_Group__r.Name, Product2.QuantityUnitOfMeasure	
                  from PricebookEntry
                  where product2Id = :productId and pricebook2Id =: pricebookId];
 
@@ -2118,6 +2118,7 @@ public with sharing class QuoteDAO{
             newQline.buildertek__Status__c = 'Accept';
             newQline.buildertek__Quote__c = QuoteId;
             newQline.buildertek__Product_Family__c = qql.buildertek__Product_Family__c;
+            newQline.buildertek__UOM__c = qql.buildertek__UOM__c;
             insertListofQuoteLines.add(newQline); 
         }
         insert insertListofQuoteLines;
@@ -2376,7 +2377,7 @@ public with sharing class QuoteDAO{
 
 
         List<PriceBookEntry> pEntries = [SELECT Id,Product2Id, Product2.buildertek__Quote_Group__c , Product2.Name, Product2.ProductCode, Product2.Description, toLabel(Product2.Family), 
-                                            Product2.IsActive,buildertek__Unit_Cost__c, buildertek__Markup__c, buildertek__Discount__c, Pricebook2.Name, UnitPrice
+                                            Product2.IsActive,buildertek__Unit_Cost__c, buildertek__Markup__c, buildertek__Discount__c, Pricebook2.Name, UnitPrice, Product2.QuantityUnitOfMeasure  //----
                                             FROM PricebookEntry WHERE Pricebook2Id=:pbookId AND IsActive = True 
                                             ORDER BY Product2.Family ASC NULLS LAST, Product2.Name ASC NULLS LAST];
 
@@ -2396,6 +2397,7 @@ public with sharing class QuoteDAO{
             aProduct.Discount = pEntry.buildertek__Discount__c;
             aProduct.UnitCost = pEntry.buildertek__Unit_Cost__c;
             aProduct.Phase = pEntry.Product2.buildertek__Quote_Group__c;
+            aProduct.QuantityUnitOfMeasure = pEntry.Product2.QuantityUnitOfMeasure;     //----
             products.add(aProduct);
         }
 
@@ -2450,6 +2452,9 @@ public with sharing class QuoteDAO{
 
         @AuraEnabled
         public Decimal Discount;
+
+        @AuraEnabled
+        public String QuantityUnitOfMeasure;        //----
     }
 
     @AuraEnabled

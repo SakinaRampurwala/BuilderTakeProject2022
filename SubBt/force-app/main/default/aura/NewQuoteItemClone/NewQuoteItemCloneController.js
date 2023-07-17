@@ -678,6 +678,7 @@
 
         console.log(component.get("v.newQuote"));
         console.log(' Quote Data ==> ' + JSON.stringify(quoteObject));
+        debugger;
 
         var recordId = component.get("v.recordId");
         component.set("v.newQuote.buildertek__Quote__c", recordId);

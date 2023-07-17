@@ -289,6 +289,7 @@ PurchaseOrderDAO.isUpdatePurchaseOrder = true;
         System.debug('in before update method');
 
         List<buildertek__Account_Payable__c> contractInvoiveList= [Select Id , Name  , buildertek__Purchase_Order__c From buildertek__Account_Payable__c WHERE buildertek__Purchase_Order__c=:newPurchaseOrdersMap.keySet()];
+        System.debug('contractInvoiveList' + contractInvoiveList);
 
         for (buildertek__Purchase_Order__c po : newPurchaseOrders) {
             if (oldPurchaseOrdersMap.get(po.Id).buildertek__Schedule_Item__c != newPurchaseOrdersMap.get(po.Id).buildertek__Schedule_Item__c) {
@@ -299,7 +300,7 @@ PurchaseOrderDAO.isUpdatePurchaseOrder = true;
                     po.buildertek__End_Date__c = null;
                 }
             }
-            if(!contractInvoiveList.isEmpty()){
+            if(!contractInvoiveList.isEmpty() && po.buildertek__Paid_Amount__c== oldPurchaseOrdersMap.get(po.Id).buildertek__Paid_Amount__c){
                 po.addError('You cannot update this Purchase Order because there is a Contract Invoice associated with it.  If you would like to change this Purchase Order, please remove the Contract Invoice first.');
             }
         }

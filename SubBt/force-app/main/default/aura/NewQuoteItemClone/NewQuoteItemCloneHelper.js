@@ -868,6 +868,10 @@
                     component.set("v.newQuote.buildertek__Grouping__c", res[0].Product2.buildertek__Quote_Group__c);
                     component.set("v.newQuote.buildertek__Grouping__r.Name", res[0].Product2.buildertek__Quote_Group__r.Name);
                 }
+                if(res[0].Product2.QuantityUnitOfMeasure != undefined && res[0].Product2.QuantityUnitOfMeasure != null){
+                    console.log("Inside UOM-->", res[0].Product2.QuantityUnitOfMeasure )
+                    component.set("v.newQuote.buildertek__UOM__c", res[0].Product2.QuantityUnitOfMeasure);
+                }
             }
         });
         $A.enqueueAction(action);
@@ -894,6 +898,7 @@
                 }
                 if (existuom == true) {
                     component.set("v.UOMvalues", res);
+                    console.log("Quote 23",res);
                 } else {
                     component.set("v.UOMvalues", 'Each');
                 }

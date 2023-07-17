@@ -267,7 +267,7 @@ export default base => class GanttToolbar extends base {
                         },
                         {
                             type     : 'button',
-                            text     : 'Export as .xslx',
+                            text     : 'Export Schedule',
                             color    : 'b-blue',
                             ref      : 'excelExportBtn',
                             icon     : 'b-fa-file-export',
@@ -500,13 +500,14 @@ export default base => class GanttToolbar extends base {
     onSaveClick(){
         try {
             var libraryDataList = [];
+            console.log('this.gantt.data ',JSON.parse(JSON.stringify(this.gantt.data)));
             for (let i = 0; i < this.gantt.data.length; i++) {
                 const data = this.gantt.data[i]._data;
                 libraryDataList.push(data);
             }
-            console.log('new data lib ',libraryDataList);
+            console.log('new data lib ',JSON.parse(JSON.stringify(libraryDataList)));
             let dataForApexController = formatJSDatatoApexData(libraryDataList);
-            console.log('check new data here ',dataForApexController);
+            console.log('check new data here ',JSON.parse(JSON.stringify(dataForApexController)));
 
         } catch (error) {
             console.log('Error-->'+error+' message-->'+error.message);
@@ -515,15 +516,6 @@ export default base => class GanttToolbar extends base {
     }
 
     onExportclick(){
-        console.log('onExportclick');
-        this.gantt.features.pdfExport.showExportDialog();
-        // Simple export
-        this.gantt.features.pdfExport.export({
-            // Required, set list of column ids to export
-            columns : this.gantt.columns.map(c => c.id)
-        }).then(result => {
-            // Response instance and response content in JSON
-            let { response, responseJSON } = result;
-        });
+        this.gantt.callGanttComponent.exportData();
     }
 };

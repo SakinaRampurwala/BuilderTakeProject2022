@@ -437,5 +437,11 @@
         component.set("v.isSaveNew", true);
     },
     handleCoSubmit:function(component, event, helper) {
+    },
+    roundToTwoDecimals: function(component, event, helper) {
+        var inputField = event.getSource();
+        var value = inputField.get("v.value");
+        var roundedValue = parseFloat(value).toFixed(2);
+        inputField.set("v.value", roundedValue);
     }
 })

@@ -289,13 +289,13 @@
                                                 <lightning:input aura:id="poItemName" value="{!item.Name}" />
                                             </td>
                                             <td data-label="Quantity">
-                                                <lightning:input type='number' aura:id="unitCost" value="{!item.buildertek__Quantity__c}" step="0.001" />
+                                                <lightning:input type='number' aura:id="unitCost" value="{!item.buildertek__Quantity__c}" step="0.01" onblur="{!c.roundToTwoDecimals}"/>
                                             </td>
                                             <td data-label="unitCost">
-                                                <lightning:input type='number' aura:id="quantity" value="{!item.buildertek__Unit_Price__c}" step="0.001" />
+                                                <lightning:input type='number' aura:id="quantity" value="{!item.buildertek__Unit_Price__c}" step="0.01" onblur="{!c.roundToTwoDecimals}"/>
                                             </td>
                                             <td data-label="Markup">
-                                                <lightning:input type='number' aura:id="quantity" value="{!item.buildertek__Markup__c}" step="0.001" />
+                                                <lightning:input type='number' aura:id="quantity" value="{!item.buildertek__Markup__c}" step="0.01" onblur="{!c.roundToTwoDecimals}"/>
                                             </td>
                                             <td>
                                                 <span data-id="{!index}" onclick="{!c.removeCOLine}">

@@ -1,4 +1,5 @@
 public with sharing class AccountPayableHelper {
+
     public static void beforeDelete(List<buildertek__Account_Payable__c> listAccountPayable) {
         for(buildertek__Account_Payable__c currPayable : listAccountPayable) {
             if(String.isNotBlank(currPayable.buildertek__Status__c)) {
@@ -11,6 +12,7 @@ public with sharing class AccountPayableHelper {
     }
    
     public static void afterUpdate(buildertek__Account_Payable__c[] oldPayableList, buildertek__Account_Payable__c[] updatedPayableList, Map<ID, buildertek__Account_Payable__c> PayableMap, Map<Id, buildertek__Account_Payable__c> oldPayableMap){
+        System.debug('afterUpdate:::');
         SET<Id> purchaseOderIdSet = new SET<Id>();
         SET<Id> budgetIdSet = new SET<Id>();
         SET<Id> budgetPurchaseOderIdSet = new SET<Id>();
@@ -27,14 +29,8 @@ public with sharing class AccountPayableHelper {
             }
         } 
         system.debug('purchaseOderIdSet --------> '+purchaseOderIdSet);
-         List<buildertek__Purchase_Order__c> purchaseOrderList = new  List<buildertek__Purchase_Order__c>();
-        
-            
-             purchaseOrderList = [SELECT Id,
-                                        Name,
-                                        buildertek__Budget__c
-                                        FROM buildertek__Purchase_Order__c
-                                        WHERE Id IN: purchaseOderIdSet];
+        List<buildertek__Purchase_Order__c> purchaseOrderList = new  List<buildertek__Purchase_Order__c>();
+        purchaseOrderList = [SELECT Id,  Name,  buildertek__Budget__c  FROM buildertek__Purchase_Order__c  WHERE Id IN: purchaseOderIdSet];
           
         if(purchaseOrderList.size() > 0){
             for(buildertek__Purchase_Order__c PO : purchaseOrderList){
@@ -63,13 +59,7 @@ public with sharing class AccountPayableHelper {
             List<buildertek__Account_Payable__c> payablesList = new  List<buildertek__Account_Payable__c>();
         if(budgetPurchaseOderIdSet !=null){
             
-                        payablesList = [SELECT Id,
-                                        Name,
-                                        buildertek__Purchase_Order__c,
-                                        buildertek__Purchase_Order__r.buildertek__Budget__c,
-                                        buildertek__Payments__c
-                                        FROM buildertek__Account_Payable__c
-                                        WHERE buildertek__Purchase_Order__c IN: budgetPurchaseOderIdSet];
+            payablesList = [SELECT Id,   Name,  buildertek__Purchase_Order__c,    buildertek__Purchase_Order__r.buildertek__Budget__c,  buildertek__Payments__c   FROM buildertek__Account_Payable__c    WHERE buildertek__Purchase_Order__c IN: budgetPurchaseOderIdSet];
             
                                                     
             system.debug('payablesList --------> '+payablesList);
@@ -145,6 +135,16 @@ public with sharing class AccountPayableHelper {
             }
             if (transactionList.size() > 0) {
                 update transactionList;
+            }
+        }
+    }
+
+    public static void RestrictToUpdateCashDisbursement(buildertek__Account_Payable__c[] invoiceList, Map<Id, buildertek__Account_Payable__c> newInvoiceMap ,  Map<Id, buildertek__Account_Payable__c> oldInvoiceMap ){
+
+        List<buildertek__Payment__c> cashDisbursementList= [Select Id , Name , buildertek__Payable__c From buildertek__Payment__c WHERE buildertek__Payable__c=:newInvoiceMap.keySet()];
+        for(buildertek__Account_Payable__c invoice : invoiceList){ 
+            if(!cashDisbursementList.isEmpty() && invoice.buildertek__Payments__c == oldInvoiceMap.get(invoice.Id).buildertek__Payments__c){
+                invoice.addError('You cannot update this Contractor Invoice because there is a Cash Disbursement associated with it.  If you would like to change this Contractor Invoice, please remove the Cash Disbursement first.');
             }
         }
     }

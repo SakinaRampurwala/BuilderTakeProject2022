@@ -34,26 +34,28 @@
         helper.getFields(component, event, helper);
 	},
     closeModel: function (component, event, helper) {
-       var workspaceAPI = component.find("workspace");
-        workspaceAPI.getFocusedTabInfo().then(function (response) {
-            var focusedTabId = response.tabId;
-            workspaceAPI.closeTab({
-                tabId: focusedTabId
-            });
-        }).catch(function (error) {
-            console.log('Error', JSON.stringify(error));
-        });
-        setTimeout(function () {
-            //component.set('v.isLoading', false);
-            var payload = component.get("v.recordId");
-            var url = location.href;
-            var navEvt = $A.get("e.force:navigateToSObject");
-            navEvt.setParams({
-                "recordId": payload,
-                "slideDevName": "related"
-            });
-            navEvt.fire();
-        }, 200);
+    //    var workspaceAPI = component.find("workspace");
+    //     workspaceAPI.getFocusedTabInfo().then(function (response) {
+    //         var focusedTabId = response.tabId;
+    //         workspaceAPI.closeTab({
+    //             tabId: focusedTabId
+    //         });
+    //     }).catch(function (error) {
+    //         console.log('Error', JSON.stringify(error));
+    //     });
+    //     setTimeout(function () {
+    //         //component.set('v.isLoading', false);
+    //         var payload = component.get("v.recordId");
+    //         var url = location.href;
+    //         var navEvt = $A.get("e.force:navigateToSObject");
+    //         navEvt.setParams({
+    //             "recordId": payload,
+    //             "slideDevName": "related"
+    //         });
+    //         navEvt.fire();
+    //     }, 200);
+        $A.get("e.force:closeQuickAction").fire();
+
     },
     handleSubmit: function (component, event, helper) {
         component.set('v.isdisabled', true);

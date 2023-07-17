@@ -1,3 +1,3 @@
-<aura:application access="GLOBAL" extends="ltng:outApp" extensible="force:slds">
-	
+<aura:application access="GLOBAL" extends="force:slds">
+    <c:importScheduleLine/>
 </aura:application>

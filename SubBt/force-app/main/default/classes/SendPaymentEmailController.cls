@@ -87,7 +87,7 @@ public without sharing class SendPaymentEmailController {
         //message.setOrgWideEmailAddressId([SELECT Id FROM OrgWideEmailAddress  LIMIT 1].Id);
         message.toAddresses = new String[] { salesOrder.buildertek__Project__r.buildertek__Customer__r.buildertek__Email_Address__c};
         message.setTemplateID(emailTemplate1.Id);     
-        message.setSaveAsActivity(false);
+        message.setSaveAsActivity(true);
         message.setWhatId(salesOrder .Id);
         message.setTargetObjectId(Condata.Id /* UserInfo.getUserId() */);
         messageList.add(message);
@@ -107,12 +107,14 @@ public without sharing class SendPaymentEmailController {
             emailToSend.setHTMLBody(email.getHTMLBody());
             emailToSend.setSaveAsActivity(true);
             emailToSend.setSubject(email.getSubject());
+            emailToSend.setWhatId(salesOrder .Id);
+            emailToSend.setTargetObjectId(Condata.Id /* UserInfo.getUserId() */);
             //emailToSend.setOrgWideEmailAddressId(email.getOrgWideEmailAddressId());
             emailToSend.setFileAttachments(email.getFileAttachments());
             actualMessageList.add(emailToSend);
         }
         
-       
+            System.debug('actualMessageList' + actualMessageList);
             Messaging.SendEmailResult [] serList = Messaging.sendEmail(actualMessageList);           
             msg = 'Email Sent';
         }catch(Exception e){

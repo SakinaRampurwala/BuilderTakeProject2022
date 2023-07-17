@@ -38,7 +38,7 @@ public with sharing class NewPricingRequestController{
                 changeorderRec.buildertek__Project__c = prline.buildertek__Pricing_Request__r.buildertek__Project__c;
                 changeorderRec.buildertek__Date_Created__c = System.today();
                 changeorderRec.buildertek__Vendor__c = prline.buildertek__Vendor__c;
-                changeorderRec.buildertek__Markup__c = prline.buildertek__Markup__c;
+                //changeorderRec.buildertek__Markup__c = prline.buildertek__Markup__c;
                 changeorderRec.buildertek__Pricing_Request_Line__c = prline.id;
                 changeorderRec.buildertek__Pricing_Request__c = prline.buildertek__Pricing_Request__c;
                 COList.add(changeorderRec);
@@ -58,7 +58,7 @@ public with sharing class NewPricingRequestController{
                         changeorderRec.buildertek__Change_Order__c = prline.id;
                         changeorderRec.buildertek__Description__c = prdetailline.buildertek__Description__c;
                         changeorderRec.buildertek__Item_Name__c = prdetailline.buildertek__Description__c;
-                        changeorderRec.buildertek__Markup__c = prdetailline.buildertek__Markup__c;
+                        //changeorderRec.buildertek__Markup__c = prdetailline.buildertek__Markup__c;
                         changeorderRec.buildertek__Product__c = prdetailline.buildertek__Product__c;
                         changeorderRec.buildertek__Quantity__c = 1;
                         changeorderRec.buildertek__Unit_Price__c = prdetailline.buildertek__Price__c;

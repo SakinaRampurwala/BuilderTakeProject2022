@@ -66,6 +66,12 @@
           })
           .catch(function(error) {
               console.log(error);
+              //force:navigateToObjectHome
+                var homeEvent = $A.get("e.force:navigateToObjectHome");
+                homeEvent.setParams({
+                    "scope": "buildertek__Quote__c"
+                });
+                homeEvent.fire();
           });
           $A.get("e.force:closeQuickAction").fire();
           component.set("v.isOpen", false);
