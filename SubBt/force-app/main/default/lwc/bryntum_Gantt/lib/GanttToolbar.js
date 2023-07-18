@@ -393,9 +393,10 @@ export default base => class GanttToolbar extends base {
         }
     }
     onSaveClick(){
-        console.log(this.gantt.data)
+        console.log('save changes',this.gantt)
         var data = this.gantt.data;
         console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
+        debugger
         console.log('Data => ',{data});
         var ganttRowData = [];
         var taskData = JSON.parse(this.gantt.taskStore.json)

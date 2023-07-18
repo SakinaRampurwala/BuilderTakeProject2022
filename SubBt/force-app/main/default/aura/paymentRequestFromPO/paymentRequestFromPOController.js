@@ -138,6 +138,7 @@
                     "message": "Something Went Wrong"
                 });
                 toastEvent.fire();
+                component.set('v.Spinner', false);
                 console.log('error', response.getError());
             }
         });

@@ -176,18 +176,18 @@ function formatApexDatatoJSData(scheduleData, scheduleItemsData, scheduleItemsDa
             taskPhaseRow["children"].push(rowChilObj);
 
             var found = false;
-               if(firstRowDup['children'].length){
-                   for(var k=0;k<firstRowDup['children'].length;k++){
-                       if(firstRowDup['children'][k].id == taskPhaseRow['id']){
+            if(firstRowDup['children'].length){
+                for(var k=0;k<firstRowDup['children'].length;k++){
+                    if(firstRowDup['children'][k].id == taskPhaseRow['id']){
                         firstRowDup['children'][k] = taskPhaseRow
                         found = true
                     }
                 }
-               }else{
+            }else{
                 firstRowDup['children'].push(taskPhaseRow);
                 found = true
             }
-               if(!found){
+            if(!found){
                 firstRowDup['children'].push(taskPhaseRow);
             }
         }else if(taskListForPhase[i].buildertek__Phase__c && !taskPhaseRow){
@@ -472,36 +472,144 @@ function formatApexDatatoJSData(scheduleData, scheduleItemsData, scheduleItemsDa
     return formattedData;
 }
 
-function formatJSDatatoApexData(libraryDataList) {
-    let dataForApexController = {};
-    let scheduleItemList = [];
+function convertJSONtoApexData(data, taskData, dependenciesData, resourceData) {
+    console.log('Data-->', data)
+    console.log('taskData-->', taskData)
+    console.log('dependenciesData-->', dependenciesData)
+    console.log('resourceData-->', resourceData)
+    let dataToPassIntoApex = {};
     let scheduleObj = {};
-    libraryDataList.forEach(LibraryData => {
-        var scheduleItemObj = {};
-        console.log('check lib data ',LibraryData);
-        if (LibraryData['type'] === "Project") {
-            const endDateTimeSchedule = convertDateTime(LibraryData.endDate);
-            scheduleObj['id'] = LibraryData.id;
-            scheduleObj['buildertek__End_date__c'] = endDateTimeSchedule.substring(0, 8);
-        }else if(LibraryData['type'] === "Task"){
-            scheduleItemObj['Id'] = LibraryData.id;
-            scheduleItemObj['Name'] = LibraryData.name;
-            scheduleItemObj['buildertek__Completion__c'] = LibraryData.percentDone;
-            scheduleItemObj['buildertek__Start_Date_Time__c'] = convertDateTime(LibraryData.startDate);
-            scheduleItemObj['buildertek__End_Date_Time__c'] = convertDateTime(LibraryData.endDate);
-            scheduleItemObj['buildertek__Duration__c'] = LibraryData.duration;
-            scheduleItemObj['buildertek__Dependency__c'] = LibraryData.predecessor;
-            scheduleItemObj['buildertek__Phase__c'] = LibraryData.phase;
-            scheduleItemList.push(scheduleItemObj);
+    var rowData = [];
+    if (data) {
+        if (data.length > 1) {
+            function getChildren(data) {
+                if (data.children) {
+                    for (var i = 0; i < data.children.length; i++) {
+                        getChildren(data.children[i])
+                    }
+                } else {
+                    rowData.push(data)
+                }
+            }
+            for (let j = 0; j < taskData.length; j++) {
+                getChildren(taskData[j])
+            }
+            var updateDataList = [];
+            var updateDataCloneList = [];
+            for (var i = 0; i < rowData.length; i++) {
+                var updateData = {}
+                var updateDataClone = {}
+                var endDate
+                if (rowData[i]['name'] != 'Milestone Complete') {
+                    endDate = new Date(rowData[i].endDate);
+                    endDate.setDate(endDate.getDate() - 1)
+                } else {
+                    endDate = new Date(rowData[i].endDate);
+                    //endDate.setDate(endDate.getDate() + 1)
+                }
+
+                rowData[i].endDate = endDate;
+                if (rowData[i]['id'].indexOf('_generate') == -1) {
+                    updateData['Id'] = rowData[i]['id']
+                }
+                updateData['buildertek__Schedule__c'] = taskData[0].id;
+                updateData['Name'] = rowData[i]['name']
+                updateData['buildertek__Order__c'] = i + 1;
+                //var startdate = new Date(rowData[i]['startDate'])
+                // console.log('test',new Date(rowData[i]['endDate']).toLocaleDateString())
+                var enddate = new Date(rowData[i]['endDate']).toLocaleDateString().split('/')
+                //var enddate = new Date(rowData[i]['endDate']).toJSON();
+                var enddate = new Date(rowData[i]['endDate'])
+                // console.log('test', rowData[i]['startDate'])
+                updateData['buildertek__Start__c'] = rowData[i]['startDate'].split('T')[0]
+                //updateData['buildertek__Finish__c'] = enddate[2] + '-'+ enddate[1] + '-'+enddate[0]
+                //updateData['buildertek__Finish__c'] = enddate.split('T')[0]
+                updateData['buildertek__Finish__c'] = enddate.getFullYear() + '-' + Number(enddate.getMonth() + 1) + '-' + enddate.getDate();
+                updateData['buildertek__Duration__c'] = rowData[i]['duration']
+                updateData['buildertek__Completion__c'] = rowData[i]['percentDone']
+                console.log('check custom type ',rowData[i]['customtype']);
+                if (rowData[i]['customtype']) {
+                    updateData['buildertek__Type__c'] = rowData[i]['customtype']
+                }else{
+                    if (rowData[i]['duration'] == 0) {
+                        updateData['buildertek__Type__c'] = 'Milestone'
+                    }else{
+                        updateData['buildertek__Type__c'] = 'Task'
+                    }
+                }
+
+                if (rowData[i]['cls']) {
+                    var check = rowData[i]['cls']
+                    if (check.includes('milestoneCompleteColor')) {
+                        updateData['buildertek__Milestone__c'] = true;
+                    }
+                }
+                if (rowData[i]['iconCls'] == 'b-fa b-fa-arrow-left indentTrue') {
+                    updateData['buildertek__Indent_Task__c'] = true
+                } else {
+                    updateData['buildertek__Indent_Task__c'] = false;
+                }
+                //updateData['buildertek__Indent_Task__c'] = rowData[i]['iconCls'].includes('indentTrue')
+                if (rowData[i]['parentId']) {
+                    // console.log(rowData[i]['parentId'])
+                    if (rowData[i]['parentId'].split('_')[1]) {
+                        updateData['buildertek__Phase__c'] = rowData[i]['parentId'].split('_')[1]
+                    }
+                }
+
+                var filledDependency = false
+                for (var j = 0; j < dependenciesData.length; j++) {
+                    if (dependenciesData[j]['to'] == rowData[i]['id']) {
+                        if (dependenciesData[j]['id'].indexOf('_generated') >= 0) {
+                            updateData['buildertek__Dependency__c'] = dependenciesData[j]['from']
+                        } else {
+                            updateData['buildertek__Dependency__c'] = dependenciesData[j]['from']
+                        }
+                        filledDependency = true;
+                    }
+                    if (!filledDependency) {
+                        updateData['buildertek__Dependency__c'] = null;
+                    }
+                }
+                updateDataClone = Object.assign({}, updateData);
+                // console.log(updateDataClone);
+                /* for (var j = 0; j < resourceData.length; j++) {
+                    if (resourceData[j]['event'] == rowData[i]['id']) {
+                        if (resourceData[j]['id'].indexOf('ContractorResource') >= 0) {
+                            var conresName = resourceData[j]['id'].split('ContractorResource_Name')[1];
+                            var obj = { 'Name': conresName }
+                            updateData['buildertek__Contractor_Resource__r'] = obj;
+                            updateData['buildertek__Contractor_Resource__c'] = resourceData[j]['resource']
+                            updateDataClone['buildertek__Contractor_Resource__c'] = resourceData[j]['resource']
+                        } else if (resourceData[j]['id'].indexOf('Resource') >= 0) {
+                            var resName = resourceData[j]['id'].split('Resource_Name')[1];
+                            var obj = { 'Name': resName }
+                            updateData['buildertek__Resource__c'] = resourceData[j]['resource']
+                            updateData['buildertek__Resource__r'] = obj;
+                            updateDataClone['buildertek__Resource__c'] = resourceData[j]['resource']
+                        }
+                    }
+                } */
+                if (rowData[i]['id'].indexOf('_generate') == -1) {
+                    updateDataCloneList.push(updateDataClone)
+                }
+                updateDataList.push(updateData)
+            }
+
+            if (data[0]._data['type'] === "Project") {
+                scheduleObj['id'] = data[0]._data.id;
+                scheduleObj['buildertek__End_date__c'] = covertIntoDate(data[0]._data.endDate);
+            }
+            console.log('updateDataList ==> ', { updateDataList });
+            dataToPassIntoApex['scheduleData'] = scheduleObj;
+            dataToPassIntoApex['taskData'] = updateDataList;
+
+            return dataToPassIntoApex;
         }
-    });
-    console.log('scheduleObj ',scheduleObj);
-    dataForApexController['scheduleObj'] = scheduleObj;
-    dataForApexController['scheduleItemList'] = scheduleItemList;
-    console.log('dataForApexController check ',dataForApexController);
-    return dataForApexController;
+    }
 }
 
+// for converting into date time formate
 function convertDateTime(dateString) {
     // Convert the date string to a JavaScript Date object
     const date = new Date(dateString);
@@ -516,4 +624,18 @@ function convertDateTime(dateString) {
     return newDate;
   }
 
-export{ formatApexDatatoJSData, formatJSDatatoApexData};
+function covertIntoDate(date) {
+    var d = new Date(date),
+    month = '' + (d.getMonth() + 1),
+    day = '' + d.getDate(),
+    year = d.getFullYear();
+
+    if (month.length < 2)
+        month = '0' + month;
+    if (day.length < 2)
+        day = '0' + day;
+
+    return [year, month, day].join('-');
+}
+
+export{ formatApexDatatoJSData, convertJSONtoApexData};

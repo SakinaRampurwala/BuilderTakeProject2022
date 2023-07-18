@@ -1,5 +1,5 @@
 /* globals bryntum : true */
-import { formatJSDatatoApexData } from "../gantt_componentHelper";
+import { convertJSONtoApexData } from "../gantt_componentHelper";
 export default base => class GanttToolbar extends base {
     static get $name() {
         return 'GanttToolbar';
@@ -274,6 +274,14 @@ export default base => class GanttToolbar extends base {
                             onAction : 'up.onExportclick'
                         },
                         {
+                            type     : 'button',
+                            text     : 'Import Schedule',
+                            color    : 'b-blue',
+                            ref      : 'excelImportBtn',
+                            icon     : 'b-fa-file-import',
+                            onAction : 'up.onImportclick'
+                        },
+                        {
                             type       : 'button',
                             color      : 'b-blue',
                             ref        : 'criticalPathsButton',
@@ -497,25 +505,28 @@ export default base => class GanttToolbar extends base {
         }
     }
 
-    onSaveClick(){
+    onSaveClick() {
         try {
-            var libraryDataList = [];
-            console.log('this.gantt.data ',JSON.parse(JSON.stringify(this.gantt.data)));
-            for (let i = 0; i < this.gantt.data.length; i++) {
-                const data = this.gantt.data[i]._data;
-                libraryDataList.push(data);
-            }
-            console.log('new data lib ',JSON.parse(JSON.stringify(libraryDataList)));
-            let dataForApexController = formatJSDatatoApexData(libraryDataList);
-            console.log('check new data here ',JSON.parse(JSON.stringify(dataForApexController)));
+            var data = this.gantt.data;
+            var taskData = JSON.parse(this.gantt.taskStore.json)
+            var taskEdit = this.gantt.taskEdit;
+            console.log('taskEdit ',{taskEdit});
+            var dependenciesData = JSON.parse(this.gantt.dependencyStore.json)
+            var resourceData = JSON.parse(this.gantt.assignmentStore.json)
+            let dataForApexController = convertJSONtoApexData(data, taskData, dependenciesData, resourceData);
+            console.log('dataForApexController ',dataForApexController);
+            this.gantt.callGanttComponent.saveChanges(dataForApexController.scheduleData,dataForApexController.taskData);
 
         } catch (error) {
-            console.log('Error-->'+error+' message-->'+error.message);
+            console.log('Error-->' + error + ' message-->' + error.message);
         }
-
     }
 
     onExportclick(){
         this.gantt.callGanttComponent.exportData();
+    }
+
+    onImportclick(){
+        this.gantt.callGanttComponent.importtData();
     }
 };

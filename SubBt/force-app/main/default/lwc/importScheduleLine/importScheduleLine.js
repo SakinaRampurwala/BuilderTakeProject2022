@@ -1,4 +1,4 @@
-import { LightningElement, track } from "lwc";
+import { LightningElement, track, api } from "lwc";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import insertData from "@salesforce/apex/importScheduleLineController.insertData";
 export default class FileUploadComponent extends LightningElement {
@@ -9,7 +9,7 @@ export default class FileUploadComponent extends LightningElement {
     showMessage;
     @track files;
     @track isOpen;
-    @track RecordId;
+    @api recordid;
     // @track BaseURLs;
     // @track isNewGantt;
 
@@ -126,10 +126,7 @@ export default class FileUploadComponent extends LightningElement {
                     if (startIndex !== null && endIndex !== null) {
                         let sub = arr[i].substring(startIndex, endIndex);
                         sub = sub.replaceAll(",", ":comma:");
-                        arr[i] =
-                            arr[i].substring(0, startIndex) +
-                            sub +
-                            arr[i].substring(endIndex, arr[i].length);
+                        arr[i] = arr[i].substring(0, startIndex) + sub + arr[i].substring(endIndex, arr[i].length);
                         startIndex = null;
                         endIndex = null;
                     }
@@ -146,6 +143,8 @@ export default class FileUploadComponent extends LightningElement {
                     data[j] = newStr;
                     // console.log('newStr:', newStr);
                     if (headers[j].trim() === "StartDate" && data[j].trim() !== "") {
+                        console.log('data[j].trim()',data[j].trim());
+                        console.log('data[j].trim() type:',typeof(data[j].trim()));
                         let date = data[j].trim();
                         let splitDate = date.split("/");
                         if (
@@ -164,8 +163,8 @@ export default class FileUploadComponent extends LightningElement {
                         } else {
                             day = splitDate[1];
                         }
-
-                        obj[headers[j].trim()] = month.split("-").reverse().join("-");
+                        // obj[headers[j].trim()] = month.split("-").reverse().join("-");
+                        obj[headers[j].trim()] = data[j].trim().replace(/\//g, "-");
                     } else {
                         if (headers[j].trim() === "% Complete") {
                             obj["percentComplete"] = data[j].trim();
@@ -176,15 +175,16 @@ export default class FileUploadComponent extends LightningElement {
                 }
 
                 if (obj.StartDate !== undefined && obj.StartDate !== "") {
+                    console.log('StartDate:',obj.StartDate);
                     jsonObj.push(obj);
                 } else {
                     let today = new Date();
                     let dd = String(today.getDate()).padStart(2, "0");
                     let mm = String(today.getMonth() + 1).padStart(2, "0");
                     let yyyy = today.getFullYear();
-
                     today = yyyy + "-" + mm + "-" + dd;
                     obj.StartDate = today;
+                    console.log('obj.StartDate:',obj.StartDate);
                     // console.log('today:', today);
                     // console.log('obj.StartDate:', obj.StartDate);
                     jsonObj.push(obj);
@@ -282,13 +282,14 @@ export default class FileUploadComponent extends LightningElement {
 
     CreateAccount(jsonstr) {
         const jsonData = JSON.parse(jsonstr);
-        const recordId = this.RecordId;
+        const recordId = this.recordid;
         // const action = this.insertData;
-        console.log("CSV FIle:", JSON.stringify(jsonData));
+        console.log("CSV File:", JSON.stringify(jsonData));
+        let dummyRecordId = 'a101K00000GobT6QAJ';
 
         insertData({
-            // recordId: this.RecordId,
-            recordId: "a101K00000GodXbQAJ",
+            // recordId: this.recordid,
+            recordId: dummyRecordId,
             strFileData: JSON.stringify(jsonData),
         })
             .then((response) => {
@@ -314,58 +315,59 @@ export default class FileUploadComponent extends LightningElement {
                         });
                         this.dispatchEvent(toastEvent);
 
-                        if (this.isNewGantt) {
-                            const workspaceAPI = this.template.querySelector(
-                                "lightning-navigation"
-                            );
-                            if (workspaceAPI) {
-                                workspaceAPI
-                                    .getFocusedTabInfo()
-                                    .then((response) => {
-                                        const focusedTabId = response.tabId;
-                                        workspaceAPI
-                                            .closeTab({ tabId: focusedTabId })
-                                            .then((res) => {
-                                                window.setTimeout(() => {
-                                                    window.open("/" + recordId, "_top");
-                                                    location.reload();
-                                                }, 2000);
-                                                if (workspaceAPI.getFocusedTabInfo()) {
-                                                    workspaceAPI
-                                                        .getFocusedTabInfo()
-                                                        .then((response) => {
-                                                            const focusedTabId = response.tabId;
-                                                            window.setTimeout(() => {
-                                                                window.open("/" + recordId, "_top");
-                                                                location.reload();
-                                                            }, 2000);
-                                                        })
-                                                        .catch((error) => {
-                                                            console.log(error);
-                                                        });
-                                                }
-                                            });
-                                    })
-                                    .catch((error) => {
-                                        console.log(error);
-                                        const navEvt = new CustomEvent("navigate", {
-                                            detail: {
-                                                recordId: recordId,
-                                                slideDevName: "detail",
-                                            },
-                                        });
-                                        window.setTimeout(() => {
-                                            location.reload();
-                                        }, 500);
-                                        this.dispatchEvent(navEvt);
-                                    });
-                            } else {
-                                window.open("/" + recordId, "_top");
-                            }
-                        } else {
-                            // window.open('/apex/BT_Task_Manager?recordId=' + escape(recordId), '_self');
-                            window.open("/a101K00000GodXbQAJ", "_self");
-                        }
+                        // if (this.isNewGantt) {
+                        //     const workspaceAPI = this.template.querySelector(
+                        //         "lightning-navigation"
+                        //     );
+                        //     if (workspaceAPI) {
+                        //         workspaceAPI
+                        //             .getFocusedTabInfo()
+                        //             .then((response) => {
+                        //                 const focusedTabId = response.tabId;
+                        //                 workspaceAPI
+                        //                     .closeTab({ tabId: focusedTabId })
+                        //                     .then((res) => {
+                        //                         window.setTimeout(() => {
+                        //                             window.open("/" + recordId, "_top");
+                        //                             location.reload();
+                        //                         }, 2000);
+                        //                         if (workspaceAPI.getFocusedTabInfo()) {
+                        //                             workspaceAPI
+                        //                                 .getFocusedTabInfo()
+                        //                                 .then((response) => {
+                        //                                     const focusedTabId = response.tabId;
+                        //                                     window.setTimeout(() => {
+                        //                                         window.open("/" + recordId, "_top");
+                        //                                         location.reload();
+                        //                                     }, 2000);
+                        //                                 })
+                        //                                 .catch((error) => {
+                        //                                     console.log(error);
+                        //                                 });
+                        //                         }
+                        //                     });
+                        //             })
+                        //             .catch((error) => {
+                        //                 console.log(error);
+                        //                 const navEvt = new CustomEvent("navigate", {
+                        //                     detail: {
+                        //                         recordId: recordId,
+                        //                         slideDevName: "detail",
+                        //                     },
+                        //                 });
+                        //                 window.setTimeout(() => {
+                        //                     location.reload();
+                        //                 }, 500);
+                        //                 this.dispatchEvent(navEvt);
+                        //             });
+                        //     } else {
+                        //         window.open("/" + recordId, "_top");
+                        //     }
+                        // } else {
+                        //     // window.open('/apex/BT_Task_Manager?recordId=' + escape(recordId), '_self');
+                        //     debugger;
+                        //     window.open("/"+dummyRecordId, "_self");
+                        // }
                     } else {
                         this.Spinner = false;
                         this.showMessage = false;
@@ -382,6 +384,14 @@ export default class FileUploadComponent extends LightningElement {
                         this.dispatchEvent(toastEvent);
                     }
                 } else {
+                    console.log('state ==> ',state);
+                    const evt = new ShowToastEvent({
+                        title: 'Toast Error',
+                        message: 'Some unexpected error',
+                        variant: 'error',
+                        mode: 'dismissable'
+                    });
+                    this.dispatchEvent(evt);
                     this.Spinner = false;
                     console.error(response.getError());
                 }

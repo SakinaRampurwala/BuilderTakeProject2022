@@ -70,21 +70,23 @@ public with sharing class CreateCDFromPR {
      @AuraEnabled
      public static String saveRecord(String CashDisbursementData){
         try{
-            Map<String, Object> jsonResponseMap = (Map<String, Object>) JSON.deserializeUntyped(CashDisbursementData);
-            // buildertek__Payment__c CashDisbursement = (buildertek__Payment__c)JSON.deserialize(CashDisbursementData, buildertek__Payment__c.class);
+            // Map<String, Object> jsonResponseMap = (Map<String, Object>) JSON.deserializeUntyped(CashDisbursementData);
+            buildertek__Payment__c CashDisbursement = (buildertek__Payment__c)JSON.deserialize(CashDisbursementData, buildertek__Payment__c.class);
 
-            buildertek__Payment__c CashDisbursement = new buildertek__Payment__c();
-            CashDisbursement.buildertek__Payment_Amount__c = (Decimal) jsonResponseMap.get('buildertek__Payment_Amount__c');
-            CashDisbursement.buildertek__Payment_Date__c = Date.valueOf(((String) jsonResponseMap.get('buildertek__Payment_Date__c')).replace('T18:00:00.000Z',''));
-            CashDisbursement.buildertek__Reference__c = (String) jsonResponseMap.get('buildertek__Reference__c');
-            CashDisbursement.buildertek__Payable__c = (String) jsonResponseMap.get('buildertek__Payable__c');
-            CashDisbursement.buildertek__Type__c = (String) jsonResponseMap.get('buildertek__Type__c');
+            // buildertek__Payment__c CashDisbursement = new buildertek__Payment__c();
+            // CashDisbursement.buildertek__Payment_Amount__c = (Decimal) jsonResponseMap.get('buildertek__Payment_Amount__c');
+            // CashDisbursement.buildertek__Payment_Date__c = Date.valueOf(((String) jsonResponseMap.get('buildertek__Payment_Date__c')).replace('T18:00:00.000Z',''));
+            // CashDisbursement.buildertek__Reference__c = (String) jsonResponseMap.get('buildertek__Reference__c');
+            // CashDisbursement.buildertek__Payable__c = (String) jsonResponseMap.get('buildertek__Payable__c');
+            // CashDisbursement.buildertek__Type__c = (String) jsonResponseMap.get('buildertek__Type__c');
+            
             insert CashDisbursement;
 
             return CashDisbursement.Id;
         }
         catch(Exception e){
-            return e.getMessage();
+            System.debug('error in saveRecord => ' + e);
+            return null;
         }
      }
     

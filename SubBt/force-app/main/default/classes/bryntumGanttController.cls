@@ -555,7 +555,29 @@ public with sharing class bryntumGanttController {
         return pickListValuesList;
     }
 
+    @AuraEnabled
+    public static String upsertDataOnSaveChanges(String scheduleRecordStr, String taskRecordsStr){
+        String msg;
+        buildertek__Schedule__c scheduleRecord = (buildertek__Schedule__c)System.JSON.deserialize(scheduleRecordStr, buildertek__Schedule__c.class);
+        List<buildertek__Project_Task__c> taskRecords = (List<buildertek__Project_Task__c>)System.JSON.deserialize(taskRecordsStr, List<buildertek__Project_Task__c>.class);
 
+        try {
+            System.debug('scheduleRecord '+scheduleRecord);
+            for (buildertek__Project_Task__c task : taskRecords) {
+                System.debug('new tasks on save changes '+taskRecords);
+            }
+            update scheduleRecord;
+            upsert taskRecords;
+            msg = 'Success';
+        } catch (Exception e) {
+
+            System.debug('Exception e '+e);
+            System.debug('Exception e '+e.getMessage());
+            System.debug('Exception e '+e.getLineNumber());
+            msg = e.getMessage() + ' ' + e.getLineNumber();
+        }
+        return msg;
+    }
 
     /* @Author        Karan Patel
      * Date           10-7-23

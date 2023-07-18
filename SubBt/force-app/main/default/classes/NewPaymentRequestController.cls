@@ -73,12 +73,19 @@ public without sharing class NewPaymentRequestController{
         buildertek__Payment_Request__c paymentRequest = (buildertek__Payment_Request__c)JSON.deserialize(paymentRequestData, buildertek__Payment_Request__c.class);
         insert paymentRequest;
 		paymentRequestId = paymentRequest.Id;
-		buildertek__Payment_Request__c exist = [SELECT Id, buildertek__BT_Contractor_Invoice_PO__c, buildertek__BT_Purchase_Order__c FROM buildertek__Payment_Request__c WHERE Id = :paymentRequestId LIMIT 1];
+		buildertek__Payment_Request__c exist = [SELECT Id, buildertek__BT_Contractor_Invoice_PO__c, buildertek__BT_Purchase_Order__c FROM buildertek__Payment_Request__c WHERE Id = :paymentRequest.Id LIMIT 1];
 		if (exist != null) {
 			exist.buildertek__BT_Purchase_Order__c = poid; 
 			update exist;
 		}
-		createAPFromPO(poid);
+        List<buildertek__Account_Payable__c> relatedAP = [SELECT Id, buildertek__Purchase_Order__c FROM buildertek__Account_Payable__c WHERE buildertek__Purchase_Order__c = :poid ORDER BY CreatedDate DESC LIMIT 1];
+        if (relatedAP.isEmpty()) {
+            createAPFromPO(poid);
+        }
+        else {
+            exist.buildertek__BT_Contractor_Invoice_PO__c = relatedAP[0].Id; 
+			update exist;
+        }
         return paymentRequest.Id;
     }
 

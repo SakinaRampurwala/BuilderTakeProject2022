@@ -1,9 +1,15 @@
 public without sharing class NewPRLineDetails {
     @AuraEnabled
     public static String createPRLineDetails(buildertek__Pricing_Request_Line_Details__c PRLineDetails) {
-        System.debug('in method calling');
-        insert PRLineDetails;
-        return PRLineDetails.Id;
+        try{
+            System.debug('in method calling');
+            insert PRLineDetails;
+            return PRLineDetails.Id;
+        }
+        catch(Exception e){
+            System.debug('error In createPRLineDetails => ' + e);
+            return e.getMessage();
+        }
     }
 
     @AuraEnabled

@@ -1,3 +1,3 @@
 <aura:application access="GLOBAL" extends="force:slds">
-    <c:importScheduleLine/>
+  <c:importScheduleLine />
 </aura:application>

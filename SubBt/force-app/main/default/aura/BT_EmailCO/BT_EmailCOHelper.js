@@ -6,8 +6,11 @@
         if (component.get("v.sObjectName") == 'buildertek__Change_Order__c') {
             folname = 'BT CO';
         }
-        if(component.get("v.sObjectName") == 'buildertek__Project__c'){
+        else if(component.get("v.sObjectName") == 'buildertek__Project__c'){
             folname = 'My Personal Email Templates';
+        }
+        else if(component.get("v.sObjectName") == 'buildertek__Permit__c'){
+            folname = 'BT Permit Email';
         }
         else{
             folname = component.get("v.templatefolderName");
@@ -31,7 +34,7 @@
                     } 
                 console.log("Modified : ",y); 
                 component.set("v.templates",response.getReturnValue());
-                var objectAPI = component.get("v.objectAPI");
+                var objectAPI = component.get("v.sObjectName");
                 if (objectAPI != 'buildertek__Permit__c') {
                     component.set("v.selectedTemplate", response.getReturnValue()[0].Id);
                 }
@@ -207,7 +210,7 @@
             if (state === "SUCCESS") {
                 if(response.getReturnValue() == 'Success'){
                     $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
-                    if (component.get("v.sObjectName") == 'buildertek__Change_Order__c' || component.get("v.sObjectName") == 'buildertek__Project__c') {
+                    if (component.get("v.sObjectName") == 'buildertek__Change_Order__c' || component.get("v.sObjectName") == 'buildertek__Project__c' || component.get("v.sObjectName") == 'buildertek__Permit__c') {
                         $A.get("e.force:closeQuickAction").fire();
                         var toastEvent = $A.get("e.force:showToast");
                         toastEvent.setParams({

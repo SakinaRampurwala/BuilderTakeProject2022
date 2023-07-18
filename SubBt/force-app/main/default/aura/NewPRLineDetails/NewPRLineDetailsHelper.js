@@ -92,6 +92,7 @@
             });
             action.setCallback(this, function(response) {
                 var state = response.getState();
+                console.log('response.getState() => ', response.getState());
                 if (state === "SUCCESS") {
 
                     var workspaceAPI = component.find("workspace");
@@ -114,11 +115,22 @@
                         "message": "The record has been created successfully."
                     });
                     toastEvent.fire();
-                    var navEvent = $A.get("e.force:navigateToSObject");
-                    navEvent.setParams({
-                        "recordId": recordId,
-                    });
-                    navEvent.fire();
+
+                    var saveNnew = component.get("v.isSaveNew");
+                    console.log('saveNnew: ' + saveNnew);
+
+                    if(saveNnew){
+                        $A.get('e.force:refreshView').fire();
+                        component.set("v.Spinner", false);
+
+                    }
+                    else{
+                        var navEvent = $A.get("e.force:navigateToSObject");
+                        navEvent.setParams({
+                            "recordId": recordId,
+                        });
+                        navEvent.fire();
+                    }
                 } else {
                     var error = response.getError();
                     console.log('error ==> ', { error });
@@ -129,6 +141,8 @@
                         "message": "Something Went Wrong"
                     });
                     toastEvent.fire();
+                    component.set("v.Spinner", false);
+
                 }
             });
             $A.enqueueAction(action);

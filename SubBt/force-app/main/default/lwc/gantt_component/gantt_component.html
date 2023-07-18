@@ -1,9 +1,18 @@
 <template>
+
+    <template if:true={isLoading}>
+        <c-show-spinner-in-gantt-component></c-show-spinner-in-gantt-component>
+    </template>
+
     <div class="container" lwc:dom="manual"></div>
 
     <!-- pop up model for exporting schedule -->
     <template if:true={showExportPopup}>
         <c-gantt-c-s-v-export-component onhidemodel={hideModalBox} schedule-data-to-export={scheduleItemsDataList}></c-gantt-c-s-v-export-component>
+    </template>
+
+    <template if:true={showImportPopup}>
+        <c-gantt-c-s-v-export-component recordid={SchedulerId} onhidemodel={hideModalBox1} schedule-data-to-export={scheduleItemsDataList}></c-gantt-c-s-v-export-component>
     </template>
 
     <template if:true={showEditResourcePopup}>

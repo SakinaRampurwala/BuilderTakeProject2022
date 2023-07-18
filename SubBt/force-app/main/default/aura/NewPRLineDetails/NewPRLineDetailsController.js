@@ -1,5 +1,7 @@
 ({
     doInit: function(component, event, helper) {
+        component.set("v.Spinner", true);
+
         var pageRef = component.get("v.pageReference");
         var state = pageRef.state;
         var base64Context = state.inContextOfRef;
@@ -12,7 +14,8 @@
         if(component.get("v.recordId") != null && component.get("v.recordId") != undefined && component.get("v.recordId") != ''){
             helper.getOptions(component, event, helper, component.get("v.recordId"));
         }
-
+        component.set("v.Spinner", false);
+        
     },
 
     closePopup: function(component, event, helper) {
@@ -51,10 +54,21 @@
         if(PRLId != null && PRLId != undefined && PRLId != ''){
             helper.getOptions(component, event, helper, PRLId);
             console.log('PRLId ==> '+ PRLId);
+            component.set("v.Spinner", false);
+
         }else{
             component.set("v.Spinner", false);
             component.set("v.OptionList", []);
         }
+    },
+
+    saveAndNew: function(component, event, helper) {
+        component.set("v.Spinner", true);
+        console.log('save and new');
+        component.set("v.isSaveNew", true);
+        helper.createRecordHelper(component, event, helper);
+        component.set("v.Spinner", false);
+
     }
     
 })
