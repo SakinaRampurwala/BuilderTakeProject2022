@@ -180,6 +180,7 @@
         })
         .catch(function(error) {
             console.log(error);
+            window.history.back();
         });
         $A.get("e.force:closeQuickAction").fire();
         component.set("v.isOpen", false);

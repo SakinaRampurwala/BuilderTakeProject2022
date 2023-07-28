@@ -142,26 +142,46 @@
         }
         for (var i = 1; i < arr.length; i++) {
             if (i >= 23) {
-                debugger;
+                // debugger;
             }
             if (arr[i] != undefined && arr[i] != '') {
                 console.log('arr::::::::',arr);
                 console.log('arr[i].match::::::::',arr[i].match(new RegExp('"' + "(.*)" + '"')));
-                debugger;
+                // debugger;
                 var TradeType = arr[i].match(new RegExp('"' + "(.*)" + '"'));
-               // alert(TradeType);
+                // alert(TradeType);
                 if (TradeType != null  && TradeType != '') {
-                   // alert("helo");
+                    console.log("TradeType => ", TradeType);
+                    debugger;
+                    var dataInit = [];
+                    dataInit = arr[i].split(',');
+
                     arr[i] = arr[i].match(new RegExp(TradeType[1] + '",' + "(.*)"))[1];
+
                     var data = arr[i].split(',');
                     var obj = {};
                     obj.TradeType = TradeType[1];
                     //obj[headers[j + 1].trim()] = data[j].trim();
-                    if (headers[j + 1].trim() == 'BuildProposal') {
-                        obj.BuildPhase = data[j].trim();
-                    }
-                    else {
-                        obj[headers[j + 1].trim()] = data[j].trim();
+                    console.log(' data.length => ',  data.length);
+                    for(var j = 0; j < data.length; j++){
+                        // alert(headers[j]);
+                        if (headers[j + 5].trim() == 'BuildProposal') {
+                            obj.BuildPhase = data[j].trim();
+                        }
+                        else {
+                            if(j<4){
+                                obj[headers[j].trim()] = dataInit[j].trim();
+                            } 
+
+                            if(headers[j + 4].trim() == 'ProductType'){
+                                obj[headers[j + 4].trim()] = TradeType[1];
+                            }
+                            if(headers[j + 5].trim() == 'TradeType'){
+                                obj[headers[j + 5].trim()] = TradeType[1];
+                            } else{
+                                obj[headers[j + 5].trim()] = data[j].trim();
+                            }
+                        }
                     }
                 } else {
                    // alert("hai");
@@ -206,11 +226,12 @@
         action.setCallback(this, function (response) {
             debugger;
             var state = response.getReturnValue();
-         // alert(JSON.stringify(state));
-            // var result = response.getReturnValue();
-            if (state == "SUCCESS") {
-                component.set("v.Spinner", false);
-                $A.get("e.force:closeQuickAction").fire();
+            console.log('response => ', JSON.stringify(state));
+        //  alert(JSON.stringify(state));
+         // var result = response.getReturnValue();
+         if (state == "SUCCESS") {
+             component.set("v.Spinner", false);
+             $A.get("e.force:closeQuickAction").fire();
                 
                 var toastEvent = $A.get("e.force:showToast");
                 
@@ -229,7 +250,7 @@
             }
             else if (state == "ERROR") {
                  component.set("v.Spinner", false);
-               // alert(response.getError());
+            //    alert(response.getError());
                 var toastEvent = $A.get("e.force:showToast");
                 
                 toastEvent.setParams({

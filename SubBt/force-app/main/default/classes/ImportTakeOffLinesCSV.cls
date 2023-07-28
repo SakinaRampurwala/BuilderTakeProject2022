@@ -202,6 +202,7 @@ public with sharing class ImportTakeOffLinesCSV{
     
     @AuraEnabled
     public static String insertData(String recordId, String strFileData){
+        // try{
         String returnresponse = '';
         system.debug('strFileData::::::'+strFileData);
         
@@ -381,11 +382,16 @@ public with sharing class ImportTakeOffLinesCSV{
                 System.debug('Error::' + e.getMessage());
                 System.debug('Error::' + e.getLineNumber());
                 returnresponse = 'ERROR';
+                // returnresponse = e.getMessage() +'{---}'+ e.getLineNumber() +'{---}'+ e.getStackTraceString();
                 system.debug(returnresponse);
             }  
         }
         system.debug(returnresponse);
        return returnresponse;
+    // }catch(Exception e){
+    //     String Error = e.getMessage() + '{at line} : '+ e.getLineNumber() + '{Stack : }'+ e.getStackTraceString();
+    //     return Error;
+    //    }
     }
 
     public class fieldWrapper{
@@ -412,7 +418,7 @@ public with sharing class ImportTakeOffLinesCSV{
         public String SubSeriesNumber;
         public String SubSeriesItem;
         public String AreaReference;
-        public Integer Quantity;
+        public Decimal Quantity;
         public String MaterialValue;
         public decimal Length;
         public decimal Width;

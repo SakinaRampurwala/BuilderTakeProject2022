@@ -60,7 +60,8 @@
         action.setCallback(this,function(response){  
             var state = response.getState();  
             if(state=='SUCCESS'){  
-                var result = response.getReturnValue();           
+                var result = response.getReturnValue();  
+                console.log('result--->',result);         
                 component.set("v.files",result);
                 this.saveModel(component, event, helper);
             }  

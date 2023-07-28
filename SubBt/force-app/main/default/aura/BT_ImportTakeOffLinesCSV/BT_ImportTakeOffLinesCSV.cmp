@@ -37,7 +37,7 @@
         </div>
         <br />
         <div class="container slds-grid slds-gutters">
-            <div class="slds-col">
+            <div>
                <lightning:input aura:id="file" type="file" name="file" multiple="false" onchange="{!c.handleFilesChange}" variant = "label-hidden" />
                 <div class="slds-text-body_small">{!v.fileName} </div>
                 <aura:if isTrue="{!v.isErrorOccured}">
@@ -51,8 +51,8 @@
                 </aura:if>
             </div>
             
-            <div class="slds-col">
-                 <button class="slds-button slds-button--brand" onclick="{!c.downloadCsv}" style ="margin-left: 700px">Download CSV</button> <br/><br/>
+            <div>
+                 <button class="slds-button slds-button--brand" onclick="{!c.downloadCsv}">Download CSV</button> <br/><br/>
                 <!--<aura:if isTrue="{!v.isSelect}">
             &nbsp; &nbsp;
             <lightning:pill label="{!v.selectedFile}" onremove="{! c.handleRemove }" />&nbsp;

@@ -1,3 +1,10 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 07-19-2023
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
 <aura:component implements="force:hasRecordId,force:lightningQuickActionWithoutHeader,lightning:isUrlAddressable,lightning:actionOverride,force:hasSObjectName,force:appHostable" access="global" controller="BT_Expenses_ComponentController">
 
     <aura:attribute name="projectsOptions" type="List" />
@@ -891,9 +898,10 @@
                 </div>
             </div>
             <footer role="contentinfo" class="slds-docked-form-footer fixedFooter" style="display:block;text-align:right;padding-right:5px;">
+                <button class="slds-button slds-button--neutral" onclick="{!c.closeModel}">Cancel</button>
 
                 <aura:if isTrue="{!v.Page1}">
-                    <button class="slds-button slds-button--neutral" onclick="{!c.closeModel}">Cancel</button>
+                    <!-- <button class="slds-button slds-buttonneutral" onclick="{!c.closeModel}">Cancel</button> -->
                     <button class="slds-button slds-button--brand" onclick="{!c.page2}">Next</button>
                 </aura:if>
                 <aura:if isTrue="{!v.Page2}">

@@ -8,6 +8,31 @@ public with sharing class PreviewChangeOrderController {
             
         return temrec;
     }
+
+    @AuraEnabled
+    public static List<Contact> getObjectContact(String recordId){
+        List<Contact> con;
+        buildertek__Change_Order__c  corecs;
+        Set<Id> projectAccId= new Set<Id>();
+        
+        corecs = [SELECT Id, Name, buildertek__Project__c , buildertek__Project__r.buildertek__Customer__c FROM buildertek__Change_Order__c WHERE Id = :recordId];
+
+        System.debug('corecs.buildertek__Project__c' + corecs.buildertek__Project__c);
+        System.debug('corecs.buildertek__Project__c' + corecs.buildertek__Project__r.buildertek__Customer__c);
+
+        if (corecs.buildertek__Project__c != null && corecs.buildertek__Project__r.buildertek__Customer__c != null){
+            if(corecs.buildertek__Project__r.buildertek__Customer__c != null){
+                projectAccId.add(corecs.buildertek__Project__r.buildertek__Customer__c);
+            }
+            
+        }
+
+        System.debug('projectAccId' + projectAccId);
+        if(!projectAccId.isEmpty()){
+            con = [SELECT Id, Name, Email , buildertek__Primary_Contact__c, AccountId FROM Contact WHERE AccountId IN: projectAccId];
+        }
+        return con;
+    }
     
     @AuraEnabled
     public static string getChangeOrderLines(String recordId, String templateId){
@@ -51,6 +76,7 @@ public with sharing class PreviewChangeOrderController {
     
      @AuraEnabled
      public static String sendProposal(String htmlBody, String recordId, String templateId, List<String> to, List<String> cc,string Emailsubject){
+        Blob filebody;
         try{
              string fileid = '';
              String body = '';
@@ -130,7 +156,7 @@ public with sharing class PreviewChangeOrderController {
             //  subject = subject +'[ref:'+recordId+']';
              mail.setSubject(subject);
              mail.setHTMLBody(body);
-             mail.setSaveAsActivity(true);
+             mail.setSaveAsActivity(false);
              List<Messaging.Emailfileattachment> fileAttachments = new List<Messaging.Emailfileattachment>();
              Messaging.Emailfileattachment efa = new Messaging.Emailfileattachment();
 
@@ -138,6 +164,7 @@ public with sharing class PreviewChangeOrderController {
              efa.setFileName(changeRec.buildertek__Project__r.Name +'-' + changeRec.buildertek__Project__r.buildertek__Auto_Number__c +'-' + changeRec.buildertek__Auto_Number__c+'.pdf');
             system.debug('templateid-----'+templateId+'record---> '+recordId);
              system.debug('Blob ---> '+setAttachmentBody(recordId, templateId,fileid));
+             filebody = setAttachmentBody(recordId, templateId,fileid);
              efa.setBody(setAttachmentBody(recordId, templateId,fileid));
              fileAttachments.add(efa); 
              mail.setFileAttachments(fileAttachments);
@@ -190,7 +217,18 @@ public with sharing class PreviewChangeOrderController {
                     
                  
                         
-                        insert caseEmailMessage;        
+                        insert caseEmailMessage;      
+                    ContentVersion conVer1 = new ContentVersion();
+                    conVer1.PathOnClient = 'CO.pdf'; // The files name, extension is very important here which will help the file in preview.
+                    conver1.Title = 'CO.pdf';
+                    conVer1.VersionData = filebody; // converting your binary string to Blog
+                    insert conVer1;    //Insert ContentVersion
+
+                    ContentDocumentLink conDocLink1 = New ContentDocumentLink();
+                    conDocLink1.LinkedEntityId = caseEmailMessage.Id; // Specify RECORD ID here i.e Any Object ID (Standard Object/Custom Object)
+                    conDocLink1.ContentDocumentId = [SELECT ContentDocumentId FROM ContentVersion WHERE Id =:conVer1.Id].ContentDocumentId;  //ContentDocumentId Id from ContentVersion
+                    conDocLink1.Visibility = 'AllUsers';
+                    insert conDocLink1;  
                     
                     
                     
@@ -287,7 +325,7 @@ public with sharing class PreviewChangeOrderController {
                  system.debug('strCC -------> '+strCC);
                 mail.setCcAddresses(strCC);
              }
-             mail.setSaveAsActivity(true);
+             mail.setSaveAsActivity(false);
              EmailServicesAddress eServices;
              if(Schema.sObjectType.EmailServicesAddress.fields.Id.isAccessible()&&
                 Schema.sObjectType.EmailServicesAddress.fields.AuthorizedSenders.isAccessible() &&
@@ -319,6 +357,21 @@ public with sharing class PreviewChangeOrderController {
              efa.setFileName(changeRec.buildertek__Project__r.Name +'-' + changeRec.buildertek__Project__r.buildertek__Auto_Number__c +'-' + changeRec.buildertek__Auto_Number__c+'.pdf');
               system.debug('templateid-----'+templateId+'record---> '+recordId);
              system.debug('Blob ---> '+setAttachmentBody(recordId, templateId,fileid));
+
+             Blob b = setAttachmentBody(recordId, templateId, fileid);
+            system.debug('Blob ---> ' + b);
+
+            ContentVersion conVer = new ContentVersion();
+            conVer.PathOnClient = 'ChangeOrder.pdf'; // The files name, extension is very important here which will help the file in preview.
+            conVer.VersionData = b; // converting your binary string to Blog
+            insert conVer;    //Insert ContentVersion
+
+            ContentDocumentLink conDocLink = New ContentDocumentLink();
+            conDocLink.LinkedEntityId = recordId; // Specify RECORD ID here i.e Any Object ID (Standard Object/Custom Object)
+            conDocLink.ContentDocumentId = [SELECT ContentDocumentId FROM ContentVersion WHERE Id =:conVer.Id].ContentDocumentId;  //ContentDocumentId Id from ContentVersion
+            conDocLink.Visibility = 'AllUsers';
+            insert conDocLink;
+
              efa.setBody(setAttachmentBody(recordId, templateId,fileid));             
              fileAttachments.add(efa); 
              mail.setFileAttachments(fileAttachments);
@@ -370,6 +423,18 @@ public with sharing class PreviewChangeOrderController {
                  
                         
                         insert caseEmailMessage;        
+
+                        ContentVersion conVer1 = new ContentVersion();
+                        conVer1.PathOnClient = 'ChangeOrder.pdf'; // The files name, extension is very important here which will help the file in preview.
+                        conver1.Title = 'ChangeOrder.pdf';
+                        conVer1.VersionData = b; // converting your binary string to Blog
+                        insert conVer1;    //Insert ContentVersion
+    
+                        ContentDocumentLink conDocLink1 = New ContentDocumentLink();
+                        conDocLink1.LinkedEntityId = caseEmailMessage.Id; // Specify RECORD ID here i.e Any Object ID (Standard Object/Custom Object)
+                        conDocLink1.ContentDocumentId = [SELECT ContentDocumentId FROM ContentVersion WHERE Id =:conVer1.Id].ContentDocumentId;  //ContentDocumentId Id from ContentVersion
+                        conDocLink1.Visibility = 'AllUsers';
+                        insert conDocLink1;    
                     
                     
                     

@@ -9,7 +9,12 @@ public class SubmittalInboundEmailTest {
        acc.Name = 'test';
        insert acc;
        
-       Contact cont = new Contact(firstName='john', lastName='smith', Email='test@test.com', HasOptedOutOfEmail=false);
+       Contact cont = new Contact();
+        cont.firstName='john';
+        cont.lastName='smith';
+        cont.Email='test@test.com'; 
+        cont.HasOptedOutOfEmail=false; 
+        cont.AccountId = acc.Id;
        insert cont ;
        
        Project__c p = new Project__c();
@@ -48,12 +53,14 @@ public class SubmittalInboundEmailTest {
        
        Submittal__c sub = new Submittal__c();
        sub.Responsible_Contact__c = cont.id;
+       sub.Responsible_Vendor__c = acc.id;
        sub.Status__c = 'Draft';
        sub.ownerid = u2.id;
        insert sub;
        
        Punch_List__c pl = new Punch_List__c();
        pl.Vendor_Contact__c = cont.id;
+       pl.buildertek__Vendor_Account__c = acc.id;
        pl.Description__c = 'test';
        pl.ownerid = u2.id;
        insert pl;

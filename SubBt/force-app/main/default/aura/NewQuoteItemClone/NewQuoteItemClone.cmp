@@ -223,26 +223,24 @@
     <div style="background: white;border-radius: 5px;height: 100%;" class="slds">
 
 
-
-        <div class="slds-modal__header" style="font-size:17px; display:none;">
-            <!-- <aura:if isTrue="{!v.isproject}">
-                <a href="{!'/'+v.quoteId}" onclick="{!c.closetab}">{!v.quoteName}</a>
-                <span style="float:right; font-size: small;">
+    <aura:if isTrue="{!v.isproject}">
+        <div class="slds-modal__header" style="font-size:17px; display:block; text-align:left;">
+            <a href="{!'/'+v.quoteId}" onclick="{!c.closetab}">{!v.quoteName}</a>
+                <!-- <span style="float:right; font-size: small;">
                     <lightning:button variant="neutral" label="Cancel" title="Cancel" onclick="{!c.closetab}"
                         iconPosition="right" />
-                </span>
-
-            </aura:if> -->
-        </div>
+                </span> -->
+            </div>
+    </aura:if>
 
         <div style="margin: -8px 0px;">
             <div style="display:block">
                 <aura:if isTrue="{!v.isproject}">
-                    <a href="{!'/'+v.quoteId}" onclick="{!c.closetab}">{!v.quoteName}</a>
-                    <span style="float:right; font-size: small;">
+                    <!-- <a href="{!'/'+v.quoteId}" onclick="{!c.closetab}">{!v.quoteName}</a> -->
+                    <!-- <span style="float:right; font-size: small;">
                         <lightning:button variant="neutral" label="Cancel" title="Cancel" onclick="{!c.closetab}"
                             iconPosition="right" />
-                    </span>
+                    </span> -->
                 </aura:if>
                 <aura:if isTrue="{!!v.displayGrouping}">
                     <div id='collapseBtn' class="slds-float_left" style="margin-top: 5px;">
@@ -371,7 +369,13 @@
                                     <lightning:button label="Delete" onclick="{!c.deleteSelectedQuoteItem}"
                                         class="sldsButtonGroup" />
                                 </div>
-
+                                <aura:if isTrue="{!v.isproject}">
+                                    <!-- <a href="{!'/'+v.quoteId}" onclick="{!c.closetab}">{!v.quoteName}</a> -->
+                                    <span style="float:right; font-size: small;padding-left: 4px;">
+                                        <lightning:button variant="neutral" label="Cancel" title="Cancel" onclick="{!c.closetab}"
+                                            iconPosition="right" />
+                                    </span>
+                                </aura:if>
                             </aura:set>
                         </aura:if>
                     </lightning:buttonGroup>
@@ -933,7 +937,7 @@
 
                         <!-- <div class="slds mainTablediv"> -->
                         <div class="slds-scrollable">
-                            <div class="divcont">
+                            <div class="divcont" aura:id="headerDiv">
                                 <!--<div class="slds-scrollable" style="width:100%;height: 35rem;">-->
 
                                 <table
@@ -1406,7 +1410,7 @@
                             </div>
                             <!--<br />-->
                             <aura:if isTrue="{!v.total > 50}">
-                                <div class="slds-align_absolute-center">
+                                <div class="slds-align_absolute-center" style="background-color: white;">
                                     <lightning:button disabled="{!v.page == 1}" variant="brand" label="Previous"
                                         onclick="{! c.navigate }" />
                                     <lightning:button disabled="{!v.page == v.pages}" aura:id="previousPage"

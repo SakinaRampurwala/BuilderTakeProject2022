@@ -29,11 +29,18 @@
         console.log({objectName});
         // console.log(objApiName);
 
-        if(objectName == 'buildertek__RFI__c' || objectName == 'buildertek__Submittal__c'){
+        if(objectName == 'buildertek__Submittal__c'){
              component.set("v.showTemplate", false);
              helper.getFiles(component, event, helper);
              helper.getContact(component, event, helper);    
-        }else {
+        }
+        else if (objectName == 'buildertek__RFI__c') {
+            // component.set("v.showBodyTemplate",true);
+            helper.getFiles(component, event, helper);
+            helper.getContact(component, event, helper);
+            helper.getTemplate(component, event, helper);
+        }
+        else {
             if(objectName == 'buildertek__Account_Payable__c' || objectName == 'buildertek__Billings__c'){
                 component.set("v.showBodyTemplate",true);
                 helper.getbodyTemplate(component, event, helper);

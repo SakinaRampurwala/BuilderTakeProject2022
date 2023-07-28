@@ -2204,6 +2204,83 @@
         });
         $A.enqueueAction(action);
     },
+
+    //  ************ For Add Sales Invoice Button *************
+    getsalesInvoiceHelper: function (component, event, helper) {
+        $A.get("e.c:BT_SpinnerEvent").setParams({
+            "action": "SHOW"
+        }).fire();
+        var budgetId = component.get('v.recordId');
+        console.log('Budget record in => ', component.get('v.recordId'));
+
+        var action = component.get("c.getSalesInvoice");
+        action.setParams({
+            "budgetId" : budgetId
+        });
+        action.setCallback(this, function(response) {
+            if (response.getState() === "SUCCESS") {
+                $A.get("e.c:BT_SpinnerEvent").setParams({
+                    "action": "HIDE"
+                }).fire();
+                component.set('v.salesInvoices', response.getReturnValue());
+                component.set("v.addSalesInvoiceSection", true);
+                console.log('SalesInvoice List => ',response.getReturnValue());
+            }
+            else if(response.getState() === "ERROR"){
+                $A.get("e.c:BT_SpinnerEvent").setParams({
+                    "action": "HIDE"
+                }).fire();
+                console.log('Error => ',response.getError());
+            }
+        });
+        $A.enqueueAction(action);
+    },
+
+    AddNewSalesInvoicesHelper: function(component, event, SLlist){
+        $A.get("e.c:BT_SpinnerEvent").setParams({
+            "action": "SHOW"
+        }).fire();
+        console.log('into update');
+        var BudgetId = component.get('v.recordId');
+        var action = component.get("c.UpdateSalesInvoices");
+        action.setParams({
+            'SLIDlist': SLlist,
+            'BudgetId': BudgetId
+        })
+        action.setCallback(this, function (response) {
+            if (response.getState() == 'SUCCESS') {
+                $A.get("e.c:BT_SpinnerEvent").setParams({
+                    "action": "HIDE"
+                }).fire();
+                console.log('Response =: ', response.getReturnValue());
+                // if(response.getReturnValue() ==  'success'){
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    type: 'SUCCESS',
+                    message: 'Sales Invoice added Successfully',
+                    duration: '5000',
+                });
+                toastEvent.fire();
+                component.set("v.addSalesInvoiceSection", false); // to close popup
+                component.set("v.selectedSalesInvoices", []); // to clear selected sales invoics
+                component.set('v.allSLChecked', false); // for check-all checkbox
+                $A.get("e.force:refreshView").fire();
+                document.location.reload(true);    
+                // window.location.reload();
+
+
+
+            }
+            else if (response.getState() == 'Error') {
+                $A.get("e.c:BT_SpinnerEvent").setParams({
+                    "action": "HIDE"
+                }).fire();
+                console.log('Error to Add Sales Invoice => ', response.getError());
+            }
+        });
+        $A.enqueueAction(action);
+    },
+
     handleSelectAll: function(component, event, helper) {
         console.log(event.target.name);
         console.log(event.target.checked);

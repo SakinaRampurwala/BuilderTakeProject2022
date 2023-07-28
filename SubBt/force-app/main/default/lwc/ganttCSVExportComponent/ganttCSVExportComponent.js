@@ -54,6 +54,7 @@ export default class GanttCSVExportComponent extends LightningElement {
                 "buildertek__Dependency__r.Name",
                 "buildertek__Start__c",
                 "buildertek__Finish__c",
+                "buildertek__Duration__c",
                 "buildertek__Completion__c",
                 "buildertek__Phase__c",
                 "buildertek__Notes__c",

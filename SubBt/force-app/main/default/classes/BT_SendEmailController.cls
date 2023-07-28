@@ -537,7 +537,7 @@ public with sharing class BT_SendEmailController{
 
             // Attached record pdf as an attachment
             List<Messaging.Emailfileattachment> fileAttachments = new List<Messaging.Emailfileattachment>();
-            if (Id.valueOf(recordId).getSObjectType().getDescribe().getName() != 'buildertek__RFQ__c' && Id.valueOf(recordId).getSObjectType().getDescribe().getName() != 'buildertek__RFI__c' && Id.valueOf(recordId).getSObjectType().getDescribe().getName() != 'buildertek__Permit__c' && Id.valueOf(recordId).getSObjectType().getDescribe().getName() != 'buildertek__Billings__c'){
+            if (Id.valueOf(recordId).getSObjectType().getDescribe().getName() != 'buildertek__RFQ__c' && Id.valueOf(recordId).getSObjectType().getDescribe().getName() != 'buildertek__Permit__c' && Id.valueOf(recordId).getSObjectType().getDescribe().getName() != 'buildertek__Billings__c'){
                 if (String.isNotBlank(templateId)){
                     Messaging.Emailfileattachment efa = new Messaging.Emailfileattachment();
                     efa.setFileName(pdfFileName + '.pdf');

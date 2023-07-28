@@ -15,6 +15,32 @@
 	    });
 	    $A.enqueueAction(action);
 	},
+
+    getContact: function(component, event, helper) {
+        var action = component.get("c.getObjectContact");
+        action.setParams({
+            "recordId": component.get("v.recordId")
+        });
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                var result = response.getReturnValue();
+                //alert('result ---------> '+result);
+                var selectedContact = component.get("v.selectedToContact");
+                if (result != undefined) {
+                    result.forEach(function(elem){
+                        console.log(elem.buildertek__Primary_Contact__c);
+                        if(elem.buildertek__Primary_Contact__c){
+                            selectedContact.push(elem);
+                        }
+                    })
+                }
+                component.set("v.selectedToContact", selectedContact);
+                console.log(component.get("v.selectedToContact"));
+            }
+        });
+        $A.enqueueAction(action);
+    },
 	
 	 getuploadSignature : function(component, event){
 	    component.set("v.parentId",component.get("v.recordId")); 

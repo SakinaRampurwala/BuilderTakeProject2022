@@ -10,6 +10,9 @@ trigger ProjectTaskTrigger on buildertek__Project_Task__c(after insert, after up
     System.debug(ProjectTaskTriggerHandler.blnSkipTaskTrigger);
     System.debug('outside condition project task ==> ');
     system.debug(BT_Utils.isTriggerDeactivate('Project_Task__c')+'--'+ProjectTaskTriggerHandler.blnSkipTaskTrigger);
+    if (ProjectTaskTriggerHandler.blnSkipTaskTrigger){
+        return;
+    }
     if (!BT_Utils.isTriggerDeactivate('Project_Task__c') && !ProjectTaskTriggerHandler.blnSkipTaskTrigger){
         System.debug('in trigger ==> ');
         ProjectTaskTriggerHandler handler = new ProjectTaskTriggerHandler(Trigger.isExecuting, Trigger.size, Trigger.oldMap);
@@ -37,21 +40,8 @@ trigger ProjectTaskTrigger on buildertek__Project_Task__c(after insert, after up
 
                     //insert update milestones
                     // this method setting the start date for phase but since the Predeseccor is not inserted with DML transaction that is why this method is commented
-                    handler.insertUpdateMilestones(Trigger.new, Trigger.newMap);
+                    // handler.insertUpdateMilestones(Trigger.new, Trigger.newMap);
                 }
-
-
-                /*  handler.OnAfterInsertItemCount(Trigger.new, Trigger.old);
-
-                 handler.OnAfterInsert(Trigger.new, Trigger.newMap);
-                 handler.UpdateOriginalstartandEndDates(Trigger.new, Trigger.newMap);
-                 if (ProjectTaskTriggerHandler.isTask == true){
-                 handler.OnAfterInsertItemCount(Trigger.new, Trigger.old);
-                 handler.OnBeforeInsert1(Trigger.new);
-                 ProjectTaskTriggerHandler.isTask = false;
-                 }*/
-
-
             }
         } else if (Trigger.isUpdate){
             // if (ProjectTaskTriggerHandler.blnSkipTaskTrigger){
@@ -62,7 +52,7 @@ trigger ProjectTaskTrigger on buildertek__Project_Task__c(after insert, after up
                 // handler.updateChildDatesWithPredecessor(Trigger.new, Trigger.newMap);
                 handler.OnAfterUpdate(Trigger.old, Trigger.new, Trigger.newMap, Trigger.oldMap);
                 handler.OnAfterUpdateOriginalstartandEndDates(Trigger.old, Trigger.new, Trigger.newMap, trigger.oldMap);
-                handler.insertUpdateMilestones(Trigger.new, Trigger.newMap);
+                // handler.insertUpdateMilestones(Trigger.new, Trigger.newMap);
                 System.debug('at the end of IS update trigger');
             }
             if (Trigger.isBefore){
@@ -75,6 +65,11 @@ trigger ProjectTaskTrigger on buildertek__Project_Task__c(after insert, after up
             handler.OnAfterDelete(Trigger.old);
         } else if (Trigger.isUnDelete && Trigger.isAfter){
             handler.OnAfterInsertItemCount(Trigger.new, Trigger.old);
+        }
+    }else if (ProjectTaskTriggerHandler.newSchedule) {
+        ProjectTaskTriggerHandler handler = new ProjectTaskTriggerHandler(Trigger.isExecuting, Trigger.size, Trigger.oldMap);
+        if (Trigger.isAfter && (Trigger.isInsert || Trigger.isUpdate) ){
+            handler.insertUpdateMilestones(Trigger.new, Trigger.newMap);
         }
     }
 }

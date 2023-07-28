@@ -23,8 +23,9 @@ export default class CreateNewSchedule extends NavigationMixin(LightningElement)
     @track scheduleLineItems = [];
     @track initialStartDate;
     @track isLoading = false;
-    description = '';
-    type = 'Standard';
+    @track description = '';
+    @track type = 'Standard';
+    @track url = '';
 
     connectedCallback(event) {
         document.addEventListener('click', this.handleDocumentEvent.bind(this));
@@ -116,6 +117,7 @@ export default class CreateNewSchedule extends NavigationMixin(LightningElement)
             .then((result) => {
                 this.masterId = result;
                 console.log('masterId', this.masterId);
+                console.log('Type masterId', typeof (this.masterId));
             })
             .catch((error) => {
                 console.log('error', JSON.stringify(error));
@@ -124,8 +126,8 @@ export default class CreateNewSchedule extends NavigationMixin(LightningElement)
 
     saveSelectedPO(event) {
         this.masterRec = event.currentTarget.dataset.id;
-        console.log('masterId', masterRec);
-        getScheduleItemList({ masterId: masterRec })
+        console.log('masterId', this.masterRec);
+        getScheduleItemList({ masterId: this.masterRec })
             .then((result) => {
                 this.scheduleLineItems = result;
                 console.log('scheduleLineItems:', this.scheduleLineItems);
@@ -157,20 +159,14 @@ export default class CreateNewSchedule extends NavigationMixin(LightningElement)
             createNewSchedule({ description: this.description, project: this.projectId, initialStartDate: this.initialStartDate, type: this.type, user: this.userId, masterId: this.masterRec })
                 .then((result) => {
                     console.log('url:', result);
-                    let cmpDef = {
-                        componentDef: "c:gantt_component",
-                        attributes: {
-                            SchedulerId: result != "" ? result : "No Record Created",
-                        }
-                    };
-                    let encodedDef = btoa(JSON.stringify(cmpDef));
-
                     this[NavigationMixin.Navigate]({
-                        type: "standard__webPage",
+                        type: 'standard__recordPage',
                         attributes: {
-                            url: "/one/one.app#" + encodedDef
-                        }
-                    });
+                            recordId: result,
+                            objectApiName: 'buildertek__Schedule__c',
+                            actionName: 'view'
+                        },
+                    }, true);
                     this.isLoading = false;
                 })
                 .catch((error) => {
@@ -181,6 +177,7 @@ export default class CreateNewSchedule extends NavigationMixin(LightningElement)
             console.log('error', JSON.stringify(error));
         }
     }
+
     onSaveandNew() {
         try {
             this.isLoading = true;
@@ -204,6 +201,29 @@ export default class CreateNewSchedule extends NavigationMixin(LightningElement)
             console.log('error', JSON.stringify(error));
         }
     }
+
+    onCancelHandle() {
+        console.log('Redirect the page');
+        this[NavigationMixin.Navigate]({
+            type: 'standard__objectPage',
+            attributes: {
+                objectApiName: 'buildertek__Schedule__c',
+                actionName: 'list'
+            },
+            state: {
+                filterName: 'Recent'
+            },
+        })
+    }
+
+    getLink(event) {
+        let scheduleName = event.currentTarget.dataset.id;
+        let val = this.masterId.find((schId) => schId.Name == scheduleName);
+        console.log('ScheduleName:', scheduleName);
+        this.url = `/${val.Id}`
+        console.log('Url:', this.url);
+    }
+
     disconnectedCallback() {
         document.removeEventListener('click', this.handleDocumentEvent.bind(this));
     }

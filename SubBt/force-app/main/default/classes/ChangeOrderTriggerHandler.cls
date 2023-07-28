@@ -32,6 +32,9 @@ public without sharing class ChangeOrderTriggerHandler {
     }
     
     public void OnBeforeUpdate(buildertek__Change_Order__c[] oldChangeOrder, buildertek__Change_Order__c[] updatedChangeOrder, Map<ID, buildertek__Change_Order__c> ChangeOrderMap, Map<ID, buildertek__Change_Order__c> oldChangeOrderMap){
+       
+       if(!blnSkipChangeOrderUpdateTrigger){
+
         Boolean isPaid = false;
         Boolean isPartiallyPaid = false;
         List<buildertek__Billings__c> invoiceList ;
@@ -102,7 +105,7 @@ public without sharing class ChangeOrderTriggerHandler {
                 budgetLine.buildertek__Unit_Price__c = newCO.buildertek__Total_Costs__c;
                 // budgetLine.buildertek__Markup__c = (newCO.buildertek__Margin__c / (1 - newCO.buildertek__Margin__c));
                 if(newCO.buildertek__Calculated_Margin__c != null){
-                    budgetLine.buildertek__Markup__c = (newCO.buildertek__Calculated_Margin__c/100)/(1-(newCO.buildertek__Calculated_Margin__c/100))*100;
+                    budgetLine.buildertek__Markup__c = (((newCO.Total_Costs__c - newCO.buildertek__Total_Amount_Tax__c)/newCO.Total_Costs__c)*100)*-1;
                 }
                 budgetLine.buildertek__Quantity__c = 1;
                 budgetLine.buildertek__Group__c = budgetLineGroupId;
@@ -121,22 +124,23 @@ public without sharing class ChangeOrderTriggerHandler {
         }
 
         //will delete automatically created budget line if unlinked from the change order on update
-        for(buildertek__Change_Order__c changeOrder : oldChangeOrder){
-            for(buildertek__Change_Order__c changeOrder2 : updatedChangeOrder){
-                if(changeOrder.Id == changeOrder2.Id){
-                    if(changeOrder.buildertek__Budget_Line__c != changeOrder2.buildertek__Budget_Line__c && changeOrder.buildertek__Budget_Line__c != null) 
-                    {
-                        string Name  = changeOrder.Name + ' budget line';
-                        buildertek__Budget_Item__c  oldBudgetLine = [SELECT Id, buildertek__Item_Name__c, Name FROM buildertek__Budget_Item__c WHERE ID =: changeOrder.buildertek__Budget_Line__c];
-                        if(oldBudgetLine.Name == Name){
-                            delete oldBudgetLine;
-                        }
-                    }
-                }
-            }
-        }
+        // for(buildertek__Change_Order__c changeOrder : oldChangeOrder){
+        //     for(buildertek__Change_Order__c changeOrder2 : updatedChangeOrder){
+        //         if(changeOrder.Id == changeOrder2.Id){
+        //             if(changeOrder.buildertek__Budget_Line__c != changeOrder2.buildertek__Budget_Line__c && changeOrder.buildertek__Budget_Line__c != null) 
+        //             {
+        //                 string Name  = changeOrder.Name + ' budget line';
+        //                 buildertek__Budget_Item__c  oldBudgetLine = [SELECT Id, buildertek__Item_Name__c, Name FROM buildertek__Budget_Item__c WHERE ID =: changeOrder.buildertek__Budget_Line__c];
+        //                 if(oldBudgetLine.Name == Name){
+        //                     delete oldBudgetLine;
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
 
 
+        // Create New Budget Line From ADD CO Button
         for(buildertek__Change_Order__c changeOrder : updatedChangeOrder){
             for(buildertek__Change_Order__c changeOrder2 : oldChangeOrder){
                 if(changeOrder.Id == changeOrder2.Id){
@@ -157,7 +161,7 @@ public without sharing class ChangeOrderTriggerHandler {
             }
         }
 
-        //BUIL -3336
+        //BUIL -3336 ------- Remove BUDGET from change order when Budget Line Removed from Change Order.   
         for(buildertek__Change_Order__c changeOrder:updatedChangeOrder){
             System.debug('Inside if comndition');
             System.debug(changeOrder.buildertek__Budget_Line__c);
@@ -167,6 +171,9 @@ public without sharing class ChangeOrderTriggerHandler {
                 changeOrder.buildertek__Budget__c = null;
             }
         }
+
+
+    }
 
     }
     
@@ -769,22 +776,35 @@ public without sharing class ChangeOrderTriggerHandler {
         if(rfqshareList.size()>0){
             Database.SaveResult[] lsr = Database.insert(rfqshareList,false);
         }
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+
         //----------------------------------------------------------------------------
         
-        
-        
-        
     }
+
+    // If user remove budget line from change order which is auto created from code then it should be deleted ---------------
+    public void DeleteBudgetLine(buildertek__Change_Order__c[] oldChangeOrder, buildertek__Change_Order__c[] updatedChangeOrder, Map<ID, buildertek__Change_Order__c> ChangeOrderMap, Map<Id, buildertek__Change_Order__c> oldChangeOrderMap){
+         System.debug('Inside Delete Budget line From Sales Invoice');
+         list<buildertek__Budget_Item__c> BudgetLineToDELETE = new list<buildertek__Budget_Item__c>();
+         Set<Id> BudgetLineToDELETESet = new Set<Id>();
+         for(buildertek__Change_Order__c co : updatedChangeOrder){
+             String BlName = co.Name + ' budget line';
+             if(oldChangeOrderMap.get(co.id).buildertek__Budget_Line__c != null && co.buildertek__Budget_Line__c == null){
+                list<buildertek__Budget_Item__c> BLlist = [SELECT Id, Name FROM buildertek__Budget_Item__c WHERE Id =: oldChangeOrderMap.get(co.id).buildertek__Budget_Line__c AND Name =: BlName LIMIT 1];
+                    for(buildertek__Budget_Item__c bl : BLlist){
+                        BudgetLineToDELETESet.add(bl.Id);
+                        }
+                    }
+             }
+         if(!blnSkipChangeOrderUpdateTrigger && BudgetLineToDELETESet.size() > 0){
+             System.debug('Budget line Is going to Delete From Change Order');
+             for(buildertek__Budget_Item__c BL : [SELECT Id, Name FROM buildertek__Budget_Item__c WHERE Id IN: BudgetLineToDELETESet]){
+                     BudgetLineToDELETE.add(BL);
+             }
+             delete BudgetLineToDELETE;
+         }
+    }
+
+
     public void UpdateProjectValueInChangeOrder(buildertek__Change_Order__c[] updatedChangeOrder, Map<ID, buildertek__Change_Order__c> oldChangeOrderMap){
         list<id> OldcontractIds = new list<id>();
         Map<String, Decimal> contractMap = new Map<String, Decimal>();
@@ -1012,7 +1032,7 @@ public without sharing class ChangeOrderTriggerHandler {
 
         }
         if(!budgetItemSet.isEmpty()){
-            List<buildertek__Budget_Item__c> budgetItemList = [Select Id , Name , buildertek__Unit_Price__c, buildertek__Markup__c, buildertek__Quantity__c , (Select Id , Name , buildertek__Calculated_Margin__c , buildertek__Total_Costs__c From Change_Orders__r Where Id=:ids) From buildertek__Budget_Item__c WHERE Id=:budgetItemSet ];
+            List<buildertek__Budget_Item__c> budgetItemList = [Select Id , Name , buildertek__Unit_Price__c, buildertek__Markup__c, buildertek__Quantity__c , (Select Id , Name , buildertek__Calculated_Margin__c , buildertek__Total_Amount_Tax__c, buildertek__Total_Costs__c From Change_Orders__r Where Id=:ids) From buildertek__Budget_Item__c WHERE Id=:budgetItemSet ];
             System.debug(budgetItemList.size());
             if(budgetItemList.size() > 0){
                 for(buildertek__Budget_Item__c budgetItem: budgetItemList){
@@ -1022,7 +1042,8 @@ public without sharing class ChangeOrderTriggerHandler {
                         System.debug(budgetItem.buildertek__Unit_Price__c);
                         System.debug(changeOrder.Name+ 'CO NAME');
                         budgetItem.buildertek__Unit_Price__c= changeOrder.buildertek__Total_Costs__c;
-                        budgetItem.buildertek__Markup__c=(changeOrder.buildertek__Calculated_Margin__c/100)/(1-(changeOrder.buildertek__Calculated_Margin__c/100))*100;    
+                       //budgetItem.buildertek__Markup__c=(changeOrder.buildertek__Calculated_Margin__c/100)/(1-(changeOrder.buildertek__Calculated_Margin__c/100))*100; 
+                        budgetItem.buildertek__Markup__c = (((changeOrder.buildertek__Total_Costs__c - changeOrder.buildertek__Total_Amount_Tax__c)/changeOrder.Total_Costs__c)*100)*-1;   
 
                         // budgetItem.buildertek__Unit_Price__c= budgetItem.buildertek__Unit_Price__c+changeOrder.buildertek__Total_Costs__c;
                         // budgetItem.buildertek__Markup__c=budgetItem.buildertek__Markup__c+ (changeOrder.buildertek__Calculated_Margin__c/100)/(1-(changeOrder.buildertek__Calculated_Margin__c/100))*100;    

@@ -6,6 +6,14 @@
     top: -3px !important;
 }
 
+.THIS .c-container {
+    position: relative;
+    /* top: 50%;
+    left: 50%;
+    /* transform: translate(-50%, -25%); */
+    /* height: 90vh; */ 
+}
+
 .THIS .newbudgetgroupingclass {
     margin: 0 auto;
     width: 100%;
@@ -234,12 +242,12 @@
 }    */
 @media only screen and (max-height: 1080px) {
     .THIS .divcont{
-        max-height: 40vh;
+        max-height: 42vh;
         overflow: auto;
     }
   }
   .THIS .divconts{
-    max-height: 50vh;
+    max-height: 57vh;
     overflow: auto;
 }
 /* .THIS .maincont{

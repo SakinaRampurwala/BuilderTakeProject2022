@@ -147,14 +147,31 @@
             var tableDataList = [];
 
             if (sProductFamily != undefined && sProductFamily != '' && sProductName != undefined && sProductName != '') {
+                console.log('in3');
+                // quoteLineList.forEach(element => {
+                //     if (element.Family != undefined && element.Family != '') {
+                //         if (element.Family.toLowerCase().includes(sProductFamily.toLowerCase()) && element.Name.toLowerCase().includes(sProductName.toLowerCase())) {
+                //             tableDataList.push(element);
+                //         }
+                //     }
+                // });
+                let familySearchTerms = sProductFamily.toLowerCase().split(' ');
+                let nameSearchTerms = sProductName.toLowerCase().split(' ');
+
                 quoteLineList.forEach(element => {
-                    if (element.Family != undefined && element.Family != '') {
-                        if (element.Family.toLowerCase().includes(sProductFamily.toLowerCase()) && element.Name.toLowerCase().includes(sProductName.toLowerCase())) {
-                            tableDataList.push(element);
-                        }
+                    let familyLowerCase = element.Family ? element.Family.toLowerCase() : '';
+                    let nameLowerCase = element.Name.toLowerCase();
+
+                    let familyMatch = familySearchTerms.every(term => familyLowerCase.includes(term));
+                    let nameMatch = nameSearchTerms.every(term => nameLowerCase.includes(term));
+
+                    // If both family and name match, add the element to the tableDataList
+                    if (familyMatch && nameMatch) {
+                        tableDataList.push(element);
                     }
                 });
             } else if (sProductFamily != undefined && sProductFamily != '') {
+                console.log('in2');
                 quoteLineList.forEach(element => {
                     if (element.Family != undefined && element.Family != '') {
                         if (element.Family.toLowerCase().includes(sProductFamily.toLowerCase())) {
@@ -163,12 +180,33 @@
                     }
                 });
             } else if (sProductName != undefined && sProductName != '') {
+                console.log('in1');
+                // quoteLineList.forEach(element => {
+                //     if (element.Name.toLowerCase().includes(sProductName.toLowerCase())) {
+                //         tableDataList.push(element);
+                //     }
+                // });
+                let searchTerms = sProductName.toLowerCase().split(' ');
+
                 quoteLineList.forEach(element => {
-                    if (element.Name.toLowerCase().includes(sProductName.toLowerCase())) {
+                    let nameLowerCase = element.Name.toLowerCase();
+                    let allSearchTermsFound = true;
+                    
+                    // Check if all search terms are present in the Name field
+                    for (let term of searchTerms) {
+                        if (!nameLowerCase.includes(term)) {
+                            allSearchTermsFound = false;
+                            break;
+                        }
+                    }
+
+                    // If all search terms are found, add the element to the tableDataList
+                    if (allSearchTermsFound) {
                         tableDataList.push(element);
                     }
                 });
             } else{
+                console.log('in5');
                 tableDataList = quoteLineList;
             }
             var checkAll = true;

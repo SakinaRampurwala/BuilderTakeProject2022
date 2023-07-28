@@ -731,6 +731,25 @@ Messaging.sendEmail(new Messaging.SingleEmailMessage[] { email });  */
             conDocLink.Visibility = 'AllUsers';
             insert conDocLink;
         }
+        else if (objectAPIName.contains('buildertek__Change_Order__c')){
+            transient ContentVersion conVer = new ContentVersion();
+            conVer.ContentLocation = 'S'; // to use S specify this document is in Salesforce, to use E for external files
+            conVer.PathOnClient = 'ChangeOrder.pdf'; // The files name, extension is very important here which will help the file in preview.
+            conVer.Title = 'ChangeOrder' + ' ' + Datetime.valueOf(customerAcceptedDate).format('MM-dd-yyyy HH:mm:ss')+'.pdf'; // Display name of the files
+            conVer.VersionData = pdfBlob;  // converting your binary string to Blog
+            insert conVer;
+            // First get the Content Document Id from ContentVersion Object
+            Id conDoc = [SELECT ContentDocumentId
+                         FROM ContentVersion
+                         WHERE Id = :conVer.Id].ContentDocumentId;
+            //create ContentDocumentLink  record
+            transient ContentDocumentLink conDocLink = New ContentDocumentLink();
+            conDocLink.LinkedEntityId = recordID; // Specify RECORD ID here i.e Any Object ID (Standard Object/Custom Object)
+            conDocLink.ContentDocumentId = conDoc;  //ContentDocumentId Id from ContentVersion
+            conDocLink.shareType = 'I';
+            conDocLink.Visibility = 'AllUsers';
+            insert conDocLink;
+        }
         customSignature = true;
         return null;
     }

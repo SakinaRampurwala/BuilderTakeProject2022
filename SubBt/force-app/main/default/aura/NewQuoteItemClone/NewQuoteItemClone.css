@@ -249,7 +249,7 @@
     width: 45% !important;
 }
 .THIS .divcont{
-    max-height: 45vh;
+    max-height: 38vh;
     overflow: auto;
 }
 
@@ -302,3 +302,7 @@
         min-height: auto !important;
     } */
   }
+.THIS .divconts{
+    max-height: 53vh;
+    overflow: auto;
+}

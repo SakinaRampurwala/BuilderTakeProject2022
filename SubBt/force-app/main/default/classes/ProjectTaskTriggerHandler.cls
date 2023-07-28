@@ -7,6 +7,7 @@
 public class ProjectTaskTriggerHandler{
 	public static Boolean isFirstTime = true;
 	public static Boolean isTask = true;
+	public static Boolean newSchedule = false;
 	//Boolean variable to allow skipping execution of trigger in certain scenarios
 	public static Boolean blnSkipTaskTrigger = false;
 	public static Boolean updateFromGanttChart = false;
@@ -326,8 +327,10 @@ public class ProjectTaskTriggerHandler{
 			if (newScheduleItemList.size() > 0){
 				Boolean flag = ProjectTaskTriggerHandler.blnSkipTaskTrigger;
 				ProjectTaskTriggerHandler.blnSkipTaskTrigger = !flag;
+				NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = !flag;
 				update newScheduleItemList;
 				ProjectTaskTriggerHandler.blnSkipTaskTrigger = flag;
+				NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = flag;
 			}
 		}
 
@@ -405,8 +408,8 @@ public class ProjectTaskTriggerHandler{
 	}
 
 	public void OnAfterUpdateOriginalstartandEndDates(Project_Task__c[] oldProjectTasks, Project_Task__c[] updatedProjectTasks, Map<ID, Project_Task__c> ProjectTaskMap, Map<Id, Project_Task__c> oldProjectTaskMap){
-		
-		
+
+
 		System.debug('3rd method data in new list ==> ' + updatedProjectTasks);
 		// List<Project_Task__C> testSIList = new List<Project_Task__C>();
 		// testSIList = [Select Id, Name, buildertek__Start__c, buildertek__Finish__c, buildertek__Duration__c
@@ -426,11 +429,11 @@ public class ProjectTaskTriggerHandler{
 			database.executeBatch(new ScheduleItemBatchClass(ProjectTaskIds));
 		}
 		System.debug('3rd method data at end of method new list ==> ' + updatedProjectTasks);
-	
+
 	}
 
 	public void OnAfterUpdate(Project_Task__c[] oldProjectTasks, Project_Task__c[] updatedProjectTasks, Map<ID, Project_Task__c> ProjectTaskMap, Map<Id, Project_Task__c> oldProjectTaskMap){
-		
+
 
 		// this variable is used in processrecord method for get old map
 		oldMapValue = oldProjectTaskMap;
@@ -503,9 +506,11 @@ public class ProjectTaskTriggerHandler{
 		}
 		ScheduleTriggerHandler handler = new ScheduleTriggerHandler(true, taskCompletionMap.values().size());
 		handler.blnSkipTaskTrigger = true;
+		NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = true;
 		update taskCompletionMap.values();
 
 		handler.blnSkipTaskTrigger = false;
+		NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = false;
 		system.debug(updatedProjectTasks);
 		// Map<Id, buildertek__Schedule__c> scheduleMap1 = new Map<Id, buildertek__Schedule__c>([Select Id, buildertek__Initial_Start_Date__c, Name, buildertek__Contractor__c, buildertek__Internal_Resource_1__c, buildertek__Project_Manager__c, buildertek__Days_Completed__c
 		//                                                                                       FROM buildertek__Schedule__c
@@ -639,13 +644,13 @@ public class ProjectTaskTriggerHandler{
 		 Database.executeBatch(taskBatch, 1000);*/
 		// ProjectTaskBatch taskBatch = new ProjectTaskBatch(scheduleIds);
 		// Database.executeBatch(taskBatch, 1000);
-		
+
 	}
 
 	//@future
 	public static void processRecords(Set<Id> scheduleIds, Id schId, Set<Id> TaskIds, Boolean isFromImportTask, String isAfterInsert){
 		system.debug(isFromImportTask);
-		
+
 		List<buildertek__Project_Task__c> previuosTasks = [Select Id, Name, buildertek__Start__c, buildertek__Finish__c, buildertek__Duration__c
 		                                                   FROM buildertek__Project_Task__c
 		                                                   WHERE buildertek__Schedule__c = :schId AND Id NOT IN:TaskIds AND buildertek__Milestone__c = :false
@@ -806,9 +811,11 @@ public class ProjectTaskTriggerHandler{
 
 			if (projectTaskToUpdate.size() > 0){
 				ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
+				NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = true;
 				update projectTaskToUpdate;
 
 				ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
+				NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = false;
 			}
 		}
 
@@ -1069,6 +1076,7 @@ public class ProjectTaskTriggerHandler{
 		}
 
 		ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
+		NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = true;
 		if (projectTaskToUpdate.size() > 0){
 			update projectTaskToUpdate;
 		}
@@ -1082,7 +1090,8 @@ public class ProjectTaskTriggerHandler{
 		// UpdateScheduleItemdatesbatchhelper.batchjobexcute(mapAllTask.keySet());
 
 		ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
-		
+		NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = false;
+
 	}
 
 	public void insertUpdateMilestones(Project_Task__c[] ProjectTasks, Map<ID, Project_Task__c> ProjectTaskMap){
@@ -1179,14 +1188,20 @@ public class ProjectTaskTriggerHandler{
 
 		if (insertUpdateMilestoneMap.values().size() > 0){
 			ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
+			NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = true;
+			ProjectTaskTriggerHandler.newSchedule = false;
 			upsert insertUpdateMilestoneMap.values();
 			ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
+			NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = false;
 		}
-
+		
 		if (deletemilestoneMap.values().size() > 0){
 			ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
+			NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = true;
+			ProjectTaskTriggerHandler.newSchedule = false;
 			delete deletemilestoneMap.values();
 			ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
+			NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = false;
 		}
 	}
 
@@ -1345,6 +1360,7 @@ public class ProjectTaskTriggerHandler{
 		}
 
 		ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
+		NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = true;
 		system.debug('ProjectTasks-->' + ProjectTasks);
 		// System.debug('newUpdateProjectTaskMap-->' + newUpdateProjectTaskMap.values());
 		if (dependencyPathExist && newUpdateProjectTaskMap.values().size() > 0){
@@ -1354,12 +1370,14 @@ public class ProjectTaskTriggerHandler{
 			System.debug(' after $update$ '+key +' Value => '+newUpdateProjectTaskMap.get(key));
 		}
 		ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
+		NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = false;
 		ProjectTaskTriggerHandler.isFromImport = false;
 		}
 	}
 
 	public static void checkDependency(List<buildertek__Project_Task__c> scheduleItemId){
 		ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
+		NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = true;
 		List<buildertek__Project_Task__c> scheduleItem = [SELECT Id, buildertek__Start__c, buildertek__Finish__c, buildertek__Duration__c, buildertek__Dependency__c, buildertek__Dependency__r.buildertek__Start__c, buildertek__Dependency__r.buildertek__Finish__c, buildertek__Dependency__r.buildertek__Duration__c
 		                                                  FROM buildertek__Project_Task__c
 		                                                  WHERE buildertek__Dependency__c IN:scheduleItemId];
@@ -1401,6 +1419,7 @@ public class ProjectTaskTriggerHandler{
 			}
 			if (projectTaskToUpdateNew.size() > 0){
 				ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
+				NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = true;
 				update projectTaskToUpdateNew;
 
 				checkDependency(projectTaskToUpdateNew);
@@ -1457,8 +1476,9 @@ public class ProjectTaskTriggerHandler{
 			}
 		}
 		ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
+		NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = true;
 		update mapAllTask.values();
-		ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
+		NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = false;
 	}
 
 	public static Date addBussinessDays(Date startDate, Integer iDays){
@@ -1650,8 +1670,10 @@ public class ProjectTaskTriggerHandler{
 		if (listAccs.size() > 0){
 			ScheduleTriggerHandler schdulehandlerCustom = new ScheduleTriggerHandler(true, listAccs.size());
 			schdulehandlerCustom.blnSkipTaskTrigger = true;
+			NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = true;
 			update listAccs;
 			schdulehandlerCustom.blnSkipTaskTrigger = false;
+			NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = false;
 		}
 	}
 
@@ -1751,8 +1773,10 @@ public class ProjectTaskTriggerHandler{
 		}
 		if (scheduleItemList.size() > 0){
 			ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
+			NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = true;
 			insert scheduleItemList;
 			ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
+			NewGanttChartTaskTriggerHandler.blnSkipTaskTrigger = false;
 		}
 	}
 

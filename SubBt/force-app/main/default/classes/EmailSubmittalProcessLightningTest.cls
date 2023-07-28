@@ -15,6 +15,7 @@ private class EmailSubmittalProcessLightningTest {
         con.FirstName = 'Test';
         con.LastName = 'Contact';
         con.Email = 'test@test.com';
+        con.AccountId = acc.Id;
         insert con;
         
         List<buildertek__Submittal__c> subList = new List<buildertek__Submittal__c>();
@@ -23,7 +24,7 @@ private class EmailSubmittalProcessLightningTest {
         sub.buildertek__Project__c = proj.Id;
         sub.buildertek__Description__c = 'Test Description';
         sub.buildertek__Responsible_Contact__c = con.Id;
-        sub.buildertek__Responsible_Vendor__c = acc.Id;
+        sub.buildertek__Responsible_Vendor__c=acc.Id;
         subList.add(sub);
         insert subList;
         

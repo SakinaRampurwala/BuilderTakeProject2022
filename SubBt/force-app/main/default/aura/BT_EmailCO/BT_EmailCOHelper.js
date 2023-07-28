@@ -12,6 +12,15 @@
         else if(component.get("v.sObjectName") == 'buildertek__Permit__c'){
             folname = 'BT Permit Email';
         }
+        else if(component.get("v.sObjectName") == 'buildertek__RFI__c'){
+            folname = 'BT RFI';
+        }
+        else if(component.get("v.sObjectName") == 'buildertek__Submittal__c'){
+            folname = 'BT Submittal';
+        }
+        else if(component.get("v.sObjectName") == 'buildertek__Quote__c'){
+            folname = 'BT Quote';
+        }
         else{
             folname = component.get("v.templatefolderName");
         }
@@ -149,7 +158,7 @@
         var action = component.get("c.getObjectContact");
         action.setParams({
             "recordId" : component.get("v.recordId"),
-            "objectAPIName" : component.get("v.objectAPI")
+            "objectAPIName" : component.get("v.sObjectName")
         });
         action.setCallback(this, function(response){
             var state = response.getState();
@@ -209,8 +218,9 @@
             var state = response.getState();
             if (state === "SUCCESS") {
                 if(response.getReturnValue() == 'Success'){
+                    console.log('1stt');
                     $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
-                    if (component.get("v.sObjectName") == 'buildertek__Change_Order__c' || component.get("v.sObjectName") == 'buildertek__Project__c' || component.get("v.sObjectName") == 'buildertek__Permit__c') {
+                    if (component.get("v.sObjectName") == 'buildertek__Change_Order__c' || component.get("v.sObjectName") == 'buildertek__Project__c' || component.get("v.sObjectName") == 'buildertek__Permit__c' || component.get("v.sObjectName") == 'buildertek__RFI__c' || component.get("v.sObjectName") == 'buildertek__Submittal__c' || component.get("v.sObjectName") == 'buildertek__Quote__c') {
                         $A.get("e.force:closeQuickAction").fire();
                         var toastEvent = $A.get("e.force:showToast");
                         toastEvent.setParams({
@@ -227,9 +237,12 @@
                     
                     
                 }else{
+                    console.log('2stt');
                     console.log(response.getReturnValue());
-                    debugger;
-                    component.get("v.onCancel")();
+                    $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
+                    // debugger;
+                    // component.get("v.onCancel")();
+                    $A.get("e.force:closeQuickAction").fire();
                     var toastEvent = $A.get("e.force:showToast");
                     toastEvent.setParams({
                         mode: 'sticky',
@@ -242,8 +255,8 @@
                     toastEvent.fire();
                 }
             }else{
-                $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
                 console.log('3stt');
+                $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
                 component.get("v.onCancel")();
             }
         });

@@ -1,4 +1,4 @@
-public class filePreviewController {
+public without sharing class filePreviewController {
     
     @AuraEnabled
     public static Map<Id, list<ContentVersion>> getRelatedFiles(List<Id> lstParentIds) {
@@ -29,28 +29,27 @@ public class filePreviewController {
 
 
         system.debug(taskIdList);
-           map<Id, list<ContentVersion>> mapParentIdAndFiles = new map<Id, list<ContentVersion>>();
-           map<Id, Id> mapCntIdParentId = new map<Id, Id>();
-            //lstParentIds
-           for(ContentDocumentLink cntLink : [Select Id, ContentDocumentId, LinkedEntityId From ContentDocumentLink Where LinkedEntityId IN: taskIdList ]) { 
-              system.debug(cntLink);
-                mapCntIdParentId.put(cntLink.ContentDocumentId, cntLink.LinkedEntityId);
-           }
-   
-           if(!mapCntIdParentId.isEmpty()) {
-               for(ContentVersion cv :  [SELECT Id,FileExtension, Title, VersionData, ContentDocumentId FROM ContentVersion WHERE ContentDocumentId IN :mapCntIdParentId.keySet() AND IsLatest = True]) {
-                  System.debug(cv);
-                if(!noteIds.contains(cv.ContentDocumentId)){
-                    if(!mapParentIdAndFiles.containsKey(mapCntIdParentId.get(cv.ContentDocumentId))) {
-                        mapParentIdAndFiles.put(mapCntIdParentId.get(cv.ContentDocumentId), new list<ContentVersion>());
-                    }
-                    
-                    mapParentIdAndFiles.get(mapCntIdParentId.get(cv.ContentDocumentId)).add(cv);
-                  }
-                   
-               }
-           }
-           
-           return mapParentIdAndFiles;
-       } 
-   }
+        map<Id, list<ContentVersion>> mapParentIdAndFiles = new map<Id, list<ContentVersion>>();
+        map<Id, Id> mapCntIdParentId = new map<Id, Id>();
+        //lstParentIds
+        for(ContentDocumentLink cntLink : [Select Id, ContentDocumentId, LinkedEntityId From ContentDocumentLink Where LinkedEntityId IN: taskIdList ]) { 
+            system.debug(cntLink);
+            mapCntIdParentId.put(cntLink.ContentDocumentId, cntLink.LinkedEntityId);
+        }
+
+        if(!mapCntIdParentId.isEmpty()) {
+            for(ContentVersion cv :  [SELECT Id,FileExtension, Title, VersionData, ContentDocumentId FROM ContentVersion WHERE ContentDocumentId IN :mapCntIdParentId.keySet() AND IsLatest = True]) {
+                System.debug(cv);
+            if(!noteIds.contains(cv.ContentDocumentId)){
+                if(!mapParentIdAndFiles.containsKey(mapCntIdParentId.get(cv.ContentDocumentId))) {
+                    mapParentIdAndFiles.put(mapCntIdParentId.get(cv.ContentDocumentId), new list<ContentVersion>());
+                }
+                
+                mapParentIdAndFiles.get(mapCntIdParentId.get(cv.ContentDocumentId)).add(cv);
+                }
+                
+            }
+        }
+        return mapParentIdAndFiles;
+    } 
+}

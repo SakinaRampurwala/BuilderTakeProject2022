@@ -1,3 +1,10 @@
+/**
+ * @description       : 
+ * @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @group             : 
+ * @last modified on  : 07-18-2023
+ * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+**/
 trigger AccountPayableTrigger on buildertek__Account_Payable__c (before insert,before update,before delete, after insert, after update) {
     if (Trigger.isBefore) {
         System.debug('AccountPayableTrigger Before Trigger');

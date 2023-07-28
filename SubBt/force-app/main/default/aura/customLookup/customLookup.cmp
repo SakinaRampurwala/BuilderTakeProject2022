@@ -13,11 +13,13 @@
     <aura:attribute name="placeholder" type="string" default=""/>
     <aura:attribute name="isplaceholder" type="boolean" default="false"/>
     <aura:attribute name="SelectMultiRecord" type="boolean" default="false" />
+    <aura:attribute name="enableBackShadow" type="boolean" default="false" />
     <aura:attribute name="RecordList" type="sObject[]" />
     
      <aura:attribute name="fromComp" type="string" default=""/>
     <aura:attribute name="showDropDownList" type="boolean" default="false"/>
-    
+
+
     <!--declare events hendlers-->  
     <aura:handler name="oSelectedRecordEvent" event="c:selectedsObjectRecordEvent" action="{!c.handleComponentEvent}"/>
    <aura:registerEvent name="ClearSelectedRecordEvent" type="c:ClearLookupvalueEvent"/>
@@ -31,6 +33,7 @@
         </div>
         <br />
     </aura:iteration> -->
+
     
     <div aura:id="searchRes" class="slds-form-element slds-lookup slds-is-close" data-select="single">
         <!--<label class="slds-form-element__label" for="lookup-348">{!v.label}</label>-->
@@ -118,13 +121,13 @@
         <!--This part is for Display typehead lookup result List-->  
         <aura:if isTrue="{!v.fromComp == 'resourceCenter'}">
             <aura:if isTrue="{!v.showDropDownList}">
-                <ul style="min-height:40px;margin-top:0px !important" class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid slds-lookup__menu slds" role="listbox">
+                <ul style="min-height:40px;margin-top:0px !important" class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid slds-lookup__menu slds" role="listbox" onclick="{!c.DisableBackShadow}">
                     <lightning:spinner class="slds-hide" variant="brand" size="small" aura:id="mySpinner"/>
                     <center> {!v.Message}</center>
                     <div class="slds-scrollable" style="height:10rem" >
                         
                         <aura:iteration items="{!v.listOfSearchRecords}" var="singleRec">
-                            <c:customLookupResult oRecord="{!singleRec}" IconName="{!v.IconName}" objectAPIName="{!v.objectAPIName}"/>
+                            <c:customLookupResult oRecord="{!singleRec}" IconName="{!v.IconName}" objectAPIName="{!v.objectAPIName}" />
                         </aura:iteration>
                         
                     </div>
@@ -146,4 +149,10 @@
             </aura:set>
         </aura:if>
     </div>
+
+    <!-- This Div only create an backgound to work onblur function to close dropdown  -->
+    <aura:if isTrue="{!v.enableBackShadow}">
+        <div class="backShadow" onclick="{!c.DisableBackShadow}"> </div>
+    </aura:if>
+
 </aura:component>

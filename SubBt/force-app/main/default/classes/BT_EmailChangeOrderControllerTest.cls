@@ -153,6 +153,7 @@ insert contentVersion2;
  
     buildertek__Submittal__c submittal1 = new buildertek__Submittal__c(); 
     submittal1.buildertek__Responsible_Contact__c=con.Id;
+    submittal1.buildertek__Responsible_Vendor__c=acc.Id;
     insert submittal1;
 
 

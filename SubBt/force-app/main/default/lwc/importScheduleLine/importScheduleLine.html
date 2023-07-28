@@ -20,8 +20,8 @@
                     </template>
                     
                     <header class="slds-modal__header">
-                        <lightning-button-icon icon-name="utility:close" onclick={closeModel} alternative-text="close"
-                            variant="bare-inverse" class="slds-modal__close"></lightning-button-icon>
+                        <lightning-button-icon icon-name="utility:close" onclick={hideModalBox1} alternative-text="close"
+                            variant="bare-inverse" size="small" class="slds-modal__close"></lightning-button-icon>
                         <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Import Schedules</h2>
                     </header>
                     <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
@@ -61,7 +61,7 @@
                         </template>
                     </div>
                     <footer class="slds-modal__footer">
-                        <button class="slds-button cancel" onclick={closeModel}>Cancel</button>
+                        <button class="slds-button cancel" onclick={hideModalBox1}>Cancel</button>
                         <button class="slds-button import" onclick={CreateRecord}>Import</button>
                     </footer>
 

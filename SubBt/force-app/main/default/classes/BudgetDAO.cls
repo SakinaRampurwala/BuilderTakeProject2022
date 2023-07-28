@@ -2562,7 +2562,7 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
 
         changeOrderList = [SELECT Id, Name, buildertek__Project__c, buildertek__Description__c, buildertek__Vendor__c, buildertek__Vendor__r.Name, buildertek__CO_Number__c, buildertek__Total_Costs__c,
                             buildertek__Total_Amount_Tax__c, buildertek__Total_Amount__c FROM buildertek__Change_Order__c
-                            WHERE buildertek__Project__c =: budgetRec.buildertek__Project__c AND (buildertek__Status__c = 'Customer Approved' OR buildertek__Status__c = 'Approved') AND buildertek__Budget__c = null ORDER BY Name ASC];
+                            WHERE buildertek__Project__c =: budgetRec.buildertek__Project__c AND (buildertek__Status__c = 'Customer Approved' OR buildertek__Status__c = 'Approved' OR buildertek__Status__c = 'Customer Accepted') AND buildertek__Budget__c = null ORDER BY Name ASC];
 
         return changeOrderList;
     }
@@ -3057,6 +3057,86 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
         }
         System.debug('purchaseOrders -----------> ' + purchaseOrders);
         update purchaseOrders;
+    }
+
+    // ************ For Add Sales Invoice Button *************
+
+    @AuraEnabled
+    public static list<buildertek__Billings__c> getSalesInvoice(String budgetId){
+        try {
+            String ProjectId = [SELECT Id, Name, buildertek__Project__c FROM  buildertek__Budget__c WHERE Id =: budgetId].buildertek__Project__c;
+            list<buildertek__Billings__c> salesInvoiceList = [SELECT Id, Name, buildertek__Budget__r.Name, buildertek__Project__r.Name, buildertek__Project__c, buildertek__Terms__c, buildertek__Amount__c, buildertek__Total_Amount_Tax__c  FROM buildertek__Billings__c WHERE buildertek__Project__c =: ProjectId AND buildertek__Budget__c = null AND buildertek__BT_Budget_Line__c = null];
+            return salesInvoiceList;
+        } catch (Exception e) {
+            System.debug('error in getSalesInvoice => ' + e.getMessage() + ' at line no : '+ e.getLineNumber() );
+            return null;
+        }
+    }
+
+    // @AuraEnabled
+    // public static string CreateNewBudgetLine(list<String> SLIDlist, String BudgetId){
+    //     try {
+    //         String BLGroupID;
+    //         list<buildertek__Budget_Line_Group__c> BLGroup = [SELECT Id, Name FROM buildertek__Budget_Line_Group__c WHERE Name LIKE '%Sales Invoice%'];
+    //         if (BLGroup.size() == 0){
+    //             System.debug('Create Budgt Line Group');
+    //             buildertek__Budget_Line_Group__c BLG = new buildertek__Budget_Line_Group__c(Name = 'Sales Invoice');
+    //             insert BLG;
+
+    //             BLGroupID = BLG.Id;
+    //         } else {
+    //             BLGroupID = BLGroup[0].Id;
+    //         }
+    //         Map<String, buildertek__Budget_Item__c> MapToUpte = new  Map<String, buildertek__Budget_Item__c>();
+    //             list<buildertek__Billings__c> UpdateSalesInvoice = new list<buildertek__Billings__c>();
+    //             list<buildertek__Billings__c> SalesInvoices = [SELECT Id, Name,buildertek__Total_Amount_Tax__c  FROM buildertek__Billings__c WHERE Id IN : SLIDlist];
+    //             for(buildertek__Billings__c Sl : SalesInvoices){
+    //                 buildertek__Budget_Item__c BL = new buildertek__Budget_Item__c();
+    //                 BL.Name = sl.Name + ' budget line';
+    //                 BL.buildertek__Unit_Price__c = sl.buildertek__Total_Amount_Tax__c;
+    //                 BL.buildertek__Quantity__c = 1;
+    //                 BL.buildertek__Group__c = BLGroupID;
+    //                 BL.buildertek__Budget__c = BudgetId;
+    //                 MapToUpte.put(Sl.Id, BL);
+    //             }
+    //             if(MapToUpte.size() > 0){
+    //                 // insert MapToUpte.value();
+    //                 System.debug('budgetLineToInset => ' + MapToUpte);
+
+    //                 for(buildertek__Billings__c slToUpdate : SalesInvoices){
+    //                     slToUpdate.buildertek__BT_Budget_Line__c = MapToUpte.get(slToUpdate.Id).Id;
+    //                     slToUpdate.buildertek__Budget__c = BudgetId;
+    //                     UpdateSalesInvoice.add(slToUpdate);
+    //                 }
+    //                 // update UpdateSalesInvoice;
+    //                 System.debug('UpdateSalesInvoice => ' + UpdateSalesInvoice);
+    //             }
+    //         return 'success';
+            
+    //     } catch (Exception e) {
+    //         System.debug('error in UpdateSalesInvoice => ' + e.getMessage() + ' at line no : '+ e.getLineNumber() );
+    //         return null;
+    //     }
+    // }
+
+    @AuraEnabled
+    public static string UpdateSalesInvoices(list<String> SLIDlist, String BudgetId){
+        try {
+            list<buildertek__Billings__c> slToUpdate = new list<buildertek__Billings__c>();
+            if(SLIDlist.size() > 0){
+                list<buildertek__Billings__c> slIDs = [SELECT Id, Name FROM buildertek__Billings__c WHERE Id IN : SLIDlist];
+                for(buildertek__Billings__c sl : slIDs){
+                    sl.buildertek__Budget__c = BudgetId;
+                    slToUpdate.add(sl);
+                }
+                    update slToUpdate;
+                return 'Successs';
+            }
+            return null;
+        } catch (Exception e) {
+            System.debug('error in UpdateSalesInvoice => ' + e.getMessage() + ' at line no : '+ e.getLineNumber() );
+            return null;
+        }
     }
 
 

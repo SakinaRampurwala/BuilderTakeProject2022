@@ -59,6 +59,8 @@
             <aura:html tag="style">
                     .slds-lookup__menu{
                         width: 100% !important;
+                        height: 200px !important;
+                        overflow: auto;
                     }
                 </aura:html>
             <lightning:spinner class="slds-hide" variant="brand" size="small" aura:id="mySpinner"/>

@@ -2460,7 +2460,15 @@ public with sharing class QuoteDAO{
     @AuraEnabled
     public static List<sObject> getProductRecords(String searchKeyWord, String ObjectName, String filter, string parentId, string prodctfamly){
         system.debug('ObjectName-->' + ObjectName);
-        String searchKey = '%'+ searchKeyWord + '%';
+        // String searchKey = '%'+ searchKeyWord + '%';
+        String[] searchTerms = searchKeyWord.split(' ');
+        String searchKey = '';
+        for (Integer i = 0; i < searchTerms.size(); i++) {
+            searchKey += 'Name LIKE \'%' + searchTerms[i] + '%\'';
+            if (i < searchTerms.size() - 1) {
+                searchKey += ' AND ';
+            }
+        }
         List<sObject> returnList = new List<sObject>();
         String sQuery;
         list<string> ProdIds = new list<string>();
@@ -2510,7 +2518,7 @@ public with sharing class QuoteDAO{
             }      
         }
 
-        sQuery = 'select id, Name from ' + ObjectName + ' where Name LIKE: searchKey AND ' + filter + ' order by Name ASC limit 5';
+        sQuery = 'select id, Name from ' + ObjectName + ' WHERE ' + searchKey + ' AND ' + filter + ' order by Name ASC';
         List<sObject> lstOfRecords = Database.query(sQuery);
         for (sObject obj : lstOfRecords){
             returnList.add(obj);

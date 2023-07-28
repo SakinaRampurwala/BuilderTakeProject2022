@@ -87,6 +87,31 @@ public with sharing class BudgetItemTriggerHandler {
 			InvoiceAPTriggerHandler.skipDeleteMethod = false;
 		}
 
+		//* for Sales Invoice
+		list<buildertek__Billings__c> slList = [SELECT Id, Name, buildertek__BT_Budget_Line__c, buildertek__Budget__c FROM buildertek__Billings__c WHERE buildertek__BT_Budget_Line__c IN: budgetLineIds ];
+		for(buildertek__Billings__c sl : slList){
+			system.debug('inside delete budget line');
+			sl.buildertek__BT_Budget_Line__c = null;
+			sl.buildertek__Budget__c = null;
+		}
+		if(slList.size() > 0){
+			InvoiceTrigger_HDL.skipsalesInvoiceUpdate = true;
+			update slList;
+			InvoiceTrigger_HDL.skipsalesInvoiceUpdate = false;
+		}
+
+		//* for Change Order
+		list<buildertek__Change_Order__c> COList = [SELECT Id, Name, buildertek__Budget_Line__c, buildertek__Budget__c FROM buildertek__Change_Order__c WHERE buildertek__Budget_Line__c IN: budgetLineIds ];
+		for(buildertek__Change_Order__c co : COList){
+			system.debug('inside delete budget line for CO');
+			co.buildertek__Budget_Line__c = null;
+			co.buildertek__Budget__c = null;
+		}
+		if(COList.size() > 0){
+			ChangeOrderTriggerHandler.blnSkipChangeOrderUpdateTrigger = true;
+			update COList;
+			ChangeOrderTriggerHandler.blnSkipChangeOrderUpdateTrigger = false;
+		}
  	}
      
  	public void OnAfterInsert(Budget_Item__c[] newBudgetItems, Map<ID, Budget_Item__c> newBudgetItemsMap){ 

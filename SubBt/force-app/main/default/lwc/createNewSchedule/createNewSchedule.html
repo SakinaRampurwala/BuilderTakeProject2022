@@ -20,7 +20,7 @@
                         <label class="slds-form-element__label">Description</label>
                         <div class="slds-form-element__control">
                             <textarea class="slds-textarea" name="desc" id="desc" rows="2"
-                                onchange={handleDescriptionChange}></textarea>
+                                onchange={handleDescriptionChange} required></textarea>
                         </div>
                     </div>
                 </td>
@@ -31,8 +31,7 @@
                                 <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click">
                                     <lightning-input label="Project" type="search" placeholder="Search BT Projects..."
                                         style="margin-bottom: 20px !important;" name="searchProjectName"
-                                        data-id="project" value={searchProjectName} onchange={handleProjectSearch}
-                                        >
+                                        data-id="project" value={searchProjectName} onchange={handleProjectSearch}>
                                     </lightning-input>
                                     <div if:true={showProjectName} class="records">
                                         <ul class="suggestions">
@@ -50,12 +49,12 @@
                                             <template for:each={suggestedProjectName} for:item="project">
                                                 <li key={project.Id} data-id={project.Id} onclick={selectedRecord}>
                                                     <div class="recitem">
-                                                        <div class="highlights-icon-container slds-avatar slds-m-right_small icon"
-                                                            style="background-color: #e56798">
-                                                            <img src="https://btservice360-dev-ed.my.salesforce.com/img/icon/t4v35/custom/custom24_120.png"
-                                                                alt="">
+                                                        <div>
+                                                            <!-- <img src="https://btservice360-dev-ed.my.salesforce.com/img/icon/t4v35/custom/custom24_120.png"
+                                                                alt=""> -->
+                                                                <lightning-icon icon-name='custom:custom24' alternative-text='custom24' size='small'></lightning-icon>
                                                         </div>
-                                                        <div class="project-name">{project.Name}
+                                                        <div class="project-name" style="margin-left: 15px;">{project.Name}
                                                         </div>
                                                     </div>
                                                 </li>
@@ -100,7 +99,7 @@
                                 <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click">
                                     <lightning-input name="project" label="Project Manager - User" type="search"
                                         placeholder="Search People..." data-id="user" value={searchProjectManager}
-                                        onchange={handleProjectManagerSearch} ></lightning-input>
+                                        onchange={handleProjectManagerSearch}></lightning-input>
                                     <div if:true={showProjectManagerName} class="records">
                                         <ul class="suggestions">
                                             <span class="sdls-media__body">
@@ -117,13 +116,12 @@
                                             <template for:each={suggestedProjectManagerName} for:item="user">
                                                 <li key={user.Id} data-id={user.Id} onclick={selectedRecord}>
                                                     <div class="recitem">
-                                                        <div
-                                                            class="highlights-icon-container slds-avatar slds-m-right_small icon">
+                                                        <div>
                                                             <lightning-icon icon-name='standard:user'
-                                                                alternative-text='user' size='medium'>
+                                                                alternative-text='user' size='small'>
                                                             </lightning-icon>
                                                         </div>
-                                                        <div class="user-name">{user.Name}
+                                                        <div class="user-name" style="margin-left: 15px;">{user.Name}
                                                         </div>
                                                     </div>
                                                 </li>
@@ -169,7 +167,7 @@
                                 </span>
                             </td>
                             <td class="slds-truncate">
-                                <a href=#>{item.Name}</a>
+                                <a href={url} data-id={item.Name} onclick={getLink}>{item.Name}</a>
                             </td>
                             <td>
                                 {item.buildertek__Description__c}
@@ -185,7 +183,7 @@
         </div>
 
         <div class="modal-footer slds-modal__footer slds-size_1-of-1">
-            <lightning-button variant="neutral" title="Cancel" label="Cancel" onclick={closeModel}
+            <lightning-button variant="neutral" title="Cancel" label="Cancel" onclick={onCancelHandle}
                 style="margin-right: 10px;"></lightning-button>
             <lightning-button variant="neutral" type="submit" title="Save &amp; New" label="Save &amp; New"
                 onclick={onSaveandNew} style="margin-right: 10px;"></lightning-button>

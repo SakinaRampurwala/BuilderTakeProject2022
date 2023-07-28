@@ -3,7 +3,8 @@
         //component.find("fieldSelect").set("v.autocomplete","off");
         $A.util.addClass(component.find("mySpinner"), "slds-show");
         var forOpen = component.find("searchRes");
-        component.set("v.showDropDownList",true)
+        component.set("v.showDropDownList",true);  //---
+        component.set("v.enableBackShadow", true);
         $A.util.addClass(forOpen, 'slds-is-open');
         $A.util.removeClass(forOpen, 'slds-is-close');
         // Get Default 5 Records order by createdDate DESC  
@@ -185,5 +186,14 @@
         }
         
         
+    },
+    
+    DisableBackShadow : function(component, helper, event) { //---
+        var backshadow = component.get("v.enableBackShadow");
+        if(backshadow){
+            component.set("v.enableBackShadow", false);
+            component.set("v.showDropDownList",false);
+            console.log('Hide Dropdown');
+        };
     },
 })

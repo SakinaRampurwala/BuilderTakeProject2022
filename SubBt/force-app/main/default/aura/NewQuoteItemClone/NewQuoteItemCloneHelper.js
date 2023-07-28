@@ -1523,6 +1523,21 @@
         }
 
      },
+     applyCSSBasedOnURL: function(component) {
+        var isproject = component.get("v.isproject");
+        console.log('isproject',isproject);
+        var headerDiv = component.find("headerDiv");
+        console.log('headerDiv',headerDiv);
+        
+        // Check if the current URL contains a specific keyword or phrase
+        if (isproject) {
+            console.log('in if');
+            $A.util.addClass(headerDiv, "divconts");
+        } else {
+            console.log('in else');
+            $A.util.removeClass(headerDiv, "divconts");
+        }
+    }
 
 
 })
