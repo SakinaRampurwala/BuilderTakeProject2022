@@ -1,18 +1,11 @@
 <apex:component controller="BT_PrintLineItemController">
-	<apex:attribute name="childObjectName" type="string" required="true"
-					description="The object to be displayed." assignTo="{!childObjName}"/>
-	<apex:attribute name="childObjectFields" type="string" required="true"
-					description="The object to be displayed." assignTo="{!childFieldApi}"/>
-	<apex:attribute name="parentObjectName" type="string" required="true"
-					description="The object to be displayed." assignTo="{!parentObjName}"/>	
-	<apex:attribute name="groupName" type="string" 
-					description="The object to be displayed." assignTo="{!groupBy}"/>
-	<apex:attribute name="groupObj" type="string" 
-					description="The object to be displayed." assignTo="{!groupObject}"/>
-	<apex:attribute name="groupObjs" type="string" 
-					description="The object to be displayed." assignTo="{!groupObjects}"/>
-	<apex:attribute name="sumOfFields" type="string" 
-					description="The object to be displayed." assignTo="{!totalSumOfFields}"/>				
+	<apex:attribute name="childObjectName" type="string" required="true" description="The object to be displayed." assignTo="{!childObjName}"/>
+	<apex:attribute name="childObjectFields" type="string" required="true" description="The object to be displayed." assignTo="{!childFieldApi}"/>
+	<apex:attribute name="parentObjectName" type="string" required="true"	description="The object to be displayed." assignTo="{!parentObjName}"/>	
+	<apex:attribute name="groupName" type="string" 	description="The object to be displayed." assignTo="{!groupBy}"/>
+	<apex:attribute name="groupObj" type="string" description="The object to be displayed." assignTo="{!groupObject}"/>
+	<apex:attribute name="groupObjs" type="string" description="The object to be displayed." assignTo="{!groupObjects}"/>
+	<apex:attribute name="sumOfFields" type="string" description="The object to be displayed." assignTo="{!totalSumOfFields}"/>				
 	<html>
 	    <style>
             .parent:nth-child(even) { 
@@ -105,7 +98,7 @@
         		    <apex:repeat value="{!childObjRecords}" var="list"> 
     			        <tr class="parent" >
     			            <apex:repeat value="{!ChildRecordsList}" var="rec">
-        			            <td style="height:60px;width:{!widthOfLineItemTable}%;float: left;text-align:center !important;font-family:'Salesforce Sans',Arial,sans-serif">
+        			            <td style="height:{!widthOfLineItemTable}%;width:{!widthOfLineItemTable}%;float: left;text-align:center !important;font-family:'Salesforce Sans',Arial,sans-serif;">
                 				    {!list[rec]} 
         			            </td>
     			            </apex:repeat>
@@ -142,7 +135,7 @@
 								<apex:outputpanel rendered="{!IF(recs.Id == list[groupObject],true,false)}">
 									<tr class="parent" >    
 										<apex:repeat value="{!ChildRecordsList}" var="rec">
-						                    <td  style="height:60px;width:{!widthOfLineItemTable}%;float: left;font-family:'Salesforce Sans',Arial,sans-serif;text-align:center">
+						                    <td  style="height:{!widthOfLineItemTable}%;width:{!widthOfLineItemTable}%;float: left;font-family:'Salesforce Sans',Arial,sans-serif;text-align:center;">
     					                        <apex:outputPanel rendered="{!IF(mapForFieldType[rec] == 'CURRENCY',true,false)}"> 
     										       <!-- ${!list[rec]} -->
     										        <apex:outputText value="${0, number, ###,##0.00}">
@@ -168,7 +161,7 @@
 								<apex:outputpanel rendered="{!IF(recs[groupObject] == list[groupObject],true,false)}">
 									<tr class="parent" >    
 										<apex:repeat value="{!ChildRecordsList}" var="rec">	 
-											<td  style="height:60px;width:{!widthOfLineItemTable}%;float: left;font-family:'Salesforce Sans',Arial,sans-serif;"> 
+											<td  style="height:{!widthOfLineItemTable}%;width:{!widthOfLineItemTable}%;float: left;font-family:'Salesforce Sans',Arial,sans-serif;"> 
 												!list[rec]} 
 											</td> 
 										</apex:repeat>

@@ -8,7 +8,7 @@
             $A.getCallback(function() {
                 component.set("v.Spinner", false); 
                 $A.get("e.force:closeQuickAction").fire();
-            }), 7000
+            }), 3500
         );
     }
 })

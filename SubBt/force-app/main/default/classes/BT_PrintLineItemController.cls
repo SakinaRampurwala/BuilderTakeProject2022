@@ -40,6 +40,7 @@ public with sharing class BT_PrintLineItemController {
         system.debug('numberOfChildFields '+numberOfChildFields.size());
         totalNumberOfChildFields = numberOfChildFields.size();
         widthOfLineItemTable = (100 / totalNumberOfChildFields)-0.23;
+
         widthOfLastHeaderValue = widthOfLineItemTable + 2.63;
         system.debug('widthOfLineItemTable @@@@@@@ '+widthOfLineItemTable);
         Fieldslist = new list<string>();    
