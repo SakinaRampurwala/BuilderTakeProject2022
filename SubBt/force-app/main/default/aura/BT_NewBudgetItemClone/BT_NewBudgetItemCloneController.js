@@ -263,6 +263,36 @@
 
 
     },
+    closetabs: function(component, event, helper) {
+        var workspaceAPI = component.find("workspace");
+        workspaceAPI.getFocusedTabInfo().then(function (response) {
+            var focusedTabId = response.tabId;
+            workspaceAPI.closeTab({ tabId: focusedTabId });
+            $A.get("e.c:BT_SpinnerEvent").setParams({
+                "action": "SHOW"
+            }).fire();
+        })
+            .catch(function (error) {
+                console.log(error);
+            });
+        var navService = component.find("navService");
+        var pageReference = {    
+            "type": "standard__recordPage", //example for opening a record page, see bottom for other supported types
+            "attributes": {
+                "recordId": component.get("v.recordId"), //place your record id here that you wish to open
+                "actionName": "view"
+            }
+        }
+        
+        navService.generateUrl(pageReference)
+        .then($A.getCallback(function(url) {
+            console.log('success: ' + url); //you can also set the url to an aura attribute if you wish
+            window.location.href = url; //this opens your page in a seperate tab here
+        }), 
+              $A.getCallback(function(error) {
+                  console.log('error: ' + error);
+              }));
+    },
 
 
 

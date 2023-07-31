@@ -618,37 +618,8 @@ public with sharing class bryntumGanttController {
         );
         insert schedule;
         String pageUrl = schedule.Id;
-        // if(masterId != null){
-        //     List<buildertek__Project_Task__c> scheduleTaskList = new List<buildertek__Project_Task__c>([SELECT Id, buildertek__Schedule__c,Name from buildertek__Project_Task__c WHERE buildertek__Schedule__c =: masterId]);
-        //     System.debug('scheduleTaskList: ' + scheduleTaskList);
-        //     if(scheduleTaskList.size() <= 0){
-        //         buildertek__Project_Task__c newSchItem = new buildertek__Project_Task__c();
-        //         newSchItem.Name = 'New task';
-        //         newSchItem.buildertek__Schedule__c = schedule.Id;
-        //         newSchItem.buildertek__Duration__c = 1;
-        //         if (initialStartDate != null){
-        //             newSchItem.buildertek__Start__c = initialStartDate;
-        //         } else{
-        //             newSchItem.buildertek__Start__c = Date.today();
-        //         }
-        //         insert newSchItem;
-        //         System.debug('newSchItem: ' + newSchItem);
-        //     }
-        // } else {
-        //     buildertek__Project_Task__c newSchItem = new buildertek__Project_Task__c();
-        //     newSchItem.Name = 'New task';
-        //     newSchItem.buildertek__Schedule__c = schedule.Id;
-        //     newSchItem.buildertek__Duration__c = 1;
-        //     if (initialStartDate != null){
-        //         newSchItem.buildertek__Start__c = initialStartDate;
-        //     } else{
-        //         newSchItem.buildertek__Start__c = Date.today();
-        //     }
-        //     insert newSchItem;
-        //     System.debug('newSchItem: ' + newSchItem);
-        // }
 
-        if(masterId != null || masterId != ''){
+        if(masterId != null && masterId != ''){
             createScheduleLineFromMasterSchedule(schedule.Id, masterId, initialStartDate);
         }
 
@@ -662,11 +633,25 @@ public with sharing class bryntumGanttController {
 
     @AuraEnabled
     public static void createScheduleLineFromMasterSchedule (String recordId, String masterId, Date initialStartDate){
+
+        buildertek__Schedule__c masterSchedule = [SELECT Id, Name, buildertek__Start_Date__c, buildertek__Initial_Start_Date__c FROM buildertek__Schedule__c WHERE Id =: masterId];
+        String businessHourId = [SELECT Id, IsDefault, IsActive FROM BusinessHours WHERE IsDefault = false LIMIT 1].Id;
+
+        date masterStartDate = masterSchedule.buildertek__Start_Date__c;
+        if (masterStartDate == null) {
+            masterStartDate = System.today();
+        }
+        DateTime oldDate = DateTime.newInstance(masterStartDate.year(), masterStartDate.month(),masterStartDate.day());
+        DateTime newDate = DateTime.newInstance(initialStartDate.year(), initialStartDate.month(),initialStartDate.day());
+
+        // Integer diffDays = Integer.valueOf(System.BusinessHours.diff(businessHourId, oldDate, newDate)/(24 * 60 * 60 * 1000L));
+        Long diffDays = System.BusinessHours.diff(businessHourId, oldDate, newDate);
+
         System.debug('initialStartDate: ' + initialStartDate);
         Map<Id, buildertek__Project_Task__c> projectInsertTaskMap = new Map<Id, buildertek__Project_Task__c>();
 
         List<buildertek__Project_Task__c> masterScheduleList = new List<buildertek__Project_Task__c>([select Id, Name, buildertek__Start__c,buildertek__Contractor__c,buildertek__Phase__c, buildertek__Schedule__c,buildertek__Dependency__r.Name, buildertek__Dependency__r.buildertek__Schedule__c, buildertek__Completed__c, buildertek__Completion__c, buildertek__Contractor_Resource__c, buildertek__Type__c,buildertek__Cost_Code__c, buildertek__Duration__c, buildertek__Finish__c, buildertek__Resource__c, buildertek__Lag__c, buildertek__Last_Saved_End_Date__c, buildertek__Last_Saved_Start_Date__c, buildertek__Material_Ordered__c, buildertek__Material_Received__c, buildertek__Milestone__c, buildertek__Notes__c, buildertek__Order__c, buildertek__Original_End_Date__c, buildertek__Original_Start_Date__c, buildertek__Payable_Task__c, buildertek__Project__c, buildertek__Purchase_Order__c, buildertek__Reason_for_Date_Change__c, buildertek__Reason_for_Date_Change_PL__c, buildertek__Required_Completion_Date__c  from buildertek__Project_Task__c where buildertek__Schedule__c = :masterId  ORDER BY buildertek__Order__c ASC NULLS LAST]);
-        String businessHourId = [SELECT Id, IsDefault, IsActive FROM BusinessHours WHERE IsDefault = false].Id;
+      
         System.debug('masterScheduleList: ' + masterScheduleList);
 
         Map<String, String> predecessorMap = new Map<String, String>();
@@ -689,26 +674,12 @@ public with sharing class bryntumGanttController {
                     newSchItem.buildertek__Duration__c = 1;
                 }
 
-                if (Masterscheduleitem.buildertek__Dependency__c == null) {
-                    System.debug('Dependency Condition: ');
-                    newSchItem.buildertek__Start__c = initialStartDate;
-                    newSchItem.buildertek__Finish__c = addDaysSkippingWeekends(businessHourId, newSchItem.buildertek__Start__c, Integer.valueOf(Masterscheduleitem.buildertek__Duration__c));
-                } else {
-                    System.debug('Dependency Condition else: ');
-                    if (projectInsertTaskMap.containsKey(Masterscheduleitem.buildertek__Dependency__c)) {
-                        System.debug('Dependency Condition !=null: ');
-                        Date dependencyFinishDate = projectInsertTaskMap.get(Masterscheduleitem.buildertek__Dependency__c).buildertek__Finish__c;
-                        Date startDate = dependencyFinishDate.addDays(1);
-                        newSchItem.buildertek__Start__c = startDate;
-                        newSchItem.buildertek__Finish__c = addDaysSkippingWeekends(businessHourId, newSchItem.buildertek__Start__c, Integer.valueOf(Masterscheduleitem.buildertek__Duration__c));
-                    } else {
-                        System.debug('Dependency Condition ==null: ');
-                        newSchItem.buildertek__Start__c = initialStartDate;
-                        newSchItem.buildertek__Finish__c = addDaysSkippingWeekends(businessHourId, newSchItem.buildertek__Start__c, Integer.valueOf(Masterscheduleitem.buildertek__Duration__c));
-                    }
-                }
+                DateTime sDate = DateTime.newInstance(Masterscheduleitem.buildertek__Start__c.year(), Masterscheduleitem.buildertek__Start__c.month(),Masterscheduleitem.buildertek__Start__c.day());
+                DateTime eDate = DateTime.newInstance(Masterscheduleitem.buildertek__Finish__c.year(), Masterscheduleitem.buildertek__Finish__c.month(),Masterscheduleitem.buildertek__Finish__c.day());
 
-                System.debug('finish date in import master before insertion ==> ' + newSchItem.buildertek__Finish__c + ' and master item id ' + newSchItem.id);
+                newSchItem.buildertek__Start__c = System.BusinessHours.add(businessHourId, sDate, diffDays).date();
+                newSchItem.buildertek__Finish__c = System.BusinessHours.add(businessHourId, eDate, diffDays).date();
+
                 newSchItem.buildertek__Resource__c = Masterscheduleitem.buildertek__Resource__c;
                 newSchItem.buildertek__Lag__c = Masterscheduleitem.buildertek__Lag__c;
                 newSchItem.buildertek__Milestone__c = Masterscheduleitem.buildertek__Milestone__c;
@@ -729,70 +700,21 @@ public with sharing class bryntumGanttController {
                 buildertek__Project_Task__c newSchItemClone = newSchItem.Clone(false, true);
                 projectInsertTaskMap.put(Masterscheduleitem.Id, newSchItemClone);
 
-                System.debug('projectInsertTaskMap values ==> ' + projectInsertTaskMap.values());
             }
         }
 
         ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
         insert projectInsertTaskMap.values();
         ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
-        Map<String, String> childToParentMap = new Map<String, String>();
-        Map<String, String> parentToChildMap = new Map<String, String>();
-        Map<String, buildertek__Project_Task__c> schIdToRecordMap = new Map<String, buildertek__Project_Task__c>();
-        List<buildertek__Project_Task__c> scheduleDependencyList = new List<buildertek__Project_Task__c>([Select Id, Name, buildertek__Start__c, buildertek__Finish__c, buildertek__Duration__c,buildertek__Dependency__c, buildertek__Dependency__r.Name, buildertek__Order__c FROM buildertek__Project_Task__c WHERE buildertek__Schedule__c =: recordId ]);
-        List<buildertek__Project_Task__c> hierarchyList = new List<buildertek__Project_Task__c>();
 
         for (String key : predecessorMap.keySet()) {
             projectInsertTaskMap.get(key).buildertek__Dependency__c = projectInsertTaskMap.get(predecessorMap.get(key)).Id;
-            if(projectInsertTaskMap.get(predecessorMap.get(key)).buildertek__Dependency__c != null){
-                childToParentMap.put(projectInsertTaskMap.get(predecessorMap.get(key)).Id, projectInsertTaskMap.get(predecessorMap.get(key)).buildertek__Dependency__c);
-                parentToChildMap.put(projectInsertTaskMap.get(predecessorMap.get(key)).buildertek__Dependency__c, projectInsertTaskMap.get(predecessorMap.get(key)).Id);
-            }
-            schIdToRecordMap.put(projectInsertTaskMap.get(predecessorMap.get(key)).Id, projectInsertTaskMap.get(key));
-            System.debug('Key===>: ' +key);
-            System.debug('projectInsertTaskMap.values(): ' +projectInsertTaskMap.values());
         }
-        System.debug('childToParentMap: ' + childToParentMap);
-        System.debug('parentToChildMap: ' + parentToChildMap);
-        System.debug('schIdToRecordMap: ' + schIdToRecordMap);
 
-        // for(buildertek__Project_Task__c task : scheduleDependencyList){
-        //     System.debug('task.buildertek__Dependency__c: ' + task.buildertek__Dependency__c);
-        //     if(task.buildertek__Dependency__c != null){
-        //         while (parentToChildMap.containsKey(task.buildertek__Dependency__c)){
-        //             System.debug('insideLoop: ');
-        //             System.debug('parentToChildMap.get(task.buildertek__Dependency__c: ' + parentToChildMap.get(task.buildertek__Dependency__c));
-        //             hierarchyList.add(schIdToRecordMap.get(parentToChildMap.get(task.buildertek__Dependency__c)));
-        //         }
-        //         System.debug('parentToChildMap.get(task.buildertek__Dependency__c: ' + parentToChildMap.get(task.buildertek__Dependency__c));
-        //     }
-        // }
-        // System.debug('hierarchyList: ' + hierarchyList);
         ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
         update projectInsertTaskMap.values();
         ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
 
     }
-
-    /* @Author        Karan Patel
-     * Date           10-7-23
-     * Description :  This method is used skip weekend during calculation of duration of Task.
-     */
-
-    // Skip weekend and calculate date
-	public static Date addDaysSkippingWeekends(String businessHourId, Date startDate, Integer duration){
-        Date result = startDate;
-		Integer addedDays = 0;
-		while (addedDays < duration){
-			result = result.addDays(1);
-			DateTime currentDate = DateTime.newInstance(result.year(), result.month(), result.day());
-			String todayDay = currentDate.format('EEEE');
-			if (todayDay != 'Saturday' && todayDay != 'Sunday'){
-				++addedDays;
-			}
-		}
-        System.debug('result: ' + result);
-		return result;
-	}
 
 }

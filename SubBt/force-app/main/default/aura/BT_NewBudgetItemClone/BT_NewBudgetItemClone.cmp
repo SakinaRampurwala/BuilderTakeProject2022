@@ -273,6 +273,7 @@
      <aura:attribute name="salesInvoices" type="Billings__c[]" />
      <aura:attribute name="selectedSalesInvoices" type="List" default="[]" access="public"/>
      <aura:attribute name="allSLChecked" type="boolean" default="false" />
+     <lightning:navigation aura:id="navService" />
      <!--  End -->
 
 
@@ -389,6 +390,12 @@
                                         <!-- <lightning:button label="Import CSV" onclick="{!c.importCSV}"/> -->
                                         <!--  <lightning:button label="Save" onclick="{!c.saveQuoteItems}"/> -->
                                         <lightning:button label="Delete Lines" onclick="{!c.deleteSelectedBudgetItem}" class="sldsButtonGroup" />
+                                        <aura:if isTrue="{!v.isbudget}">
+                                            <!-- <a href="{!v.fromWhereBudgetIsOpen}" onclick="{!c.closetab}" class="sldsButtonGroup"> -->
+                                                <lightning:button label="Cancel" onclick="{!c.closetabs}" class="sldsButtonGroup" /> 
+                                            <!-- </a> -->
+                                                
+                                        </aura:if>
                                         <!--</aura:if>-->
                                         <!--<div class="slds-align_absolute-center">-->
                                         <aura:if isTrue="{!v.showButtons}">

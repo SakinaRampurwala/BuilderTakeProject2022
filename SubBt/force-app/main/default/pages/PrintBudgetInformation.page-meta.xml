@@ -6,7 +6,7 @@
     <label>PrintBudgetInformation</label>
     <packageVersions>
         <majorNumber>1</majorNumber>
-        <minorNumber>19</minorNumber>
+        <minorNumber>20</minorNumber>
         <namespace>sf_chttr_apps</namespace>
     </packageVersions>
     <packageVersions>

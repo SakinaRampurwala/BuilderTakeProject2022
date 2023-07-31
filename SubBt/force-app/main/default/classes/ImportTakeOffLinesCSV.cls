@@ -418,6 +418,9 @@ public with sharing class ImportTakeOffLinesCSV{
         public String SubSeriesNumber;
         public String SubSeriesItem;
         public String AreaReference;
+        // Updated by: Poojan Gabani
+        // Date:27-07-2023  Ticket No: TKS-20
+        // Update Quantity Datatype to Decimal From Integer 
         public Decimal Quantity;
         public String MaterialValue;
         public decimal Length;

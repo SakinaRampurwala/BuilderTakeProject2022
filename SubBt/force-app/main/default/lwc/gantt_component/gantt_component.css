@@ -2,6 +2,10 @@
     height : 81vh;
 }
 
+.b-field-inner{
+    border:none !important
+}
+
 .b-float-root {
     z-index: 100;
 }
@@ -61,6 +65,32 @@
     .container {
         height : 78vh;
     }
+  }
+
+  progress {
+    transform: rotate(-90deg);
+    width: 1.5em;
+    height: 0.3em;
+    transform-origin: 50%;
+    position: relative;
+    top: 5px;
+    appearance: none;
+  }
+
+  progress::-moz-progress-bar {
+    background: #d6d6d6;
+    border-radius: 3px;
+  }
+
+  progress::-webkit-progress-bar {
+    background: #d6d6d6;
+    border-radius: 3px;
+  }
+
+  progress::-webkit-progress-value {
+    background: #83b5fe;
+    border-bottom-left-radius: 3px;
+    border-top-left-radius: 3px;
   }
 
 /* Spinner end */

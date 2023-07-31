@@ -153,6 +153,8 @@
                 if (TradeType != null  && TradeType != '') {
                     console.log("TradeType => ", TradeType);
                     debugger;
+                    // Updated by: Poojan Gabani
+                    // Date:27-07-2023  Ticket No: TKS-20
                     var dataInit = [];
                     dataInit = arr[i].split(',');
 
@@ -227,7 +229,7 @@
             debugger;
             var state = response.getReturnValue();
             console.log('response => ', JSON.stringify(state));
-        //  alert(JSON.stringify(state));
+         // alert(JSON.stringify(state));
          // var result = response.getReturnValue();
          if (state == "SUCCESS") {
              component.set("v.Spinner", false);

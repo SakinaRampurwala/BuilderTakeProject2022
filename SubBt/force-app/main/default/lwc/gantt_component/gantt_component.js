@@ -1,26 +1,12 @@
 /* globals bryntum : true */
-import {
-  api,
-  LightningElement,
-  track,
-  wire
-} from "lwc";
-import {
-  ShowToastEvent
-} from "lightning/platformShowToastEvent";
-import {
-  loadScript,
-  loadStyle
-} from "lightning/platformResourceLoader";
+import { api, LightningElement, track, wire } from "lwc";
+import { ShowToastEvent } from "lightning/platformShowToastEvent";
+import { loadScript, loadStyle } from "lightning/platformResourceLoader";
 
 import GanttStyle from "@salesforce/resourceUrl/BT_Bryntum_NewGanttCss";
 import GANTTModule from "@salesforce/resourceUrl/BT_Bryntum_NewGantt_ModuleJS";
-import {
-  NavigationMixin
-} from "lightning/navigation";
-import {
-  refreshApex
-} from "@salesforce/apex";
+import { NavigationMixin } from "lightning/navigation";
+import { refreshApex } from "@salesforce/apex";
 
 // import GanttStyle from "@salesforce/resourceUrl/BT_Bryntum_NewGanttCss";
 import GanttToolbarMixin from "./lib/GanttToolbar";
@@ -33,9 +19,7 @@ import {
   formatApexDatatoJSData,
   recordsTobeDeleted,
 } from "./gantt_componentHelper";
-import {
-  populateIcons
-} from "./lib/BryntumGanttIcons";
+import { populateIcons } from "./lib/BryntumGanttIcons";
 import bryntum_gantt from "@salesforce/resourceUrl/bryntum_gantt";
 
 export default class Gantt_component extends NavigationMixin(LightningElement) {
@@ -173,14 +157,14 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
 
   loadLibraries() {
     Promise.all([
-        console.log("Lodding libraries"),
-        // loadScript(this, GANTT + "/gantt.lwc.module.min.js"),
-        // loadStyle(this, GANTT + "/gantt.stockholm-1.css"),
-        loadScript(this, GANTTModule),
-        loadStyle(this, GanttStyle + "/gantt.stockholm.css"),
-        console.log("Loaded libraries"),
-        // loadStyle(this, GanttStyle + "/gantt.stockholm.css")
-      ])
+      console.log("Lodding libraries"),
+      // loadScript(this, GANTT + "/gantt.lwc.module.min.js"),
+      // loadStyle(this, GANTT + "/gantt.stockholm-1.css"),
+      loadScript(this, GANTTModule),
+      loadStyle(this, GanttStyle + "/gantt.stockholm.css"),
+      console.log("Loaded libraries"),
+      // loadStyle(this, GanttStyle + "/gantt.stockholm.css")
+    ])
       .then(() => {
         // this.handleHideSpinner();
         console.log("lib loaded");
@@ -208,7 +192,8 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
     this.dispatchEvent(
       new ShowToastEvent({
         title: "Success",
-        message: uploadedFiles.length +
+        message:
+          uploadedFiles.length +
           " Files uploaded Successfully: " +
           uploadedFileNames,
         variant: "success",
@@ -243,8 +228,8 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
 
   getScheduleWrapperDataFromApex() {
     scheduleWrapperDataFromApex({
-        scheduleid: this.SchedulerId,
-      })
+      scheduleid: this.SchedulerId,
+    })
       .then((response) => {
         console.log("response ", JSON.parse(JSON.stringify(response)));
         var records = response;
@@ -297,7 +282,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
               taskMap.has(scheduleItemsList[i].buildertek__Phase__c) &&
               i == taskMap.get(scheduleItemsList[i].buildertek__Phase__c) &&
               scheduleItemsMap.get(scheduleItemsList[i].buildertek__Phase__c) !=
-              undefined
+                undefined
             ) {
               scheduleItemsListClone.push(
                 scheduleItemsMap.get(scheduleItemsList[i].buildertek__Phase__c)
@@ -628,18 +613,18 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
     });
 
     project.hoursPerDay = 8;
-    project.calendar = 'business';
+    project.calendar = "business";
 
     const gantt = new bryntum.gantt.Gantt({
       project,
       appendTo: this.template.querySelector(".container"),
-      // startDate: "2019-07-01",
-      // endDate: "2019-10-01",
-
+      rowHeight         : 40,
+      barMargin         : 6,
       tbar: new GanttToolbar(),
 
       dependencyIdField: "sequenceNumber",
-      columns: [{
+      columns: [
+        {
           type: "wbs",
           draggable: false,
         },
@@ -648,13 +633,14 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
           draggable: false,
           showCircle: true,
           width: 100,
-          text: "% Complete"
+          text: "% Complete",
         },
         {
           type: "name",
           draggable: false,
           width: 250,
           renderer: (record) => {
+
             populateIcons(record);
             if (record.record._data.type == "Phase") {
               record.record.readOnly = true;
@@ -676,6 +662,33 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
             } else {
               return record.value;
             }
+
+            children : [
+              {
+                  tag  : 'span',
+                  html : bryntum.gantt.StringHelper.encodeHtml(record.name)
+              },
+              {
+                  class    : 'b-actions',
+                  children : [
+                      {
+                          tag     : 'i',
+                          class   : 'edit b-fa b-fa-fw b-fa-pen',
+                          dataset : { btip : 'Edit' }
+                      },
+                      {
+                          tag     : 'i',
+                          class   : 'add b-fa b-fa-fw b-fa-plus',
+                          dataset : { btip : 'Add task' }
+                      },
+                      {
+                          tag     : 'i',
+                          class   : 'menu b-fa b-fa-fw b-fa-ellipsis-h',
+                          dataset : { btip : 'Task menu' }
+                      }
+                  ]
+              }
+            ]
           },
         },
         {
@@ -759,6 +772,21 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
         //   },
         // },
         // //Added for Contractor
+        {
+          type: "widget",
+          text: "Contractor",
+          draggable: false,
+          width: 120,
+
+          widgets: [
+            {
+              type: "Combo",
+              items: ["test1", "test2"],
+              editable : false,
+              name: "contractorname",
+            },
+          ],
+        },
         // {
         //   text: "Contractor",
         //   draggable: false,
@@ -865,104 +893,100 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
           draggable: false,
           // text    : 'Attach File',
           width: 30,
-          actions: [{
-            cls: "b-fa b-fa-paperclip",
-            onClick: ({
-              record
-            }) => {
-              if (
-                record._data.type == "Task" &&
-                record._data.id.indexOf("_generate") == -1 &&
-                record._data.name != "Milestone Complete"
-              ) {
-                this.showpopup = true;
-                this.fileTaskId = record._data.id;
-              }
+          actions: [
+            {
+              cls: "b-fa b-fa-paperclip",
+              onClick: ({ record }) => {
+                if (
+                  record._data.type == "Task" &&
+                  record._data.id.indexOf("_generate") == -1 &&
+                  record._data.name != "Milestone Complete"
+                ) {
+                  this.showpopup = true;
+                  this.fileTaskId = record._data.id;
+                }
+              },
+              renderer: ({ action, record }) => {
+                if (
+                  record._data.type == "Task" &&
+                  record._data.id.indexOf("_generate") == -1 &&
+                  record._data.name != "Milestone Complete"
+                ) {
+                  return `<i class="b-action-item ${action.cls}" data-btip="Attach"></i>`;
+                } else {
+                  return `<i class="b-action-item ${action.cls}" data-btip="Attach" style="display:none;"></i>`;
+                }
+              },
             },
-            renderer: ({
-              action,
-              record
-            }) => {
-              if (
-                record._data.type == "Task" &&
-                record._data.id.indexOf("_generate") == -1 &&
-                record._data.name != "Milestone Complete"
-              ) {
-                return `<i class="b-action-item ${action.cls}" data-btip="Attach"></i>`;
-              } else {
-                return `<i class="b-action-item ${action.cls}" data-btip="Attach" style="display:none;"></i>`;
-              }
-            },
-          }, ],
+          ],
         },
         {
           type: "action",
           draggable: false,
           // text    : 'Files',
           width: 30,
-          actions: [{
-            cls: "b-fa b-fa-file",
-            onClick: ({
-              record
-            }) => {
-              this.showFileForRecord = record._data.id;
-              this.showFilePopup = true;
-            },
-            renderer: ({
-              action,
-              record
-            }) => {
-              if (
-                record._data.type == "Task" &&
-                record._data.id.indexOf("_generate") == -1 &&
-                record._data.name != "Milestone Complete"
-              ) {
-                if (this.storeRes["" + record._data.id]["fileLength"]) {
-                  return `<i style="font-size:1.1rem;color:green;" class="b-action-item ${action.cls}" data-btip="File"></i>`;
+          actions: [
+            {
+              cls: "b-fa b-fa-file",
+              onClick: ({ record }) => {
+                this.showFileForRecord = record._data.id;
+                this.showFilePopup = true;
+              },
+              renderer: ({ action, record }) => {
+                if (
+                  record._data.type == "Task" &&
+                  record._data.id.indexOf("_generate") == -1 &&
+                  record._data.name != "Milestone Complete"
+                ) {
+                  if (this.storeRes["" + record._data.id]["fileLength"]) {
+                    return `<i style="font-size:1.1rem;color:green;" class="b-action-item ${action.cls}" data-btip="File"></i>`;
+                  }
+                  return `<i style="font-size:1.1rem;" class="b-action-item ${action.cls}" data-btip="File"></i>`;
+                  // return `<i class="b-action-item ${action.cls}" data-btip="File"></i>`;
+                } else {
+                  return `<i class="b-action-item ${action.cls}" data-btip="File" style="display:none;"></i>`;
                 }
-                return `<i style="font-size:1.1rem;" class="b-action-item ${action.cls}" data-btip="File"></i>`;
-                // return `<i class="b-action-item ${action.cls}" data-btip="File"></i>`;
-              } else {
-                return `<i class="b-action-item ${action.cls}" data-btip="File" style="display:none;"></i>`;
-              }
+              },
             },
-          }, ],
+          ],
         },
         {
           type: "action",
           draggable: false,
           //text    : 'Go to Item',
           width: 30,
-          actions: [{
-            cls: "b-fa b-fa-external-link-alt",
-            onClick: ({
-              record
-            }) => {
-              if (
-                record._data.id.indexOf("_generate") == -1 &&
-                record._data.name != "Milestone Complete"
-              ) {
-                console.log("Action link", record._data.id);
-                this.navigateToRecordViewPage(record._data.id);
-              }
+          actions: [
+            {
+              cls: "b-fa b-fa-external-link-alt",
+              onClick: ({ record }) => {
+                if (
+                  record._data.id.indexOf("_generate") == -1 &&
+                  record._data.name != "Milestone Complete"
+                ) {
+                  console.log("Action link", record._data.id);
+                  this.navigateToRecordViewPage(record._data.id);
+                }
+              },
+              renderer: ({ action, record }) => {
+                if (
+                  record._data.type == "Task" &&
+                  record._data.id.indexOf("_generate") == -1 &&
+                  record._data.name != "Milestone Complete"
+                ) {
+                  return `<i class="b-action-item ${action.cls}" data-btip="Go To Item"></i>`;
+                } else {
+                  return `<i class="b-action-item ${action.cls}" data-btip="Go To Item" style="display:none;"></i>`;
+                }
+              },
             },
-            renderer: ({
-              action,
-              record
-            }) => {
-              if (
-                record._data.type == "Task" &&
-                record._data.id.indexOf("_generate") == -1 &&
-                record._data.name != "Milestone Complete"
-              ) {
-                return `<i class="b-action-item ${action.cls}" data-btip="Go To Item"></i>`;
-              } else {
-                return `<i class="b-action-item ${action.cls}" data-btip="Go To Item" style="display:none;"></i>`;
-              }
-            },
-          }, ],
+          ],
         },
       ],
+
+      viewPreset : {
+        base      : 'weekAndDayLetter',
+        tickWidth : 50
+      },
 
       subGridConfigs: {
         locked: {
@@ -1055,9 +1079,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
       },
 
       listeners: {
-        taskMenuBeforeShow({
-          record
-        }) {
+        taskMenuBeforeShow({ record }) {
           // put your location here where you want to disable the task menu
           if (
             record._data.type == "Phase" ||
@@ -1071,9 +1093,7 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
       },
     });
 
-    gantt.on("cellClick", ({
-      record
-    }) => {
+    gantt.on("cellClick", ({ record }) => {
       console.log("cell event");
       gantt.scrollTaskIntoView(record);
     });
@@ -1227,52 +1247,51 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
       taskData
     ); //!helper method to get list of string to delete
 
-    console.log('taskdata:- ', taskData);
+    console.log("taskdata:- ", taskData);
     // var mapofphase = {};
     // var listofmilestone = [];
     var newtasklistafterid = [];
     // var taskidrecordMap = new Map();
-    taskData.forEach(newTaskRecord => {
-
-      console.log('infor loop newTaskrecord');
-      var demoidvar = newTaskRecord.Id
-      var demoidvar2 = newTaskRecord.buildertek__Dependency__c
-      console.log('demoidvar:- ', demoidvar);
+    taskData.forEach((newTaskRecord) => {
+      console.log("infor loop newTaskrecord");
+      var demoidvar = newTaskRecord.Id;
+      var demoidvar2 = newTaskRecord.buildertek__Dependency__c;
+      console.log("demoidvar:- ", demoidvar);
       // taskidrecordMap.set(newTaskRecord.Id, newTaskRecord);
 
       if (demoidvar != undefined || demoidvar != null) {
         if (demoidvar.includes("_generatedt_")) {
-          console.log('newTaskRecord:- ', newTaskRecord);
-          delete newTaskRecord.Id
-          console.log('newTaskRecord2:- ', newTaskRecord);
+          console.log("newTaskRecord:- ", newTaskRecord);
+          delete newTaskRecord.Id;
+          console.log("newTaskRecord2:- ", newTaskRecord);
         }
       }
       if (demoidvar2 != undefined || demoidvar2 != null) {
         if (demoidvar2.includes("_generatedt_")) {
-          delete newTaskRecord.buildertek__Dependency__c
+          delete newTaskRecord.buildertek__Dependency__c;
         }
       }
       newtasklistafterid.push(newTaskRecord);
     });
 
-    console.log('taskData before apex:- ', newtasklistafterid);
+    console.log("taskData before apex:- ", newtasklistafterid);
     var that = this;
-    console.log('Dependency Data map :- ', dependenciesDatamap)
+    console.log("Dependency Data map :- ", dependenciesDatamap);
     // console.log('Task id and record Data map :- ', taskidrecordMap)
     // console.log('Task id and record Data map :- ', JSON.stringify(taskidrecordMap))
     upsertDataOnSaveChanges({
-        scheduleRecordStr: JSON.stringify(scheduleData),
-        taskRecordsStr: JSON.stringify(newtasklistafterid),
-        listOfRecordsToDelete: listOfRecordsToDelete,
-        // dependenciesDatamap: JSON.stringify(dependenciesDatamap),
-        // taskIdAndRecordDataMap :JSON.stringify(taskidrecordMap)
-      })
+      scheduleRecordStr: JSON.stringify(scheduleData),
+      taskRecordsStr: JSON.stringify(newtasklistafterid),
+      listOfRecordsToDelete: listOfRecordsToDelete,
+      // dependenciesDatamap: JSON.stringify(dependenciesDatamap),
+      // taskIdAndRecordDataMap :JSON.stringify(taskidrecordMap)
+    })
       .then(function (response) {
         console.log("response ", {
-          response
+          response,
         });
         console.log("response ", response);
-        debugger
+        debugger;
         if (response == "Success") {
           that.dispatchEvent(
             new ShowToastEvent({
