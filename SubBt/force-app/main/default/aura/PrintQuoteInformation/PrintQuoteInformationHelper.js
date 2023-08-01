@@ -14,6 +14,8 @@
                 console.log('get template body');
                 console.log({ result });
                 component.set("v.quoteLines", result);
+                component.set("v.Spinner", false);
+
 
                
             }

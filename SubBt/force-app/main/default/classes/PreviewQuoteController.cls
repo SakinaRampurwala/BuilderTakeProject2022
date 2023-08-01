@@ -628,7 +628,7 @@ public without sharing class PreviewQuoteController{
     }
 
     @AuraEnabled
-    public static String setAttachmentBody2(String recordId, String templateId, String fileid){
+    public static String getBlobBody(String recordId, String templateId, String fileid){
 
         pagereference pdf;
         pdf = Page.buildertek__BT_GenerateQuotePDF;
