@@ -1898,6 +1898,9 @@
         component.set("v.expenseNote", null);
         component.set('v.budgetItemId', '');
 
+        component.set('v.addInvoicePOSection', false);
+
+
         // $A.get('e.force:refreshView').fire();
     },
     importCSV: function (component, event, helper) {
@@ -4245,6 +4248,125 @@ $A.get("e.c:BT_SpinnerEvent").setParams({"action" : "HIDE" }).fire();
         }
     },
 
+    addInvoicePO:function (component, event, helper) {
+        console.log('add Invoice po button click......');
+        var selectedRecords = component.get('v.selectedRecs');
+
+        $A.get("e.c:BT_SpinnerEvent").setParams({
+            "action": "SHOW"
+        }).fire();
+
+        if(selectedRecords.length < 1){
+
+            helper.addInvoicePOHelper(component, event, helper);
+
+        }else{
+            component.find('notifLib').showNotice({
+                "variant": "error",
+                "header": "Budget Lines selected.",
+                "message": "You can only add a Invoice PO at the budget level.",
+                closeCallback: function () { }
+            });
+
+            $A.get("e.c:BT_SpinnerEvent").setParams({
+                "action": "HIDE"
+            }).fire();
+
+        }
 
 
+    },
+
+    checkAllInvoicePO:function (component, event, helper) {
+        var invoicePoList=component.get('v.invoicePORecordList');
+        var value = event.getSource().get("v.checked");
+        var listOfUpdateInvoicePO= invoicePoList.map(function(elements){
+            elements.Selected=value;
+            return elements;
+        })
+        component.set('v.invoicePORecordList' , listOfUpdateInvoicePO);
+    },
+
+    checkInvoicePO:function (component, event, helper) {
+        var invoicePoList = component.get("v.invoicePORecordList");
+        console.log('invoicePoList ==> ', invoicePoList);
+        var checkedAll = true;
+        invoicePoList.forEach(element => {
+            if (!element.Selected) {
+                checkedAll = false;
+            }
+        });
+        component.find("selectAllInvoicePo").set("v.checked", checkedAll);
+    },
+
+    addNewInvoicePO:function (component, event, helper) {
+        var selectedRecords = component.get('v.selectedRecs');
+        var invoicePoList = component.get("v.invoicePORecordList");
+        let selectedInvoiceList = [];
+        let selectedInvoiceIdList = [];
+
+        const result= invoicePoList.map(element => {
+            if (element.Selected) {
+                selectedInvoiceList.push(element);
+                selectedInvoiceIdList.push(element.Id);
+            }
+        });
+
+        console.log({selectedInvoiceList});
+
+        if(selectedInvoiceList.length > 0){
+
+            $A.get("e.c:BT_SpinnerEvent").setParams({
+                "action": "SHOW"
+            }).fire();
+            var BudgetId = component.get('v.recordId');
+            var action = component.get("c.addInvoicePOToBudget");
+            action.setParams({
+                'invoicePoList': selectedInvoiceIdList,
+                'BudgetId': BudgetId
+            })
+            action.setCallback(this, function (response) {
+                if (response.getState() == 'SUCCESS') {
+                    $A.get("e.c:BT_SpinnerEvent").setParams({
+                        "action": "HIDE"
+                    }).fire();
+
+                    var toastEvent = $A.get("e.force:showToast");
+                    toastEvent.setParams({
+                        type: 'SUCCESS',
+                        message: 'Invoice (PO)  added Successfully',
+                        duration: '5000',
+                    });
+                    toastEvent.fire();
+                    component.set("v.addInvoicePOSection", false); // to close popup
+                    $A.get("e.force:refreshView").fire();
+                    document.location.reload(true);    
+    
+
+                }
+                else if (response.getState() == 'Error') {
+                    $A.get("e.c:BT_SpinnerEvent").setParams({
+                        "action": "HIDE"
+                    }).fire();
+                    console.log('Error to Add Sales Invoice => ', response.getError());
+                }
+            });
+            $A.enqueueAction(action);
+
+    
+        }else{
+
+            var toastEvent = $A.get("e.force:showToast");
+            toastEvent.setParams({
+                type: 'ERROR',
+                message: 'Please select atleast one Invoice (PO)',
+                duration: '5000',
+            });
+            toastEvent.fire();
+
+        }
+
+
+
+    }
 })

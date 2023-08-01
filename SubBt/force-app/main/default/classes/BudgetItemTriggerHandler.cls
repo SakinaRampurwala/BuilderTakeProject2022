@@ -112,6 +112,18 @@ public with sharing class BudgetItemTriggerHandler {
 			update COList;
 			ChangeOrderTriggerHandler.blnSkipChangeOrderUpdateTrigger = false;
 		}
+
+		//* for  Invoice PO
+		list<buildertek__Account_Payable__c> invoicePOList = [SELECT Id, Name, buildertek__BT_Budget_Line__c, buildertek__Budget__c FROM buildertek__Account_Payable__c WHERE buildertek__BT_Budget_Line__c IN: budgetLineIds ];
+		for(buildertek__Account_Payable__c invoicePo : invoicePOList){
+			invoicePo.buildertek__BT_Budget_Line__c = null;
+			invoicePo.buildertek__Budget__c = null;
+		}
+		if(invoicePOList.size() > 0){
+			AccountPayableHelper.skipInvoicePOUpdate = true;
+			update invoicePOList;
+			AccountPayableHelper.skipInvoicePOUpdate = false;
+		}
  	}
      
  	public void OnAfterInsert(Budget_Item__c[] newBudgetItems, Map<ID, Budget_Item__c> newBudgetItemsMap){ 

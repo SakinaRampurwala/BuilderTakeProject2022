@@ -282,6 +282,13 @@
      <lightning:navigation aura:id="navService" />
      <!--  End -->
 
+     <!-- Add Invoice PO button attributes -->
+    <aura:attribute name="addInvoicePOSection" type="Boolean" default="false" />
+    <aura:attribute name="invoicePORecordList" type="buildertek__Account_Payable__c[]" />
+
+
+
+
 
     <force:recordData aura:id="newforcerecord" layoutType="FULL" recordId="{!v.recordId}" targetRecord="{!v.newRecord}" targetFields="{!v.sampleNewRecord}" targetError="{!v.newRecordError}" />
 
@@ -390,9 +397,10 @@
                                 <aura:if isTrue="{!v.enableMassUpdate}">
 
                                     <lightning:button iconName="utility:save" iconPosition="left" onclick="{!c.onClickMassUpdate}" label="Save" class="sldsButtonGroup" />
-
                                     <lightning:button iconName="utility:close" iconPosition="left" onclick="{!c.onClickMassUpdateCancel}" label="Cancel" class="sldsButtonGroup" />
                                     <aura:set attribute="else">
+
+                                        <lightning:button label="Add Invoice (PO)" onclick="{!c.addInvoicePO}" class="sldsButtonGroup" />
                                         <lightning:button iconName="utility:edit" iconPosition="left" onclick="{!c.onClickMassUpdate}" label="Mass Update" class="sldsButtonGroup" />
                                         <!--  <lightning:button iconName="utility:copy" iconPosition="left"
                                             onclick="{!c.onClickMassDuplicate}" label="Duplicate Lines" class="sldsButtonGroup" />-->
@@ -401,11 +409,11 @@
                                                 class="sldsButtonGroup" /> -->
                                                 <!-- commented on 26thmay DFL <lightning:button iconName="utility:add" iconPosition="left" onclick="{!c.newGroup}" label="Add Group" class="sldsButtonGroup"/>-->
                                                 <!--<aura:if isTrue="{!v.groupListSize > 0}">-->
-                                                    <lightning:button label="Add Expense" onclick="{!c.addExpense}" class="sldsButtonGroup" />
-                                                    <lightning:button label="Add PO" onclick="{!c.addPO}" class="sldsButtonGroup" />
-                                                    <lightning:button label="Add CO" onclick="{!c.addCO}" class="sldsButtonGroup" />
-                                                    <lightning:button label="Add Invoice (AP)" onclick="{!c.addInvoice}" class="sldsButtonGroup" />
-                                                    <lightning:button label="Add Sales Invoice" onclick="{!c.addSalesInvoice}" class="sldsButtonGroup" />
+                                        <lightning:button label="Add Expense" onclick="{!c.addExpense}" class="sldsButtonGroup" />
+                                        <lightning:button label="Add PO" onclick="{!c.addPO}" class="sldsButtonGroup" />
+                                        <lightning:button label="Add CO" onclick="{!c.addCO}" class="sldsButtonGroup" />
+                                        <lightning:button label="Add Invoice (AP)" onclick="{!c.addInvoice}" class="sldsButtonGroup" />
+                                        <lightning:button label="Add Sales Invoice" onclick="{!c.addSalesInvoice}" class="sldsButtonGroup" />
                                         <lightning:button label="Add Labor" onclick="{!c.addTimeCard}" class="sldsButtonGroup" />
                                         <lightning:button iconPosition="left" onclick="{!c.onClickAddlines}" label="New Budget Lines" class="sldsButtonGroup" />
                                         <!-- <lightning:button label="Add Product" onclick="{!c.addProduct}" class="sldsButtonGroup" />-->
@@ -424,7 +432,7 @@
                                         <lightning:button label="Delete Lines" onclick="{!c.deleteSelectedBudgetItem}" class="sldsButtonGroup" />
                                         <aura:if isTrue="{!v.isbudget}">
                                             <!-- <a href="{!v.fromWhereBudgetIsOpen}" onclick="{!c.closetab}" class="sldsButtonGroup"> -->
-                                                <lightning:button label="Cancel" onclick="{!c.closetabs}" class="sldsButtonGroup" /> 
+                                            <lightning:button label="Cancel" onclick="{!c.closetabs}" class="sldsButtonGroup" /> 
                                             <!-- </a> -->
                                                 
                                         </aura:if>
@@ -1918,6 +1926,82 @@
                 <div class="slds-backdrop slds-backdrop_open"></div>
             </aura:if>
 
+
+            <aura:if isTrue="{!v.addInvoicePOSection}">
+                <aura:html tag="style">
+                    .slds-modal__container{
+                        max-width: 50rem;
+                        width: 60%;
+                    }
+                    .coFildData{
+                        max-width: 60px;
+                    }
+                </aura:html>
+                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container">
+                        <div aura:id="poContainer" class="c-container">
+                            <header class="slds-modal__header">
+                                <lightning:buttonIcon iconName="utility:close" onclick="{!c.doCancel}" alternativeText="close" variant="bare-inverse" class="slds-modal__close" />
+                                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Invoice (PO)</h2>
+                            </header>
+                            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" style="max-height:70vh;">
+                                <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                                    <thead>
+                                        <tr class="slds-text-title_caps">
+                                            <th scope="col" class="slds-truncate">
+                                                <lightning:input aura:id="selectAllInvoicePo" type="checkbox" name="checkAll" onchange="{!c.checkAllInvoicePO}" />
+                                            </th>
+                                            <th scope="col">
+                                                <div class="slds-truncate">Invoice Name</div>
+                                            </th>
+                                            <th scope="col">
+                                                <div class="slds-truncate">Description</div>
+                                            </th>
+                                            <th scope="col">
+                                                <div class="slds-truncate">Invoice Total</div>
+                                            </th>
+                                            <!-- <th scope="col">
+                                                <div class="slds-truncate">Vendor</div>
+                                            </th> -->
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <aura:iteration items="{!v.invoicePORecordList}" var="item" indexVar="index">
+                                            <tr>
+                                                <td style="padding-left: 0.5rem; width: 30px;">
+                                                    <lightning:input type="checkbox" name="input1" checked="{!item.Selected}" id="{!item.Id}" onchange="{!c.checkInvoicePO}" />
+                                                </td>
+                                                <td class="slds-truncate coFildData">
+                                                    {!item.Name}
+                                                </td>
+                                                <td class="slds-truncate coFildData">
+                                                    {!item.buildertek__Description__c}
+                                                </td>
+                                                <td>
+                                                    <lightning:formattedNumber value="{!item.buildertek__Net_Amount__c}" style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
+                                                </td>
+                                                <!-- <td class="slds-truncate coFildData">
+                                                    {!item.buildertek__Vendor__r.Name}
+                                                </td> -->
+                                            </tr>
+                                        </aura:iteration>
+                                        <aura:if isTrue="{!empty(v.invoicePORecordList)}">
+                                            <td colspan="5" style="text-align: center; line-height: 10rem; font-size: 18px; ">
+                                                No Records Found
+                                            </td>
+                                        </aura:if>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <footer class="slds-modal__footer">
+                                <lightning:button variant="neutral" title="Cancel" label="Cancel" onclick="{! c.doCancel }" />
+                                <lightning:button variant="brand" type="submit" name="Save" label="Save" onclick="{!c.addNewInvoicePO}" />
+                            </footer>
+                        </div>
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </aura:if>
 
             <aura:if isTrue="{!v.addExpenseSection}">
                 <aura:html tag="style">

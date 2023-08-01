@@ -1,5 +1,8 @@
 public with sharing class AccountPayableHelper {
 
+    public static boolean skipInvoicePOUpdate = false;
+
+
     public static void beforeDelete(List<buildertek__Account_Payable__c> listAccountPayable) {
         for(buildertek__Account_Payable__c currPayable : listAccountPayable) {
             if(String.isNotBlank(currPayable.buildertek__Status__c)) {
@@ -148,5 +151,76 @@ public with sharing class AccountPayableHelper {
             }
         }
     }
+
+    public static void updateBudgetAndBudgetLine(buildertek__Account_Payable__c[] invoiceList, Map<Id, buildertek__Account_Payable__c> newInvoiceMap ,  Map<Id, buildertek__Account_Payable__c> oldInvoiceMap ){
+        Map<String, buildertek__Budget_Item__c> MapToUpte = new  Map<String, buildertek__Budget_Item__c>();
+        String BLGroupID;
+        list<buildertek__Budget_Line_Group__c> BLGroup = [SELECT Id, Name FROM buildertek__Budget_Line_Group__c WHERE Name LIKE '%Invoice (PO)%'];
+            // Check is Buddget line group with name sales invoice is avialable or on if not abailabe it will create new
+            if (BLGroup.size() == 0){
+                System.debug('Create Budgt Line Group');
+                buildertek__Budget_Line_Group__c BLG = new buildertek__Budget_Line_Group__c(Name = 'Invoice (PO)');
+                insert BLG;
+
+                BLGroupID = BLG.Id;
+            } else {
+                BLGroupID = BLGroup[0].Id;
+            }
+
+            for(buildertek__Account_Payable__c invoicePo : invoiceList){
+                if(invoicePo.buildertek__BT_Budget_Line__c==null && invoicePo.buildertek__Budget__c != oldInvoiceMap.get(invoicePo.Id).buildertek__Budget__c && invoicePo.buildertek__Budget__c!=null){
+                        buildertek__Budget_Item__c budgetLine = new buildertek__Budget_Item__c();
+                        budgetLine.Name = invoicePo.Name + ' budget line';
+                        budgetLine.buildertek__Unit_Price__c = 0;
+                        budgetLine.buildertek__Invoice_PO__c = invoicePo.buildertek__Net_Amount__c;
+                        budgetLine.buildertek__Quantity__c = 1;
+                        budgetLine.buildertek__Group__c = BLGroupID;
+                        budgetLine.buildertek__Budget__c = invoicePo.buildertek__Budget__c;
+                        MapToUpte.put(invoicePo.Id, budgetLine);
+                }
+            }
+            if(MapToUpte.size() > 0){
+                insert MapToUpte.values();
+    
+                for(buildertek__Account_Payable__c invoicePo : invoiceList){
+                    if(invoicePo.buildertek__BT_Budget_Line__c==null && invoicePo.buildertek__Budget__c != oldInvoiceMap.get(invoicePo.Id).buildertek__Budget__c && invoicePo.buildertek__Budget__c!=null){
+                            invoicePo.buildertek__BT_Budget_Line__c = MapToUpte.get(invoicePo.Id).Id;
+                    }
+                }
+
+            } 
+
+            // Remove Budget when Budget Line is removed from Sales invoice --------------------------------------
+            for(buildertek__Account_Payable__c invoicePo : invoiceList){
+                if(!skipInvoicePOUpdate  && invoicePo.buildertek__BT_Budget_Line__c == null && oldInvoiceMap.get(invoicePo.id).buildertek__BT_Budget_Line__c != null && invoicePo.buildertek__Budget__c != null){
+                    invoicePo.buildertek__Budget__c = null;
+                }
+            }
+    }
+
+    // If user remove budget line from  invoice it will delete  invoice in perticular  invoicce auto created from Code.
+    public static void DeleteBudgetLine(buildertek__Account_Payable__c[] oldInvoiceList, buildertek__Account_Payable__c[] newInvoiceList, Map<ID, buildertek__Account_Payable__c> oldInvoiceMap , Map<ID, buildertek__Account_Payable__c> newInvoiceMap){
+        list<buildertek__Budget_Item__c> BudgetLineToDELETE = new list<buildertek__Budget_Item__c>();
+        list<buildertek__Account_Payable__c> SaleInvoiceToUpdate = new list<buildertek__Account_Payable__c>();
+        Set<Id> BudgetLineToDELETESet = new Set<Id>();
+
+        for(buildertek__Account_Payable__c invoicePo : newInvoiceList){
+            if(invoicePo.buildertek__BT_Budget_Line__c == null && oldInvoiceMap.get(invoicePo.id).buildertek__BT_Budget_Line__c != null){
+                String BlName = invoicePo.Name + ' budget line';
+                list<buildertek__Budget_Item__c> BLlist = [SELECT Id, Name FROM buildertek__Budget_Item__c WHERE Id =: oldInvoiceMap.get(invoicePo.id).buildertek__BT_Budget_Line__c AND Name =: BlName LIMIT 1];
+                for(buildertek__Budget_Item__c bl : BLlist){
+                    BudgetLineToDELETESet.add(bl.Id);
+                    }
+                }
+            }
+            if( !skipInvoicePOUpdate && BudgetLineToDELETESet.size() > 0){
+                System.debug('Budget line Is going to Delete From  Invoice PO');
+                for(buildertek__Budget_Item__c BL : [SELECT Id, Name FROM buildertek__Budget_Item__c WHERE Id IN: BudgetLineToDELETESet]){
+                    BudgetLineToDELETE.add(BL);
+                }
+                delete BudgetLineToDELETE;
+            }
+}
+
     
 }

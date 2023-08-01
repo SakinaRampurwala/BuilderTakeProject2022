@@ -3140,6 +3140,37 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
     }
 
 
+    @AuraEnabled
+    public static List<buildertek__Account_Payable__c> getInvoicePOData(string RecId){
+        System.debug('RecId'+ RecId);
+        buildertek__Budget__c budgetRec = [SELECT Id, Name, buildertek__Project__c FROM buildertek__Budget__c where Id = :RecId ORDER BY Name ASC];
+        System.debug(budgetRec);
+
+        List<buildertek__Account_Payable__c> invoicePOList = new List<buildertek__Account_Payable__c>();
+        invoicePOList = [SELECT Id, Name, buildertek__Project__c, buildertek__Description__c,buildertek__BT_Budget_Line__c, buildertek__Net_Amount__c, buildertek__Budget__c  FROM buildertek__Account_Payable__c
+                        WHERE buildertek__BT_Budget_Line__c = null AND buildertek__Budget__c = null AND buildertek__Project__c=: budgetRec.buildertek__Project__c ORDER BY Name DESC];
+        
+        System.debug('invoicePOList======>>>>>>'+invoicePOList);
+
+        return invoicePOList;
+    }
+
+    @AuraEnabled
+    public static string addInvoicePOToBudget(list<String> invoicePoList, String BudgetId){
+        list<buildertek__Account_Payable__c> invoicePoToUpdate = new list<buildertek__Account_Payable__c>();
+        if(invoicePoList.size() > 0){
+            list<buildertek__Account_Payable__c> invPoList = [SELECT Id, Name FROM buildertek__Account_Payable__c WHERE Id IN : invoicePoList];
+            for(buildertek__Account_Payable__c invoicePo : invPoList){
+                invoicePo.buildertek__Budget__c = BudgetId;
+                invoicePoToUpdate.add(invoicePo);
+            }
+                update invoicePoToUpdate;
+            return 'Successs';
+        }
+        return null;
+
+    }
+
 
 
 

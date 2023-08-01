@@ -2400,6 +2400,33 @@
             $A.util.removeClass(headerDiv, "divconts");
         }
     },
+    addInvoicePOHelper:function (component, event, helper) {
+
+        component.set('v.addInvoicePOSection' , true);
+
+        var action = component.get("c.getInvoicePOData");
+        action.setParams({
+            "RecId": component.get("v.recordId")
+        });
+        action.setCallback(this, function (response) {
+            var state= response.getState();
+            var error= response.getError();
+            console.log(state);
+            console.log(error);
+
+            if(state === 'SUCCESS'){
+                console.log(response.getReturnValue());
+                var result=response.getReturnValue();
+                component.set('v.invoicePORecordList', result);
+            }
+
+            $A.get("e.c:BT_SpinnerEvent").setParams({
+                "action": "HIDE"
+            }).fire();
+
+        });
+        $A.enqueueAction(action);
+    }
     
     
 })

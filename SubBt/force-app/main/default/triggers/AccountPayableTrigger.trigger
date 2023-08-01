@@ -27,6 +27,7 @@ trigger AccountPayableTrigger on buildertek__Account_Payable__c (before insert,b
            
             if(Trigger.isUpdate){
                 AccountPayableHelper.RestrictToUpdateCashDisbursement(Trigger.new, Trigger.newMap ,Trigger.oldMap);
+                AccountPayableHelper.updateBudgetAndBudgetLine(Trigger.new, Trigger.newMap ,Trigger.oldMap);
             }
 
 
@@ -43,7 +44,9 @@ trigger AccountPayableTrigger on buildertek__Account_Payable__c (before insert,b
             AccountPayableHelper.OnAfterInsert(Trigger.new, Trigger.newMap); 
         } else if(Trigger.isUpdate){
             System.debug(' AccountPayableTrigger After Trigger update');
-            AccountPayableHelper.afterUpdate(Trigger.old, Trigger.new, Trigger.newMap, trigger.oldMap);   
+            AccountPayableHelper.afterUpdate(Trigger.old, Trigger.new, Trigger.newMap, trigger.oldMap); 
+            AccountPayableHelper.DeleteBudgetLine(Trigger.old ,Trigger.new , Trigger.oldMap , Trigger.newMap);
+
         }
     }
 }
