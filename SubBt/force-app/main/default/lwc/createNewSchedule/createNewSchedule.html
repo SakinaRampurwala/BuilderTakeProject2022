@@ -29,8 +29,7 @@
                         <div class="slds-form-element__control">
                             <div class="slds-combobox_container">
                                 <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click">
-                                    <lightning-input label="Project" type="search" placeholder="Search BT Projects..."
-                                        style="margin-bottom: 20px !important;" name="searchProjectName"
+                                    <lightning-input label="Project" type="search" placeholder="Search BT Projects..." name="searchProjectName"
                                         data-id="project" value={searchProjectName} onchange={handleProjectSearch}>
                                     </lightning-input>
                                     <div if:true={showProjectName} class="records">

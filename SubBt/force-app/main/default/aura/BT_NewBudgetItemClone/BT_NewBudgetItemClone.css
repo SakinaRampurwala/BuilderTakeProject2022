@@ -250,6 +250,14 @@
     max-height: 57vh;
     overflow: auto;
 }
-/* .THIS .maincont{
-    
-} */
+.THIS .rkclass{
+    display: flex;
+    flex-direction: row;
+    gap: 25px;
+}
+.THIS .rkclasses{
+    display: flex;
+    /* justify-content: center; */
+    flex-direction: column;
+    align-items: center;
+}

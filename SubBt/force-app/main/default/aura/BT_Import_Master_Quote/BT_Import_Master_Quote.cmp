@@ -37,7 +37,7 @@
     		<table class="slds-table slds-table_bordered slds-table_fixed-layout" role="grid">
     		    <thead>
     				<tr class="slds-text-title_caps">
-    					<th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white; border-top-left-radius:5px;vertical-align: top;line-height: 2; width:30px;">
+    					<th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white; border-top-left-radius:5px;vertical-align: middle;line-height: 2; width:30px;">
     				        <ui:inputCheckbox aura:id="checkContractors" change="{!c.selectAll}" />		
     					</th>
     					<th  style="background-color:rgba(27, 82, 151, 1.0); color:white;vertical-align: top;line-height: 2;">
@@ -99,15 +99,6 @@
     			</tbody>
     		</table>
     		<br/>
-            <lightning:buttonGroup >
-                <lightning:button label="Previous" disabled="{!or(v.startPage == 0, v.disableBtn)}"
-                                  onclick="{!c.previous}" variant="brand"
-                                  iconName='utility:back'/>
-                &nbsp; &nbsp; &nbsp;
-                <lightning:button label="Next" disabled="{!or(v.endPage >= v.totalRecords, v.disableBtn)}"
-                                  onclick="{!c.next}" variant="brand"
-                                  iconName='utility:forward' iconPosition='right'/>
-            </lightning:buttonGroup>
         </div> 
         <aura:if isTrue="{!v.Spinner}">
             <div aura:id="spinnerId" class="slds-spinner_container">
@@ -123,6 +114,17 @@
         </aura:if>
     </div>
     <div class="slds-modal__footer">
+        <div class="slds-button-group" style="float:left;">
+			<lightning:buttonGroup >
+                <lightning:button label="Previous" disabled="{!or(v.startPage == 0, v.disableBtn)}"
+                                  onclick="{!c.previous}" variant="brand"
+                                  iconName='utility:back'/>
+                &nbsp; &nbsp; &nbsp;
+                <lightning:button label="Next" disabled="{!or(v.endPage >= v.totalRecords, v.disableBtn)}"
+                                  onclick="{!c.next}" variant="brand"
+                                  iconName='utility:forward' iconPosition='right'/>
+            </lightning:buttonGroup>
+		</div>
     	<button class="slds-button slds-button--neutral" onclick="{!c.closeModel}" >Cancel</button>
     	<button class="slds-button slds-button--brand" onclick="{!c.importQuote}">Import Master Quote</button>
     </div>

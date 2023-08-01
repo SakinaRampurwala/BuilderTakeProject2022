@@ -8,7 +8,7 @@ public with sharing class ImportquoteClass {
                                         buildertek__Project__r.Name,
                                         buildertek__Type__c
                                         from buildertek__Quote__c
-                                        WHERE buildertek__Type__c = 'Master'];    
+                                        WHERE buildertek__Type__c = 'Master' ORDER BY Name ASC];    
         
         for(buildertek__Quote__c bud : quotesList){
             MasterquoteClass MasterquotesClassRecord = new MasterquoteClass(); 

@@ -31,8 +31,13 @@ public class GetMasterRFQs {
             totalRecords = Database.countQuery(query);
             system.debug(totalRecords);
         }else{
+            // totalRecords = [SELECT COUNT() FROM buildertek__RFQ__c 
+            //                     WHERE (buildertek__Status__c ='Awarded' OR buildertek__Status__c ='Accepted') AND buildertek__Project__c=:budgetRec.buildertek__Project__c];
+
+
+            // Changed For Ticket No BUIL - 3449
             totalRecords = [SELECT COUNT() FROM buildertek__RFQ__c 
-                                WHERE buildertek__Status__c ='Awarded' OR buildertek__Status__c ='Accepted'];
+                                WHERE buildertek__Status__c IN:statusList AND  buildertek__Project__c=:budgetRec.buildertek__Project__c];
         }
         
         

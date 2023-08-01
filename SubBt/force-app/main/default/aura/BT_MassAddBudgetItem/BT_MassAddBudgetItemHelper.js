@@ -202,7 +202,7 @@
                     buildertek__Product__c : productId,
                     Name : ProductList[i].Name,
                     buildertek__Group__c : noGroupingId,
-                    buildertek__Quantity__c : '',
+                    buildertek__Quantity__c : '1',
                     buildertek__UOM__c : '',
                     buildertek__Contractor__c : '',
                     buildertek__Unit_Price__c : ProductList[i].UnitPrice,

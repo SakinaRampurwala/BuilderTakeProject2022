@@ -87,6 +87,7 @@
                     "v.TotalPages",
                     Math.ceil(resultData.totalRecords / pageSize)
                 );
+                // console.log('Total Records --> ',  resultData.totalRecords);
             }
         });  
         $A.enqueueAction(action);

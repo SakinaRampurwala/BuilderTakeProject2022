@@ -26,7 +26,7 @@
             <table class="slds-table slds-table_bordered slds-table_fixed-layout" role="grid">
                 <thead>
                     <tr class="slds-text-title_caps">
-                        <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white; border-top-left-radius:5px;vertical-align: top;line-height: 2;width: 30px !important;">
+                        <th scope="col" style="background-color:rgba(27, 82, 151, 1.0); color:white; border-top-left-radius:5px;vertical-align: middle;line-height: 2;width: 30px !important;">
                             <ui:inputCheckbox aura:id="checkContractors" change="{!c.selectAll}" />		
                         </th>
                         <th  style="background-color:rgba(27, 82, 151, 1.0); color:white;vertical-align: top;line-height: 2;">
@@ -79,6 +79,7 @@
         </aura:if>
     </div>
     <div class="slds-modal__footer">
+        <div class="slds-button-group" style="float: left;">
         <lightning:buttonGroup >
                 <lightning:button label="Previous" disabled="{!v.startPage == 0}"  
                                   onclick="{!c.previous}" variant="brand"
@@ -88,6 +89,7 @@
                                   onclick="{!c.next}" variant="brand"
                                   iconName='utility:forward' iconPosition='right'/>
             </lightning:buttonGroup>
+        </div>
         <button class="slds-button slds-button--neutral" onclick="{!c.closeModel}" >Cancel</button>
         <button class="slds-button slds-button--brand" onclick="{!c.importQuote}">Import Quotes</button>
     </div>

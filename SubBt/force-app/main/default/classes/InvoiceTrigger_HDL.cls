@@ -88,6 +88,7 @@ public with sharing class InvoiceTrigger_HDL {
         for(buildertek__Billings__c sl : newInvoiceList){
             if(oldInvoiceMap.get(sl.Id).buildertek__Budget__c == null && sl.buildertek__Budget__c != oldInvoiceMap.get(sl.Id).buildertek__Budget__c){
                     buildertek__Budget_Item__c BL = new buildertek__Budget_Item__c();
+                    // BL.Name = sl.Name.length() > 67 ? (sl.Name.substring(0,66) + ' budget line') : (sl.name + ' budget line');
                     BL.Name = sl.Name + ' budget line';
                     BL.buildertek__Unit_Price__c = 0;
                     BL.buildertek__Sales_Invoice__c = sl.buildertek__Total_Amount_Tax__c;

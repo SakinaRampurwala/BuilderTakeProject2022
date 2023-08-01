@@ -1,4 +1,5 @@
 ({
+
     getcurr: function(component, event, helper) {
         var action = component.get("c.getRfqTo");
         action.setCallback(this, function(response) {

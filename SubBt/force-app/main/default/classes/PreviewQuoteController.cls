@@ -628,6 +628,20 @@ public without sharing class PreviewQuoteController{
     }
 
     @AuraEnabled
+    public static String setAttachmentBody2(String recordId, String templateId, String fileid){
+
+        pagereference pdf;
+        pdf = Page.buildertek__BT_GenerateQuotePDF;
+        system.debug('*********'+pdf);
+        pdf.getParameters().put('recordId', recordId);
+        pdf.getParameters().put('templateId', templateId);
+        pdf.getParameters().put('fileId', fileId);
+        pdf.setRedirect(true);
+
+        return EncodingUtil.base64Encode(pdf.getContent());
+    }
+
+    @AuraEnabled
     public static void createTask(String whatId, String emailSubject){
         //system.debug('whoId ---------> '+whoId);
         system.debug('whatId ---------> ' + whatId);

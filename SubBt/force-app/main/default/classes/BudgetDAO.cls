@@ -2372,7 +2372,7 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
     }
     @AuraEnabled
     public static buildertek__Budget__c getbudget(String recordId){
-        buildertek__Budget__c quoterecord = [Select Id,Name from buildertek__Budget__c  where Id =: recordId ORDER BY Name ASC LIMIT 1];
+        buildertek__Budget__c quoterecord = [Select Id, Name, buildertek__Original_Budget__c, buildertek__Total_Costs__c, buildertek__Total_Sales_Price__c, buildertek__Gross_Profit__c, buildertek__Estimated_Gross_Profit__c, buildertek__Estimated_Gross_Profit_Percent__c from buildertek__Budget__c  where Id =: recordId ORDER BY Name ASC LIMIT 1];
         return quoterecord;
     }
     @AuraEnabled

@@ -6,3 +6,6 @@
     white-space: nowrap;
     font-size: 20px;
 }
+.THIS .groupBUtton {
+    float: left !important; 
+}

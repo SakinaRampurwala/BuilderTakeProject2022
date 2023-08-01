@@ -39,7 +39,7 @@ public with sharing class ImportMasterQuotes {
                                         buildertek__Project__r.Name,
                                         buildertek__Type__c
                                         FROM buildertek__Quote__c
-                                        WHERE buildertek__Type__c = 'Master' AND Name LIKE:searchString];    
+                                        WHERE buildertek__Type__c = 'Master' AND Name LIKE:searchString ORDER BY Name ASC];    
         
               }
         for(buildertek__Quote__c qut : quotesList){
@@ -239,25 +239,25 @@ public with sharing class ImportMasterQuotes {
                                                     buildertek__Section_II__c, buildertek__Section_III__c, buildertek__Section_IV__c, buildertek__Section_V__c, 
                                                     buildertek__Section_VI__c, buildertek__Section_VII__c, buildertek__Section_VIII__c, buildertek__Section_X__c, 
                                                     buildertek__Section_IX__c, buildertek__Footer__c FROM buildertek__Quote__c WHERE Id =:recordId];
-                buildertek__Quote__c quote1 = [SELECT Id, Name, buildertek__Memo__c, buildertek__Email_Body__c, buildertek__Section_I__c, 
+                List<buildertek__Quote__c> quote1 = [SELECT Id, Name, buildertek__Memo__c, buildertek__Email_Body__c, buildertek__Section_I__c, 
                                                     buildertek__Section_II__c, buildertek__Section_III__c, buildertek__Section_IV__c, buildertek__Section_V__c, 
                                                     buildertek__Section_VI__c, buildertek__Section_VII__c, buildertek__Section_VIII__c, buildertek__Section_X__c, 
                                                     buildertek__Section_IX__c, buildertek__Footer__c FROM buildertek__Quote__c WHERE Id =:quoteIds];
                     // if(!quoteItemList.isEmpty()){
                         system.debug('new to complete');
-                        quote.buildertek__Memo__c = quote1.buildertek__Memo__c;
-                        quote.buildertek__Email_Body__c = quote1.buildertek__Email_Body__c;
-                        quote.buildertek__Section_I__c = quote1.buildertek__Section_I__c;
-                        quote.buildertek__Section_II__c = quote1.buildertek__Section_II__c;
-                        quote.buildertek__Section_III__c = quote1.buildertek__Section_III__c;
-                        quote.buildertek__Section_IV__c = quote1.buildertek__Section_IV__c;
-                        quote.buildertek__Section_V__c = quote1.buildertek__Section_V__c;
-                        quote.buildertek__Section_VI__c = quote1.buildertek__Section_VI__c;
-                        quote.buildertek__Section_VII__c = quote1.buildertek__Section_VII__c;
-                        quote.buildertek__Section_VIII__c = quote1.buildertek__Section_VIII__c;
-                        quote.buildertek__Section_X__c = quote1.buildertek__Section_X__c;
-                        quote.buildertek__Section_IX__c = quote1.buildertek__Section_IX__c;
-                        quote.buildertek__Footer__c = quote1.buildertek__Footer__c;
+                        quote.buildertek__Memo__c = quote1[0].buildertek__Memo__c;
+                        quote.buildertek__Email_Body__c = quote1[0].buildertek__Email_Body__c;
+                        quote.buildertek__Section_I__c = quote1[0].buildertek__Section_I__c;
+                        quote.buildertek__Section_II__c = quote1[0].buildertek__Section_II__c;
+                        quote.buildertek__Section_III__c = quote1[0].buildertek__Section_III__c;
+                        quote.buildertek__Section_IV__c = quote1[0].buildertek__Section_IV__c;
+                        quote.buildertek__Section_V__c = quote1[0].buildertek__Section_V__c;
+                        quote.buildertek__Section_VI__c = quote1[0].buildertek__Section_VI__c;
+                        quote.buildertek__Section_VII__c = quote1[0].buildertek__Section_VII__c;
+                        quote.buildertek__Section_VIII__c = quote1[0].buildertek__Section_VIII__c;
+                        quote.buildertek__Section_X__c = quote1[0].buildertek__Section_X__c;
+                        quote.buildertek__Section_IX__c = quote1[0].buildertek__Section_IX__c;
+                        quote.buildertek__Footer__c = quote1[0].buildertek__Footer__c;
                     // } 
                     // else if(!masterQuoteItemList.isEmpty()) {
                     //     quote.buildertek__Email_Body__c = masterQuoteItemList[0].buildertek__Master_Quote__r.buildertek__Email_Body__c;

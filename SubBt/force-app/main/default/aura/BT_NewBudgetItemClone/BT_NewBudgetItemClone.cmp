@@ -250,6 +250,12 @@
 
 
     <aura:attribute name="fromWhereBudgetIsOpen" type="string" />
+    <aura:attribute name="OriginalBudget" type="string" />
+    <aura:attribute name="TotalCosts" type="string" />
+    <aura:attribute name="TotalSalesPrice" type="string" />
+    <aura:attribute name="GrossMarginPer" type="string" />
+    <aura:attribute name="GrossMargin" type="string" />
+    <aura:attribute name="ProjectedGrossMargin" type="string" />
 
 
 
@@ -283,8 +289,34 @@
     <c:BT_Spinner />
     <div style="background: white;border-radius: 5px;height: auto;" class="slds-scrollable">
         <aura:if isTrue="{!v.isbudget}">
-            <div class="slds-modal__header" style="font-size:17px; text-align: left;">
-                <a href="{!v.fromWhereBudgetIsOpen}" onclick="{!c.closetab}">{!v.budgetName} </a>
+            <div class="slds-modal__header rkclass" style="text-align: left;">
+                <a href="{!v.fromWhereBudgetIsOpen}" style="font-size:17px;padding-right: 50px;" onclick="{!c.closetab}">{!v.budgetName} </a>
+                <div class="rkclass">
+                    <div class="rkclasses">
+                        <p>Original Budget </p><p> {!v.OriginalBudget}</p>
+                    </div>
+                    <div class="rkclasses">
+                        <p>Total Costs </p><p> {!v.TotalCosts}</p>
+                    </div>
+                    <div class="rkclasses">
+                        <p>Total Sales Price </p><p> {!v.TotalSalesPrice}</p>
+                    </div>
+                    <div class="rkclasses">
+                        <p>Gross Margin (%) </p><p> {!v.GrossMarginPer}</p>
+                    </div>
+                    <div class="rkclasses">
+                        <p>Gross Margin ($) </p><p> {!v.GrossMargin}</p>
+                    </div>
+                    <div class="rkclasses">
+                        <p>Projected Gross Margin (%) </p><p> {!v.ProjectedGrossMargin}</p>
+                    </div>
+                    
+                    
+                    
+                    
+                    
+                    
+                </div>
             </div>
         </aura:if>
         <div id="mainContainer">
@@ -1840,9 +1872,9 @@
                                             <th scope="col">
                                                 <div class="slds-truncate">CO Amount</div>
                                             </th>
-                                            <th scope="col">
+                                            <!-- <th scope="col">
                                                 <div class="slds-truncate">Vendor</div>
-                                            </th>
+                                            </th> -->
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -1863,9 +1895,9 @@
                                                 <td>
                                                     <lightning:formattedNumber value="{!item.buildertek__Total_Amount__c}" style="currency" currencyCode="{!v.currencycode}" currencyDisplayAs="code" />
                                                 </td>
-                                                <td class="slds-truncate coFildData">
+                                                <!-- <td class="slds-truncate coFildData">
                                                     {!item.buildertek__Vendor__r.Name}
-                                                </td>
+                                                </td> -->
                                             </tr>
                                         </aura:iteration>
                                         <aura:if isTrue="{!empty(v.coRecordList)}">

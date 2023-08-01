@@ -8,26 +8,26 @@ export default class GanttCSVExportComponent extends LightningElement {
     @api scheduleDataToExport;
     @track fileName = 'Schedule-Gantt';
 
-    renderedCallback(){
+    renderedCallback() {
         try {
             Promise.all([
                 loadScript(this, PARSER + "/PapaParse/papaparse.js"),
             ])
-            .then(() => {
-                console.log('lib loaded');
-            })
-            .catch((error) => {
-                console.log('error in promise', {error});
-                this.dispatchEvent(
-                    new ShowToastEvent({
-                        title: "Error loading Papa Parse",
-                        message: error,
-                        variant: "error",
-                    })
-                );
-            });
+                .then(() => {
+                    console.log('lib loaded');
+                })
+                .catch((error) => {
+                    console.log('error in promise', { error });
+                    this.dispatchEvent(
+                        new ShowToastEvent({
+                            title: "Error loading Papa Parse",
+                            message: error,
+                            variant: "error",
+                        })
+                    );
+                });
         } catch (error) {
-            console.log('error ',JSON.parse(JSON.stringify(error)));
+            console.log('error ', JSON.parse(JSON.stringify(error)));
         }
 
     }
@@ -49,11 +49,12 @@ export default class GanttCSVExportComponent extends LightningElement {
             console.log('exportScheduleData');
             let temp = this.scheduleDataToExport;
             console.log('exportScheduleData', JSON.parse(JSON.stringify(temp)));
+            
             let getColumns = [
                 "Name",
                 "buildertek__Dependency__r.Name",
                 "buildertek__Start__c",
-                "buildertek__Finish__c",
+                // "buildertek__Finish__c",
                 "buildertek__Duration__c",
                 "buildertek__Completion__c",
                 "buildertek__Phase__c",
@@ -61,20 +62,30 @@ export default class GanttCSVExportComponent extends LightningElement {
                 "buildertek__Lag__c",
             ];
 
+            let object = [
+                "Name",
+                "Dependency",
+                "StartDate",
+                "Duration",
+                "% Complete",
+                "Phase",
+                "Notes",
+                "Lag"
+            ];
+
             const convertedObject = this.scheduleDataToExport.map((item) => {
                 const obj = {};
-                getColumns.forEach((column) => {
+                getColumns.forEach((column, index) => {
                     if (item.hasOwnProperty(column)) {
-                        obj[column] = item[column];
+                        obj[object[index]] = item[column];
                     } else {
-                        obj[column] = null;
+                        obj[object[index]] = null;
                     }
-
                     if (item.hasOwnProperty("buildertek__Dependency__c")) {
-                        obj["buildertek__Dependency__r.Name"] =
+                        obj["Dependency"] =
                             item.buildertek__Dependency__r.Name;
                     } else {
-                        obj["buildertek__Dependency__r.Name"] = null;
+                        obj["Dependency"] = null;
                     }
                 });
                 return obj;
@@ -93,7 +104,7 @@ export default class GanttCSVExportComponent extends LightningElement {
             document.body.removeChild(element);
             this.hideModalBox();
         } catch (error) {
-            console.log('error ',JSON.parse(JSON.stringify(error)));
+            console.log('error ', JSON.parse(JSON.stringify(error)));
         }
     }
 }

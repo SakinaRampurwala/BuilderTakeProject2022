@@ -454,7 +454,6 @@ export default class importScheduleLine extends LightningElement {
         this.showMessage = true;
         const fileInput = this.files;
 
-        console.log("fileInput", fileInput);
         if (!fileInput || fileInput.length === 0) {
             this.Spinner = false;
             this.showMessage = false;

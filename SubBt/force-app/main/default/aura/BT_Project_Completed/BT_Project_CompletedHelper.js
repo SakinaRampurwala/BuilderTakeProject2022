@@ -18,6 +18,15 @@
                 });
                 //}
             }
+            else{
+                $A.get("e.force:closeQuickAction").fire();
+                component.find('notifLib').showNotice({
+                    "variant": "error",
+                    "header": "Error",
+                    "message": "Error while updating the Project.",
+                    
+                });
+            }
             
             
         });

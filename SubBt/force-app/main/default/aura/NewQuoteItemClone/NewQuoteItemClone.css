@@ -305,4 +305,8 @@
 .THIS .divconts{
     max-height: 53vh;
     overflow: auto;
+
+    /* min-height: fit-content;
+    max-height: 100%;
+    overflow: auto; */
 }
