@@ -34,6 +34,7 @@ public with sharing class AssestManagerHandler{
 			}
 		}
 	}
+
     public void afterInsert(List<buildertek__Asset_History__c> newAssetHistory, Map<Id, buildertek__Asset_History__c> AssetHistoryMap){
         list<Id> assetManagerId = new list<Id>();
         List<buildertek__Asset_Manager__c> assetManagerList = new List<buildertek__Asset_Manager__c>();
@@ -46,6 +47,7 @@ public with sharing class AssestManagerHandler{
                                FROM buildertek__Asset_Manager__c
                                WHERE Id IN :assetManagerId];
         }
+
         for (buildertek__Asset_Manager__c assetmanagerRec: assetManagerList){
             for (buildertek__Asset_History__c assethistoryRec : newAssetHistory){
                 assetmanagerRec.buildertek__Current_Project__c = assethistoryRec.buildertek__Project__c;
@@ -53,5 +55,77 @@ public with sharing class AssestManagerHandler{
             }
         }
         update assetManagerList;
-    }
+}
+
+ 	public void afterUpdate(List<buildertek__Asset_History__c> newAssetHistory, List<buildertek__Asset_History__c> oldAssetHistry, Map<Id, buildertek__Asset_History__c> NewAssHisMap, Map<Id, buildertek__Asset_History__c> oldAssHisMap){
+		
+// ----------------------- Update Asset Record When most recent Asset History is Updated --------------- BUIL - 3452 ---------------------------------------------------
+		// try {
+		system.debug('Inside After Update');
+		Set<Id> assetManagerIdSet = new Set<Id>();
+		List<buildertek__Asset_Manager__c> AssManListToUpDate = new List<buildertek__Asset_Manager__c>();
+		Map<Id, buildertek__Asset_History__c> AssMap = new Map<Id, buildertek__Asset_History__c>();
+
+		for(buildertek__Asset_History__c UpdatedAH : newAssetHistory){
+			buildertek__Asset_History__c RecentAH = [SELECT Id,Name, buildertek__Asset_Manager__c, buildertek__Project__c, buildertek__Location_on_Jobsite__c FROM buildertek__Asset_History__c WHERE buildertek__Asset_Manager__c =: UpdatedAH.buildertek__Asset_Manager__c ORDER BY CreatedDate DESC LIMIT 1];
+
+			// Check If Updated "Asset Histry" is recent "Asset Histry" of a "Perticular Asset" -- If Yes Then Update Asset.
+			if(UpdatedAH.Id == RecentAH.Id){
+				if(UpdatedAH.buildertek__Project__c != oldAssHisMap.get(UpdatedAH.Id).buildertek__Project__c || UpdatedAH.buildertek__Location_on_Jobsite__c != oldAssHisMap.get(UpdatedAH.Id).buildertek__Location_on_Jobsite__c){
+					buildertek__Asset_Manager__c AssMan = new buildertek__Asset_Manager__c(Id = UpdatedAH.buildertek__Asset_Manager__c);
+					AssMan.buildertek__Current_Project__c = RecentAH.buildertek__Project__c;
+					AssMan.buildertek__Location_on_Jobsite__c = RecentAH.buildertek__Location_on_Jobsite__c;
+					AssManListToUpDate.add(AssMan);
+					//	 System.debug('Recent AH is Updted');
+				}
+			}
+		}
+		if(AssManListToUpDate.size() > 0){
+			// System.debug('Going To Update Asset ===>> ' + AssManListToUpDate);
+			update AssManListToUpDate;
+		}
+		// } catch (Exception e) {
+		// 	System.debug('Error in After Update =::: '+ e.getMessage() +' -- '+ e.getStackTraceString());
+		// } 
+		// =============================================== End ==================================================================
+ }
+
+ public void beforeDelete(List<buildertek__Asset_History__c> newAssetHistory, List<buildertek__Asset_History__c> oldAssetHistry, Map<Id, buildertek__Asset_History__c> NewAssHisMap, Map<Id, buildertek__Asset_History__c> oldAssHisMap){
+
+	// ----------------------- Update Asset Record When most recent Asset History is Deleted --------------- BUIL - 3452 ---------------------------------------------------
+		// try {
+			system.debug('Inside After Update');
+			Set<Id> assetManagerIdSet = new Set<Id>();
+			List<buildertek__Asset_Manager__c> AssManListToUpDate = new List<buildertek__Asset_Manager__c>();
+			Map<Id, buildertek__Asset_History__c> AssMap = new Map<Id, buildertek__Asset_History__c>();
+	
+			for(buildertek__Asset_History__c DeletedAH : oldAssetHistry){
+				list<buildertek__Asset_History__c> RecentAH = [SELECT Id,Name, buildertek__Asset_Manager__c, buildertek__Project__c, buildertek__Location_on_Jobsite__c FROM buildertek__Asset_History__c WHERE buildertek__Asset_Manager__c =: DeletedAH.buildertek__Asset_Manager__c ORDER BY CreatedDate DESC];
+
+				// Check if Most Recent Asset history is Delted -----> If Yes Then --> Update Asset with new most Recent(Second most recent) Assest History
+				if(RecentAH.size() > 1 && DeletedAH.Id == RecentAH[0].Id){
+					buildertek__Asset_Manager__c AssMan = new buildertek__Asset_Manager__c(Id = DeletedAH.buildertek__Asset_Manager__c);
+					AssMan.buildertek__Current_Project__c = RecentAH[1].buildertek__Project__c;
+					AssMan.buildertek__Location_on_Jobsite__c = RecentAH[1].buildertek__Location_on_Jobsite__c;
+					AssManListToUpDate.add(AssMan);
+					// system.debug('Most recent Histoy Is Deleted and Update with second Most History');
+				}
+				else if(RecentAH.size() <= 1){ // --> When Only one asset history is availabe
+					buildertek__Asset_Manager__c AssMan = new buildertek__Asset_Manager__c(Id = DeletedAH.buildertek__Asset_Manager__c);
+					AssMan.buildertek__Current_Project__c = null;
+					AssMan.buildertek__Location_on_Jobsite__c = null;
+					AssManListToUpDate.add(AssMan);
+					// system.debug('Most recent Histoy Is Deleted and There is no More History Pending');
+				}
+			}
+			if(AssManListToUpDate.size() > 0){
+				update AssManListToUpDate;
+			}
+		// } catch (Exception e) {
+		// 	System.debug('Error in After Update =::: '+ e.getMessage() +' -- '+ e.getStackTraceString());
+		// } 
+		// =============================================== End ==================================================================
+			
+ }
+
 }

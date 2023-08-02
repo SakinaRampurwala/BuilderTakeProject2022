@@ -67,11 +67,22 @@ public with sharing class ServiceRequestDAO {
             if (Schema.sObjectType.buildertek__Service_Request__c.fields.buildertek__Customer_Name__c.isCreateable() && Schema.sObjectType.buildertek__Service_Request__c.fields.buildertek__Request_Status__c.isCreateable()&&
                 Schema.sObjectType.buildertek__Service_Request__c.fields.buildertek__Issues__c.isCreateable() && Schema.sObjectType.buildertek__Service_Request__c.fields.buildertek__Project__c.isCreateable()&&
                 Schema.sObjectType.buildertek__Service_Request__c.fields.buildertek__Subject__c.isCreateable() && Schema.sObjectType.buildertek__Service_Request__c.fields.RecordTypeId.isCreateable()) {
-                insert serviceReq;
+                    // List<buildertek__Service_Request__c> serreq = [Select id, buildertek__Issues__c From buildertek__Service_Request__c Where buildertek__Issues__c =: recordId];
+                    // if (!serreq.isEmpty()) {
+                    //     err.Message = 'Cannot Create the Service Request';
+                    //     err.RecordId = '';
+                    // }
+                    // else {
+                        insert serviceReq;
+                        // err.Message = 'Success';
+                        // err.RecordId = serviceReq.Id;
+                        
+                    // }
+                
             }
             err.Message = 'Success';
             err.RecordId = serviceReq.Id;
-            return err;     
+            return err;    
         }catch(Exception exp){
             err.Message = exp.getMessage();
             err.RecordId = '';

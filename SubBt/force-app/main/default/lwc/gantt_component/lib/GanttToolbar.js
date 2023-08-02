@@ -515,7 +515,7 @@ export default base => class GanttToolbar extends base {
             var taskData = JSON.parse(this.gantt.taskStore.json)
             var taskEdit = this.gantt.taskEdit;
             console.log('taskEdit ',{taskEdit});
-            var dependenciesData = JSON.parse(this.gantt.dependencyStore.json)
+            var dependenciesData = JSON.parse(this.gantt.dependencyStore.json);
             var resourceData = JSON.parse(this.gantt.assignmentStore.json)
             let dataForApexController = convertJSONtoApexData(data, taskData, dependenciesData, resourceData);
             console.log('dataForApexController ',dataForApexController);

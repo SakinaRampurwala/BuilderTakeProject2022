@@ -144,8 +144,6 @@ export default class importScheduleLine extends LightningElement {
                     data[j] = newStr;
                     // console.log('newStr:', newStr);
                     if (headers[j].trim() === "StartDate" && data[j].trim() !== "") {
-                        console.log('data[j].trim()',data[j].trim());
-                        console.log('data[j].trim() type:',typeof(data[j].trim()));
                         let date = data[j].trim();
                         let splitDate = date.split("/");
                         if (
@@ -166,13 +164,16 @@ export default class importScheduleLine extends LightningElement {
                         }
                         // obj[headers[j].trim()] = month.split("-").reverse().join("-");
                         obj[headers[j].trim()] = data[j].trim().replace(/\//g, "-");
+                        console.log('obj[headers[j].trim()]:',obj[headers[j].trim()]);
                     } else {
+                        console.log('Date Loop Else');
                         if (headers[j].trim() === "% Complete") {
                             obj["percentComplete"] = data[j].trim();
                         } else {
                             obj[headers[j].trim()] = data[j].trim();
                         }
                     }
+                    console.log('j:',j,'data.length:',data.length);
                 }
 
                 if (obj.StartDate !== undefined && obj.StartDate !== "") {
@@ -454,6 +455,7 @@ export default class importScheduleLine extends LightningElement {
         this.showMessage = true;
         const fileInput = this.files;
 
+        console.log("fileInput", fileInput);
         if (!fileInput || fileInput.length === 0) {
             this.Spinner = false;
             this.showMessage = false;

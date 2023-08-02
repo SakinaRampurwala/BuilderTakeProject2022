@@ -618,8 +618,9 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
     const gantt = new bryntum.gantt.Gantt({
       project,
       appendTo: this.template.querySelector(".container"),
-      rowHeight         : 40,
-      barMargin         : 6,
+      // startDate: "2019-07-01",
+      // endDate: "2019-10-01",
+
       tbar: new GanttToolbar(),
 
       dependencyIdField: "sequenceNumber",
@@ -772,21 +773,25 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
         //   },
         // },
         // //Added for Contractor
-        {
-          type: "widget",
-          text: "Contractor",
-          draggable: false,
-          width: 120,
+        // {
+        //   type: "widget",
+        //   text: "Contractor",
+        //   draggable: false,
+        //   width: 120,
+        //   readOnly: true,
 
-          widgets: [
-            {
-              type: "Combo",
-              items: ["test1", "test2"],
-              editable : false,
-              name: "contractorname",
-            },
-          ],
-        },
+        //   // editor: "Combo",
+        //   type: "widget",
+        //   widgets: [
+        //     {
+        //       type: "Combo",
+        //       items: ["test1", "test2"],
+        //       editable : false,
+        //       name: "contractorname",
+
+        //     },
+        //   ],
+        // },
         // {
         //   text: "Contractor",
         //   draggable: false,
@@ -982,11 +987,6 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
           ],
         },
       ],
-
-      viewPreset : {
-        base      : 'weekAndDayLetter',
-        tickWidth : 50
-      },
 
       subGridConfigs: {
         locked: {
@@ -1274,14 +1274,31 @@ export default class Gantt_component extends NavigationMixin(LightningElement) {
       newtasklistafterid.push(newTaskRecord);
     });
 
-    console.log("taskData before apex:- ", newtasklistafterid);
+    console.log("taskData before apex:- ", taskData);
     var that = this;
-    console.log("Dependency Data map :- ", dependenciesDatamap);
+    // var newdependencydatalist = [];
+    // dependenciesDatamap.forEach((newTaskRecord) => {
+    //   console.log("infor loop newTaskrecord");
+    //   delete newTaskRecord.id;
+    //   delete newTaskRecord.lagUnit;
+    //   delete newTaskRecord.type;
+    //   delete newTaskRecord.cls;
+    //   delete newTaskRecord.fromSide;
+    //   delete newTaskRecord.toSide;
+    //   delete newTaskRecord.lag;
+    //   delete newTaskRecord.fromEvent;
+    //   delete newTaskRecord.toEvent;
+    //   delete newTaskRecord.active;
+    //   newdependencydatalist.push(newTaskRecord);
+    // });
+    // console.log("Dependency Data map :- ", dependenciesDatamap);
+    // console.log("Dependency Data map :- ", newdependencydatalist);
     // console.log('Task id and record Data map :- ', taskidrecordMap)
     // console.log('Task id and record Data map :- ', JSON.stringify(taskidrecordMap))
     upsertDataOnSaveChanges({
       scheduleRecordStr: JSON.stringify(scheduleData),
       taskRecordsStr: JSON.stringify(newtasklistafterid),
+      // taskRecordsStr: JSON.stringify(taskData),
       listOfRecordsToDelete: listOfRecordsToDelete,
       // dependenciesDatamap: JSON.stringify(dependenciesDatamap),
       // taskIdAndRecordDataMap :JSON.stringify(taskidrecordMap)

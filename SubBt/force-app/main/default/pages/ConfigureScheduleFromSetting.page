@@ -5,7 +5,7 @@
             <apex:outputText escape="false" value="{!settingDescription}">
             </apex:outputText>
         </apex:pageBlock>
-        <apex:pageBlock mode="maindetail"> 
+        <apex:pageBlock mode="maindetail">
             <apex:pageMessages />
             <apex:pageblocksection >
                 <apex:inputcheckbox value="{!hideInternalResource}" label="Hide Internal Resource">
@@ -14,7 +14,7 @@
                 </apex:inputcheckbox>
                 <apex:inputcheckbox value="{!hideContractorResource}" label="Hide Contractor Resource">
                 </apex:inputcheckbox>
-                <apex:inputcheckbox value="{!donotShiftScheduleDatesbaseonPredecessors}" label="Do not Shift Schedule Dates base on Predecessors">
+                <apex:inputcheckbox value="{!oldGanttChart}" label="Old Gantt Chart">
                 </apex:inputcheckbox>
                 <center>
                     <apex:commandButton value="Save" id="onSave" styleClass="slds-button slds-button_brand" action="{!onSave}"></apex:commandButton>

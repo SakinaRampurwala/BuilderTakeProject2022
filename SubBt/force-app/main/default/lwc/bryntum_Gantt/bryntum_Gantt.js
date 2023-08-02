@@ -32,7 +32,6 @@ import changeOriginalDates from "@salesforce/apex/BT_NewGanttChartCls.changeOrig
 
 import setWBSValue from "@salesforce/apex/BT_NewGanttChartCls.setWBSValue";
 
-import AdminSettings from "@salesforce/apex/BT_NewGanttChartCls.getColumnSettings";
 import PARSER from "@salesforce/resourceUrl/PapaParse";
 
 import { formatData, saveeditRecordMethod } from "./bryntum_GanttHelper";

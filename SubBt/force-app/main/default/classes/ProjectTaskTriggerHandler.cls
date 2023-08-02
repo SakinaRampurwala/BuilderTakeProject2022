@@ -21,7 +21,6 @@ public class ProjectTaskTriggerHandler{
 		BatchSize = size;
         refMapforPrevParent = new Map<Id,Date>();
 		oldMapValue = new Map<Id, buildertek__Project_Task__c>();
-		// this.oldMapValue = oldMap;
 	}
 
 	public void checkCircular(buildertek__Project_Task__c[] updatedProjectTasks, Map<ID, buildertek__Project_Task__c> oldProjectTaskMap){
@@ -1027,28 +1026,9 @@ public class ProjectTaskTriggerHandler{
 			} else if (projectTask.buildertek__Dependency__c == null){
 
 				system.debug('if predessesor is null then here '+projectTask.Id);
-				// this logic is added for predessesor is equal to null
-					// added by Nishit (MV Clouds)
 
 					Integer totalDay1=0;
-					// TODO client wants to remove lag logic for no predecessor
-					/*if (!oldMapValue.isEmpty() && oldMapValue.get(projectTask.Id) != null) {
-						if (oldMapValue.get(projectTask.Id).buildertek__Lag__c != projectTask.buildertek__Lag__c && projectTask.buildertek__Lag__c != null) {
-							Integer lagDays1 = Integer.valueOf(projectTask.buildertek__Lag__c);
-							totalDay1 = lagDays1;
-						} else{
-							totalDay1 = 0;
-						}
-					}else {
-						if (isAfterInsert == 'insert'){
-							System.debug('when insert task name and ==> '+projectTask.Name+' Id '+projectTask.Id);
-							Integer lagDays1 = Integer.valueOf(projectTask.buildertek__Lag__c);
-							totalDay1 = lagDays1;
-						}else{
-							System.debug('when update task name and ==> '+projectTask.Name+' Id '+projectTask.Id);
-							totalDay1 = 0;
-						}
-					}*/
+
 					startDate = projectTask.buildertek__Start__c;
 					System.debug('start date in else '+startDate+'name &'+projectTask.Name);
 					startDate = addDaysSkippingWeekends(projectTask.buildertek__Start__c, totalDay1);
@@ -1074,20 +1054,12 @@ public class ProjectTaskTriggerHandler{
 			update projectTaskToUpdate;
 		}
 
-		/*if(predesecorTaskList.size()> 0){
-		 ProjectTaskTriggerHandler.checkDependency(predesecorTaskList);
-		 }*/
-
-		/* UpdateScheduleItemDatesBatch be = new UpdateScheduleItemDatesBatch(mapAllTask.keySet());
-		 database.executeBatch(be,1);*/
-		// UpdateScheduleItemdatesbatchhelper.batchjobexcute(mapAllTask.keySet());
-
 		ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
 	} catch (Exception ex) {
 		System.debug('An error occurred: ' + ex.getMessage());
         System.debug('Error line number: ' + ex.getLineNumber());
         System.debug('Error stack trace: ' + ex.getStackTraceString());
-			
+
 	}
 
 	}
@@ -1199,17 +1171,6 @@ public class ProjectTaskTriggerHandler{
 
 	public void updateChildDatesWithPredecessor(Project_Task__c[] ProjectTasks, Map<ID, Project_Task__c> ProjectTaskMap){
 
-		List<buildertek__Admin_Interface_Node_Configuration__c> adminInterfaceNodeConfigurations = [Select Id, buildertek__Do_not_Shift_Schedule_Dates_base_on_Pred__c
-                                                                                              from buildertek__Admin_Interface_Node_Configuration__c
-                                                                                              WHERE Name = :'Schedule Configuration' LIMIT 1];
-
-        Boolean donotShiftdatesofSchedules = false;
-        if (adminInterfaceNodeConfigurations.size() > 0) {
-            donotShiftdatesofSchedules = adminInterfaceNodeConfigurations[0].buildertek__Do_not_Shift_Schedule_Dates_base_on_Pred__c;
-        }
-
-		System.debug('donnotShiftdatesofSchedules:- ' + donotShiftdatesofSchedules);
-		if (donotshiftdatesofSchedules == false){
 		// List<Project_Task__c> tempList = new List<Project_Task__c>();
 		// tempList = [select Id, Name, buildertek__Start__c, buildertek__Finish__c, buildertek__Duration__c, buildertek__Dependency__c, buildertek__Dependency__r.buildertek__Schedule_Item_Dependency_Path__c, buildertek__Schedule_Item_Dependency_Path__c, buildertek__Schedule__c, buildertek__Milestone__c, buildertek__Phase__c
 		//             from buildertek__Project_Task__c
@@ -1362,7 +1323,7 @@ public class ProjectTaskTriggerHandler{
 		}
 		ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
 		ProjectTaskTriggerHandler.isFromImport = false;
-		}
+
 	}
 
 	public static void checkDependency(List<buildertek__Project_Task__c> scheduleItemId){

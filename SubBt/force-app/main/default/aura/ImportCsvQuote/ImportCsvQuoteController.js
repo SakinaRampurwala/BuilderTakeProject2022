@@ -2,6 +2,9 @@
     save : function(component, event, helper) {
         helper.save(component, helper);     
     },
+    closeModel : function(component, event, helper){
+	    $A.get("e.force:closeQuickAction").fire();    
+	},
     
     onSelectFileHandler : function(component,event,helper){
         console.log('onfile select');
