@@ -12,6 +12,7 @@ public class PurchaseOrderDAOTest {
     }
     
     public static testMethod void test1() {
+
         Purchase_Order__c po = [Select Id from Purchase_Order__c LIMIT 1];
         PurchaseOrderDAO.RollUpPurchaseOrder(new set<Id>{po.Id});
         
@@ -80,6 +81,7 @@ public class PurchaseOrderDAOTest {
         PurchaseOrderDAO.createAPFromPO(po.Id);
         PurchaseOrderDAO.getProduct(PurchaseItemJSON);
         PurchaseOrderDAO.addProductsToList(PurchaseItemJSON, porListRec[0], 2);
+
         System.assertEquals('Test','Test');
     }
 }

@@ -4,6 +4,8 @@ import searchUsers from '@salesforce/apex/bryntumGanttController.searchUsers';
 import fetchScheduleList from '@salesforce/apex/bryntumGanttController.fetchScheduleList';
 import getScheduleItemList from '@salesforce/apex/bryntumGanttController.getScheduleItemList';
 import createNewSchedule from '@salesforce/apex/bryntumGanttController.createNewSchedule';
+import getProjectName from '@salesforce/apex/bryntumGanttController.getProjectName';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { NavigationMixin } from 'lightning/navigation';
 
 export default class CreateNewSchedule extends NavigationMixin(LightningElement) {
@@ -26,10 +28,44 @@ export default class CreateNewSchedule extends NavigationMixin(LightningElement)
     @track description = '';
     @track type = 'Standard';
     @track url = '';
+    @track showProjectIcon = false;
+    @track showUserIcon = false;
+    @track isInputEnabledForProject = false;
+    @track isInputEnabledForUser = false;
+    @track projectSchedule = false;
 
     connectedCallback(event) {
         document.addEventListener('click', this.handleDocumentEvent.bind(this));
         this.getFields();
+        let name = 'inContextOfRef';
+        let url = window.location.href;
+        let regex = new RegExp("[?&]" + name + "(=1.([^&#]*)|&|#|$)");
+        let results = regex.exec(url);
+        console.log('results:', results);
+        let value = decodeURIComponent(results[2].replace(/\+/g, " "));
+        console.log('value:', value);
+        let context = JSON.parse(window.atob(value));
+        let parentRecordId = context.attributes.recordId;
+        if (parentRecordId) {
+            console.log(parentRecordId);
+            this.getProjectNameFromId(parentRecordId);
+        }
+    }
+
+    getProjectNameFromId(parentRecordId) {
+        console.log('parentRecordId:', parentRecordId);
+        this.projectSchedule = true;
+        getProjectName({ parentRecordId: parentRecordId })
+            .then((result) => {
+                this.searchProjectName = result;
+                this.isInputEnabledForProject = true;
+                this.showProjectIcon = true;
+                this.projectId = parentRecordId;
+                console.log('result:', result);
+            })
+            .catch((error) => {
+                console.log('error:', JSON.stringify(error));
+            });
     }
 
     handleProjectSearch(event) {
@@ -104,9 +140,13 @@ export default class CreateNewSchedule extends NavigationMixin(LightningElement)
 
         if (this.searchbarValue === 'project') {
             this.searchProjectName = selectedValue;
+            this.showProjectIcon = true;
+            this.isInputEnabledForProject = true;
             this.projectId = pId;
         } else {
             this.searchProjectManager = selectedValue;
+            this.isInputEnabledForUser = true;
+            this.showUserIcon = true;
             this.userId = pId;
         }
 
@@ -139,7 +179,6 @@ export default class CreateNewSchedule extends NavigationMixin(LightningElement)
 
     handleDescriptionChange(event) {
         this.description = event.target.value;
-        console.log('description', typeof (this.description));
     }
 
     handleStartDateChange(event) {
@@ -149,11 +188,11 @@ export default class CreateNewSchedule extends NavigationMixin(LightningElement)
 
     handleTypeChange(event) {
         this.type = event.target.value;
-        console.log('type', typeof (this.type));
+        console.log('type:', this.type);
     }
 
     createSchedule() {
-        try {
+        if (this.description.length != 0) {
             this.isLoading = true;
             console.log(`description: ${this.description} projectId: ${this.projectId} formattedDate: ${this.initialStartDate} type: ${this.type} userId: ${this.userId} masterRec: ${this.masterRec}`);
             createNewSchedule({ description: this.description, project: this.projectId, initialStartDate: this.initialStartDate, type: this.type, user: this.userId, masterId: this.masterRec })
@@ -173,32 +212,83 @@ export default class CreateNewSchedule extends NavigationMixin(LightningElement)
                     console.log('error:', error);
                     this.isLoading = false;
                 })
-        } catch (error) {
-            console.log('error', JSON.stringify(error));
+        } else {
+            const event = new ShowToastEvent({
+                title: 'Error creating schedule',
+                message: 'Description field is empty !!!',
+                variant: 'error',
+                mode: 'dismissable'
+            });
+            this.dispatchEvent(event);
         }
+
     }
 
     onSaveandNew() {
-        try {
+        if (this.description.length != 0) {
             this.isLoading = true;
             console.log(`description: ${this.description} projectId: ${this.projectId} formattedDate: ${this.initialStartDate} type: ${this.type} userId: ${this.userId} masterRec: ${this.masterRec}`);
             createNewSchedule({ description: this.description, project: this.projectId, initialStartDate: this.initialStartDate, type: this.type, user: this.userId, masterId: this.masterRec })
                 .then((result) => {
                     console.log('schId:', result);
                     this.isLoading = false;
+                    const event = new ShowToastEvent({
+                        title: 'Success',
+                        message: 'Schedule created !!!',
+                        variant: 'success',
+                        mode: 'dismissable'
+                    });
+                    this.dispatchEvent(event);
+                })
+                .catch((error) => {
+                    console.log('error:', error);
+                    this.isLoading = false;
+                    const event = new ShowToastEvent({
+                        title: 'Error',
+                        message: 'Error creating schedule !!!',
+                        variant: 'error',
+                        mode: 'dismissable'
+                    });
+                    this.dispatchEvent(event);
+                })
+                .finally(() => {
+                    const form = this.template.querySelector('form');
+                    const inputs = form.querySelectorAll('input, textarea, select, radio');
+                    inputs.forEach((input) => {
+                        if (input.name !== 'searchProjectName') {
+                            if (input.type === 'radio') {
+                                input.checked = false; 
+                            } else {
+                                input.value = '';
+                            }
+                        }
+                    });
+                    
+                    if (!this.projectSchedule) {
+                        console.log('projectSchedule:',this.projectSchedule);
+                        this.searchProjectName = '';
+                        this.showProjectIcon = false;
+                        this.isInputEnabledForProject = false;
+                        this.projectId = undefined;
+                    }
                     this.description = '';
                     this.initialStartDate = undefined;
                     this.type = 'Standard';
                     this.userId = undefined;
                     this.masterRec = undefined;
-                    this.projectId = undefined;
+                    this.searchProjectManager = '';
+                    this.showUserIcon = false;
+                    this.isInputEnabledForUser = false;
+                    console.log(`description: ${this.description} projectId: ${this.projectId} formattedDate: ${this.initialStartDate} type: ${this.type} userId: ${this.userId} masterRec: ${this.masterRec}`);
                 })
-                .catch((error) => {
-                    console.log('error:', error);
-                    this.isLoading = false;
-                })
-        } catch (error) {
-            console.log('error', JSON.stringify(error));
+        } else {
+            const event = new ShowToastEvent({
+                title: 'Error',
+                message: 'Description field is empty !!!',
+                variant: 'error',
+                mode: 'dismissable'
+            });
+            this.dispatchEvent(event);
         }
     }
 
@@ -214,6 +304,11 @@ export default class CreateNewSchedule extends NavigationMixin(LightningElement)
                 filterName: 'Recent'
             },
         })
+        let close = true;
+        const closeclickedevt = new CustomEvent('closeclicked', {
+            detail: { close },
+        });
+        this.dispatchEvent(closeclickedevt);
     }
 
     getLink(event) {
@@ -228,4 +323,19 @@ export default class CreateNewSchedule extends NavigationMixin(LightningElement)
         document.removeEventListener('click', this.handleDocumentEvent.bind(this));
     }
 
+    clearInput(event) {
+        let clearInputForType = event.currentTarget.dataset.id;
+        console.log('clearInputForType', clearInputForType);
+        if (clearInputForType === 'project') {
+            this.searchProjectName = '';
+            this.projectId = undefined;
+            this.showProjectIcon = false;
+            this.isInputEnabledForProject = false;
+        } else {
+            this.searchProjectManager = '';
+            this.userId = undefined;
+            this.showUserIcon = false;
+            this.isInputEnabledForUser = false;
+        }
+    }
 }

@@ -16,6 +16,7 @@ public class AuthorizationController {
             map<string, object>  cachedGeneralSettings = new  map<string, object>();
             Map<String, Schema.SObjectField> schemaFieldMap = Schema.SObjectType.buildertek__QuickBooks_Setting__mdt.fields.getMap();
             string query = 'SELECT ' + getCSVFields(schemaFieldMap.keySet()) + ' FROM buildertek__QuickBooks_Setting__mdt WHERE MasterLabel = ' +  '\'' + String.escapeSingleQuotes(user) + '\'';
+            // string query = 'SELECT ' + getCSVFields(schemaFieldMap.keySet()) + ' FROM buildertek__QuickBooks_Setting__mdt';
             buildertek__QuickBooks_Setting__mdt generalSettings = Database.query(query);
 
             for (String fieldName: schemaFieldMap.keySet()) {

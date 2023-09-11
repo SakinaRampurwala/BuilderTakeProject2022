@@ -43,7 +43,7 @@ public without sharing class NewCheckInBtnController {
     public static void deleteContentVersion(List<String> documentId) {
         try {
             List<ContentDocument> cdListToDelete = new List<ContentDocument>();
-            cdListToDelete = [SELECT Id FROM ContentDocument WHERE ID IN: documentId];
+            cdListToDelete = [SELECT Id, FileType FROM ContentDocument WHERE ID IN: documentId];
             if (cdListToDelete.size() > 0) {
                 delete cdListToDelete;
             }

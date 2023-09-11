@@ -165,8 +165,8 @@ public class ImportProductsOnRfqLines {
             if(vendor != '' && vendor != null){
                 queryList = queryList+ ' AND (buildertek__Vendor__r.Name LIKE \'%'+vendor+'%\')';
             }
-            queryList2 = queryList+ ' ORDER BY Name';
-            queryList = queryList+ ' ORDER BY Name';
+            queryList2 = queryList+ ' ORDER BY Name LIMIT 10000';
+            queryList = queryList+ ' ORDER BY Name LIMIT 10000';
 
             // queryList = queryList+ ' ORDER BY Name LIMIT :pageSize OFFSET :offset';
             

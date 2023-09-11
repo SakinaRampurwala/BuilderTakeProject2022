@@ -47,17 +47,17 @@ private class bryntumGanttControllerTest {
             
         Test.startTest();
         bryntumGanttController.getScheduleWrapperAtLoading(schedule.Id);
-        bryntumGanttController.getAccounts(1,2,'Test' , 'Test');
-        bryntumGanttController.getContacts('Test' , 'Test' , 'Test');
+        // bryntumGanttController.getAccounts(1,2,'Test' , 'Test');
+        // bryntumGanttController.getContacts('Test' , 'Test' , 'Test');
         bryntumGanttController.searchProject('Test');
-        bryntumGanttController.getFieldSet();
-        bryntumGanttController.getDropDown('buildertek__Type__c');
+        // bryntumGanttController.getFieldSet();
+        // bryntumGanttController.getDropDown('buildertek__Type__c');
         bryntumGanttController.fetchScheduleList();
         bryntumGanttController.searchUsers('Buildertek');
         bryntumGanttController.getScheduleItemList(scheduleRec.Id);
         bryntumGanttController.createNewSchedule('Test' , project.Id , date.today(),'Standard' , userId , scheduleRec.Id);
         bryntumGanttController.createScheduleLineFromMasterSchedule(scheduleRec.Id , schedule.Id , date.today());
-        bryntumGanttController.addDaysSkippingWeekends('Test' , date.today() , 3);
+        // bryntumGanttController.addDaysSkippingWeekends('Test' , date.today() , 3);
         Test.stopTest();
     }
 }

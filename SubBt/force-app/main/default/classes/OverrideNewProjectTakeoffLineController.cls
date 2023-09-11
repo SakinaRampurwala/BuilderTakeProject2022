@@ -164,6 +164,12 @@ public class OverrideNewProjectTakeoffLineController {
         return pickListValuesList;
     }
 
+    @AuraEnabled
+    public static String getobjectName(Id recordId){
+        String sObjName = recordId.getSObjectType().getDescribe().getName();
+        return sObjName;
+    }
+
 
     
 }

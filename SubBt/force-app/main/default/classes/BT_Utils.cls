@@ -1201,6 +1201,7 @@ public with sharing class BT_Utils{
                 }
             }
 
+            System.debug('clone schedule system here');
             if(cloneChildRec.size() > 0){
                 insert cloneChildRec;
             }

@@ -12,7 +12,7 @@ public without sharing class importScheduleLineController {
         if(String.isNotBlank(recordId)){
             mainScheduleRec = [SELECT Id, Name, buildertek__Initial_Start_Date__c, buildertek__Start_Date__c, buildertek__End_Date__c, buildertek__Original_Start_Date__c, buildertek__Original_End_Date__c FROM buildertek__Schedule__c WHERE Id =:recordId limit 1];
         }
-        
+
         list<buildertek__Project_Task__c> existedScheduleitems = new list<buildertek__Project_Task__c>();
         existedScheduleitems = [select Id, buildertek__Completion__c, buildertek__Full_Name__c,buildertek__Contractor__c, buildertek__Contractor_Resource__c, buildertek__Duration__c, buildertek__Finish__c, buildertek__Resource__c, buildertek__Lag__c, buildertek__Milestone__c, buildertek__Notes__c, buildertek__Order__c, buildertek__Original_End_Date__c, buildertek__Original_Start_Date__c, buildertek__Phase__c, buildertek__Type__c, buildertek__Dependency__c, buildertek__Project__c, buildertek__Purchase_Order__c, buildertek__Reason_for_Date_Change__c, buildertek__Reason_for_Date_Change_PL__c, buildertek__Required_Completion_Date__c, buildertek__Schedule__c, buildertek__Start__c, Name
                                 from buildertek__Project_Task__c
@@ -31,6 +31,8 @@ public without sharing class importScheduleLineController {
             count = Integer.valueOf(existedScheduleitems[lastIndex].buildertek__Order__c)+1;
         }
 
+        String businessHourId = [SELECT Id, IsDefault, IsActive FROM BusinessHours WHERE IsDefault = true LIMIT 1].Id;
+
         for (fieldWrapper wrapper : datalist){
             if (wrapper.Name != null && String.isNotBlank(wrapper.Name)){
                 buildertek__Project_Task__c schItem = new buildertek__Project_Task__c();
@@ -47,11 +49,22 @@ public without sharing class importScheduleLineController {
                 schItem.buildertek__Completion__c = wrapper.percentComplete;
 
                 Date startDate = system.today();
-                if (wrapper.StartDate != null) {
-                    startDate = wrapper.StartDate;
-                } else if(mainScheduleRec.buildertek__Initial_Start_Date__c != null){
+
+                if(mainScheduleRec.buildertek__Initial_Start_Date__c != null){
                     startDate = mainScheduleRec.buildertek__Initial_Start_Date__c;
+                } else if (wrapper.StartDate != null) {
+                    startDate = Date.valueOf(wrapper.StartDate);
                 }
+
+                if (String.isEmpty(wrapper.Dependency) && String.isBlank(wrapper.Dependency)) {
+                    startDate = Date.valueOf(wrapper.StartDate);
+                }
+
+                // if (wrapper.StartDate != null) {
+                //     startDate = Date.valueOf(wrapper.StartDate);
+                // } else if(mainScheduleRec.buildertek__Initial_Start_Date__c != null){
+                //     startDate = mainScheduleRec.buildertek__Initial_Start_Date__c;
+                // }
 
                 DateTime currentDate = DateTime.newInstance(startDate.year(), startDate.month(), startDate.day());
                 String todayDay = currentDate.format('EEEE');
@@ -62,18 +75,23 @@ public without sharing class importScheduleLineController {
                 }
 
                 schItem.buildertek__Start__c = startDate;
-                wrapper.StartDate = Date.valueOf(startDate);
+                // wrapper.StartDate = Date.valueOf(startDate);
+
+                Date sDate = Date.newInstance(schItem.buildertek__Start__c.year(), schItem.buildertek__Start__c.month(), schItem.buildertek__Start__c.day());
 
                 schItem.buildertek__Duration__c = wrapper.Duration;
-                schItem.buildertek__Finish__c = addDaysSkippingWeekends(schItem.buildertek__Start__c, Integer.valueOf(wrapper.Duration));
-                schItem.buildertek__Original_Start_Date__c = Date.valueOf(wrapper.StartDate);
+                // schItem.buildertek__Finish__c = System.BusinessHours.add(businessHourId, sDate, Integer.valueOf(wrapper.Duration)*(24 * 60 * 60 * 1000L)).date();
+                schItem.buildertek__Finish__c = addDaysSkippingWeekends(sDate, Integer.valueOf(wrapper.Duration));
+                System.debug('schItem.buildertek__Finish__c neo '+schItem.buildertek__Finish__c);
+
+                schItem.buildertek__Original_Start_Date__c = startDate;
                 schItem.buildertek__Original_End_Date__c = startDate.addDays(wrapper.Duration);
                 schItem.buildertek__Phase__c = wrapper.Phase;
                 schItem.buildertek__Notes__c = wrapper.Notes;
                 schItem.buildertek__Lag__c = Double.valueOf(wrapper.Lag != null && String.isNotBlank(wrapper.Lag) ? wrapper.Lag : '0');
                 schItem.buildertek__Order__c = count;
                 count++;
-                
+
                 projectInsertTaskMap.put(schItem.Name, schItem);
             }
         }
@@ -82,7 +100,7 @@ public without sharing class importScheduleLineController {
                 ProjectTaskTriggerHandler.blnSkipTaskTrigger = true;
                 insert projectInsertTaskMap.values();
                 ProjectTaskTriggerHandler.blnSkipTaskTrigger = false;
-                
+
                 Set<Id> taskIds = new Set<Id>();
                 for (String key : projectInsertTaskMap.keySet()) {
                     System.debug('projectInsertTaskMap :=>  ' + projectInsertTaskMap.get(key));
@@ -113,8 +131,12 @@ public without sharing class importScheduleLineController {
                 for (String key : newProjectTaskMap.keySet()) {
                     System.debug('Old newProjectTaskMap.get(key) ==> '+newProjectTaskMap.get(key));
                     if (newProjectTaskMap.get(key).buildertek__Dependency__c != null) {
-                        newProjectTaskMap.get(key).buildertek__Start__c = newProjectTaskMap.get(newProjectTaskMap.get(key).buildertek__Dependency__c).buildertek__Finish__c;
-                        newProjectTaskMap.get(key).buildertek__Finish__c = addDaysSkippingWeekends(newProjectTaskMap.get(key).buildertek__Start__c, Integer.valueOf(newProjectTaskMap.get(key).buildertek__Duration__c));
+                        newProjectTaskMap.get(key).buildertek__Start__c = skipWeekend(newProjectTaskMap.get(newProjectTaskMap.get(key).buildertek__Dependency__c).buildertek__Finish__c.adddays(1));
+
+                        Date sDate = Date.newInstance(newProjectTaskMap.get(key).buildertek__Start__c.year(), newProjectTaskMap.get(key).buildertek__Start__c.month(), newProjectTaskMap.get(key).buildertek__Start__c.day());
+                        // newProjectTaskMap.get(key).buildertek__Finish__c = System.BusinessHours.add(businessHourId, sDate, Integer.valueOf(newProjectTaskMap.get(key).buildertek__Duration__c)*(24 * 60 * 60 * 1000L)).date();
+                        newProjectTaskMap.get(key).buildertek__Finish__c = addDaysSkippingWeekends(sDate, Integer.valueOf(newProjectTaskMap.get(key).buildertek__Duration__c));
+                        System.debug('newProjectTaskMap.get(key).buildertek__Finish__c '+newProjectTaskMap.get(key).buildertek__Finish__c);
                     }
                 }
 
@@ -122,7 +144,7 @@ public without sharing class importScheduleLineController {
                     System.debug('New newProjectTaskMap.get(key) ==> '+newProjectTaskMap.get(key));
                 }
                 update newProjectTaskMap.values();
-                
+
                 returnresponse = 'SUCCESS';
             } catch (Exception e){
                 returnresponse = 'ERROR'+' '+e.getMessage()+' '+e.getLineNumber();
@@ -134,7 +156,7 @@ public without sharing class importScheduleLineController {
     // Skip weekend and calculate date
 	public static Date addDaysSkippingWeekends(Date sDate, Integer days){
 		Date result = sDate;
-		Integer addedDays = 0;
+		Integer addedDays = 1;
 		while (addedDays < days){
 			result = result.addDays(1);
 			DateTime currentDate = DateTime.newInstance(result.year(), result.month(), result.day());
@@ -146,10 +168,21 @@ public without sharing class importScheduleLineController {
 		return result;
 	}
 
+    public static Date skipWeekend(Date startDate){
+		DateTime currDate = DateTime.newInstance(startDate.year(), startDate.month(), startDate.day());
+		String todayDay = currDate.format('EEEE');
+		if (todayDay == 'Saturday'){
+			startDate = startDate.addDays(2);
+		} else if (todayDay == 'Sunday'){
+			startDate = startDate.addDays(1);
+		}
+		return startDate;
+	}
+
     public class fieldWrapper{
         public String Name;
         public String Dependency;
-        public Date StartDate;
+        public String StartDate;
         public Integer Duration;
         public Decimal percentComplete;
         public String Phase;

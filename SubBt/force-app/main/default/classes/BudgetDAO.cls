@@ -3158,7 +3158,9 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
     @AuraEnabled
     public static string addInvoicePOToBudget(list<String> invoicePoList, String BudgetId){
         list<buildertek__Account_Payable__c> invoicePoToUpdate = new list<buildertek__Account_Payable__c>();
-        if(invoicePoList.size() > 0){
+        list<buildertek__Payment__c> cashDisburshment = [SELECT Id, buildertek__Payable__c FROM buildertek__Payment__c WHERE buildertek__Payable__c IN: invoicePoList];  // Changes for BUIL-3498 START
+        System.debug('cashDisburshment -- SIZE---->' + cashDisburshment.size()); 
+        if(invoicePoList.size() > 0 && cashDisburshment.size() == 0){  
             list<buildertek__Account_Payable__c> invPoList = [SELECT Id, Name FROM buildertek__Account_Payable__c WHERE Id IN : invoicePoList];
             for(buildertek__Account_Payable__c invoicePo : invPoList){
                 invoicePo.buildertek__Budget__c = BudgetId;
@@ -3166,11 +3168,107 @@ buildertek__Budget__c budgetCopy = Database.query(query);*/
             }
                 update invoicePoToUpdate;
             return 'Successs';
-        }
+        }else if (cashDisburshment.size() > 0) {
+            return 'HasDisburshment';
+        } // Changes for BUIL-3498 END
         return null;
-
     }
 
+    @AuraEnabled
+    public static string CheckUserAccess(String AccessType){
+        // try {
+            switch on AccessType{
+                when 'Create'{
+                    if(Schema.sObjectType.buildertek__Budget_Item__c.isCreateable())
+                        {return 'True';}
+                    else{ return 'False'; }
+                }
+                when 'Update'{
+                    if(Schema.sObjectType.buildertek__Budget_Item__c.isUpdateable()){
+                        return 'True';
+                    }
+                    else{
+                        return 'False';
+                    }
+                }
+                when 'Delete'{
+                    if(Schema.sObjectType.buildertek__Budget_Item__c.isDeletable()){
+                        return 'True';
+                    }
+                    else{
+                        return 'False';
+                    }
+                }
+                when else{
+                    return null;
+                }
+            }
+        }
+
+
+    @AuraEnabled
+    public static budgetLineWrapperClass getBudgetLineData(String budgetId, Integer pageNumber, Integer recordToDisply, List<String> groupingList){
+        budgetLineWrapperClass mainWrapper = new budgetLineWrapperClass();
+        Integer pageSize = recordToDisply;
+        Integer offset = (pageNumber - 1) * pageSize;
+        List<String> gorupingFieldList = new List<String>{'id', 'buildertek__Sub_Grouping__c', 'buildertek__Group__c'};
+        String apiString = '';
+
+        List<BT_Lightning_Utils.dataTableFields> column = BT_Lightning_Utils.getFieldSetForDataTable('buildertek__Budget_Item__c', 'buildertek__BT_Related_List_View_Fields');
+        for(BT_Lightning_Utils.dataTableFields s : column){
+            if (!gorupingFieldList.contains(s.fieldName)) {
+                apiString += s.fieldName + ', ';
+            }
+        }
+        String query = 'SELECT Id, '+apiString;
+        query += 'buildertek__Sub_Grouping__c, buildertek__Sub_Grouping__r.Name, buildertek__Group__c, buildertek__Group__r.Name ';
+        query += 'FROM buildertek__Budget_Item__c WHERE buildertek__Budget__c =\''+budgetId+'\''+' ORDER BY '+groupingList[0];
+        if (groupingList.size() > 1) {
+            query += ', '+groupingList[1];
+        }
+        if (groupingList.size() > 2) {
+            query += ', '+groupingList[2];
+        }
+        if (groupingList.size() > 3) {
+            query += ', '+groupingList[3];
+        }
+        query += ' NULLS LAST';
+
+        List<buildertek__Budget_Item__c> budgetLineList = Database.query(query);
+
+        Integer totalBudgetLine = [SELECT count() FROM buildertek__Budget_Item__c WHERE buildertek__Budget__c = :budgetId];
+
+        buildertek__Budget__c budget = [SELECT Id, Name, buildertek__Budget_Line_Grouping_Fields__c FROM buildertek__Budget__c WHERE Id =: budgetId];
+        budget.buildertek__Budget_Line_Grouping_Fields__c = JSON.serialize(groupingList);
+        update budget;
+
+        mainWrapper.budgetLineList = budgetLineList;
+        mainWrapper.columns = column;
+        mainWrapper.pageSize = recordToDisply;
+        mainWrapper.pageNumber = pageNumber;
+        mainWrapper.total = totalBudgetLine;
+
+        return mainWrapper;
+
+    }    
+
+    public class budgetLineWrapperClass{
+
+        @AuraEnabled
+        public List<buildertek__Budget_Item__c> budgetLineList;
+    
+        @AuraEnabled
+        public List<BT_Lightning_Utils.dataTableFields> columns;
+    
+        @AuraEnabled
+        public Integer pageSize{ get; set; }
+    
+        @AuraEnabled
+        public Integer pageNumber{ get; set; }
+    
+        @AuraEnabled
+        public Integer total{ get; set; }
+    }
 
 
 
